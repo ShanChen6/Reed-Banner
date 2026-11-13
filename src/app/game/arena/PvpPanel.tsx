@@ -14,7 +14,9 @@ import {
   needsCell,
   ELEMENTS,
   PASSIVE,
+  MAIN_ID,
   PROFESSIONS,
+  selectableActors,
   skillTargetOptions,
   whirlStep,
   type BattleAction,
@@ -28,6 +30,7 @@ import {
   type Whirl,
 } from "@/core";
 import type { PvpMatchView, PvpOverview } from "@/server/pvp";
+import type { PvpRoomView } from "@/server/pvpRooms";
 import { Alert, Button, ChoiceChip } from "@/components/ui";
 import { FrameInset, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { ElementIcon } from "../art/icons";
@@ -92,6 +95,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [matchId, setMatchId] = useState<string | null>(null);
+  const [inRoom, setInRoom] = useState(false);
   /** Nghề và hệ chọn cho trận kế tiếp; chưa chọn thì lấy theo hồ sơ. */
   const [pick, setPick] = useState<{ element?: Element; profession?: Profession }>({});
 
@@ -134,6 +138,21 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
     setBusy(false);
     if (r.status === 200) setOverview(r.data as unknown as PvpOverview);
   };
+
+  if (inRoom || (overview?.room && !matchId)) {
+    return (
+      <PvpRoom
+        onMatch={(id) => {
+          setInRoom(false);
+          setMatchId(id);
+        }}
+        onExit={() => {
+          setInRoom(false);
+          void refresh();
+        }}
+      />
+    );
+  }
 
   if (matchId) {
     return (
@@ -236,9 +255,250 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
         </div>
       )}
     </OrnateFrame>
+      {o && !o.queue && (
+        <OrnateFrame level="raised" className="flex flex-col gap-3">
+          <SectionTitle description="Đấu 3vs3 giao hữu với bạn bè: mỗi người một tướng của mình, chỗ trống có thể để máy điều khiển. Giao hữu không tính điểm hạng, không có vàng.">
+            Phòng 3vs3
+          </SectionTitle>
+          <Button variant="secondary" disabled={busy || !!o.banUntil} onClick={() => setInRoom(true)}>
+            Lập hoặc vào phòng
+          </Button>
+        </OrnateFrame>
+      )}
       <RankRewardsPanel mode="pvp" />
       <SeasonBoardPanel board="pvp" />
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+const ROOM_ERROR: Record<string, string> = {
+  notFound: "Không có phòng với mã này.",
+  inRoom: "Bạn đang ở một phòng khác.",
+  inMatch: "Bạn đang có một trận dở. Hãy vào lại trận đó.",
+  full: "Phòng đã đủ người.",
+  closed: "Phòng đã đóng.",
+  started: "Phòng đã bắt đầu trận.",
+  notHost: "Chỉ chủ phòng làm được việc này.",
+  notMember: "Bạn không còn ở trong phòng này.",
+  badHero: "Bạn không chọn được tướng này.",
+  badBuild: "Nghề hoặc hệ không hợp lệ.",
+  heroTaken: "Phe này đã có tướng đó.",
+  dblTaken: "Đinh Bộ Lĩnh đã có người chọn trong phòng.",
+  badSlot: "Chỗ không hợp lệ.",
+  slotTaken: "Chỗ đã có người.",
+  needHero: "Mọi người cần chọn tướng trước khi bắt đầu.",
+  needHumans: "Mỗi phe cần ít nhất một người thật.",
+  needFull: "Còn chỗ trống. Hãy bật máy điền chỗ hoặc chờ thêm người.",
+  conflict: "Máy chủ đang bận, hãy thử lại.",
+};
+
+const roomError = (data: Json): string => ROOM_ERROR[String(data.error)] ?? ERROR_NAME[String(data.error)] ?? "Có lỗi xảy ra, hãy thử lại.";
+
+/** Phòng giao hữu 3vs3: lập phòng hoặc vào bằng mã, chọn tướng, chủ phòng bắt đầu. */
+function PvpRoom({ onMatch, onExit }: { onMatch: (matchId: string) => void; onExit: () => void }) {
+  const [room, setRoom] = useState<PvpRoomView | null>(null);
+  const [code, setCode] = useState("");
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [looked, setLooked] = useState(false);
+  const [pick, setPick] = useState<{ element?: Element; profession?: Profession }>({});
+
+  const apply = useCallback(
+    (r: { status: number; data: Json }) => {
+      if (r.status === 200) {
+        const v = r.data.room as PvpRoomView;
+        setRoom(v);
+        setMessage("");
+        if (v.matchId) onMatch(v.matchId);
+        return true;
+      }
+      setMessage(roomError(r.data));
+      return false;
+    },
+    [onMatch],
+  );
+
+  const poll = useCallback(async () => {
+    const r = await call("/api/pvp/rooms");
+    setLooked(true);
+    if (r.status === 200) apply(r);
+    else if (r.status === 404 || r.status === 403) setRoom(null);
+  }, [apply]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- tải phòng hiện tại khi vào màn
+    void poll();
+    const id = window.setInterval(() => void poll(), POLL_MS);
+    return () => window.clearInterval(id);
+  }, [poll]);
+
+  const act = async (body: Json) => {
+    setBusy(true);
+    const r = await call("/api/pvp/rooms", body);
+    setBusy(false);
+    return apply(r);
+  };
+
+  const leave = async () => {
+    setBusy(true);
+    await call("/api/pvp/rooms", { action: "leave" });
+    setBusy(false);
+    setRoom(null);
+    onExit();
+  };
+
+  if (!looked) return <p role="status" className="text-on-wood-soft">Đang tải…</p>;
+
+  if (!room || room.status === "closed") {
+    return (
+      <OrnateFrame level="raised" className="flex flex-col gap-4">
+        <SectionTitle description="Lập phòng rồi đưa mã cho bạn bè, hoặc gõ mã bạn bè đưa để vào. Mỗi phe ba chỗ.">Phòng 3vs3</SectionTitle>
+        {message && <Alert role="alert">{message}</Alert>}
+        <div className="flex flex-wrap items-end gap-3">
+          <Button size="lg" disabled={busy} onClick={() => void act({ action: "create" })}>
+            Lập phòng mới
+          </Button>
+          <label className="flex flex-col gap-1 text-sm text-on-wood-soft">
+            Mã phòng
+            <input
+              className="min-h-11 w-40 rounded-control border border-frame-line bg-wood-inset px-3 uppercase tracking-widest text-on-wood"
+              value={code}
+              maxLength={6}
+              autoComplete="off"
+              onChange={(e) => setCode(e.target.value.toUpperCase())}
+            />
+          </label>
+          <Button variant="secondary" disabled={busy || code.length < 6} onClick={() => void act({ action: "join", code })}>
+            Vào phòng
+          </Button>
+          <Button variant="secondary" disabled={busy} onClick={onExit}>
+            Quay lại
+          </Button>
+        </div>
+      </OrnateFrame>
+    );
+  }
+
+  const mine = room.slots.find((x) => x.mine);
+  const myHero = mine?.hero ?? null;
+  const chosen = room.heroes.find((h) => h.id === myHero?.id);
+  const side = (from: number, label: string) => (
+    <div className="flex flex-col gap-2">
+      <p className="font-bold text-title-on-wood">{label}</p>
+      {room.slots.slice(from, from + 3).map((x) => (
+        <FrameInset key={x.slot} className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <p className="text-on-wood">
+              {x.occupied ? `${x.name ?? "Người chơi"}${x.host ? " (chủ phòng)" : ""}${x.mine ? " · bạn" : ""}` : "Chỗ trống"}
+            </p>
+            {x.hero && (
+              <p className="text-sm text-on-wood-soft">
+                {x.hero.name} · cấp {x.hero.level} · {PROFESSION_NAME[x.hero.profession as keyof typeof PROFESSION_NAME] ?? x.hero.profession} · {ELEMENT_NAME[x.hero.element]}
+              </p>
+            )}
+            {x.occupied && !x.hero && <p className="text-sm text-on-wood-soft">Chưa chọn tướng</p>}
+          </div>
+          {!x.occupied && room.you.slot !== null && (
+            <Button size="sm" variant="secondary" disabled={busy} onClick={() => void act({ action: "move", slot: x.slot })}>
+              Ngồi đây
+            </Button>
+          )}
+        </FrameInset>
+      ))}
+    </div>
+  );
+
+  return (
+    <OrnateFrame level="raised" className="flex flex-col gap-4">
+      <SectionTitle description="Đưa mã này cho bạn bè để họ vào phòng.">
+        Phòng {room.code}
+      </SectionTitle>
+      {message && <Alert role="alert">{message}</Alert>}
+      <div className="grid gap-3 md:grid-cols-2">
+        {side(0, "Phe thứ nhất")}
+        {side(3, "Phe thứ hai")}
+      </div>
+      <div className="flex flex-wrap items-end gap-3" role="group" aria-label="Chọn tướng">
+        <label className="flex flex-col gap-1 text-sm text-on-wood-soft">
+          Tướng của bạn
+          <select
+            className="min-h-11 rounded-control border border-frame-line bg-wood-inset px-3 text-on-wood"
+            value={myHero?.id ?? ""}
+            disabled={busy}
+            onChange={(e) => e.target.value && void act({ action: "hero", hero: e.target.value, element: pick.element, profession: pick.profession })}
+          >
+            <option value="">Chọn tướng</option>
+            {room.heroes.map((h) => (
+              <option key={h.id} value={h.id}>
+                {h.name} · cấp {h.level}
+              </option>
+            ))}
+          </select>
+        </label>
+        {myHero?.id === MAIN_ID && chosen && (
+          <>
+            <label className="flex flex-col gap-1 text-sm text-on-wood-soft">
+              Nghề
+              <select
+                className="min-h-11 rounded-control border border-frame-line bg-wood-inset px-3 text-on-wood"
+                value={pick.profession ?? myHero.profession}
+                onChange={(e) => {
+                  const profession = e.target.value as Profession;
+                  setPick((p) => ({ ...p, profession }));
+                  void act({ action: "hero", hero: myHero.id, element: pick.element ?? myHero.element, profession });
+                }}
+              >
+                {PROFESSIONS.map((x) => (
+                  <option key={x} value={x}>
+                    {PROFESSION_NAME[x as keyof typeof PROFESSION_NAME] ?? x}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="flex flex-col gap-1 text-sm text-on-wood-soft">
+              Hệ
+              <select
+                className="min-h-11 rounded-control border border-frame-line bg-wood-inset px-3 text-on-wood"
+                value={pick.element ?? myHero.element}
+                onChange={(e) => {
+                  const element = e.target.value as Element;
+                  setPick((p) => ({ ...p, element }));
+                  void act({ action: "hero", hero: myHero.id, element, profession: pick.profession ?? myHero.profession });
+                }}
+              >
+                {ELEMENTS.map((x) => (
+                  <option key={x} value={x}>
+                    {ELEMENT_NAME[x]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </>
+        )}
+      </div>
+      <p className="text-sm text-on-wood-soft">Cấp và trang bị theo hồ sơ của từng tướng. Mỗi trận chỉ một người được chọn Đinh Bộ Lĩnh.</p>
+      {room.you.host ? (
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="flex min-h-11 items-center gap-2 text-on-wood">
+            <input type="checkbox" checked={room.fillAi} disabled={busy} onChange={(e) => void act({ action: "fill", fillAi: e.target.checked })} />
+            Chỗ trống do máy điều khiển
+          </label>
+          <Button size="lg" disabled={busy || room.startBlock !== null} onClick={() => void act({ action: "start" })}>
+            Bắt đầu trận
+          </Button>
+          {room.startBlock && <p className="text-sm text-on-wood-soft">{ROOM_ERROR[room.startBlock]}</p>}
+        </div>
+      ) : (
+        <p role="status" className="text-on-wood-soft">Chờ chủ phòng bắt đầu trận.</p>
+      )}
+      <div>
+        <Button variant="secondary" disabled={busy} onClick={() => void leave()}>
+          Rời phòng
+        </Button>
+      </div>
+    </OrnateFrame>
   );
 }
 
@@ -271,7 +531,7 @@ function Bar({ value, max, label, tone }: { value: number; max: number; label: s
   );
 }
 
-function FighterPanel({ f, rage, mine, active }: { f: Fighter; rage: number; mine: boolean; active: boolean }) {
+function FighterPanel({ f, rage, showRage, mine, active, tag }: { f: Fighter; rage: number; showRage: boolean; mine: boolean; active: boolean; tag?: string }) {
   return (
     <FrameInset className={`flex flex-col gap-1.5 p-3 ${active ? "ring-2 ring-frame-gold" : ""}`}>
       <div className="flex items-center gap-2">
@@ -279,14 +539,14 @@ function FighterPanel({ f, rage, mine, active }: { f: Fighter; rage: number; min
         <p className="font-semibold">
           {f.name}
           <span className="ml-2 text-caption font-normal text-on-wood-soft">
-            {mine ? "Bạn" : "Đối thủ"} · {PROFESSION_NAME[f.profession as keyof typeof PROFESSION_NAME] ?? f.profession} · {ELEMENT_NAME[f.element]}
+            {tag ?? (mine ? "Bạn" : "Đối thủ")} · {PROFESSION_NAME[f.profession as keyof typeof PROFESSION_NAME] ?? f.profession} · {ELEMENT_NAME[f.element]}
             {f.level ? ` · cấp ${f.level}` : ""}
           </span>
         </p>
       </div>
       <Bar value={f.hp} max={f.maxHp} label="Máu" tone="hp" />
       <Bar value={f.energy} max={100} label="Năng lượng" tone="energy" />
-      <Bar value={rage} max={100} label="Nộ" tone="rage" />
+      {showRage && <Bar value={rage} max={100} label="Nộ" tone="rage" />}
       {f.effects.length > 0 && (
         <p className="text-caption text-on-wood-soft">
           {f.effects.map((e) => `${EFFECT_NAME[e.kind] ?? e.kind}${e.turns ? ` (${e.turns})` : ""}`).join(", ")}
@@ -395,6 +655,15 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
   const board = state.board;
   const remaining = view.clock.deadline === null ? null : Math.max(0, Math.ceil((view.clock.deadline - (clockNow + offset)) / 1000));
   const over = view.status !== "active";
+  const team = view.format === "team";
+  /** Nhãn chỗ ngồi: "Bạn", tên đồng đội hoặc đối thủ, hoặc "Máy" khi do máy điều khiển. */
+  const seatTag = (side: 0 | 1, position: number) => {
+    const seat = view.seats.find((x) => x.side === side && x.position === position);
+    if (!seat) return side === mySide ? "Đồng đội" : "Đối thủ";
+    return seat.mine ? "Bạn" : seat.ai ? "Máy" : (seat.name ?? (side === mySide ? "Đồng đội" : "Đối thủ"));
+  };
+  /** Đội trưởng của phe đang đánh được chọn người hành động trong số người ra tay được. */
+  const captainPick = !over && view.you.captain && !view.you.left && state.turn.side === mySide && !state.turn.skillUsed ? selectableActors(state) : [];
   const skills = myTurn ? (actor.skills ?? []).map((sid) => fighterSkill(actor, sid)).filter((d): d is SkillDef => !!d) : [];
 
   const cast = (def: SkillDef, whirl?: Whirl) => {
@@ -478,7 +747,11 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
                   ? state.turn.extra
                     ? "Lượt thêm của bạn"
                     : "Lượt của bạn"
-                  : "Đối thủ đang đánh"}
+                  : team
+                    ? state.turn.side === mySide
+                      ? `Lượt của ${seatTag(mySide, state.turn.actor)} (đồng đội)`
+                      : `${seatTag(foeSide, state.turn.actor)} đang đánh`
+                    : "Đối thủ đang đánh"}
           </p>
           {!over && (
             <p className={`text-lg font-bold tabular-nums ${myTurn && remaining !== null && remaining <= 10 ? "text-danger" : "text-title-on-wood"}`} aria-label="Thời gian còn lại của lượt">
@@ -486,9 +759,14 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
             </p>
           )}
         </div>
+        {view.friendly && <p className="text-caption text-on-wood-soft">Giao hữu: không tính điểm hạng, không có vàng.</p>}
         {message && <Alert role="alert">{message}</Alert>}
 
-        <FighterPanel f={foe.fighters[0] as Fighter} rage={foe.rage} mine={false} active={!myTurn && !over} />
+        <div className={team ? "grid gap-2 md:grid-cols-3" : ""}>
+          {foe.fighters.map((f, i) => (
+            <FighterPanel key={i} f={f} rage={foe.rage} showRage={i === foe.leader} mine={false} active={!over && state.turn.side === foeSide && state.turn.actor === i} tag={team ? seatTag(foeSide, i) : undefined} />
+          ))}
+        </div>
 
         <div className="mx-auto w-full max-w-[34rem]">
           <div
@@ -519,7 +797,21 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
           </div>
         </div>
 
-        <FighterPanel f={own.fighters[0] as Fighter} rage={own.rage} mine active={myTurn} />
+        <div className={team ? "grid gap-2 md:grid-cols-3" : ""}>
+          {own.fighters.map((f, i) => (
+            <FighterPanel key={i} f={f} rage={own.rage} showRage={i === own.leader} mine active={!over && state.turn.side === mySide && state.turn.actor === i} tag={team ? seatTag(mySide, i) : undefined} />
+          ))}
+        </div>
+        {captainPick.length > 1 && (
+          <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Chọn người hành động">
+            <span className="text-sm text-on-wood-soft">Đội trưởng chọn người đánh lượt này:</span>
+            {captainPick.map((i) => (
+              <ChoiceChip key={i} selected={state.turn.actor === i} size="sm" disabled={busy} onClick={() => void play({ type: "selectActor", fighter: i })}>
+                {own.fighters[i]?.name} ({seatTag(mySide, i)})
+              </ChoiceChip>
+            ))}
+          </div>
+        )}
 
         {lines.length > 0 && (
           <FrameInset className="flex flex-col gap-1 p-3">
@@ -595,7 +887,9 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
       {over && (
         <OrnateFrame level="raised" className="flex flex-col items-center gap-2 text-center" role="status">
           <h3 className="ui-title-on-wood text-2xl font-bold">{view.winner === null ? "Trận bị hủy" : view.winner === mySide ? "Chúa công thắng!" : "Chúa công thua"}</h3>
-          {result ? (
+          {view.friendly ? (
+            <p>Trận giao hữu nên không đổi điểm hạng và không có vàng.</p>
+          ) : result ? (
             <p>
               {result.counted
                 ? `Điểm ${result.before} → ${result.after} (${result.delta >= 0 ? "+" : ""}${result.delta}).${result.gold > 0 ? ` Thưởng ${result.gold} vàng.` : " Trận này không có vàng (đã đủ trần vàng hôm nay, hoặc đã đấu quá nhiều trận với cùng một người)."}`
