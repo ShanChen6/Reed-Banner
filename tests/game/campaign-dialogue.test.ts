@@ -67,7 +67,8 @@ describe("Trình phát thoại Chiến dịch", () => {
     assert.equal(speakerLook("Trần Minh Công")?.id, "tranLam");
     assert.equal(speakerLook("Phạm Phòng Át")?.id, "phamBachHo");
     assert.equal(speakerLook("Nguyễn Bặc")?.id, "nguyenBac");
-    assert.equal(speakerLook("Một người lính già"), null);
+    assert.equal(speakerLook("Một người lính già")?.id, "story-linh-gia");
+    assert.equal(speakerLook("Người không có trong thoại"), null);
   });
 
   it("phía Hoa Lư đứng trái, Đinh Bộ Lĩnh luôn có mặt khi có thoại", () => {
