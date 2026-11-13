@@ -124,7 +124,7 @@
 
 ## Quần Hùng online hai người chơi (phát triển sau)
 
-- TODO: Chốt các câu hỏi mở còn lại của PvP trực tiếp ([mục 6](../02-game-modes/future/quan-hung-pvp-truc-tiep.md#6-câu-hỏi-mở)): Đinh Bộ Lĩnh ở 3vs3, cách tích Nộ riêng, ngưỡng phá trận, điền AI. Shan đã duyệt luật 1vs1 và 3vs3 ngày 13/11/2026.
+- TODO: Chốt các câu hỏi mở còn lại của PvP trực tiếp ([mục 6](../02-game-modes/future/quan-hung-pvp-truc-tiep.md#6-câu-hỏi-mở)): cách tích Nộ riêng, ngưỡng phá trận, điền AI. Shan đã duyệt luật 1vs1 và 3vs3 ngày 13/11/2026.
 
 ## Tầm Tướng Ký
 

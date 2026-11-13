@@ -17,6 +17,7 @@
 - **Cấp:** dùng **cấp của chính tướng được chọn** trong hồ sơ người chơi, không chuẩn hóa. Ví dụ Hà Vân cấp 2 thì vào trận ở cấp 2, Đinh Bộ Lĩnh cấp 5 thì vào trận ở cấp 5. **Có tính trang bị** của tướng đó.
 - **Chuẩn bị:** sau khi chọn tướng có **màn chờ chuẩn bị** để người chơi sắp xếp trang bị cho tướng mình đã chọn (mục 3.4).
 - **Chọn tướng 3vs3:** **lần lượt, có cấm chọn**; **mỗi phe cấm 3 tướng**, hết giờ cấm thì máy cấm ngẫu nhiên (mục 3.3).
+- **Đinh Bộ Lĩnh ở 3vs3:** chọn được, **cấm theo nghề hoặc hệ** của ông (không cấm cả ông), **mỗi phe chọn ông tối đa một lần**, người đầu chọn thì người sau không chọn nữa (mục 3.8).
 - **Nộ:** **tính riêng cho từng người chơi**, mỗi tướng có thanh Nộ và bị động của chính mình (mục 3.5).
 - **Bỏ lượt:** người hết giờ thì **mất lượt, lượt chuyển sang đối thủ**. Bỏ lượt liên tục bị coi là **phá trận**: cảnh cáo, về sau hạn chế ghép trận (mục 3.6). Chưa xử thua vì bỏ lượt. Luật phá trận được Shan đồng ý.
 - **Điểm hạng:** **mỗi người một điểm Elo riêng**, tính cho từng thể thức (mục 3.7). **Người phá trận không được tính điểm.**
@@ -40,7 +41,7 @@
 | | 1vs1 | 3vs3 |
 |---|---|---|
 | Số người | 2 | 6 (3 mỗi phe) |
-| Tướng | Đinh Bộ Lĩnh của mỗi người, chọn nghề và hệ trước trận | Mỗi người **một tướng** đang sở hữu, cấp và trang bị của chính tướng đó; Đinh Bộ Lĩnh có nên chọn được không: xem mục 3.8 |
+| Tướng | Đinh Bộ Lĩnh của mỗi người, chọn nghề và hệ trước trận | Mỗi người **một tướng** đang sở hữu, cấp và trang bị của chính tướng đó; Đinh Bộ Lĩnh chọn được, mỗi phe một lần (mục 3.8) |
 | Luật trận | [Trận đấu mục 3](../../01-gameplay/tran-dau.md#3-luật-1vs1), máu ×2 | [Trận đấu mục 2](../../01-gameplay/tran-dau.md#2-luật-3vs3) |
 | Điểm | Elo 1vs1 riêng | Elo 3vs3 riêng |
 
@@ -57,9 +58,9 @@ Phe đi trước bốc ngẫu nhiên hoặc phe điểm thấp hơn đi trước
 
 Quy trình (số lượng cấm do Shan chốt; thứ tự và giờ là đề xuất, cần mô phỏng ở PVP-00):
 
-1. **Cấm:** hai phe lần lượt **cấm**, mỗi phe cấm **3 tướng** của đối phương (tướng bị cấm không ai trong cả trận chọn được). Mỗi lượt cấm tối đa 20 giây; **hết giờ thì máy cấm ngẫu nhiên** một tướng trong kho chung hợp lệ.
+1. **Cấm:** hai phe lần lượt **cấm**, mỗi phe cấm **3 tướng** của đối phương (tướng bị cấm không ai trong cả trận chọn được). Riêng **Đinh Bộ Lĩnh chỉ cấm theo một nghề hoặc một hệ** của ông (mục 3.8), mỗi lượt cấm ông vẫn tính một trong 3 lượt. Mỗi lượt cấm tối đa 20 giây; **hết giờ thì máy cấm ngẫu nhiên** một tướng trong kho chung hợp lệ.
 2. **Chọn:** các phe lần lượt chọn theo thứ tự xen kẽ (đề xuất 1-2-2-1 hoặc A-B-B-A-A-B), mỗi người chọn đúng **một tướng đang sở hữu**. Hết giờ chọn thì máy chọn thay tướng hợp lệ có cấp cao nhất.
-3. **Không trùng tướng trong cùng phe**; tướng đã chọn hoặc đã bị cấm không ai chọn lại.
+3. **Không trùng tướng trong cùng phe**; tướng đã chọn hoặc đã bị cấm không ai chọn lại. **Mỗi phe chỉ chọn Đinh Bộ Lĩnh một lần**: người đầu tiên chọn ông thì đồng đội sau không chọn ông nữa (mục 3.8).
 4. **Đội trưởng** (người vào trước, hoặc chủ phòng) xếp **vị trí 1 / 2 / 3** cho phe mình sau khi các tướng đã chọn xong.
 5. Hai phe **thấy tướng của nhau** từ lúc chọn. Cấp và trang bị chi tiết hiện sau khi vào trận.
 
@@ -67,9 +68,9 @@ Quy trình (số lượng cấm do Shan chốt; thứ tự và giờ là đề x
 
 ### 3.4 Màn chờ chuẩn bị (sau khi chọn tướng)
 
-- Sau bước chọn, mỗi người vào **màn chờ chuẩn bị** có đồng hồ đếm ngược chung (đề xuất 60 giây) để **sắp xếp trang bị cho tướng mình đã chọn**, lấy từ kho của chính mình. Tướng và cấp đã khóa, chỉ đổi được trang bị (và nghề, hệ của Đinh Bộ Lĩnh nếu chọn ông, mục 3.8).
+- Sau bước chọn, mỗi người vào **màn chờ chuẩn bị** có đồng hồ đếm ngược chung (đề xuất 60 giây) để **sắp xếp trang bị cho tướng mình đã chọn**, lấy từ kho của chính mình. Tướng và cấp đã khóa, chỉ đổi được trang bị. Nghề và hệ của Đinh Bộ Lĩnh đã chọn và khóa từ lúc chọn tướng (mục 3.8).
 - Trang bị **được tính vào chỉ số trong trận**. Chốt trang bị khi hết giờ hoặc khi bấm sẵn sàng; hết giờ thì giữ trang bị đang mặc. Người sẵn sàng thấy trạng thái sẵn sàng của mọi người, **chưa thấy** trang bị chi tiết của đối thủ.
-- Trận bắt đầu khi mọi người sẵn sàng hoặc hết giờ chờ. Ở 1vs1 cũng có màn này (chọn nghề, hệ của Đinh Bộ Lĩnh và trang bị).
+- Trận bắt đầu khi mọi người sẵn sàng hoặc hết giờ chờ. Ở 1vs1 cũng có màn này (chọn nghề, hệ của Đinh Bộ Lĩnh và trang bị); riêng 1vs1 nghề, hệ chọn ngay ở màn chuẩn bị.
 - Vì tính cả trang bị và cấp, hàng đợi cần **ghép theo Elo kỹ** để người mới không gặp người có đồ và cấp vượt trội.
 
 ### 3.5 Lượt, giờ, Nộ riêng và người hành động
@@ -101,13 +102,13 @@ Quy trình (số lượng cấm do Shan chốt; thứ tự và giờ là đề x
 - **Giao hữu qua phòng mã:** không tính điểm, không thưởng.
 - Điểm không xuống dưới 0.
 
-### 3.8 Đinh Bộ Lĩnh ở 3vs3 (chờ Shan chọn)
+### 3.8 Đinh Bộ Lĩnh ở 3vs3 (Shan chọn phương án A, 13/11/2026)
 
-Shan chưa có ý tưởng; Claude đề xuất **phương án A**, có phương án thay thế:
-
-- **A. Chọn được, không bị cấm, tối đa một người mỗi phe** (đề xuất). Ông là nhân vật chính nên luôn có mặt trong kho của mọi người chơi, và vì có đủ nghề, hệ nên người chọn ông chọn nghề và hệ ở màn chuẩn bị (mục 3.4) rồi khóa. Miễn cấm để tránh cả hai phe cùng cấm ông ở lượt đầu khiến ông không bao giờ được dùng; tối đa một mỗi phe để không có đội ba Đinh Bộ Lĩnh. Cấp của ông là cấp trong hồ sơ người chơi (ví dụ cấp 5). Rủi ro: ông có thể mạnh nhất vì linh hoạt, nên phải mô phỏng cân bằng và có thể đổi sang phương án B nếu quá lệch.
-- **B. Không có trong 3vs3, chỉ có ở 1vs1.** 3vs3 hoàn toàn là kho tướng, không có chuyện "ai cũng có Đinh Bộ Lĩnh". Dễ cân bằng nhất; mất nét "Chúa công ra trận cùng đồng đội".
-- **C. Có thể bị cấm như mọi tướng.** Giữ luật đồng đều, nhưng nhiều khả năng bị cấm hầu hết các trận, nên khó thấy ông.
+- **Chọn được:** Đinh Bộ Lĩnh có mặt trong kho của mọi người chơi. Người chọn ông **chọn nghề và hệ ngay lúc chọn tướng** rồi khóa (một trong 8 nghề × 7 hệ, tức 56 kiểu); ở màn chuẩn bị chỉ đổi được trang bị.
+- **Mỗi đội chọn ông tối đa một lần:** người chọn trước trong đội lấy ông thì **đồng đội chọn sau không chọn ông nữa**. Hai đội mỗi bên có thể có một Đinh Bộ Lĩnh (kể cả cùng nghề, hệ). Cấp của ông là cấp trong hồ sơ người chọn.
+- **Cấm theo nghề hoặc theo hệ, không cấm cả ông:** bạn không cấm "Đinh Bộ Lĩnh" nói chung mà cấm **một nghề** (ví dụ Tướng sĩ) **hoặc một hệ** (ví dụ Hỏa) của ông. Phe bị cấm không chọn được kiểu Đinh Bộ Lĩnh trùng nghề hoặc hệ đó nhưng vẫn chọn được các kiểu còn lại. Vì ông có 56 kiểu nên một lượt cấm gần như không ảnh hưởng tới việc ông có mặt. Lượt cấm này **tính vào 3 lượt cấm của phe** như cấm một tướng khác.
+- **Giới hạn khuyến nghị:** vì mỗi lượt cấm chỉ chặn một phần kiểu, nên cần mô phỏng cân bằng 56 kiểu; nếu có kiểu quá mạnh thì tăng độ ưu tiên cấm hoặc điều chỉnh số trị riêng của PvP, không đổi chỉ số ở các chế độ khác.
+- **Nộ và bị động:** ông dùng bị động theo nghề và hệ đã chọn như các tướng khác.
 
 ### 3.9 Thưởng
 
@@ -145,9 +146,9 @@ Làm **1vs1 trước**, vì khái quát trận cho nhiều chủ sở hữu và 
 
 ## 6. Câu hỏi mở
 
-Đã chốt ở mục 1.1: đội hình 1vs1 và 3vs3, cấp (cấp của chính tướng), có tính trang bị, màn chuẩn bị, cấm chọn 3 tướng mỗi phe, Nộ riêng, bỏ lượt và phá trận, Elo từng người (phá trận không tính điểm, trận có AI ít điểm hơn), giao hữu, thưởng vàng. Còn lại:
+Đã chốt ở mục 1.1 (gồm Đinh Bộ Lĩnh ở 3vs3): đội hình 1vs1 và 3vs3, cấp (cấp của chính tướng), có tính trang bị, màn chuẩn bị, cấm chọn 3 tướng mỗi phe, Nộ riêng, bỏ lượt và phá trận, Elo từng người (phá trận không tính điểm, trận có AI ít điểm hơn), giao hữu, thưởng vàng. Còn lại:
 
-- **Đinh Bộ Lĩnh ở 3vs3:** chọn phương án A, B hay C ở mục 3.8.
+- **Đinh Bộ Lĩnh ở 3vs3:** đã chốt phương án A; còn cần mô phỏng cân bằng 56 kiểu và kiểm cấm theo nghề, hệ.
 - **Nộ riêng:** cách tích mục 3.5 đúng ý Shan chưa (người ghép bộ trống nhận Nộ)? Cần mô phỏng cân bằng vì phe 3 người có ba thanh.
 - **Cấm chọn:** thứ tự chọn xen kẽ, giờ mỗi lượt cấm và chọn (đề xuất 20 giây).
 - **Màn chuẩn bị:** giờ chờ (đề xuất 60 giây) và có cho đổi nghề, hệ của Đinh Bộ Lĩnh ở đây không.
