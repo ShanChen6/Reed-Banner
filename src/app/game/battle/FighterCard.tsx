@@ -127,7 +127,7 @@ export function FighterCard({
 
   // Nội tại chỉ nằm trong tooltip; thẻ chỉ hiện buff/debuff.
   const cardTitle = [
-    `ATK ${fighter.atk} · DEF ${fighter.def} · Máu tối đa ${fighter.maxHp}`,
+    `Công ${fighter.atk} · Thủ ${fighter.def} · Máu tối đa ${fighter.maxHp}`,
     fusionSummary(fighter),
     isFusion(fighter)
       ? `Nội tại: ${fusionPassiveLines(fighter).map((l) => l.name).join(" · ")}`

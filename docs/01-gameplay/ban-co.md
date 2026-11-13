@@ -101,7 +101,7 @@ Tính theo **tổng số ô của một bộ ghép liền nhau**.
 ### Tỉ lệ sinh ô theo màn
 
 - Bảng chuẩn (màn thường, chế độ Thường): ⚔️ 18% · ☯️ 16% · 🍙 15% · ❤️ 15% · 💰 11% · 📖 11% · 🥁 14%.
-- **Màn thường trong chiến dịch:** có thể có bảng tỉ lệ riêng như một đặc tính của màn, ví dụ "Thành Cổ Loa: nhiều kiếm, ít tim". Đây là câu đố chọn đội.
+- **Màn thường trong Bình Loạn:** có thể có bảng tỉ lệ riêng như một đặc tính của màn, ví dụ "Thành Cổ Loa: nhiều kiếm, ít tim". Đây là câu đố chọn đội.
 - **Trận trùm ("sân nhà"):** tăng tỉ lệ ô theo nghề của trùm, kèm **lợi thế bất đối xứng** để trùm hưởng nhiều hơn, ví dụ trùm nhận ×1.5 từ ô nghề của nó.
   > TODO: cân bằng mức lợi thế sân nhà.
 - **Giới hạn bắt buộc:** mỗi loại ô tối thiểu **8%**, tối đa **35%**.

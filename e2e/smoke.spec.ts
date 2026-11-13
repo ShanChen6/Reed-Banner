@@ -47,7 +47,7 @@ test.describe("tài khoản đã đăng nhập", () => {
         await page.goto(`/game/${SCENE_SLUG[scene]}`);
         await page.waitForLoadState("networkidle");
         await expect(page.getByRole("banner"), `${name}: thanh đầu trang hiện tên màn`).toContainText(name);
-        await expect(page.getByText(/^Không tải được/), `${name}: tải được dữ liệu`).toHaveCount(0);
+        await expect(page.getByText(/^(Không tải được|Chưa mở được|Chưa nhận được)/), `${name}: tải được dữ liệu`).toHaveCount(0);
         await expectNoHorizontalOverflow(page);
         expectClean(problems);
       });

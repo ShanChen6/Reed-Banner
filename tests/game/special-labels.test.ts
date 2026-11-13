@@ -34,7 +34,7 @@ test("chú thích hệ ghi rõ hệ phòng thủ dù biểu tượng là Vạn h
 
 test("nhãn chiêu dung hợp ghi hệ của đòn, không gọi nhầm là tuyệt chiêu", () => {
   assert.match(skillSourceName(getSkill("dn_thuyAnhXuyenLuu")!), /^Chiêu dung hợp · đòn hệ Thủy$/);
-  assert.match(skillSourceName(getSkill("vp_vanDuThienLy")!), /^Tuyệt chiêu nhân vật · đòn hệ Phong$/);
+  assert.match(skillSourceName(getSkill("vp_vanDuThienLy")!), /^Tuyệt chiêu tướng quân · đòn hệ Phong$/);
   assert.equal(skillSourceName(getSkill("dn_thoAnTranTam")!), "Chiêu dung hợp");
   assert.match(skillText(getSkill("vp_muaGiangYLoan")!), /đòn hệ Thủy/);
 });

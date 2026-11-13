@@ -254,7 +254,7 @@ function RewardModal({
           })()}
           {reward.unlockedHeroes.map((id) => (
             <li key={id} className="text-jade">
-              Mở khóa đồng hành: {companionById(id)?.name ?? id}
+              Tướng quân gia nhập: {companionById(id)?.name ?? id}
             </li>
           ))}
           <li className="text-caption text-on-wood-soft">
@@ -770,7 +770,7 @@ export default function ChapterOne({
     if (!res.id) {
       setBusy(false);
       setMessage(
-        ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Không tạo được trận",
+        ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Chưa bày được trận. Xin thử lại.",
       );
       return;
     }
@@ -951,7 +951,7 @@ export default function ChapterOne({
               {node.type === "diplomacy" && !copy && (
                 <p className="mt-2 text-caption text-on-wood-soft">
                   Hội kiến: không có trận, không có thanh máu. Hoàn thành bằng
-                  lựa chọn lời đáp; server ghi kết quả.
+                  lựa chọn lời đáp; máy chủ ghi kết quả.
                 </p>
               )}
               {!event &&

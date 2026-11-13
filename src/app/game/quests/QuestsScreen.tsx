@@ -72,7 +72,7 @@ export default function QuestsScreen({
     return (
       <Shell>
         <p className="py-24 text-center text-on-wood-soft">
-          {loadError ? "Không tải được hồ sơ, thử tải lại trang." : "Đang tải…"}
+          {loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : "Đang tải…"}
         </p>
       </Shell>
     );

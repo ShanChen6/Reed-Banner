@@ -153,7 +153,7 @@ describe("màn nghỉ Sinh tồn", () => {
   it("hiển thị round thắng, cảnh báo boss, lực lượng, hồi HP, energy và lương server", () => {
     const html = render(view());
     assert.match(html, /Đã thắng đợt 4/);
-    assert.match(html, /CẢNH BÁO TRÙM/);
+    assert.match(html, /Cảnh báo trùm/);
     assert.match(html, /300 → 400\/500/);
     assert.match(html, /Năng lượng: 28/);
     assert.match(html, /Lương hiện tại: <strong>35/);
@@ -162,10 +162,10 @@ describe("màn nghỉ Sinh tồn", () => {
     assert.match(html, /Dự bị/);
     assert.match(html, /Đủ điều kiện · chờ lượt hồi sinh/);
     assert.match(html, /Hồi sinh Lê Thạch · 40 lương · dự bị/);
-    assert.match(html, /Chọn đồng đội vị trí 1/);
+    assert.match(html, /Chọn phó tướng vị trí 1/);
     assert.match(html, /Nghề Đinh Bộ Lĩnh/);
     assert.match(html, /Nguyên tố Đinh Bộ Lĩnh/);
-    assert.match(html, /HP 400\/500 →/);
+    assert.match(html, /Máu 400\/500 →/);
     assert.match(html, /Kỹ năng dự kiến/);
     assert.match(html, /Xác nhận và vào đợt 5/);
     assert.match(html, /sm:inset-4/);
@@ -237,7 +237,7 @@ describe("màn nghỉ Sinh tồn", () => {
   it("không bắt đầu tự động; thiếu preview thì hiển thị lỗi và yêu cầu xác nhận", () => {
     const noPreview = { ...view(), break: undefined };
     const html = render(noPreview);
-    assert.match(html, /Không tải được dữ liệu nghỉ/);
+    assert.match(html, /Chưa nhận được tin lúc nghỉ giữa đợt/);
     assert.match(html, /Không thể tự tính thay hoặc tự bắt đầu đợt kế/);
     assert.match(html, /Tải lại dữ liệu nghỉ/);
   });

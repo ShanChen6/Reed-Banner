@@ -27,6 +27,7 @@ export const NGUYEN_BAC: WarriorRig = {
   cloth: [],
   covers: [],
   blade: [{ x: 300, y: 880 }, { x: 25, y: 1470 }],
+  strikeFx: "fireBanner",
   fxColor: 0xff783d,
   // Tấn rộng hai tay kéo đao ngang hông (đánh thường), vươn thẳng tay chém đao tới trước, tay kia xòe ra sau (ra chiêu),
   // hai tay giơ đao qua đầu bổ xuống (tuyệt chiêu). Tranh tư thế lưu đúng cỡ ô trong tờ ghép (texScale 1/3).

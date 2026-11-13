@@ -61,7 +61,7 @@ export default function CampaignEnding({
 
       <div className="grid gap-3 md:grid-cols-2">
         <div>
-          <h3 className="font-semibold text-frame-gold">Biên niên chiến dịch</h3>
+          <h3 className="font-semibold text-frame-gold">Biên niên Bình Loạn</h3>
           <ol className="mt-1 flex flex-col gap-1">
             {CAMPAIGN_CHAPTERS.map((c) => {
               const done = chapterStatus(campaign, c).filter(
@@ -87,7 +87,7 @@ export default function CampaignEnding({
             theo về · {ledger.resolved.military} đánh dẹp ·{" "}
             {ledger.resolved.uncertain} tan rã hoặc còn tranh luận
           </p>
-          <h3 className="mt-2 font-semibold text-frame-gold">Người đồng hành</h3>
+          <h3 className="mt-2 font-semibold text-frame-gold">Tướng quân theo về</h3>
           <p className="mt-1 text-on-wood">
             {campaign.unlockedHeroes
               .map((id) => companionById(id)?.name ?? id)
@@ -122,7 +122,7 @@ export default function CampaignEnding({
           ))}
         </ul>
         <p className="mt-2 text-caption text-on-wood-soft">
-          Cờ Lau, mini game của ShanVerse. Lời kể là game sáng tác trên khung sử
+          Cờ Lau, trò chơi nhỏ của ShanVerse. Lời kể là game sáng tác trên khung sử
           liệu; nhãn ở từng đoạn (sử chép, game tái dựng, hư cấu, truyền thuyết,
           còn tranh luận) cho biết đoạn đó thuộc loại nào.
         </p>

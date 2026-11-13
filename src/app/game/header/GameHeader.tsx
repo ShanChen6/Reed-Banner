@@ -54,14 +54,14 @@ function HomeButton() {
     <nav aria-label="Điều hướng" className="flex min-w-0 justify-self-start">
       <SceneLink
         scene="MENU"
-        title="Về Chiến trường"
+        title="Về Chiến Trường"
         className="game-header-btn game-header-chip flex h-10 pointer-coarse:h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-md px-2.5 font-serif font-semibold whitespace-nowrap md:px-4"
       >
         <svg aria-hidden viewBox="0 0 24 24" className="size-5 text-[var(--frame-gold)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
           <path d="M3.5 11.5 12 4l8.5 7.5" />
           <path d="M5.5 10v9.5h4.5v-5.5h4v5.5h4.5V10" />
         </svg>
-        <span className="sr-only md:not-sr-only md:text-base">Chiến trường</span>
+        <span className="sr-only md:not-sr-only md:text-base">Chiến Trường</span>
       </SceneLink>
     </nav>
   );

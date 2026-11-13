@@ -77,7 +77,7 @@ export default function HonorsScreen({ destinyEnabled = true, tamTuongKyRanked =
         <OrnateFrame className="flex flex-col gap-3">
           <SectionTitle description="Các kỳ đã khép mà bạn nhận thưởng hạng, mới nhất trước.">Các mùa trước</SectionTitle>
           {!honors?.items ? (
-            <BoardEmpty>{honors?.error ? "Không tải được công trạng." : "Đang tải…"}</BoardEmpty>
+            <BoardEmpty>{honors?.error ? "Chưa tải được Công Trạng. Xin tải lại trang." : "Đang tải…"}</BoardEmpty>
           ) : honors.items.length === 0 ? (
             <BoardEmpty>Chưa có kỳ nào được nhận thưởng. Lên hạng ở một kỳ rồi nhận thưởng khi kỳ khép lại.</BoardEmpty>
           ) : (

@@ -142,7 +142,7 @@ export default function Armory({
             <div className="flex flex-col items-center gap-2 py-10 text-center text-[15px] text-[var(--on-wood-soft)]">
               <p>{profile.bag.length === 0 ? "Kho đồ trống. Thắng trận chắc chắn rơi 1 món." : "Không có món nào thuộc loại này."}</p>
               <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-4">
-                <ShopGlyph className="size-4" /> Mua ở Cửa hàng
+                <ShopGlyph className="size-4" /> Mua ở Cửa Hàng
               </SceneLink>
             </div>
           ) : (
@@ -227,7 +227,7 @@ function ItemPanel({
         <div className="min-w-0">
           <h3 className={`font-serif text-lg leading-snug font-bold ${TIER_CLASS[item.tier]}`}>{gearText(item)}</h3>
           <p className="text-sm text-[var(--on-wood-soft)]">
-            {item.slot === "vuKhi" && item.profession ? `Chỉ nghề ${PROFESSION_NAME[item.profession]}` : "Mọi tướng sĩ mặc được"}
+            {item.slot === "vuKhi" && item.profession ? `Chỉ nghề ${PROFESSION_NAME[item.profession]}` : "Mọi tướng quân mặc được"}
           </p>
           <p className="mt-1 text-[15px]">{wearer ? <>Đang ở <b className="text-success">{nameOf(wearer)}</b></> : "Chưa ai dùng"}</p>
         </div>

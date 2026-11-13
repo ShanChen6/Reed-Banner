@@ -27,6 +27,7 @@ export const DINH_DIEN: WarriorRig = {
     neck: { x: 500, y: 335 },
   },
   blade: [{ x: 195, y: 600 }, { x: 182, y: 40 }],
+  strikeFx: "earthAegis",
   fxColor: 0xd9ad65,
   // Đâm giáo ngang ngực sau khiên (đánh thường), tấn rộng kéo giáo ngang hông (ra chiêu), lao tới đâm giáo chếch xuống,
   // khiên chắn sau lưng (tuyệt chiêu). Tranh tư thế lưu đúng cỡ ô trong tờ ghép (texScale 1/3).

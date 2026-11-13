@@ -194,7 +194,7 @@ Mười hai sứ quân nằm trong danh mục 12 sứ quân dùng chung (`src/co
 
 ## 7. Tùy tướng chiến dịch (chỉ AI)
 
-Phó tướng, thầy pháp, lang y… đi kèm sứ quân ở chiến dịch không có bộ theo hệ: họ dùng **chiêu nghề nấc 1 và một chiêu nhánh nấc 2** ([Bộ chiêu nghề](ky-nang/mo-hinh-nhan-vat.md#43-bộ-chiêu-nghề)) cộng dấu ấn nguyên tố, dựng bằng `buildAide`. Người chơi không sở hữu được tùy tướng. Đối thủ AI ở Leo tháp, Sinh tồn, Thử thách ngày và Đấu trường bóng ma rút từ tướng thường nên dùng bộ nghề + hệ mới như người chơi. Thủ lĩnh chiến dịch giữ bộ hệ cũ theo preset riêng.
+Tùy tướng (võ tướng, thầy pháp, lang y…) đi kèm sứ quân ở Bình Loạn không có bộ theo hệ: họ dùng **chiêu nghề nấc 1 và một chiêu nhánh nấc 2** ([Bộ chiêu nghề](ky-nang/mo-hinh-nhan-vat.md#43-bộ-chiêu-nghề)) cộng dấu ấn nguyên tố, dựng bằng `buildAide`. Người chơi không sở hữu được tùy tướng. Đối thủ AI ở Leo tháp, Sinh tồn, Thử thách ngày và Đấu trường bóng ma rút từ tướng thường nên dùng bộ nghề + hệ mới như người chơi. Thủ lĩnh chiến dịch giữ bộ hệ cũ theo preset riêng.
 
 ## 8. Cân bằng lịch sử trước cải tổ 22/10/2026
 

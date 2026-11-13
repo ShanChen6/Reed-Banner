@@ -466,7 +466,7 @@ function fictionNotes(nodeId: CampaignMissionId): string[] {
   const notes: string[] = [];
   if (isCombatStoryNode(node))
     notes.push(
-      "Trận đấu match-3, đối thủ, cấp, đội hình, nghề, hệ, kỹ năng, lương và phần thưởng là cơ chế game; không mô tả diễn biến trận thật.",
+      "Trận đấu ghép ba, đối thủ, cấp, đội hình, nghề, hệ, kỹ năng, lương và phần thưởng là cơ chế game; không mô tả diễn biến trận thật.",
     );
   else if (node.type === "diplomacy")
     notes.push(

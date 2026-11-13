@@ -11,15 +11,15 @@ export const PASSWORD_ERROR: Record<PasswordError, string> = {
   badUsername: "Tên đăng nhập gồm 3–20 ký tự: chữ không dấu, số, dấu chấm hoặc gạch dưới.",
   badPassword: `Mật khẩu cần từ ${PASSWORD_MIN} ký tự trở lên.`,
   mismatch: "Hai lần nhập mật khẩu không khớp.",
-  taken: "Tên đăng nhập này đã có người dùng.",
+  taken: "Tên đăng nhập này đã có người dùng. Xin chọn tên khác.",
   hasPassword: "Tài khoản này đã có tên đăng nhập.",
   wrong: "Sai tên đăng nhập hoặc mật khẩu.",
-  locked: "Sai quá nhiều lần, tên đăng nhập này tạm khóa 15 phút.",
+  locked: "Sai quá nhiều lần, tên đăng nhập này tạm khóa 15 phút. Xin quay lại sau.",
   noPassword: "Tài khoản này chưa có mật khẩu.",
   badEmail: "Email không hợp lệ.",
   emailTaken: "Email này đã gắn với một tài khoản khác.",
-  badToken: "Đường dẫn đã dùng rồi hoặc hết hạn. Bạn gửi yêu cầu mới nhé.",
-  tooMany: "Đã gửi nhiều thư quá, bạn đợi một giờ rồi thử lại nhé.",
+  badToken: "Đường dẫn đã dùng rồi hoặc hết hạn. Xin gửi yêu cầu mới.",
+  tooMany: "Thư đã gửi quá nhiều. Xin đợi một giờ rồi thử lại.",
 };
 
 

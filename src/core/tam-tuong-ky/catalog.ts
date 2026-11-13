@@ -122,7 +122,7 @@ const PACK_1_NODES: readonly CatalogNode[] = [
   role("phapSuThuy", "Pháp thuật hệ Thủy", { profession: "phapSu", element: "thuy" }),
   role("hybrid", "Vạn tượng", { hybrid: true }, "Dung hợp tám nghề, bảy hệ của tướng đặc biệt"),
   // Dấu danh tính.
-  know("reedBanner", "Cờ lau", "co-hieu", "Mốc chiến dịch: Nguyễn Bặc gia nhập ở “Cờ lau tập trận”"),
+  know("reedBanner", "Cờ lau", "co-hieu", "Mốc Bình Loạn: Nguyễn Bặc gia nhập ở “Cờ lau tập trận”"),
   know("outerArmor", "Ngoại giáp", "binh-khi", "Chức Ngoại giáp của Đinh Điền (chiêu Ngoại Giáp Hộ Quân)"),
   know("doHoPhu", "Đô hộ phủ", "thu-tich", "Chức Đô hộ phủ sĩ sư của Lưu Cơ (chiêu Đô Hộ Phủ Lệnh)"),
   know("hoaLuHerbs", "Thảo dược Hoa Lư", "thien-nhien", "Chiêu Hoa Lư Thảo Dược của Trịnh Tú"),

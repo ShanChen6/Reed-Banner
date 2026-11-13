@@ -34,7 +34,7 @@ export default function LoginGate({ scene, name, reason }: { scene: Scene; name:
           </ul>
         )}
         <div className="ui-action-bar flex flex-wrap items-center justify-end gap-2">
-          <SceneLink scene="MENU" className={buttonVariants({ variant: "secondary" })}>Về Chiến trường</SceneLink>
+          <SceneLink scene="MENU" className={buttonVariants({ variant: "secondary" })}>Về Chiến Trường</SceneLink>
           <SceneLink scene="LOGIN" className={buttonVariants({ size: "lg" })}>Đăng nhập để chơi</SceneLink>
         </div>
       </OrnateFrame>

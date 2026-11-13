@@ -41,7 +41,7 @@ export const PROFILE_ERROR: Record<
   owned: "Đã có",
   invalidSkill: "Kỹ năng không hợp lệ",
   notEnoughGold: "Không đủ vàng",
-  notOwned: "Chưa có nhân vật này",
+  notOwned: "Chưa có tướng quân này",
   invalidItem: "Không có món này",
   bagFull: "Túi đồ đã đầy, bán bớt rồi mua",
   notWeapon: "Món này không phải vũ khí",
@@ -59,7 +59,7 @@ export const PROFILE_ERROR: Record<
   questNotDone: "Chưa xong",
   questClaimed: "Đã nhận thưởng",
   noQuest: "Không có nhiệm vụ này",
-  network: "Mất kết nối tới máy chủ, thử lại",
+  network: "Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin thử lại.",
   conflict: "Hồ sơ vừa đổi ở nơi khác, đã tải lại",
 };
 
@@ -265,8 +265,8 @@ export default function ProgressPanel({
       </div>
       <p className="mt-2 opacity-60">
         Lên cấp nhận 1 điểm kỹ năng. Mỗi cấp kỹ năng +10% hệ số sát thương, hồi và hiệu ứng có hệ số; tiện ích như trừ năng lượng, Câm lặng, Xua tan giữ nguyên tác dụng. Cấp{" "}
-        {SKILL_MAX_LEVEL} giảm 10% năng lượng. Kỹ năng nâng theo ô nên nhân vật
-        chính giữ nguyên cấp kỹ năng khi đổi nghề/nguyên tố. Đối thủ Tianwu cùng cấp với Đinh Bộ
+        {SKILL_MAX_LEVEL} giảm 10% năng lượng. Kỹ năng nâng theo ô nên chủ tướng
+        giữ nguyên cấp kỹ năng khi đổi nghề/nguyên tố. Đối thủ cùng cấp với Đinh Bộ
         Lĩnh.
       </p>
     </section>

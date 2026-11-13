@@ -167,7 +167,7 @@ export function skillSourceName(def: SkillDef): string {
   const hit = def.damageElement ? ` · đòn hệ ${ELEMENT_NAME[def.damageElement]}` : "";
   if (skillSource(def) === "character") {
     if (!def.ultimate) return `Chiêu dung hợp${hit}`;
-    return (def.characterKind === "signature" ? "Chiêu riêng" : "Tuyệt chiêu nhân vật") + hit;
+    return (def.characterKind === "signature" ? "Chiêu riêng" : "Tuyệt chiêu tướng quân") + hit;
   }
   return def.profession ? `Nghề ${PROFESSION_NAME[def.profession]}` : def.element ? `Hệ ${ELEMENT_NAME[def.element]}` : "Kỹ năng";
 }
@@ -177,11 +177,11 @@ export function skillStepTexts(def: SkillDef): string[] {
   const to = { targets: "mục tiêu", self: "bản thân", team: "cả đội", enemies: "mọi địch" };
   return def.steps.map(s => {
     switch (s.type) {
-      case "damage": return `${pct(s.atk)} Công${s.pierce ? `, bỏ ${pct(s.pierce)} DEF` : ""}${s.pierceShield ? ", xuyên Khiên" : ""}${s.lifesteal ? `, hút máu ${pct(s.lifesteal)}` : ""}${s.execute ? `, ×${s.execute.multiplier} khi địch ≤${pct(s.execute.threshold)} máu` : ""}`;
+      case "damage": return `${pct(s.atk)} Công${s.pierce ? `, bỏ ${pct(s.pierce)} Thủ` : ""}${s.pierceShield ? ", xuyên Khiên" : ""}${s.lifesteal ? `, hút máu ${pct(s.lifesteal)}` : ""}${s.execute ? `, ×${s.execute.multiplier} khi địch ≤${pct(s.execute.threshold)} máu` : ""}`;
       case "heal": return `Hồi ${pct(s.ratio)} máu ${to[s.to]}`;
       case "cleanse": return `Thanh tẩy ${to[s.to]}`;
       case "dispel": return "Xua tan hiệu ứng có lợi mục tiêu";
-      case "energy": return `${s.amount >= 0 ? "+" : ""}${s.amount} năng lượng ${to[s.to]}${s.requiresHpDamage ? ", nếu gây mất HP thật" : ""}`;
+      case "energy": return `${s.amount >= 0 ? "+" : ""}${s.amount} năng lượng ${to[s.to]}${s.requiresHpDamage ? ", nếu gây mất máu thật" : ""}`;
       case "enemyFood": return `${s.amount} lương địch`;
       case "mark": return `Dấu ấn nguyên tố${s.enhanced ? " cường hóa" : ""}${s.guaranteed ? " chắc chắn" : ""}`;
       case "effect": return `${EFFECT_NAME[s.effect]} ${s.value ? pct(s.value) : ""}${s.ofMaxHp ? " máu tối đa" : s.ofAtk ? " Công" : ""} ${to[s.to]}${s.turns === null ? " đến khi hết" : ` ${s.turns} lượt`}${s.chance === undefined ? "" : `, xác suất ${pct(s.chance)}`}`;
@@ -194,7 +194,7 @@ export function skillStepTexts(def: SkillDef): string[] {
 
 export function skillText(def: SkillDef): string {
   const partners=skillComboPartners(def);
-  return `${def.name} · ${skillSourceName(def)} · ô ${def.slot ?? "—"} · mở cấp ${SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1} · ${def.cost} NL · ${SKILL_TARGET_NAME[def.target]}: ${skillStepTexts(def).join("; ")}${partners.length ? `. Có thể mở: ${partners.join(", ")} (cần tác dụng thực)` : ""}`;
+  return `${def.name} · ${skillSourceName(def)} · ô ${def.slot ?? "—"} · mở cấp ${SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1} · ${def.cost} năng lượng · ${SKILL_TARGET_NAME[def.target]}: ${skillStepTexts(def).join("; ")}${partners.length ? `. Có thể mở: ${partners.join(", ")} (cần tác dụng thực)` : ""}`;
 }
 
 /**
@@ -219,9 +219,9 @@ export function passiveText(element: Element): string {
   const P = PASSIVE;
   const effect: Record<Element, string> = {
     moc: `Cả đội Hồi phục ${pct(P.mocTeamRegen)} máu tối đa mỗi lượt.`,
-    kim: `Đánh thường và kỹ năng của thủ lĩnh bỏ qua ${pct(P.kimPierce)} DEF; kỹ năng xuyên Khiên.`,
+    kim: `Đánh thường và kỹ năng của thủ lĩnh bỏ qua ${pct(P.kimPierce)} Thủ; kỹ năng xuyên Khiên.`,
     thuy: `Đóng băng ngay 1 đối thủ; kỹ năng sát thương của thủ lĩnh có ${pct(P.thuyFreezeChance)} cơ hội Đóng băng thêm.`,
-    hoa: `Mọi sát thương của thủ lĩnh +${pct(P.hoaDamage)}, đổi lại DEF bản thân −${pct(P.hoaDefDown)}.`,
+    hoa: `Mọi sát thương của thủ lĩnh +${pct(P.hoaDamage)}, đổi lại Thủ bản thân −${pct(P.hoaDefDown)}.`,
     tho: `Thủ lĩnh nhận Khiên ${pct(P.thoShield)} máu tối đa và Phản đòn ${pct(P.thoReflect)}.`,
     loi: `Trừ ${P.loiDrain} năng lượng mọi đối thủ; mỗi ô âm dương ghép được thêm ${P.loiEnergyPerTile} năng lượng.`,
     phong: `Được xoay lốc xoáy miễn phí ${P.phongFreeWhirlTurns} nấc trước kỹ năng và đổi ô, ${P.phongFreeWhirls} lần mỗi lần kích hoạt.`,
@@ -243,13 +243,13 @@ export const COMBO_SIGNAL_TEXT: Record<ComboSignalKind, string> = {
   armorBroken: "kỹ năng áp Thủ− lên mục tiêu (mới, mạnh hơn hoặc lâu hơn)",
   controlled: "kỹ năng áp Đóng băng hoặc Câm lặng lên mục tiêu",
   dispelled: "kỹ năng xua tan hiệu ứng có lợi của mục tiêu",
-  skillDamage: "kỹ năng làm mục tiêu mất HP thực (phần Khiên đỡ không tính)",
-  healed: "kỹ năng hồi HP thực (phần hồi tràn không tính)",
+  skillDamage: "kỹ năng làm mục tiêu mất máu thực (phần Khiên đỡ không tính)",
+  healed: "kỹ năng hồi máu thực (phần hồi tràn không tính)",
   shieldAbsorbed: "kỹ năng cấp Khiên cho đồng đội và Khiên đó thực sự đỡ đòn kiếm/kỹ năng của địch",
-  damageTaken: "bản thân mất HP thực vì kỹ năng chủ động của địch",
+  damageTaken: "bản thân mất máu thực vì kỹ năng chủ động của địch",
   shieldBroken: "Khiên của bản thân vừa về 0 vì đòn kiếm/kỹ năng của địch",
-  weakened: "kỹ năng khiến một địch còn sống xuống còn tối đa 50% HP",
-  finishing: "kỹ năng khiến một địch còn sống xuống còn tối đa 30% HP",
+  weakened: "kỹ năng khiến một địch còn sống xuống còn tối đa 50% máu",
+  finishing: "kỹ năng khiến một địch còn sống xuống còn tối đa 30% máu",
 };
 
 const signals = (kinds: readonly ComboSignalKind[]) => kinds.map((k) => COMBO_SIGNAL_TEXT[k]).join(" hoặc ");
@@ -276,7 +276,7 @@ export function chaseTriggerText(p: ChasePassiveDef): string[] {
     energy: "người nhận đầy năng lượng",
     burn: "mục tiêu đã chết",
     silence: "mục tiêu đã bị Câm lặng",
-    defUp: "đã có DEF+ bằng hoặc mạnh hơn",
+    defUp: "đã có Thủ+ bằng hoặc mạnh hơn",
   };
   return [
     `Tự phản ứng ngay khi ${p.alliesOnly ? "một đồng đội khác" : "bất kỳ ai trong phe, kể cả bản thân,"} dùng ${signals(p.triggers)}; không tốn lượt hay năng lượng.`,

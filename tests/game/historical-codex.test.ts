@@ -73,7 +73,7 @@ describe("Sử ký trong game", () => {
         );
       // Phần game dựng luôn có, trận nói rõ là cơ chế.
       assert.ok(h.fiction.length >= 2, node.id);
-      if (isCombatStoryNode(node)) assert.match(h.fiction[0]!, /match-3/);
+      if (isCombatStoryNode(node)) assert.match(h.fiction[0]!, /ghép ba/);
     }
   });
 

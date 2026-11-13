@@ -88,7 +88,7 @@ function CompanionCard({
         </ChoiceChip>
       ) : lockNode ? (
         <span className="min-w-0 max-w-[45%] text-right text-caption leading-snug text-on-wood-soft">
-          {hero ? "Mở khóa đồng hành sau" : "Mở bán sau"} {lockNode.id} “{lockNode.title}”
+          {hero ? "Gia nhập sau" : "Mở bán sau"} {lockNode.id} “{lockNode.title}”
         </span>
       ) : (
         <Button variant="primary"
@@ -171,12 +171,12 @@ export default function ShopPanel({
     { id: "regular", title: "Cửa hàng tướng thường", label: "tướng thường", items: forSale },
     {
       id: "warlord",
-      title: "Sứ quân (mở bán khi đánh bại ở chiến dịch)",
+      title: "Sứ quân (mở bán khi đánh bại ở Bình Loạn)",
       label: "sứ quân",
-      note: "Mở bán khi đánh bại ở chiến dịch. Khi tuyển về, sứ quân dùng 3 chiêu nghề + 2 chiêu hệ + chiêu riêng ô 4 mở cấp 10. Khi làm đối thủ chiến dịch, họ giữ bộ hệ của màn và luôn có chiêu riêng; bộ chiêu có thể khác.",
+      note: "Mở bán khi đánh bại ở Bình Loạn. Khi tuyển về, sứ quân dùng 3 chiêu nghề + 2 chiêu hệ + chiêu riêng ô 4 mở cấp 10. Khi làm đối thủ ở Bình Loạn, họ giữ bộ hệ của màn và luôn có chiêu riêng; bộ chiêu có thể khác.",
       items: warlordsLeft,
     },
-    { id: "hero", title: "Tướng lịch sử (gia nhập qua chiến dịch)", label: "tướng lịch sử", note: sellOnly ? "Không bán: gia nhập đội khi qua mốc chiến dịch." : undefined, items: heroesLeft },
+    { id: "hero", title: "Tướng lịch sử (gia nhập qua Bình Loạn)", label: "tướng lịch sử", note: sellOnly ? "Không bán: gia nhập đội khi qua mốc Bình Loạn." : undefined, items: heroesLeft },
   ];
   const card = (c: FighterConfig) => (
     <CompanionCard
@@ -205,7 +205,7 @@ export default function ShopPanel({
         <h2 className="ui-title-on-wood text-base">Đội hình 3vs3</h2>
         {message && <span role="alert" className="text-danger">{message}</span>}
       </div>
-      {locked && <p className="mb-2 text-on-wood-soft">Đang trong trận: đổi đội và mua nhân vật sau khi trận kết thúc.</p>}
+      {locked && <p className="mb-2 text-on-wood-soft">Đang trong trận: đổi đội và chiêu mộ tướng quân sau khi trận kết thúc.</p>}
       <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">{owned.map(card)}</ul>
       </>)}
       {compact ? (
@@ -225,7 +225,7 @@ export default function ShopPanel({
             ))}
           </div>
         )}
-        <span className="font-semibold text-on-wood-soft">{sellOnly ? "Lọc:" : "Lọc nhân vật chưa có:"}</span>
+        <span className="font-semibold text-on-wood-soft">{sellOnly ? "Lọc:" : "Lọc tướng quân chưa có:"}</span>
         <Select
           aria-label="Lọc theo nghề"
           value={profFilter}
@@ -265,7 +265,7 @@ export default function ShopPanel({
         </div>
       ))}
       <p className="mt-3 text-caption text-on-wood-soft">
-        Mọi nhân vật kèm có 3 chiêu nghề, 2 chiêu hệ và 1 tuyệt chiêu như Đinh Bộ Lĩnh, nâng theo ô; ô 4 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân).{!sellOnly && " Chọn 2 nhân vật kèm ra trận cùng Đinh Bộ Lĩnh."} Nhân vật mua về bắt đầu ở cấp 1.
+        Mọi phó tướng có 3 chiêu nghề, 2 chiêu hệ và 1 tuyệt chiêu như Đinh Bộ Lĩnh, nâng theo ô; ô 4 là tuyệt chiêu (tướng thường) hoặc chiêu riêng (tướng lịch sử, sứ quân).{!sellOnly && " Chọn 2 phó tướng ra trận cùng Đinh Bộ Lĩnh."} Tướng quân chiêu mộ về bắt đầu ở cấp 1.
       </p>
       </>)}
     </section>
