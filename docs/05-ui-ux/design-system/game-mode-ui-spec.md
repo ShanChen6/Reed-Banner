@@ -300,3 +300,13 @@ Không đụng Campaign, battle engine, mode balance, rewards, routing contracts
 - [ ] Ở desktop/tablet/mobile: không overflow, crop ảnh đúng trọng tâm, text/CTA có độ tương phản và focus rõ.
 - [ ] Screenshot QA đối chiếu độ hoàn thiện (hoa văn, hệ viền, font, vật liệu, tone) với Campaign, không sao chép bố cục atlas.
 - [ ] Không thêm route/API/logic/reward hoặc artwork chưa duyệt.
+
+## 15. Thẻ Hướng dẫn của từng chế độ (13/11/2026)
+
+Shan yêu cầu mỗi chế độ chơi có một thẻ Hướng dẫn. Đã làm cho mười chế độ ở thẻ Chiến Trường: Bình Loạn, Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh, Quần Hùng, Trận Đồ, Khai Lộ, Tầm Tướng Ký, Viễn Chinh. Giao Tranh và Thao Luyện chưa có.
+
+- **Nội dung** nằm ở `src/app/game/modeGuides.ts`, mỗi chế độ có Mục tiêu, Cách chơi, Luật cần nhớ, Phần thưởng, Mẹo nhỏ. Số liệu lấy từ hằng số trong `src/core` khi có (số tầng Thí Luyện, vàng Nhật Lệnh, lượt Quần Hùng, vàng mỗi đợt Trấn Ải, cỡ bàn Khai Lộ), còn lại lấy từ luật ở `docs/02-game-modes/`. Đổi luật thì sửa cả hai nơi.
+- **Thành phần** `src/app/game/ModeGuide.tsx`: `ModeGuideTabs` thêm hai thẻ Chơi và Hướng dẫn dưới banner, thẻ Chơi giữ nguyên nội dung màn; `ModeGuidePanel` là khối nội dung. Chuyển thẻ không gọi API.
+- **Màn đã có thẻ riêng:** Bình Loạn thêm thẻ Hướng dẫn vào thanh Bản đồ, Nhiệm vụ, Sử ký, Tái đấu (`AtlasShell.tsx`); Trận Đồ thêm vào hàng thẻ Xếp hạng, Chơi thường, Bảng xếp hạng, Ban thưởng. Ở Trận Đồ, thẻ Hướng dẫn ẩn khối Luật chơi và Bộ sưu tập ở cuối màn để khỏi trùng.
+- **Văn phong** theo [Văn phong giao diện](../../00-overview/thuat-ngu.md#văn-phong-giao-diện): gọi bạn, câu ngắn có dấu chấm, tên chế độ hoa mọi chữ, tài nguyên viết thường. `tests/game/mode-guides.test.ts` kiểm tra đủ mười chế độ, câu kết thúc bằng dấu chấm, không dùng "người chơi" và từ tiếng Anh; `tests/game/ui-wording.test.ts` quét cả nội dung này.
+- **Màn khóa:** khách chưa đăng nhập chỉ thấy màn nhắc đăng nhập (`LoginGate`) của Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh, Quần Hùng, Tầm Tướng Ký, nên chưa thấy thẻ Hướng dẫn; mô tả ngắn ở màn khóa vẫn là `MODE_INFO`.

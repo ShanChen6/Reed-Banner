@@ -44,6 +44,7 @@ import {
   rewardCandidates,
   rewardTargetLimit,
 } from "./destiny-ui";
+import { ModeGuideTabs } from "../ModeGuide";
 
 interface DestinyMilestoneView {
   readonly id: string;
@@ -360,6 +361,7 @@ export default function DestinyScreen() {
           { label: "Đá Cường Hóa", value: overview.stones },
         ]}
       />
+      <ModeGuideTabs scene="DESTINY">
 
       {message && <Alert className="p-3 text-sm" role="alert">{message}</Alert>}
 
@@ -615,6 +617,7 @@ export default function DestinyScreen() {
 
       <RankRewardsPanel mode="destiny" />
       <DestinyBoardPanel />
+      </ModeGuideTabs>
     </ModeScreen>
   );
 }

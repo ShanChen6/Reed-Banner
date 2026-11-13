@@ -37,6 +37,7 @@ import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
 import { Button, buttonVariants, choiceVariants } from "@/components/ui";
 import { ModeBanner, ModeScreen, OrnateFrame } from "@/components/game-ui";
+import { ModeGuideTabs } from "../ModeGuide";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -370,6 +371,7 @@ export default function KhaiLoScreen() {
         description={<span className="hidden sm:inline">Chạm để xóa cả khối quân cùng hệ, gom khối to để được nhiều điểm và mở đường xuyên bàn cờ.</span>}
         actions={<Button variant="secondary" onClick={newGame}>Ván mới</Button>}
       />
+      <ModeGuideTabs scene="KHAI_LO">
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <OrnateFrame aria-label="Vùng chơi" flush className="flex flex-col items-center gap-3 p-2 [--kl-gutter:3.5rem] sm:p-5 sm:[--kl-gutter:6.25rem]">
@@ -525,6 +527,7 @@ export default function KhaiLoScreen() {
           <p className="text-sm text-on-wood-soft">Bản chơi thử, không cần mạng: chưa có thưởng và bảng xếp hạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.</p>
         </aside>
       </div>
+      </ModeGuideTabs>
     </Shell>
   );
 }

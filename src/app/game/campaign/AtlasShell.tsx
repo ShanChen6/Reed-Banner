@@ -601,7 +601,7 @@ export function StrongholdPanel({
   );
 }
 
-export type AtlasView = "atlas" | "mission" | "codex" | "raid";
+export type AtlasView = "atlas" | "mission" | "codex" | "raid" | "guide";
 
 /** Biểu tượng nét mảnh cho thanh header (bản đồ, cuộn nhiệm vụ, sách sử, binh lính). */
 function TabIcon({ kind }: { kind: AtlasView }) {
@@ -639,6 +639,12 @@ function TabIcon({ kind }: { kind: AtlasView }) {
         <>
           <path {...p} d="M4 4l9 9M6 14l-2 2 2 2 2-2M11 15l2 2" />
           <path {...p} d="M20 4l-9 9M18 14l2 2-2 2-2-2" />
+        </>
+      )}
+      {kind === "guide" && (
+        <>
+          <circle {...p} cx="12" cy="12" r="9" />
+          <path {...p} d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01" />
         </>
       )}
     </svg>
@@ -703,6 +709,7 @@ export function AtlasHeader({
     { v: "mission", label: "Nhiệm vụ" },
     { v: "codex", label: "Sử ký" },
     { v: "raid", label: "Tái đấu" },
+    { v: "guide", label: "Hướng dẫn" },
   ];
   const tabClass = (active: boolean) =>
     `atlas-tab flex h-[52px] min-w-0 flex-col items-center justify-center gap-0.5 rounded-md border px-1 text-caption leading-none font-bold tracking-wide whitespace-nowrap uppercase sm:h-12 sm:flex-row sm:gap-1.5 sm:px-2 sm:text-sm ${
@@ -721,7 +728,7 @@ export function AtlasHeader({
       </div>
       <nav
         aria-label="Màn Sử ký"
-        className="grid flex-1 grid-cols-4 gap-1.5 xl:mx-auto xl:max-w-[44rem]"
+        className="grid flex-1 grid-cols-3 gap-1.5 sm:grid-cols-5 xl:mx-auto xl:max-w-[55rem]"
       >
         {tabs.map((t) => (
           <button

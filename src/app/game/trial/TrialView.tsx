@@ -41,6 +41,7 @@ import {
   type TrialFloorEntry,
   type TrialOverview,
 } from "./trial-ui";
+import { ModeGuideTabs } from "../ModeGuide";
 
 /** Số cột của lưới tầng ở mọi bề rộng (khớp class grid-cols-5 bên dưới). Dùng cho phím lên/xuống. */
 export const FLOOR_GRID_COLUMNS = 5;
@@ -475,6 +476,7 @@ export default function TrialView(props: TrialViewProps) {
           { label: "Đá Cường Hóa", value: <span data-testid="stones">{overview.stones}</span> },
         ]}
       />
+      <ModeGuideTabs scene="TRIAL">
 
       {!overview.supported && (
         <Alert role="alert" className="p-3 text-sm">
@@ -525,6 +527,7 @@ export default function TrialView(props: TrialViewProps) {
           <SweepPanel overview={overview} sweepBusy={props.sweepBusy} onSweep={props.onSweep} className="self-start lg:col-start-1 lg:row-start-2" />
         </div>
       )}
+      </ModeGuideTabs>
     </>
   );
 }
