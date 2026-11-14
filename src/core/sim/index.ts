@@ -5,3 +5,4 @@ export * from "./profile";
 export * from "./survival";
 export * from "./roster";
 export * from "./expedition";
+export * from "./rage";

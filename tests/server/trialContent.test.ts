@@ -105,7 +105,9 @@ describe("nội dung 50 tầng Trial", () => {
   });
 
   it("tầng cân bằng lại tăng contentVersion để không đối chiếu sai trận cũ", () => {
-    for (const floor of [16, 19, 20])
+    // Tầng 16, 19 cân bằng lại ở V1; tầng 20 thêm lần hai và tầng 24, 38, 40, 50 một lần khi Nộ riêng từng tướng áp dụng cho Trial (14/11/2026).
+    for (const floor of [16, 19, 24, 38, 40, 50])
       assert.equal(TRIAL_FLOOR_DATA[floor - 1]!.contentVersion, 2);
+    assert.equal(TRIAL_FLOOR_DATA[19]!.contentVersion, 3);
   });
 });
