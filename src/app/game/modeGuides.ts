@@ -7,10 +7,11 @@ import { DAILY_GOLD } from "@/core/daily/daily";
 import { SURVIVAL_BOSS_EVERY, SURVIVAL_WAVE_GOLD } from "@/core/survival/survival";
 import { TRIAL_FLOORS } from "@/core/progress/dualTowerState";
 import { DT_ITEM_PICKS, DT_LEVELS } from "@/core/do-tham";
+import { SL_AID_USE_MAX, SL_LEVELS } from "@/core/su-lo";
 import { KL_CLEAR_TROOPS, KL_HEIGHT, KL_START_TROOPS, KL_TIME_BONUS_PER_SECOND, KL_WIDTH, levelTimeLimit } from "@/core/khai-lo/engine";
 import type { Scene } from "./scene";
 
-/** Các chế độ có thẻ Hướng dẫn (đúng mười một chế độ ở thẻ Chiến Trường). */
+/** Các chế độ có thẻ Hướng dẫn (đúng mười hai chế độ ở thẻ Chiến Trường). */
 export type GuideScene = Extract<
   Scene,
   | "CAMPAIGN"
@@ -22,6 +23,7 @@ export type GuideScene = Extract<
   | "FORMATION"
   | "KHAI_LO"
   | "DO_THAM"
+  | "SU_LO"
   | "TAM_TUONG_KY"
   | "EXPEDITION"
 >;
@@ -49,6 +51,7 @@ export const GUIDE_SCENES: readonly GuideScene[] = [
   "FORMATION",
   "KHAI_LO",
   "DO_THAM",
+  "SU_LO",
   "TAM_TUONG_KY",
   "EXPEDITION",
 ];
@@ -93,7 +96,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     rewards: [
       "Lần đầu qua mỗi tầng được Đá Cường Hóa. Đánh lại tầng đã qua không nhận thêm.",
-      "Đã qua tầng 1 thì mỗi ngày quét tháp được 1 đến 7 đá, tùy tầng cao nhất đã qua. Ngày đổi lúc 0 giờ giờ Việt Nam, lượt bỏ lỡ không cộng dồn.",
+      "Đã qua tầng 1 thì mỗi ngày quét tháp được 1 đến 12 đá, tùy tầng cao nhất đã qua. Ngày đổi lúc 0 giờ giờ Việt Nam, lượt bỏ lỡ không cộng dồn.",
       "Đá Cường Hóa hiện chỉ tích trong tài khoản, chưa có chỗ dùng.",
     ],
     tips: [
@@ -260,6 +263,32 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Bắt đầu từ góc nhỏ có số 1 nằm cạnh các ô đã biết: thường chỉ còn một ô để dò.",
       "Khi hai ô số chung nhau vài ô trống, so sánh số bẫy của chúng để tìm ô chắc chắn.",
       "Cất Gió mách cho lúc bí: nó luôn chỉ ra một ô suy ra được.",
+    ],
+  },
+  SU_LO: {
+    goal: "Dẫn tướng qua mê cung lịch sử từ thời Ngô Quyền tới loạn sứ quân. Mỗi ô dừng chân là một câu hỏi sử, đáp đúng mới đứng vững, sai thì đọc sử chép rồi thử lại.",
+    steps: [
+      `Chọn mê cung, độ khó và hai tướng đi cùng. Dễ ${SL_LEVELS.de.cols}×${SL_LEVELS.de.rows} không sương, Thường ${SL_LEVELS.thuong.cols}×${SL_LEVELS.thuong.rows} có ${SL_LEVELS.thuong.questionSeconds} giây mỗi câu, Khó ${SL_LEVELS.kho.cols}×${SL_LEVELS.kho.rows} có ${SL_LEVELS.kho.questionSeconds} giây mỗi câu.`,
+      "Đổ xúc xắc rồi chọn một ô viền vàng để tới. Bạn được dừng sớm hơn số đã đổ.",
+      "Trả lời câu hỏi ở ô vừa tới. Đúng thì cắm cờ lau, ô đó đã thông.",
+      "Tới ô Trấn giữ cổng thì vào giao tranh: đổi ô ghép ba để hạ Thành lực. Hạ xong thì đi vào Cổng là thoát.",
+    ],
+    rules: [
+      "Trả lời sai thì tướng quay về ô bắt đầu lượt đó. Số lượt không giới hạn, chỉ dùng để chấm sao.",
+      "Ô Lục, Vàng, Đỏ là câu dễ tới khó. Ô Đỏ đáp đúng còn mở lối tắt khóa ở ngay bên cạnh.",
+      "Ô Bẫy cũng là một câu hỏi: đúng thì gỡ bẫy, sai thì dính bẫy như Phục binh, Nước lũ hay Đốt cầu. Từ bậc Thường có bẫy ẩn trông như ô Vàng.",
+      "Ô Ải phải đúng hai câu liền. Không đi xuyên qua Ải và ô Trấn khi chưa thông.",
+      `Trợ giúp có hạn: Lọc lời, Đổi câu, Hỏi tướng và Hỏa tốc, cả mê cung dùng tối đa ${SL_AID_USE_MAX} lần.`,
+      "Trong giao tranh, ai cũng có sức như nhau, cấp và đồ của bạn không tính. Kẻ địch không đánh lại; hết nước thì lui về, Thành lực đã mất vẫn giữ nguyên.",
+    ],
+    rewards: [
+      "Bản chơi thử chạy ngay trên máy bạn, chưa có thưởng và bảng xếp hạng. Số sao và số lượt tốt nhất lưu trên trình duyệt này.",
+      "Thoát trong mốc lượt và sai không quá hai câu thì được ba sao.",
+    ],
+    tips: [
+      "Đọc kỹ phần sử chép sau mỗi câu: câu sai sẽ hiện lại ở phần ôn tập cuối ván.",
+      "Khi đổ số lớn, cân nhắc dừng ở ô Lục gần cổng thay vì chạy vào ô Đỏ xa.",
+      "Trong giao tranh, ghép sách để Quân sư hiến kế: đáp đúng thì Thành lực giảm mạnh.",
     ],
   },
   TAM_TUONG_KY: {

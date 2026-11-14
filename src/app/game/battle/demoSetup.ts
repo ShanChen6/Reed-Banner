@@ -32,6 +32,7 @@ import {
   type Tier,
   type SurvivalResult,
   type DailyScore,
+  simRageOption,
 } from "@/core";
 
 import {
@@ -146,9 +147,11 @@ export function demoSides({
 }
 
 export function newBattle(seed: number, setup: Setup): BattleState {
+  const sides = demoSides(setup);
   return createBattle({
-    sides: demoSides(setup),
+    sides,
     seed,
+    ...simRageOption(sides),
     firstSide: PLAYER,
   }).state;
 }

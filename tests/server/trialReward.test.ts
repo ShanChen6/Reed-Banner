@@ -204,7 +204,7 @@ describe("tiến trình vĩnh viễn và đá lần đầu của Trial", () => {
         records: [
           { floor: 1, clears: 2, bestTurns: 8 },
           { floor: 1, clears: 1, bestTurns: 4 },
-          { floor: 99, clears: 1, bestTurns: 1 },
+          { floor: 999, clears: 1, bestTurns: 1 },
           { floor: 2, clears: 0, bestTurns: 3 },
           { floor: 2, clears: -1, bestTurns: "x" },
           "rác",

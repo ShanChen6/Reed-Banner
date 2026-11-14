@@ -84,9 +84,9 @@ export interface ExpeditionTierInfo {
 }
 
 export const EXPEDITION_TIER_INFO: Readonly<Record<ExpeditionTier, ExpeditionTierInfo>> = {
-  1: { name: "Bậc I", level: 10, power: 0.8, aiSteps: 0, firstGold: 300, repeatGold: 80, gearTier: 3 },
-  2: { name: "Bậc II", level: 18, power: 0.88, aiSteps: 1, firstGold: 600, repeatGold: 160, gearTier: 4 },
-  3: { name: "Bậc III", level: 26, power: 0.96, aiSteps: 2, firstGold: 1000, repeatGold: 300, gearTier: 5 },
+  1: { name: "Bậc I", level: 10, power: 0.78, aiSteps: 0, firstGold: 300, repeatGold: 80, gearTier: 3 },
+  2: { name: "Bậc II", level: 18, power: 0.86, aiSteps: 1, firstGold: 600, repeatGold: 160, gearTier: 4 },
+  3: { name: "Bậc III", level: 26, power: 0.95, aiSteps: 2, firstGold: 1000, repeatGold: 300, gearTier: 5 },
 };
 
 

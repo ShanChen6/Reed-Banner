@@ -1,6 +1,6 @@
 # Tài liệu Cờ Lau (Reed Banner)
 
-> Cập nhật: 12/11/2026
+> Cập nhật: 14/11/2026
 > Trạng thái: **REFERENCE** — bản đồ tài liệu.
 
 Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** nguồn chính (đánh dấu ★); file khác chỉ link tới đó. Tìm đường dẫn cũ (trước 27/10/2026) ở [MOVED.md](MOVED.md).
@@ -39,6 +39,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [khai-lo/](02-game-modes/khai-lo/gdd.md) | Khai Lộ: [GDD](02-game-modes/khai-lo/gdd.md), giải đố xóa khối, có bản chơi thử |
 | ★ [do-tham/](02-game-modes/do-tham/gdd.md) | Do Thám: [GDD](02-game-modes/do-tham/gdd.md), giải đố dò bẫy, bàn suy luận được, đạo cụ nguyên tố; có bản chơi thử |
 | [future/](02-game-modes/future/quan-hung-pvp-truc-tiep.md) | Đề xuất đang làm dần (lõi PvP đã có code): [Quần Hùng PvP trực tiếp](02-game-modes/future/quan-hung-pvp-truc-tiep.md) (**DRAFT**) |
+| ★ [su-lo/](02-game-modes/su-lo/gdd.md) | Sử Lộ, tức Mê cung lịch sử: [GDD](02-game-modes/su-lo/gdd.md) và [sổ nguồn riêng](02-game-modes/su-lo/nguon-su.md); đổ xúc xắc qua mê cung, dừng ô nào trả lời câu sử ô đó, sai về ô bắt đầu lượt; bẫy, ô may mắn, trợ giúp có hạn, boss trấn cổng đánh bằng match-3 một chiều; có bản chơi thử mê cung I, II |
 
 ## 03 · Nhân vật & kỹ năng (`03-characters/`)
 

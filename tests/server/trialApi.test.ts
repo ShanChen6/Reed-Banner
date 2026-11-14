@@ -52,11 +52,11 @@ const body = (floor: number, over: Record<string, unknown> = {}) => ({
 });
 
 describe("API Tháp Thí Luyện", () => {
-  it("registry phát hành đủ 50 tầng thật", async () => {
-    assert.equal(trialRegistry().size, 50);
+  it("registry phát hành đủ 100 tầng thật", async () => {
+    assert.equal(trialRegistry().size, 100);
     const o = await trialOverview(new MemoryProfileStore(), null, trialRegistry());
     assert.equal(o.available, true);
-    assert.equal(o.floors.length, 50);
+    assert.equal(o.floors.length, 100);
     assert.equal(o.floors[0]?.state, "open");
     assert.ok(o.floors.slice(1).every((floor) => floor.state === "locked"));
     assert.equal(o.stones, 0);

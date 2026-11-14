@@ -42,15 +42,15 @@ describe("trạng thái quét Trial hằng ngày", () => {
 
   it("tier lấy từ highestCleared, zero floors không đủ điều kiện", () => {
     assert.deepEqual([0, 1, 5, 6, 10, 11, 15, 16, 20].map(trialSweepTier), [0, 1, 1, 2, 2, 3, 3, 4, 4]);
-    // Tầng 21-50: mỗi 10 tầng một bậc; quá số tầng thì giữ bậc cao nhất.
-    assert.deepEqual([21, 30, 31, 40, 41, 50, 99].map(trialSweepTier), [5, 5, 6, 6, 7, 7, 7]);
+    // Tầng 21-100: mỗi 10 tầng một bậc; quá số tầng thì giữ bậc cao nhất.
+    assert.deepEqual([21, 30, 31, 40, 41, 50, 51, 61, 71, 81, 91, 100, 999].map(trialSweepTier), [5, 5, 6, 6, 7, 7, 8, 9, 10, 11, 12, 12, 12]);
     assert.deepEqual(planTrialSweepState(NEW_TRIAL, midnight), { ok: false, error: "no_cleared_floors" });
     assert.deepEqual(planTrialSweepState({ ...NEW_TRIAL, cleared: 1 }, Number.MAX_SAFE_INTEGER), { ok: false, error: "invalid_time" });
   });
 
-  it("bảng đá quét theo tier có cap 7, invalid bằng 0 và tra cứu idempotent", () => {
-    assert.deepEqual(TRIAL_SWEEP_STONES_BY_TIER, { 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7 });
-    assert.deepEqual([-1, 0, 1, 2, 3, 4, 7, 8, 1.5, Number.NaN].map(trialSweepStoneAmount), [0, 0, 1, 2, 3, 4, 7, 0, 0, 0]);
+  it("bảng đá quét theo tier có cap 12, invalid bằng 0 và tra cứu idempotent", () => {
+    assert.deepEqual(TRIAL_SWEEP_STONES_BY_TIER, { 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12 });
+    assert.deepEqual([-1, 0, 1, 2, 3, 4, 7, 12, 13, 1.5, Number.NaN].map(trialSweepStoneAmount), [0, 0, 1, 2, 3, 4, 7, 12, 0, 0, 0]);
     assert.equal(trialSweepStoneAmount(4), trialSweepStoneAmount(4));
     assert.equal(Object.isFrozen(TRIAL_SWEEP_STONES_BY_TIER), true);
   });
@@ -117,8 +117,8 @@ describe("trạng thái quét Trial hằng ngày", () => {
 });
 
 describe("settlement đá quét Trial", () => {
-  it("đủ bảy tier thì nhận đúng 1 đến 7 đá từ progress server", async () => {
-    for (const [cleared, amount] of [[1, 1], [6, 2], [11, 3], [16, 4], [21, 5], [31, 6], [41, 7]] as const) {
+  it("đủ mười hai tier thì nhận đúng 1 đến 12 đá từ progress server", async () => {
+    for (const [cleared, amount] of [[1, 1], [6, 2], [11, 3], [16, 4], [21, 5], [31, 6], [41, 7], [51, 8], [61, 9], [71, 10], [81, 11], [91, 12]] as const) {
       const store = await seeded(cleared);
       const result = await settleTrialSweep(store, "u1", midnight);
       assert.ok(result.ok);
