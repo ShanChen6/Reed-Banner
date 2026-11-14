@@ -311,11 +311,11 @@ Shan yêu cầu mỗi chế độ chơi có một thẻ Hướng dẫn. Đã là
 - **Văn phong** theo [Văn phong giao diện](../../00-overview/thuat-ngu.md#văn-phong-giao-diện): gọi bạn, câu ngắn có dấu chấm, tên chế độ hoa mọi chữ, tài nguyên viết thường. `tests/game/mode-guides.test.ts` kiểm tra đủ mười một chế độ, câu kết thúc bằng dấu chấm, không dùng "người chơi" và từ tiếng Anh; `tests/game/ui-wording.test.ts` quét cả nội dung này.
 - **Màn khóa:** khách chưa đăng nhập chỉ thấy màn nhắc đăng nhập (`LoginGate`) của Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh, Quần Hùng, Tầm Tướng Ký, nên chưa thấy thẻ Hướng dẫn; mô tả ngắn ở màn khóa vẫn là `MODE_INFO`.
 
-## 16. Ba thẻ nhóm chế độ ở Chiến trường (14/11/2026)
+## 16. Ba mục nhóm chế độ ở Chiến trường (14/11/2026)
 
-Shan yêu cầu chia mục Chế độ chơi của màn Chiến trường (`MenuScene.tsx`) thành ba thẻ: **Chiến đấu**, **Giải đố**, **Sắp ra mắt**.
+Shan yêu cầu chia chế độ của màn Chiến trường (`MenuScene.tsx`) thành ba nhóm **xếp dọc trong cùng một trang**, cuộn từ trên xuống: **Chiến đấu**, rồi **Giải đố**, cuối cùng **Sắp ra mắt** (Shan bỏ kiểu thẻ chỉ hiện một nhóm). Hàng nút ba nhóm là thanh dẫn bám ngay dưới header: bấm thì cuộn tới mục, cuộn thì nút của mục đang đọc sáng lên.
 
 - **Chiến đấu** (trận ghép ô, dẫn đội tướng đánh nhau): Bình Loạn (thẻ to), Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh, Quần Hùng, Viễn Chinh.
 - **Giải đố** (một người, không đọ sức đội hình): Trận Đồ (xếp quân, không đánh nhau), Khai Lộ, Do Thám, Sử Lộ (có trận ghép ô một chiều với quân giặc trấn cổng nhưng trục chính là đáp câu sử và mọi người như nhau), Tầm Tướng Ký (ghép yếu tố, không đánh nhau).
-- **Sắp ra mắt**: mọi chế độ đang khóa theo cờ tính năng (`TRIAL`, `DESTINY`, `TAM_TUONG_KY`, `EXPEDITION`) tự chuyển sang thẻ này; bật cờ thì chế độ về đúng nhóm, không cần sửa code. Sau đó là `UPCOMING` (chế độ chỉ mới có thiết kế, chưa có phân cảnh). Không còn chế độ nào thì hiện dòng báo trống.
-- Mỗi chế độ khai báo `group` trong `MODES`; thêm chế độ mới phải chọn nhóm. Thẻ dùng `Tabs` chung (`src/components/ui/choice.tsx`), có số chế độ trên mỗi thẻ và một câu dẫn dưới hàng thẻ. Thẻ đang mở nhớ trong `sessionStorage` (`coLau.home.modeTab`) để vào một chế độ rồi quay lại vẫn đúng thẻ.
+- **Sắp ra mắt**: mọi chế độ đang khóa theo cờ tính năng (`TRIAL`, `DESTINY`, `TAM_TUONG_KY`, `EXPEDITION`) tự chuyển sang mục này; bật cờ thì chế độ về đúng nhóm, không cần sửa code. Sau đó là `UPCOMING` (chế độ chỉ mới có thiết kế, chưa có phân cảnh). Không còn chế độ nào thì hiện dòng báo trống.
+- Mỗi chế độ khai báo `group` trong `MODES`; thêm chế độ mới phải chọn nhóm. Thanh dẫn là `nav` với liên kết neo `#home-battle`, `#home-puzzle`, `#home-soon` (kiểu `.ui-choice`, nút đang đọc mang `aria-current`), có số chế độ trên mỗi nút; mỗi mục có tiêu đề và một câu dẫn. Người dùng tắt chuyển động thì nhảy thẳng, không cuộn mượt.

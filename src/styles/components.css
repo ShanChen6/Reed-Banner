@@ -113,7 +113,7 @@
     color: var(--on-wood);
     transition: border-color 0.15s, background-color 0.15s, color 0.15s;
   }
-  .ui-choice:hover:not(:disabled):not([aria-selected="true"]):not([aria-pressed="true"]) {
+  .ui-choice:hover:not(:disabled):not([aria-selected="true"]):not([aria-pressed="true"]):not([aria-current="page"]):not(.is-selected) {
     border-color: var(--frame-gold);
     background: var(--wood-hi);
   }
