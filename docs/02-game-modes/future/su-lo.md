@@ -1,6 +1,6 @@
 # Sử Lộ (Mê cung lịch sử): đổ xúc xắc, trả lời sử, tìm đường thoát
 
-> Cập nhật: 14/11/2026 (Shan chốt: tên Sử Lộ, không giới hạn số lượt, ô giao tranh mọi người như nhau)
+> Cập nhật: 14/11/2026 (Shan chốt: tên Sử Lộ, sai về ô bắt đầu lượt, không giới hạn số lượt, ô giao tranh mọi người như nhau)
 > Trạng thái: **DRAFT** — ý tưởng gốc của Shan (14/11/2026), Claude viết thiết kế chi tiết; chưa có code. Ba điểm đã chốt ghi ở [mục 13](#13-điểm-cần-shan-quyết). Mọi con số là **điểm xuất phát**, cần chơi thử và mô phỏng. Các điểm chờ Shan quyết gom ở [mục 13](#13-điểm-cần-shan-quyết).
 
 ## 1. Định vị
@@ -451,12 +451,12 @@ Các câu mê cung IV và phần sau năm 970 của mê cung III **chưa soạn 
 - Tên chế độ là **Sử Lộ** ([mục 1](#1-định-vị)), dòng phụ "Mê cung lịch sử".
 - **Không giới hạn số lượt** vì đây là giải đố học sử: bỏ lương làm giới hạn, không thua vì hết lượt; số lượt chỉ để chấm sao và xếp hạng.
 - **Ô giao tranh mọi người như nhau:** không lấy chỉ số hồ sơ; tướng chọn được mọi tướng lịch sử không cần sở hữu.
+- **Trả lời sai thì tướng quay về ô bắt đầu lượt đó** ([mục 3.3](#33-trả-lời)), không về điểm xuất phát.
 
 **Còn mở:**
 
-1. **Sai thì về đâu:** về ô bắt đầu lượt (đề xuất, nhẹ nhàng) hay về xuất phát (rất khó)?
-2. **Mua trợ giúp bằng vàng** ở chế độ thường: có hay không? (Nếu muốn mọi người như nhau tuyệt đối thì bỏ.)
-3. **Mê cung ngày có bảng xếp hạng** (cần đăng nhập) ngay từ đầu hay để sau?
-4. **Sổ nguồn cho sau năm 968:** mở rộng thẳng [sổ nguồn Campaign](../campaign/history-sources.md) (đang `FROZEN`, cần sửa đổi có ghi lý do) hay làm sổ riêng cho chế độ này?
-5. **Boss mê cung III và IV:** Đỗ Thích (979) và quân Tống (981) có hợp không, sau khi có nguồn?
-6. **Ai duyệt câu:** chỉ Shan, hay Shan duyệt mẫu rồi giao người đối chiếu nguồn?
+1. **Mua trợ giúp bằng vàng** ở chế độ thường: có hay không? (Nếu muốn mọi người như nhau tuyệt đối thì bỏ.)
+2. **Mê cung ngày có bảng xếp hạng** (cần đăng nhập) ngay từ đầu hay để sau?
+3. **Sổ nguồn cho sau năm 968:** mở rộng thẳng [sổ nguồn Campaign](../campaign/history-sources.md) (đang `FROZEN`, cần sửa đổi có ghi lý do) hay làm sổ riêng cho chế độ này?
+4. **Boss mê cung III và IV:** Đỗ Thích (979) và quân Tống (981) có hợp không, sau khi có nguồn?
+5. **Ai duyệt câu:** chỉ Shan, hay Shan duyệt mẫu rồi giao người đối chiếu nguồn?

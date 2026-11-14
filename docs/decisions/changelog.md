@@ -6,7 +6,7 @@
 
 **Sử Lộ (Mê cung lịch sử), thiết kế DRAFT**
 - Shan đề xuất chế độ đổ xúc xắc đi qua mê cung, trả lời câu sử thời Ngô, Đinh, Tiền Lê; ô giao tranh là match-3 một chiều (boss không đánh lại). Thiết kế ở [Sử Lộ](../02-game-modes/future/su-lo.md).
-- Shan chốt: tên Hán Việt **Sử Lộ**, không giới hạn số lượt vì là giải đố học sử, ô giao tranh mọi người như nhau (không lấy chỉ số hồ sơ).
+- Shan chốt: tên Hán Việt **Sử Lộ**, không giới hạn số lượt vì là giải đố học sử, ô giao tranh mọi người như nhau (không lấy chỉ số hồ sơ); trả lời sai thì tướng quay về ô bắt đầu lượt.
 
 ## 12/11/2026
 
