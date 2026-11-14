@@ -108,6 +108,7 @@ export function simulateDestinyCycle(cycleId: string, rosterCap: 3 | 5 | 8, leve
     const made = createDestinyFloorBattle(run, {
       ...selected, rules: content.floor.rules, foes: { fighters: content.floor.foes, leader: 0 },
       seed: hashString(`${battleSeed}|${run.floor}`), timer: false, firstSide: 0, weights: content.floor.weights,
+      perFighterRage: process.env.PER_FIGHTER_RAGE !== "0",
     });
     if (!made.ok) break;
     let state = made.state;
