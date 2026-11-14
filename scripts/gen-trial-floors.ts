@@ -93,7 +93,7 @@ const legalPairs = (rules: FloorRules, level: number) => {
 const seen = new Set(TRIAL_FLOOR_DATA.map((f) => JSON.stringify(f.rules)));
 
 function build(floor: number): { spec: TrialFloorSpec; weightName: WeightName; intro: string; title: string; reason: string } {
-  const rng = createRng(0x51d0 + floor * 7919);
+  const rng = createRng(0x51d0 + floor * 7919 + Number(process.env.GEN_SALT ?? 0));
   let parts: Parts;
   for (let tries = 0; ; tries++) {
     parts = pickRules(floor, rng);
