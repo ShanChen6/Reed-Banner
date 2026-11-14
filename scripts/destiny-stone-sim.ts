@@ -3,7 +3,12 @@
 import { simulateDestinyCycle, summarize, type DestinySimPolicy } from "../src/server/destinyBalanceReport";
 
 // Mặc định đo luật V2 (20 tầng, chu kỳ từ 16/11/2026); thêm `--v1` để đo lại luật 10 tầng cũ.
-const cycles = process.argv.includes("--v1")
+const mondays = (from: string, n: number) => Array.from({ length: n }, (_, i) => new Date(Date.parse(from) + i * 7 * 86_400_000).toISOString().slice(0, 10));
+// `--cycles N` đo N chu kỳ liên tiếp từ 16/11/2026 (mẫu lớn hơn để so luật Nộ: PER_FIGHTER_RAGE=0 là luật cũ).
+const cycleCount = Number(process.argv[process.argv.indexOf("--cycles") + 1]);
+const cycles = cycleCount > 0
+  ? mondays("2026-11-16", cycleCount)
+  : process.argv.includes("--v1")
   ? ["2026-10-19", "2026-10-26", "2026-11-02", "2026-11-09"]
   : ["2026-11-16", "2026-11-23", "2026-11-30", "2026-12-07"];
 const caps = [3, 5, 8] as const;
