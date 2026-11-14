@@ -177,7 +177,7 @@
 
 ## Sử Lộ (Mê cung lịch sử) — 14/11/2026
 
-Thiết kế DRAFT ở [Sử Lộ](../02-game-modes/future/su-lo.md#13-điểm-cần-shan-quyết).
+Bản chơi thử đã code (mê cung I, II); luật ở [Sử Lộ](../02-game-modes/su-lo/gdd.md#13-điểm-cần-shan-quyết).
 
 - [x] Tên Sử Lộ, không giới hạn số lượt, ô giao tranh mọi người như nhau (Shan, 14/11/2026).
 - [x] Trả lời sai thì về ô bắt đầu lượt (Shan, 14/11/2026).
@@ -185,3 +185,4 @@ Thiết kế DRAFT ở [Sử Lộ](../02-game-modes/future/su-lo.md#13-điểm-c
 - [x] Có bảng xếp hạng mê cung ngày; boss III, IV do Claude chọn (Shan, 14/11/2026).
 - [x] Lập sổ nguồn riêng; Claude duyệt câu lần 1, Shan duyệt lần 2 (Shan, 14/11/2026).
 - [ ] TODO: chốt số liệu (mốc lượt, số nước giao tranh, giá trợ giúp, thưởng) sau khi chơi thử.
+- [ ] TODO: Shan duyệt lần 2 kho 47 câu mê cung I, II (`src/core/su-lo/questions.ts`).

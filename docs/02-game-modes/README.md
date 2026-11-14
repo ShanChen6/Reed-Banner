@@ -20,6 +20,7 @@
 | **Tầm Tướng Ký** | Ghép yếu tố có thứ tự từ 7 hệ để tìm chân dung tướng, không đánh nhau. Chế độ Thường tốn phiếu; Hạng tuần tiêu nguyên liệu, có bảng và thưởng. Bắt buộc đăng nhập; tắt mặc định, một biến `TAM_TUONG_KY_ENABLED` mở cả chế độ, Hạng và các gói đã duyệt. Luật ở [Design Freeze](tam-tuong-ky/design-freeze.md) | Một người, 3 gói: 77 tướng (mọi tướng) | Sau Trận Đồ |
 | **Viễn Chinh** | Chia 6 tướng làm hai đạo, mỗi ngày một đạo tiến một ô trên sa bàn, đạo kia nghỉ hồi sức; giặc tăng viện theo ngày, hai đạo giáp công thành đích. Thưởng trận như trận thường, thưởng lớn lần đầu mỗi bậc; 3 lượt xuất quân mỗi ngày. Chơi offline, khách chơi được, không bảng xếp hạng; tắt mặc định (`EXPEDITION_ENABLED`). Luật ở [GDD Viễn Chinh](expedition/01-vien-chinh-gdd.md) | Hai đạo 3vs3, 6 sa bàn × 3 bậc | Sau Tầm Tướng Ký |
 | **Do Thám** | Giải đố dò bẫy trên sa bàn, cờ lau đánh dấu; 3 bậc (9×9, 16×16, 30×16), bàn suy luận được, đạo cụ nguyên tố. Bản chơi thử offline, khách chơi được, chưa thưởng và chưa xếp hạng. Luật ở [GDD](do-tham/gdd.md) | Một người, 3 bậc | Sau Khai Lộ |
+| **Sử Lộ** (Mê cung lịch sử) | Đổ xúc xắc dẫn tướng qua mê cung, mỗi ô dừng chân là một câu hỏi sử (Ngô Quyền, loạn sứ quân; nhà Đinh, Tiền Lê chờ nguồn), sai về ô bắt đầu lượt, không giới hạn lượt; boss trấn cổng đánh bằng match-3 một chiều, mọi người như nhau. Bản chơi thử offline, khách chơi được, chưa thưởng và chưa xếp hạng. Luật ở [GDD](su-lo/gdd.md) | Một người, 3 bậc | Sau Do Thám |
 
 <a id="2-chiến-dịch"></a>
 

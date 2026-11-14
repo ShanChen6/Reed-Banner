@@ -4,10 +4,11 @@
 
 ## 14/11/2026
 
-**Sử Lộ (Mê cung lịch sử), thiết kế DRAFT**
-- Shan đề xuất chế độ đổ xúc xắc đi qua mê cung, trả lời câu sử thời Ngô, Đinh, Tiền Lê; ô giao tranh là match-3 một chiều (boss không đánh lại). Thiết kế ở [Sử Lộ](../02-game-modes/future/su-lo.md).
+**Sử Lộ (Mê cung lịch sử): thiết kế và bản chơi thử**
+- Shan đề xuất chế độ đổ xúc xắc đi qua mê cung, trả lời câu sử thời Ngô, Đinh, Tiền Lê; ô giao tranh là match-3 một chiều (boss không đánh lại). Thiết kế ở [Sử Lộ](../02-game-modes/su-lo/gdd.md).
 - Shan chốt: tên Hán Việt **Sử Lộ**, không giới hạn số lượt vì là giải đố học sử, ô giao tranh mọi người như nhau (không lấy chỉ số hồ sơ); trả lời sai thì tướng quay về ô bắt đầu lượt.
 - Shan chốt thêm: trợ giúp có nhưng hạn chế; có bảng xếp hạng mê cung ngày; lập sổ nguồn riêng; boss mê cung III, IV do Claude chọn; Claude duyệt câu lần 1, Shan duyệt lần 2.
+- Shan đồng ý triển khai. Bản chơi thử offline `/game/maze`: mê cung I (Ngô Quyền dựng nước) và II (Loạn sứ quân), ba bậc, 47 câu đã duyệt lần 1, boss trấn cổng đánh bằng match-3 một chiều; mê cung III, IV chờ nguồn. Thưởng hồ sơ và mê cung ngày làm sau.
 
 ## 12/11/2026
 
