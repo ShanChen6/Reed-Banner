@@ -14,6 +14,13 @@ import { PVP_TEAM_FILL_MS } from "../../src/server/pvpTeam";
 const T0 = 1_700_000_000_000;
 const USERS = ["u1", "u2", "u3"];
 
+/** Hồ sơ có 8 tướng (Đinh Bộ Lĩnh và 7 tướng kèm), đủ điều kiện vào 3vs3 xếp hạng. */
+function richProfile() {
+  const p = newProfile();
+  const sample = p.companions.haVan!;
+  return { ...p, companions: { ...p.companions, nguyenBac: structuredClone(sample), dinhDien: structuredClone(sample) } };
+}
+
 async function makeDb(): Promise<PvpStore> {
   const db = drizzle(new PGlite());
   await migrate(db, { migrationsFolder: "drizzle" });
@@ -31,7 +38,8 @@ for (const [name, factory] of stores) {
     const setup = async () => {
       const pvp = await factory();
       const profiles: ProfileStore = new MemoryProfileStore();
-      for (const id of USERS) await profiles.put(id, newProfile(), 0, T0);
+      for (const id of USERS) await profiles.put(id, richProfile(), 0, T0);
+      await profiles.put("poor", newProfile(), 0, T0);
       const mk = (now: number): PvpDeps => ({ pvp, profiles, now, seed: 99 + n++, newId: () => `team-${++n}`, nameOf: async (id) => `Tên ${id}` });
       return { pvp, profiles, mk };
     };
@@ -53,6 +61,15 @@ for (const [name, factory] of stores) {
       assert.ok(r.ok);
       return (r as { ok: true; view: PvpDraftView }).view;
     };
+
+    it("cần từ 7 tướng trở lên mới xếp hàng 3vs3; 1vs1 không đòi", async () => {
+      const { mk } = await setup();
+      assert.deepEqual(await pvpEnqueue("poor", "team", mk(T0)), { ok: false, error: "needHeroes" });
+      assert.deepEqual(await pvpEnqueue("poor", "duel", mk(T0)), { ok: true });
+      const o = await pvpOverview("u1", mk(T0));
+      assert.deepEqual(o.heroCount, { have: 8, need: 7 });
+      assert.deepEqual((await pvpOverview("poor", mk(T0))).heroCount, { have: 6, need: 7 });
+    });
 
     it("chưa chờ đủ lâu thì chưa ghép; vào hàng đợi không cần chọn tướng", async () => {
       const { mk } = await setup();
@@ -133,7 +150,7 @@ for (const [name, factory] of stores) {
       if (m.ok) assert.equal(m.view.seats.find((s) => s.mine)?.name, "Tên u1");
     });
 
-    it("bị cấm hết tướng kèm và Đinh Bộ Lĩnh đã có người lấy: một phe không còn ai chọn được thì bỏ phiên, mọi người rời hàng đợi", async () => {
+    it("bị cấm hết 5 tướng khởi đầu và Đinh Bộ Lĩnh đã có người lấy: đủ 7 tướng nên ai cũng còn tướng chọn, không bỏ phiên", async () => {
       const { mk } = await setup();
       const id = await toDraft(mk);
       const starters = ["haVan", "leThach", "maiThanh", "toKim", "phungPhong"];
@@ -152,11 +169,9 @@ for (const [name, factory] of stores) {
         if (!r.ok) break;
         v = r.view;
       }
-      assert.equal(v.status, "abandoned");
-      for (const u of USERS) {
-        const o = await pvpOverview(u, mk(t + 100));
-        assert.deepEqual([o.draftId, o.matchId, o.queue], [null, null, null]);
-      }
+      assert.equal(v.status, "prep");
+      assert.equal(v.picks.length, 3, "mỗi người thật vẫn có tướng, kể cả tướng khởi đầu đã bị cấm hết");
+      assert.ok(v.picks.every((p) => !starters.includes(p.hero.id) || p.hero.id === "dinhBoLinh"));
     });
 
     it("không ai bấm: hết giờ máy cấm, chọn thay, người hỏi sau vẫn vào được trận; không vào hàng đợi lại khi đang cấm chọn", async () => {

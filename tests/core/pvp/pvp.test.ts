@@ -504,6 +504,14 @@ describe("PvP: mô phỏng trận qua cùng đường pvpAct", () => {
     }
   });
 
+  it("3vs3 có hai tướng trùng nhau trong một phe (hết tướng khác nên được chọn trùng): trận vẫn chạy hết", () => {
+    const base = team(T6, 11);
+    const f = base.sides[0].fighters;
+    const config: PvpConfig = { ...base, sides: [{ ...base.sides[0], fighters: [f[0]!, f[0]!, f[2]!] }, base.sides[1]] };
+    const { state } = playOut(config);
+    assert.notEqual(state.battle.winner, null);
+  });
+
   it("3vs3 có người bỏ lượt và có AI điền: trận vẫn kết thúc, điểm tính đúng", () => {
     const base = team(T6, 9);
     const config: PvpConfig = { ...base, sides: [base.sides[0], { ...base.sides[1], players: ["q1", "q2", null] }] };
