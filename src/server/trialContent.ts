@@ -7,6 +7,8 @@ const STANDARD = { kiem: 18, amDuong: 16, banhChung: 15, tim: 15, vang: 11, sach
 const OFFENSE = { kiem: 24, amDuong: 15, banhChung: 12, tim: 14, vang: 10, sach: 10, trong: 15 } as const;
 const LOW_HEAL = { kiem: 22, amDuong: 16, banhChung: 15, tim: 8, vang: 12, sach: 12, trong: 15 } as const;
 const TACTICAL = { kiem: 18, amDuong: 18, banhChung: 12, tim: 12, vang: 12, sach: 12, trong: 16 } as const;
+/** Các bộ tỉ lệ ô dùng trong dữ liệu tầng; công cụ sinh tầng (`scripts/gen-trial-floors.ts`) chọn theo tên. */
+export const TRIAL_WEIGHTS = { STANDARD, OFFENSE, LOW_HEAL, TACTICAL } as const;
 
 interface FloorInput {
   readonly title: string; readonly intro: string; readonly rules: FloorRules;
