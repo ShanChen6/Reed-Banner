@@ -14,6 +14,13 @@ import { PVP_TEAM_FILL_MS } from "../../src/server/pvpTeam";
 const T0 = 1_700_000_000_000;
 const USERS = ["u1", "u2", "u3"];
 
+/** Hồ sơ có 8 tướng (Đinh Bộ Lĩnh và 7 tướng kèm), đủ điều kiện vào 3vs3 xếp hạng. */
+function richProfile() {
+  const p = newProfile();
+  const sample = p.companions.haVan!;
+  return { ...p, companions: { ...p.companions, nguyenBac: structuredClone(sample), dinhDien: structuredClone(sample) } };
+}
+
 async function makeDb(): Promise<PvpStore> {
   const db = drizzle(new PGlite());
   await migrate(db, { migrationsFolder: "drizzle" });
@@ -31,7 +38,8 @@ for (const [name, factory] of stores) {
     const setup = async () => {
       const pvp = await factory();
       const profiles: ProfileStore = new MemoryProfileStore();
-      for (const id of USERS) await profiles.put(id, newProfile(), 0, T0);
+      for (const id of USERS) await profiles.put(id, richProfile(), 0, T0);
+      await profiles.put("poor", newProfile(), 0, T0);
       const mk = (now: number): PvpDeps => ({ pvp, profiles, now, seed: 99 + n++, newId: () => `team-${++n}`, nameOf: async (id) => `Tên ${id}` });
       return { pvp, profiles, mk };
     };
@@ -53,6 +61,15 @@ for (const [name, factory] of stores) {
       assert.ok(r.ok);
       return (r as { ok: true; view: PvpDraftView }).view;
     };
+
+    it("cần từ 7 tướng trở lên mới xếp hàng 3vs3; 1vs1 không đòi", async () => {
+      const { mk } = await setup();
+      assert.deepEqual(await pvpEnqueue("poor", "team", mk(T0)), { ok: false, error: "needHeroes" });
+      assert.deepEqual(await pvpEnqueue("poor", "duel", mk(T0)), { ok: true });
+      const o = await pvpOverview("u1", mk(T0));
+      assert.deepEqual(o.heroCount, { have: 8, need: 7 });
+      assert.deepEqual((await pvpOverview("poor", mk(T0))).heroCount, { have: 6, need: 7 });
+    });
 
     it("chưa chờ đủ lâu thì chưa ghép; vào hàng đợi không cần chọn tướng", async () => {
       const { mk } = await setup();
@@ -88,7 +105,7 @@ for (const [name, factory] of stores) {
         }
         const res =
           mine.turn!.kind === "ban"
-            ? await pvpDraftPlay(id, who, { type: "ban", ban: { kind: "hero", id: mine.roster[0]!.id } }, mk(t))
+            ? await pvpDraftPlay(id, who, { type: "ban", ban: { kind: "hero", id: mine.roster[mine.roster.length - 1]!.id } }, mk(t))
             : await pvpDraftPlay(id, who, { type: "pick", hero: free!.hero.id }, mk(t));
         assert.ok(res.ok, res.ok ? "" : res.error);
         v = (res as { ok: true; view: PvpDraftView }).view;
@@ -131,6 +148,30 @@ for (const [name, factory] of stores) {
       const m = await pvpGetMatch(v.matchId!, "u1", mk(t + 200));
       assert.ok(m.ok);
       if (m.ok) assert.equal(m.view.seats.find((s) => s.mine)?.name, "Tên u1");
+    });
+
+    it("bị cấm hết 5 tướng khởi đầu và Đinh Bộ Lĩnh đã có người lấy: đủ 7 tướng nên ai cũng còn tướng chọn, không bỏ phiên", async () => {
+      const { mk } = await setup();
+      const id = await toDraft(mk);
+      const starters = ["haVan", "leThach", "maiThanh", "toKim", "phungPhong"];
+      let t = T0 + PVP_TEAM_FILL_MS + 2000;
+      let v = await view(id, "u1", mk, t);
+      for (let guard = 0; guard < 20 && v.status === "active"; guard++) {
+        t += 1000;
+        const who = USERS.find((u) => v.turn?.name === `Tên ${u}`)!;
+        const mine = await view(id, who, mk, t);
+        const bannedIds = new Set(mine.bans.map((b) => b.value));
+        const body =
+          mine.turn!.kind === "ban"
+            ? ({ type: "ban", ban: { kind: "hero", id: starters.find((x) => !bannedIds.has(x)) ?? mine.roster.find((x) => !bannedIds.has(x.id))!.id } } as const)
+            : ({ type: "pick", hero: (mine.choices.find((c) => c.error === null) ?? mine.choices[0]!).hero.id } as const);
+        const r = await pvpDraftPlay(id, who, body, mk(t));
+        if (!r.ok) break;
+        v = r.view;
+      }
+      assert.equal(v.status, "prep");
+      assert.equal(v.picks.length, 3, "mỗi người thật vẫn có tướng, kể cả tướng khởi đầu đã bị cấm hết");
+      assert.ok(v.picks.every((p) => !starters.includes(p.hero.id) || p.hero.id === "dinhBoLinh"));
     });
 
     it("không ai bấm: hết giờ máy cấm, chọn thay, người hỏi sau vẫn vào được trận; không vào hàng đợi lại khi đang cấm chọn", async () => {

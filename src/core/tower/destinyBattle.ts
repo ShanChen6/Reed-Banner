@@ -40,6 +40,8 @@ export interface DestinyBattleInput {
   readonly timer?: boolean;
   readonly firstSide?: 0 | 1;
   readonly weights?: BattleConfig["weights"];
+  /** Mặc định true (Nộ riêng từng tướng); false chỉ để mô phỏng so với luật Nộ cũ. */
+  readonly perFighterRage?: boolean;
 }
 
 export type DestinyBattleError =
@@ -106,7 +108,7 @@ export function createDestinyFloorBattle(run: DestinyRun, input: DestinyBattleIn
     sides: [{ fighters: configs, leader: 0, food: run.food, hpRatio }, input.foes],
     seed: input.seed,
     // Nộ riêng từng tướng: Nộ giữ xuyên tầng theo từng người.
-    perFighterRage: true,
+    ...((input.perFighterRage ?? true) ? { perFighterRage: true } : {}),
     ...(input.now === undefined ? {} : { now: input.now }),
     ...(input.timer === undefined ? {} : { timer: input.timer }),
     ...(input.firstSide === undefined ? {} : { firstSide: input.firstSide }),
@@ -120,9 +122,11 @@ export function createDestinyFloorBattle(run: DestinyRun, input: DestinyBattleIn
       run.fighters![id]!.energy + destinyAppliedEnergyBonus(run, id),
     );
   });
-  created.state.sides[0].rages = input.activeIds.map((id) =>
+  const startRages = input.activeIds.map((id) =>
     Math.min(RAGE_MAX, Math.max(0, destinyRageOf(run, id)) + destinyAppliedRageBonus(run, id)),
   );
+  if (created.state.sides[0].rages) created.state.sides[0].rages = startRages;
+  else created.state.sides[0].rage = startRages[0] ?? 0;
   return { ok: true, run: { ...run, phase: "battle" }, ...created };
 }
 
@@ -180,7 +184,7 @@ export function settleDestinyFloor(run: DestinyRun, battle: BattleState): Destin
   // Nộ riêng: tướng ra trận lấy từ thanh của mình (trừ phần Phúc đã cộng), tướng nghỉ giữ nguyên.
   const rages: Record<string, number> = Object.fromEntries(run.roster.map((id) => [id, destinyRageOf(run, id)]));
   active.forEach((current, i) => {
-    const left = battle.sides[0].rages?.[i] ?? 0;
+    const left = battle.sides[0].rages?.[i] ?? (i === 0 ? battle.sides[0].rage : 0);
     rages[current.id] = Math.max(0, Math.min(RAGE_MAX, Math.round(left) - destinyAppliedRageBonus(run, current.id)));
   });
 

@@ -15,7 +15,7 @@ export function parseTowerMode(raw: unknown): TowerMode | null {
     : null;
 }
 
-export const TRIAL_FLOORS = 50;
+export const TRIAL_FLOORS = 100;
 export const DUAL_TOWER_SCHEMA = 1;
 /** Trần an toàn của đá tài khoản. */
 export const STONES_MAX = Number.MAX_SAFE_INTEGER;
@@ -41,12 +41,12 @@ export interface TrialFloorRecord {
   readonly bestTurns: number;
 }
 
-export type TrialSweepTier = 1 | 2 | 3 | 4 | 5 | 6 | 7;
-export const TRIAL_SWEEP_MAX_TIER = 7;
+export type TrialSweepTier = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export const TRIAL_SWEEP_MAX_TIER = 12;
 
 /**
  * Bậc quét theo tầng cao nhất đã qua (0 = chưa đủ điều kiện). Tầng 1-20 giữ bậc cũ (mỗi 5 tầng một bậc, tối đa 4)
- * để người chơi cũ không mất quyền lợi; tầng 21-50 mỗi 10 tầng thêm một bậc (5, 6, 7).
+ * để người chơi cũ không mất quyền lợi; tầng 21-100 mỗi 10 tầng thêm một bậc (5 tới 12).
  */
 export function trialSweepTierOf(highestCleared: number): 0 | TrialSweepTier {
   if (!Number.isInteger(highestCleared) || highestCleared <= 0) return 0;

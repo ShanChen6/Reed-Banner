@@ -5,6 +5,7 @@
 
 import {
   PVP_ELO_START,
+  PVP_TEAM_MIN_HEROES,
   PVP_FORGIVE_PER_DAY,
   PVP_GOLD_DAILY_CAP,
   PVP_GOLD_PER_OPPONENT,
@@ -40,7 +41,7 @@ import {
 } from "@/core";
 import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 import { recordSeason, type SeasonStore } from "./seasons";
-import type { PvpRoomRecord } from "./pvpRooms";
+import { heroesOf, type PvpRoomRecord } from "./pvpRooms";
 import { buildDraft, pickTeamGroup } from "./pvpTeam";
 
 /** Bản đầu chỉ mở 1vs1. */
@@ -386,7 +387,7 @@ export function pvpMatchWindow(waitedMs: number): number {
   return PVP_MATCH_WINDOW + Math.floor(Math.max(0, waitedMs) / PVP_MATCH_WINDOW_EVERY_MS) * PVP_MATCH_WINDOW_STEP;
 }
 
-export type PvpQueueError = "badFormat" | "inMatch" | "banned" | "badBuild";
+export type PvpQueueError = "badFormat" | "inMatch" | "banned" | "badBuild" | "needHeroes";
 
 /** Nghề và hệ Đinh Bộ Lĩnh mang vào trận 1vs1. */
 export interface PvpBuild {
@@ -409,6 +410,8 @@ export async function pvpEnqueue(
     if (!ELEMENTS.includes(el as Element) || !PROFESSIONS.includes(pr as Profession)) return { ok: false, error: "badBuild" };
     await updateProfile(deps.profiles, ownerId, (p) => ({ ok: true, profile: { ...p, element: el as Element, profession: pr as Profession } }), deps.now);
   }
+  // 3vs3: cần từ PVP_TEAM_MIN_HEROES tướng (kể cả Đinh Bộ Lĩnh) để luôn còn tướng chọn dù bị cấm 6 lượt.
+  if (format === "team" && (await heroesOf(ownerId, deps)).length < PVP_TEAM_MIN_HEROES) return { ok: false, error: "needHeroes" };
   const own = await deps.pvp.rating(ownerId, format);
   if (own.banUntil > deps.now) return { ok: false, error: "banned", until: own.banUntil };
   const cur = await deps.pvp.queueOf(ownerId);
@@ -513,6 +516,8 @@ export interface PvpOverview {
   readonly build: PvpBuild;
   /** Vàng PvP còn nhận được hôm nay (trần mỗi ngày trừ số đã nhận); số trận không giới hạn. */
   readonly goldLeft: number;
+  /** Số tướng đang có (kể cả Đinh Bộ Lĩnh) và số tướng tối thiểu để vào 3vs3 xếp hạng. */
+  readonly heroCount: { readonly have: number; readonly need: number };
   /** Mã phòng mời đang ở (3vs3 giao hữu), null nếu không ở phòng nào. */
   readonly room: string | null;
   /** Số lần bị tính phá trận trong tuần này. */
@@ -566,6 +571,7 @@ export async function pvpOverview(ownerId: string, deps: PvpDeps): Promise<PvpOv
   }
   return {
     build: { element: profile.element, profession: profile.profession },
+    heroCount: { have: (await heroesOf(ownerId, deps)).length, need: PVP_TEAM_MIN_HEROES },
     room,
     goldLeft: Math.max(0, PVP_GOLD_DAILY_CAP - gold),
     breakCount: r.breakWeek === vnWeek(deps.now) ? r.breakCount : 0,
@@ -809,6 +815,3 @@ export function pvpPlay(id: string, owner: string, action: BattleAction, deps: P
     return { ok: true, state: r.state, events: r.events };
   });
 }
-
-/** Chỉ tín hiệu còn sống, không nước đi (client gọi mỗi vài giây khi chờ đối thủ). */
-export const pvpPing = pvpGetMatch;

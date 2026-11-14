@@ -1,5 +1,6 @@
 // Mô phỏng nhanh, tất định cho report nội dung Trial. Đây là công cụ cân bằng, không tham gia runtime/API.
 import { playAiTurn } from "@/core/ai";
+import { simRageOption } from "@/core/sim/rage";
 import { createBattle, type Element, type Profession } from "@/core/battle";
 import { autoProgress, newProfile, type Profile } from "@/core/progress";
 import { analyzeFeasibility, profileCandidates } from "@/core/tower/puzzleValidator";
@@ -53,6 +54,7 @@ export function evaluateTrialFloor(
       sides: [prepared.lineup.side, { fighters: resolved.floor.foes, leader: 0 }],
       seed: spec.board.publicSeed,
       timer: false,
+      ...simRageOption([prepared.lineup.side, { fighters: resolved.floor.foes }]),
       firstSide: 0,
       weights: resolved.floor.weights,
     }).state;

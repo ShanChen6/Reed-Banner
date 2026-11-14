@@ -47,7 +47,7 @@ export function formatDateKey(dateKey: string): string {
 
 /** Mỗi chặng 10 tầng; tên theo nội dung luật của chặng. Tháp dài hơn thì chặng dư lấy tên theo số. */
 export const STAGE_SIZE = 10;
-const STAGE_NAMES = ["Nhập Môn", "Luyện Trận", "Lệnh Mới", "Song Lệnh", "Tam Lệnh"] as const;
+const STAGE_NAMES = ["Nhập Môn", "Luyện Trận", "Lệnh Mới", "Song Lệnh", "Tam Lệnh", "Tứ Lệnh", "Ngũ Lệnh", "Lục Lệnh", "Thất Lệnh", "Thiên Đỉnh"] as const;
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"] as const;
 
 export interface TrialStage {

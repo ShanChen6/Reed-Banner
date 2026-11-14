@@ -2,6 +2,7 @@
 //   1. Luật có khóa đội hình không (tĩnh, chính xác, trên bộ tướng dự kiến)?
 //   2. Có tìm được đường thắng không (tìm kiếm có giới hạn, chỉ là chứng cứ, không phải chứng minh)?
 // "Có đội hợp lệ" không có nghĩa "tầng giải được". Không sửa engine, không đổi độ khó hay tặng tướng.
+import { simRageOption } from "../sim/rage";
 import { chooseSkill, playAiTurn, toView, type Difficulty } from "../ai";
 import {
   act,
@@ -253,6 +254,8 @@ function startState(setup: PuzzleSetup): BattleState {
     sides: [setup.sides[0], setup.sides[1]],
     seed: setup.seed,
     timer: false,
+    // Cùng luật Nộ với trận thật (`startMatch`): lời giải phải đúng khi người chơi đánh thật.
+    ...simRageOption(setup.sides),
     firstSide: setup.firstSide ?? 0,
     ...(setup.weights ? { weights: setup.weights } : {}),
   });
