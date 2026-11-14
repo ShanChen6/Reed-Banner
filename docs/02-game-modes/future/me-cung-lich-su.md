@@ -1,7 +1,7 @@
-# Mê cung lịch sử: đổ xúc xắc, trả lời sử, tìm đường thoát
+# Mê Lộ (Mê cung lịch sử): đổ xúc xắc, trả lời sử, tìm đường thoát
 
-> Cập nhật: 14/11/2026
-> Trạng thái: **DRAFT** — ý tưởng gốc của Shan (14/11/2026), Claude viết thiết kế chi tiết; chưa có code. Mọi con số là **điểm xuất phát**, cần chơi thử và mô phỏng. Các điểm chờ Shan quyết gom ở [mục 13](#13-điểm-cần-shan-quyết).
+> Cập nhật: 14/11/2026 (Shan chốt: đổi tên Hán Việt, không giới hạn số lượt, ô giao tranh mọi người như nhau)
+> Trạng thái: **DRAFT** — ý tưởng gốc của Shan (14/11/2026), Claude viết thiết kế chi tiết; chưa có code. Ba điểm đã chốt ghi ở [mục 13](#13-điểm-cần-shan-quyết). Mọi con số là **điểm xuất phát**, cần chơi thử và mô phỏng. Các điểm chờ Shan quyết gom ở [mục 13](#13-điểm-cần-shan-quyết).
 
 ## 1. Định vị
 
@@ -9,19 +9,19 @@ Chế độ một người, không đánh nhau theo lượt hai phe. Người ch
 
 - **Mục tiêu học:** người chơi đi hết các mê cung là đã đọc qua mạch sử từ Ngô Quyền dựng nước, loạn sứ quân, nhà Đinh tới nhà Tiền Lê. Sau mỗi câu luôn hiện 1–2 dòng **sử chép** giải thích đáp án, có ghi nguồn.
 - **Khác các chế độ không đánh nhau đang có:** [Khai Lộ](../khai-lo/gdd.md) và [Do Thám](../do-tham/gdd.md) là giải đố thuần, [Trận Đồ](../tran-do/gdd.md) là xếp quân, [Tầm Tướng Ký](../tam-tuong-ky/design-freeze.md) là ghép công thức. Mê cung lịch sử là chế độ duy nhất lấy **kiến thức sử** làm cơ chế chính.
-- **Gắn với game chính:** dùng lại bàn cờ match-3 (ô giao tranh), lương, vàng, tướng lịch sử và Sử ký của [Bình Loạn](../campaign/design-freeze.md). Quy tắc nguồn sử theo [sổ nguồn Campaign](../campaign/history-sources.md).
-- **Tên và đường dẫn:** tên hiển thị tạm là **Mê Cung Lịch Sử** (tên Shan đặt; tên chế độ hoa mọi chữ theo [Văn phong giao diện](../../00-overview/thuat-ngu.md#văn-phong-giao-diện)). Route tiếng Anh theo quy ước: `/game/maze`, scene `MAZE`, cờ bật `MAZE_ENABLED` (tắt mặc định như các chế độ mới khác).
+- **Gắn với game chính:** dùng lại bàn cờ match-3 (ô giao tranh), vàng, tướng lịch sử và Sử ký của [Bình Loạn](../campaign/design-freeze.md). Quy tắc nguồn sử theo [sổ nguồn Campaign](../campaign/history-sources.md).
+- **Tên và đường dẫn:** Shan muốn tên Hán Việt (14/11/2026). Claude chọn mặc định **Mê Lộ** ("đường rối", nghĩa gốc của mê cung), dòng phụ trên thẻ là "Mê cung lịch sử". Phương án khác: **Vấn Sử** (hỏi sử, nhấn vào phần câu hỏi), **Sử Lộ** (con đường sử), **Mê Trận** (dễ lẫn với Trận Đồ). Mê Lộ và Khai Lộ cùng chữ "Lộ"; nếu thấy dễ lẫn thì chọn Vấn Sử. Tên chế độ hoa mọi chữ theo [Văn phong giao diện](../../00-overview/thuat-ngu.md#văn-phong-giao-diện). Route tiếng Anh theo quy ước: `/game/maze`, scene `MAZE`, cờ bật `MAZE_ENABLED` (tắt mặc định như các chế độ mới khác).
 
 ## 2. Vòng chơi một màn
 
 1. Chọn mê cung (theo giai đoạn) và bậc **Dễ / Thường / Khó**.
 2. Chọn **tướng cầm quân** (quân cờ trên sa bàn) và **ban tham mưu** 2 tướng (dùng cho trợ giúp "Hỏi tướng", [mục 6](#6-trợ-giúp-mưu-kế)).
 3. Lời dẫn mở màn: 2–3 câu sử chép về giai đoạn của mê cung.
-4. Lặp lượt: **đổ xúc xắc → đi → dừng → trả lời → hiệu ứng ô** ([mục 3](#3-luật-di-chuyển-và-trả-lời)). Mỗi lần đổ xúc xắc tốn **1 lương**.
+4. Lặp lượt: **đổ xúc xắc → đi → dừng → trả lời → hiệu ứng ô** ([mục 3](#3-luật-di-chuyển-và-trả-lời)). Bộ đếm **lượt** tăng 1 mỗi lần đổ xúc xắc.
 5. Muốn qua **cổng thoát** phải hạ **boss trấn cổng** ở ô giao tranh cuối.
 6. Kết màn: chấm sao, thưởng, các thẻ Sử ký mới mở ([mục 8](#8-chấm-sao-thưởng-và-sử-ký-sưu-tầm)).
 
-**Thua màn:** hết lương mà chưa thoát ("hết lương, rút quân"). Có thể chơi lại ngay; mê cung tạo lại theo seed mới (chế độ thường) nên không học thuộc đường được.
+**Không giới hạn số lượt** (Shan chốt 14/11/2026: đây là giải đố học sử). Màn không thua vì hết lượt; người chơi đi tới khi thoát hoặc tự bỏ màn. Số lượt chỉ dùng để chấm sao ([mục 8.1](#81-sao)) và xếp hạng mê cung ngày. Chơi lại thì mê cung tạo lại theo seed mới (chế độ thường) nên không học thuộc đường được.
 
 Một màn Thường nhắm **8–12 phút**, khoảng 15–20 câu hỏi và 1–2 trận giao tranh.
 
@@ -65,8 +65,8 @@ X · · ┬ · · B · ┐
 | Màu ô | Độ khó câu | Đúng | Sai |
 |---|---|---|---|
 | Lục | 1 (dễ) | Đứng lại | Về ô bắt đầu lượt |
-| Vàng | 2 (vừa) | Đứng lại, **+1 lương** | Về ô bắt đầu lượt |
-| Đỏ | 3 (khó) | Đứng lại, **+2 lương**, **+1 Ấn sử** (điểm của màn) | Về ô bắt đầu lượt, **−1 lương** |
+| Vàng | 2 (vừa) | Đứng lại, **+1 Ấn sử** | Về ô bắt đầu lượt |
+| Đỏ | 3 (khó) | Đứng lại, **+2 Ấn sử** | Về ô bắt đầu lượt |
 
 Tỉ lệ màu theo bậc: Dễ 60/30/10, Thường 40/40/20, Khó 25/45/30 (phần trăm Lục/Vàng/Đỏ). Ô đỏ hay nằm trên **lối tắt**: đường ngắn hơn nhưng khó hơn, đường vòng dài nhưng dễ.
 
@@ -89,8 +89,8 @@ Tên bẫy mang không khí sử nhưng là **cơ chế game** (`fictional`), kh
 
 | Bẫy | Hiệu ứng khi sai | Gợi ý dùng ở |
 |---|---|---|
-| Phục binh | Mất lượt kế (vẫn trừ lương lượt đó) | Mọi mê cung |
-| Cọc ngầm | −2 lương | Mê cung Ngô (gợi trận Bạch Đằng) |
+| Phục binh | Mất lượt kế (bộ đếm lượt vẫn tăng) | Mọi mê cung |
+| Cọc ngầm | Mắc kẹt: mất 2 lượt kế | Mê cung Ngô (gợi trận Bạch Đằng) |
 | Nước lũ | Trôi lùi thêm 2 ô theo đường đã đi | Mê cung có sông |
 | Lạc lối | Dịch tới một ô đã thông ngẫu nhiên | Mê cung có rừng, núi |
 | Thích khách | Mất 1 trợ giúp ngẫu nhiên đang có | Mê cung nhà Đinh |
@@ -105,7 +105,7 @@ Dừng vào: hỏi một câu **Lục**. Đúng thì nhận lợi và ô thành 
 | Ô | Lợi ích |
 |---|---|
 | Ngựa chiến | Đi tiếp ngay 2 bước (không hỏi ở ô dừng nếu là ô đã thông) |
-| Kho lương | +3 lương |
+| Trạm ngựa | Lượt kế đổ hai xúc xắc, chọn số lớn hơn |
 | Mật thư | Lộ một lối tắt bị khóa và mở nó; lộ mọi bẫy ẩn trên lối đó |
 | Đồn trinh sát | Lộ mọi ô (kể cả bẫy ẩn) trong bán kính 3 |
 | Sử quan | +1 trợ giúp tùy chọn |
@@ -141,7 +141,7 @@ Shan (14/11/2026): người chơi di chuyển các ô để đánh boss, **boss 
 - Dùng lõi bàn cờ có sẵn (`src/core/board`: đổi ô, ghép, rơi, ô đặc biệt bản yếu/mạnh theo [Bàn cờ](../../01-gameplay/ban-co.md)). Không dùng `battle` (không có lượt địch, không máu người chơi).
 - Boss có **Thành lực** (thanh máu). Người chơi có **số nước** giới hạn: Dễ 15, Thường 12, Khó 10. Ghép 4 ô trở lên cho thêm 1 nước (theo luật thêm lượt hiện có, tối đa 1 lần mỗi nước).
 - Hết nước mà Thành lực còn: thua trận giao tranh. Hạ Thành lực về 0: thắng.
-- **Chỉ số không lấy từ hồ sơ.** Sát thương do loại ô quyết định, như nhau với mọi người, để chế độ là học sử chứ không phải cày cấp, và để mê cung ngày công bằng.
+- **Mọi người chơi như nhau** (Shan chốt 14/11/2026). Không lấy cấp, chỉ số, kỹ năng, trang bị hay nghề/hệ từ hồ sơ. Sát thương chỉ do loại ô quyết định; tướng cầm quân chỉ đổi hình trên sa bàn. Chế độ tập trung vào kiến thức sử, không phải cày cấp, và mê cung ngày công bằng.
 
 ### 5.2 Ý nghĩa ô trong giao tranh
 
@@ -152,7 +152,7 @@ Bàn dùng 6 loại ô; bỏ Tim vì không ai mất máu.
 | ⚔️ Kiếm | Sát thương thẳng vào Thành lực |
 | 🥁 Trống trận | Tích **Sĩ khí**: đủ 10 thì nước kế tiếp sát thương ×1.5 |
 | 📖 Sách | Tích **Mưu**: đủ 9 thì mở câu **Quân sư hiến kế** (câu Vàng). Đúng: phá giáp boss, Thành lực −15% ngay |
-| ☯️ Âm dương | Nạp **Kế sách** của tướng cầm quân (100 năng lượng = một đòn lớn, theo nghề của tướng: Tướng sĩ chém mạnh, Mưu sĩ phá chướng ngại, v.v.) |
+| ☯️ Âm dương | Nạp **Kế sách**: đủ 100 năng lượng thì được một đòn lớn, như nhau với mọi tướng (phá một hàng và gây sát thương theo số ô phá) |
 | 🍙 Bánh chưng | +1 nước (tối đa 3 lần mỗi trận) |
 | 💰 Thỏi vàng | Vàng thưởng nhặt được, cộng khi thắng màn |
 
@@ -168,7 +168,7 @@ Boss **không tấn công**. Thay vào đó Thành lực chia **3 pha** (100–6
 ### 5.4 Thắng, thua
 
 - **Thắng:** ô giao tranh thành đã thông, nhận thẻ Sử ký riêng của boss, vàng nhặt được, +2 Ấn sử. Boss phụ mở lối tắt gần đó.
-- **Thua:** tướng lùi về ô bắt đầu lượt, **−2 lương**. Boss **giữ nguyên Thành lực đã mất** cho lần sau, nên luôn có tiến triển và không bị kẹt.
+- **Thua:** tướng lùi về ô bắt đầu lượt. Boss **giữ nguyên Thành lực đã mất** cho lần sau, nên luôn có tiến triển và không bị kẹt.
 - Muốn bỏ qua boss phụ thì cứ đi đường khác; boss trấn cổng thì bắt buộc.
 
 ### 5.5 Boss theo giai đoạn (đề xuất)
@@ -195,13 +195,13 @@ Mỗi màn được cấp sẵn một bộ; chế độ thường cho mua thêm 
 | **Hỏi tướng** | 1 | 60 vàng | Một tướng trong ban tham mưu cho gợi ý. Nếu câu hỏi gắn tên người hay vùng đất của chính tướng đó (ví dụ hỏi về Hoa Lư mà hỏi Nguyễn Bặc) thì gợi ý **chắc**: loại thêm một đáp án sai; nếu không thì chỉ hiện gợi ý chữ |
 | **Hỏa tốc** | 1 | 40 vàng | Lượt này tự chọn số bước 1–6 thay vì đổ xúc xắc |
 
-Ban tham mưu chọn trong **tướng lịch sử đã có** (Nguyễn Bặc, Đinh Điền, Lê Hoàn, Trịnh Tú, Lưu Cơ, Đinh Liễn, các sứ quân đã mở), dùng chân dung có sẵn. Lời gợi ý là lời game.
+Ban tham mưu và tướng cầm quân chọn trong **mọi tướng lịch sử** (Đinh Bộ Lĩnh, Nguyễn Bặc, Đinh Điền, Lê Hoàn, Trịnh Tú, Lưu Cơ, Đinh Liễn, 12 sứ quân), **không cần đã sở hữu**, để ai cũng có như nhau. Dùng chân dung có sẵn. Lời gợi ý là lời game.
 
 ## 7. Bậc và số liệu một màn
 
 | | Dễ | Thường | Khó |
 |---|---|---|---|
-| Lương đầu màn | 24 | 20 | 18 |
+| Mốc lượt cho ★★ | 12 | 16 | 20 |
 | Quãng ngắn nhất tới cổng | 14 | 20 | 26 |
 | Sương mù | không | bán kính 2 | bán kính 1 |
 | Đồng hồ câu | không | 30 giây | 20 giây |
@@ -209,14 +209,14 @@ Ban tham mưu chọn trong **tướng lịch sử đã có** (Nguyễn Bặc, Đ
 | Nước giao tranh | 15 | 12 | 10 |
 | Tỉ lệ Lục/Vàng/Đỏ | 60/30/10 | 40/40/20 | 25/45/30 |
 
-Số lương được chọn để người trả lời đúng khoảng 70% thoát được với chừng 1/3 lương dư ở bậc Thường. Cần mô phỏng (`pnpm sim -- --maze`, người chơi giả với tỉ lệ đúng 50/70/90%) trước khi chốt.
+Mốc lượt cho ★★ ([mục 8.1](#81-sao)) đặt sao cho người trả lời đúng khoảng 70% đạt được ở bậc Thường. Cần mô phỏng (`pnpm sim -- --maze`, người chơi giả với tỉ lệ đúng 50/70/90%) trước khi chốt.
 
 ## 8. Chấm sao, thưởng và Sử ký sưu tầm
 
 ### 8.1 Sao
 
 - ★ Thoát được.
-- ★★ Thoát và còn ít nhất 1/3 lương đầu màn.
+- ★★ Thoát trong mốc lượt của bậc: Dễ 12, Thường 16, Khó 20 lượt (điểm xuất phát).
 - ★★★ Thêm điều kiện sai không quá 2 câu trong cả màn.
 
 ### 8.2 Thưởng (điểm xuất phát)
@@ -423,7 +423,7 @@ Các câu mê cung IV và phần sau năm 970 của mê cung III **chưa soạn 
 ### 12.1 Giao diện (phác)
 
 - Sa bàn kiểu bản đồ cổ như [bản đồ Bình Loạn](../../05-ui-ux/campaign/README.md): lối đi là đường đất, ô là phiến đá có màu viền theo độ khó, cờ lau cắm trên ô đã thông.
-- Thanh trên: lương, Ấn sử, trợ giúp, nút Sổ ôn. Xúc xắc trống đồng ở góc dưới.
+- Thanh trên: số lượt, Ấn sử, trợ giúp, nút Sổ ôn. Xúc xắc trống đồng ở góc dưới.
 - Câu hỏi hiện trên thẻ tre trượt lên; sau khi trả lời lật mặt sau là sử chép kèm mã nguồn.
 - Ô giao tranh mở bàn cờ match-3 cỡ nhỏ (8×8 nếu lõi bàn cờ hỗ trợ kích thước khác, không thì 12×8), boss là chân dung lớn bên trên với thanh Thành lực ba pha.
 - Điện thoại: sa bàn kéo và phóng to được, tự cuộn theo tướng.
@@ -440,18 +440,24 @@ Các câu mê cung IV và phần sau năm 970 của mê cung III **chưa soạn 
 
 1. **Kho câu bước 1:** mở rộng sổ nguồn, soạn và duyệt 60 câu mê cung II (giai đoạn có nguồn tốt nhất).
 2. **Bản chơi thử offline:** lõi mê cung + mê cung II bậc Dễ/Thường, chưa có giao tranh, chưa thưởng.
-3. **Giao tranh một chiều** và boss mê cung II; mô phỏng số lương, số nước.
+3. **Giao tranh một chiều** và boss mê cung II; mô phỏng mốc lượt, số nước.
 4. Đủ 4 mê cung, thưởng hồ sơ, Sử ký sưu tầm.
 5. Mê cung ngày và bảng xếp hạng.
 
 ## 13. Điểm cần Shan quyết
 
-1. **Tên hiển thị:** giữ "Mê cung lịch sử" hay đặt tên Hán Việt hợp các chế độ khác (ví dụ "Sử Lộ", "Mê Trận")? Route vẫn là `/game/maze`.
+**Đã chốt (Shan, 14/11/2026):**
+
+- Tên Hán Việt thay "Mê cung lịch sử"; Claude đề xuất **Mê Lộ** làm mặc định, phương án ở [mục 1](#1-định-vị). Shan có thể đổi.
+- **Không giới hạn số lượt** vì đây là giải đố học sử: bỏ lương làm giới hạn, không thua vì hết lượt; số lượt chỉ để chấm sao và xếp hạng.
+- **Ô giao tranh mọi người như nhau:** không lấy chỉ số hồ sơ; tướng chọn được mọi tướng lịch sử không cần sở hữu.
+
+**Còn mở:**
+
+1. **Tên cuối cùng:** Mê Lộ, Vấn Sử, Sử Lộ hay tên khác?
 2. **Sai thì về đâu:** về ô bắt đầu lượt (đề xuất, nhẹ nhàng) hay về xuất phát (rất khó)?
-3. **Lương làm giới hạn lượt:** đồng ý mỗi lần đổ xúc xắc tốn 1 lương, hết lương là thua màn?
-4. **Giao tranh không lấy chỉ số hồ sơ** (ai cũng như nhau) hay để tướng mạnh đánh nhanh hơn?
-5. **Mua trợ giúp bằng vàng** ở chế độ thường: có hay không?
-6. **Mê cung ngày có bảng xếp hạng** (cần đăng nhập) ngay từ đầu hay để sau?
-7. **Sổ nguồn cho sau năm 968:** mở rộng thẳng [sổ nguồn Campaign](../campaign/history-sources.md) (đang `FROZEN`, cần sửa đổi có ghi lý do) hay làm sổ riêng cho Mê cung?
-8. **Boss mê cung III và IV:** Đỗ Thích (979) và quân Tống (981) có hợp không, sau khi có nguồn?
-9. **Ai duyệt câu:** chỉ Shan, hay Shan duyệt mẫu rồi giao người đối chiếu nguồn?
+3. **Mua trợ giúp bằng vàng** ở chế độ thường: có hay không? (Nếu muốn mọi người như nhau tuyệt đối thì bỏ.)
+4. **Mê cung ngày có bảng xếp hạng** (cần đăng nhập) ngay từ đầu hay để sau?
+5. **Sổ nguồn cho sau năm 968:** mở rộng thẳng [sổ nguồn Campaign](../campaign/history-sources.md) (đang `FROZEN`, cần sửa đổi có ghi lý do) hay làm sổ riêng cho chế độ này?
+6. **Boss mê cung III và IV:** Đỗ Thích (979) và quân Tống (981) có hợp không, sau khi có nguồn?
+7. **Ai duyệt câu:** chỉ Shan, hay Shan duyệt mẫu rồi giao người đối chiếu nguồn?

@@ -39,7 +39,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [khai-lo/](02-game-modes/khai-lo/gdd.md) | Khai Lộ: [GDD](02-game-modes/khai-lo/gdd.md), giải đố xóa khối, có bản chơi thử |
 | ★ [do-tham/](02-game-modes/do-tham/gdd.md) | Do Thám: [GDD](02-game-modes/do-tham/gdd.md), giải đố dò bẫy, bàn suy luận được, đạo cụ nguyên tố; có bản chơi thử |
 | [future/](02-game-modes/future/quan-hung-pvp-truc-tiep.md) | Đề xuất đang làm dần (lõi PvP đã có code): [Quần Hùng PvP trực tiếp](02-game-modes/future/quan-hung-pvp-truc-tiep.md) (**DRAFT**) |
-| ★ [future/me-cung-lich-su.md](02-game-modes/future/me-cung-lich-su.md) | Mê cung lịch sử (**DRAFT**, chưa code): đổ xúc xắc đi qua mê cung, dừng ô nào trả lời câu sử ô đó (Ngô → Đinh → Tiền Lê); bẫy, ô may mắn, trợ giúp, ô giao tranh match-3 một chiều đánh boss; khung kho câu hỏi và quy trình duyệt nguồn |
+| ★ [future/me-cung-lich-su.md](02-game-modes/future/me-cung-lich-su.md) | Mê Lộ, tức Mê cung lịch sử (**DRAFT**, chưa code): đổ xúc xắc đi qua mê cung, dừng ô nào trả lời câu sử ô đó (Ngô → Đinh → Tiền Lê); bẫy, ô may mắn, không giới hạn lượt, trợ giúp, ô giao tranh match-3 một chiều đánh boss (mọi người như nhau); khung kho câu hỏi và quy trình duyệt nguồn |
 
 ## 03 · Nhân vật & kỹ năng (`03-characters/`)
 
