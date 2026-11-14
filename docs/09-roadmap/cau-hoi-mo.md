@@ -181,6 +181,7 @@ Thiết kế DRAFT ở [Sử Lộ](../02-game-modes/future/su-lo.md#13-điểm-c
 
 - [x] Tên Sử Lộ, không giới hạn số lượt, ô giao tranh mọi người như nhau (Shan, 14/11/2026).
 - [x] Trả lời sai thì về ô bắt đầu lượt (Shan, 14/11/2026).
-- [ ] TODO: mua trợ giúp bằng vàng.
-- [ ] TODO: mê cung ngày có bảng xếp hạng ngay không; boss mê cung III, IV.
-- [ ] TODO: sổ nguồn cho giai đoạn sau năm 968 (mở rộng sổ Campaign hay làm sổ riêng) và người duyệt câu hỏi.
+- [x] Trợ giúp có nhưng hạn chế (Shan, 14/11/2026).
+- [x] Có bảng xếp hạng mê cung ngày; boss III, IV do Claude chọn (Shan, 14/11/2026).
+- [x] Lập sổ nguồn riêng; Claude duyệt câu lần 1, Shan duyệt lần 2 (Shan, 14/11/2026).
+- [ ] TODO: chốt số liệu (mốc lượt, số nước giao tranh, giá trợ giúp, thưởng) sau khi chơi thử.

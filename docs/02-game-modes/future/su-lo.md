@@ -179,14 +179,14 @@ Boss lấy từ sự kiện **có nguồn**. Khi nguồn chưa đủ thì chưa 
 |---|---|---|---|
 | I. Ngô Quyền dựng nước | Thủy quân Nam Hán của Lưu Hoằng Tháo | S03, lời bàn Lê Văn Hưu: Tiền Ngô vương "phá trăm vạn binh của Lưu Hoằng Tháo" | Đã đọc (14/11/2026); chi tiết cọc gỗ, năm 938 **chưa** có trong nguồn đã mở |
 | II. Loạn sứ quân | Vòng vây Hoa Lư năm 951 (quân hai vua Ngô) | E04, S02 mục Tân Hợi 951: đánh không hạ được, rút quân | Đã có trong sổ nguồn |
-| III. Nhà Đinh | Chưa chốt (ứng viên: truy bắt Đỗ Thích năm 979) | Kỷ nhà Đinh trong Toàn thư | **Chưa mở được nguồn** |
-| IV. Nhà Tiền Lê | Quân Tống năm 981 (Hầu Nhân Bảo) | Kỷ nhà Lê trong Toàn thư | **Chưa mở được nguồn** |
+| III. Nhà Đinh | Thủy quân Chiêm Thành theo đường biển đánh vào năm 979 (Claude chọn; pha bàn cờ là sóng lớn, bão biển) | Kỷ nhà Đinh trong Toàn thư, năm 979 | **Chưa mở được nguồn**; phải xác minh trước khi dùng. Không có nguồn thì đổi sang phương án dự phòng: truy bắt Đỗ Thích (979) |
+| IV. Nhà Tiền Lê | Quân Tống năm 981 do Hầu Nhân Bảo cầm đầu (Claude chọn; pha bàn cờ là cọc, ải núi) | Kỷ nhà Lê trong Toàn thư, năm 981 | **Chưa mở được nguồn**; phải xác minh trước khi dùng |
 
 Không biến người không có ghi chép giao tranh (ví dụ các sứ quân quy phục hay liên minh) thành boss; quy tắc này giữ đúng [sổ nguồn mục 2](../campaign/history-sources.md#2-nhãn-confidence-và-quy-tắc-freeze).
 
 ## 6. Trợ giúp (Mưu kế)
 
-Mỗi màn được cấp sẵn một bộ; chế độ thường cho mua thêm bằng vàng trước màn (tối đa +1 mỗi loại), mê cung ngày thì không.
+Mỗi màn được cấp sẵn một bộ. Shan chốt (14/11/2026): **có trợ giúp nhưng hạn chế**. Chế độ thường cho mua thêm bằng vàng trước màn, tối đa +1 mỗi loại mỗi màn; tổng số lần dùng mỗi màn không quá 6. Mê cung ngày (có bảng xếp hạng) không cho mua, ai cũng có đúng bộ cấp sẵn.
 
 | Trợ giúp | Cấp sẵn | Mua thêm | Tác dụng |
 |---|---|---|---|
@@ -329,16 +329,32 @@ Chỉ câu `approved` được chọn vào màn. Thẻ Sử ký lấy theo `clai
 
 ### 10.4 Số lượng
 
-Một màn Thường dùng khoảng 20 câu, không lặp trong một lượt chơi; chơi lại nên gặp câu mới. Mục tiêu bản đầu: **80 câu `approved` mỗi giai đoạn** (khoảng 30 Lục, 30 Vàng, 20 Đỏ), tổng 320. Bản chơi thử có thể bắt đầu với 1 mê cung và 60 câu.
+Một màn Thường dùng khoảng 20 câu, không lặp trong một lượt chơi; chơi lại nên gặp câu mới. Mục tiêu bản đầu: **khoảng 300 câu `approved`**, chia theo độ dày nguồn ở [mục 10.6](#106-ước-lượng-kho-câu-hỏi) (khoảng 40% Lục, 35% Vàng, 25% Đỏ). Bản chơi thử có thể bắt đầu với 1 mê cung và 60 câu.
 
 ### 10.5 Quy trình duyệt
 
-1. **Mở rộng sổ nguồn.** Sổ hiện có (S01–S11) phủ tới năm 968. Kỷ nhà Đinh và nhà Tiền Lê của Toàn thư, chương Đinh và Tiền Lê của Việt Nam sử lược **chưa có trong sổ** (ngày 14/11/2026 chưa mở được các trang này trên Wikisource). Cần thêm nguồn S12 trở đi, đọc thật và ghi locator, trước khi soạn câu cho mê cung III và IV.
+1. **Sổ nguồn riêng** (Shan chốt 14/11/2026): lập `docs/02-game-modes/su-lo/nguon-su.md` khi bắt đầu soạn kho (chưa tạo file rỗng). Sổ dùng lại mã S01–S11 của [sổ nguồn Campaign](../campaign/history-sources.md) (không chép lại, chỉ dẫn link) và thêm nguồn mới từ S12 trở đi, cùng định dạng nhãn, độ tin cậy, locator. Kỷ nhà Đinh và nhà Tiền Lê của Toàn thư, chương Đinh và Tiền Lê của Việt Nam sử lược phải đọc thật và ghi vào sổ này trước khi soạn câu cho mê cung III và IV (ngày 14/11/2026 chưa mở được các trang này trên Wikisource).
 2. **Soạn theo lô** 20 câu một giai đoạn, trạng thái `draft`, đủ nguồn và locator.
 3. **Kiểm tự động** (`pnpm maze:check`, thêm vào `pnpm check`): đủ trường; mã nguồn và claim có trong sổ; không trùng câu; đáp án nằm trong options; `disputed` không dùng dạng `year`/`trueFalse`; `legend` có chữ "tương truyền"/"theo truyền thuyết".
-4. **Đối chiếu chéo:** một người (hoặc phiên Claude khác) mở lại nguồn, xác nhận locator và đáp án → `verified`. Người soạn không tự đối chiếu.
-5. **Shan duyệt** trên trang xem kho (chỉ bản dev, kiểu `/demo/art`) hoặc bảng trong PR → `approved`, ghi `review.by/at`.
+4. **Duyệt lần 1 (Claude):** mở lại nguồn, xác nhận locator, đáp án, nhãn và đáp án nhiễu → `verified`. Phiên duyệt khác phiên đã soạn lô đó.
+5. **Duyệt lần 2 (Shan):** trên trang xem kho (chỉ bản dev, kiểu `/demo/art`) hoặc bảng trong PR → `approved`, ghi `review.by/at`. Shan chốt cách duyệt hai lần này ngày 14/11/2026.
 6. **Người chơi báo sai:** nút "Báo câu này" sau mỗi câu, ghi vào hàng chờ trên server. Câu bị báo nhiều tạm rút khỏi lượt chơi tới khi xem lại; sửa nội dung thì tăng `rev`.
+
+### 10.6 Ước lượng kho câu hỏi
+
+Shan hỏi (14/11/2026): dữ liệu từ nhà Ngô tới Tiền Lê làm được bao nhiêu câu. Ước lượng của Claude, **chưa đếm trên nguồn**: mỗi sự kiện có ghi chép (một claim) cho được khoảng 2–3 câu khác nhau (trắc nghiệm, năm, xếp thứ tự, nối, đọc trích) mà không thành hỏi lại một ý.
+
+| Giai đoạn | Số claim ước tính | Câu hỏi tốt ước tính | Ghi chú |
+|---|---|---|---|
+| I. Ngô Quyền (trước 939–944) | 15–20 | 40–60 | Giai đoạn ngắn, ít ghi chép; trước 939 (Dương Đình Nghệ, Kiều Công Tiễn, phá quân Nam Hán) cần thêm nguồn |
+| II. Loạn sứ quân (944–967) | 45–55 | 120–150 | Dày nhất: 12 sứ quân với tên, danh hiệu, nơi giữ, kết cục; đã có sổ nguồn |
+| III. Nhà Đinh (968–979) | 35–45 | 90–120 | Lên ngôi, quốc hiệu, kinh đô, niên hiệu, triều thần, biến cố 979 |
+| IV. Nhà Tiền Lê (980–1009) | 40–55 | 100–140 | Lê Hoàn lên ngôi, chống Tống, Chiêm Thành, các đời vua sau |
+| **Tổng** | **135–175** | **khoảng 350–470** | |
+
+- Ép lên quá khoảng 500 câu thì bắt đầu hỏi lại cùng một ý với cách hỏi khác, hoặc phải dùng chi tiết nhỏ khó kiểm chứng; không nên.
+- Một số ý bị loại theo [quy tắc soạn](#103-quy-tắc-soạn-câu): mốc `disputed` chỉ hỏi kiểu "sử chép thế nào", truyền thuyết phải ghi "tương truyền", nên con số thực có thể thấp hơn khoảng 10–20%.
+- Vì vậy mục tiêu bản đầu khoảng 300 câu là vừa sức. Mê cung I mỏng nhất, nên lấy thêm khoảng 30% câu ôn từ các giai đoạn khác khi chơi lại nhiều lần.
 
 ## 11. Câu hỏi mẫu
 
@@ -442,7 +458,7 @@ Các câu mê cung IV và phần sau năm 970 của mê cung III **chưa soạn 
 2. **Bản chơi thử offline:** lõi mê cung + mê cung II bậc Dễ/Thường, chưa có giao tranh, chưa thưởng.
 3. **Giao tranh một chiều** và boss mê cung II; mô phỏng mốc lượt, số nước.
 4. Đủ 4 mê cung, thưởng hồ sơ, Sử ký sưu tầm.
-5. Mê cung ngày và bảng xếp hạng.
+5. Mê cung ngày và bảng xếp hạng (Shan chốt có làm).
 
 ## 13. Điểm cần Shan quyết
 
@@ -453,10 +469,12 @@ Các câu mê cung IV và phần sau năm 970 của mê cung III **chưa soạn 
 - **Ô giao tranh mọi người như nhau:** không lấy chỉ số hồ sơ; tướng chọn được mọi tướng lịch sử không cần sở hữu.
 - **Trả lời sai thì tướng quay về ô bắt đầu lượt đó** ([mục 3.3](#33-trả-lời)), không về điểm xuất phát.
 
-**Còn mở:**
+**Đã chốt thêm (Shan, 14/11/2026):**
 
-1. **Mua trợ giúp bằng vàng** ở chế độ thường: có hay không? (Nếu muốn mọi người như nhau tuyệt đối thì bỏ.)
-2. **Mê cung ngày có bảng xếp hạng** (cần đăng nhập) ngay từ đầu hay để sau?
-3. **Sổ nguồn cho sau năm 968:** mở rộng thẳng [sổ nguồn Campaign](../campaign/history-sources.md) (đang `FROZEN`, cần sửa đổi có ghi lý do) hay làm sổ riêng cho chế độ này?
-4. **Boss mê cung III và IV:** Đỗ Thích (979) và quân Tống (981) có hợp không, sau khi có nguồn?
-5. **Ai duyệt câu:** chỉ Shan, hay Shan duyệt mẫu rồi giao người đối chiếu nguồn?
+- **Trợ giúp có nhưng hạn chế** ([mục 6](#6-trợ-giúp-mưu-kế)): mua thêm tối đa +1 mỗi loại mỗi màn, mê cung ngày không mua.
+- **Có bảng xếp hạng mê cung ngày** ([mục 8.5](#85-mê-cung-ngày-bước-sau)).
+- **Lập sổ nguồn riêng** cho chế độ này ([mục 10.5](#105-quy-trình-duyệt)).
+- **Boss mê cung III, IV do Claude chọn** ([mục 5.5](#55-boss-theo-giai-đoạn-đề-xuất)): thủy quân Chiêm Thành năm 979 và quân Tống năm 981, cần xác minh nguồn trước khi dùng.
+- **Duyệt câu hai lần:** Claude duyệt lần 1, Shan duyệt lần 2.
+
+Hiện không còn điểm mở về luật. Các số liệu (mốc lượt, số nước, giá trợ giúp, thưởng) vẫn là điểm xuất phát, chốt sau khi chơi thử.
