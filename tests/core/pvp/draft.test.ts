@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { MAIN_ID, PVP_DRAFT_TURN_MS, PVP_PREP_MS, createDraft, draftBeginPrep, draftPrepDone, draftPrepReady, draftPrepSwap, draftBan, draftCatchUp, draftOver, draftPick, draftStep, type DraftHero, type PvpDraft } from "../../../src/core";
+import { MAIN_ID, PVP_DRAFT_TURN_MS, PVP_PREP_MS, createDraft, draftBeginPrep, draftPrepDone, draftPrepReady, draftPrepSwap, draftBan, draftCatchUp, draftChoices, draftOver, draftPick, draftStep, type DraftHero, type PvpDraft } from "../../../src/core";
 
 const T0 = 1_000_000;
 const hero = (id: string, level = 3, element: DraftHero["element"] = "kim", profession: DraftHero["profession"] = "tuongSi"): DraftHero => ({ id, name: id, level, element, profession });
@@ -59,14 +59,10 @@ describe("PvP cấm chọn", () => {
     assert.equal(draftOver(done), true);
     assert.equal(done.bans.length, 6);
     assert.ok(done.bans.every((b) => b.auto));
-    // Mỗi người chỉ có Đinh Bộ Lĩnh và hai tướng, mà tướng bị cấm không chọn được: ai hết tướng thì chỗ đó do máy điền.
-    assert.ok(done.picks.length >= 2 && done.picks.length <= 5);
+    // Mỗi người chỉ có Đinh Bộ Lĩnh và hai tướng: tướng bị cấm không chọn được; hết tướng khác thì được chọn trùng đồng đội.
+    assert.ok(done.picks.length >= 2 && done.picks.length <= 6);
     assert.ok(done.picks.every((p) => !done.bans.some((b) => b.ban.kind === "hero" && b.ban.id === p.hero.id)));
     assert.equal(done.picks.filter((p) => p.hero.id === MAIN_ID).length, 1);
-    for (const side of [0, 1]) {
-      const ids = done.picks.filter((p) => p.side === side).map((p) => p.hero.id);
-      assert.equal(new Set(ids).size, ids.length);
-    }
     // Kết quả xác định theo hạt giống.
     assert.deepEqual(draftCatchUp(make(), T0 + 20 * PVP_DRAFT_TURN_MS), done);
   });
@@ -118,5 +114,41 @@ describe("PvP cấm chọn", () => {
       assert.equal(draftOver(r.draft), true);
       assert.equal(r.draft.picks.length, 1);
     }
+  });
+
+  it("hết tướng nào khác thì được chọn trùng tướng của đồng đội; còn tướng khác thì không", () => {
+    const humans = [["a1", "a2"], ["b1"]] as const;
+    // a2 chỉ có h1, đồng đội a1 đã chọn h1: không còn tướng nào khác nên a2 được chọn trùng.
+    const owned = {
+      a1: [hero("h1", 3)],
+      a2: [hero("h1", 3)],
+      b1: [hero("h1", 3), hero("h2", 3)],
+    };
+    let d = createDraft({ humans, names: {}, ratings: { a1: 1000, a2: 1000, b1: 1100 }, owned, roster: ROSTER, seed: 7, now: T0 });
+    const bans = [["b1", "h5"], ["a1", "h6"], ["b1", "h7"], ["a1", "h3"], ["b1", "h4"], ["a2", "h8"]] as const;
+    for (const [who, id] of bans) {
+      const r = draftBan(d, who, { kind: "hero", id }, T0);
+      if (r.ok) d = r.draft;
+    }
+    while (draftStep(d)?.kind === "ban") d = draftCatchUp(d, (d.deadline as number) + 1);
+    const first = draftStep(d)!;
+    const r1 = draftPick(d, first.owner, { hero: "h1" }, T0);
+    assert.ok(r1.ok);
+    if (!r1.ok) return;
+    d = r1.draft;
+    while (draftStep(d) && draftStep(d)!.owner !== "a2") {
+      const s2 = draftStep(d)!;
+      const choice = draftChoices(d, s2.owner).find((c) => c.error === null)!;
+      const r = draftPick(d, s2.owner, { hero: choice.hero.id }, T0);
+      assert.ok(r.ok);
+      if (r.ok) d = r.draft;
+    }
+    const a2 = draftChoices(d, "a2");
+    assert.deepEqual(a2.map((c) => c.error), [null], "chỉ có h1 mà đồng đội đã lấy nên được chọn trùng");
+    const dup = draftPick(d, "a2", { hero: "h1" }, T0);
+    assert.ok(dup.ok);
+    if (dup.ok) assert.equal(dup.draft.picks.filter((p) => p.side === 0 && p.hero.id === "h1").length, 2);
+    // b1 còn h2 nên không được chọn trùng h1 trong cùng phe nếu phe đã có h1.
+    assert.ok(draftChoices(d, "b1").some((c) => c.hero.id === "h2"));
   });
 });

@@ -72,6 +72,7 @@ const ERROR_NAME: Record<string, string> = {
   inMatch: "Bạn đang có một trận dở. Hãy vào lại trận đó.",
   badFormat: "Thể thức này chưa mở.",
   banned: "Bạn đang bị hạn chế ghép trận vì phá trận.",
+  needHeroes: "Đấu 3vs3 xếp hạng cần từ 7 tướng trở lên (kể cả Đinh Bộ Lĩnh), vì sáu lượt cấm vẫn phải chừa tướng cho bạn chọn.",
   conflict: "Máy chủ đang bận, hãy thử lại.",
   notYourTurn: "Chưa đến lượt bạn.",
   notCaptain: "Chỉ đội trưởng mới đổi được người hành động.",
@@ -284,9 +285,10 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
             Điểm {o.ratings.team.rating} · {o.ratings.team.wins} thắng · {o.ratings.team.losses} thua
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <Button disabled={busy || !!o.banUntil} onClick={() => void queue("team")}>
+            <Button disabled={busy || !!o.banUntil || o.heroCount.have < o.heroCount.need} onClick={() => void queue("team")}>
               Tìm trận 3vs3
             </Button>
+            {o.heroCount.have < o.heroCount.need && <p className="text-sm text-on-wood-soft">Cần từ {o.heroCount.need} tướng trở lên, bạn đang có {o.heroCount.have}.</p>}
             <p className="text-sm text-on-wood-soft">Ghép đủ người thì cấm chọn tướng công khai, mỗi phe cấm 3 tướng rồi mỗi người chọn một tướng của mình.</p>
           </div>
         </OrnateFrame>

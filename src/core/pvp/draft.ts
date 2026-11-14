@@ -9,6 +9,8 @@ import { createRng } from "../rng";
 import { pvpSideRating } from "./elo";
 
 export const PVP_DRAFT_BANS_PER_SIDE = 3;
+/** Số tướng tối thiểu để xếp hàng 3vs3 xếp hạng: sáu lượt cấm không thể lấy hết tướng của một người. */
+export const PVP_TEAM_MIN_HEROES = 7;
 /** Thời gian cho mỗi lượt cấm hoặc chọn. */
 export const PVP_DRAFT_TURN_MS = 20_000;
 /** Thời gian chuẩn bị sau cấm chọn: đổi trang bị, đội trưởng xếp vị trí, mọi người bấm sẵn sàng. */
@@ -149,12 +151,16 @@ const professionBanned = (d: PvpDraft, p: Profession) => d.bans.some((b) => b.ba
 export function draftChoices(d: PvpDraft, owner: string): { readonly hero: DraftHero; readonly error: DraftError | null }[] {
   const side = d.humans[0].includes(owner) ? 0 : 1;
   const dblTaken = d.picks.some((p) => p.hero.id === MAIN_ID);
-  return (d.owned[owner] ?? []).map((hero) => {
-    if (d.picks.some((p) => p.side === side && p.hero.id === hero.id)) return { hero, error: "heroTaken" as const };
+  const base = (d.owned[owner] ?? []).map((hero) => {
     if (hero.id === MAIN_ID && dblTaken) return { hero, error: "dblTaken" as const };
     if (isBanned(d, hero)) return { hero, error: "banned" as const };
+    if (d.picks.some((p) => p.side === side && p.hero.id === hero.id)) return { hero, error: "heroTaken" as const };
     return { hero, error: null };
   });
+  // Không còn tướng nào khác thì được chọn tướng trùng với đồng đội trong phe (trận có người đánh thật đòi từ 7 tướng,
+  // sáu lượt cấm vẫn chừa ít nhất một tướng cho mỗi người).
+  if (base.some((c) => c.error === null)) return base;
+  return base.map((c) => (c.error === "heroTaken" ? { hero: c.hero, error: null } : c));
 }
 
 /** Người này còn tướng nào chọn được không. */
