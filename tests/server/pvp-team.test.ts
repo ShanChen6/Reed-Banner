@@ -88,7 +88,7 @@ for (const [name, factory] of stores) {
         }
         const res =
           mine.turn!.kind === "ban"
-            ? await pvpDraftPlay(id, who, { type: "ban", ban: { kind: "hero", id: mine.roster[0]!.id } }, mk(t))
+            ? await pvpDraftPlay(id, who, { type: "ban", ban: { kind: "hero", id: mine.roster[mine.roster.length - 1]!.id } }, mk(t))
             : await pvpDraftPlay(id, who, { type: "pick", hero: free!.hero.id }, mk(t));
         assert.ok(res.ok, res.ok ? "" : res.error);
         v = (res as { ok: true; view: PvpDraftView }).view;
@@ -131,6 +131,32 @@ for (const [name, factory] of stores) {
       const m = await pvpGetMatch(v.matchId!, "u1", mk(t + 200));
       assert.ok(m.ok);
       if (m.ok) assert.equal(m.view.seats.find((s) => s.mine)?.name, "Tên u1");
+    });
+
+    it("bị cấm hết tướng kèm và Đinh Bộ Lĩnh đã có người lấy: một phe không còn ai chọn được thì bỏ phiên, mọi người rời hàng đợi", async () => {
+      const { mk } = await setup();
+      const id = await toDraft(mk);
+      const starters = ["haVan", "leThach", "maiThanh", "toKim", "phungPhong"];
+      let t = T0 + PVP_TEAM_FILL_MS + 2000;
+      let v = await view(id, "u1", mk, t);
+      for (let guard = 0; guard < 20 && v.status === "active"; guard++) {
+        t += 1000;
+        const who = USERS.find((u) => v.turn?.name === `Tên ${u}`)!;
+        const mine = await view(id, who, mk, t);
+        const bannedIds = new Set(mine.bans.map((b) => b.value));
+        const body =
+          mine.turn!.kind === "ban"
+            ? ({ type: "ban", ban: { kind: "hero", id: starters.find((x) => !bannedIds.has(x)) ?? mine.roster.find((x) => !bannedIds.has(x.id))!.id } } as const)
+            : ({ type: "pick", hero: (mine.choices.find((c) => c.error === null) ?? mine.choices[0]!).hero.id } as const);
+        const r = await pvpDraftPlay(id, who, body, mk(t));
+        if (!r.ok) break;
+        v = r.view;
+      }
+      assert.equal(v.status, "abandoned");
+      for (const u of USERS) {
+        const o = await pvpOverview(u, mk(t + 100));
+        assert.deepEqual([o.draftId, o.matchId, o.queue], [null, null, null]);
+      }
     });
 
     it("không ai bấm: hết giờ máy cấm, chọn thay, người hỏi sau vẫn vào được trận; không vào hàng đợi lại khi đang cấm chọn", async () => {

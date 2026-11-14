@@ -298,7 +298,8 @@ export default function PvpDraftScreen({ id, onMatch, onExit }: { id: string; on
       )}
       {!mine && view.turn && <p className="text-sm text-on-wood-soft">Hết giờ thì máy tự cấm ngẫu nhiên hoặc chọn thay. Cấp và trang bị theo hồ sơ của từng tướng.</p>}
       {view.status === "abandoned" && (
-        <div>
+        <div className="flex flex-col gap-2">
+          <Alert role="alert">Không dựng được trận vì một phe không có ai chọn được tướng. Mọi người đã rời hàng đợi, hãy ghép lại.</Alert>
           <Button variant="secondary" onClick={onExit}>
             Quay lại
           </Button>

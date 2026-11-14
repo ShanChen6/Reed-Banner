@@ -157,8 +157,15 @@ export function draftChoices(d: PvpDraft, owner: string): { readonly hero: Draft
   });
 }
 
+/** Người này còn tướng nào chọn được không. */
+function hasAnyChoice(d: PvpDraft, owner: string): boolean {
+  return draftChoices(d, owner).some((c) => c.error === null);
+}
+
 function advance(d: PvpDraft, now: number): PvpDraft {
-  const at = d.at + 1;
+  let at = d.at + 1;
+  // Người không còn tướng nào chọn được (ví dụ chỉ có Đinh Bộ Lĩnh mà phe kia đã lấy) thì bỏ lượt ngay, khỏi chờ hết giờ.
+  while (at < d.steps.length && d.steps[at]!.kind === "pick" && !hasAnyChoice({ ...d, at }, d.steps[at]!.owner)) at++;
   return { ...d, at, deadline: at >= d.steps.length ? null : now + PVP_DRAFT_TURN_MS };
 }
 
@@ -212,12 +219,7 @@ function autoStep(d: PvpDraft, now: number): PvpDraft {
     const r = draftPick(d, step.owner, { hero: c.hero.id, ...(element ? { element } : {}), ...(profession ? { profession } : {}) }, now);
     if (r.ok) return r.draft;
   }
-  // Hết tướng hợp lệ: chọn tướng chưa trùng trong phe, bất chấp cấm, để phe không bị thiếu người.
-  const loose = choices.filter((c) => c.error !== "heroTaken" && c.error !== "dblTaken").sort(byLevel)[0];
-  if (loose) {
-    const r = draftPick(d, step.owner, { hero: loose.hero.id }, now, true);
-    if (r.ok) return r.draft;
-  }
+  // Hết tướng hợp lệ (bị cấm hết hoặc trùng): người này không vào đội, chỗ đó do máy điền.
   return advance(d, now);
 }
 

@@ -64,7 +64,7 @@ export async function probePvp(): Promise<{ available: boolean; busy: boolean }>
   const r = await call("/api/pvp");
   if (r.status !== 200) return { available: false, busy: false };
   const o = r.data as unknown as PvpOverview;
-  return { available: true, busy: !!o.matchId || !!o.queue };
+  return { available: true, busy: !!o.matchId || !!o.draftId || !!o.queue };
 }
 
 const ERROR_NAME: Record<string, string> = {

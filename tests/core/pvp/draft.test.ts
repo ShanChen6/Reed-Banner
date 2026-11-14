@@ -59,8 +59,9 @@ describe("PvP cấm chọn", () => {
     assert.equal(draftOver(done), true);
     assert.equal(done.bans.length, 6);
     assert.ok(done.bans.every((b) => b.auto));
-    // Mỗi người chỉ có Đinh Bộ Lĩnh và hai tướng: phe không có Đinh Bộ Lĩnh thiếu một tướng nên một chỗ do máy điền.
-    assert.equal(done.picks.length, 5);
+    // Mỗi người chỉ có Đinh Bộ Lĩnh và hai tướng, mà tướng bị cấm không chọn được: ai hết tướng thì chỗ đó do máy điền.
+    assert.ok(done.picks.length >= 2 && done.picks.length <= 5);
+    assert.ok(done.picks.every((p) => !done.bans.some((b) => b.ban.kind === "hero" && b.ban.id === p.hero.id)));
     assert.equal(done.picks.filter((p) => p.hero.id === MAIN_ID).length, 1);
     for (const side of [0, 1]) {
       const ids = done.picks.filter((p) => p.side === side).map((p) => p.hero.id);
@@ -90,7 +91,8 @@ describe("PvP cấm chọn", () => {
     if (r.ok) assert.deepEqual(r.draft.prep!.lineup[0].map((s) => s.hero.id), [d.prep!.lineup[0][2]!.hero.id, d.prep!.lineup[0][1]!.hero.id, d.prep!.lineup[0][0]!.hero.id]);
     assert.equal(draftPrepDone(d, T0 + 1000), false);
     let all = d;
-    for (const o of ["a1", "a2", "a3", "b1", "b2", "b3"]) {
+    const seated = d.prep!.lineup.flat().flatMap((x) => (x.owner === null ? [] : [x.owner]));
+    for (const o of seated) {
       assert.equal(draftPrepDone(all, T0 + 1000), false);
       const x = draftPrepReady(all, o);
       assert.ok(x.ok);
@@ -98,5 +100,23 @@ describe("PvP cấm chọn", () => {
     }
     assert.equal(draftPrepDone(all, T0 + 1000), true);
     assert.equal(draftPrepDone(d, T0 + PVP_PREP_MS), true);
+  });
+
+  it("người chỉ có Đinh Bộ Lĩnh mà phe kia đã lấy thì bị bỏ lượt chọn ngay, không chờ hết giờ", () => {
+    const humans = [["a1"], ["b1"]] as const;
+    const owned = { a1: [hero(MAIN_ID, 5, "hoa", "phapSu")], b1: [hero(MAIN_ID, 5, "hoa", "phapSu")] };
+    let d = createDraft({ humans, names: {}, ratings: { a1: 1100, b1: 1000 }, owned, roster: ROSTER, seed: 7, now: T0 });
+    for (const [who, id] of [["a1", "h1"], ["b1", "h2"], ["a1", "h3"], ["b1", "h4"], ["a1", "h5"], ["b1", "h6"]] as const) {
+      const r = draftBan(d, who, { kind: "hero", id }, T0);
+      assert.ok(r.ok);
+      if (r.ok) d = r.draft;
+    }
+    // Phe điểm thấp (b1) chọn trước và lấy Đinh Bộ Lĩnh; a1 không còn tướng nào nên cấm chọn xong luôn.
+    const r = draftPick(d, "b1", { hero: MAIN_ID, element: "kim" }, T0);
+    assert.ok(r.ok);
+    if (r.ok) {
+      assert.equal(draftOver(r.draft), true);
+      assert.equal(r.draft.picks.length, 1);
+    }
   });
 });
