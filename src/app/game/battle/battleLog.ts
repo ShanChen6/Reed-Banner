@@ -77,7 +77,7 @@ export function describe(state: BattleState, e: BattleEvent): string | null {
         ? "Phe bạn bị Đóng băng, mất lượt"
         : "Đối thủ bị Đóng băng, mất lượt";
     case "end":
-      return e.winner === PLAYER ? "Bạn thắng!" : "Bạn thua";
+      return e.winner === PLAYER ? "Chúa công thắng!" : "Chúa công thua";
     default:
       return null;
   }

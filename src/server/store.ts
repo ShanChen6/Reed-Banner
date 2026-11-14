@@ -15,6 +15,8 @@ import { DrizzleSeasonStore } from "./db/seasons";
 import { MemorySeasonStore, type SeasonStore } from "./seasons";
 import { DrizzleLeaderboardStore } from "./db/leaderboard";
 import { DrizzleArenaStore } from "./db/arena";
+import { DrizzlePvpStore } from "./db/pvp";
+import { MemoryPvpStore, type PvpStore } from "./pvp";
 import { MemoryArenaStore, type ArenaStore } from "./arena";
 import { MemoryLeaderboardStore, type LeaderboardStore } from "./leaderboard";
 import { DrizzleProfileStore } from "./db/profiles";
@@ -78,7 +80,7 @@ export class MemoryMatchStore implements MatchStore {
   }
 }
 
-const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore; coLauFormationStore?: FormationStore; coLauRankRewardStore?: RankRewardStore; coLauSeasonStore?: SeasonStore };
+const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauPvpStore?: PvpStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore; coLauFormationStore?: FormationStore; coLauRankRewardStore?: RankRewardStore; coLauSeasonStore?: SeasonStore };
 
 /**
  * Kho dùng chung của server: Postgres (Neon) khi có DATABASE_URL, ngược lại lưu trong bộ nhớ (dev).
@@ -180,4 +182,11 @@ export async function checkDatabase(): Promise<DatabaseCheck> {
   } catch (e) {
     return { kind: "neon", ok: false, error: e instanceof Error ? e.name : "unknown" };
   }
+}
+
+/** Kho Quần Hùng online (PvP): hàng đợi, trận và điểm hạng, cùng nguồn với kho trận. */
+export function pvpStore(): PvpStore {
+  const url = process.env.DATABASE_URL;
+  globalStore.coLauPvpStore ??= url ? new DrizzlePvpStore(neonDb(url)) : new MemoryPvpStore();
+  return globalStore.coLauPvpStore;
 }

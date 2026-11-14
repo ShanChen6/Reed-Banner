@@ -1,6 +1,7 @@
 // Mô phỏng Viễn Chinh: một kế hoạch tham lam điều hai đạo quân (đi đường ngắn nhất, chờ giáp công trước thành
 // đích, đóng quân khi cả hai đuối), mọi trận do AI đánh thay người chơi. Thuần, tất định theo seed.
 
+import { simRageOption } from "./rage";
 import { playAiTurn, type Difficulty } from "../ai";
 import { createBattle, type BattleState } from "../battle";
 import {
@@ -297,6 +298,7 @@ function fight(run: ExpeditionRun, army: ArmyIndex, encounter: ExpeditionEncount
     sides: [expeditionArmySide(run, army), expeditionFoeSide(encounter)],
     seed,
     timer: false,
+    ...simRageOption([expeditionArmySide(run, army), expeditionFoeSide(encounter)]),
     firstSide: 0,
     weights: encounter.weights,
   });

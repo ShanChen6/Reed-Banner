@@ -470,6 +470,15 @@ export function campaignBattleScenario(
   return node && isCombatStoryNode(node) ? node.scenario : undefined;
 }
 
+/** NPC hư cấu (`hero: false`) theo id, lấy từ encounter đầu tiên có mặt; undefined khi không có. */
+export function campaignNpc(id: string): EncounterFoe | undefined {
+  for (const e of ENCOUNTERS) {
+    const foe = e.foes.find((f) => f.id === id && !f.hero);
+    if (foe) return foe;
+  }
+  return undefined;
+}
+
 /** Đối thủ đã dựng ở cấp của encounter; undefined khi nhiệm vụ chưa có nội dung trận. */
 export function campaignEncounterFoes(
   nodeId: string,

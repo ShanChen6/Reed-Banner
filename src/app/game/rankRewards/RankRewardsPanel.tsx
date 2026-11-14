@@ -20,7 +20,7 @@ interface Item {
 }
 
 const TIER_LABEL = Object.fromEntries(REWARD_TIERS.map((t) => [t.tier, t.label])) as Record<string, string>;
-const PERIOD_NOUN: Record<RankRewardMode, string> = { daily: "ngày", destiny: "chu kỳ", survival: "mùa", arena: "mùa", tamTuongKy: "tuần" };
+const PERIOD_NOUN: Record<RankRewardMode, string> = { daily: "ngày", destiny: "chu kỳ", survival: "mùa", arena: "mùa", tamTuongKy: "tuần", pvp: "mùa" };
 
 export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankRewardMode; onClaimed?: () => void }) {
   const [state, setState] = useState<{ canClaim: boolean; items: Item[] } | null>(null);
@@ -62,8 +62,8 @@ export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankReward
   if (!state.canClaim)
     return (
       <p role="note" className="rounded border border-frame-gold-hi/20 bg-black/20 px-3 py-2 text-sm text-muted">
-        Thưởng vàng theo hạng cuối kỳ chỉ dành cho tài khoản đã đăng nhập.{" "}
-        <SceneLink scene="LOGIN" className="text-frame-gold underline">Đăng nhập</SceneLink>
+        Thưởng vàng theo hạng cuối kỳ chỉ dành cho tài khoản đã ghi danh.{" "}
+        <SceneLink scene="LOGIN" className="text-frame-gold underline">Trình danh</SceneLink>
       </p>
     );
   if (state.items.length === 0 && !note) return null;

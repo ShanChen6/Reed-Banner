@@ -3,7 +3,7 @@
 > Cập nhật: 11/11/2026 (thêm 8 Phúc của luật V2, Shan chốt)
 > Trạng thái: **IMPLEMENTED**
 
-Phúc chỉ tồn tại trong một Destiny run. Thứ tự chỉ số là: build/cấp → trang bị và cộng hưởng hệ → tổng phần trăm Phúc → làm tròn. Bonus năng lượng/nộ khí đầu trận là tạm thời và bị loại khỏi runtime khi settle để không cộng lặp qua tầng.
+Phúc chỉ tồn tại trong một Destiny run. Thứ tự chỉ số là: build/cấp → trang bị và cộng hưởng hệ → tổng phần trăm Phúc → làm tròn. Bonus năng lượng/nộ khí đầu trận là tạm thời và bị loại khỏi runtime khi settle để không cộng lặp qua tầng. Từ 14/11/2026 Thiên Mệnh dùng Nộ riêng từng tướng ([tài nguyên, mục 3](../../01-gameplay/tai-nguyen-cong-thuc.md#3-nộ-và-kỹ-năng-bị-động)): run lưu `rages` theo id (dữ liệu cũ chỉ có `rage` của thủ lĩnh thì thủ lĩnh lấy từ đó, tướng khác bắt đầu từ 0), tướng nghỉ giữ nguyên Nộ, bị động hết hiệu lực qua tầng. Phúc Trống trận chỉ cộng cho thủ lĩnh, không nhân theo số tướng.
 
 | ID | Nhóm | Hiếm | Cap | Effect v1 |
 |---|---|---:|---:|---|

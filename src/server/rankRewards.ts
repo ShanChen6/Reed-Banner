@@ -108,7 +108,7 @@ export function destinySource(board: DestinyLeaderboardStore): RankRewardSource 
 }
 
 /** Mùa theo tuần của Trấn Ải và Quần Hùng: kỳ là khóa thứ Hai đầu tuần, bảng là điểm mùa của @/server/seasons. */
-export function seasonSource(mode: "survival" | "arena" | "tamTuongKy", seasons: SeasonStore): RankRewardSource {
+export function seasonSource(mode: "survival" | "arena" | "tamTuongKy" | "pvp", seasons: SeasonStore): RankRewardSource {
   return {
     mode,
     closedPeriods(now, count) {

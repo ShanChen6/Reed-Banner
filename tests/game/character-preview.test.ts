@@ -3,6 +3,7 @@ import { readFileSync, statSync } from "node:fs";
 import { test } from "node:test";
 import { characterCatalog } from "../../src/app/demo/characters/catalog";
 import { partUrl, partsOf, rigOf } from "../../src/app/game/stage/rigs";
+import { campaignNpc } from "../../src/core";
 
 test("bảng xem thử chỉ có nhân vật có rig, dung lượng khớp các file thật", async () => {
   const characters = await characterCatalog();
@@ -65,4 +66,12 @@ test("Xạ thủ và Sát thủ đã vào roster; chỉ Đinh Ngọc và Vũ Pho
   assert.equal(vuPhong.element, "phong");
   assert.ok(!ALL_COMPANIONS.some((c) => c.id === "vuPhong"));
   assert.ok(characters.filter((c) => !archers.includes(c.id) && !assassins.includes(c.id) && c.id !== "dinhNgoc" && c.id !== "vuPhong").every((c) => !c.previewOnly));
+});
+
+test("NPC Bình Loạn tách tab riêng: chỉ id có trong encounter mới là NPC", async () => {
+  const characters = await characterCatalog();
+  const npcs = characters.filter((c) => c.npc);
+  assert.ok(npcs.length >= 27);
+  assert.ok(npcs.every((c) => campaignNpc(c.id) && !c.previewOnly));
+  assert.ok(!characters.find((c) => c.id === "nguyenBac")?.npc);
 });

@@ -1,6 +1,7 @@
 // Mô phỏng cân bằng: cho AI đấu AI nhiều trận và tổng hợp số liệu.
 // Thuần, tất định theo seed; script trong scripts/ chỉ gọi vào đây và in kết quả.
 
+import { simRageOption } from "./rage";
 import { playAiTurn, type Difficulty } from "../ai";
 import {
   createBattle,
@@ -50,6 +51,7 @@ export function runBattle(m: Matchup, options: SimOptions = {}): BattleResult {
     sides: [m.sides[0], m.sides[1]],
     seed: m.seed,
     timer: false,
+    ...simRageOption(m.sides),
     firstSide: m.firstSide,
     ...(m.weights ? { weights: m.weights } : {}),
   });

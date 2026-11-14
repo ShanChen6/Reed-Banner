@@ -65,6 +65,10 @@ export interface Side {
   rage: number;
   /** Số lượt của phe còn lại của kỹ năng bị động; 0 là không có hiệu lực. */
   passiveTurns: number;
+  /** Chế độ Nộ riêng từng người (Đấu người 3vs3): Nộ của từng tướng theo vị trí; bỏ trống là một Nộ chung của thủ lĩnh. */
+  rages?: number[];
+  /** Số lượt còn lại của bị động của từng tướng theo vị trí, đi kèm `rages`. */
+  passives?: number[];
   /** Số lần xoay lốc xoáy miễn phí còn lại của bị động Phong đang có hiệu lực. */
   freeWhirls: number;
   /** Vàng và sách thu được, dùng cho phần thưởng ngoài trận. */

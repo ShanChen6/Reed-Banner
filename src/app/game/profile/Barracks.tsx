@@ -148,10 +148,10 @@ export default function Barracks({
                 <SceneLink
                   scene="LOGIN"
                   params={{ returnTo: "/game/profile" }}
-                  aria-label="Đăng nhập để giữ Doanh Trại"
+                  aria-label="Trình danh để giữ Doanh Trại"
                   className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center rounded-md px-2 text-sm sm:px-3"
                 >
-                  Đăng nhập
+                  Trình danh
                   <span className="hidden sm:inline">
                     &nbsp;để giữ Doanh Trại
                   </span>

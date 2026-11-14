@@ -37,7 +37,8 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [tam-tuong-ky/](02-game-modes/tam-tuong-ky/design-freeze.md) | Tầm Tướng Ký (có code sau cờ `TAM_TUONG_KY_ENABLED`): [design freeze](02-game-modes/tam-tuong-ky/design-freeze.md) (**FROZEN**, luật), [engine](02-game-modes/tam-tuong-ky/engine.md), [server chế độ Thường](02-game-modes/tam-tuong-ky/server.md), [Hạng tuần](02-game-modes/tam-tuong-ky/hang-tuan.md), [Gói 1](02-game-modes/tam-tuong-ky/goi-1.md), [Gói 2](02-game-modes/tam-tuong-ky/goi-2.md), [Gói 3](02-game-modes/tam-tuong-ky/goi-3.md), [cân bằng nguyên tố và cảnh báo](02-game-modes/tam-tuong-ky/can-bang-va-canh-bao.md), [nghiệm thu](02-game-modes/tam-tuong-ky/nghiem-thu.md) |
 | ★ [tran-do/](02-game-modes/tran-do/gdd.md) | Trận Đồ (tên mã Binh Pháp): [GDD](02-game-modes/tran-do/gdd.md), luật chơi thử và xếp hạng; giao diện ở [màn Trận Đồ](05-ui-ux/screens/tran-do.md) |
 | ★ [khai-lo/](02-game-modes/khai-lo/gdd.md) | Khai Lộ: [GDD](02-game-modes/khai-lo/gdd.md), giải đố xóa khối, có bản chơi thử |
-| [future/](02-game-modes/future/quan-hung-pvp-truc-tiep.md) | Chỉ còn đề xuất chưa có code: [Quần Hùng PvP trực tiếp](02-game-modes/future/quan-hung-pvp-truc-tiep.md) (**DRAFT**) |
+| ★ [do-tham/](02-game-modes/do-tham/gdd.md) | Do Thám: [GDD](02-game-modes/do-tham/gdd.md), giải đố dò bẫy, bàn suy luận được, đạo cụ nguyên tố; có bản chơi thử |
+| [future/](02-game-modes/future/quan-hung-pvp-truc-tiep.md) | Đề xuất đang làm dần (lõi PvP đã có code): [Quần Hùng PvP trực tiếp](02-game-modes/future/quan-hung-pvp-truc-tiep.md) (**DRAFT**) |
 
 ## 03 · Nhân vật & kỹ năng (`03-characters/`)
 
@@ -91,6 +92,8 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | [prompts/le-thach.md](06-art/prompts/le-thach.md) | Bộ prompt tranh Lê Thạch cầm giáo mũi đồng và khiên mây theo chuẩn mới (giáp đơn giản, biểu tượng Hoa Lư thêu vào áo vải, 1 avatar bán thân + 6 dáng quay phải); DRAFT, chưa có ảnh |
 | [prompts/kha-son.md](06-art/prompts/kha-son.md) | Bộ prompt tranh Kha Sơn dựng mới: rìu-giáo hai tay, giáp đơn giản một mảnh, biểu tượng Tam Đái thêu vào áo vải (1 avatar bán thân + 6 dáng quay phải, kèm ghi chú đính ảnh vũ khí); DRAFT, đang thử |
 | [prompts/y-su-ban-than.md](06-art/prompts/y-su-ban-than.md) | Prompt ảnh bán thân cho 6 y sư (Lục Diệp, Trần Ngọc, Hồng Đan, Mã Liên, Tiêu Minh, Bạch Sương) vẽ lại từ chân dung cũ, giữ nguyên nhân vật; DRAFT, chưa có ảnh |
+| [prompts/npc-binh-loan.md](06-art/prompts/npc-binh-loan.md) | Prompt chân dung bán thân cho 30 NPC hư cấu của Bình Loạn, dùng chung theo 6 vai và đổi màu, biểu tượng theo phe; DRAFT, chưa có ảnh |
+| [prompts/nguoi-noi-thoai.md](06-art/prompts/nguoi-noi-thoai.md) | Prompt chân dung bán thân cho 6 người nói không tên trong thoại Chiến dịch (người đưa tin, cụ già, sứ giả Hoa Lư, lính già, người dân, tướng Bố Hải); DRAFT, chưa có ảnh |
 | [prompts/phung-phong.md](06-art/prompts/phung-phong.md) | Bộ prompt tranh Phùng Phong cầm gậy trúc chỉ huy, sáo trúc cài hông, theo phong cách mới (ảnh chuẩn đứng, bán thân, phong thái, bốn tranh ra chiêu quay phải); DRAFT, chưa có ảnh |
 | [prompts/to-kim.md](06-art/prompts/to-kim.md) | Bộ prompt tranh Tô Kim cầm quạt xếp nan sắt, cân đồng và túi tiền ở hông, theo phong cách mới (ảnh chuẩn đứng, bán thân, phong thái, bốn tranh ra chiêu quay phải); DRAFT, chưa có ảnh |
 | [prompts/tran-cuong.md](06-art/prompts/tran-cuong.md) | Bộ prompt tranh Trần Cương cầm đại đao, giáp vảy bọc đồng, theo phong cách mới (ảnh chuẩn đứng, bán thân, phong thái đứng gác cổng, bốn tranh ra chiêu quay phải); DRAFT, chưa có ảnh |

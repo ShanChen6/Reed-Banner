@@ -3,6 +3,7 @@ import {
   ENERGY_MAX,
   fighterSkill,
   FOOD_MAX,
+  PASSIVE_TURNS,
   RAGE_MAX,
   type BattleEvent,
   type BattleState,
@@ -92,13 +93,21 @@ export function sidesAfterEvents(
       case "upkeep":
         next[e.side].food = e.food;
         break;
-      case "rage":
-        next[e.side].rage = Math.min(RAGE_MAX, next[e.side].rage + e.amount);
+      case "rage": {
+        const side = next[e.side];
+        if (side.rages && e.fighter !== undefined) side.rages[e.fighter] = Math.min(RAGE_MAX, (side.rages[e.fighter] ?? 0) + e.amount);
+        else side.rage = Math.min(RAGE_MAX, side.rage + e.amount);
         break;
-      case "passive":
+      }
+      case "passive": {
         // Đầy nộ thì bị động kích hoạt và nộ về 0.
-        next[e.side].rage = 0;
+        const side = next[e.side];
+        if (side.rages && e.fighter !== undefined) {
+          side.rages[e.fighter] = 0;
+          if (side.passives) side.passives[e.fighter] = PASSIVE_TURNS + 1;
+        } else side.rage = 0;
         break;
+      }
       case "skill": {
         // Tiền kỹ năng trừ thẳng, không có sự kiện "energy" riêng.
         const f = fighter(e);

@@ -55,6 +55,7 @@ const MODES: readonly Mode[] = [
   { scene: "ARENA", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Đấu người", status: "Tranh ngôi đầu bảng mỗi tuần", cta: "Thách đấu" },
   { scene: "FORMATION", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Vào trận ngay · không cần tài khoản", cta: "Bày trận" },
   { scene: "KHAI_LO", title: "Khai Lộ", text: MODE_TEXT.KHAI_LO, art: "khai-lo", kicker: "Giải đố", status: "Giải đố ngay · không cần tài khoản", cta: "Giải đố" },
+  { scene: "DO_THAM", title: "Do Thám", text: MODE_TEXT.DO_THAM, kicker: "Giải đố", status: "Dò bẫy ngay · không cần tài khoản", cta: "Do thám" },
   { scene: "TAM_TUONG_KY", title: "Tầm Tướng Ký", text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Một phiếu, một lượt tìm tướng", cta: "Ghép tướng", lockedText: "Sắp khai mở" },
   { scene: "EXPEDITION", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, art: "vien-chinh", kicker: "Hành quân", status: "Bày mưu tính kế trên sa bàn", cta: "Hành quân", lockedText: "Sắp khai mở" },
 ];
@@ -259,10 +260,10 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
             <>
               <span className="flex min-w-0 flex-1 items-center gap-1.5 text-[var(--ash)]">
                 {needsLogin && <LockGlyph />}
-                <span className="leading-tight">{needsLogin ? "Đăng nhập để ghi danh xếp hạng" : mode.status}</span>
+                <span className="leading-tight">{needsLogin ? "Trình danh để có tên trên bảng xếp hạng" : mode.status}</span>
               </span>
               <span className="home-enter flex shrink-0 items-center gap-1 rounded-full border border-frame-gold/50 bg-black/30 px-3 py-1 font-serif font-semibold transition group-hover:border-frame-gold group-hover:bg-frame-gold/20">
-                {needsLogin ? "Đăng nhập" : mode.cta} <span aria-hidden>›</span>
+                {needsLogin ? "Trình danh" : mode.cta} <span aria-hidden>›</span>
               </span>
             </>
           )}

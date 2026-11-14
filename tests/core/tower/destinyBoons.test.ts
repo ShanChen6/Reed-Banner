@@ -105,7 +105,7 @@ describe("Destiny boon catalog", () => {
   it("energy/rage bonus không bị lưu chồng khi settle", () => {
     const { run, foes, companions } = fixture();
     const fighters = { ...run.fighters, [MAIN_ID]: { ...run.fighters![MAIN_ID]!, energy: 30 } };
-    const boosted = add({ ...run, fighters, rage: 25 }, "supplyCache", "supplyCache", "battleDrum");
+    const boosted = add({ ...run, fighters, rage: 25, rages: { ...run.rages, [MAIN_ID]: 25 } }, "supplyCache", "supplyCache", "battleDrum");
     const made = createDestinyFloorBattle(boosted, {
       activeIds: [MAIN_ID, companions[0]!, companions[1]!],
       leaderBuild: { element: "hoa", profession: "tuongSi" }, rules: {}, foes, seed: 31, timer: false,
@@ -113,19 +113,21 @@ describe("Destiny boon catalog", () => {
     assert.ok(made.ok);
     if (!made.ok) return;
     assert.equal(made.state.sides[0].fighters[0]!.energy, 50);
-    assert.equal(made.state.sides[0].rage, 35);
+    assert.equal(made.state.sides[0].rages![0], 35);
+    assert.equal(made.state.sides[0].rages![1], 0, "Phúc Trống trận chỉ cộng cho thủ lĩnh, không nhân theo số tướng");
     made.state.winner = 0;
     const settled = settleDestinyFloor(made.run, made.state);
     assert.ok(settled.ok);
     if (!settled.ok) return;
     assert.equal(settled.run.fighters![MAIN_ID]!.energy, 30);
     assert.equal(settled.run.rage, 25);
+    assert.equal(settled.run.rages![MAIN_ID], 25);
 
     const nearCapFighters = {
       ...run.fighters,
       [MAIN_ID]: { ...run.fighters![MAIN_ID]!, energy: 95 },
     };
-    const nearCap = add({ ...run, fighters: nearCapFighters, rage: 95 }, "supplyCache", "supplyCache", "battleDrum");
+    const nearCap = add({ ...run, fighters: nearCapFighters, rage: 95, rages: { ...run.rages, [MAIN_ID]: 95 } }, "supplyCache", "supplyCache", "battleDrum");
     const capped = createDestinyFloorBattle(nearCap, {
       activeIds: [MAIN_ID, companions[0]!, companions[1]!],
       leaderBuild: { element: "hoa", profession: "tuongSi" }, rules: {}, foes, seed: 32, timer: false,
@@ -133,7 +135,7 @@ describe("Destiny boon catalog", () => {
     assert.ok(capped.ok);
     if (!capped.ok) return;
     assert.equal(capped.state.sides[0].fighters[0]!.energy, 100);
-    assert.equal(capped.state.sides[0].rage, 100);
+    assert.equal(capped.state.sides[0].rages![0], 100);
     capped.state.winner = 0;
     const cappedSettle = settleDestinyFloor(capped.run, capped.state);
     assert.ok(cappedSettle.ok);

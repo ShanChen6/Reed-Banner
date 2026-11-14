@@ -225,3 +225,127 @@ export const seasonScores = pgTable(
   },
   (t) => [primaryKey({ columns: [t.mode, t.season, t.ownerId] }), index("season_scores_rank_idx").on(t.mode, t.season, t.score)],
 );
+
+/**
+ * Trận PvP (Quần Hùng online): trạng thái cả trận (`PvpState`, gồm seed và RNG, không bao giờ gửi cho client), `seq` để
+ * ghi có điều kiện khi hai người chơi cùng gửi nước đi. `settledAt` đặt đúng một lần khi tính điểm hạng sau trận.
+ */
+export const pvpMatches = pgTable(
+  "pvp_matches",
+  {
+    id: text("id").primaryKey(),
+    format: text("format").notNull(),
+    state: jsonb("state").notNull(),
+    seq: integer("seq").notNull(),
+    status: text("status").notNull(),
+    owners: jsonb("owners").notNull(),
+    results: jsonb("results"),
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+    settledAt: bigint("settled_at", { mode: "number" }),
+  },
+  (t) => [index("pvp_matches_status_idx").on(t.status, t.updatedAt)],
+);
+
+/** Phiên cấm chọn của trận 3vs3 xếp hạng: sau khi ghép đủ nhóm, trước khi dựng trận. `matchId` đặt khi cấm chọn xong. */
+export const pvpDrafts = pgTable(
+  "pvp_drafts",
+  {
+    id: text("id").primaryKey(),
+    state: jsonb("state").notNull(),
+    seq: integer("seq").notNull(),
+    status: text("status").notNull(),
+    owners: jsonb("owners").notNull(),
+    matchId: text("match_id"),
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [index("pvp_drafts_status_idx").on(t.status, t.updatedAt)],
+);
+
+/** Hàng đợi ghép trận: mỗi người một dòng. `matchId` đặt khi đã được ghép, người chơi đọc ra ở lần hỏi kế tiếp. */
+export const pvpQueue = pgTable(
+  "pvp_queue",
+  {
+    ownerId: text("owner_id").primaryKey(),
+    format: text("format").notNull(),
+    rating: integer("rating").notNull(),
+    enqueuedAt: bigint("enqueued_at", { mode: "number" }).notNull(),
+    lastSeen: bigint("last_seen", { mode: "number" }).notNull(),
+    matchId: text("match_id"),
+  },
+  (t) => [index("pvp_queue_wait_idx").on(t.format, t.matchId, t.enqueuedAt)],
+);
+
+/**
+ * Điểm hạng PvP của từng người ở từng thể thức. Điểm đổi bằng phép cộng trong SQL để hai trận kết thúc cùng lúc không ghi
+ * đè nhau. `forgiveDay` và `forgiveUsed` đếm số lượt mất kết nối đã được tha trong ngày (giờ Việt Nam).
+ */
+export const pvpRatings = pgTable(
+  "pvp_ratings",
+  {
+    ownerId: text("owner_id").notNull(),
+    format: text("format").notNull(),
+    rating: integer("rating").notNull(),
+    wins: integer("wins").notNull().default(0),
+    losses: integer("losses").notNull().default(0),
+    forgiveDay: text("forgive_day").notNull().default(""),
+    forgiveUsed: integer("forgive_used").notNull().default(0),
+    /** Tuần (giờ Việt Nam) của bộ đếm `breakCount`: số trận bị tính phá trận trong tuần. */
+    breakWeek: text("break_week").notNull().default(""),
+    breakCount: integer("break_count").notNull().default(0),
+    /** Bị hạn chế ghép trận tới mốc này (ms); 0 là không bị hạn chế. */
+    banUntil: bigint("ban_until", { mode: "number" }).notNull().default(0),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.ownerId, t.format] }), index("pvp_ratings_rank_idx").on(t.format, t.rating)],
+);
+
+/** Vàng PvP đã nhận mỗi ngày (giờ Việt Nam), để giữ trần vàng mỗi ngày. Số trận không bị giới hạn. */
+export const pvpDaily = pgTable(
+  "pvp_daily",
+  {
+    ownerId: text("owner_id").notNull(),
+    day: text("day").notNull(),
+    gold: integer("gold").notNull().default(0),
+  },
+  (t) => [primaryKey({ columns: [t.ownerId, t.day] })],
+);
+
+/** Số trận một người đã đấu với cùng một đối thủ trong ngày: quá mức thì trận đó không có vàng (điểm hạng vẫn tính). */
+export const pvpPairs = pgTable(
+  "pvp_pairs",
+  {
+    day: text("day").notNull(),
+    ownerId: text("owner_id").notNull(),
+    opponentId: text("opponent_id").notNull(),
+    matches: integer("matches").notNull().default(0),
+  },
+  (t) => [primaryKey({ columns: [t.day, t.ownerId, t.opponentId] })],
+);
+
+/**
+ * Phòng mời bằng mã của Đấu người 3vs3 (giao hữu, không tính điểm). `slots` là sáu chỗ ngồi (0–2 phe một, 3–5 phe hai) gồm người,
+ * tướng đã chọn và nghề, hệ nếu là Đinh Bộ Lĩnh. Ghi kèm điều kiện `seq` như trận.
+ */
+export const pvpRooms = pgTable(
+  "pvp_rooms",
+  {
+    code: text("code").primaryKey(),
+    host: text("host").notNull(),
+    status: text("status").notNull(),
+    slots: jsonb("slots").notNull(),
+    fillAi: boolean("fill_ai").notNull().default(false),
+    matchId: text("match_id"),
+    seq: integer("seq").notNull(),
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [index("pvp_rooms_updated_idx").on(t.status, t.updatedAt)],
+);
+
+/** Mỗi người chỉ ở một phòng: dòng này chỉ ra phòng đang ở. */
+export const pvpRoomMembers = pgTable("pvp_room_members", {
+  ownerId: text("owner_id").primaryKey(),
+  code: text("code").notNull(),
+});

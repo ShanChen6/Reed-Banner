@@ -71,8 +71,8 @@ export function BattleResult({
             ? "Dừng lại, ghi điểm"
             : "Cả đội đã gục"
           : state.winner === PLAYER
-            ? "Bạn thắng!"
-            : "Bạn thua"}
+            ? "Chúa công thắng!"
+            : "Chúa công thua"}
       </p>
       {raidBoss && raidBossById(raidBoss) && (
         <p className="max-w-sm text-center text-sm text-on-wood-soft italic">

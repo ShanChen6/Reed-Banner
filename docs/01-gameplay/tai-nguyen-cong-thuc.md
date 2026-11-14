@@ -31,7 +31,13 @@
 
 ## 3. Nộ và kỹ năng bị động
 
-- Mỗi phe có **một thanh Nộ** (0–100), gắn với **thủ lĩnh**: phe người chơi là nhân vật chính; phe AI là nhân vật đứng vị trí 1. Nhân vật kèm không có nộ.
+- **Nộ riêng từng tướng (13/11/2026, Shan duyệt):** trận có đội từ 2 người trở lên (Giao Tranh, Quần Hùng, Sinh Tồn, Chiến Dịch, Hằng Ngày, Viễn Chinh, Thiên Mệnh và Đấu người 3vs3) cho **mỗi tướng một thanh Nộ** (0–100) và bị động theo nghề, hệ của chính tướng đó, cả hai phe như nhau. Thiên Mệnh (từ 14/11/2026, Nộ lưu theo từng tướng qua các tầng) cũng dùng Nộ riêng. Trận một người mỗi phe và các câu đố Tháp Thí Luyện (bộ kiểm định lời giải) giữ luật cũ: một thanh Nộ gắn với **thủ lĩnh** (phe người chơi là nhân vật chính, phe AI là vị trí 1, nhân vật kèm không có nộ). Các mục dưới viết theo luật cũ, đọc "thủ lĩnh" thành "tướng đó" khi áp dụng Nộ riêng:
+  - Trống trận ghép được cộng cho **tướng đang hành động**; tướng nào mất máu thì thanh của tướng đó tăng.
+  - Đầy 100 thì bị động của tướng đó kích hoạt 3 lượt của phe, rồi Nộ về 0. Nộ riêng **vẫn tích khi bị động đang chạy**, giữ ở mức đầy và kích hoạt lại ngay khi bị động hết, nên số lần dùng trong trận không giới hạn.
+  - Bị động Phong (xoay miễn phí) và Lôi (năng lượng) tính cho cả phe khi có bất kỳ tướng nào đang có bị động đó; Kim, Hỏa chỉ cho chính tướng đó.
+  - Qua đợt (Sinh Tồn) Nộ giữ nguyên, bị động hết hiệu lực.
+  - Đo bằng mô phỏng AI Thường (300 trận 3vs3, 60 lần mỗi nhiệm vụ Chiến Dịch): bị động mỗi trận 2,3 → 3,2 (cả hai phe), thời lượng trận ~10 phút không đổi, tỉ lệ thắng Chiến Dịch và độ sâu Sinh Tồn trong sai số.
+- Luật cũ: mỗi phe có **một thanh Nộ** (0–100), gắn với **thủ lĩnh**: phe người chơi là nhân vật chính; phe AI là nhân vật đứng vị trí 1. Nhân vật kèm không có nộ.
 - **Tích nộ:**
   - Mỗi ô 🥁 Trống trận ghép được (do bất kỳ ai trong phe ghép): **+8 nộ**.
   - Thủ lĩnh mất máu: **+1 nộ cho mỗi 2% máu tối đa** bị mất.
@@ -44,7 +50,7 @@
 - Nộ reset về 0 mỗi trận (kể cả Bình Loạn).
 - Mục tiêu cân bằng: bị động kích hoạt khoảng 2–3 lần mỗi trận chuẩn.
 
-> TODO: kiểm tra tốc độ tích nộ bằng mô phỏng.
+> Đã đo tốc độ tích Nộ riêng bằng mô phỏng (13/11/2026), số liệu ở trên.
 
 ## 4. Công thức sát thương
 
