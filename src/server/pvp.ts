@@ -815,6 +815,3 @@ export function pvpPlay(id: string, owner: string, action: BattleAction, deps: P
     return { ok: true, state: r.state, events: r.events };
   });
 }
-
-/** Chỉ tín hiệu còn sống, không nước đi (client gọi mỗi vài giây khi chờ đối thủ). */
-export const pvpPing = pvpGetMatch;
