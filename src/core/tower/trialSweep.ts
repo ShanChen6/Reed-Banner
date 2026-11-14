@@ -11,6 +11,11 @@ export const TRIAL_SWEEP_STONES_BY_TIER: Readonly<Record<TrialSweepTier, number>
   5: 5,
   6: 6,
   7: 7,
+  8: 8,
+  9: 9,
+  10: 10,
+  11: 11,
+  12: 12,
 });
 
 /** Invalid or ineligible tiers emit zero; callers must never accept a client amount. */
@@ -27,7 +32,7 @@ export function nextTrialSweepResetAt(now: number): number {
   return vnDayStart(trialDateKey(now)) + DAY_MS;
 }
 
-/** 0 = chưa đủ điều kiện; tầng 1-20 mỗi 5 tầng một bậc, tầng 21-50 mỗi 10 tầng một bậc (tối đa 7). */
+/** 0 = chưa đủ điều kiện; tầng 1-20 mỗi 5 tầng một bậc, tầng 21-100 mỗi 10 tầng một bậc (tối đa 12). */
 export const trialSweepTier = trialSweepTierOf;
 
 export type TrialSweepStateResult =

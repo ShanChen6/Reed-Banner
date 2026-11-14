@@ -19,16 +19,16 @@ function ruleCount(rules: FloorRules): number {
   );
 }
 
-describe("nội dung 50 tầng Trial", () => {
-  it("đủ 50 tầng liên tục, parse được và snapshot idempotent", () => {
+describe("nội dung 100 tầng Trial", () => {
+  it("đủ 100 tầng liên tục, parse được và snapshot idempotent", () => {
     const registry = createTrialRegistry(TRIAL_FLOOR_DATA, { requireComplete: true });
     assert.ok(registry.ok);
-    assert.equal(TRIAL_DESIGN_REASON.length, 50);
+    assert.equal(TRIAL_DESIGN_REASON.length, 100);
     if (!registry.ok) return;
     const again = createTrialRegistry(JSON.parse(registry.registry.snapshot()), { requireComplete: true });
     assert.ok(again.ok);
     if (again.ok) assert.equal(again.registry.snapshot(), registry.registry.snapshot());
-    assert.equal(new Set(registry.registry.all().map(serializeTrialFloor)).size, 50);
+    assert.equal(new Set(registry.registry.all().map(serializeTrialFloor)).size, 100);
   });
 
   it("đúng các nhóm thiết kế và mọi trận giữ 3v3/defeatAll", () => {
@@ -50,7 +50,7 @@ describe("nội dung 50 tầng Trial", () => {
         assert.ok(spec.difficulty === "boss" || spec.difficulty === "nightmare");
       } else {
         // Chặng III một luật, chặng IV hai luật, chặng V ba luật; ải trùm ở cuối mỗi nửa chặng cao.
-        assert.equal(ruleCount(spec.rules), spec.floor <= 30 ? 1 : spec.floor <= 40 ? 2 : 3, `tầng ${spec.floor}`);
+        assert.equal(ruleCount(spec.rules), spec.floor <= 30 ? 1 : spec.floor <= 40 ? 2 : spec.floor <= 70 ? 3 : 4, `tầng ${spec.floor}`);
         if (spec.floor % 10 === 0) assert.ok(spec.difficulty === "boss" || spec.difficulty === "nightmare", `tầng ${spec.floor}`);
       }
     }
@@ -68,12 +68,13 @@ describe("nội dung 50 tầng Trial", () => {
 
   it("simulator có sample thắng xác nhận cho từng tầng", () => {
     const results = evaluateTrialContent(TRIAL_FLOOR_DATA);
-    assert.equal(results.length, 50);
+    assert.equal(results.length, 100);
     for (const result of results) {
       assert.ok(result.sampleTeams > 0, `tầng ${result.floor}: không có đội mẫu`);
       // Đội mẫu chỉ có tướng khởi đầu, không trang bị. Tầng 1-30 giữ ngưỡng 10/12; tầng 31-49 nới còn 8/12 vì
-      // người chơi tới đó đã có trang bị và tướng cửa hàng; đỉnh tháp là tầng khó nhất nên chỉ cần 6/12.
-      const need = result.floor <= 30 ? 10 : result.floor < 50 ? 8 : 6;
+      // người chơi tới đó đã có trang bị và tướng cửa hàng; từ tầng 51 ngưỡng giảm dần để tháp khó dần tới đỉnh ở tầng 100.
+      // Tầng 51-100 khó dần: dải mục tiêu của công cụ `scripts/gen-trial-floors.ts` (đỉnh tháp ở tầng 100 chỉ cần 5/12).
+      const need = result.floor <= 30 ? 10 : result.floor <= 67 ? 8 : result.floor <= 84 ? 7 : result.floor <= 99 ? 6 : 5;
       assert.ok(result.wins >= need, `tầng ${result.floor}: ${result.wins}/12, cần ${need}/12`);
       assert.ok(result.sampleTurns !== null, `tầng ${result.floor}: thiếu số lượt`);
     }
