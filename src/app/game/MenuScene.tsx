@@ -1,11 +1,12 @@
 "use client";
 
-// Phân cảnh MENU (Home V2, docs/05-ui-ux/design-system/game-mode-ui-spec.md mục 14): tranh Hoa Lư làm hero với logo
-// và nút Vào trận, lưới mười chế độ dẫn bằng tranh, hàng tiện ích cuối trang. Bấm vào đâu cũng chỉ đổi phân cảnh,
+// Phân cảnh MENU (Home V2, docs/05-ui-ux/design-system/game-mode-ui-spec.md mục 14 và 16): tranh Hoa Lư làm hero với logo
+// và nút Vào trận, chế độ chia ba thẻ (Chiến đấu, Giải đố, Sắp ra mắt) dẫn bằng tranh, hàng tiện ích cuối trang. Bấm vào đâu cũng chỉ đổi phân cảnh,
 // không tải lại trang. Khung, góc hoa văn và màu lấy lại từ Sử ký (lớp .campaign-atlas) để cùng một chất liệu.
 
 import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import Image from "next/image";
+import { Tabs } from "@/components/ui";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Logo } from "./art/logo";
 import { fetchProfile, ONLINE_BATTLE_KEY } from "./battle/online";
@@ -19,8 +20,14 @@ import { SceneLink } from "./SceneContext";
 
 const HERO_ART = "/art/campaign/bg/hoalu.webp";
 
+/** Nhóm chế độ: Chiến đấu là trận ghép ô đánh nhau, Giải đố là chế độ một người không đọ sức đội hình. */
+type ModeGroup = "battle" | "puzzle";
+/** Ba thẻ ở mục Chế độ chơi; chế độ đang khóa theo cờ tính năng nằm ở thẻ Sắp ra mắt, bật cờ thì về đúng nhóm. */
+type ModeTab = ModeGroup | "soon";
+
 interface Mode {
   readonly scene: Scene;
+  readonly group: ModeGroup;
   readonly title: string;
   readonly text: string;
   /** Tranh trong public/art/home/; chế độ sắp ra mắt chưa có tranh thì dựng tạm từ biểu tượng nghề/hệ. */
@@ -40,6 +47,7 @@ interface Mode {
 const MODES: readonly Mode[] = [
   {
     scene: "CAMPAIGN",
+    group: "battle",
     title: "Bình Loạn",
     text: MODE_TEXT.CAMPAIGN,
     art: "campaign",
@@ -48,22 +56,22 @@ const MODES: readonly Mode[] = [
     status: "Sáu chương sử Việt · tái đấu sứ quân",
     cta: "Dẹp loạn",
   },
-  { scene: "TRIAL", title: "Tháp Thí Luyện", text: MODE_TEXT.TRIAL, art: "trial", kicker: "Leo tháp", status: "Hai mươi tầng · thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
-  { scene: "DESTINY", title: "Tháp Thiên Mệnh", text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp", status: "Mỗi chu kỳ một vận · tranh hạng thiên hạ", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
-  { scene: "SURVIVAL", title: "Trấn Ải", text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Sinh tồn", status: "Ghi danh bảng xếp hạng mỗi tuần", cta: "Giữ ải" },
-  { scene: "DAILY", title: "Nhật Lệnh", text: MODE_TEXT.DAILY, art: "daily", kicker: "Mỗi ngày", status: "Lệnh mới ban mỗi ngày", cta: "Nhận lệnh" },
-  { scene: "ARENA", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Đấu người", status: "Tranh ngôi đầu bảng mỗi tuần", cta: "Thách đấu" },
-  { scene: "FORMATION", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Vào trận ngay · không cần tài khoản", cta: "Bày trận" },
-  { scene: "KHAI_LO", title: "Khai Lộ", text: MODE_TEXT.KHAI_LO, art: "khai-lo", kicker: "Giải đố", status: "Giải đố ngay · không cần tài khoản", cta: "Giải đố" },
-  { scene: "DO_THAM", title: "Do Thám", text: MODE_TEXT.DO_THAM, kicker: "Giải đố", status: "Dò bẫy ngay · không cần tài khoản", cta: "Do thám" },
-  { scene: "SU_LO", title: "Sử Lộ", text: MODE_TEXT.SU_LO, kicker: "Học sử", status: "Chơi thử ngay · không cần tài khoản", cta: "Lên đường" },
-  { scene: "TAM_TUONG_KY", title: "Tầm Tướng Ký", text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Một phiếu, một lượt tìm tướng", cta: "Ghép tướng", lockedText: "Sắp khai mở" },
-  { scene: "EXPEDITION", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, art: "vien-chinh", kicker: "Hành quân", status: "Bày mưu tính kế trên sa bàn", cta: "Hành quân", lockedText: "Sắp khai mở" },
+  { scene: "TRIAL", group: "battle", title: "Tháp Thí Luyện", text: MODE_TEXT.TRIAL, art: "trial", kicker: "Leo tháp", status: "Hai mươi tầng · thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
+  { scene: "DESTINY", group: "battle", title: "Tháp Thiên Mệnh", text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp", status: "Mỗi chu kỳ một vận · tranh hạng thiên hạ", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
+  { scene: "SURVIVAL", group: "battle", title: "Trấn Ải", text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Sinh tồn", status: "Ghi danh bảng xếp hạng mỗi tuần", cta: "Giữ ải" },
+  { scene: "DAILY", group: "battle", title: "Nhật Lệnh", text: MODE_TEXT.DAILY, art: "daily", kicker: "Mỗi ngày", status: "Lệnh mới ban mỗi ngày", cta: "Nhận lệnh" },
+  { scene: "ARENA", group: "battle", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Đấu người", status: "Tranh ngôi đầu bảng mỗi tuần", cta: "Thách đấu" },
+  { scene: "FORMATION", group: "puzzle", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Vào trận ngay · không cần tài khoản", cta: "Bày trận" },
+  { scene: "KHAI_LO", group: "puzzle", title: "Khai Lộ", text: MODE_TEXT.KHAI_LO, art: "khai-lo", kicker: "Giải đố", status: "Giải đố ngay · không cần tài khoản", cta: "Giải đố" },
+  { scene: "DO_THAM", group: "puzzle", title: "Do Thám", text: MODE_TEXT.DO_THAM, kicker: "Giải đố", status: "Dò bẫy ngay · không cần tài khoản", cta: "Do thám" },
+  { scene: "SU_LO", group: "puzzle", title: "Sử Lộ", text: MODE_TEXT.SU_LO, kicker: "Học sử", status: "Chơi thử ngay · không cần tài khoản", cta: "Lên đường" },
+  { scene: "TAM_TUONG_KY", group: "puzzle", title: "Tầm Tướng Ký", text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Một phiếu, một lượt tìm tướng", cta: "Ghép tướng", lockedText: "Sắp khai mở" },
+  { scene: "EXPEDITION", group: "battle", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, art: "vien-chinh", kicker: "Hành quân", status: "Bày mưu tính kế trên sa bàn", cta: "Hành quân", lockedText: "Sắp khai mở" },
 ];
 
 /**
- * Chế độ sắp ra mắt: thẻ không bấm được, hiện ở mục "Sắp ra mắt" dưới lưới chế độ. Mười chế độ hiện có đã vào MODES nên
- * danh sách này đang trống và mục tự ẩn; thêm một phần tử vào đây khi có ý tưởng mới (có `scene` thì thẻ bấm được).
+ * Chế độ chỉ mới có thiết kế (chưa có phân cảnh): thẻ không bấm được ở thẻ Sắp ra mắt, sau các chế độ đang khóa theo cờ.
+ * Các chế độ có code đều đã vào MODES nên danh sách này đang trống; thêm một phần tử khi có ý tưởng mới (có `scene` thì bấm được).
  * TODO tranh: public/art/home/<id>.webp, chưa có thì thẻ dùng tranh mực tạm.
  */
 const UPCOMING: readonly { id: string; title: string; text: string; art?: string; scene?: Scene; note?: string }[] = [];
@@ -81,6 +89,41 @@ const UTILITIES: readonly { scene: Scene; title: string; icon: UtilityIcon }[] =
 ];
 
 type UtilityIcon = "scroll" | "rank" | "swords" | "shop";
+
+const TABS: readonly { value: ModeTab; label: string; text: string }[] = [
+  { value: "battle", label: "Chiến đấu", text: "Ghép ô ra đòn, dẫn đội tướng dẹp loạn, leo tháp, giữ ải, so tài cùng quần hùng." },
+  { value: "puzzle", label: "Giải đố", text: "Không cần đội hình mạnh: tính từng nước, dò từng bẫy, đáp đúng sử xưa." },
+  { value: "soon", label: "Sắp ra mắt", text: "Những chế độ đang dựng, khai mở dần qua từng bản cập nhật." },
+];
+
+// Nhớ thẻ đang mở trong phiên (vào một chế độ rồi quay lại vẫn đúng thẻ). Không đọc được kho thì dùng thẻ Chiến đấu.
+const TAB_KEY = "coLau.home.modeTab";
+const tabListeners = new Set<() => void>();
+
+function readTab(): ModeTab {
+  try {
+    const v = window.sessionStorage.getItem(TAB_KEY);
+    return v === "puzzle" || v === "soon" ? v : "battle";
+  } catch {
+    return "battle";
+  }
+}
+
+function saveTab(tab: ModeTab) {
+  try {
+    window.sessionStorage.setItem(TAB_KEY, tab);
+  } catch {
+    // Trình duyệt chặn kho phiên: thẻ vẫn đổi qua lượt render dưới.
+  }
+  tabListeners.forEach((f) => f());
+}
+
+function subscribeTab(f: () => void) {
+  tabListeners.add(f);
+  return () => {
+    tabListeners.delete(f);
+  };
+}
 
 function hasSavedBattle(): boolean {
   try {
@@ -106,6 +149,14 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
     };
   }, []);
   const plan = profile === undefined ? null : heroPlan(profile, saved);
+  const storedTab = useSyncExternalStore(subscribeTab, readTab, () => "battle" as const);
+  // Kho phiên bị chặn thì giữ lựa chọn trong state để thẻ vẫn đổi được.
+  const [pickedTab, setPickedTab] = useState<ModeTab | null>(null);
+  const tab = pickedTab ?? storedTab;
+  const pickTab = (t: ModeTab) => {
+    setPickedTab(t);
+    saveTab(t);
+  };
   const locked = (scene: Scene) =>
     scene === "TRIAL"
       ? !towerFeatures.trial
@@ -116,6 +167,13 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
           : scene === "EXPEDITION"
             ? !towerFeatures.expedition
             : false;
+  const byTab: Record<ModeTab, readonly Mode[]> = {
+    battle: MODES.filter((m) => m.group === "battle" && !locked(m.scene)),
+    puzzle: MODES.filter((m) => m.group === "puzzle" && !locked(m.scene)),
+    soon: MODES.filter((m) => locked(m.scene)),
+  };
+  const count = (t: ModeTab) => byTab[t].length + (t === "soon" ? UPCOMING.length : 0);
+  const current = TABS.find((t) => t.value === tab)!;
 
   return (
     <main className="campaign-atlas ui-mode-screen flex flex-col">
@@ -164,27 +222,49 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
 
         <section aria-labelledby="home-modes">
           <SectionHeading id="home-modes" kicker="Chế độ chơi" title="Chọn chiến trường" />
-          <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-            {MODES.map((m) => (
-              <li key={m.scene} className={m.featured ? "sm:col-span-2 lg:col-span-3" : undefined}>
-                <ModeCard mode={m} locked={locked(m.scene)} needsLogin={!account && ONLINE_RANKED.includes(m.scene)} />
-              </li>
-            ))}
-          </ul>
+          <Tabs<ModeTab>
+            label="Nhóm chế độ chơi"
+            value={tab}
+            onChange={pickTab}
+            panelId="home-modes-panel"
+            fullWidth
+            className="home-tabs mt-5 flex-nowrap gap-1.5 sm:w-fit sm:gap-2 [&>*]:gap-1.5 [&>*]:px-2 [&>*]:whitespace-nowrap sm:[&>*]:flex-none sm:[&>*]:px-4"
+            items={TABS.map((t) => ({
+              value: t.value,
+              label: (
+                <>
+                  <span className="font-serif">{t.label}</span>
+                  <span aria-hidden className="home-tab-count rounded-full px-1.5 text-[13px] leading-5 tabular-nums">
+                    {count(t.value)}
+                  </span>
+                  <span className="sr-only">, {count(t.value)} chế độ</span>
+                </>
+              ),
+            }))}
+          />
+          <div id="home-modes-panel" role="tabpanel" aria-label={current.label} className="mt-4">
+            <p className="text-[15px] leading-snug text-[var(--on-wood)]/85">{current.text}</p>
+            {count(tab) === 0 ? (
+              <p className="home-mode-soon atlas-frame mt-5 px-5 py-8 text-center font-serif text-[var(--ash)]">
+                Mọi chế độ đang dựng đã khai mở. Chế độ mới sẽ hiện ở đây.
+              </p>
+            ) : (
+              <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+                {byTab[tab].map((m) => (
+                  <li key={m.scene} className={m.featured ? "sm:col-span-2 lg:col-span-3" : undefined}>
+                    <ModeCard mode={m} locked={locked(m.scene)} needsLogin={!account && ONLINE_RANKED.includes(m.scene)} />
+                  </li>
+                ))}
+                {tab === "soon" &&
+                  UPCOMING.map((u) => (
+                    <li key={u.id}>
+                      <UpcomingCard mode={u} />
+                    </li>
+                  ))}
+              </ul>
+            )}
+          </div>
         </section>
-
-        {UPCOMING.length > 0 && (
-        <section aria-labelledby="home-soon">
-          <SectionHeading id="home-soon" kicker="Sắp ra mắt" title="Đang dựng" />
-          <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-            {UPCOMING.map((u) => (
-              <li key={u.id}>
-                <UpcomingCard mode={u} />
-              </li>
-            ))}
-          </ul>
-        </section>
-        )}
 
         <section aria-labelledby="home-more">
           <SectionHeading id="home-more" kicker="Tiện ích" title="Quân vụ" />
