@@ -22,7 +22,7 @@ const HERO_ART = "/art/campaign/bg/hoalu.webp";
 
 /** Nhóm chế độ: Chiến đấu là trận ghép ô đánh nhau, Giải đố là chế độ một người không đọ sức đội hình. */
 type ModeGroup = "battle" | "puzzle";
-/** Ba mục xếp dọc ở Chế độ chơi; chế độ đang khóa theo cờ tính năng nằm ở mục Sắp ra mắt, bật cờ thì về đúng nhóm. */
+/** Ba mục xếp dọc ở Chế độ chơi: hai nhóm chế độ đã phát hành và mục Sắp ra mắt cho chế độ mới chỉ có thiết kế (UPCOMING). */
 type ModeTab = ModeGroup | "soon";
 
 interface Mode {
@@ -70,11 +70,18 @@ const MODES: readonly Mode[] = [
 ];
 
 /**
- * Chế độ chỉ mới có thiết kế (chưa có phân cảnh): thẻ không bấm được ở thẻ Sắp ra mắt, sau các chế độ đang khóa theo cờ.
- * Các chế độ có code đều đã vào MODES nên danh sách này đang trống; thêm một phần tử khi có ý tưởng mới (có `scene` thì bấm được).
+ * Chế độ mới đang thiết kế, chưa phát hành: thẻ không bấm được ở mục Sắp ra mắt (có `scene` thì bấm được). Chế độ đã phát hành
+ * nhưng tắt cờ ở môi trường nào đó vẫn nằm ở nhóm của nó, hiện thẻ khóa. Nguồn: hàng "Chế độ mới" ở docs/09-roadmap/lo-trinh.md.
  * TODO tranh: public/art/home/<id>.webp, chưa có thì thẻ dùng tranh mực tạm.
  */
-const UPCOMING: readonly { id: string; title: string; text: string; art?: string; scene?: Scene; note?: string }[] = [];
+const UPCOMING: readonly { id: string; title: string; text: string; art?: string; scene?: Scene; note?: string }[] = [
+  {
+    id: "pvp-live",
+    title: "Quần Hùng đấu trực tiếp",
+    text: "Đối mặt hào kiệt khắp nơi trên cùng một bàn cờ, một chọi một hay ba chọi ba, từng lượt định thắng thua.",
+    art: "arena",
+  },
+];
 
 
 /** Tiện ích cuối trang. Hồ sơ và Tài khoản đã có trên thanh header nên không lặp lại ở đây. */
@@ -93,7 +100,7 @@ type UtilityIcon = "scroll" | "rank" | "swords" | "shop";
 const TABS: readonly { value: ModeTab; label: string; text: string }[] = [
   { value: "battle", label: "Chiến đấu", text: "Ghép ô ra đòn, dẫn đội tướng dẹp loạn, leo tháp, giữ ải, so tài cùng quần hùng." },
   { value: "puzzle", label: "Giải đố", text: "Không cần đội hình mạnh: tính từng nước, dò từng bẫy, đáp đúng sử xưa." },
-  { value: "soon", label: "Sắp ra mắt", text: "Những chế độ đang dựng, khai mở dần qua từng bản cập nhật." },
+  { value: "soon", label: "Sắp ra mắt", text: "Những chế độ mới đang dựng, khai mở dần qua từng bản cập nhật." },
 ];
 
 function hasSavedBattle(): boolean {
@@ -132,9 +139,9 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
             ? !towerFeatures.expedition
             : false;
   const byTab: Record<ModeTab, readonly Mode[]> = {
-    battle: MODES.filter((m) => m.group === "battle" && !locked(m.scene)),
-    puzzle: MODES.filter((m) => m.group === "puzzle" && !locked(m.scene)),
-    soon: MODES.filter((m) => locked(m.scene)),
+    battle: MODES.filter((m) => m.group === "battle"),
+    puzzle: MODES.filter((m) => m.group === "puzzle"),
+    soon: [],
   };
   const count = (t: ModeTab) => byTab[t].length + (t === "soon" ? UPCOMING.length : 0);
 
@@ -214,7 +221,7 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
               <p className="mt-2 text-[15px] leading-snug text-[var(--on-wood)]/85">{t.text}</p>
               {count(t.value) === 0 ? (
                 <p className="home-mode-soon atlas-frame mt-5 px-5 py-8 text-center font-serif text-[var(--ash)]">
-                  Mọi chế độ đang dựng đã khai mở. Chế độ mới sẽ hiện ở đây.
+                  Chưa có chế độ mới đang dựng. Khi có, chế độ sẽ hiện ở đây.
                 </p>
               ) : (
                 <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
