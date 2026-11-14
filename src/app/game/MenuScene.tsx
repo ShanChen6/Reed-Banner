@@ -1,12 +1,12 @@
 "use client";
 
 // Phân cảnh MENU (Home V2, docs/05-ui-ux/design-system/game-mode-ui-spec.md mục 14 và 16): tranh Hoa Lư làm hero với logo
-// và nút Vào trận, chế độ chia ba thẻ (Chiến đấu, Giải đố, Sắp ra mắt) dẫn bằng tranh, hàng tiện ích cuối trang. Bấm vào đâu cũng chỉ đổi phân cảnh,
+// và nút Vào trận, chế độ chia ba mục xếp dọc (Chiến đấu, Giải đố, Sắp ra mắt) có thanh dẫn bám đầu màn, hàng tiện ích cuối trang. Bấm vào đâu cũng chỉ đổi phân cảnh,
 // không tải lại trang. Khung, góc hoa văn và màu lấy lại từ Sử ký (lớp .campaign-atlas) để cùng một chất liệu.
 
 import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import Image from "next/image";
-import { Tabs } from "@/components/ui";
+import { choiceVariants } from "@/components/ui";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Logo } from "./art/logo";
 import { fetchProfile, ONLINE_BATTLE_KEY } from "./battle/online";
@@ -22,7 +22,7 @@ const HERO_ART = "/art/campaign/bg/hoalu.webp";
 
 /** Nhóm chế độ: Chiến đấu là trận ghép ô đánh nhau, Giải đố là chế độ một người không đọ sức đội hình. */
 type ModeGroup = "battle" | "puzzle";
-/** Ba thẻ ở mục Chế độ chơi; chế độ đang khóa theo cờ tính năng nằm ở thẻ Sắp ra mắt, bật cờ thì về đúng nhóm. */
+/** Ba mục xếp dọc ở Chế độ chơi; chế độ đang khóa theo cờ tính năng nằm ở mục Sắp ra mắt, bật cờ thì về đúng nhóm. */
 type ModeTab = ModeGroup | "soon";
 
 interface Mode {
@@ -96,35 +96,6 @@ const TABS: readonly { value: ModeTab; label: string; text: string }[] = [
   { value: "soon", label: "Sắp ra mắt", text: "Những chế độ đang dựng, khai mở dần qua từng bản cập nhật." },
 ];
 
-// Nhớ thẻ đang mở trong phiên (vào một chế độ rồi quay lại vẫn đúng thẻ). Không đọc được kho thì dùng thẻ Chiến đấu.
-const TAB_KEY = "coLau.home.modeTab";
-const tabListeners = new Set<() => void>();
-
-function readTab(): ModeTab {
-  try {
-    const v = window.sessionStorage.getItem(TAB_KEY);
-    return v === "puzzle" || v === "soon" ? v : "battle";
-  } catch {
-    return "battle";
-  }
-}
-
-function saveTab(tab: ModeTab) {
-  try {
-    window.sessionStorage.setItem(TAB_KEY, tab);
-  } catch {
-    // Trình duyệt chặn kho phiên: thẻ vẫn đổi qua lượt render dưới.
-  }
-  tabListeners.forEach((f) => f());
-}
-
-function subscribeTab(f: () => void) {
-  tabListeners.add(f);
-  return () => {
-    tabListeners.delete(f);
-  };
-}
-
 function hasSavedBattle(): boolean {
   try {
     return window.localStorage.getItem(ONLINE_BATTLE_KEY) !== null;
@@ -149,14 +120,7 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
     };
   }, []);
   const plan = profile === undefined ? null : heroPlan(profile, saved);
-  const storedTab = useSyncExternalStore(subscribeTab, readTab, () => "battle" as const);
-  // Kho phiên bị chặn thì giữ lựa chọn trong state để thẻ vẫn đổi được.
-  const [pickedTab, setPickedTab] = useState<ModeTab | null>(null);
-  const tab = pickedTab ?? storedTab;
-  const pickTab = (t: ModeTab) => {
-    setPickedTab(t);
-    saveTab(t);
-  };
+  const active = useActiveSection();
   const locked = (scene: Scene) =>
     scene === "TRIAL"
       ? !towerFeatures.trial
@@ -173,7 +137,6 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
     soon: MODES.filter((m) => locked(m.scene)),
   };
   const count = (t: ModeTab) => byTab[t].length + (t === "soon" ? UPCOMING.length : 0);
-  const current = TABS.find((t) => t.value === tab)!;
 
   return (
     <main className="campaign-atlas ui-mode-screen flex flex-col">
@@ -220,51 +183,57 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
           </div>
         </section>
 
-        <section aria-labelledby="home-modes">
-          <SectionHeading id="home-modes" kicker="Chế độ chơi" title="Chọn chiến trường" />
-          <Tabs<ModeTab>
-            label="Nhóm chế độ chơi"
-            value={tab}
-            onChange={pickTab}
-            panelId="home-modes-panel"
-            fullWidth
-            className="home-tabs mt-5 flex-nowrap gap-1.5 sm:w-fit sm:gap-2 [&>*]:gap-1.5 [&>*]:px-2 [&>*]:whitespace-nowrap sm:[&>*]:flex-none sm:[&>*]:px-4"
-            items={TABS.map((t) => ({
-              value: t.value,
-              label: (
-                <>
-                  <span className="font-serif">{t.label}</span>
-                  <span aria-hidden className="home-tab-count rounded-full px-1.5 text-[13px] leading-5 tabular-nums">
-                    {count(t.value)}
-                  </span>
-                  <span className="sr-only">, {count(t.value)} chế độ</span>
-                </>
-              ),
-            }))}
-          />
-          <div id="home-modes-panel" role="tabpanel" aria-label={current.label} className="mt-4">
-            <p className="text-[15px] leading-snug text-[var(--on-wood)]/85">{current.text}</p>
-            {count(tab) === 0 ? (
-              <p className="home-mode-soon atlas-frame mt-5 px-5 py-8 text-center font-serif text-[var(--ash)]">
-                Mọi chế độ đang dựng đã khai mở. Chế độ mới sẽ hiện ở đây.
-              </p>
-            ) : (
-              <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-                {byTab[tab].map((m) => (
-                  <li key={m.scene} className={m.featured ? "sm:col-span-2 lg:col-span-3" : undefined}>
-                    <ModeCard mode={m} locked={locked(m.scene)} needsLogin={!account && ONLINE_RANKED.includes(m.scene)} />
-                  </li>
-                ))}
-                {tab === "soon" &&
-                  UPCOMING.map((u) => (
-                    <li key={u.id}>
-                      <UpcomingCard mode={u} />
+        <div className="flex flex-col gap-6">
+          <nav aria-label="Nhóm chế độ chơi" className="home-mode-nav sticky top-14 z-30 -mx-4 px-4 py-2.5 md:top-16 xl:top-[68px]">
+            <ul className="flex gap-1.5 sm:gap-2">
+              {TABS.map((t) => (
+                <li key={t.value} className="flex-1 sm:flex-none">
+                  <a
+                    href={`#${sectionId(t.value)}`}
+                    aria-current={active === t.value ? "true" : undefined}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      jumpTo(t.value);
+                    }}
+                    className={choiceVariants({ className: `w-full gap-1.5 px-2 whitespace-nowrap sm:px-4 ${active === t.value ? "is-selected" : ""}` })}
+                  >
+                    <span className="font-serif">{t.label}</span>
+                    <span aria-hidden className="home-tab-count rounded-full px-1.5 text-[13px] leading-5 tabular-nums">
+                      {count(t.value)}
+                    </span>
+                    <span className="sr-only">, {count(t.value)} chế độ</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {TABS.map((t) => (
+            <section key={t.value} id={sectionId(t.value)} data-mode-group={t.value} aria-labelledby={`${sectionId(t.value)}-title`} className="home-mode-group">
+              <SectionHeading id={`${sectionId(t.value)}-title`} kicker="Chế độ chơi" title={t.label} />
+              <p className="mt-2 text-[15px] leading-snug text-[var(--on-wood)]/85">{t.text}</p>
+              {count(t.value) === 0 ? (
+                <p className="home-mode-soon atlas-frame mt-5 px-5 py-8 text-center font-serif text-[var(--ash)]">
+                  Mọi chế độ đang dựng đã khai mở. Chế độ mới sẽ hiện ở đây.
+                </p>
+              ) : (
+                <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+                  {byTab[t.value].map((m) => (
+                    <li key={m.scene} className={m.featured ? "sm:col-span-2 lg:col-span-3" : undefined}>
+                      <ModeCard mode={m} locked={locked(m.scene)} needsLogin={!account && ONLINE_RANKED.includes(m.scene)} />
                     </li>
                   ))}
-              </ul>
-            )}
-          </div>
-        </section>
+                  {t.value === "soon" &&
+                    UPCOMING.map((u) => (
+                      <li key={u.id}>
+                        <UpcomingCard mode={u} />
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </section>
+          ))}
+        </div>
 
         <section aria-labelledby="home-more">
           <SectionHeading id="home-more" kicker="Tiện ích" title="Quân vụ" />
@@ -283,6 +252,51 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
       </div>
     </main>
   );
+}
+
+const sectionId = (t: ModeTab) => `home-${t}`;
+
+/** Cuộn tới mục của nhóm; người dùng tắt chuyển động thì nhảy thẳng. */
+function jumpTo(t: ModeTab) {
+  const el = document.getElementById(sectionId(t));
+  if (!el) return;
+  const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+}
+
+/**
+ * Mục đang đọc: mục cuối cùng có mép trên đã qua dải dưới thanh dẫn (khoảng 30% chiều cao màn). Cuộn tới đáy trang thì
+ * lấy mục cuối, để mục Sắp ra mắt ngắn vẫn sáng được.
+ */
+function useActiveSection(): ModeTab {
+  const [active, setActive] = useState<ModeTab>("battle");
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const line = window.innerHeight * 0.3;
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+      let next: ModeTab = "battle";
+      for (const t of TABS) {
+        const el = document.getElementById(sectionId(t.value));
+        if (el && el.getBoundingClientRect().top <= line) next = t.value;
+      }
+      if (atBottom) next = TABS[TABS.length - 1]!.value;
+      setActive(next);
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+  return active;
 }
 
 /** Nút ở hero: dạng viên chữ serif, cùng chiều cao 48px; `className` quyết định nút chính hay phụ. */
