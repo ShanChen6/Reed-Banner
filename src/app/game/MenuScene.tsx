@@ -1,11 +1,12 @@
 "use client";
 
-// Phân cảnh MENU (Home V2, docs/05-ui-ux/design-system/game-mode-ui-spec.md mục 14): tranh Hoa Lư làm hero với logo
-// và nút Vào trận, lưới mười chế độ dẫn bằng tranh, hàng tiện ích cuối trang. Bấm vào đâu cũng chỉ đổi phân cảnh,
+// Phân cảnh MENU (Home V2, docs/05-ui-ux/design-system/game-mode-ui-spec.md mục 14 và 16): tranh Hoa Lư làm hero với logo
+// và nút Vào trận, chế độ chia ba mục xếp dọc (Chiến đấu, Giải đố, Sắp ra mắt) có thanh dẫn bám đầu màn, hàng tiện ích cuối trang. Bấm vào đâu cũng chỉ đổi phân cảnh,
 // không tải lại trang. Khung, góc hoa văn và màu lấy lại từ Sử ký (lớp .campaign-atlas) để cùng một chất liệu.
 
 import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import Image from "next/image";
+import { choiceVariants } from "@/components/ui";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Logo } from "./art/logo";
 import { fetchProfile, ONLINE_BATTLE_KEY } from "./battle/online";
@@ -19,8 +20,14 @@ import { SceneLink } from "./SceneContext";
 
 const HERO_ART = "/art/campaign/bg/hoalu.webp";
 
+/** Nhóm chế độ: Chiến đấu là trận ghép ô đánh nhau, Giải đố là chế độ một người không đọ sức đội hình. */
+type ModeGroup = "battle" | "puzzle";
+/** Ba mục xếp dọc ở Chế độ chơi: hai nhóm chế độ đã phát hành và mục Sắp ra mắt cho chế độ mới chỉ có thiết kế (UPCOMING). */
+type ModeTab = ModeGroup | "soon";
+
 interface Mode {
   readonly scene: Scene;
+  readonly group: ModeGroup;
   readonly title: string;
   readonly text: string;
   /** Tranh trong public/art/home/; chế độ sắp ra mắt chưa có tranh thì dựng tạm từ biểu tượng nghề/hệ. */
@@ -40,6 +47,7 @@ interface Mode {
 const MODES: readonly Mode[] = [
   {
     scene: "CAMPAIGN",
+    group: "battle",
     title: "Bình Loạn",
     text: MODE_TEXT.CAMPAIGN,
     art: "campaign",
@@ -48,25 +56,32 @@ const MODES: readonly Mode[] = [
     status: "Sáu chương sử Việt · tái đấu sứ quân",
     cta: "Dẹp loạn",
   },
-  { scene: "TRIAL", title: "Tháp Thí Luyện", text: MODE_TEXT.TRIAL, art: "trial", kicker: "Leo tháp", status: "Hai mươi tầng · thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
-  { scene: "DESTINY", title: "Tháp Thiên Mệnh", text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp", status: "Mỗi chu kỳ một vận · tranh hạng thiên hạ", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
-  { scene: "SURVIVAL", title: "Trấn Ải", text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Sinh tồn", status: "Ghi danh bảng xếp hạng mỗi tuần", cta: "Giữ ải" },
-  { scene: "DAILY", title: "Nhật Lệnh", text: MODE_TEXT.DAILY, art: "daily", kicker: "Mỗi ngày", status: "Lệnh mới ban mỗi ngày", cta: "Nhận lệnh" },
-  { scene: "ARENA", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Đấu người", status: "Tranh ngôi đầu bảng mỗi tuần", cta: "Thách đấu" },
-  { scene: "FORMATION", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Vào trận ngay · không cần tài khoản", cta: "Bày trận" },
-  { scene: "KHAI_LO", title: "Khai Lộ", text: MODE_TEXT.KHAI_LO, art: "khai-lo", kicker: "Giải đố", status: "Giải đố ngay · không cần tài khoản", cta: "Giải đố" },
-  { scene: "DO_THAM", title: "Do Thám", text: MODE_TEXT.DO_THAM, kicker: "Giải đố", status: "Dò bẫy ngay · không cần tài khoản", cta: "Do thám" },
-  { scene: "SU_LO", title: "Sử Lộ", text: MODE_TEXT.SU_LO, kicker: "Học sử", status: "Chơi thử ngay · không cần tài khoản", cta: "Lên đường" },
-  { scene: "TAM_TUONG_KY", title: "Tầm Tướng Ký", text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Một phiếu, một lượt tìm tướng", cta: "Ghép tướng", lockedText: "Sắp khai mở" },
-  { scene: "EXPEDITION", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, art: "vien-chinh", kicker: "Hành quân", status: "Bày mưu tính kế trên sa bàn", cta: "Hành quân", lockedText: "Sắp khai mở" },
+  { scene: "TRIAL", group: "battle", title: "Tháp Thí Luyện", text: MODE_TEXT.TRIAL, art: "trial", kicker: "Leo tháp", status: "Hai mươi tầng · thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
+  { scene: "DESTINY", group: "battle", title: "Tháp Thiên Mệnh", text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp", status: "Mỗi chu kỳ một vận · tranh hạng thiên hạ", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
+  { scene: "SURVIVAL", group: "battle", title: "Trấn Ải", text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Sinh tồn", status: "Ghi danh bảng xếp hạng mỗi tuần", cta: "Giữ ải" },
+  { scene: "DAILY", group: "battle", title: "Nhật Lệnh", text: MODE_TEXT.DAILY, art: "daily", kicker: "Mỗi ngày", status: "Lệnh mới ban mỗi ngày", cta: "Nhận lệnh" },
+  { scene: "ARENA", group: "battle", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Đấu người", status: "Tranh ngôi đầu bảng mỗi tuần", cta: "Thách đấu" },
+  { scene: "FORMATION", group: "puzzle", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Vào trận ngay · không cần tài khoản", cta: "Bày trận" },
+  { scene: "KHAI_LO", group: "puzzle", title: "Khai Lộ", text: MODE_TEXT.KHAI_LO, art: "khai-lo", kicker: "Giải đố", status: "Giải đố ngay · không cần tài khoản", cta: "Giải đố" },
+  { scene: "DO_THAM", group: "puzzle", title: "Do Thám", text: MODE_TEXT.DO_THAM, kicker: "Giải đố", status: "Dò bẫy ngay · không cần tài khoản", cta: "Do thám" },
+  { scene: "SU_LO", group: "puzzle", title: "Sử Lộ", text: MODE_TEXT.SU_LO, kicker: "Học sử", status: "Chơi thử ngay · không cần tài khoản", cta: "Lên đường" },
+  { scene: "TAM_TUONG_KY", group: "puzzle", title: "Tầm Tướng Ký", text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Một phiếu, một lượt tìm tướng", cta: "Ghép tướng", lockedText: "Sắp khai mở" },
+  { scene: "EXPEDITION", group: "battle", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, art: "vien-chinh", kicker: "Hành quân", status: "Bày mưu tính kế trên sa bàn", cta: "Hành quân", lockedText: "Sắp khai mở" },
 ];
 
 /**
- * Chế độ sắp ra mắt: thẻ không bấm được, hiện ở mục "Sắp ra mắt" dưới lưới chế độ. Mười chế độ hiện có đã vào MODES nên
- * danh sách này đang trống và mục tự ẩn; thêm một phần tử vào đây khi có ý tưởng mới (có `scene` thì thẻ bấm được).
+ * Chế độ mới đang thiết kế, chưa phát hành: thẻ không bấm được ở mục Sắp ra mắt (có `scene` thì bấm được). Chế độ đã phát hành
+ * nhưng tắt cờ ở môi trường nào đó vẫn nằm ở nhóm của nó, hiện thẻ khóa. Nguồn: hàng "Chế độ mới" ở docs/09-roadmap/lo-trinh.md.
  * TODO tranh: public/art/home/<id>.webp, chưa có thì thẻ dùng tranh mực tạm.
  */
-const UPCOMING: readonly { id: string; title: string; text: string; art?: string; scene?: Scene; note?: string }[] = [];
+const UPCOMING: readonly { id: string; title: string; text: string; art?: string; scene?: Scene; note?: string }[] = [
+  {
+    id: "pvp-live",
+    title: "Quần Hùng đấu trực tiếp",
+    text: "Đối mặt hào kiệt khắp nơi trên cùng một bàn cờ, một chọi một hay ba chọi ba, từng lượt định thắng thua.",
+    art: "arena",
+  },
+];
 
 
 /** Tiện ích cuối trang. Hồ sơ và Tài khoản đã có trên thanh header nên không lặp lại ở đây. */
@@ -81,6 +96,12 @@ const UTILITIES: readonly { scene: Scene; title: string; icon: UtilityIcon }[] =
 ];
 
 type UtilityIcon = "scroll" | "rank" | "swords" | "shop";
+
+const TABS: readonly { value: ModeTab; label: string; text: string }[] = [
+  { value: "battle", label: "Chiến đấu", text: "Ghép ô ra đòn, dẫn đội tướng dẹp loạn, leo tháp, giữ ải, so tài cùng quần hùng." },
+  { value: "puzzle", label: "Giải đố", text: "Không cần đội hình mạnh: tính từng nước, dò từng bẫy, đáp đúng sử xưa." },
+  { value: "soon", label: "Sắp ra mắt", text: "Những chế độ mới đang dựng, khai mở dần qua từng bản cập nhật." },
+];
 
 function hasSavedBattle(): boolean {
   try {
@@ -106,6 +127,7 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
     };
   }, []);
   const plan = profile === undefined ? null : heroPlan(profile, saved);
+  const active = useActiveSection();
   const locked = (scene: Scene) =>
     scene === "TRIAL"
       ? !towerFeatures.trial
@@ -116,6 +138,12 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
           : scene === "EXPEDITION"
             ? !towerFeatures.expedition
             : false;
+  const byTab: Record<ModeTab, readonly Mode[]> = {
+    battle: MODES.filter((m) => m.group === "battle"),
+    puzzle: MODES.filter((m) => m.group === "puzzle"),
+    soon: [],
+  };
+  const count = (t: ModeTab) => byTab[t].length + (t === "soon" ? UPCOMING.length : 0);
 
   return (
     <main className="campaign-atlas ui-mode-screen flex flex-col">
@@ -162,29 +190,57 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
           </div>
         </section>
 
-        <section aria-labelledby="home-modes">
-          <SectionHeading id="home-modes" kicker="Chế độ chơi" title="Chọn chiến trường" />
-          <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-            {MODES.map((m) => (
-              <li key={m.scene} className={m.featured ? "sm:col-span-2 lg:col-span-3" : undefined}>
-                <ModeCard mode={m} locked={locked(m.scene)} needsLogin={!account && ONLINE_RANKED.includes(m.scene)} />
-              </li>
-            ))}
-          </ul>
-        </section>
+        <div className="flex flex-col gap-6">
+          <nav aria-label="Nhóm chế độ chơi" className="home-mode-nav sticky top-14 z-30 -mx-4 px-4 py-2.5 md:top-16 xl:top-[68px]">
+            <ul className="flex gap-1.5 sm:gap-2">
+              {TABS.map((t) => (
+                <li key={t.value} className="flex-1 sm:flex-none">
+                  <a
+                    href={`#${sectionId(t.value)}`}
+                    aria-current={active === t.value ? "true" : undefined}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      jumpTo(t.value);
+                    }}
+                    className={choiceVariants({ className: `w-full gap-1.5 px-2 whitespace-nowrap sm:px-4 ${active === t.value ? "is-selected" : ""}` })}
+                  >
+                    <span className="font-serif">{t.label}</span>
+                    <span aria-hidden className="home-tab-count rounded-full px-1.5 text-[13px] leading-5 tabular-nums">
+                      {count(t.value)}
+                    </span>
+                    <span className="sr-only">, {count(t.value)} chế độ</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
-        {UPCOMING.length > 0 && (
-        <section aria-labelledby="home-soon">
-          <SectionHeading id="home-soon" kicker="Sắp ra mắt" title="Đang dựng" />
-          <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-            {UPCOMING.map((u) => (
-              <li key={u.id}>
-                <UpcomingCard mode={u} />
-              </li>
-            ))}
-          </ul>
-        </section>
-        )}
+          {TABS.map((t) => (
+            <section key={t.value} id={sectionId(t.value)} data-mode-group={t.value} aria-labelledby={`${sectionId(t.value)}-title`} className="home-mode-group">
+              <SectionHeading id={`${sectionId(t.value)}-title`} kicker="Chế độ chơi" title={t.label} />
+              <p className="mt-2 text-[15px] leading-snug text-[var(--on-wood)]/85">{t.text}</p>
+              {count(t.value) === 0 ? (
+                <p className="home-mode-soon atlas-frame mt-5 px-5 py-8 text-center font-serif text-[var(--ash)]">
+                  Chưa có chế độ mới đang dựng. Khi có, chế độ sẽ hiện ở đây.
+                </p>
+              ) : (
+                <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+                  {byTab[t.value].map((m) => (
+                    <li key={m.scene} className={m.featured ? "sm:col-span-2 lg:col-span-3" : undefined}>
+                      <ModeCard mode={m} locked={locked(m.scene)} needsLogin={!account && ONLINE_RANKED.includes(m.scene)} />
+                    </li>
+                  ))}
+                  {t.value === "soon" &&
+                    UPCOMING.map((u) => (
+                      <li key={u.id}>
+                        <UpcomingCard mode={u} />
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </section>
+          ))}
+        </div>
 
         <section aria-labelledby="home-more">
           <SectionHeading id="home-more" kicker="Tiện ích" title="Quân vụ" />
@@ -203,6 +259,51 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
       </div>
     </main>
   );
+}
+
+const sectionId = (t: ModeTab) => `home-${t}`;
+
+/** Cuộn tới mục của nhóm; người dùng tắt chuyển động thì nhảy thẳng. */
+function jumpTo(t: ModeTab) {
+  const el = document.getElementById(sectionId(t));
+  if (!el) return;
+  const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+}
+
+/**
+ * Mục đang đọc: mục cuối cùng có mép trên đã qua dải dưới thanh dẫn (khoảng 30% chiều cao màn). Cuộn tới đáy trang thì
+ * lấy mục cuối, để mục Sắp ra mắt ngắn vẫn sáng được.
+ */
+function useActiveSection(): ModeTab {
+  const [active, setActive] = useState<ModeTab>("battle");
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const line = window.innerHeight * 0.3;
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+      let next: ModeTab = "battle";
+      for (const t of TABS) {
+        const el = document.getElementById(sectionId(t.value));
+        if (el && el.getBoundingClientRect().top <= line) next = t.value;
+      }
+      if (atBottom) next = TABS[TABS.length - 1]!.value;
+      setActive(next);
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+  return active;
 }
 
 /** Nút ở hero: dạng viên chữ serif, cùng chiều cao 48px; `className` quyết định nút chính hay phụ. */
