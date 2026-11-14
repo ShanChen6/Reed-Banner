@@ -174,3 +174,14 @@
 - [x] Thua trận rút về; giới hạn 3 lượt xuất quân mỗi ngày; chơi offline, khách chơi được, không bảng xếp hạng (Shan, 04/11/2026). → [GDD mục 8](../02-game-modes/expedition/01-vien-chinh-gdd.md#8-shan-đã-quyết-04112026)
 - [ ] TODO: Shan chơi thử (bật `EXPEDITION_ENABLED=true`), duyệt số liệu mục 5 và số lượt mỗi ngày.
 - [ ] TODO: tranh thumbnail Home `public/art/home/vien-chinh.webp` và banner riêng.
+
+## Sử Lộ (Mê cung lịch sử) — 14/11/2026
+
+Thiết kế DRAFT ở [Sử Lộ](../02-game-modes/future/su-lo.md#13-điểm-cần-shan-quyết).
+
+- [x] Tên Sử Lộ, không giới hạn số lượt, ô giao tranh mọi người như nhau (Shan, 14/11/2026).
+- [x] Trả lời sai thì về ô bắt đầu lượt (Shan, 14/11/2026).
+- [x] Trợ giúp có nhưng hạn chế (Shan, 14/11/2026).
+- [x] Có bảng xếp hạng mê cung ngày; boss III, IV do Claude chọn (Shan, 14/11/2026).
+- [x] Lập sổ nguồn riêng; Claude duyệt câu lần 1, Shan duyệt lần 2 (Shan, 14/11/2026).
+- [ ] TODO: chốt số liệu (mốc lượt, số nước giao tranh, giá trợ giúp, thưởng) sau khi chơi thử.
