@@ -20,6 +20,7 @@ import {
   applyDestinyTerrain,
   destinyAppliedEnergyBonus,
   destinyAppliedRageBonus,
+  destinyRageOf,
 } from "./destinyBoons";
 import { destinyFloorCount, destinyRunRulesVersion } from "./destinyRules";
 import { STANDARD_WEIGHTS } from "../board";
@@ -104,6 +105,8 @@ export function createDestinyFloorBattle(run: DestinyRun, input: DestinyBattleIn
   const created = createBattle({
     sides: [{ fighters: configs, leader: 0, food: run.food, hpRatio }, input.foes],
     seed: input.seed,
+    // Nộ riêng từng tướng: Nộ giữ xuyên tầng theo từng người.
+    perFighterRage: true,
     ...(input.now === undefined ? {} : { now: input.now }),
     ...(input.timer === undefined ? {} : { timer: input.timer }),
     ...(input.firstSide === undefined ? {} : { firstSide: input.firstSide }),
@@ -117,9 +120,8 @@ export function createDestinyFloorBattle(run: DestinyRun, input: DestinyBattleIn
       run.fighters![id]!.energy + destinyAppliedEnergyBonus(run, id),
     );
   });
-  created.state.sides[0].rage = Math.min(
-    RAGE_MAX,
-    Math.max(0, run.rage ?? 0) + destinyAppliedRageBonus(run),
+  created.state.sides[0].rages = input.activeIds.map((id) =>
+    Math.min(RAGE_MAX, Math.max(0, destinyRageOf(run, id)) + destinyAppliedRageBonus(run, id)),
   );
   return { ok: true, run: { ...run, phase: "battle" }, ...created };
 }
@@ -175,6 +177,13 @@ export function settleDestinyFloor(run: DestinyRun, battle: BattleState): Destin
     };
   }
 
+  // Nộ riêng: tướng ra trận lấy từ thanh của mình (trừ phần Phúc đã cộng), tướng nghỉ giữ nguyên.
+  const rages: Record<string, number> = Object.fromEntries(run.roster.map((id) => [id, destinyRageOf(run, id)]));
+  active.forEach((current, i) => {
+    const left = battle.sides[0].rages?.[i] ?? 0;
+    rages[current.id] = Math.max(0, Math.min(RAGE_MAX, Math.round(left) - destinyAppliedRageBonus(run, current.id)));
+  });
+
   const allActiveDown = active.every(({ id }) => fighters[id]!.hp === 0);
   const won = battle.winner === 0 && !allActiveDown;
   // Thắng tầng cuối là hoàn thành run: không còn tầng kế nên không mở phần thưởng giữa tầng.
@@ -192,10 +201,8 @@ export function settleDestinyFloor(run: DestinyRun, battle: BattleState): Destin
         return [id, fighter.hp / fighter.config.maxHp];
       })),
       food: clampDestinyFood(battle.sides[0].food),
-      rage: Math.max(0, Math.min(
-        RAGE_MAX,
-        Math.round(battle.sides[0].rage) - destinyAppliedRageBonus(run),
-      )),
+      rages,
+      rage: rages[MAIN_ID] ?? 0,
       totalTurns: (run.totalTurns ?? 0) + Math.max(0, Math.round(battle.turn.number)),
       settledFloor: run.floor,
       phase: won && !completed ? "reward" : "done",

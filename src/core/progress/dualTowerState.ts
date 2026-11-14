@@ -159,6 +159,8 @@ export interface DestinyRun {
   readonly food: number;
   /** Nộ khí xuyên tầng; thiếu ở dữ liệu cũ được hiểu là 0. */
   readonly rage?: number;
+  /** Nộ riêng của từng tướng theo id roster, giữ xuyên tầng; thiếu ở dữ liệu cũ thì tướng thủ lĩnh lấy từ `rage`, còn lại 0. */
+  readonly rages?: Readonly<Record<string, number>>;
   /** Tổng lượt các tầng đã đánh trong run, dùng tie-break BXH cycle. */
   readonly totalTurns?: number;
   readonly boons?: readonly DestinyBoonStack[];
@@ -354,6 +356,7 @@ function parseDestinyRun(raw: unknown): DestinyRun | null {
     !Array.isArray(raw.boons) ||
     !["prepare", "battle", "reward", "done"].includes(raw.phase as string) ||
     (raw.rage !== undefined && (!Number.isInteger(raw.rage) || (raw.rage as number) < 0 || (raw.rage as number) > 100)) ||
+    (raw.rages !== undefined && (!isObj(raw.rages) || Object.entries(raw.rages).some(([id, v]) => !Number.isInteger(v) || (v as number) < 0 || (v as number) > 100 || typeof id !== "string"))) ||
     (raw.totalTurns !== undefined && (!Number.isInteger(raw.totalTurns) || (raw.totalTurns as number) < 0)) ||
     (raw.settledFloor !== undefined &&
       (!Number.isInteger(raw.settledFloor) || (raw.settledFloor as number) < 0 || (raw.settledFloor as number) > uint(raw.floor))) ||
@@ -442,6 +445,7 @@ function parseDestinyRun(raw: unknown): DestinyRun | null {
     boons,
     phase: raw.phase as DestinyRunPhase,
     rage: raw.rage === undefined ? 0 : raw.rage as number,
+    ...(raw.rages === undefined ? {} : { rages: { ...(raw.rages as Record<string, number>) } }),
     totalTurns: raw.totalTurns === undefined ? 0 : raw.totalTurns as number,
     settledFloor: raw.settledFloor === undefined ? 0 : raw.settledFloor as number,
     rewardedFloor: raw.rewardedFloor === undefined ? 0 : raw.rewardedFloor as number,

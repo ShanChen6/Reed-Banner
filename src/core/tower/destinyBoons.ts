@@ -1,6 +1,7 @@
 import { ENERGY_MAX, RAGE_MAX, type Element, type FighterConfig } from "../battle";
 import { MAX_WEIGHT, MIN_WEIGHT, type SpawnWeights, type TileKind } from "../board";
 import {
+  MAIN_ID,
   DESTINY_BOON_IDS,
   DESTINY_BOON_STATE_RULES,
   type DestinyBoon,
@@ -202,9 +203,15 @@ export function destinyAppliedEnergyBonus(run: DestinyRun, fighterId: string): n
   return Math.max(0, Math.min(destinyStartingEnergyBonus(run), ENERGY_MAX - energy));
 }
 
-export function destinyAppliedRageBonus(run: DestinyRun): number {
-  const rage = run.rage ?? 0;
-  return Math.max(0, Math.min(destinyStartingRageBonus(run), RAGE_MAX - rage));
+/** Nộ riêng của một tướng khi vào trận: dữ liệu mới theo `rages`, dữ liệu cũ chỉ có Nộ của thủ lĩnh. */
+export function destinyRageOf(run: DestinyRun, fighterId: string): number {
+  return run.rages?.[fighterId] ?? (fighterId === MAIN_ID ? (run.rage ?? 0) : 0);
+}
+
+/** Phúc Trống trận cộng Nộ khởi đầu cho thủ lĩnh (không nhân theo số tướng). */
+export function destinyAppliedRageBonus(run: DestinyRun, fighterId: string = MAIN_ID): number {
+  if (fighterId !== MAIN_ID) return 0;
+  return Math.max(0, Math.min(destinyStartingRageBonus(run), RAGE_MAX - destinyRageOf(run, fighterId)));
 }
 
 export type DestinyBoonChangeError = "unknown_boon" | "stack_cap" | "not_owned";
