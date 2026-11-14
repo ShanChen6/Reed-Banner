@@ -77,8 +77,8 @@ export function BattleHeader({
               ? "Trấn Ải kết thúc"
               : state.winner !== null
                 ? state.winner === PLAYER
-                  ? "Bạn thắng!"
-                  : "Bạn thua"
+                  ? "Chúa công thắng!"
+                  : "Chúa công thua"
                 : pending
                   ? "Đang chờ máy chủ…"
                   : playerTurn

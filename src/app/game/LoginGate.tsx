@@ -11,7 +11,7 @@ import { MODE_INFO } from "./modeInfo";
 import type { Scene } from "./scene";
 import { SceneLink } from "./SceneContext";
 
-const DEFAULT_REASON = "Chế độ này tính bảng xếp hạng và có thưởng nên cần tài khoản đã đăng nhập.";
+const DEFAULT_REASON = "Chế độ này tính bảng xếp hạng và có thưởng nên cần tài khoản đã ghi danh.";
 
 export default function LoginGate({ scene, name, reason }: { scene: Scene; name: string; reason?: string }) {
   const info = MODE_INFO[scene];
@@ -21,7 +21,7 @@ export default function LoginGate({ scene, name, reason }: { scene: Scene; name:
         art={info?.art ? `/art/home/${info.art}.webp` : undefined} />
       <OrnateFrame level="raised" role="status" className="mx-auto w-full max-w-2xl">
         <SectionTitle description={`${reason ?? DEFAULT_REASON} Bạn vẫn chơi thường thoải mái ở các chế độ khác.`}>
-          Cần đăng nhập
+          Cần trình danh
         </SectionTitle>
         {info?.perks && (
           <ul className="mb-4 grid gap-2">
@@ -35,7 +35,7 @@ export default function LoginGate({ scene, name, reason }: { scene: Scene; name:
         )}
         <div className="ui-action-bar flex flex-wrap items-center justify-end gap-2">
           <SceneLink scene="MENU" className={buttonVariants({ variant: "secondary" })}>Về Chiến Trường</SceneLink>
-          <SceneLink scene="LOGIN" className={buttonVariants({ size: "lg" })}>Đăng nhập để chơi</SceneLink>
+          <SceneLink scene="LOGIN" className={buttonVariants({ size: "lg" })}>Trình danh để chơi</SceneLink>
         </div>
       </OrnateFrame>
     </ModeScreen>

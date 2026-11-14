@@ -13,4 +13,5 @@ export * from "./tower";
 export * from "./survival";
 export * from "./daily";
 export * from "./arena";
+export * from "./pvp";
 export * from "./expedition";

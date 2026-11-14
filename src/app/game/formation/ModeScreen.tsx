@@ -15,10 +15,10 @@ import LevelCard from "./LevelCard";
 import { MAP_POOL } from "./maps";
 import type { LevelOverview, Overview } from "./rankedClient";
 import RewardLadder from "./RewardLadder";
-import Rules from "./Rules";
+import { ModeGuidePanel } from "../ModeGuide";
 import { formatRemaining } from "./time";
 
-type Tab = "ranked" | "practice" | "board" | "rewards";
+type Tab = "ranked" | "practice" | "board" | "rewards" | "guide";
 const TIER_LABEL = Object.fromEntries(REWARD_TIERS.map((t) => [t.tier, t.label])) as Record<string, string>;
 const CADENCE = { day: "Kỳ theo ngày", week: "Kỳ theo tuần" } as const;
 
@@ -93,7 +93,7 @@ function RankedCard({ l, now, busy, canPlay, onPlay }: { l: LevelOverview; now: 
         </div>
         <RewardLadder level={l.level} rank={m?.status === "won" ? (m.rank ?? null) : null} winners={l.winners} />
         <button type="button" disabled={busy || !canPlay} onClick={() => onPlay(l.level)} className={buttonVariants({ className: "mt-auto min-h-12 px-4" })}>
-          {canPlay ? action : "Đăng nhập để chơi"}
+          {canPlay ? action : "Trình danh để chơi"}
         </button>
       </div>
     </li>
@@ -182,8 +182,8 @@ export default function ModeScreen({
       )}
       {!overview?.canPlay && !overview?.failed && (
         <div role="note" className="ui-frame flex flex-wrap items-center justify-between gap-3 p-4">
-          <p className="max-w-xl text-[15px]">Chế độ xếp hạng chỉ dành cho tài khoản đã đăng nhập. Chơi thường vẫn thoải mái, không cần đăng nhập.</p>
-          <SceneLink scene="LOGIN" className={buttonVariants({ className: "flex min-h-12 items-center px-6" })}>Đăng nhập</SceneLink>
+          <p className="max-w-xl text-[15px]">Chế độ xếp hạng chỉ dành cho tài khoản đã ghi danh. Chơi thường vẫn thoải mái, không cần trình danh.</p>
+          <SceneLink scene="LOGIN" className={buttonVariants({ className: "flex min-h-12 items-center px-6" })}>Trình danh</SceneLink>
         </div>
       )}
     </>
@@ -198,27 +198,32 @@ export default function ModeScreen({
         description="Bày quân tướng theo nghề và hệ để khai thông toàn bộ sa bàn. Mỗi ô khai thông lộ một mảnh bản đồ thời Loạn 12 sứ quân."
       />
 
-      {rankedOn && (
-        <Tabs
-          label="Chế độ"
-          value={active}
-          onChange={setTab}
-          items={[
-            { value: "ranked", label: "Xếp hạng · có thưởng" },
-            { value: "practice", label: "Chơi thường" },
-            { value: "board", label: "Bảng xếp hạng" },
-            {
-              value: "rewards",
-              label: (
-                <>
-                  Ban thưởng
-                  {overview?.canPlay && pending.length > 0 && <span role="img" aria-label={`${pending.length} thưởng chờ nhận`} className="ml-1.5 inline-block size-2 rounded-full bg-lacquer-hi align-middle" />}
-                </>
-              ),
-            },
-          ]}
-        />
-      )}
+      <Tabs
+        label="Chế độ"
+        value={active}
+        onChange={setTab}
+        items={[
+          ...(rankedOn
+            ? [
+                { value: "ranked" as const, label: "Xếp hạng · có thưởng" },
+                { value: "practice" as const, label: "Chơi thường" },
+                { value: "board" as const, label: "Bảng xếp hạng" },
+                {
+                  value: "rewards" as const,
+                  label: (
+                    <>
+                      Ban thưởng
+                      {overview?.canPlay && pending.length > 0 && <span role="img" aria-label={`${pending.length} thưởng chờ nhận`} className="ml-1.5 inline-block size-2 rounded-full bg-lacquer-hi align-middle" />}
+                    </>
+                  ),
+                },
+              ]
+            : [{ value: "practice" as const, label: "Chơi thường" }]),
+          { value: "guide" as const, label: "Hướng dẫn" },
+        ]}
+      />
+
+      {active === "guide" && <ModeGuidePanel scene="FORMATION" />}
 
       {active === "ranked" && rankedOn && (
         <section aria-label="Xếp hạng" className="flex flex-col gap-4">
@@ -339,11 +344,7 @@ export default function ModeScreen({
         </section>
       )}
 
-      <Collection collected={collection} />
-      <section aria-labelledby="tran-do-rules" className="ui-frame p-4">
-        <h2 id="tran-do-rules" className="mb-2 font-serif text-xl font-bold text-title-on-wood">Luật chơi</h2>
-        <Rules />
-      </section>
+      {active !== "guide" && <Collection collected={collection} />}
     </>
   );
 }

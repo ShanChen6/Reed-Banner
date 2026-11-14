@@ -1,6 +1,7 @@
 // Mô phỏng sinh tồn: AI Thường đánh thay người chơi qua các đợt trên cùng một trận, tự quyết hồi sinh bằng lương.
 // Dùng để cân đường cong sức mạnh của đợt, xem docs/02-game-modes/README.md mục 4.
 
+import { simRageOption } from "./rage";
 import { playAiTurn } from "../ai";
 import { beginWave, createBattle, FOOD_MAX } from "../battle";
 import {
@@ -60,6 +61,7 @@ export function simulateSurvival(
     ],
     seed,
     timer: false,
+    ...simRageOption([activeSide.value, { fighters: first.foes }]),
     firstSide: 0,
   });
   const turns: number[] = [];

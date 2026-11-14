@@ -1,4 +1,5 @@
 import { playAiTurn } from "../ai";
+import { simRageOption } from "./rage";
 import { elementMultiplier, type Element } from "../battle/elements";
 import {
   beginWave,
@@ -326,6 +327,7 @@ export function simulateSurvivalV11(
     sides: [activeSide.value, { fighters: firstWave.foes, leader: 0 }],
     seed,
     timer: false,
+    ...simRageOption([activeSide.value, { fighters: firstWave.foes }]),
     firstSide: 0,
   });
   const turns: number[] = [];

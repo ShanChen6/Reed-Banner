@@ -87,6 +87,7 @@ import { DIA_AN } from "./dia-an";
 import { LOI_ANH } from "./loi-anh";
 import { VO_ANH } from "./vo-anh";
 import { VU_PHONG } from "./vu-phong";
+import { NPC_RIGS } from "./npc";
 
 export * from "./types";
 
@@ -186,6 +187,7 @@ const RIGS: Readonly<Record<string, Rig>> = {
   diaAn: DIA_AN,
   loiAnh: LOI_ANH,
   voAnh: VO_ANH,
+  ...NPC_RIGS,
 };
 
 export function rigOf(id: string): Rig | null {
@@ -193,8 +195,8 @@ export function rigOf(id: string): Rig | null {
 }
 
 /**
- * Rig dùng trong trận cho một nhân vật cụ thể. Đinh Bộ Lĩnh (`adaptiveFx`) mượn hiệu ứng tuyệt chiêu và màu của nhân
- * vật kèm cùng nghề, cùng hệ có hiệu ứng riêng, vì tuyệt chiêu của anh đổi theo nghề và hệ người chơi chọn.
+ * Rig dùng trong trận cho một nhân vật cụ thể. Đinh Bộ Lĩnh và NPC (`adaptiveFx`) mượn hiệu ứng tuyệt chiêu và màu của nhân
+ * vật kèm cùng nghề, cùng hệ có hiệu ứng riêng, vì tuyệt chiêu của Đinh Bộ Lĩnh đổi theo nghề và hệ người chơi chọn, còn NPC không có hiệu ứng riêng.
  */
 export function rigFor(f: { readonly id: string; readonly element: Element; readonly profession: Profession }): Rig | null {
   const rig = rigOf(f.id);

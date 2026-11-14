@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { describe, it } from "node:test";
-import { BUST_IDS, bustUrl, portraitUrl, STAGE_BACKDROP_ELEMENTS, stageBackdropUrl } from "../../src/app/game/art/portrait-data";
+import { BUST_IDS, bustUrl, NPC_PORTRAIT_IDS, portraitUrl, STAGE_BACKDROP_ELEMENTS, stageBackdropUrl } from "../../src/app/game/art/portrait-data";
 
 describe("Chân dung bán thân (bust.webp)", () => {
   it("mỗi nhân vật trong BUST_IDS có chân dung cũ làm dự phòng và tệp bust.webp tồn tại", () => {
@@ -15,6 +15,19 @@ describe("Chân dung bán thân (bust.webp)", () => {
 
   it("nhân vật chưa có bust thì bustUrl là null", () => {
     assert.equal(bustUrl("khongCoNguoiNay"), null);
+  });
+});
+
+describe("Chân dung NPC Bình Loạn", () => {
+  it("mỗi id trong NPC_PORTRAIT_IDS có tệp WebP ở public/art/npc", () => {
+    for (const id of NPC_PORTRAIT_IDS) {
+      assert.equal(portraitUrl(id), `/art/npc/${id}.webp`);
+      assert.ok(existsSync(`public/art/npc/${id}.webp`), `thiếu public/art/npc/${id}.webp`);
+    }
+  });
+
+  it("NPC chưa có ảnh thì không có đường dẫn (dùng hình tạm theo nghề)", () => {
+    assert.equal(portraitUrl("khong-co-npc-nay"), null);
   });
 });
 

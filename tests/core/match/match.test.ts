@@ -11,6 +11,7 @@ import {
   mainCharacter,
   settle,
   startMatch,
+  type SideConfig,
   STARTER_COMPANIONS,
   TURN_MS,
   viewOf,
@@ -104,5 +105,17 @@ describe("trận online", () => {
     assert.equal("aiRng" in (v.battle as object), false);
     assert.equal(catchUpDifficulty("boss"), "hard");
     assert.equal(catchUpDifficulty("easy"), "easy");
+  });
+});
+
+
+describe("Nộ riêng trong trận online", () => {
+  const trio = (p: string): SideConfig => ({ fighters: [1, 2, 3].map((i) => ({ id: `${p}${i}`, name: `${p}${i}`, element: "kim", profession: "tuongSi", maxHp: 1000, atk: 20, def: 0 })), leader: 0 });
+  const one = (p: string): SideConfig => ({ fighters: [trio(p).fighters[0]!], leader: 0 });
+  const mk = (a: SideConfig, b: SideConfig) => startMatch({ sides: [a, b], seed: 1, difficulty: "normal", now: 0, firstSide: 0 } as never).match.battle;
+
+  it("đội từ 2 người trở lên: mỗi tướng một Nộ; trận một người mỗi phe giữ Nộ chung", () => {
+    assert.deepEqual(mk(trio("a"), trio("b")).sides[0].rages, [0, 0, 0]);
+    assert.equal(mk(one("a"), one("b")).sides[0].rages, undefined);
   });
 });

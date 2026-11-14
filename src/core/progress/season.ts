@@ -6,8 +6,8 @@
 
 import { vnWeek } from "../vnTime";
 
-/** `tamTuongKy`: điểm tuần chế độ Hạng Tầm Tướng Ký; bảng riêng ở màn chế độ, không nằm trong `SEASON_MODES` của trang Xếp hạng. */
-export type SeasonMode = "survival" | "arena" | "tamTuongKy";
+/** `pvp`: điểm Elo nhận được trong tuần ở Quần Hùng Đấu người (chỉ người có tổng dương lên bảng); bảng riêng ở màn Đấu người. `tamTuongKy`: điểm tuần chế độ Hạng Tầm Tướng Ký; bảng riêng ở màn chế độ, không nằm trong `SEASON_MODES` của trang Xếp hạng. */
+export type SeasonMode = "survival" | "arena" | "tamTuongKy" | "pvp";
 
 /** Bảng mùa trên trang Xếp hạng. */
 export const SEASON_MODES: readonly SeasonMode[] = ["survival", "arena"];

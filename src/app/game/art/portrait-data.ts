@@ -79,7 +79,52 @@ const PHOTOS: Readonly<Record<string, string>> = {
   voAnh: "/art/characters/vo-anh/portrait.webp",
 };
 
+/**
+ * NPC hư cấu của Bình Loạn (id trong `src/core/campaign/encounters.ts`, `hero: false`) đã có chân dung riêng
+ * (`public/art/npc/<id>.webp`, 384×384, nền tranh sương; prompt ở docs/06-art/prompts/npc-binh-loan.md).
+ * Thiếu thì ô chân dung dùng hình tạm theo nghề như cũ. Thêm id vào đây khi có ảnh.
+ */
+export const NPC_PORTRAIT_IDS: ReadonlySet<string> = new Set([
+  "bo-hai-raider-boatman",
+  "bo-hai-raider-chief",
+  "bo-hai-raider-scout",
+  "do-dong-boatman",
+  "do-dong-guard",
+  "do-dong-healer",
+  "do-dong-lookout",
+  "do-dong-road-captain",
+  "do-dong-strategist",
+  "do-dong-vanguard",
+  "hoa-lu-raider-chief",
+  "hoi-ho-bank-guard",
+  "hoi-ho-ritualist",
+  "ngo-951-field-commander",
+  "ngo-951-soldier",
+  "ngo-951-strategist",
+  "phong-chau-strategist",
+  "phong-chau-vanguard",
+  "phu-liet-healer",
+  "phu-liet-raid-leader",
+  "phu-liet-raider",
+  "phu-liet-scout",
+  "phu-liet-vanguard",
+  "phu-liet-wall-archer",
+  "phu-liet-wall-captain",
+  "phu-liet-wall-guard",
+  "sieu-loai-strategist",
+  "sieu-loai-vanguard",
+  "story-cu-gia-trong-dong",
+  "story-linh-gia",
+  "story-nguoi-dan-hoa-lu",
+  "story-nguoi-dua-tin",
+  "story-su-gia-hoa-lu",
+  "story-tuong-bo-hai",
+  "tien-du-healer",
+  "tien-du-vanguard",
+]);
+
 export function portraitUrl(id: string): string | null {
+  if (NPC_PORTRAIT_IDS.has(id)) return `/art/npc/${id}.webp`;
   return PHOTOS[id] ?? null;
 }
 

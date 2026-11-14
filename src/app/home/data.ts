@@ -43,7 +43,7 @@ export const FAQ: readonly { readonly q: string; readonly a: string }[] = [
   },
   {
     q: "Có mất tiền không?",
-    a: "Không. Cờ Lau miễn phí. Bạn chơi ngay bằng tài khoản khách, tiến trình gắn với trình duyệt; đăng nhập hoặc tạo tài khoản để giữ tiến trình trên mọi máy.",
+    a: "Không. Cờ Lau miễn phí. Bạn chơi ngay bằng tài khoản khách, tiến trình gắn với trình duyệt; trình danh hoặc ghi danh để giữ tiến trình trên mọi máy.",
   },
   {
     q: "Đánh sai nước có bị phạt không?",

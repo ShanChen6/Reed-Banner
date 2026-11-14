@@ -10,6 +10,7 @@ import {
   type Profession,
   type StoryBeat,
 } from "@/core";
+import { NPC_PORTRAIT_IDS } from "../art/portrait-data";
 
 export const MAIN_SPEAKER = "Đinh Bộ Lĩnh";
 
@@ -64,9 +65,25 @@ export interface SpeakerLook {
 
 /**
  * Chân dung theo tên người nói: nhân vật có trong danh sách (kể cả sứ quân gọi theo tước hiệu, ví dụ Trần Minh
- * Công) dùng chân dung của họ; người không tên (người đưa tin, lính già) không có chân dung.
+ * Công) dùng chân dung của họ; người không tên (người đưa tin, lính già) có chân dung riêng khi đã có ảnh (STORY_SPEAKER_LOOKS), chưa có thì không hiện chân dung.
  */
+/**
+ * Người nói không tên trong thoại (không có trong danh sách nhân vật) và id chân dung của họ ở public/art/npc/. Hệ và nghề
+ * chỉ quyết định màu viền ô chân dung. Chỉ có hiệu lực khi id đã nằm trong `NPC_PORTRAIT_IDS` (có ảnh); thiếu ảnh thì
+ * ô thoại vẫn hiện chữ cái đầu như cũ.
+ */
+const STORY_SPEAKER_LOOKS: Readonly<Record<string, SpeakerLook>> = {
+  "Người đưa tin": { id: "story-nguoi-dua-tin", element: "phong", profession: "binhLinh" },
+  "Cụ già trong động": { id: "story-cu-gia-trong-dong", element: "tho", profession: "quanSu" },
+  "Sứ giả Hoa Lư": { id: "story-su-gia-hoa-lu", element: "thuy", profession: "muuSi" },
+  "Một người lính già": { id: "story-linh-gia", element: "tho", profession: "binhLinh" },
+  "Một người dân Hoa Lư": { id: "story-nguoi-dan-hoa-lu", element: "moc", profession: "ySu" },
+  "Một tướng Bố Hải": { id: "story-tuong-bo-hai", element: "thuy", profession: "tuongSi" },
+};
+
 export function speakerLook(speaker: string): SpeakerLook | null {
+  const story = STORY_SPEAKER_LOOKS[speaker];
+  if (story && NPC_PORTRAIT_IDS.has(story.id)) return story;
   const byName = ALL_COMPANIONS.find((c) => c.name === speaker);
   const record = WARLORD_RECORDS.find(
     (w) => w.name === speaker || w.title === speaker,

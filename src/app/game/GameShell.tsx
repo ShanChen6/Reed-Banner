@@ -15,6 +15,7 @@ import CampaignScreen from "./campaign/CampaignScreen";
 import DailyScreen from "./daily/DailyScreen";
 import FormationScreen from "./formation/FormationScreen";
 import KhaiLoScreen from "./khai-lo/KhaiLoScreen";
+import DoThamScreen from "./do-tham/DoThamScreen";
 import TamTuongKyScreen from "./tam-tuong-ky/TamTuongKyScreen";
 import HonorsScreen from "./leaderboard/HonorsScreen";
 import MenuScene from "./MenuScene";
@@ -95,7 +96,7 @@ export default function GameShell({
         <GameHeader scene={currentScene} account={account} />
         {arrived && api.params.get("login") === "error" && !(currentScene in auth) && (
           <p role="alert" className="bg-danger-surface/60 px-4 py-2 text-center text-sm text-danger">
-            Đăng nhập chưa thành. Xin thử lại.
+            Trình danh chưa thành. Xin thử lại.
           </p>
         )}
         <div key={currentScene} className="scene-enter flex flex-1 flex-col">
@@ -144,11 +145,13 @@ function SceneView({
       return <FormationScreen />;
     case "TAM_TUONG_KY":
       if (!towerFeatures.tamTuongKy) return <DisabledTowerMode name={SCENE_TITLE.TAM_TUONG_KY} />;
-      return account ? <TamTuongKyScreen ranked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate scene="TAM_TUONG_KY" name={SCENE_TITLE.TAM_TUONG_KY} reason="Chế độ này cần tài khoản đã đăng nhập vì mỗi lượt chơi tốn một phiếu, và tiến trình Tướng Lục lưu theo tài khoản." />;
+      return account ? <TamTuongKyScreen ranked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate scene="TAM_TUONG_KY" name={SCENE_TITLE.TAM_TUONG_KY} reason="Chế độ này cần tài khoản đã ghi danh vì mỗi lượt chơi tốn một phiếu, và tiến trình Tướng Lục lưu theo tài khoản." />;
     case "EXPEDITION":
       return !towerFeatures.expedition ? <DisabledTowerMode name={SCENE_TITLE.EXPEDITION} /> : <ExpeditionScreen />;
     case "KHAI_LO":
       return <KhaiLoScreen />;
+    case "DO_THAM":
+      return <DoThamScreen />;
     case "QUESTS":
       return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} tamTuongKyPack2={towerFeatures.tamTuongKyPack2 === true} tamTuongKyPack3={towerFeatures.tamTuongKyPack3 === true} />;
     case "SHOP":

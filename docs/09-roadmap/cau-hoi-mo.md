@@ -124,7 +124,7 @@
 
 ## Quần Hùng online hai người chơi (phát triển sau)
 
-- TODO: Duyệt luật PvP trực tiếp ([thiết kế DRAFT](../02-game-modes/future/quan-hung-pvp-truc-tiep.md)): chuẩn hóa cấp và trang bị hay để nguyên tiến độ; dùng đội 3vs3 đang chọn hay chọn riêng mỗi trận; con số hết giờ, mất kết nối, trận mỗi ngày và số lần đánh lại cùng một người; kênh đẩy (polling, SSE hay dịch vụ ngoài); có giao hữu không tính Elo không; song song hay thay thế đấu trường bóng ma.
+- TODO: Chốt các câu hỏi mở còn lại của PvP trực tiếp ([mục 6](../02-game-modes/future/quan-hung-pvp-truc-tiep.md#6-câu-hỏi-mở)): cách tích Nộ riêng, ngưỡng phá trận, điền AI. Shan đã duyệt luật 1vs1 và 3vs3 ngày 13/11/2026.
 
 ## Tầm Tướng Ký
 

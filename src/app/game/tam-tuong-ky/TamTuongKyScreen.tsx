@@ -60,6 +60,7 @@ import {
   type TtkRankedView,
   type TtkView,
 } from "./client";
+import { ModeGuideTabs } from "../ModeGuide";
 
 /** Sổ đang chạy, theo `packId` server trả về (Gói 1, hoặc Gói 1 + Gói 2). */
 const CatalogContext = createContext<Catalog>(catalogForPack(undefined));
@@ -255,6 +256,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
           description="Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng. Công thức biểu trưng của trò chơi, không phải diễn giải sử học."
           stats={[{ label: "Phiếu", value: `${view.tickets}/${view.maxTickets}` }]}
         />
+        <ModeGuideTabs scene="TAM_TUONG_KY">
 
         <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
           <Altar
@@ -314,6 +316,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
           />
           <Ledger entries={entries} found={found} hidden={tab !== "ledger"} group={ledgerTab} onGroup={setLedgerTab} focus={ledgerFocus} />
         </div>
+        </ModeGuideTabs>
       </div>
       <MobileBar slots={slots} ready={ready} tried={tried} onCombine={combine} />
     </main>
@@ -419,6 +422,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
             { label: "Đã tiêu", value: view.unitsSpent },
           ]}
         />
+        <ModeGuideTabs scene="TAM_TUONG_KY">
 
         <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
           <Panel id="ttk-ranked-altar" title="Đài Hợp Nguyên">
@@ -472,6 +476,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
             </section>
           </Panel>
         </div>
+        </ModeGuideTabs>
       </div>
       <MobileBar slots={slots} ready={ready} tried={tried} onCombine={combine} />
     </main>

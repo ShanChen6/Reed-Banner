@@ -133,6 +133,7 @@ export function rankRewardDeps(): RankRewardDeps {
       ...(features.destiny ? [destinySource(destinyBoardOf())] : []),
       seasonSource("survival", seasonStore()),
       seasonSource("arena", seasonStore()),
+      seasonSource("pvp", seasonStore()),
       ...(tamTuongKyRankedEnabled() ? [seasonSource("tamTuongKy", seasonStore())] : []),
     ],
     claims: rankRewardStore(),
