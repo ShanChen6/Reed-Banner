@@ -195,11 +195,12 @@ nguyên hay luật mới.
 
 | Bậc | Cấp gợi ý | Sức mạnh địch ngày 1 | AI | Lần đầu | Thắng lại |
 |---|---|---|---|---|---|
-| I | 10 | ×0,80 | gốc | 300 vàng + món Lam | 80 vàng |
-| II | 18 | ×0,88 | +1 nấc | 600 vàng + món Tím | 160 vàng |
-| III | 26 | ×0,96 | +2 nấc | 1 000 vàng + món Cam | 300 vàng |
+| I | 10 | ×0,78 | gốc | 300 vàng + món Lam | 80 vàng |
+| II | 18 | ×0,86 | +1 nấc | 600 vàng + món Tím | 160 vàng |
+| III | 26 | ×0,95 | +2 nấc | 1 000 vàng + món Cam | 300 vàng |
 
 - Cấp địch = cấp gợi ý + độ sâu của ô − 3 (ô sát trại thấp hơn 2 cấp, thành đích cao hơn 1 cấp).
+- Chỉnh 14/11/2026 khi áp dụng Nộ riêng từng tướng: hệ số sức mạnh bậc I, II, III giảm từ 0,80, 0,88, 0,96 xuống 0,78, 0,86, 0,95 (40 lần mỗi ô: tỉ lệ thắng trung bình +4 điểm so với luật Nộ cũ ở lần đo trước khi chốt bậc III).
 - Máu địch nhân thêm ×0,8 (trận trên sa bàn ngắn hơn trận thường, như Trấn Ải nhân ×0,6).
 - Nghỉ: +15% máu, +10 lương. Làng: +35% máu, +20 lương. Kho lương: +20 lương cho cả hai đạo. Tăng viện 5%/ngày.
   Giáp công: máu địch ×0,75.
