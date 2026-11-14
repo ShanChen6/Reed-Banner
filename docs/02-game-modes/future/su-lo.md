@@ -1,6 +1,6 @@
-# Mê Lộ (Mê cung lịch sử): đổ xúc xắc, trả lời sử, tìm đường thoát
+# Sử Lộ (Mê cung lịch sử): đổ xúc xắc, trả lời sử, tìm đường thoát
 
-> Cập nhật: 14/11/2026 (Shan chốt: đổi tên Hán Việt, không giới hạn số lượt, ô giao tranh mọi người như nhau)
+> Cập nhật: 14/11/2026 (Shan chốt: tên Sử Lộ, không giới hạn số lượt, ô giao tranh mọi người như nhau)
 > Trạng thái: **DRAFT** — ý tưởng gốc của Shan (14/11/2026), Claude viết thiết kế chi tiết; chưa có code. Ba điểm đã chốt ghi ở [mục 13](#13-điểm-cần-shan-quyết). Mọi con số là **điểm xuất phát**, cần chơi thử và mô phỏng. Các điểm chờ Shan quyết gom ở [mục 13](#13-điểm-cần-shan-quyết).
 
 ## 1. Định vị
@@ -10,7 +10,7 @@ Chế độ một người, không đánh nhau theo lượt hai phe. Người ch
 - **Mục tiêu học:** người chơi đi hết các mê cung là đã đọc qua mạch sử từ Ngô Quyền dựng nước, loạn sứ quân, nhà Đinh tới nhà Tiền Lê. Sau mỗi câu luôn hiện 1–2 dòng **sử chép** giải thích đáp án, có ghi nguồn.
 - **Khác các chế độ không đánh nhau đang có:** [Khai Lộ](../khai-lo/gdd.md) và [Do Thám](../do-tham/gdd.md) là giải đố thuần, [Trận Đồ](../tran-do/gdd.md) là xếp quân, [Tầm Tướng Ký](../tam-tuong-ky/design-freeze.md) là ghép công thức. Mê cung lịch sử là chế độ duy nhất lấy **kiến thức sử** làm cơ chế chính.
 - **Gắn với game chính:** dùng lại bàn cờ match-3 (ô giao tranh), vàng, tướng lịch sử và Sử ký của [Bình Loạn](../campaign/design-freeze.md). Quy tắc nguồn sử theo [sổ nguồn Campaign](../campaign/history-sources.md).
-- **Tên và đường dẫn:** Shan muốn tên Hán Việt (14/11/2026). Claude chọn mặc định **Mê Lộ** ("đường rối", nghĩa gốc của mê cung), dòng phụ trên thẻ là "Mê cung lịch sử". Phương án khác: **Vấn Sử** (hỏi sử, nhấn vào phần câu hỏi), **Sử Lộ** (con đường sử), **Mê Trận** (dễ lẫn với Trận Đồ). Mê Lộ và Khai Lộ cùng chữ "Lộ"; nếu thấy dễ lẫn thì chọn Vấn Sử. Tên chế độ hoa mọi chữ theo [Văn phong giao diện](../../00-overview/thuat-ngu.md#văn-phong-giao-diện). Route tiếng Anh theo quy ước: `/game/maze`, scene `MAZE`, cờ bật `MAZE_ENABLED` (tắt mặc định như các chế độ mới khác).
+- **Tên và đường dẫn:** tên chế độ là **Sử Lộ** ("con đường sử"; Shan chốt 14/11/2026, chọn trong các phương án Mê Lộ, Vấn Sử, Sử Lộ). Dòng phụ trên thẻ là "Mê cung lịch sử". Tên chế độ hoa mọi chữ theo [Văn phong giao diện](../../00-overview/thuat-ngu.md#văn-phong-giao-diện). Route tiếng Anh theo quy ước: `/game/maze`, scene `MAZE`, cờ bật `MAZE_ENABLED` (tắt mặc định như các chế độ mới khác).
 
 ## 2. Vòng chơi một màn
 
@@ -448,16 +448,15 @@ Các câu mê cung IV và phần sau năm 970 của mê cung III **chưa soạn 
 
 **Đã chốt (Shan, 14/11/2026):**
 
-- Tên Hán Việt thay "Mê cung lịch sử"; Claude đề xuất **Mê Lộ** làm mặc định, phương án ở [mục 1](#1-định-vị). Shan có thể đổi.
+- Tên chế độ là **Sử Lộ** ([mục 1](#1-định-vị)), dòng phụ "Mê cung lịch sử".
 - **Không giới hạn số lượt** vì đây là giải đố học sử: bỏ lương làm giới hạn, không thua vì hết lượt; số lượt chỉ để chấm sao và xếp hạng.
 - **Ô giao tranh mọi người như nhau:** không lấy chỉ số hồ sơ; tướng chọn được mọi tướng lịch sử không cần sở hữu.
 
 **Còn mở:**
 
-1. **Tên cuối cùng:** Mê Lộ, Vấn Sử, Sử Lộ hay tên khác?
-2. **Sai thì về đâu:** về ô bắt đầu lượt (đề xuất, nhẹ nhàng) hay về xuất phát (rất khó)?
-3. **Mua trợ giúp bằng vàng** ở chế độ thường: có hay không? (Nếu muốn mọi người như nhau tuyệt đối thì bỏ.)
-4. **Mê cung ngày có bảng xếp hạng** (cần đăng nhập) ngay từ đầu hay để sau?
-5. **Sổ nguồn cho sau năm 968:** mở rộng thẳng [sổ nguồn Campaign](../campaign/history-sources.md) (đang `FROZEN`, cần sửa đổi có ghi lý do) hay làm sổ riêng cho chế độ này?
-6. **Boss mê cung III và IV:** Đỗ Thích (979) và quân Tống (981) có hợp không, sau khi có nguồn?
-7. **Ai duyệt câu:** chỉ Shan, hay Shan duyệt mẫu rồi giao người đối chiếu nguồn?
+1. **Sai thì về đâu:** về ô bắt đầu lượt (đề xuất, nhẹ nhàng) hay về xuất phát (rất khó)?
+2. **Mua trợ giúp bằng vàng** ở chế độ thường: có hay không? (Nếu muốn mọi người như nhau tuyệt đối thì bỏ.)
+3. **Mê cung ngày có bảng xếp hạng** (cần đăng nhập) ngay từ đầu hay để sau?
+4. **Sổ nguồn cho sau năm 968:** mở rộng thẳng [sổ nguồn Campaign](../campaign/history-sources.md) (đang `FROZEN`, cần sửa đổi có ghi lý do) hay làm sổ riêng cho chế độ này?
+5. **Boss mê cung III và IV:** Đỗ Thích (979) và quân Tống (981) có hợp không, sau khi có nguồn?
+6. **Ai duyệt câu:** chỉ Shan, hay Shan duyệt mẫu rồi giao người đối chiếu nguồn?

@@ -4,9 +4,9 @@
 
 ## 14/11/2026
 
-**Mê Lộ (Mê cung lịch sử), thiết kế DRAFT**
-- Shan đề xuất chế độ đổ xúc xắc đi qua mê cung, trả lời câu sử thời Ngô, Đinh, Tiền Lê; ô giao tranh là match-3 một chiều (boss không đánh lại). Thiết kế ở [Mê Lộ](../02-game-modes/future/me-cung-lich-su.md).
-- Shan chốt: đổi tên Hán Việt (Claude đề xuất Mê Lộ), không giới hạn số lượt vì là giải đố học sử, ô giao tranh mọi người như nhau (không lấy chỉ số hồ sơ).
+**Sử Lộ (Mê cung lịch sử), thiết kế DRAFT**
+- Shan đề xuất chế độ đổ xúc xắc đi qua mê cung, trả lời câu sử thời Ngô, Đinh, Tiền Lê; ô giao tranh là match-3 một chiều (boss không đánh lại). Thiết kế ở [Sử Lộ](../02-game-modes/future/su-lo.md).
+- Shan chốt: tên Hán Việt **Sử Lộ**, không giới hạn số lượt vì là giải đố học sử, ô giao tranh mọi người như nhau (không lấy chỉ số hồ sơ).
 
 ## 12/11/2026
 
