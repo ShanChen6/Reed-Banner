@@ -37,7 +37,7 @@ describe("Destiny chọn đội và dựng trận", () => {
     const { run, foes, companionIds } = fixture();
     const reserve = companionIds[2]!;
     const wounded = Math.floor(run.fighters![reserve]!.config.maxHp / 3);
-    const changed = runtimeRun(run, { [reserve]: { hp: wounded, energy: 47 } }, 38);
+    const changed = { ...runtimeRun(run, { [reserve]: { hp: wounded, energy: 47 } }, 38), rages: { [MAIN_ID]: 38, [reserve]: 22 } };
     const result = createDestinyFloorBattle(changed, {
       activeIds: [MAIN_ID, companionIds[0]!, reserve],
       leaderBuild: { element: "hoa", profession: "phapSu" },
@@ -48,11 +48,38 @@ describe("Destiny chọn đội và dựng trận", () => {
     assert.equal(result.state.sides[0].fighters[2]!.hp,
       Math.max(1, Math.round(result.state.sides[0].fighters[2]!.maxHp * wounded / run.fighters![reserve]!.config.maxHp)));
     assert.equal(result.state.sides[0].fighters[2]!.energy, 47);
-    assert.equal(result.state.sides[0].rage, 38);
+    // Nộ riêng: mỗi tướng ra trận mang Nộ của chính mình, kể cả tướng dự bị vừa xoay vào.
+    assert.deepEqual(result.state.sides[0].rages, [38, 0, 22]);
+    assert.deepEqual(result.state.sides[0].passives, [0, 0, 0]);
     assert.equal(result.state.sides[0].fighters[0]!.element, "hoa");
     assert.equal(result.state.sides[0].fighters[0]!.profession, "phapSu");
     assert.ok(Object.values(result.state.sides[0].fighters[0]!.skillLevels ?? {}).every((level) => level === 1));
     assert.equal(changed.fighters![reserve]!.hp, wounded, "hàm dựng trận không sửa/heal snapshot run");
+  });
+
+  it("dữ liệu run cũ chỉ có Nộ của thủ lĩnh: thủ lĩnh giữ Nộ, tướng khác bắt đầu từ 0", () => {
+    const { run, foes, companionIds } = fixture();
+    const legacy: DestinyRun = { ...run, rage: 38 };
+    delete (legacy as { rages?: unknown }).rages;
+    const made = createDestinyFloorBattle(legacy, {
+      activeIds: [MAIN_ID, companionIds[0]!, companionIds[1]!],
+      leaderBuild: { element: "hoa", profession: "phapSu" }, rules: {}, foes, seed: 3, timer: false,
+    });
+    assert.ok(made.ok);
+    if (made.ok) assert.deepEqual(made.state.sides[0].rages, [38, 0, 0]);
+  });
+
+  it("Nộ đầy của tướng giữ nguyên sang tầng sau, bị động bắt đầu chưa chạy", () => {
+    const { run, foes, companionIds } = fixture();
+    const full = { ...run, rages: { ...run.rages, [companionIds[0]!]: 100 } };
+    const made = createDestinyFloorBattle(full, {
+      activeIds: [MAIN_ID, companionIds[0]!, companionIds[1]!],
+      leaderBuild: { element: "hoa", profession: "phapSu" }, rules: {}, foes, seed: 4, timer: false,
+    });
+    assert.ok(made.ok);
+    if (!made.ok) return;
+    assert.equal(made.state.sides[0].rages![1], 100);
+    assert.deepEqual(made.state.sides[0].passives, [0, 0, 0]);
   });
 
   it("đồng bộ HP/energy theo ID, giữ reserve và food xuyên tầng, rồi settle idempotent", () => {
@@ -72,7 +99,7 @@ describe("Destiny chọn đội và dựng trận", () => {
     made.state.sides[0].fighters[1]!.energy = 29;
     made.state.sides[0].fighters[2]!.hp = made.state.sides[0].fighters[2]!.maxHp - 1;
     made.state.sides[0].food = 7;
-    made.state.sides[0].rage = 41;
+    made.state.sides[0].rages = [41, 12, 63];
     made.state.winner = 0;
 
     const settled = settleDestinyFloor(made.run, made.state);
@@ -85,6 +112,8 @@ describe("Destiny chọn đội và dựng trận", () => {
     assert.deepEqual(settled.run.fighters![reserveId], reserveBefore, "reserve không tự heal hay đổi energy");
     assert.equal(settled.run.food, 20, "food dùng clamp Tower legacy 20–100");
     assert.equal(settled.run.rage, 41);
+    assert.deepEqual(settled.run.rages, { ...Object.fromEntries(settled.run.roster.map((id) => [id, 0])), [activeIds[0]]: 41, [activeIds[1]]: 12, [activeIds[2]]: 63 });
+    assert.equal(settled.run.rages![reserveId], 0, "tướng nghỉ giữ nguyên Nộ");
     assert.equal(settled.run.phase, "reward");
 
     const replay = settleDestinyFloor(settled.run, made.state);

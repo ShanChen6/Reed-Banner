@@ -14,6 +14,7 @@ import {
   PROFESSIONS,
   RAGE_MAX,
   companionById,
+  destinyRageOf,
   type DestinyLeaderBuild,
   type DestinyProgress,
   type DestinyRewardOffer,
@@ -424,7 +425,7 @@ export default function DestinyScreen() {
       {run && run.active && (
         <section className="grid gap-4 sm:gap-5 lg:grid-cols-[1fr_1.4fr]">
           <OrnateFrame className="order-2 min-w-0 self-start lg:order-1">
-            <SectionTitle description={`Lương ${run.food}/${DESTINY_FOOD_MAX} · Nộ ${run.rage ?? 0}/${RAGE_MAX}`}>Đội hình</SectionTitle>
+            <SectionTitle description={`Lương ${run.food}/${DESTINY_FOOD_MAX} · Mỗi tướng có thanh Nộ riêng, giữ qua các tầng`}>Đội hình</SectionTitle>
             <ul className="space-y-2">
               {run.roster.map((id) => {
                 const f = run.fighters?.[id];
@@ -443,7 +444,7 @@ export default function DestinyScreen() {
                         </div>
                         <p className="text-caption text-on-wood-soft">
                           {id === MAIN_ID ? "Thủ lĩnh · đổi nghề và hệ trước mỗi tầng" : `${ELEMENT_NAME[f.config.element]} · ${PROFESSION_NAME[f.config.profession]}`}
-                          {!f.downed && ` · Năng lượng ${f.energy}`}
+                          {!f.downed && ` · Năng lượng ${f.energy} · Nộ ${destinyRageOf(run, id)}/${RAGE_MAX}`}
                           {onField && id !== MAIN_ID && " · Ra trận"}
                         </p>
                         <div className="mt-1.5"><HpBar hp={f.hp} maxHp={f.config.maxHp} /></div>
