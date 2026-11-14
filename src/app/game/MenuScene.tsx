@@ -56,6 +56,7 @@ const MODES: readonly Mode[] = [
   { scene: "FORMATION", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Vào trận ngay · không cần tài khoản", cta: "Bày trận" },
   { scene: "KHAI_LO", title: "Khai Lộ", text: MODE_TEXT.KHAI_LO, art: "khai-lo", kicker: "Giải đố", status: "Giải đố ngay · không cần tài khoản", cta: "Giải đố" },
   { scene: "DO_THAM", title: "Do Thám", text: MODE_TEXT.DO_THAM, kicker: "Giải đố", status: "Dò bẫy ngay · không cần tài khoản", cta: "Do thám" },
+  { scene: "SU_LO", title: "Sử Lộ", text: MODE_TEXT.SU_LO, kicker: "Học sử", status: "Chơi thử ngay · không cần tài khoản", cta: "Lên đường" },
   { scene: "TAM_TUONG_KY", title: "Tầm Tướng Ký", text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Một phiếu, một lượt tìm tướng", cta: "Ghép tướng", lockedText: "Sắp khai mở" },
   { scene: "EXPEDITION", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, art: "vien-chinh", kicker: "Hành quân", status: "Bày mưu tính kế trên sa bàn", cta: "Hành quân", lockedText: "Sắp khai mở" },
 ];
