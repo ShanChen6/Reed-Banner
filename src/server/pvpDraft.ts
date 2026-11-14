@@ -135,6 +135,13 @@ async function withDraft(
     }
     // Cấm chọn xong thì sang màn chuẩn bị: máy điền chỗ trống, đội hình theo thứ tự ghế, đội trưởng xếp lại.
     if (draftOver(state) && !state.prep) state = draftBeginPrep(state, draftFillers(state), state.deadline ?? deps.now);
+    // Một phe không có người thật nào chọn được tướng thì không dựng trận được: bỏ phiên, trả mọi người về trạng thái rảnh.
+    if (state.prep && [0, 1].some((side) => !state.prep!.lineup[side as 0 | 1].some((s) => s.owner !== null))) {
+      const dead: PvpDraftRecord = { ...rec, state, seq: rec.seq + 1, status: "abandoned", updatedAt: deps.now };
+      if (!(await deps.pvp.saveDraft(dead, rec.seq))) continue;
+      for (const o of rec.owners) await deps.pvp.dequeue(o);
+      return { ok: true, view: viewOf(dead, owner, deps.now) };
+    }
     const status: PvpDraftRecord["status"] = state.prep ? "prep" : "active";
     if (draftPrepDone(state, deps.now)) {
       const day = vnDay(deps.now);
