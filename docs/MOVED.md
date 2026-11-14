@@ -1,12 +1,18 @@
 # Đường dẫn đã chuyển
 
-> Cập nhật: 12/11/2026
+> Cập nhật: 14/11/2026
 > Trạng thái: **REFERENCE** — tra đường dẫn đã chuyển hoặc đã xóa.
 
 Prompt, ghi chú hoặc commit cũ còn nhắc một đường dẫn không còn tồn tại thì tra ở đây:
 
 - **Đã chuyển:** mở đường dẫn mới; lịch sử theo được bằng `git log --follow <đường dẫn mới>`.
 - **Đã xóa:** tài liệu hết hiệu lực được xóa thay vì lưu trữ ([quy định](00-overview/quy-dinh-tai-lieu.md#5-thêm-chuyển-gộp-xóa-file)). Xem lại nội dung bằng `git log --all -- <đường dẫn>` rồi `git show <commit>^:<đường dẫn>`. Đó không phải luật hiện hành.
+
+## 14/11/2026 — Sử Lộ có code
+
+| Đường dẫn cũ | Đường dẫn mới |
+|---|---|
+| `docs/02-game-modes/future/su-lo.md` | [`docs/02-game-modes/su-lo/gdd.md`](02-game-modes/su-lo/gdd.md) |
 
 ## 12/11/2026 — chuyển tài liệu chế độ đã có code ra khỏi `future/`
 
