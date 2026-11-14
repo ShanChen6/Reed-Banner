@@ -180,6 +180,7 @@
 Thiết kế DRAFT ở [Sử Lộ](../02-game-modes/future/su-lo.md#13-điểm-cần-shan-quyết).
 
 - [x] Tên Sử Lộ, không giới hạn số lượt, ô giao tranh mọi người như nhau (Shan, 14/11/2026).
-- [ ] TODO: sai thì về đâu, mua trợ giúp bằng vàng.
+- [x] Trả lời sai thì về ô bắt đầu lượt (Shan, 14/11/2026).
+- [ ] TODO: mua trợ giúp bằng vàng.
 - [ ] TODO: mê cung ngày có bảng xếp hạng ngay không; boss mê cung III, IV.
 - [ ] TODO: sổ nguồn cho giai đoạn sau năm 968 (mở rộng sổ Campaign hay làm sổ riêng) và người duyệt câu hỏi.
