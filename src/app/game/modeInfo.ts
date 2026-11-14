@@ -6,7 +6,7 @@ import { DAILY_GOLD } from "@/core/daily/daily";
 import type { Scene } from "./scene";
 
 /**
- * Câu mô tả mười một chế độ, một nguồn cho thẻ ở Chiến trường và banner/màn khóa của từng chế độ. Giọng hào sảng, nhịp hai vế như
+ * Câu mô tả mười hai chế độ, một nguồn cho thẻ ở Chiến trường và banner/màn khóa của từng chế độ. Giọng hào sảng, nhịp hai vế như
  * dòng hero "Dẹp loạn mười hai sứ quân, dựng lại giang sơn Đại Việt"; mở đầu bằng động từ, số viết bằng chữ, không thuật ngữ kỹ thuật.
  */
 export const MODE_TEXT = {
@@ -19,6 +19,7 @@ export const MODE_TEXT = {
   FORMATION: "Bày binh bố trận, xếp quân theo nghề, theo hệ, từng bước mở lộ bản đồ.",
   KHAI_LO: "Phá từng khối quân cùng hệ, khai mở đường tiến qua trận cờ.",
   DO_THAM: "Dò từng bước, gỡ hết bẫy chông trên sa bàn, cắm cờ lau đánh dấu nơi nguy hiểm.",
+  SU_LO: "Đổ xúc xắc vượt mê cung, đáp đúng sử xưa, mở đường qua cổng thành.",
   TAM_TUONG_KY: "Hội tụ bảy hệ, tìm lại chân dung những bậc danh tướng.",
   EXPEDITION: "Chia quân hai đạo, thần tốc hành quân, giáp công phá thành địch.",
 } as const;

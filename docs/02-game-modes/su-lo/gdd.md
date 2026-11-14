@@ -1,7 +1,7 @@
 # Sử Lộ (Mê cung lịch sử): đổ xúc xắc, trả lời sử, tìm đường thoát
 
-> Cập nhật: 14/11/2026 (Shan chốt: tên Sử Lộ, sai về ô bắt đầu lượt, không giới hạn số lượt, ô giao tranh mọi người như nhau)
-> Trạng thái: **DRAFT** — ý tưởng gốc của Shan (14/11/2026), Claude viết thiết kế chi tiết; chưa có code. Ba điểm đã chốt ghi ở [mục 13](#13-điểm-cần-shan-quyết). Mọi con số là **điểm xuất phát**, cần chơi thử và mô phỏng. Các điểm chờ Shan quyết gom ở [mục 13](#13-điểm-cần-shan-quyết).
+> Cập nhật: 14/11/2026 (Shan chốt luật và đồng ý triển khai; bản chơi thử offline đã code)
+> Trạng thái: **IMPLEMENTED (bản chơi thử)** — ý tưởng gốc của Shan, Claude viết thiết kế, Shan chốt luật (14/11/2026, [mục 13](#13-điểm-cần-shan-quyết)) và đồng ý triển khai. Bản chơi thử offline đã có code cho mê cung I, II (mục [12.4](#124-bản-chơi-thử-đã-code)); mê cung III, IV chờ nguồn, thưởng hồ sơ và mê cung ngày chưa làm. Mọi con số là **điểm xuất phát**, chốt sau chơi thử.
 
 ## 1. Định vị
 
@@ -446,19 +446,34 @@ Các câu mê cung IV và phần sau năm 970 của mê cung III **chưa soạn 
 
 ### 12.2 Kỹ thuật
 
-- `src/core/maze/`: sinh mê cung theo seed (đảm bảo luôn có đường tới cổng, quãng ngắn nhất đúng bậc), state machine màn (`mazeAct`: roll, move, answer, useAid), chọn câu không lặp, `skirmish.ts` (giao tranh một chiều trên lõi `board`). Logic thuần, theo luật ESLint của `src/core/`.
-- `src/core/maze/questions/`: kho câu và `pnpm maze:check`.
-- Hồ sơ thêm `maze` (sao từng bậc, thẻ Sử ký đã mở, đã nhận thưởng lần đầu), thao tác qua `applyProfileAction` như các chế độ khác.
-- Scene `MAZE`, route `/game/maze`, cờ `MAZE_ENABLED`.
-- Mê cung ngày: bảng mới trên server, đáp án chỉ trả sau khi nộp.
+- `src/core/su-lo/` (logic thuần, theo luật ESLint của `src/core/`):
+  - `maze.ts`: sinh mê cung theo seed (cây khung DFS + vòng lặp, một nửa vòng là lối tắt khóa; cổng là lá xa nhất, boss là ô kề duy nhất của cổng; cửa ải trên đường chính), bảng `SL_LEVELS`.
+  - `engine.ts`: state machine `slAct` (roll, move, answer, aid, skirmish, retreat), `reachable` (không quay đầu, không đi xuyên Ải/Trấn chưa thông), sương, bẫy, ô may mắn, trợ giúp, `starsOf`.
+  - `questions.ts`: kho câu theo lược đồ mục 10.2, `questionErrors` kiểm quy tắc soạn câu mục 10.3.
+  - `skirmish.ts`: giao tranh một chiều trên lõi `src/core/board`; `bosses.ts`: boss từng mê cung.
+- `tests/core/su-lo/`: luật câu hỏi, câu trích phải có nguyên văn trong sổ nguồn, bất biến mê cung (40 seed mỗi bậc), luật lượt, chơi trọn ván, cân số giao tranh.
+- Giao diện `src/app/game/su-lo/SuLoScreen.tsx`, scene `SU_LO`, route `/game/maze`. Không có cờ bật tắt: bản chơi thử mở cho mọi người như Do Thám.
+- Chưa làm: hồ sơ thêm `suLo` (sao, Sử ký, thưởng lần đầu) qua `applyProfileAction`; mê cung ngày với bảng trên server, đáp án chỉ trả sau khi nộp.
 
 ### 12.3 Các bước
 
-1. **Kho câu bước 1:** mở rộng sổ nguồn, soạn và duyệt 60 câu mê cung II (giai đoạn có nguồn tốt nhất).
-2. **Bản chơi thử offline:** lõi mê cung + mê cung II bậc Dễ/Thường, chưa có giao tranh, chưa thưởng.
-3. **Giao tranh một chiều** và boss mê cung II; mô phỏng mốc lượt, số nước.
-4. Đủ 4 mê cung, thưởng hồ sơ, Sử ký sưu tầm.
-5. Mê cung ngày và bảng xếp hạng (Shan chốt có làm).
+1. ✓ **Lõi luật, sinh mê cung, kho câu bước 1** (47 câu mê cung I, II đã duyệt lần 1, chờ Shan duyệt lần 2).
+2. ✓ **Giao tranh một chiều** và boss mê cung I, II; cân Thành lực bằng test mô phỏng.
+3. ✓ **Bản chơi thử offline** `/game/maze`, mê cung I, II, ba bậc.
+4. Mở rộng sổ nguồn (S12 trở đi) cho nhà Đinh, Tiền Lê; mở mê cung III, IV và boss của chúng.
+5. Thưởng hồ sơ, Sử ký sưu tầm.
+6. Mê cung ngày và bảng xếp hạng (Shan chốt có làm).
+
+### 12.4 Bản chơi thử đã code
+
+Khác bản thiết kế ở trên:
+
+- Ô **Bẫy ẩn** trông như ô câu hỏi Vàng cho tới khi lộ; đáp đúng là gỡ bẫy (+1 Ấn sử), sai thì về ô bắt đầu lượt rồi bẫy mới phát tác.
+- **Ô giao tranh** chỉ có ở ô Trấn trước cổng; chưa có ô giao tranh giữa đường. Bàn cờ dùng lõi 12×8 có sẵn, chưa có chướng ngại theo pha.
+- Ô **tim** trong giao tranh cũng nạp Sĩ khí như trống (lõi bàn cờ không có ô riêng cho hồi máu ở chế độ này).
+- Thành lực boss: Dễ 920 / 15 nước, Thường 880 / 12 nước, Khó 820 / 10 nước; test mô phỏng (đánh tham lam, đáp đúng câu hiến kế) cho thắng lần đầu 35–85% ở bậc Thường, trong hai lần ≥ 85%.
+- Trợ giúp có trong ván nhưng chưa mua thêm được; cả mê cung dùng tối đa 6 lần.
+- Duyệt lần 1 của Claude: mỗi câu đối chiếu với sổ nguồn ([nguon-su.md](nguon-su.md) và [sổ nguồn Campaign](../campaign/history-sources.md)), câu nào có trích dẫn thì test kiểm nguyên văn có trong sổ.
 
 ## 13. Điểm cần Shan quyết
 
