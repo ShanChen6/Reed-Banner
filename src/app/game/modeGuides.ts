@@ -96,7 +96,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     rewards: [
       "Lần đầu qua mỗi tầng được Đá Cường Hóa. Đánh lại tầng đã qua không nhận thêm.",
-      "Đã qua tầng 1 thì mỗi ngày quét tháp được 1 đến 7 đá, tùy tầng cao nhất đã qua. Ngày đổi lúc 0 giờ giờ Việt Nam, lượt bỏ lỡ không cộng dồn.",
+      "Đã qua tầng 1 thì mỗi ngày quét tháp được 1 đến 12 đá, tùy tầng cao nhất đã qua. Ngày đổi lúc 0 giờ giờ Việt Nam, lượt bỏ lỡ không cộng dồn.",
       "Đá Cường Hóa hiện chỉ tích trong tài khoản, chưa có chỗ dùng.",
     ],
     tips: [
