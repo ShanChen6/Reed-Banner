@@ -1,6 +1,6 @@
 # Prompt thumbnail thẻ chế độ ở Chiến trường
 
-> Cập nhật: 07/11/2026
+> Cập nhật: 15/11/2026 (thêm mục 5: Sử Lộ)
 > Trạng thái: **IMPLEMENTED** — Claude soạn theo yêu cầu của Shan (07/11/2026: thumbnail Khai Lộ và Viễn Chinh đang dùng chung một tranh mực tạm); Shan tạo tranh từ hai prompt dưới đây, đã gắn vào thẻ (`public/art/home/khai-lo.webp`, `public/art/home/vien-chinh.webp`, 960×540, khoảng 145 KB mỗi tranh).
 
 Thẻ chế độ ở màn Chiến trường (`src/app/game/MenuScene.tsx`, danh sách `MODES`) dùng tranh `public/art/home/<tên>.webp`. Hiện
@@ -63,3 +63,14 @@ Stylised digital painting of a historical Vietnamese scouting scene for a strate
 
 Nếu công cụ có ô negative: dùng khối ở mục 1.
 
+## 5. Sử Lộ — mê cung lịch sử (15/11/2026, chờ Shan tạo tranh)
+
+Thẻ Sử Lộ (`MODES` trong `MenuScene.tsx`) và biển đầu màn Sử Lộ (`ModeBanner` trong `SuLoScreen.tsx`) chưa có tranh riêng; Do Thám (mục 4) cũng vậy. Tạo tranh theo thông số mục 1 (16:9, vùng dưới êm và tối, không chữ, không mặt rõ) vào tệp `su-lo.png`. Khi gửi lại tranh, Claude xuất WebP 960×540 vào `public/art/home/su-lo.webp`, thêm `art: "su-lo"` cho thẻ ở `MenuScene.tsx` và `art="/art/home/su-lo.webp"` cho `ModeBanner` ở `SuLoScreen.tsx`. Do Thám làm tương tự với `do-tham.webp` (thẻ ở `MenuScene.tsx`, biển ở `DoThamScreen.tsx`).
+
+Ý chính ([GDD](../../02-game-modes/su-lo/gdd.md)): một **mê cung** lát đá với tường lũy tre và đá vôi nhìn từ trên cao chếch, đường đi khúc khuỷu mờ sương dẫn tới **cổng thành** đá ở xa; trên đường rải vài ô đá khắc dấu, một **viên xúc xắc** gỗ khắc hoa văn đồng và một **cuộn sử** mở ra đặt ở góc; một quân cờ tướng nhỏ (bóng, không rõ mặt) đứng ở ô xuất phát. Gợi cảm giác "đi giữa trang sử", màu đồng cổ và giấy dó với điểm son nhẹ, hợp bộ thẻ hiện có.
+
+```text
+Stylised digital painting of a historical Vietnamese maze for a strategy-puzzle game, 16:9 landscape, 10th-century Dinh dynasty. A winding labyrinth of low stone-and-bamboo palisade walls seen from a slightly raised angle in soft mist, a path of worn flagstones with a few carved marker stones, leading far to a weathered stone city gate with a tiled roof. In the foreground a hand-carved wooden die with bronze Dong Son ornamental inlay and an unrolled bamboo-slip history scroll resting on a stone ledge, a small game-piece figure (tiny silhouette, no visible face) on the starting tile. Limestone karst hills and bamboo groves in the haze. Rice-paper and woodcut texture, antique bronze and warm parchment palette with subtle vermilion accents, painterly brushwork, calm composition with the main subject centered in the upper two thirds, the lower third soft, dark and empty for a title overlay. No text, no letters, no numbers, no border, no watermark, no close-up faces.
+```
+
+Nếu công cụ có ô negative: dùng khối ở mục 1.
