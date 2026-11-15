@@ -18,7 +18,6 @@ import {
 } from "../art/icons";
 
 import { buttonVariants } from "@/components/ui";
-import { ANIM_SPEED_NAME, type AnimSpeed } from "./pacing";
 
 import {
   PLAYER,
@@ -27,8 +26,6 @@ import {
 } from "./demoSetup";
 
 export interface BattleHeaderProps {
-  readonly animSpeed: AnimSpeed;
-  readonly onAnimSpeed: (v: AnimSpeed) => void;
   readonly atBreak: boolean;
   readonly difficulty: Difficulty;
   readonly online: boolean;
@@ -46,8 +43,6 @@ export interface BattleHeaderProps {
 }
 
 export function BattleHeader({
-  animSpeed,
-  onAnimSpeed,
   atBreak,
   difficulty,
   online,
@@ -102,20 +97,6 @@ export function BattleHeader({
           Đổi đội hình
         </button>
       )}
-      <label className="flex items-center gap-2 text-caption text-on-wood-soft">
-        Tốc độ
-        <select
-          value={animSpeed}
-          onChange={(e) => onAnimSpeed(e.target.value as AnimSpeed)}
-          className="min-h-9 pointer-coarse:min-h-11 rounded-control border border-frame-line-soft bg-wood-inset px-2 py-1 text-on-wood"
-        >
-          {(Object.keys(ANIM_SPEED_NAME) as AnimSpeed[]).map((v) => (
-            <option key={v} value={v}>
-              {ANIM_SPEED_NAME[v]}
-            </option>
-          ))}
-        </select>
-      </label>
       <label className="flex items-center gap-2 text-caption text-on-wood-soft">
         Độ khó
         <select
