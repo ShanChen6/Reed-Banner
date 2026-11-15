@@ -66,14 +66,14 @@ function RouteColumn({
           {done}/{regions.length} vùng
         </span>
       </h3>
-      <ol className="grid gap-1.5 text-sm xl:grid-cols-2">
+      <ol className="grid flex-1 auto-rows-fr gap-1.5 text-sm xl:grid-cols-2">
         {regions.map((r) => (
-          <li key={r.mission}>
+          <li key={r.mission} className="flex">
             <button
               type="button"
               disabled={r.state === "locked"}
               onClick={() => onPick(r.mission)}
-              className={`atlas-mission flex min-h-11 w-full flex-col items-start rounded-md border px-2 py-1 text-left disabled:cursor-not-allowed ${FOCUS}`}
+              className={`atlas-mission flex min-h-11 w-full flex-col items-start justify-center rounded-md border px-2 py-1 text-left disabled:cursor-not-allowed ${FOCUS}`}
             >
               <span className="font-semibold">
                 {r.state === "completed" ? "✓ " : ""}
