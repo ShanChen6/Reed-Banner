@@ -54,7 +54,7 @@ import type { MusicId } from "../audio/cues";
 import { bounceFrames, eventFrames, type Frame } from "./animation";
 import { BATTLE_PRELOAD, frameCue, soundsForEvents, type CuePlay } from "./sounds";
 import { sidesAfterEvents } from "./heldSides";
-import { COMBAT_PACING } from "./pacing";
+import { ANIM_SPEED_FACTOR, ANIM_SPEED_KEY, COMBAT_PACING, parseAnimSpeed, type AnimSpeed } from "./pacing";
 import {
   CloudCorner,
   DongSonBand,
@@ -133,6 +133,14 @@ const CORNERS = [
  * Phân cảnh trận đấu. `online`: trận do server xử lý qua /api/battles (PLAYING), đồng hồ 30 giây bật; ngược
  * lại chạy hoàn toàn trong trình duyệt (PRACTICE).
  */
+function readAnimSpeed(): string | null {
+  try {
+    return window.localStorage.getItem(ANIM_SPEED_KEY);
+  } catch {
+    return null;
+  }
+}
+
 export default function DemoGame({
   online = false,
   autoResume = false,
@@ -209,6 +217,24 @@ export default function DemoGame({
   /** Online: khung đổi ô đã diễn trước trong lúc chờ server, commit kế tiếp bỏ khung đầu. */
   const swapShown = useRef(false);
   const pacingTimeouts = useRef<Set<number>>(new Set());
+  /** Tốc độ hoạt ảnh người chơi chọn, nhớ lại ở lần sau. */
+  const [animSpeed, setAnimSpeedState] = useState<AnimSpeed>("normal");
+  const speedFactor = useRef(ANIM_SPEED_FACTOR.normal);
+  useEffect(() => {
+    const saved = parseAnimSpeed(readAnimSpeed());
+    speedFactor.current = ANIM_SPEED_FACTOR[saved];
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- đọc tùy chọn đã lưu ở trình duyệt khi vào màn
+    setAnimSpeedState(saved);
+  }, []);
+  const setAnimSpeed = useCallback((v: AnimSpeed) => {
+    speedFactor.current = ANIM_SPEED_FACTOR[v];
+    setAnimSpeedState(v);
+    try {
+      window.localStorage.setItem(ANIM_SPEED_KEY, v);
+    } catch {
+      // Không lưu được thì chỉ áp dụng cho lần xem này.
+    }
+  }, []);
   const turnBannerId = useRef(0);
   const [pacing, setPacing] = useState(false);
   const [turnBanner, setTurnBanner] = useState<{
@@ -380,7 +406,8 @@ export default function DemoGame({
     // Bật "giảm chuyển động" (hay tắt hiệu ứng hoạt ảnh của Windows) vẫn phải thấy từng bước đổi ô, xóa ô, ô rơi để biết
     // nước đi đã diễn ra thế nào; chỉ bỏ chuyển động của ô và rút ngắn mỗi bước.
     const calm = prefersReducedMotion();
-    const shown = calm ? frames.map((f) => ({ ...f, anims: {}, ms: Math.min(f.ms, 220) })) : frames;
+    const k = speedFactor.current;
+    const shown = frames.map((f) => ({ ...f, ...(calm ? { anims: {} } : {}), ms: Math.round((calm ? Math.min(f.ms, 220) : f.ms) * k) }));
     afterAnim.current = done;
     setAnim({ frames: shown, i: 0, id: animId.current++ });
   }, []);
@@ -389,7 +416,7 @@ export default function DemoGame({
     const id = window.setTimeout(() => {
       pacingTimeouts.current.delete(id);
       done();
-    }, ms);
+    }, Math.round(ms * speedFactor.current));
     pacingTimeouts.current.add(id);
   }, []);
 
@@ -1167,6 +1194,8 @@ export default function DemoGame({
           profession={profession}
           scenarioFailed={scenarioFailed}
           scenarioOver={scenarioOver}
+          animSpeed={animSpeed}
+          onAnimSpeed={setAnimSpeed}
           setDifficulty={setDifficulty}
           setProfile={setProfile}
           setStarted={setStarted}
