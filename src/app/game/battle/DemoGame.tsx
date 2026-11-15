@@ -376,9 +376,13 @@ export default function DemoGame({
 
   /** Chạy các khung hoạt ảnh rồi mới cập nhật trạng thái trận (máu, nhật ký, lượt). */
   const play = useCallback((frames: readonly Frame[], done: () => void) => {
-    if (frames.length === 0 || prefersReducedMotion()) return done();
+    if (frames.length === 0) return done();
+    // Bật "giảm chuyển động" (hay tắt hiệu ứng hoạt ảnh của Windows) vẫn phải thấy từng bước đổi ô, xóa ô, ô rơi để biết
+    // nước đi đã diễn ra thế nào; chỉ bỏ chuyển động của ô và rút ngắn mỗi bước.
+    const calm = prefersReducedMotion();
+    const shown = calm ? frames.map((f) => ({ ...f, anims: {}, ms: Math.min(f.ms, 220) })) : frames;
     afterAnim.current = done;
-    setAnim({ frames, i: 0, id: animId.current++ });
+    setAnim({ frames: shown, i: 0, id: animId.current++ });
   }, []);
 
   const afterPacingDelay = useCallback((ms: number, done: () => void) => {
