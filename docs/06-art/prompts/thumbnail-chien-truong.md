@@ -1,6 +1,6 @@
 # Prompt thumbnail thẻ chế độ ở Chiến trường
 
-> Cập nhật: 15/11/2026 (thêm mục 5: Sử Lộ)
+> Cập nhật: 15/11/2026 (thêm mục 5: Sử Lộ; Do Thám và Sử Lộ đã có tranh `public/art/home/do-tham.webp`, `su-lo.webp`, 960×540, khoảng 140 KB mỗi tranh, đã gắn vào thẻ và biển đầu màn)
 > Trạng thái: **IMPLEMENTED** — Claude soạn theo yêu cầu của Shan (07/11/2026: thumbnail Khai Lộ và Viễn Chinh đang dùng chung một tranh mực tạm); Shan tạo tranh từ hai prompt dưới đây, đã gắn vào thẻ (`public/art/home/khai-lo.webp`, `public/art/home/vien-chinh.webp`, 960×540, khoảng 145 KB mỗi tranh).
 
 Thẻ chế độ ở màn Chiến trường (`src/app/game/MenuScene.tsx`, danh sách `MODES`) dùng tranh `public/art/home/<tên>.webp`. Hiện
@@ -51,7 +51,7 @@ High quality hand-painted 2D environment illustration for a Vietnamese historica
 
 Tranh Khai Lộ là sân lát ngọc bảy sắc hệ với con đường được dọn dần tới cổng thành; tranh Viễn Chinh là hai đạo quân cờ vàng và cờ xanh ngọc tiến về một thành đất, có thuyền chiến trên sông. Cả hai có phần dưới êm và tối nên tên chế độ đè lên vẫn đọc rõ.
 
-## 4. Do Thám — sa bàn dò bẫy (13/11/2026, chờ Shan tạo tranh)
+## 4. Do Thám — sa bàn dò bẫy (13/11/2026, đã có tranh)
 
 Thẻ Do Thám (`MODES` trong `MenuScene.tsx`) đang dùng tranh mực tạm vì chưa có `public/art/home/do-tham.webp`. Tạo tranh theo thông số mục 1 (16:9, vùng dưới êm và tối, không chữ, không mặt rõ). Khi gửi lại tranh, Claude xuất WebP 960×540 vào `public/art/home/do-tham.webp` và thêm `art: "do-tham"` cho thẻ.
 
@@ -63,7 +63,7 @@ Stylised digital painting of a historical Vietnamese scouting scene for a strate
 
 Nếu công cụ có ô negative: dùng khối ở mục 1.
 
-## 5. Sử Lộ — mê cung lịch sử (15/11/2026, chờ Shan tạo tranh)
+## 5. Sử Lộ — mê cung lịch sử (15/11/2026, đã có tranh)
 
 Thẻ Sử Lộ (`MODES` trong `MenuScene.tsx`) và biển đầu màn Sử Lộ (`ModeBanner` trong `SuLoScreen.tsx`) chưa có tranh riêng; Do Thám (mục 4) cũng vậy. Tạo tranh theo thông số mục 1 (16:9, vùng dưới êm và tối, không chữ, không mặt rõ) vào tệp `su-lo.png`. Khi gửi lại tranh, Claude xuất WebP 960×540 vào `public/art/home/su-lo.webp`, thêm `art: "su-lo"` cho thẻ ở `MenuScene.tsx` và `art="/art/home/su-lo.webp"` cho `ModeBanner` ở `SuLoScreen.tsx`. Do Thám làm tương tự với `do-tham.webp` (thẻ ở `MenuScene.tsx`, biển ở `DoThamScreen.tsx`).
 
