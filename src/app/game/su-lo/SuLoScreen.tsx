@@ -558,6 +558,7 @@ export default function SuLoScreen() {
     <ModeScreen label="Sử Lộ">
       <ModeBanner
         title="Sử Lộ"
+        art="/art/home/su-lo.webp"
         kicker={`Giải đố lịch sử · ${game ? `${SL_ERA_NAME[game.era]} · ${LEVEL_NAME[game.level]}` : "Chuẩn bị"}`}
         description="Đổ xúc xắc dẫn tướng qua mê cung, trả lời đúng mới đứng vững ở ô vừa tới. Sai thì quay về chỗ cũ, đọc sử chép rồi thử lại."
         stats={[
