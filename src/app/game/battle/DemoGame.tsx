@@ -376,9 +376,13 @@ export default function DemoGame({
 
   /** Chạy các khung hoạt ảnh rồi mới cập nhật trạng thái trận (máu, nhật ký, lượt). */
   const play = useCallback((frames: readonly Frame[], done: () => void) => {
-    if (frames.length === 0 || prefersReducedMotion()) return done();
+    if (frames.length === 0) return done();
+    // Bật "giảm chuyển động" (hay tắt hiệu ứng hoạt ảnh của Windows) vẫn phải thấy từng bước đổi ô, xóa ô, ô rơi để biết
+    // nước đi đã diễn ra thế nào; chỉ bỏ chuyển động của ô và rút ngắn mỗi bước.
+    const calm = prefersReducedMotion();
+    const shown = calm ? frames.map((f) => ({ ...f, anims: {}, ms: Math.min(f.ms, 220) })) : frames;
     afterAnim.current = done;
-    setAnim({ frames, i: 0, id: animId.current++ });
+    setAnim({ frames: shown, i: 0, id: animId.current++ });
   }, []);
 
   const afterPacingDelay = useCallback((ms: number, done: () => void) => {
@@ -1240,15 +1244,18 @@ export default function DemoGame({
         )}
 
         {started && stageVisible && (
-          <BattleStage
-            sides={[(heldSides ?? state.sides)[PLAYER].fighters, (heldSides ?? state.sides)[AI].fighters]}
-            actor={
-              state.winner === null
-                ? { side: state.turn.side, fighter: state.turn.actor }
-                : null
-            }
-            bus={cueBus}
-          />
+          /* md+: sân đấu dính dưới thanh đầu trang để cuộn xuống bàn cờ vẫn thấy hoạt ảnh khi đối thủ ra đòn. */
+          <div className="z-20 md:sticky md:top-16 md:-mx-1 md:bg-[color-mix(in_srgb,var(--wood-lo,#1c120b)_94%,transparent)] md:px-1 md:pb-1 md:backdrop-blur xl:top-[68px]">
+            <BattleStage
+              sides={[(heldSides ?? state.sides)[PLAYER].fighters, (heldSides ?? state.sides)[AI].fighters]}
+              actor={
+                state.winner === null
+                  ? { side: state.turn.side, fighter: state.turn.actor }
+                  : null
+              }
+              bus={cueBus}
+            />
+          </div>
         )}
 
         <div
@@ -1265,9 +1272,9 @@ export default function DemoGame({
                 waiting={pending}
               />
             )}
-            {/* lg+: bàn cờ không cao quá phần màn hình còn lại dưới sân đấu, để thấy cả hoạt ảnh lẫn bàn cờ khi chơi. */}
+            {/* lg+: bàn cờ cố gắng vừa phần màn hình còn lại dưới sân đấu nhưng không nhỏ hơn 34rem; màn thấp thì cuộn, sân đấu dính trên đầu nên vẫn thấy hoạt ảnh. */}
             <div
-              className="relative mx-auto mt-3 w-full rounded-xl border-2 border-[var(--primary)] bg-[var(--decorative-frame)] p-1.5 shadow-lg lg:max-w-[max(30rem,calc((100dvh-21rem)*var(--board-ratio)))]"
+              className="relative mx-auto mt-3 w-full rounded-xl border-2 border-[var(--primary)] bg-[var(--decorative-frame)] p-1.5 shadow-lg lg:max-w-[max(34rem,calc((100dvh-21rem)*var(--board-ratio)))]"
               style={{ "--board-ratio": board.cols / board.rows } as React.CSSProperties}
             >
               <BoardCrest className="pointer-events-none absolute -top-4 left-1/2 z-10 h-8 w-40 -translate-x-1/2 md:-top-5 md:h-10 md:w-52" />
