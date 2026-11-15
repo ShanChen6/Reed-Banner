@@ -716,8 +716,8 @@ export function AtlasHeader({
       active ? "atlas-tab-active" : ""
     }`;
   return (
-    <header className="atlas-header flex flex-col gap-2 px-1 pt-1 pb-3 xl:flex-row xl:items-center">
-      <div className="atlas-header-title px-3 xl:w-60 xl:shrink-0">
+    <header className="atlas-header flex flex-col gap-2 px-1 pt-1 pb-3 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-x-4">
+      <div className="atlas-header-title px-3 md:order-1">
         <h1
           id="chapter-one-title"
           className="atlas-title text-xl leading-tight font-black tracking-wide uppercase sm:text-2xl"
@@ -728,7 +728,7 @@ export function AtlasHeader({
       </div>
       <nav
         aria-label="Màn Sử ký"
-        className="grid flex-1 grid-cols-3 gap-1.5 sm:grid-cols-5 xl:mx-auto xl:max-w-[55rem]"
+        className="grid grid-cols-3 gap-1.5 sm:grid-cols-5 md:order-3 md:basis-full"
       >
         {tabs.map((t) => (
           <button
@@ -743,7 +743,7 @@ export function AtlasHeader({
           </button>
         ))}
       </nav>
-      <div className="flex flex-wrap items-center justify-end gap-1.5 px-1">
+      <div className="flex flex-wrap items-center justify-end gap-1.5 px-1 md:order-2">
         <dl className="flex flex-wrap items-center justify-end gap-1.5 text-sm">
           {[
             { k: "Cấp", v: level, icon: "level" },
