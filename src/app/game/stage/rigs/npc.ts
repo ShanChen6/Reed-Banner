@@ -2,7 +2,7 @@ import type { PartBox, Point, PoseArt, WarriorRig } from "./types";
 
 /**
  * Hình động NPC hư cấu của Bình Loạn (id trong `src/core/campaign/encounters.ts`, `hero: false`). Bộ tranh Shan gửi
- * 14/11/2026 (27 NPC): ảnh đứng 1024×1536 và bốn tranh tư thế (đánh thường, ra chiêu, tuyệt chiêu, gục).
+ * 14/11/2026 (30 NPC): ảnh đứng 1024×1536 và bốn tranh tư thế (đánh thường, ra chiêu, tuyệt chiêu, gục).
  *
  * Khác nhân vật chính, NPC không tách tay và vũ khí: thân là nguyên ảnh đứng, chỉ đầu tách lớp để gật nhẹ theo nhịp
  * thở; ba lớp tay/vũ khí là ảnh trống 2×2. Lúc ra đòn game thay bằng tranh tư thế nên không thiếu nhát vung.
@@ -172,6 +172,35 @@ export const NPC_RIGS: Readonly<Record<string, WarriorRig>> = {
       ),
     },
     down: down({ x: 51, y: 14 }, { x: 637, y: 960 }, 0.82),
+  }),
+  // Lính giữ bến Đỗ Động (Thủy, binh lính): đoản kiếm tay phải, sào móc tay trái.
+  "do-dong-boatman": npcRig({
+    dir: "do-dong-boatman",
+    foot: { x: 516, y: 1522 },
+    height: 1522,
+    body: { x: 178, y: 12, w: 696, h: 1518 },
+    head: { x: 296, y: 12, w: 284, h: 278 },
+    neck: { x: 446, y: 275 },
+    blade: [
+      { x: 446, y: 820 },
+      { x: 446, y: 700 },
+    ],
+    fxColor: 0x4aa3d9,
+    poses: {
+      attack: pose("pose-attack", { x: 75, y: 7 }, { x: 575, y: 1015 }, 1, {
+        x: 1420,
+        y: 244,
+      }),
+      cast: pose("pose-cast", { x: 16, y: 12 }, { x: 512, y: 1524 }, 1, {
+        x: 988,
+        y: 1502,
+      }),
+      ultimate: pose("pose-ultimate", { x: 4, y: 43 }, { x: 512, y: 1481 }, 1, {
+        x: 988,
+        y: 1457,
+      }),
+    },
+    down: down({ x: 70, y: 12 }, { x: 772, y: 965 }, 0.82),
   }),
   // Thân binh Đỗ Động (Hỏa, tướng sĩ): giáo dựng bên phải, kiếm đeo hông.
   "do-dong-guard": npcRig({
@@ -688,6 +717,35 @@ export const NPC_RIGS: Readonly<Record<string, WarriorRig>> = {
     },
     down: down({ x: 188, y: 15 }, { x: 791, y: 963 }, 0.82),
   }),
+  // Quân cướp lương Tây Phù Liệt (Hỏa, tướng sĩ): đoản kiếm, túi vải đeo chéo.
+  "phu-liet-raider": npcRig({
+    dir: "phu-liet-raider",
+    foot: { x: 498, y: 1522 },
+    height: 1522,
+    body: { x: 140, y: 12, w: 668, h: 1518 },
+    head: { x: 296, y: 12, w: 282, h: 278 },
+    neck: { x: 447, y: 275 },
+    blade: [
+      { x: 447, y: 820 },
+      { x: 447, y: 700 },
+    ],
+    fxColor: 0xe0552b,
+    poses: {
+      attack: pose("pose-attack", { x: 54, y: 6 }, { x: 553, y: 1016 }, 1, {
+        x: 1412,
+        y: 245,
+      }),
+      cast: pose("pose-cast", { x: 15, y: 10 }, { x: 512, y: 1524 }, 1, {
+        x: 988,
+        y: 1502,
+      }),
+      ultimate: pose("pose-ultimate", { x: 4, y: 87 }, { x: 513, y: 1480 }, 1, {
+        x: 992,
+        y: 730,
+      }),
+    },
+    down: down({ x: 74, y: 12 }, { x: 678, y: 967 }, 0.82),
+  }),
   // Thám báo Tây Phù Liệt (Lôi, mưu sĩ): quạt giấy gập trong tay, túi thẻ tre.
   "phu-liet-scout": npcRig({
     dir: "phu-liet-scout",
@@ -817,6 +875,35 @@ export const NPC_RIGS: Readonly<Record<string, WarriorRig>> = {
       ),
     },
     down: down({ x: 191, y: 13 }, { x: 794, y: 962 }, 0.82),
+  }),
+  // Lính giữ cổng Tây Phù Liệt (Kim, binh lính): đoản kiếm và khiên da tròn.
+  "phu-liet-wall-guard": npcRig({
+    dir: "phu-liet-wall-guard",
+    foot: { x: 499, y: 1522 },
+    height: 1522,
+    body: { x: 180, y: 12, w: 700, h: 1518 },
+    head: { x: 366, y: 12, w: 210, h: 278 },
+    neck: { x: 447, y: 275 },
+    blade: [
+      { x: 447, y: 820 },
+      { x: 447, y: 700 },
+    ],
+    fxColor: 0xe8c55a,
+    poses: {
+      attack: pose("pose-attack", { x: 75, y: 6 }, { x: 574, y: 1015 }, 1, {
+        x: 1434,
+        y: 244,
+      }),
+      cast: pose("pose-cast", { x: 15, y: 10 }, { x: 512, y: 1523 }, 1, {
+        x: 989,
+        y: 1502,
+      }),
+      ultimate: pose("pose-ultimate", { x: 3, y: 92 }, { x: 511, y: 1480 }, 1, {
+        x: 988,
+        y: 654,
+      }),
+    },
+    down: down({ x: 73, y: 9 }, { x: 769, y: 968 }, 0.82),
   }),
   // Quân sư Siêu Loại (Thổ, quân sư): áo xám, quạt giấy, túi thẻ tre.
   "sieu-loai-strategist": npcRig({
