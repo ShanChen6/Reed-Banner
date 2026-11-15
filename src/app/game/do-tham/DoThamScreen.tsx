@@ -313,6 +313,7 @@ export default function DoThamScreen() {
     <ModeScreen label="Do Thám">
       <ModeBanner
         title="Do Thám"
+        art="/art/home/do-tham.webp"
         kicker={`Giải đố · ${LEVEL_NAME[level]}`}
         description="Mở từng ô, suy ra chỗ giấu bẫy từ các con số rồi cắm cờ lau. Bàn nào cũng suy luận được, không cần đoán."
         stats={[
