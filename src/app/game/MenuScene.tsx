@@ -6,7 +6,6 @@
 
 import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import Image from "next/image";
-import { choiceVariants } from "@/components/ui";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Logo } from "./art/logo";
 import { fetchProfile, ONLINE_BATTLE_KEY } from "./battle/online";
@@ -127,7 +126,6 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
     };
   }, []);
   const plan = profile === undefined ? null : heroPlan(profile, saved);
-  const active = useActiveSection();
   const locked = (scene: Scene) =>
     scene === "TRIAL"
       ? !towerFeatures.trial
@@ -191,32 +189,8 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
         </section>
 
         <div className="flex flex-col gap-6">
-          <nav aria-label="Nhóm chế độ chơi" className="home-mode-nav sticky top-14 z-30 -mx-4 px-4 py-2.5 md:top-16 xl:top-[68px]">
-            <ul className="flex gap-1.5 sm:gap-2">
-              {TABS.map((t) => (
-                <li key={t.value} className="flex-1 sm:flex-none">
-                  <a
-                    href={`#${sectionId(t.value)}`}
-                    aria-current={active === t.value ? "true" : undefined}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      jumpTo(t.value);
-                    }}
-                    className={choiceVariants({ className: `w-full gap-1.5 px-2 whitespace-nowrap sm:px-4 ${active === t.value ? "is-selected" : ""}` })}
-                  >
-                    <span className="font-serif">{t.label}</span>
-                    <span aria-hidden className="home-tab-count rounded-full px-1.5 text-[13px] leading-5 tabular-nums">
-                      {count(t.value)}
-                    </span>
-                    <span className="sr-only">, {count(t.value)} chế độ</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
           {TABS.map((t) => (
-            <section key={t.value} id={sectionId(t.value)} data-mode-group={t.value} aria-labelledby={`${sectionId(t.value)}-title`} className="home-mode-group">
+            <section key={t.value} id={sectionId(t.value)} data-mode-group={t.value} aria-labelledby={`${sectionId(t.value)}-title`}>
               <SectionHeading id={`${sectionId(t.value)}-title`} kicker="Chế độ chơi" title={t.label} />
               <p className="mt-2 text-[15px] leading-snug text-[var(--on-wood)]/85">{t.text}</p>
               {count(t.value) === 0 ? (
@@ -262,49 +236,6 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
 }
 
 const sectionId = (t: ModeTab) => `home-${t}`;
-
-/** Cuộn tới mục của nhóm; người dùng tắt chuyển động thì nhảy thẳng. */
-function jumpTo(t: ModeTab) {
-  const el = document.getElementById(sectionId(t));
-  if (!el) return;
-  const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  el.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
-}
-
-/**
- * Mục đang đọc: mục cuối cùng có mép trên đã qua dải dưới thanh dẫn (khoảng 30% chiều cao màn). Cuộn tới đáy trang thì
- * lấy mục cuối, để mục Sắp ra mắt ngắn vẫn sáng được.
- */
-function useActiveSection(): ModeTab {
-  const [active, setActive] = useState<ModeTab>("battle");
-  useEffect(() => {
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const line = window.innerHeight * 0.3;
-      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
-      let next: ModeTab = "battle";
-      for (const t of TABS) {
-        const el = document.getElementById(sectionId(t.value));
-        if (el && el.getBoundingClientRect().top <= line) next = t.value;
-      }
-      if (atBottom) next = TABS[TABS.length - 1]!.value;
-      setActive(next);
-    };
-    const onScroll = () => {
-      if (!frame) frame = window.requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (frame) window.cancelAnimationFrame(frame);
-    };
-  }, []);
-  return active;
-}
 
 /** Nút ở hero: dạng viên chữ serif, cùng chiều cao 48px; `className` quyết định nút chính hay phụ. */
 function HeroLink({ action, className }: { action: HeroAction; className: string }) {
