@@ -113,7 +113,7 @@ export function MobileBar({ state, rules, noMove, disabled, covered, total, onDi
   const h = state.hand;
   const pct = total > 0 ? Math.round((100 * covered) / total) : 0;
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-frame-bronze bg-wood-lo/95 px-3 pt-2 pb-3 shadow-[0_-6px_18px_rgb(0_0_0/0.6)] backdrop-blur lg:hidden">
+    <div className="mobile-dock fixed inset-x-0 bottom-0 z-30 border-t-2 border-frame-bronze bg-wood-lo/95 px-3 pt-2 pb-3 shadow-[0_-6px_18px_rgb(0_0_0/0.6)] backdrop-blur lg:hidden">
       <div className="mx-auto flex max-w-md items-center gap-3">
         <div className="size-14 shrink-0 rounded-md border border-frame-bronze bg-paper p-0.5"><PieceFace piece={h} large /></div>
         <div className="min-w-0 flex-1 text-sm leading-tight">

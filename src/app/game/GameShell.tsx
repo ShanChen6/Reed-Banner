@@ -29,6 +29,7 @@ import SurvivalScreen from "./survival/SurvivalScreen";
 import TrialScreen from "./trial/TrialScreen";
 import DestinyScreen from "./destiny/DestinyScreen";
 import ExpeditionScreen from "./expedition/ExpeditionScreen";
+import FullscreenToggle from "./FullscreenToggle";
 import GameHeader from "./header/GameHeader";
 import GameFooter, { FOOTER_SCENES } from "./GameFooter";
 import LoginGate from "./LoginGate";
@@ -104,6 +105,7 @@ export default function GameShell({
           <SceneView scene={currentScene} account={account} auth={auth} resume={api.params.get("resume") === "1"} towerFeatures={towerFeatures} />
         </div>
         {FOOTER_SCENES.has(currentScene) && <GameFooter />}
+        <FullscreenToggle scene={currentScene} />
       </div>
       </AudioProvider>
     </SceneContext.Provider>

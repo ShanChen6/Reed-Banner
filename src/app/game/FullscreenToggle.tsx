@@ -1,12 +1,13 @@
 "use client";
 
-// Nút bật/tắt toàn màn hình ở thanh header, chỉ hiện ở các chế độ chơi (FULLSCREEN_SCENES), không tự bật. Toàn màn
+// Nút nổi bật/tắt toàn màn hình ở góc dưới bên phải, chỉ hiện ở các chế độ chơi (FULLSCREEN_SCENES), không tự bật.
+// Trên điện thoại, màn nào có thanh dính đáy (lớp .mobile-dock) thì nút nhích lên trên thanh đó (globals.css). Toàn màn
 // hình áp cho cả trang nên đổi phân cảnh vẫn giữ; đang toàn màn hình mà sang màn khác thì nút vẫn hiện để thoát.
 // Trình duyệt không cho (iPhone Safari chỉ cho video toàn màn hình) thì ẩn nút; ở đó "Thêm vào màn hình chính" là
 // cách duy nhất bỏ được thanh địa chỉ.
 
 import { useCallback, useSyncExternalStore } from "react";
-import { FULLSCREEN_SCENES, type Scene } from "../scene";
+import { FULLSCREEN_SCENES, type Scene } from "./scene";
 
 function subscribe(onChange: () => void) {
   document.addEventListener("fullscreenchange", onChange);
@@ -37,7 +38,7 @@ export default function FullscreenToggle({ scene }: { scene: Scene }) {
       aria-pressed={active}
       aria-label={label}
       title={label}
-      className="game-header-btn game-header-chip flex size-10 shrink-0 items-center justify-center rounded-md pointer-coarse:size-11"
+      className="fullscreen-fab game-header-btn game-header-chip fixed z-40 flex size-11 items-center justify-center rounded-full opacity-85 shadow-[0_4px_12px_rgb(0_0_0/0.5)] hover:opacity-100 focus-visible:opacity-100"
     >
       <svg aria-hidden viewBox="0 0 24 24" className="size-5 text-[var(--frame-gold)]" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
         {active ? (

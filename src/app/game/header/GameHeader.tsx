@@ -2,13 +2,12 @@
 
 // Thanh header chung của màn chơi /game, ba cột: trái là nút về Chiến trường (màn chính), giữa là bảng tên phân
 // cảnh (Doanh Trại, Cửa Hàng, chế độ chơi...), phải là vàng hiện có và menu tài khoản (Doanh Trại, cài đặt âm thanh,
-// đăng nhập/đăng xuất). Ở chế độ chơi, cạnh nút về có thêm nút toàn màn hình. Tranh phong cảnh trải hết chiều dài thanh. GameShell dựng một lần cho mọi phân cảnh; tab
+// đăng nhập/đăng xuất). Tranh phong cảnh trải hết chiều dài thanh. GameShell dựng một lần cho mọi phân cảnh; tab
 // riêng của từng màn vẫn nằm trong màn đó. Màu lấy từ token chung trong theme.css (lớp .game-header).
 
 import type { ShellAccount } from "../GameShell";
 import { SCENE_TITLE, type Scene } from "../scene";
 import { SceneLink } from "../SceneContext";
-import FullscreenToggle from "./FullscreenToggle";
 import HeaderAccountMenu from "./HeaderAccountMenu";
 import HeaderGold from "./HeaderGold";
 import { HeaderOrnament } from "./HeaderOrnament";
@@ -20,11 +19,7 @@ export default function GameHeader({ scene, account }: { scene: Scene; account: 
       {/* Ba cột, cột giữa luôn ở đúng giữa thanh. Lề hai bên từ md chừa chỗ cho mặt trống của hai góc hoa văn. */}
       <div className="relative mx-auto grid h-full grid-cols-[1fr_auto_1fr] items-center gap-2 px-2 sm:px-4 md:gap-3 md:px-16 xl:px-[4.5rem]">
         {/* Ở màn chính, tên giữa đã là "Chiến trường" nên không hiện thêm nút về; ô trái để trống giữ bảng tên ở giữa. */}
-        {/* Nút toàn màn hình đứng cạnh nút về (cột trái còn rộng); cột phải trên điện thoại đã chật vàng và avatar. */}
-        <div className="flex min-w-0 items-center justify-self-start gap-1.5 md:gap-3">
-          {scene !== "MENU" && <HomeButton />}
-          <FullscreenToggle scene={scene} />
-        </div>
+        {scene === "MENU" ? <span /> : <HomeButton />}
         <SceneTitle title={SCENE_TITLE[scene]} />
         <div className="flex min-w-0 items-center justify-end gap-1.5 md:gap-3">
           <HeaderGold scene={scene} />
