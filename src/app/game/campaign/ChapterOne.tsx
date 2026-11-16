@@ -159,27 +159,27 @@ function StoryLines({
   );
 }
 
-function RewardModal({
+function RewardNotice({
   profile,
   seen,
   onClose,
 }: {
   profile: Profile;
   seen: readonly string[];
-  /** Nhận thưởng: đóng bảng và mở màn nhiệm vụ vừa xong để phát thoại kết ở đó. */
+  /** Nhận thưởng: ẩn dòng báo và mở màn nhiệm vụ vừa xong để đọc thoại kết ở đó. */
   onClose: (receipts: readonly string[], nodeId: CampaignMissionId) => void;
 }) {
   const reward = pendingFirstClear(profile.campaign, seen);
   if (!reward) return null;
   const node = storyNodeById(reward.nodeId)!;
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
+    // Báo thưởng nằm ngay trong trang (không dùng hộp nổi), trên đầu khung Sử ký.
+    <section
       aria-labelledby="first-clear-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      role="status"
+      className="rounded-xl border-2 border-frame-gold bg-wood p-3 text-on-wood shadow-lg"
     >
-      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border-2 border-frame-gold bg-wood p-4 text-on-wood shadow-2xl">
+      <div>
         <p className="text-kicker text-frame-gold">
           Hoàn thành lần đầu
         </p>
@@ -189,7 +189,7 @@ function RewardModal({
         >
           {node.title}
         </h2>
-        <ul className="ui-frame-inset mt-3 flex flex-col gap-1 p-2 text-sm">
+        <ul className="ui-frame-inset mt-2 flex flex-col gap-1 p-2 text-sm">
           <li className="font-semibold text-frame-gold">
             +{reward.missionGold} vàng thưởng nhiệm vụ
           </li>
@@ -224,7 +224,7 @@ function RewardModal({
           </Button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -434,7 +434,7 @@ export default function ChapterOne({
       }
       className="flex scroll-mt-4 flex-col gap-4"
     >
-      <RewardModal
+      <RewardNotice
         profile={profile}
         seen={seen}
         onClose={(receipts, nodeId) => {
