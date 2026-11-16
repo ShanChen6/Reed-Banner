@@ -20,11 +20,6 @@ import {
 export const fighterName = (id: string) =>
   id === MAIN_ID ? "Đinh Bộ Lĩnh" : (companionById(id)?.name ?? id);
 
-export interface LogLine {
-  readonly id: number;
-  readonly text: string;
-}
-
 export function describe(state: BattleState, e: BattleEvent): string | null {
   const name = (side: number, i: number) =>
     state.sides[side as 0 | 1].fighters[i]?.name ?? "?";

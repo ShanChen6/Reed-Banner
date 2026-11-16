@@ -156,7 +156,7 @@ export default function SetupLobby({
         <div className="flex flex-col items-center gap-2 ui-frame-inset rounded-xl p-3 sm:flex-row">
           <TeamRow fighters={teams[0]} label="Phe bạn" align="start" />
           <span className="font-serif text-2xl font-bold text-frame-gold sm:text-3xl">VS</span>
-          <TeamRow fighters={teams[1]} label="Tianwu" align="end" />
+          <TeamRow fighters={teams[1]} label="Đối thủ" align="end" />
         </div>
 
         {/* Ba khối chọn gọn một hàng nhãn + chip: nhãn trái, lựa chọn phải; đang chọn là giấy dó (quy tắc bề mặt ở theme.md). */}

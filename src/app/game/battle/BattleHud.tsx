@@ -65,14 +65,14 @@ export function TurnClock({
       : "Đối thủ đang đi";
   return (
     <div
-      className={`flex items-center gap-3 ui-frame-inset rounded-lg px-3 py-1.5 ${
+      className={`mx-auto flex w-full max-w-md items-center gap-2 ui-frame-inset rounded-full px-3 py-0.5 ${
         urgent ? "!border-stat-hp" : ""
       }`}
       role="timer"
       aria-label={seconds === null ? label : `${label}, còn ${seconds} giây`}
     >
-      <span className="w-32 shrink-0 text-sm font-semibold">{label}</span>
-      <div className="h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-black/30">
+      <span className="shrink-0 text-caption font-semibold">{label}</span>
+      <div className="h-1 min-w-0 flex-1 overflow-hidden rounded-full bg-black/30">
         <div
           className={`h-full rounded-full transition-[width] duration-300 ease-linear ${
             !mine ? "bg-on-wood-soft/60" : urgent ? "bg-stat-hp" : "bg-frame-gold-hi"
@@ -81,7 +81,7 @@ export function TurnClock({
         />
       </div>
       <span
-        className={`w-12 shrink-0 text-right font-mono text-lg font-bold tabular-nums ${
+        className={`w-8 shrink-0 text-right font-mono text-caption font-bold tabular-nums ${
           urgent ? "animate-pulse text-stat-hp" : ""
         }`}
       >
