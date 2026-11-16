@@ -159,30 +159,27 @@ function StoryLines({
   );
 }
 
-function RewardModal({
+function RewardNotice({
   profile,
   seen,
   onClose,
-  onNext,
 }: {
   profile: Profile;
   seen: readonly string[];
-  onClose: (receipts: readonly string[]) => void;
-  onNext: (receipts: readonly string[], next: CampaignMissionId | null) => void;
+  /** Nhận thưởng: ẩn dòng báo và mở màn nhiệm vụ vừa xong để đọc thoại kết ở đó. */
+  onClose: (receipts: readonly string[], nodeId: CampaignMissionId) => void;
 }) {
   const reward = pendingFirstClear(profile.campaign, seen);
   if (!reward) return null;
   const node = storyNodeById(reward.nodeId)!;
-  const copy = missionCopy(reward.nodeId);
-  const nextId = nextMissionAfter(profile.campaign, reward.nodeId);
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
+    // Báo thưởng nằm ngay trong trang (không dùng hộp nổi), trên đầu khung Sử ký.
+    <section
       aria-labelledby="first-clear-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      role="status"
+      className="rounded-xl border-2 border-frame-gold bg-wood p-3 text-on-wood shadow-lg"
     >
-      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border-2 border-frame-gold bg-wood p-4 text-on-wood shadow-2xl">
+      <div>
         <p className="text-kicker text-frame-gold">
           Hoàn thành lần đầu
         </p>
@@ -192,23 +189,7 @@ function RewardModal({
         >
           {node.title}
         </h2>
-        {copy && (
-          <div className="mt-3">
-            <StoryLines
-              profile={profile}
-              nodeId={node.id}
-              choice={profile.campaign.storyChoices[node.id]}
-              outro
-              {...(nextId
-                ? {
-                    finishLabel: `Tiếp: ${storyNodeById(nextId)!.title}`,
-                    onFinished: () => onNext(reward.receipts, nextId),
-                  }
-                : {})}
-            />
-          </div>
-        )}
-        <ul className="ui-frame-inset mt-3 flex flex-col gap-1 p-2 text-sm">
+        <ul className="ui-frame-inset mt-2 flex flex-col gap-1 p-2 text-sm">
           <li className="font-semibold text-frame-gold">
             +{reward.missionGold} vàng thưởng nhiệm vụ
           </li>
@@ -238,25 +219,12 @@ function RewardModal({
           </li>
         </ul>
         <div className="mt-4 flex flex-wrap gap-2">
-          {/* Có thoại kết thì nút "Tiếp" nằm ở câu cuối của thoại: đọc xong mới đi tiếp được. */}
-          {nextId && !copy && (
-            <Button variant="ornate"
-              type="button"
-              onClick={() => onNext(reward.receipts, nextId)}
-            >
-              Tiếp: {storyNodeById(nextId)!.title}
-            </Button>
-          )}
-          <Button variant="secondary"
-            type="button"
-            onClick={() => onClose(reward.receipts)}
-
-          >
-            Đóng
+          <Button variant="ornate" type="button" onClick={() => onClose(reward.receipts, reward.nodeId)}>
+            Nhận thưởng
           </Button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -466,13 +434,14 @@ export default function ChapterOne({
       }
       className="flex scroll-mt-4 flex-col gap-4"
     >
-      <RewardModal
+      <RewardNotice
         profile={profile}
         seen={seen}
-        onClose={markSeen}
-        onNext={(receipts, next) => {
+        onClose={(receipts, nodeId) => {
           markSeen(receipts);
-          if (next) openMission(next);
+          // Thoại chỉ phát một kiểu: trong màn nhiệm vụ. Bảng thưởng chỉ báo thưởng rồi đưa về đúng nhiệm vụ.
+          move({ nodeId, phase: "choice", choice: campaign.storyChoices[nodeId] });
+          updateAtlas({ ...atlas, view: "mission" });
         }}
       />
       {/* Đại card Sử ký (Polish V2 P02): header, ba cột và tuyến dưới nằm trong một khung gỗ. Màn nhiệm vụ và
