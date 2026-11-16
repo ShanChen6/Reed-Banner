@@ -555,7 +555,7 @@ export default function SuLoScreen() {
   );
 
   return (
-    <ModeScreen label="Sử Lộ">
+    <ModeScreen card label="Sử Lộ">
       <ModeBanner
         title="Sử Lộ"
         art="/art/home/su-lo.webp"

@@ -9,7 +9,9 @@ import {
   formatDateKey,
   isBossFloor,
   leaderChoices,
+  leaderPicker,
   nextSweepTierHint,
+  ownedCompanions,
   lineupErrorText,
   stageIndexOf,
   suggestCompanions,
@@ -140,5 +142,22 @@ describe("UI Tháp Thí Luyện", () => {
     const r = previewLineup(profile, { bannedElements: ["hoa"] }, ["haVan", "leThach"], { element: "moc", profession: "tuongSi" });
     assert.equal(r.status, "invalid");
     if (r.status === "invalid") assert.deepEqual(r.errors.map(lineupErrorText), ["Hệ Hỏa bị cấm ở tầng này"]);
+  });
+
+  it("thủ lĩnh chọn nghề/hệ tự do; đội chưa đạt yêu cầu tầng thì chỉ báo lỗi, không ép nghề", () => {
+    const needSoldier: FloorRules = { minProfessions: { binhLinh: 1 } };
+    const picked = ownedCompanions(profile).filter((m) => m.profession !== "binhLinh").slice(0, 2).map((m) => m.id);
+    assert.equal(picked.length, 2);
+    const build = { element: "kim", profession: "phapSu" } as const;
+    const picker = leaderPicker(profile, needSoldier, picked, build);
+    // Không hệ hay nghề nào bị khóa; chỉ Binh lính được đánh dấu hợp luật.
+    assert.ok(picker.elements.every((o) => !o.banned) && picker.professions.every((o) => !o.banned));
+    assert.deepEqual(picker.professions.filter((o) => o.fits).map((o) => o.value), ["binhLinh"]);
+    assert.deepEqual(picker.suggestion, { element: "kim", profession: "binhLinh" });
+    const preview = previewLineup(profile, needSoldier, picked, build);
+    assert.equal(preview.status, "invalid");
+    if (preview.status === "invalid") assert.deepEqual(preview.errors.map(lineupErrorText), ["Đội cần có Binh lính"]);
+    // Đã hợp luật thì không gợi ý đổi.
+    assert.equal(leaderPicker(profile, needSoldier, picked, picker.suggestion!).suggestion, null);
   });
 });

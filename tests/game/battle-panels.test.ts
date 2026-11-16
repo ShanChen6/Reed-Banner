@@ -77,6 +77,25 @@ describe("mảng màn trận tách từ DemoGame", () => {
     assert.match(tower, /Về Tháp Thiên Mệnh/);
   });
 
+  it("BattleResult Thí Luyện: về màn chuẩn bị tầng kế, không có nút nâng kỹ năng hay dòng kinh nghiệm", () => {
+    const won = battle(0);
+    const trial = { floor: 7, won: true, cleared: 7, newlyCleared: true, stonesGranted: 3, newBest: true };
+    const html = render(createElement(BattleResult, resultProps(won, {
+      online: true, mode: "progress", trialFloorNo: 7, outcome: outcome(won, { trial }),
+    })));
+    assert.match(html, /đã vượt tầng 7\. \+3 Đá Cường Hóa lần đầu/);
+    assert.match(html, /Chuẩn bị tầng 8/);
+    assert.match(html, /href="\/game\/trial\?floor=8"/);
+    assert.doesNotMatch(html, /Nâng kỹ năng|kinh nghiệm|Không rơi trang bị/);
+
+    const lost = battle(1);
+    const lostHtml = render(createElement(BattleResult, resultProps(lost, {
+      online: true, mode: "progress", trialFloorNo: 7, outcome: outcome(lost, { trial: { ...trial, won: false, stonesGranted: 0 } }),
+    })));
+    assert.match(lostHtml, /Về Tháp Thí Luyện/);
+    assert.match(lostHtml, /floor=7/);
+  });
+
   it("CampaignResult: đạt mục tiêu và thất bại", () => {
     const plan = CAMPAIGN_SCENARIOS[0]!;
     const scenario: CampaignScenarioTag = { nodeId: plan.nodeId, scenarioId: plan.nodeId, phaseIndex: 0 };

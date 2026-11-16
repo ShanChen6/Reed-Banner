@@ -189,6 +189,15 @@ export interface Outcome {
   /** Chỉ có ở trận đánh trùm online. */
   readonly raid?: RaidResult;
   readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done"; readonly completed?: boolean };
+  /** Tháp Thí Luyện: tầng vừa đánh và đá lần đầu server vừa cộng (khớp `TrialResult` ở server). */
+  readonly trial?: {
+    readonly floor: number;
+    readonly won: boolean;
+    readonly cleared: number;
+    readonly newlyCleared: boolean;
+    readonly stonesGranted: number;
+    readonly newBest: boolean;
+  };
   /** Trận Viễn Chinh: kết quả trên sa bàn, có `end` khi trận này kết thúc lượt viễn chinh. */
   readonly expedition?: {
     readonly won: boolean;

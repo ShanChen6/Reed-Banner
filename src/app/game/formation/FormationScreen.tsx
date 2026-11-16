@@ -353,7 +353,7 @@ export default function FormationScreen() {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <GameModeScreen label="Trận Đồ" className="campaign-atlas pb-10">
+    <GameModeScreen card label="Trận Đồ" className="campaign-atlas pb-10">
       {children}
     </GameModeScreen>
   );

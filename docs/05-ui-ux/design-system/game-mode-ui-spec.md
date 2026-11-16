@@ -12,7 +12,7 @@
 - Giữ hình ảnh **gỗ tối / đồng cổ / giấy dó / vàng kim / đỏ son**, hoa văn Đông Sơn Việt Nam; không đưa mỹ thuật Á Đông chung chung (cung điện Trung Hoa, torii, giáp samurai) vào key art.
 - Campaign hiện có Sử Ký, atlas ba cột và chi tiết nhiệm vụ: **reference về độ hoàn thiện và chất liệu**, không áp 3 cột máy móc lên mọi mode.
 - `TRIAL`, `DESTINY` chỉ hiện click được khi server feature flag cho phép; không giả tạo trạng thái tiến độ hoặc phần thưởng ở client.
-- Trial **20 tầng live** (có thể mở rộng sau này, không vẽ floor 21 click được); Destiny **10 tầng/chu kỳ 7 ngày live** (20 tầng là đề xuất, không ghi là đã có).
+- Trial **100 tầng live** từ 14/11/2026 (10 chặng, lưới tầng theo chặng); Destiny **10 tầng/chu kỳ 7 ngày live** (20 tầng là đề xuất, không ghi là đã có).
 - Survival hiển thị là **Trấn Ải** (đổi tên 27/10/2026, trước đây là Sinh tồn); concept hình doanh trại/cổng thành không hàm ý HP thành.
 - Daily: một đề cố định/ngày, một lượt/người, đội cho sẵn, không trang bị. Arena: PvP **bất đồng bộ** chống đội phòng thủ snapshot do AI điều khiển, không matchmaking real-time.
 - Tái đấu sứ quân (tên cũ Đánh trùm) là phần của Campaign, không thiết kế lại. Normal/Practice thuộc luồng trận chiến chung; chỉ cân chỉnh entry/navigation, không đổi luật.
@@ -99,7 +99,7 @@ Không đặt kích thước battle board bằng CSS cố định gây tràn. Sc
 
 ## 5. Tháp Thí Luyện — 'Thư viện thử thách'
 
-**Chế độ:** 3v3, 20 tầng live, Đinh Bộ Lĩnh bắt buộc; đổi nghề/hệ trước tầng, chọn 2 companion hợp luật; full HP/lương mới mỗi lần. Thưởng first-clear và quét ngày do server chốt.
+**Chế độ:** 3v3, 100 tầng live (10 chặng), Đinh Bộ Lĩnh bắt buộc; chọn 2 tướng kèm, đổi nghề/hệ thủ lĩnh tự do bằng hai hàng chip có icon (chấm ngọc = chọn vào thì đội hợp luật, hệ/nghề bị cấm gạch ngang); đội chưa hợp luật thì khóa nút Vào tầng và liệt kê luật chưa đạt, kèm nút đổi nhanh sang nghề/hệ hợp luật gần nhất. Full HP/lương mới mỗi lần. Hết trận về thẳng màn chuẩn bị tầng kế (thắng) hoặc tầng vừa đánh (thua), không qua màn nâng kỹ năng. Thưởng first-clear và quét ngày do server chốt.
 
 ```text
 [HEADER]
@@ -319,3 +319,12 @@ Shan yêu cầu chia chế độ của màn Chiến trường (`MenuScene.tsx`) 
 - **Giải đố** (một người, không đọ sức đội hình): Trận Đồ (xếp quân, không đánh nhau), Khai Lộ, Do Thám, Sử Lộ (có trận ghép ô một chiều với quân giặc trấn cổng nhưng trục chính là đáp câu sử và mọi người như nhau), Tầm Tướng Ký (ghép yếu tố, không đánh nhau).
 - **Sắp ra mắt**: chỉ chế độ mới đang thiết kế, chưa phát hành (`UPCOMING`, theo hàng "Chế độ mới" của [lộ trình](../../09-roadmap/lo-trinh.md)); hiện có Quần Hùng đấu trực tiếp. Chế độ đã phát hành nhưng tắt cờ ở một môi trường (ví dụ máy dev) vẫn nằm ở nhóm của nó với thẻ khóa, không chuyển sang mục này (Shan 14/11). Không còn chế độ nào thì hiện dòng báo trống.
 - Mỗi chế độ khai báo `group` trong `MODES`; thêm chế độ mới phải chọn nhóm. Thanh dẫn là `nav` với liên kết neo `#home-battle`, `#home-puzzle`, `#home-soon` (kiểu `.ui-choice`, nút đang đọc mang `aria-current`), có số chế độ trên mỗi nút; mỗi mục có tiêu đề và một câu dẫn. Người dùng tắt chuyển động thì nhảy thẳng, không cuộn mượt.
+
+## 17. Đại card cho mọi màn chế độ (16/11/2026)
+
+Shan yêu cầu màn chính của mọi chế độ bọc trong một khung lớn như Sử ký Bình Loạn.
+
+- **Thành phần:** `ModeCard` trong `src/components/game-ui/ModeScreen.tsx`, lớp `.ui-mode-card` ở `src/styles/components.css` (cùng viền, vạch trong, nền gỗ và góc hoa văn với `.atlas-frame-wood` của Bình Loạn). Màn dùng `<ModeScreen card>` là banner, tab Chơi/Hướng dẫn và nội dung nằm trong một card.
+- **Đang dùng:** Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh, Quần Hùng, Viễn Chinh, Trận Đồ, Khai Lộ, Do Thám, Sử Lộ, Tầm Tướng Ký (bọc `ModeCard` trực tiếp vì màn tự dựng `main`). Bình Loạn giữ khung Sử ký riêng; màn chuẩn bị Thao Luyện/Giao Tranh đã là một khung lớn trong `DemoGame.tsx`.
+- Màn không phải chế độ chơi (Nhiệm vụ, Cửa Hàng, Công Trạng, màn khóa đăng nhập) không dùng card.
+- Chế độ mới: dùng `<ModeScreen card>`.

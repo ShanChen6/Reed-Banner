@@ -1,6 +1,6 @@
 # Song Tháp — hướng dẫn người chơi
 
-> Cập nhật: 11/11/2026 (Tháp Thí Luyện 50 tầng; Tháp Thiên Mệnh 20 tầng, Phúc mới; viết lại bằng từ của người chơi)
+> Cập nhật: 16/11/2026 (Tháp Thí Luyện 100 tầng, chọn nghề/hệ thủ lĩnh tự do; Tháp Thiên Mệnh 20 tầng, Phúc mới)
 > Trạng thái: **REFERENCE** — hướng dẫn cho người chơi.
 
 Từ dùng trong hướng dẫn và trên màn hình: **lượt leo** là một lần leo tháp từ tầng 1 với đội hình đã khóa;
@@ -8,9 +8,10 @@ Từ dùng trong hướng dẫn và trên màn hình: **lượt leo** là một 
 
 ## Chọn tháp
 
-- **Tháp Thí Luyện:** 50 tầng cố định để giải luật, chia 5 chặng 10 tầng (Nhập Môn, Luyện Trận, Lệnh Mới, Song Lệnh,
-  Tam Lệnh); tầng 21 trở lên gặp đối thủ là tướng cửa hàng và ghép dần hai, ba luật. Mỗi lần vào tầng, máu và lương bắt đầu lại; tầng đã thắng có
-  thể chơi lại nhưng thưởng đá lần đầu không lặp.
+- **Tháp Thí Luyện:** 100 tầng cố định để giải luật, chia 10 chặng 10 tầng (Nhập Môn, Luyện Trận, Lệnh Mới, Song Lệnh,
+  Tam Lệnh, Tứ Lệnh, Ngũ Lệnh, Lục Lệnh, Thất Lệnh, Thiên Đỉnh); tầng 21 trở lên gặp đối thủ là tướng cửa hàng và ghép dần
+  hai, ba, bốn luật. Mỗi lần vào tầng, máu và lương bắt đầu lại; tầng đã thắng có thể chơi lại nhưng thưởng đá lần đầu
+  không lặp. Hết trận, nút kết quả đưa về màn chuẩn bị của tầng kế (thắng) hoặc tầng vừa đánh (thua).
 - **Tháp Thiên Mệnh** (tên cũ: Tháp Vận Mệnh): hành trình **20 tầng** trong chu kỳ tuần, áp dụng từ chu kỳ
   16/11/2026 (trước đó là 10 tầng). Đội hình được khóa khi bắt đầu lượt leo; máu, năng lượng và lương còn lại
   mang sang tầng sau. Dự bị không tự hồi, trừ khi đã chọn Phúc Hậu quân. Tầng 1–5 Dễ, 6–10 Thường, 11–15 Khó,
@@ -24,7 +25,8 @@ Từ dùng trong hướng dẫn và trên màn hình: **lượt leo** là một 
 
 Đọc luật tầng trước khi chọn tướng ra trận. Tướng bị làm mờ là không hợp luật nghề/hệ, đã gục, hoặc đã đủ hai
 người; màn hình ghi rõ lý do dưới tên tướng. Nếu chưa xếp được ba người hợp luật, hãy đổi nghề/hệ Đinh Bộ Lĩnh
-hoặc chọn tướng khác. Khi khóa đội hình, Tháp Thiên Mệnh kiểm tra trước rằng đội hình xếp được ba người hợp luật
+hoặc chọn tướng khác. Ở Tháp Thí Luyện, mọi hệ và nghề của Đinh Bộ Lĩnh luôn chọn được; chấm xanh đánh dấu lựa chọn
+làm đội hợp luật, và đội chưa hợp luật thì nút Vào tầng khóa, kèm dòng ghi luật nào chưa đạt. Khi khóa đội hình, Tháp Thiên Mệnh kiểm tra trước rằng đội hình xếp được ba người hợp luật
 cho mọi tầng của chu kỳ.
 
 Muốn dừng lượt leo giữa chừng phải xác nhận: lượt leo kết thúc, kỷ lục chu kỳ và đá đã nhận vẫn giữ, và có thể
@@ -34,7 +36,7 @@ khóa đội hình mới để leo lại từ tầng 1.
 
 | Nguồn | Điều kiện | Đá |
 |---|---|---:|
-| Thí Luyện, lần đầu vượt tầng | Thắng mỗi tầng lần đầu | Tổng tối đa 355/50 tầng (77 ở tầng 1–20, 278 ở tầng 21–50) |
+| Thí Luyện, lần đầu vượt tầng | Thắng mỗi tầng lần đầu | Tổng tối đa 1 605/100 tầng (77 ở tầng 1–20, 355 tới tầng 50) |
 | Thí Luyện, quét tháp bậc 1 | Tầng cao nhất 1–5 | 1/ngày |
 | Thí Luyện, quét tháp bậc 2 | Tầng cao nhất 6–10 | 2/ngày |
 | Thí Luyện, quét tháp bậc 3 | Tầng cao nhất 11–15 | 3/ngày |
@@ -42,6 +44,7 @@ khóa đội hình mới để leo lại từ tầng 1.
 | Thí Luyện, quét tháp bậc 5 | Tầng cao nhất 21–30 | 5/ngày |
 | Thí Luyện, quét tháp bậc 6 | Tầng cao nhất 31–40 | 6/ngày |
 | Thí Luyện, quét tháp bậc 7 | Tầng cao nhất 41–50 | 7/ngày |
+| Thí Luyện, quét tháp bậc 8–12 | Tầng cao nhất 51–60 / 61–70 / 71–80 / 81–90 / 91–100 | 8 / 9 / 10 / 11 / 12 mỗi ngày |
 | Thiên Mệnh, mốc tầng | Lần đầu qua tầng 5 / 10 / 15 / 20 trong chu kỳ: 3 / 4 / 5 / 6 đá | Tối đa 18/chu kỳ |
 | Thiên Mệnh, cuối chu kỳ | Kỷ lục chu kỳ: tầng 1–4 / 5–9 / 10–14 / 15–19 / 20 cho 1 / 2 / 3 / 4 / 5 đá | 0–5/chu kỳ |
 | Thiên Mệnh, phần thưởng giữa tầng | Chọn hồi phục hoặc Phúc | 0 |

@@ -2,6 +2,14 @@
 
 > Trạng thái: **REFERENCE** — nhật ký quyết định theo ngày.
 
+## 16/11/2026
+
+**Tháp Thí Luyện: chọn đội và kết thúc trận (Shan yêu cầu)**
+- Mô tả chế độ ở Chiến trường, trang chủ, Hướng dẫn và tài liệu sửa theo 100 tầng.
+- Đinh Bộ Lĩnh chọn hệ và nghề tự do bằng hai hàng chip có icon thay cho hai ô chọn; trước đây luật tầng (ví dụ cần 1 Binh lính) ép thủ lĩnh vào nghề duy nhất hợp luật. Chấm ngọc đánh dấu lựa chọn làm đội hợp luật, hệ/nghề bị cấm gạch ngang; đội chưa hợp luật thì nút Vào tầng khóa và màn ghi luật chưa đạt, kèm nút đổi nhanh sang nghề/hệ hợp luật gần nhất. Đổi tướng kèm không còn đặt lại nghề/hệ đã chọn. Server vẫn kiểm tra lại đội.
+- Hết trận Thí Luyện: lớp kết quả ghi tầng đã vượt, đá lần đầu và kỷ lục lượt (không còn dòng kinh nghiệm/vàng luôn bằng 0); nút "Chuẩn bị tầng N" đưa về màn chuẩn bị tầng kế, thua thì "Về Tháp Thí Luyện" mở lại tầng vừa đánh. Bỏ nút "Nâng kỹ năng & đánh tiếp" ở trận Thí Luyện.
+- Mọi màn chế độ bọc trong một đại card như Bình Loạn (`<ModeScreen card>`, [đặc tả](../05-ui-ux/design-system/game-mode-ui-spec.md#17-đại-card-cho-mọi-màn-chế-độ-16112026)).
+
 ## 14/11/2026
 
 **Sử Lộ (Mê cung lịch sử): thiết kế và bản chơi thử**

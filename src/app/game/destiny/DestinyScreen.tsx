@@ -292,7 +292,7 @@ export default function DestinyScreen() {
   };
 
   if (!overview || !profile) return (
-    <ModeScreen label="Tháp Thiên Mệnh">
+    <ModeScreen card label="Tháp Thiên Mệnh">
       <div className="py-24 text-center text-on-wood-soft">
         {failed ? (
           <>
@@ -350,7 +350,7 @@ export default function DestinyScreen() {
   );
 
   return (
-    <ModeScreen wide label="Tháp Thiên Mệnh">
+    <ModeScreen card label="Tháp Thiên Mệnh">
       <ModeBanner
         title="Tháp Thiên Mệnh"
         kicker={cycleText}

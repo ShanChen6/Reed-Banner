@@ -11,7 +11,7 @@ import type { Scene } from "./scene";
  */
 export const MODE_TEXT = {
   CAMPAIGN: "Qua sáu chương chinh chiến, thu phục sứ quân, quy giang sơn về một mối.",
-  TRIAL: "Vượt hai mươi tầng tháp, mỗi tầng một thế trận, thử sức anh hùng.",
+  TRIAL: "Vượt một trăm tầng tháp, mỗi tầng một thế trận, thử sức anh hùng.",
   DESTINY: "Một đội một mệnh, một mạch xông tháp, giữ binh lực qua từng tầng.",
   SURVIVAL: "Giữ vững cửa ải, chặn từng đợt giặc, xem ai trụ được đến cùng.",
   DAILY: "Một lệnh truyền khắp thiên hạ, mỗi ngày một trận, so tài cùng quần hùng.",

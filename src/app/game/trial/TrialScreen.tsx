@@ -37,14 +37,16 @@ interface SweepResponse {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <ModeScreen wide label="Tháp Thí Luyện">
+    <ModeScreen card label="Tháp Thí Luyện">
       {children}
     </ModeScreen>
   );
 }
 
 export default function TrialScreen() {
-  const { go } = useScene();
+  const { go, params } = useScene();
+  // Kết thúc trận Thí Luyện quay về đây với ?floor= (tầng kế khi thắng, tầng vừa đánh khi thua).
+  const askedFloor = Number(params.get("floor")) || null;
   const [overview, setOverview] = useState<TrialOverview | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [floor, setFloor] = useState<number | null>(null);
@@ -60,7 +62,13 @@ export default function TrialScreen() {
       setLoadError(true);
       return;
     }
-    const preferred = tower.active?.floor ?? tower.floors.find((entry) => entry.state === "open")?.floor.floor ?? tower.floors.at(-1)?.floor.floor ?? null;
+    const asked = tower.floors.find((entry) => entry.floor.floor === askedFloor);
+    const preferred =
+      tower.active?.floor ??
+      asked?.floor.floor ??
+      tower.floors.find((entry) => entry.state === "open")?.floor.floor ??
+      tower.floors.at(-1)?.floor.floor ??
+      null;
     const rules = tower.floors.find((entry) => entry.floor.floor === preferred)?.floor.rules ?? {};
     setOverview(tower);
     setProfile(stored.profile);
@@ -68,7 +76,7 @@ export default function TrialScreen() {
     setCompanions(suggestCompanions(stored.profile, rules, stored.profile.team.slice(0, 2)));
     setBuild(null);
     setFloor(preferred);
-  }, []);
+  }, [askedFloor]);
 
   const load = useCallback(async () => {
     setLoadError(false);
@@ -187,8 +195,8 @@ export default function TrialScreen() {
           if (!selectedEntry) return;
           const option = companionOptions(profile, selectedEntry.floor.rules, companions).find((candidate) => candidate.id === id);
           if (option) {
+            // Giữ nghề/hệ thủ lĩnh người chơi đã chọn; đội chưa hợp luật thì màn chỉ chặn nút vào tầng.
             setCompanions(toggleCompanion(companions, option));
-            setBuild(null);
             setMessage(null);
           }
         }}

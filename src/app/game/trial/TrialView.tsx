@@ -1,7 +1,7 @@
 "use client";
 
 import { FrameInset, ModeBanner, OrnateFrame } from "@/components/game-ui";
-import { Alert, Button, Select, Tabs, choiceVariants } from "@/components/ui";
+import { Alert, Button, ChoiceChip, Tabs, choiceVariants } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 
@@ -10,8 +10,8 @@ import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 // server trả; client không tự cộng.
 
 import { useRef, useState } from "react";
-import { MAIN_ID, type Element, type Profession, type Profile } from "@/core";
-import { ElementIcon } from "../art/icons";
+import { MAIN_ID, type Profile } from "@/core";
+import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 import {
@@ -29,7 +29,7 @@ import {
   trialStages,
   unclaimedStones,
   FLOOR_STATE_TEXT,
-  leaderChoices,
+  leaderPicker,
   lineupErrorText,
   lockedHint,
   navigateIndex,
@@ -38,6 +38,7 @@ import {
   RULE_TAG,
   sweepButtonState,
   type LeaderBuild,
+  type LeaderPick,
   type TrialFloorEntry,
   type TrialOverview,
 } from "./trial-ui";
@@ -160,32 +161,52 @@ function FloorNavigator({
   );
 }
 
-function Pick({
+/** Một hàng chip chọn hệ hoặc nghề của thủ lĩnh: icon + tên, chấm ngọc là chọn vào thì đội hợp luật. */
+function LeaderPickRow<T extends string>({
   label,
+  picks,
   value,
-  options,
+  names,
+  icon,
+  busy,
   onPick,
 }: {
   label: string;
-  value: string;
-  options: readonly { value: string; text: string }[];
-  onPick: (v: string) => void;
+  picks: readonly LeaderPick<T>[];
+  value: T;
+  names: Readonly<Record<T, string>>;
+  icon: (value: T) => React.ReactNode;
+  busy: boolean;
+  onPick: (value: T) => void;
 }) {
   return (
-    <label className="flex flex-col gap-1 text-caption text-on-wood-soft">
-      {label}
-      <Select
-        value={value}
-        onChange={(e) => onPick(e.target.value)}
-        className="min-h-11 text-sm"
-      >
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.text}
-          </option>
-        ))}
-      </Select>
-    </label>
+    <div role="group" aria-label={`${label} của Đinh Bộ Lĩnh`} className="flex flex-col gap-1.5">
+      <span className="text-caption text-on-wood-soft">{label}</span>
+      <div className={cn("grid grid-cols-4 gap-1.5", picks.length === 7 ? "sm:grid-cols-7" : "sm:grid-cols-8")}>
+        {picks.map((p) => {
+          const note = p.banned ? ", bị cấm ở tầng này" : p.fits ? ", hợp luật" : "";
+          return (
+            <ChoiceChip
+              key={p.value}
+              selected={p.value === value}
+              disabled={busy}
+              aria-label={`${names[p.value]}${note}`}
+              title={p.banned ? `${names[p.value]} bị cấm ở tầng này` : names[p.value]}
+              onClick={() => onPick(p.value)}
+              data-banned={p.banned || undefined}
+              className={cn(
+                "relative min-h-14 flex-col gap-0.5 px-1 py-1.5 pointer-coarse:min-h-14",
+                p.banned && p.value !== value && "opacity-60",
+              )}
+            >
+              {icon(p.value)}
+              <span className={cn("whitespace-nowrap text-caption font-normal", p.banned && "line-through")}>{names[p.value]}</span>
+              {p.fits && <span aria-hidden className="absolute right-1 top-1 size-1.5 rounded-full bg-jade" />}
+            </ChoiceChip>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -197,22 +218,15 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
   const options = companionOptions(profile, f.rules, companions);
   // Hàng chục tướng kèm: cắt trang 12 để không dài trên điện thoại (lựa chọn giữ nguyên khi sang trang).
   const pagedOptions = usePagedItems(options, 12);
-  const build = props.build ?? defaultBuild(profile, f.rules, companions);
+  const build = props.build ?? defaultBuild(profile);
   const preview = previewLineup(profile, f.rules, companions, build);
-  const choices = leaderChoices(profile, f.rules, companions);
+  const picker = leaderPicker(profile, f.rules, companions, build);
   const hasActiveHere = props.overview.active?.floor === f.floor;
   const activeElsewhere = props.overview.active !== null && !hasActiveHere;
   const locked = entry.state === "locked";
   const canStart =
     !busy && !locked && win.supported && (hasActiveHere || (!activeElsewhere && preview.status === "valid"));
-
-  const elementOptions = Array.from(new Set(choices.map((c) => c.element)));
-  const professionOptions = choices.filter((c) => c.element === build.element).map((c) => c.profession);
-  const pickElement = (v: string) => {
-    const el = v as Element;
-    const next = choices.find((c) => c.element === el && c.profession === build.profession) ?? choices.find((c) => c.element === el);
-    if (next) props.onBuild(next);
-  };
+  const noLegalBuild = companions.length >= 2 && preview.status === "invalid" && picker.suggestion === null;
 
   return (
     <OrnateFrame level="raised" aria-labelledby="trial-floor-title" className={cn("flex min-w-0 flex-col gap-4", props.className)}>
@@ -331,45 +345,63 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
             <PageControls paged={pagedOptions} label="Phân trang tướng kèm" className="mt-2" />
           </div>
 
-          <FrameInset>
-            <div className="flex items-center gap-3">
+          <FrameInset className="flex flex-col gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <Portrait id={MAIN_ID} element={build.element} profession={build.profession} className="size-12 shrink-0" />
-              <div className="text-sm">
-                <p className="font-semibold">Đinh Bộ Lĩnh (thủ lĩnh, luôn ra trận)</p>
+              <div className="min-w-0 flex-1 text-sm">
+                <p className="font-semibold">Đinh Bộ Lĩnh <span className="font-normal text-on-wood-soft">(thủ lĩnh, luôn ra trận)</span></p>
                 <p className="flex items-center gap-1 text-on-wood-soft" data-testid="leader-preview">
                   <ElementIcon element={build.element} className="size-3.5" />
+                  <ProfessionIcon profession={build.profession} className="size-3.5" />
                   {ELEMENT_NAME[build.element]} · {PROFESSION_NAME[build.profession]}
                 </p>
               </div>
+              {picker.suggestion && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  type="button"
+                  disabled={busy}
+                  onClick={() => props.onBuild(picker.suggestion!)}
+                >
+                  Đổi sang {ELEMENT_NAME[picker.suggestion.element]} · {PROFESSION_NAME[picker.suggestion.profession]}
+                </Button>
+              )}
             </div>
-            {choices.length > 0 ? (
-              <div className="mt-2 grid grid-cols-2 gap-2">
-                <Pick
-                  label="Hệ của thủ lĩnh"
-                  value={build.element}
-                  options={elementOptions.map((e) => ({ value: e, text: ELEMENT_NAME[e] }))}
-                  onPick={pickElement}
-                />
-                <Pick
-                  label="Nghề của thủ lĩnh"
-                  value={build.profession}
-                  options={professionOptions.map((p: Profession) => ({ value: p, text: PROFESSION_NAME[p] }))}
-                  onPick={(v) => props.onBuild({ element: build.element, profession: v as Profession })}
-                />
-              </div>
-            ) : (
-              <p className="mt-2 text-caption text-on-wood-soft">
-                {companions.length < 2 ? "Chọn đủ 2 tướng để xem nghề và hệ hợp luật của thủ lĩnh." : "Thủ lĩnh không có nghề và hệ nào hợp luật khi đi cùng 2 tướng này. Hãy đổi tướng kèm."}
-              </p>
-            )}
-            <p className="mt-2 text-caption text-on-wood-soft">Đổi nghề/hệ chỉ áp dụng cho trận này, không đổi hồ sơ.</p>
+            <LeaderPickRow
+              label="Hệ"
+              picks={picker.elements}
+              value={build.element}
+              names={ELEMENT_NAME}
+              icon={(e) => <ElementIcon element={e} className="size-5" />}
+              busy={busy}
+              onPick={(element) => props.onBuild({ element, profession: build.profession })}
+            />
+            <LeaderPickRow
+              label="Nghề"
+              picks={picker.professions}
+              value={build.profession}
+              names={PROFESSION_NAME}
+              icon={(p) => <ProfessionIcon profession={p} className="size-5" />}
+              busy={busy}
+              onPick={(profession) => props.onBuild({ element: build.element, profession })}
+            />
+            <p className="flex items-center gap-1.5 text-caption text-on-wood-soft">
+              <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-jade" />
+              {companions.length < 2
+                ? "Hợp luật tầng (xét riêng thủ lĩnh). Chọn đủ 2 tướng kèm để xét cả đội."
+                : noLegalBuild
+                  ? "Hai tướng kèm này chưa ghép được với nghề và hệ nào để hợp luật tầng. Hãy đổi tướng kèm."
+                  : "Chọn vào thì đội hợp luật với 2 tướng kèm đang chọn."}{" "}
+              Đổi nghề/hệ chỉ áp dụng cho trận này.
+            </p>
           </FrameInset>
 
           <div aria-live="polite" data-testid="lineup-status" className="text-sm">
             {preview.status === "incomplete" && <p className="text-on-wood-soft">Cần chọn thêm {preview.missing} tướng kèm.</p>}
             {preview.status === "valid" && <p className="text-jade">Đội hình hợp luật, sẵn sàng vào tầng.</p>}
             {preview.status === "invalid" && (
-              <ul className="list-inside list-disc text-danger">
+              <ul className="list-inside list-disc text-danger" aria-label="Đội hình chưa đạt yêu cầu tầng">
                 {preview.errors.map((e, i) => (
                   <li key={i}>{lineupErrorText(e)}</li>
                 ))}

@@ -558,6 +558,6 @@ function Stats({ state, best, left, msLeft }: { state: KlState; best: number; le
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <ModeScreen label="Khai Lộ">{children}</ModeScreen>
+    <ModeScreen card label="Khai Lộ">{children}</ModeScreen>
   );
 }
