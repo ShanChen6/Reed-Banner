@@ -97,12 +97,15 @@ describe("mảng màn trận tách từ DemoGame", () => {
     }));
     assert.match(bar, /aria-label="Kỹ năng"/);
     for (const def of skills) assert.ok(bar.includes(def.name), def.name);
+    // Bị động chỉ đọc ở Doanh Trại, thanh kỹ năng trong trận không kèm khối luật.
+    assert.doesNotMatch(bar, /bị động|nội tại/);
 
     const column = render(createElement(TeamColumn, {
       aim: null, aimMark: 0, aimingAlly: false, aimingFoe: false, apply: () => true, arenaFoe: null, fireAim: noop,
       floats: [], inline: false, own: state.sides[1], s: 1, selectable: [], skillBar: () => null, started: true, state,
     }));
-    assert.match(column, /Tianwu/);
+    assert.match(column, /Đối thủ/);
+    assert.doesNotMatch(column, /Tianwu/);
     for (const f of state.sides[1].fighters) assert.ok(column.includes(f.name), f.name);
   });
 });

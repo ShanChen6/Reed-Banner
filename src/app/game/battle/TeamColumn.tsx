@@ -73,7 +73,7 @@ export function TeamColumn({
             ? "Phe bạn"
             : arenaFoe
               ? `Bóng ma · ${arenaFoe.rating} điểm`
-              : "Tianwu"}
+              : "Đối thủ"}
         </span>
         <span
           title="Lương thực"
