@@ -489,7 +489,7 @@ function MobileBar({ slots, ready, tried, onCombine }: { slots: Slots; ready: bo
   const catalog = useCatalog();
   const label = (id: NodeId | null) => (id ? nameOf(catalog, id) : "…");
   return (
-    <div className="fixed inset-x-0 bottom-0 z-20 border-t border-[var(--frame-line)] bg-[var(--wood)]/95 px-4 py-2 backdrop-blur lg:hidden">
+    <div className="mobile-dock fixed inset-x-0 bottom-0 z-20 border-t border-[var(--frame-line)] bg-[var(--wood)]/95 px-4 py-2 backdrop-blur lg:hidden">
       <div className="mx-auto flex max-w-xl items-center gap-3">
         <p className="min-w-0 flex-1 truncate text-sm" aria-hidden>
           {label(slots[0])} <span className="text-[var(--ash)]">+</span> {label(slots[1])}
