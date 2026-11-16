@@ -9,7 +9,7 @@ import { Alert, Button, buttonVariants, choiceVariants } from "@/components/ui";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import StartBar from "./StartBar";
 import BattlePrep, { type BattleChoice } from "./BattlePrep";
-import { startTarget } from "./startMission";
+import { nextMissionAfter, startTarget } from "./startMission";
 import {
   CAMPAIGN_CHAPTERS,
   CAMPAIGN_FINAL_NODE,
@@ -114,36 +114,22 @@ const CERTAINTY_TEXT = {
 } as const;
 
 /** Nhiệm vụ kế tiếp sau khi hoàn thành: trong chương, hết chương thì sang chương sau nếu đã mở. */
-function nextMission(
-  profile: Profile,
-  nodeId: CampaignMissionId,
-): CampaignMissionId | null {
-  const chapter = chapterContentOf(nodeId);
-  if (!chapter) return null;
-  // Khép Chương III thì ở lại xem Hội quân Hoa Lư trước khi chọn tuyến.
-  if (chapter.chapter === 3 && campaignMusterReady(profile.campaign))
-    return null;
-  const index = CAMPAIGN_CHAPTERS.indexOf(chapter);
-  for (const c of CAMPAIGN_CHAPTERS.slice(index)) {
-    const next = chapterStatus(profile.campaign, c).find(
-      (m) => m.status === "open" || m.status === "inProgress",
-    );
-    if (next) return next.id;
-  }
-  return null;
-}
-
 /** Lời đáp đã chọn rồi (nếu có) kết thúc nhiệm vụ, phát từng câu. Chỉ trình diễn, không gửi gì lên server. */
 function StoryLines({
   profile,
   nodeId,
   choice,
   outro,
+  finishLabel,
+  onFinished,
 }: {
   profile: Profile;
   nodeId: string;
   choice?: string;
   outro?: boolean;
+  /** Nút ở câu cuối (đi tiếp): chỉ hiện khi đã đọc hết thoại. Không có thoại thì hiện nút riêng. */
+  finishLabel?: string;
+  onFinished?: () => void;
 }) {
   const copy = missionCopy(nodeId);
   const picked = copy?.choices.find((c) => c.id === choice);
@@ -153,7 +139,12 @@ function StoryLines({
       : []),
     ...(outro && copy ? [{ section: "outro", beats: copy.outro }] : []),
   ];
-  if (segments.length === 0) return null;
+  if (segments.every((s) => s.beats.length === 0))
+    return finishLabel && onFinished ? (
+      <Button variant="ornate" type="button" onClick={onFinished} className="self-start">
+        {finishLabel}
+      </Button>
+    ) : null;
   const sequence = segments.map((s) => s.section).join("+");
   return (
     <DialoguePlayer
@@ -163,34 +154,32 @@ function StoryLines({
       label={outro ? `Kết thúc ${nodeId}` : `Lời đáp ${nodeId}`}
       segments={segments}
       main={profile}
+      {...(finishLabel && onFinished ? { finishLabel, onFinished } : {})}
     />
   );
 }
 
-function RewardModal({
+function RewardNotice({
   profile,
   seen,
   onClose,
-  onNext,
 }: {
   profile: Profile;
   seen: readonly string[];
-  onClose: (receipts: readonly string[]) => void;
-  onNext: (receipts: readonly string[], next: CampaignMissionId | null) => void;
+  /** Nhận thưởng: ẩn dòng báo và mở màn nhiệm vụ vừa xong để đọc thoại kết ở đó. */
+  onClose: (receipts: readonly string[], nodeId: CampaignMissionId) => void;
 }) {
   const reward = pendingFirstClear(profile.campaign, seen);
   if (!reward) return null;
   const node = storyNodeById(reward.nodeId)!;
-  const copy = missionCopy(reward.nodeId);
-  const nextId = nextMission(profile, reward.nodeId);
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
+    // Báo thưởng nằm ngay trong trang (không dùng hộp nổi), trên đầu khung Sử ký.
+    <section
       aria-labelledby="first-clear-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      role="status"
+      className="rounded-xl border-2 border-frame-gold bg-wood p-3 text-on-wood shadow-lg"
     >
-      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border-2 border-frame-gold bg-wood p-4 text-on-wood shadow-2xl">
+      <div>
         <p className="text-kicker text-frame-gold">
           Hoàn thành lần đầu
         </p>
@@ -200,17 +189,7 @@ function RewardModal({
         >
           {node.title}
         </h2>
-        {copy && (
-          <div className="mt-3">
-            <StoryLines
-              profile={profile}
-              nodeId={node.id}
-              choice={profile.campaign.storyChoices[node.id]}
-              outro
-            />
-          </div>
-        )}
-        <ul className="ui-frame-inset mt-3 flex flex-col gap-1 p-2 text-sm">
+        <ul className="ui-frame-inset mt-2 flex flex-col gap-1 p-2 text-sm">
           <li className="font-semibold text-frame-gold">
             +{reward.missionGold} vàng thưởng nhiệm vụ
           </li>
@@ -240,25 +219,12 @@ function RewardModal({
           </li>
         </ul>
         <div className="mt-4 flex flex-wrap gap-2">
-          {nextId && (
-            <Button variant="ornate"
-              type="button"
-              onClick={() => onNext(reward.receipts, nextId)}
-
-            >
-              Tiếp: {storyNodeById(nextId)!.title}
-            </Button>
-          )}
-          <Button variant="secondary"
-            type="button"
-            onClick={() => onClose(reward.receipts)}
-
-          >
-            Đóng
+          <Button variant="ornate" type="button" onClick={() => onClose(reward.receipts, reward.nodeId)}>
+            Nhận thưởng
           </Button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -323,6 +289,8 @@ export default function ChapterOne({
   const missionHeadingRef = useRef<HTMLHeadingElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const shownView = useRef(atlas.view);
+  /** Khung cần tới khi về bản đồ (Hội quân, hồi kết) để không phải tự tìm dưới bản đồ. */
+  const jumpTo = useRef<string | null>(null);
   // Đổi màn thì đưa tiêu điểm tới tiêu đề nhiệm vụ hoặc về bản đồ (người dùng bàn phím, đọc màn hình không lạc).
   // Không để trình duyệt tự cuộn theo tiêu điểm (preventScroll) và chỉ cuộn trang khi đầu card đang nằm trên khung nhìn
   // (ví dụ mở nhiệm vụ từ danh sách ở cuối bản đồ); bấm tab ở đầu card thì giữ nguyên vị trí cuộn.
@@ -330,6 +298,13 @@ export default function ChapterOne({
     if (shownView.current === atlas.view) return;
     shownView.current = atlas.view;
     const section = sectionRef.current;
+    const jump = jumpTo.current ? document.getElementById(jumpTo.current) : null;
+    jumpTo.current = null;
+    if (jump && atlas.view === "atlas") {
+      jump.scrollIntoView({ block: "start" });
+      jump.focus({ preventScroll: true });
+      return;
+    }
     if (section && section.getBoundingClientRect().top < 0) section.scrollIntoView({ block: "start" });
     if (atlas.view === "mission") {
       missionHeadingRef.current?.focus({ preventScroll: true });
@@ -410,6 +385,35 @@ export default function ChapterOne({
   const done = status === "completed";
   /** Nhiệm vụ có trận: cột Bày trận bên phải (máy tính) hoặc dưới cốt truyện (điện thoại), luôn có từ đầu nhiệm vụ. */
   const prepSide = isBattle && !!copy && node.type !== "diplomacy";
+  // Xong nhiệm vụ: nút đi tiếp ở câu cuối của thoại kết (mọi loại nhiệm vụ, cả hội kiến), nên phải đọc hết thoại
+  // mới sang được nhiệm vụ hoặc chương kế. Không còn nhiệm vụ mở thì về bản đồ Sử ký.
+  const nextId = done ? nextMissionAfter(campaign, step.nodeId) : null;
+  const nextChapter = nextId ? chapterContentOf(nextId) : null;
+  const finish: { finishLabel?: string; onFinished?: () => void } = !done
+    ? {}
+    : nextId
+      ? {
+          finishLabel:
+            nextChapter && nextChapter.chapter !== chapterContentOf(step.nodeId)?.chapter
+              ? `Sang Chương ${ROMAN[nextChapter.chapter]}: ${storyNodeById(nextId)!.title}`
+              : `Tiếp: ${storyNodeById(nextId)!.title}`,
+          onFinished: () => openMission(nextId),
+        }
+      : {
+          finishLabel: campaignCompleted(campaign)
+            ? "Xem hồi kết Bình Loạn"
+            : campaignMusterReady(campaign)
+              ? "Xem Hội quân Hoa Lư"
+              : "Về bản đồ Sử ký",
+          onFinished: () => {
+            jumpTo.current = campaignCompleted(campaign)
+              ? "campaign-ending-title"
+              : campaignMusterReady(campaign)
+                ? "muster-title"
+                : null;
+            updateAtlas({ ...atlas, view: "atlas" });
+          },
+        };
 
   const submitEvent = async () => {
     if (!choice) return;
@@ -468,13 +472,14 @@ export default function ChapterOne({
       }
       className="flex scroll-mt-4 flex-col gap-4"
     >
-      <RewardModal
+      <RewardNotice
         profile={profile}
         seen={seen}
-        onClose={markSeen}
-        onNext={(receipts, next) => {
+        onClose={(receipts, nodeId) => {
           markSeen(receipts);
-          if (next) openMission(next);
+          // Thoại chỉ phát một kiểu: trong màn nhiệm vụ. Bảng thưởng chỉ báo thưởng rồi đưa về đúng nhiệm vụ.
+          move({ nodeId, phase: "choice", choice: campaign.storyChoices[nodeId] });
+          updateAtlas({ ...atlas, view: "mission" });
         }}
       />
       {/* Đại card Sử ký (Polish V2 P02): header, ba cột và tuyến dưới nằm trong một khung gỗ. Màn nhiệm vụ và
@@ -681,6 +686,7 @@ export default function ChapterOne({
                   })
                 }
                 onProfile={onProfile}
+                {...finish}
               />
             ) : (
               <>
@@ -785,6 +791,7 @@ export default function ChapterOne({
                       nodeId={step.nodeId}
                       choice={choice}
                       outro={done}
+                      {...finish}
                     />
                     {!isBattle && !done && (
                       <button

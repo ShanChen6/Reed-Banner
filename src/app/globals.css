@@ -1407,3 +1407,15 @@
     animation: none;
   }
 }
+
+/* Nút toàn màn hình nổi ở góc dưới phải (FullscreenToggle.tsx), chừa vùng an toàn của tai thỏ/thanh home. Dưới lg,
+   màn nào có thanh dính đáy (.mobile-dock: Bày trận Bình Loạn, Trận Đồ, Tầm Tướng Ký) thì nút nhích lên trên thanh. */
+.fullscreen-fab {
+  right: max(0.75rem, env(safe-area-inset-right));
+  bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+@media (width < 64rem) {
+  body:has(.mobile-dock) .fullscreen-fab {
+    bottom: calc(max(0.75rem, env(safe-area-inset-bottom)) + 5.5rem);
+  }
+}

@@ -5,6 +5,8 @@ import {
   CAMPAIGN_MISSION_IDS,
   STORY_NODES,
   campaignCompleted,
+  campaignMusterReady,
+  chapterContentOf,
   campaignEventByNode,
   campaignPhaseCount,
   isCombatStoryNode,
@@ -16,6 +18,7 @@ import {
 import { createBattleFor, getBattle, parseNewBattle } from "../../src/server/battles";
 import { completeCampaignEvent } from "../../src/server/campaignEvents";
 import { MemoryProfileStore, loadProfile } from "../../src/server/profiles";
+import { nextMissionAfter } from "../../src/app/game/campaign/startMission";
 import { MemoryMatchStore } from "../../src/server/store";
 
 // CAMP-09.03: hồ sơ mới đi hết M01 → M24 qua đúng API server (sự kiện và trận), kiểm tra thứ tự, thua/đánh lại,
@@ -87,6 +90,20 @@ describe("E2E Campaign V2: hồ sơ mới đi hết 24 nhiệm vụ", () => {
     assert.equal(parseNewBattle(battleBody("M01")), null);
     assert.equal(parseNewBattle(battleBody("M24")), null);
 
+    // Xong mỗi nhiệm vụ phải có lối đi tiếp (nút "Tiếp"/"Sang Chương"), trừ lúc khép Chương III (xem Hội quân
+    // trên bản đồ) và nhiệm vụ cuối. Nhiệm vụ được chỉ tới phải đang mở.
+    const dead: string[] = [];
+    const checkNext = async (id: CampaignMissionId) => {
+      const campaign = (await loadProfile(env.profiles, OWNER)).profile.campaign;
+      const next = nextMissionAfter(campaign, id);
+      if (next) {
+        assert.ok(!campaign.completed.includes(next), `${id} → ${next} đã xong`);
+        return;
+      }
+      const musterGate = chapterContentOf(id)?.chapter === 3 && campaignMusterReady(campaign);
+      if (!musterGate && id !== CAMPAIGN_MISSION_IDS.at(-1)) dead.push(id);
+    };
+
     for (const id of CAMPAIGN_MISSION_IDS) {
       const node = storyNodeById(id)!;
       const before = (await loadProfile(env.profiles, OWNER)).profile;
@@ -104,6 +121,7 @@ describe("E2E Campaign V2: hồ sơ mới đi hết 24 nhiệm vụ", () => {
         assert.deepEqual(await event(env, id, `evt_${id}_other`, campaignEventByNode(id)!.choices.at(-1)!.id),
           campaignEventByNode(id)!.choices.length > 1 ? { ok: false, error: "invalidChoice" } : retry, id);
         assert.equal((await loadProfile(env.profiles, OWNER)).profile.gold, r.profile.gold, id);
+        await checkNext(id);
         continue;
       }
       assert.deepEqual(await event(env, id), { ok: false, error: "notEvent" }, id);
@@ -147,7 +165,9 @@ describe("E2E Campaign V2: hồ sơ mới đi hết 24 nhiệm vụ", () => {
         assert.deepEqual(after.campaign.completed, settled.campaign.completed, id);
       }
       assert.ok(before.gold <= (await loadProfile(env.profiles, OWNER)).profile.gold, id);
+      await checkNext(id);
     }
+    assert.deepEqual(dead, [], "nhiệm vụ xong mà không có lối đi tiếp");
 
     const final = await loadProfile(env.profiles, OWNER);
     assert.ok(campaignCompleted(final.profile.campaign));

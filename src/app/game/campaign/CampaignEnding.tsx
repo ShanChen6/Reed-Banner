@@ -49,6 +49,7 @@ export default function CampaignEnding({
         </p>
         <h2
           id="campaign-ending-title"
+          tabIndex={-1}
           className="text-xl font-black text-title-on-wood"
         >
           Đại Cồ Việt, kinh đô Hoa Lư, năm 968

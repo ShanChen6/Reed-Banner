@@ -42,6 +42,8 @@ export interface TeamColumnProps {
   readonly skillBar: (stacked: boolean) => ReactNode;
   readonly started: boolean;
   readonly state: BattleState;
+  /** Đang diễn lượt của phe này (khác `state.turn`): không đánh dấu người đang đi theo `state.turn`. */
+  readonly turnSide?: 0 | 1 | null;
 }
 
 export function TeamColumn({
@@ -60,6 +62,7 @@ export function TeamColumn({
   skillBar,
   started,
   state,
+  turnSide = null,
 }: TeamColumnProps) {
   return (
     <div
@@ -85,6 +88,7 @@ export function TeamColumn({
       {own.fighters.map((f, i) => {
         const isActor =
           state.winner === null &&
+          turnSide === null &&
           state.turn.side === s &&
           state.turn.actor === i;
         const canPick =

@@ -23,6 +23,8 @@ export default function CompanionPicker({
   marks = [],
   onToggle,
   labelId,
+  pageSize = PAGE,
+  narrow = false,
 }: {
   owned: readonly string[];
   team: readonly string[];
@@ -31,6 +33,10 @@ export default function CompanionPicker({
   marks?: readonly Element[];
   onToggle: (id: string) => void;
   labelId: string;
+  /** Số người mỗi trang; cột hẹp (Bày trận) dùng ít hơn để khỏi kéo dài trang. */
+  pageSize?: number;
+  /** Cột hẹp: thẻ nhỏ hơn để vừa hai cột. */
+  narrow?: boolean;
 }) {
   const [query, setQuery] = useState("");
   const [element, setElement] = useState<Element | "counter" | null>(null);
@@ -59,7 +65,7 @@ export default function CompanionPicker({
     .filter((c) => !team.includes(c.id))
     .sort((a, b) => Number(marks.includes(b.element)) - Number(marks.includes(a.element)));
   const list = [...chosen, ...rest];
-  const paged = usePagedItems(list, PAGE);
+  const paged = usePagedItems(list, pageSize);
   const shown = paged.pageItems;
   // Đổi bộ lọc thì về trang đầu.
   const filter = <T,>(set: (v: T) => void) => (v: T) => {
@@ -123,7 +129,7 @@ export default function CompanionPicker({
         </select>
       </div>
 
-      <ul className="grid grid-cols-[repeat(auto-fill,minmax(12.5rem,1fr))] gap-1.5" role="group" aria-labelledby={labelId}>
+      <ul className={`grid gap-1.5 ${narrow ? "grid-cols-2" : "grid-cols-[repeat(auto-fill,minmax(12.5rem,1fr))]"}`} role="group" aria-labelledby={labelId}>
         {shown.map((c) => {
           const on = team.includes(c.id);
           return (
@@ -138,18 +144,29 @@ export default function CompanionPicker({
                   className: "w-full justify-start gap-2 px-2 py-1 text-left font-normal",
                 })}
               >
-                <Portrait id={c.id} element={c.element} profession={c.profession} className="size-9 shrink-0" />
+                <Portrait id={c.id} element={c.element} profession={c.profession} className={`${narrow ? "size-8" : "size-9"} shrink-0`} />
                 <span className="min-w-0 leading-tight">
                   <span className="block truncate font-semibold">
                     {c.name}
                     {marks.includes(c.element) && <span className={on ? "" : "text-jade"}> ★</span>}
                   </span>
-                  <span className="flex items-center gap-1 text-caption opacity-80">
-                    <ElementIcon element={c.element} className="size-3.5" />
-                    {ELEMENT_NAME[c.element]} ·
-                    <ProfessionIcon profession={c.profession} className="size-3.5" />
-                    {PROFESSION_NAME[c.profession]}
-                  </span>
+                  {narrow ? (
+                    // Cột hẹp: chỉ icon (tên hệ/nghề ở tooltip) để chữ không vỡ dòng.
+                    <span
+                      className="flex items-center gap-1 opacity-80"
+                      title={`${ELEMENT_NAME[c.element]} · ${PROFESSION_NAME[c.profession]}`}
+                    >
+                      <ElementIcon element={c.element} className="size-4" />
+                      <ProfessionIcon profession={c.profession} className="size-4" />
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1 text-caption opacity-80">
+                      <ElementIcon element={c.element} className="size-3.5" />
+                      {ELEMENT_NAME[c.element]} ·
+                      <ProfessionIcon profession={c.profession} className="size-3.5" />
+                      {PROFESSION_NAME[c.profession]}
+                    </span>
+                  )}
                 </span>
               </button>
             </li>

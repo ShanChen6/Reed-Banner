@@ -340,6 +340,8 @@ export default function BattlePrep({
                   marks={advice.counterElements}
                   onToggle={toggleTeam}
                   labelId={`team-${nodeId}`}
+                  pageSize={6}
+                  narrow
                 />
               </div>
             )}
@@ -375,7 +377,7 @@ export default function BattlePrep({
       )}
 
       {/* Điện thoại: dính đáy màn để lúc đọc cốt truyện vẫn thấy nút; từ lg nằm cuối cột Bày trận. */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-frame-line bg-[color-mix(in_srgb,var(--wood-lo,#1c120b)_94%,transparent)] px-4 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur lg:static lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
+      <div className="mobile-dock fixed inset-x-0 bottom-0 z-30 border-t border-frame-line bg-[color-mix(in_srgb,var(--wood-lo,#1c120b)_94%,transparent)] px-4 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur lg:static lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
         {resumeId ? (
           <Button
             variant="ornate"
