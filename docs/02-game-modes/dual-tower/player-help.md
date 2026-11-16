@@ -24,7 +24,8 @@ Từ dùng trong hướng dẫn và trên màn hình: **lượt leo** là một 
 ## Luật và đội hình
 
 Đọc luật tầng trước khi chọn tướng ra trận. Tướng bị làm mờ là không hợp luật nghề/hệ, đã gục, hoặc đã đủ hai
-người; màn hình ghi rõ lý do dưới tên tướng. Nếu chưa xếp được ba người hợp luật, hãy đổi nghề/hệ Đinh Bộ Lĩnh
+người; Tháp Thiên Mệnh ghi lý do dưới tên tướng. Ở Tháp Thí Luyện, hai tướng kèm đã chọn nằm ở hai ô riêng phía
+trên danh sách; tướng bị luật tầng cấm chỉ bị làm mờ và xếp cuối (lý do đã ghi ở Luật tầng, xem lại bằng cách rê chuột). Nếu chưa xếp được ba người hợp luật, hãy đổi nghề/hệ Đinh Bộ Lĩnh
 hoặc chọn tướng khác. Ở Tháp Thí Luyện, mọi hệ và nghề của Đinh Bộ Lĩnh luôn chọn được; chấm xanh đánh dấu lựa chọn
 làm đội hợp luật, và đội chưa hợp luật thì nút Vào tầng khóa, kèm dòng ghi luật nào chưa đạt. Khi khóa đội hình, Tháp Thiên Mệnh kiểm tra trước rằng đội hình xếp được ba người hợp luật
 cho mọi tầng của chu kỳ.
