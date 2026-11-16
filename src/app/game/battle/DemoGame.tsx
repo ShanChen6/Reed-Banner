@@ -162,6 +162,7 @@ export default function DemoGame({
   /** Campaign V2: mục tiêu nhiệm vụ (có thể xong trước khi phân thắng bại, ví dụ cầm cự đủ lượt). */
   const [scenario, setScenario] = useState<CampaignScenarioTag | null>(null);
   const [destinyFloorNo, setDestinyFloorNo] = useState<number | null>(null);
+  const [trialFloorNo, setTrialFloorNo] = useState<number | null>(null);
   const [expeditionMatch, setExpeditionMatch] = useState(false);
   /** Viễn Chinh: mục tiêu riêng của trận (giữ cầu, hộ tống, phá cổng). */
   const [expeditionObjective, setExpeditionObjective] = useState<ExpeditionObjective | null>(null);
@@ -998,6 +999,7 @@ export default function DemoGame({
     setSpecialQuestId(res.view.specialQuest ?? null);
     setScenario(res.view.campaignScenario ?? null);
     setDestinyFloorNo(res.view.destiny?.floor ?? null);
+    setTrialFloorNo(res.view.trial?.floor ?? null);
     setExpeditionMatch(res.view.expedition !== undefined);
     setExpeditionObjective(res.view.expedition?.objective ?? null);
     setSurvival(res.view.survival ?? null);
@@ -1370,6 +1372,7 @@ export default function DemoGame({
                     arenaFoe={arenaFoe}
                     dailyDay={dailyDay}
                     destinyFloorNo={destinyFloorNo}
+                    trialFloorNo={trialFloorNo}
                     drop={drop}
                     expeditionMatch={expeditionMatch}
                     mode={mode}

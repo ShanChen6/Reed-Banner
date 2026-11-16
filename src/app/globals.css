@@ -466,10 +466,6 @@
   border-bottom: 1px solid var(--frame-inner);
   color: var(--on-wood);
 }
-.campaign-atlas .atlas-scroll {
-  scrollbar-color: var(--frame-bronze) transparent;
-  scrollbar-width: thin;
-}
 .campaign-atlas .atlas-route {
   border-color: var(--frame-line-mid);
   background: color-mix(in srgb, var(--paper-hi) 55%, transparent);
@@ -1283,10 +1279,6 @@
   outline: 2px solid var(--frame-gold-pale);
   outline-offset: 2px;
 }
-.barracks .barracks-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: var(--frame-line) transparent;
-}
 .barracks.gear-picker {
   background: var(--wood-panel);
   border: 1px solid var(--frame-line);
@@ -1417,5 +1409,47 @@
 @media (width < 64rem) {
   body:has(.mobile-dock) .fullscreen-fab {
     bottom: calc(max(0.75rem, env(safe-area-inset-bottom)) + 5.5rem);
+  }
+}
+
+/* Thanh cuộn: mảnh, ray trong suốt, con trượt đồng bo tròn. Ẩn khi đứng yên, hiện khi đang cuộn rồi mờ dần sau khi
+   ngừng (ScrollbarAutoHide.tsx gắn data-scroll="on"/"off" lên phần tử đang cuộn). Màu con trượt đi qua biến
+   --sb-thumb khai báo bằng @property để chuyển màu mượt được; không kế thừa nên khung cuộn lồng nhau không hiện theo.
+   Chrome/Firefox dùng scrollbar-color; Safari macOS dùng ::-webkit-scrollbar (Chrome bỏ qua khi đã có scrollbar-color). */
+@property --sb-thumb {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-thumb) transparent;
+}
+[data-scroll] {
+  transition: --sb-thumb 0.6s ease;
+}
+[data-scroll="on"] {
+  --sb-thumb: color-mix(in srgb, var(--frame-bronze-hi) 80%, transparent);
+  transition-duration: 0.15s;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 9999px;
+  background: var(--sb-thumb) padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--frame-gold);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll] {
+    transition: none;
   }
 }

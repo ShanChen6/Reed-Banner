@@ -74,7 +74,7 @@ export default function ArenaScreen() {
 
   if (data?.rating === undefined) {
     return (
-      <ModeScreen label="Quần Hùng">
+      <ModeScreen card label="Quần Hùng">
         <p className="py-24 text-center text-on-wood-soft">
           {data ? "Chưa mở được Quần Hùng. Xin tải lại trang." : "Đang tải…"}
         </p>
@@ -126,7 +126,7 @@ export default function ArenaScreen() {
   };
 
   return (
-    <ModeScreen wide label="Quần Hùng">
+    <ModeScreen card label="Quần Hùng">
       <ModeBanner
         title="Quần Hùng"
         kicker="Đấu người"

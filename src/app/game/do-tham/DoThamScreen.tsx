@@ -310,7 +310,7 @@ export default function DoThamScreen() {
   };
 
   return (
-    <ModeScreen label="Do Thám">
+    <ModeScreen card label="Do Thám">
       <ModeBanner
         title="Do Thám"
         art="/art/home/do-tham.webp"

@@ -6,7 +6,7 @@
 // Giao diện: docs/05-ui-ux/screens/tam-tuong-ky.md.
 
 import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
-import { ModeBanner } from "@/components/game-ui";
+import { ModeBanner, ModeCard } from "@/components/game-ui";
 import { ChoiceChip, buttonVariants } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -249,6 +249,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
     <CatalogContext.Provider value={catalog}>
     <main aria-label="Tầm Tướng Ký" className="campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
       <div className={`mx-auto flex w-full flex-col gap-4 ${MODE_CONTENT_WIDTH}`}>
+        <ModeCard>
         <ModeBanner
           title="Tầm Tướng Ký"
           kicker="Ghép yếu tố"
@@ -317,6 +318,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
           <Ledger entries={entries} found={found} hidden={tab !== "ledger"} group={ledgerTab} onGroup={setLedgerTab} focus={ledgerFocus} />
         </div>
         </ModeGuideTabs>
+        </ModeCard>
       </div>
       <MobileBar slots={slots} ready={ready} tried={tried} onCombine={combine} />
     </main>
@@ -411,6 +413,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
     <CatalogContext.Provider value={catalog}>
     <main aria-label="Tầm Tướng Ký" className="campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
       <div className={`mx-auto flex w-full flex-col gap-4 ${MODE_CONTENT_WIDTH}`}>
+        <ModeCard>
         <ModeBanner
           title={`Tầm Tướng Ký · Hạng tuần ${view.week}`}
           kicker={`Hạng tuần ${view.week}`}
@@ -477,6 +480,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
           </Panel>
         </div>
         </ModeGuideTabs>
+        </ModeCard>
       </div>
       <MobileBar slots={slots} ready={ready} tried={tried} onCombine={combine} />
     </main>

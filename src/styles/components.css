@@ -216,6 +216,24 @@
     isolation: isolate;
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--frame-gold) 25%, transparent), 0 14px 36px color-mix(in srgb, var(--black) 73%, transparent);
   }
+  /* Đại card của màn chế độ (16/11/2026): cùng kiểu khung Sử ký Bình Loạn (.campaign-atlas .atlas-frame-wood), bọc
+     banner, tab Chơi/Hướng dẫn và nội dung trong một khung gỗ. Dùng qua <ModeScreen card>. */
+  .ui-mode-card {
+    position: relative;
+    border: 1.5px solid var(--frame-line);
+    border-radius: 0.75rem;
+    background: linear-gradient(var(--wood-hi), var(--wood-panel));
+    color: var(--on-wood);
+  }
+  .ui-mode-card::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border: 1px solid var(--frame-inner);
+    border-radius: 0.5rem;
+    pointer-events: none;
+  }
+  .ui-mode-card > .ui-frame-corner { color: var(--frame-gold-hi); }
   .ui-frame--paper {
     background:
       radial-gradient(ellipse at 25% 0%, var(--paper-hi) 0%, transparent 60%),

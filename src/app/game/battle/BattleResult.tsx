@@ -10,6 +10,7 @@ import {
   type SurvivalView,
   type GearItem,
 } from "@/core";
+import { TRIAL_FLOORS } from "@/core/progress/dualTowerState";
 import {
   gearText,
   TIER_CLASS,
@@ -44,6 +45,17 @@ export interface BattleResultProps {
   readonly state: BattleState;
   readonly survival: SurvivalView | null;
   readonly towerFeatures: { readonly trial: boolean; readonly destiny: boolean };
+  /** Tầng Tháp Thí Luyện của trận; null khi không phải trận Thí Luyện. */
+  readonly trialFloorNo?: number | null;
+}
+
+/** Dòng kết quả Thí Luyện: Thí Luyện không có kinh nghiệm, vàng hay đồ rơi, chỉ có tầng và đá lần đầu. */
+function trialSummary(trial: NonNullable<Outcome["trial"]>): string {
+  if (!trial.won) return `Thí Luyện: chưa vượt được tầng ${trial.floor}. Đổi đội hình rồi thử lại.`;
+  const stones = trial.stonesGranted > 0 ? ` +${trial.stonesGranted} Đá Cường Hóa lần đầu.` : "";
+  const best = trial.newBest ? " Kỷ lục lượt mới!" : "";
+  const top = trial.floor >= TRIAL_FLOORS ? " Đã chinh phục cả tháp!" : "";
+  return `Thí Luyện: đã vượt tầng ${trial.floor}.${stones}${best}${top}`;
 }
 
 export function BattleResult({
@@ -62,7 +74,12 @@ export function BattleResult({
   state,
   survival,
   towerFeatures,
+  trialFloorNo = null,
 }: BattleResultProps) {
+  const trialMatch = trialFloorNo !== null;
+  const won = state.winner === PLAYER;
+  // Thắng thì mở sẵn tầng kế ở màn chuẩn bị; thua (hoặc tầng cuối) thì về đúng tầng vừa đánh để đổi đội.
+  const trialNext = trialFloorNo !== null && won && trialFloorNo < TRIAL_FLOORS ? trialFloorNo + 1 : trialFloorNo;
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-wood-lo/90 text-on-wood">
       <p className="text-xl font-bold">
@@ -92,7 +109,7 @@ export function BattleResult({
           ”
         </p>
       )}
-      {(!online || outcome) && (
+      {(!online || outcome) && !trialMatch && (
         <p className="text-sm">
           {drop ? (
             <>
@@ -124,10 +141,17 @@ export function BattleResult({
       )}
       {outcome && (
         <div className="text-center text-sm">
-          <p>
-            +{outcome.rewards.xp[0]} kinh nghiệm mỗi người · +
-            {outcome.rewards.gold} vàng
-          </p>
+          {!trialMatch && (
+            <p>
+              +{outcome.rewards.xp[0]} kinh nghiệm mỗi người · +
+              {outcome.rewards.gold} vàng
+            </p>
+          )}
+          {outcome.trial && (
+            <p className={`font-semibold ${outcome.trial.won ? "text-frame-gold" : "text-danger"}`}>
+              {trialSummary(outcome.trial)}
+            </p>
+          )}
           {outcome.destiny && (
             <p className={`font-semibold ${outcome.destiny.won ? "text-frame-gold" : "text-danger"}`}>
               {outcome.destiny.completed
@@ -227,6 +251,15 @@ export function BattleResult({
             {outcome?.destiny?.won && !outcome.destiny.completed ? "Chọn thưởng Thiên Mệnh" : "Về Tháp Thiên Mệnh"}
           </SceneLink>
         )}
+        {trialNext !== null && towerFeatures.trial && (
+          <SceneLink
+            scene="TRIAL"
+            params={{ floor: String(trialNext) }}
+            className={buttonVariants({ size: "sm" })}
+          >
+            {won && trialNext !== trialFloorNo ? `Chuẩn bị tầng ${trialNext}` : "Về Tháp Thí Luyện"}
+          </SceneLink>
+        )}
         {expeditionMatch && (
           <SceneLink
             scene="EXPEDITION"
@@ -284,15 +317,18 @@ export function BattleResult({
             Chơi lại
           </button>
         )}
-        <button
-          type="button"
-          onClick={restart}
-          className={buttonVariants({ variant: "secondary", size: "sm" })}
-        >
-          {mode === "progress"
-            ? "Nâng kỹ năng & đánh tiếp"
-            : "Đổi đội hình"}
-        </button>
+        {/* Thí Luyện đổi đội và nghề ở màn chuẩn bị tầng, không qua màn nâng kỹ năng. */}
+        {!(trialMatch && towerFeatures.trial) && (
+          <button
+            type="button"
+            onClick={restart}
+            className={buttonVariants({ variant: "secondary", size: "sm" })}
+          >
+            {mode === "progress"
+              ? "Nâng kỹ năng & đánh tiếp"
+              : "Đổi đội hình"}
+          </button>
+        )}
       </div>
     </div>
   );
