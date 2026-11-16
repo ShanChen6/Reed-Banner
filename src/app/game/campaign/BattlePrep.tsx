@@ -7,7 +7,7 @@
 import { useState } from "react";
 import { Button, choiceVariants } from "@/components/ui";
 import LeaderBuild from "../profile/LeaderBuild";
-import CompanionPicker from "./CompanionPicker";
+import CompanionPicker, { LevelTag } from "./CompanionPicker";
 import {
   CAMPAIGN_FOOD_MAX,
   FOOD_PRICE,
@@ -87,6 +87,9 @@ export default function BattlePrep({
   const [profession, setProfession] = useState<Profession>(profile.profession);
   const [open, setOpen] = useState<Open>(null);
   // Đội 3vs3: hai người đi cùng, chọn trong số nhân vật đã có (kể cả người mới gia nhập). Server kiểm lại.
+  const levels = Object.fromEntries(
+    Object.entries(profile.companions).map(([id, p]) => [id, p.level]),
+  );
   const owned = Object.keys(profile.companions).filter((id) =>
     ownsCompanion(profile, id),
   );
@@ -266,7 +269,10 @@ export default function BattlePrep({
         >
           <Portrait id={MAIN_ID} element={element} profession={profession} className="size-9 shrink-0" />
           <span className="min-w-0 flex-1 leading-tight">
-            <span className="block truncate font-semibold">Đinh Bộ Lĩnh · chủ tướng</span>
+            <span className="flex items-baseline gap-2">
+              <span className="truncate font-semibold">Đinh Bộ Lĩnh · chủ tướng</span>
+              <LevelTag level={profile.main.level} suggest={advice.recommendedLevel} />
+            </span>
             <span className="flex items-center gap-1 text-caption opacity-80">
               <ElementIcon element={element} className="size-3.5" />
               {ELEMENT_NAME[element]} ·
@@ -321,7 +327,7 @@ export default function BattlePrep({
                           <span className="flex items-center gap-1 text-caption opacity-80">
                             <ElementIcon element={c.element} className="size-3.5" />
                             <ProfessionIcon profession={c.profession} className="size-3.5" />
-                            phó tướng
+                            <LevelTag level={levels[c.id]} suggest={advice.recommendedLevel} />
                           </span>
                         </span>
                       </>
@@ -342,6 +348,8 @@ export default function BattlePrep({
                   labelId={`team-${nodeId}`}
                   pageSize={6}
                   narrow
+                  levels={levels}
+                  suggestLevel={advice.recommendedLevel}
                 />
               </div>
             )}
