@@ -120,11 +120,16 @@ function StoryLines({
   nodeId,
   choice,
   outro,
+  finishLabel,
+  onFinished,
 }: {
   profile: Profile;
   nodeId: string;
   choice?: string;
   outro?: boolean;
+  /** Nút ở câu cuối (đi tiếp): chỉ hiện khi đã đọc hết thoại. Không có thoại thì hiện nút riêng. */
+  finishLabel?: string;
+  onFinished?: () => void;
 }) {
   const copy = missionCopy(nodeId);
   const picked = copy?.choices.find((c) => c.id === choice);
@@ -134,7 +139,12 @@ function StoryLines({
       : []),
     ...(outro && copy ? [{ section: "outro", beats: copy.outro }] : []),
   ];
-  if (segments.length === 0) return null;
+  if (segments.every((s) => s.beats.length === 0))
+    return finishLabel && onFinished ? (
+      <Button variant="ornate" type="button" onClick={onFinished} className="self-start">
+        {finishLabel}
+      </Button>
+    ) : null;
   const sequence = segments.map((s) => s.section).join("+");
   return (
     <DialoguePlayer
@@ -144,6 +154,7 @@ function StoryLines({
       label={outro ? `Kết thúc ${nodeId}` : `Lời đáp ${nodeId}`}
       segments={segments}
       main={profile}
+      {...(finishLabel && onFinished ? { finishLabel, onFinished } : {})}
     />
   );
 }
@@ -188,6 +199,12 @@ function RewardModal({
               nodeId={node.id}
               choice={profile.campaign.storyChoices[node.id]}
               outro
+              {...(nextId
+                ? {
+                    finishLabel: `Tiếp: ${storyNodeById(nextId)!.title}`,
+                    onFinished: () => onNext(reward.receipts, nextId),
+                  }
+                : {})}
             />
           </div>
         )}
@@ -221,11 +238,11 @@ function RewardModal({
           </li>
         </ul>
         <div className="mt-4 flex flex-wrap gap-2">
-          {nextId && (
+          {/* Có thoại kết thì nút "Tiếp" nằm ở câu cuối của thoại: đọc xong mới đi tiếp được. */}
+          {nextId && !copy && (
             <Button variant="ornate"
               type="button"
               onClick={() => onNext(reward.receipts, nextId)}
-
             >
               Tiếp: {storyNodeById(nextId)!.title}
             </Button>
@@ -761,12 +778,35 @@ export default function ChapterOne({
                       Lựa chọn chỉ đổi lời kể; kết quả nhiệm vụ và phần thưởng
                       như nhau.
                     </p>
-                    <StoryLines
-                      profile={profile}
-                      nodeId={step.nodeId}
-                      choice={choice}
-                      outro={done}
-                    />
+                    {(() => {
+                      // Xong nhiệm vụ: nút đi tiếp ở câu cuối của thoại kết, nên phải đọc hết thoại mới sang được
+                      // nhiệm vụ hoặc chương kế. Không còn nhiệm vụ mở thì về bản đồ Sử ký.
+                      const nextId = done ? nextMissionAfter(campaign, step.nodeId) : null;
+                      const nextChapter = nextId ? chapterContentOf(nextId) : null;
+                      const finish = !done
+                        ? {}
+                        : nextId
+                          ? {
+                              finishLabel:
+                                nextChapter && nextChapter.chapter !== chapterContentOf(step.nodeId)?.chapter
+                                  ? `Sang Chương ${ROMAN[nextChapter.chapter]}: ${storyNodeById(nextId)!.title}`
+                                  : `Tiếp: ${storyNodeById(nextId)!.title}`,
+                              onFinished: () => openMission(nextId),
+                            }
+                          : {
+                              finishLabel: "Về bản đồ Sử ký",
+                              onFinished: () => updateAtlas({ ...atlas, view: "atlas" }),
+                            };
+                      return (
+                        <StoryLines
+                          profile={profile}
+                          nodeId={step.nodeId}
+                          choice={choice}
+                          outro={done}
+                          {...finish}
+                        />
+                      );
+                    })()}
                     {!isBattle && !done && (
                       <button
                         type="button"
@@ -777,36 +817,6 @@ export default function ChapterOne({
                         {busy ? "Đang ghi…" : "Hoàn thành nhiệm vụ"}
                       </button>
                     )}
-                    {done &&
-                      (() => {
-                        // Xong nhiệm vụ: luôn có lối đi tiếp, kể cả khi đã đóng màn thưởng (sang nhiệm vụ kế, hoặc chương kế).
-                        const nextId = nextMissionAfter(profile.campaign, step.nodeId);
-                        const nextChapter = nextId ? chapterContentOf(nextId) : null;
-                        return (
-                          <div className="mt-1 flex flex-wrap items-center gap-2 border-t border-frame-line-soft pt-3">
-                            <span className="text-sm text-jade">Đã hoàn thành nhiệm vụ.</span>
-                            {nextId ? (
-                              <Button
-                                variant="ornate"
-                                type="button"
-                                onClick={() => openMission(nextId)}
-                              >
-                                {nextChapter && nextChapter.chapter !== chapterContentOf(step.nodeId)?.chapter
-                                  ? `Sang Chương ${ROMAN[nextChapter.chapter]}: ${storyNodeById(nextId)!.title}`
-                                  : `Tiếp: ${storyNodeById(nextId)!.title}`}
-                              </Button>
-                            ) : (
-                              <Button
-                                variant="secondary"
-                                type="button"
-                                onClick={() => updateAtlas({ ...atlas, view: "atlas" })}
-                              >
-                                Về bản đồ Sử ký
-                              </Button>
-                            )}
-                          </div>
-                        );
-                      })()}
                   </div>
                 )}
               </>
