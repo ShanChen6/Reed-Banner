@@ -144,18 +144,29 @@ export default function CompanionPicker({
                   className: "w-full justify-start gap-2 px-2 py-1 text-left font-normal",
                 })}
               >
-                <Portrait id={c.id} element={c.element} profession={c.profession} className="size-9 shrink-0" />
+                <Portrait id={c.id} element={c.element} profession={c.profession} className={`${narrow ? "size-8" : "size-9"} shrink-0`} />
                 <span className="min-w-0 leading-tight">
                   <span className="block truncate font-semibold">
                     {c.name}
                     {marks.includes(c.element) && <span className={on ? "" : "text-jade"}> ★</span>}
                   </span>
-                  <span className="flex items-center gap-1 text-caption opacity-80">
-                    <ElementIcon element={c.element} className="size-3.5" />
-                    {ELEMENT_NAME[c.element]} ·
-                    <ProfessionIcon profession={c.profession} className="size-3.5" />
-                    {PROFESSION_NAME[c.profession]}
-                  </span>
+                  {narrow ? (
+                    // Cột hẹp: chỉ icon (tên hệ/nghề ở tooltip) để chữ không vỡ dòng.
+                    <span
+                      className="flex items-center gap-1 opacity-80"
+                      title={`${ELEMENT_NAME[c.element]} · ${PROFESSION_NAME[c.profession]}`}
+                    >
+                      <ElementIcon element={c.element} className="size-4" />
+                      <ProfessionIcon profession={c.profession} className="size-4" />
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1 text-caption opacity-80">
+                      <ElementIcon element={c.element} className="size-3.5" />
+                      {ELEMENT_NAME[c.element]} ·
+                      <ProfessionIcon profession={c.profession} className="size-3.5" />
+                      {PROFESSION_NAME[c.profession]}
+                    </span>
+                  )}
                 </span>
               </button>
             </li>

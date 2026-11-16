@@ -19,7 +19,8 @@ Bố cục hai cột từ `lg` (1024px):
 - Cột Bày trận có ngay từ đầu nhiệm vụ; chưa chọn lời kế thì nút ghi "Chọn lời kế trước". Không còn bước "Chuẩn bị xuất quân" riêng.
 - **Điện thoại:** cốt truyện trước, Bày trận bên dưới, nút Xuất quân dính đáy màn.
 - **Bộ chọn phó tướng** trong cột Bày trận: hai cột, 6 người mỗi trang (phân trang dùng chung `usePagedItems`/`PageControls`).
-- **Xong nhiệm vụ** (mọi loại): cuối cột trái có dòng "Đã hoàn thành nhiệm vụ" kèm nút sang nhiệm vụ kế ("Tiếp: …", hoặc "Sang Chương … : …" khi qua chương); không còn nhiệm vụ mở (như lúc chờ Hội quân) thì là nút "Về bản đồ Sử ký". Nút này có cả khi đã đóng màn thưởng.
+- **Bộ chọn phó tướng** chỉ hiện tên, icon hệ và icon nghề (tên hệ/nghề ở tooltip) để thẻ không vỡ dòng.
+- **Xong nhiệm vụ** (mọi loại): nút sang nhiệm vụ kế ("Tiếp: …", hoặc "Sang Chương …: …" khi qua chương) nằm ở câu cuối của thoại kết, nên phải đọc hết thoại mới đi tiếp được; không còn nhiệm vụ mở (như lúc chờ Hội quân) thì là "Về bản đồ Sử ký". Màn thưởng lần đầu cũng vậy: có thoại kết thì nút "Tiếp" ở câu cuối, chỉ "Đóng" luôn có.
 
 Code: `BattlePrep.tsx` (cột Bày trận), `ChapterOne.tsx` (khung hai cột).
 
