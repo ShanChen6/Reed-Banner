@@ -124,7 +124,7 @@ export function resolveScene(scene: Scene, signedIn: boolean): Scene {
 }
 
 /**
- * Phân cảnh chế độ chơi: thanh header hiện nút toàn màn hình (header/FullscreenToggle.tsx). Màn chính, cửa hàng,
+ * Phân cảnh chế độ chơi: hiện nút toàn màn hình nổi ở góc dưới phải (FullscreenToggle.tsx). Màn chính, cửa hàng,
  * hồ sơ, bảng xếp hạng, nhiệm vụ và tài khoản không cần nên không hiện, trừ khi đang ở toàn màn hình (để thoát được).
  */
 export const FULLSCREEN_SCENES: ReadonlySet<Scene> = new Set<Scene>([
