@@ -25,6 +25,8 @@ export default function CompanionPicker({
   labelId,
   pageSize = PAGE,
   narrow = false,
+  levels = {},
+  suggestLevel,
 }: {
   owned: readonly string[];
   team: readonly string[];
@@ -37,6 +39,10 @@ export default function CompanionPicker({
   pageSize?: number;
   /** Cột hẹp: thẻ nhỏ hơn để vừa hai cột. */
   narrow?: boolean;
+  /** Cấp của từng người (theo hồ sơ); có thì hiện "Cấp N" và xếp người cấp cao lên trước. */
+  levels?: Readonly<Record<string, number>>;
+  /** Cấp gợi ý của màn: cấp dưới mức này hiện màu cảnh báo. */
+  suggestLevel?: number;
 }) {
   const [query, setQuery] = useState("");
   const [element, setElement] = useState<Element | "counter" | null>(null);
@@ -63,7 +69,11 @@ export default function CompanionPicker({
   });
   const rest = match
     .filter((c) => !team.includes(c.id))
-    .sort((a, b) => Number(marks.includes(b.element)) - Number(marks.includes(a.element)));
+    .sort(
+      (a, b) =>
+        Number(marks.includes(b.element)) - Number(marks.includes(a.element)) ||
+        (levels[b.id] ?? 0) - (levels[a.id] ?? 0),
+    );
   const list = [...chosen, ...rest];
   const paged = usePagedItems(list, pageSize);
   const shown = paged.pageItems;
@@ -153,11 +163,12 @@ export default function CompanionPicker({
                   {narrow ? (
                     // Cột hẹp: chỉ icon (tên hệ/nghề ở tooltip) để chữ không vỡ dòng.
                     <span
-                      className="flex items-center gap-1 opacity-80"
+                      className="flex items-center gap-1"
                       title={`${ELEMENT_NAME[c.element]} · ${PROFESSION_NAME[c.profession]}`}
                     >
-                      <ElementIcon element={c.element} className="size-4" />
-                      <ProfessionIcon profession={c.profession} className="size-4" />
+                      <ElementIcon element={c.element} className="size-4 opacity-80" />
+                      <ProfessionIcon profession={c.profession} className="size-4 opacity-80" />
+                      <LevelTag level={levels[c.id]} suggest={suggestLevel} plain={on} />
                     </span>
                   ) : (
                     <span className="flex items-center gap-1 text-caption opacity-80">
@@ -165,6 +176,7 @@ export default function CompanionPicker({
                       {ELEMENT_NAME[c.element]} ·
                       <ProfessionIcon profession={c.profession} className="size-3.5" />
                       {PROFESSION_NAME[c.profession]}
+                      <LevelTag level={levels[c.id]} suggest={suggestLevel} plain={on} />
                     </span>
                   )}
                 </span>
@@ -178,5 +190,20 @@ export default function CompanionPicker({
       )}
       <PageControls paged={paged} label="Trang người đi cùng" />
     </div>
+  );
+}
+
+/** "Cấp N" trên thẻ người đi cùng; dưới cấp gợi ý của màn thì màu cảnh báo, đủ cấp thì màu ngọc. */
+export function LevelTag({ level, suggest, plain = false }: { level?: number; suggest?: number; plain?: boolean }) {
+  if (level === undefined) return null;
+  const low = suggest !== undefined && level < suggest;
+  const tone = plain || suggest === undefined ? "" : low ? "text-danger" : "text-jade";
+  return (
+    <span
+      className={`text-caption font-semibold tabular-nums ${tone}`}
+      title={suggest === undefined ? undefined : low ? `Dưới cấp gợi ý ${suggest}` : `Đủ cấp gợi ý ${suggest}`}
+    >
+      Cấp {level}
+    </span>
   );
 }
