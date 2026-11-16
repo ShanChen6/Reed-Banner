@@ -163,18 +163,15 @@ function RewardModal({
   profile,
   seen,
   onClose,
-  onNext,
 }: {
   profile: Profile;
   seen: readonly string[];
-  onClose: (receipts: readonly string[]) => void;
-  onNext: (receipts: readonly string[], next: CampaignMissionId | null) => void;
+  /** Nhận thưởng: đóng bảng và mở màn nhiệm vụ vừa xong để phát thoại kết ở đó. */
+  onClose: (receipts: readonly string[], nodeId: CampaignMissionId) => void;
 }) {
   const reward = pendingFirstClear(profile.campaign, seen);
   if (!reward) return null;
   const node = storyNodeById(reward.nodeId)!;
-  const copy = missionCopy(reward.nodeId);
-  const nextId = nextMissionAfter(profile.campaign, reward.nodeId);
   return (
     <div
       role="dialog"
@@ -192,22 +189,6 @@ function RewardModal({
         >
           {node.title}
         </h2>
-        {copy && (
-          <div className="mt-3">
-            <StoryLines
-              profile={profile}
-              nodeId={node.id}
-              choice={profile.campaign.storyChoices[node.id]}
-              outro
-              {...(nextId
-                ? {
-                    finishLabel: `Tiếp: ${storyNodeById(nextId)!.title}`,
-                    onFinished: () => onNext(reward.receipts, nextId),
-                  }
-                : {})}
-            />
-          </div>
-        )}
         <ul className="ui-frame-inset mt-3 flex flex-col gap-1 p-2 text-sm">
           <li className="font-semibold text-frame-gold">
             +{reward.missionGold} vàng thưởng nhiệm vụ
@@ -238,21 +219,8 @@ function RewardModal({
           </li>
         </ul>
         <div className="mt-4 flex flex-wrap gap-2">
-          {/* Có thoại kết thì nút "Tiếp" nằm ở câu cuối của thoại: đọc xong mới đi tiếp được. */}
-          {nextId && !copy && (
-            <Button variant="ornate"
-              type="button"
-              onClick={() => onNext(reward.receipts, nextId)}
-            >
-              Tiếp: {storyNodeById(nextId)!.title}
-            </Button>
-          )}
-          <Button variant="secondary"
-            type="button"
-            onClick={() => onClose(reward.receipts)}
-
-          >
-            Đóng
+          <Button variant="ornate" type="button" onClick={() => onClose(reward.receipts, reward.nodeId)}>
+            Nhận thưởng
           </Button>
         </div>
       </div>
@@ -469,10 +437,11 @@ export default function ChapterOne({
       <RewardModal
         profile={profile}
         seen={seen}
-        onClose={markSeen}
-        onNext={(receipts, next) => {
+        onClose={(receipts, nodeId) => {
           markSeen(receipts);
-          if (next) openMission(next);
+          // Thoại chỉ phát một kiểu: trong màn nhiệm vụ. Bảng thưởng chỉ báo thưởng rồi đưa về đúng nhiệm vụ.
+          move({ nodeId, phase: "choice", choice: campaign.storyChoices[nodeId] });
+          updateAtlas({ ...atlas, view: "mission" });
         }}
       />
       {/* Đại card Sử ký (Polish V2 P02): header, ba cột và tuyến dưới nằm trong một khung gỗ. Màn nhiệm vụ và
