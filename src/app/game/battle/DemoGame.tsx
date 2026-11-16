@@ -97,7 +97,6 @@ import {
   type Outcome,
   demoDrop,
 } from "./demoSetup";
-import { describe, type LogLine } from "./battleLog";
 import { BattleResult } from "./BattleResult";
 
 import {
@@ -193,8 +192,6 @@ export default function DemoGame({
   /** Nấc xoay đang rê chuột hoặc focus để xem trước kết quả (chưa bấm). */
   const [spinPreview, setSpinPreview] = useState<number | null>(null);
   const [toast, setToast] = useState<string | null>(null);
-  const [log, setLog] = useState<LogLine[]>([]);
-  const logId = useRef(0);
   const [anim, setAnim] = useState<{
     readonly frames: readonly Frame[];
     readonly i: number;
@@ -318,18 +315,6 @@ export default function DemoGame({
     setToast(text);
     window.setTimeout(() => setToast((t) => (t === text ? null : t)), 1600);
   }, []);
-
-  const pushLog = useCallback(
-    (s: BattleState, events: readonly BattleEvent[]) => {
-      const lines = events.flatMap((e) => {
-        const text = describe(s, e);
-        return text ? [{ id: logId.current++, text }] : [];
-      });
-      if (lines.length > 0)
-        setLog((l) => [...lines.reverse(), ...l].slice(0, 30));
-    },
-    [],
-  );
 
   const showNumbers = useCallback((events: readonly BattleEvent[]) => {
     const order = new Map<string, number>();
@@ -531,7 +516,6 @@ export default function DemoGame({
           setHeldBoard(board);
           sides = sidesAfterEvents(sides, current.events, after);
           setHeldSides(sides);
-          pushLog(after, current.events);
           const effectMs = showNumbers(current.events);
           cueBus.emit(cues.end);
           playCues(sounds.end);
@@ -556,7 +540,6 @@ export default function DemoGame({
     },
     [
       play,
-      pushLog,
       showNumbers,
       cueBus,
       playCues,
@@ -939,7 +922,6 @@ export default function DemoGame({
     setAim(null);
     setWhirlAim(null);
     setPendingWhirl(null);
-    setLog([]);
     setBattleId(null);
     setScenario(null);
     setSurvival(null);
@@ -1449,8 +1431,9 @@ export default function DemoGame({
         </div>
 
         {/* Giao Tranh online: chỉ giữ chọn đội nhanh và lối sang Doanh Trại (trang bị, kỹ năng chỉnh ở đó). Lúc đang đánh thì ẩn hẳn
-            để bàn cờ không bị đẩy xuống. Chơi thử Tiến trình (offline) vẫn đủ panel vì hồ sơ nằm trên trình duyệt. */}
-        {mode === "progress" && !(online && started && state.winner === null) && (
+            để bàn cờ không bị đẩy xuống; hết trận cũng ẩn, màn kết thúc chỉ còn kết quả. Chơi thử Tiến trình (offline) vẫn đủ panel
+            khi đang đánh vì hồ sơ nằm trên trình duyệt. */}
+        {mode === "progress" && !(started && (online || state.winner !== null)) && (
           <ProgressSection
             changeProfile={changeProfile}
             element={element}
@@ -1463,20 +1446,6 @@ export default function DemoGame({
           />
         )}
 
-        <section
-          aria-label="Nhật ký trận"
-          className={`ui-frame-inset max-h-32 overflow-y-auto rounded-xl p-2 text-caption text-on-wood ${started ? "" : "hidden"}`}
-        >
-          {log.length === 0 ? (
-            <p className="opacity-60">Nhật ký trận sẽ hiện ở đây.</p>
-          ) : (
-            <ul className="space-y-0.5">
-              {log.map((l) => (
-                <li key={l.id}>{l.text}</li>
-              ))}
-            </ul>
-          )}
-        </section>
       </OrnateFrame>
     </div>
   );

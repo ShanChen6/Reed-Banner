@@ -2,7 +2,6 @@
 // Thanh kỹ năng của người đang hành động: bấm để dùng (hoặc ngắm mục tiêu), phím số 1–6, xoáy ô miễn phí của hệ Phong.
 
 import type { Dispatch, SetStateAction } from "react";
-import SkillDetails from "./SkillDetails";
 import { skillText } from "./labels";
 
 import {
@@ -98,7 +97,6 @@ export function SkillBar({
           </button>
         );
       })}
-      <SkillDetails skills={skills} passive={actor.comboPassive} fighter={actor} />
       {myTurn && canFreeWhirl(state) && (
         <button
           type="button"
