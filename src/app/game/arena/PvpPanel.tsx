@@ -35,11 +35,12 @@ import { Alert, Button, ChoiceChip } from "@/components/ui";
 import { FrameInset, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { ElementIcon } from "../art/icons";
 import { TileArt } from "../art/tiles";
+import { EffectBadge } from "../art/effects";
 import PvpDraftScreen from "./PvpDraft";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { SeasonBoardPanel } from "../leaderboard/boards";
 import { describe } from "../battle/battleLog";
-import { ELEMENT_NAME, EFFECT_NAME, ERROR_TEXT, PROFESSION_NAME, skillText } from "../battle/labels";
+import { ELEMENT_NAME, ERROR_TEXT, PROFESSION_NAME, skillText } from "../battle/labels";
 
 const POLL_MS = 1500;
 const OVERVIEW_POLL_MS = 2000;
@@ -586,9 +587,11 @@ function FighterPanel({ f, rage, showRage, mine, active, tag }: { f: Fighter; ra
       <Bar value={f.energy} max={100} label="Năng lượng" tone="energy" />
       {showRage && <Bar value={rage} max={100} label="Nộ" tone="rage" />}
       {f.effects.length > 0 && (
-        <p className="text-caption text-on-wood-soft">
-          {f.effects.map((e) => `${EFFECT_NAME[e.kind] ?? e.kind}${e.turns ? ` (${e.turns})` : ""}`).join(", ")}
-        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {f.effects.map((e) => (
+            <EffectBadge key={e.kind} kind={e.kind} value={e.value} turns={e.turns ?? null} />
+          ))}
+        </div>
       )}
     </FrameInset>
   );

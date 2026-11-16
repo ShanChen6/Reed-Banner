@@ -23,7 +23,7 @@ Bố cục **ngang** (landscape), cả trên desktop lẫn điện thoại xoay 
 - **Tên phe:** cột trái ghi "Phe bạn", cột phải ghi "Đối thủ" (tên AI Tianwu chỉ ở trang giới thiệu).
 - **Bị động** không hiện trong trận; mô tả bị động chỉ đọc ở thẻ nhân vật trong Doanh Trại. Thanh kỹ năng trong trận chỉ có các nút kỹ năng.
 - **Hết trận:** chỉ còn kết quả trên bàn cờ, không hiện khối đội hình 3vs3 bên dưới. Màn trận không có nhật ký trận.
-- **Góc trên trái / phải:** khung từng nhân vật của mỗi phe: tên, cấp, thanh máu, thanh năng lượng, thanh nộ (chỉ ở thủ lĩnh), biểu tượng hiệu ứng trạng thái kèm số lượt còn lại.
+- **Góc trên trái / phải:** khung từng nhân vật của mỗi phe: tên, cấp, thanh máu, thanh năng lượng, thanh nộ (chỉ ở thủ lĩnh), biểu tượng hiệu ứng trạng thái (ảnh tròn `public/art/effects/`, viền vàng có lợi, đỏ thẫm bất lợi) kèm số nhỏ ở góc: số lượt còn lại, riêng Khiên là lượng hấp thụ.
   - 1vs1: mỗi bên một khung.
   - 3vs3: mỗi bên ba khung xếp dọc; khung của người hành động được làm sáng; chạm vào khung để đổi người hành động.
 - Lương thực của mỗi phe hiển thị cạnh khung của phe đó.
