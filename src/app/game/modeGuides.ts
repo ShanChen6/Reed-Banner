@@ -84,12 +84,13 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
   TRIAL: {
     goal: `Leo ${TRIAL_FLOORS} tầng tháp cố định. Mỗi tầng có một luật chọn đội riêng, bạn xếp đội hợp luật rồi hạ đối thủ.`,
     steps: [
-      "Chọn tầng đang mở và đọc luật của tầng.",
-      "Chọn ba tướng ra trận hợp luật. Tướng bị làm mờ là không hợp luật, đã gục hoặc đã đủ người; lý do ghi dưới tên tướng.",
-      "Đánh trận 3 đấu 3. Thắng thì tầng kế mở ra.",
+      "Chọn tầng đang mở (100 tầng chia 10 chặng) và đọc luật của tầng.",
+      "Chọn 2 tướng kèm, rồi chọn hệ và nghề cho Đinh Bộ Lĩnh. Chấm xanh trên hệ/nghề là chọn vào thì đội hợp luật.",
+      "Đội chưa hợp luật thì nút Vào tầng bị khóa và màn ghi rõ luật nào chưa đạt.",
+      "Đánh trận 3 đấu 3. Thắng thì về thẳng màn chuẩn bị của tầng kế; thua thì về lại tầng vừa đánh để đổi đội.",
     ],
     rules: [
-      "Đinh Bộ Lĩnh luôn ra trận ở vị trí thủ lĩnh. Bạn đổi nghề và hệ cho ông miễn phí trước mỗi tầng, miễn là hợp luật.",
+      "Đinh Bộ Lĩnh luôn ra trận ở vị trí thủ lĩnh. Bạn đổi nghề và hệ cho ông miễn phí trước mỗi tầng; chỉ áp dụng cho trận đó.",
       "Mỗi lần vào tầng, máu và lương bắt đầu lại.",
       "Không đổi được tướng khi trận đang đánh.",
       "Từ tầng 21 trở lên, đối thủ là tướng cửa hàng và luật ghép dần hai, ba điều.",

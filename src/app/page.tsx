@@ -79,7 +79,7 @@ const MODES: readonly { slug: ModeIconKind; name: string; body: string; flag?: k
   { slug: "practice", name: "Thao Luyện", body: "Vào trận ngay, không cần mạng, 3vs3 đấu Tianwu với đội cấp tối đa. Không cần tài khoản." },
   { slug: "play", name: "Giao Tranh", body: "Trận trực tuyến có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm." },
   { slug: "campaign", name: "Bình Loạn", body: "Sáu chương dẹp loạn 12 sứ quân, tướng lịch sử gia nhập, rồi Tái đấu sứ quân bị đánh dẹp ở 3 bậc." },
-  { slug: "trial", name: "Tháp Thí Luyện", body: "20 tầng cố định, tự chọn đội và luật riêng từng tầng.", flag: "trial" },
+  { slug: "trial", name: "Tháp Thí Luyện", body: "100 tầng cố định chia 10 chặng, tự chọn đội theo luật riêng từng tầng.", flag: "trial" },
   { slug: "destiny", name: "Tháp Thiên Mệnh", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng.", flag: "destiny" },
   { slug: "survival", name: "Trấn Ải", body: "Một bàn cờ, đối thủ kéo đến theo đợt, nghỉ giữa đợt để tính tiếp." },
   { slug: "daily", name: "Nhật Lệnh", body: "Một đề chung cho mọi người, mỗi ngày một lần, có bảng xếp hạng." },

@@ -3,7 +3,9 @@
 
 import {
   companionById,
+  ELEMENTS,
   leaderBuildOptions,
+  PROFESSIONS,
   MAIN_ID,
   trialSweepStoneAmount,
   trialSweepTier,
@@ -269,17 +271,55 @@ export function leaderChoices(
   return leaderBuildOptions(rules, MAIN_ID, members);
 }
 
-/** Build mặc định: giữ build hiện tại nếu hợp luật, không thì build hợp luật đầu tiên. */
-export function defaultBuild(
+/** Build mặc định: build hiện tại của hồ sơ. Người chơi tự đổi; đội chưa hợp luật thì chỉ chặn nút vào tầng. */
+export function defaultBuild(profile: Profile): LeaderBuild {
+  return { element: profile.element, profession: profile.profession };
+}
+
+export interface LeaderPick<T> {
+  readonly value: T;
+  /** Luật tầng cấm hệ/nghề này. */
+  readonly banned: boolean;
+  /** Chọn giá trị này (giữ nguyên trục còn lại) thì đội hợp luật với 2 tướng kèm đang chọn. */
+  readonly fits: boolean;
+}
+
+export interface LeaderPicker {
+  readonly elements: readonly LeaderPick<Element>[];
+  readonly professions: readonly LeaderPick<Profession>[];
+  /** Build hợp luật gần build đang chọn nhất (giữ nghề, rồi giữ hệ); null khi chưa đủ tướng kèm, không có, hoặc đã hợp luật. */
+  readonly suggestion: LeaderBuild | null;
+}
+
+/**
+ * Bộ chọn hệ/nghề của thủ lĩnh: mọi hệ và nghề luôn chọn được, chỉ đánh dấu cái bị cấm và cái hợp luật để người
+ * chơi tự quyết. Nút vào tầng dựa vào `previewLineup`, không dựa vào đây.
+ */
+export function leaderPicker(
   profile: Profile,
   rules: FloorRules,
   selected: readonly string[],
-): LeaderBuild {
-  const cur: LeaderBuild = { element: profile.element, profession: profile.profession };
-  const options = leaderChoices(profile, rules, selected);
-  if (options.length === 0 || options.some((o) => o.element === cur.element && o.profession === cur.profession))
-    return cur;
-  return options[0]!;
+  build: LeaderBuild,
+): LeaderPicker {
+  const banE = new Set<Element>(rules.bannedElements ?? []);
+  const banP = new Set<Profession>(rules.bannedProfessions ?? []);
+  const legal = leaderChoices(profile, rules, selected);
+  const full = selectedMembers(profile, selected).length >= COMPANION_COUNT;
+  const isLegal = (b: LeaderBuild) => legal.some((o) => o.element === b.element && o.profession === b.profession);
+  const fits = (b: LeaderBuild, banned: boolean) => (full ? isLegal(b) : !banned);
+  const suggestion =
+    !full || isLegal(build)
+      ? null
+      : (legal.find((o) => o.profession === build.profession) ?? legal.find((o) => o.element === build.element) ?? legal[0] ?? null);
+  return {
+    elements: ELEMENTS.map((value) => ({ value, banned: banE.has(value), fits: fits({ ...build, element: value }, banE.has(value)) })),
+    professions: PROFESSIONS.map((value) => ({
+      value,
+      banned: banP.has(value),
+      fits: fits({ ...build, profession: value }, banP.has(value)),
+    })),
+    suggestion,
+  };
 }
 
 /**

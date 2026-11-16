@@ -74,7 +74,7 @@ export default function DailyScreen() {
 
   if (!data?.setup) {
     return (
-      <ModeScreen label="Nhật Lệnh">
+      <ModeScreen card label="Nhật Lệnh">
         <p className="py-24 text-center text-on-wood-soft">
           {data
             ? "Chưa nhận được Nhật Lệnh hôm nay. Xin tải lại trang."
@@ -125,7 +125,7 @@ export default function DailyScreen() {
   const day = data.day?.split("-").reverse().join("/");
 
   return (
-    <ModeScreen wide label="Nhật Lệnh">
+    <ModeScreen card label="Nhật Lệnh">
       <ModeBanner
         title="Nhật Lệnh"
         kicker={day ? `Ngày ${day}` : "Mỗi ngày"}

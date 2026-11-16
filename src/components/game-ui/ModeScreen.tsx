@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { FrameCorners } from "./FrameCorners";
 import { OrnateFrame } from "./OrnateFrame";
 
 // Khung màn chế độ dùng chung (đồng bộ UI 05/11/2026, docs/05-ui-ux/design-system/theme.md).
@@ -9,11 +10,36 @@ import { OrnateFrame } from "./OrnateFrame";
 /** Mọi màn chế độ dùng một bề rộng nội dung duy nhất (MODE_CONTENT_WIDTH) để lề trái/phải thẳng hàng khi chuyển màn. */
 export const MODE_CONTENT_WIDTH = "max-w-7xl 2xl:max-w-[90rem] 3xl:max-w-[105rem]";
 
-export function ModeScreen({ children, className, label }: { children: ReactNode; className?: string; /** @deprecated Bỏ từ 06/11/2026: mọi màn cùng một bề rộng; giữ để màn cũ không lỗi biên dịch. */ wide?: boolean; label?: string }) {
+export function ModeScreen({
+  children,
+  className,
+  label,
+  card,
+}: {
+  children: ReactNode;
+  className?: string;
+  /** @deprecated Bỏ từ 06/11/2026: mọi màn cùng một bề rộng; giữ để màn cũ không lỗi biên dịch. */
+  wide?: boolean;
+  label?: string;
+  /** Màn chế độ chơi: bọc banner, tab và nội dung trong một đại card như Bình Loạn (16/11/2026). */
+  card?: boolean;
+}) {
   return (
     <main aria-label={label} className={cn("ui-mode-screen", className)}>
-      <div className={cn("mx-auto flex w-full flex-col gap-4 sm:gap-5", MODE_CONTENT_WIDTH)}>{children}</div>
+      <div className={cn("mx-auto flex w-full flex-col gap-4 sm:gap-5", MODE_CONTENT_WIDTH)}>
+        {card ? <ModeCard>{children}</ModeCard> : children}
+      </div>
     </main>
+  );
+}
+
+/** Đại card của màn chế độ: khung gỗ viền đồng, góc hoa văn, như khung Sử ký của Bình Loạn. */
+export function ModeCard({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <div data-slot="mode-card" className={cn("ui-mode-card flex min-w-0 flex-col gap-4 p-2 sm:gap-5 sm:p-3", className)}>
+      <FrameCorners size="size-6" />
+      {children}
+    </div>
   );
 }
 

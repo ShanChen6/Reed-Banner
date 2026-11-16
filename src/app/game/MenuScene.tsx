@@ -55,7 +55,7 @@ const MODES: readonly Mode[] = [
     status: "Sáu chương sử Việt · tái đấu sứ quân",
     cta: "Dẹp loạn",
   },
-  { scene: "TRIAL", group: "battle", title: "Tháp Thí Luyện", text: MODE_TEXT.TRIAL, art: "trial", kicker: "Leo tháp", status: "Hai mươi tầng · thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
+  { scene: "TRIAL", group: "battle", title: "Tháp Thí Luyện", text: MODE_TEXT.TRIAL, art: "trial", kicker: "Leo tháp", status: "100 tầng · thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
   { scene: "DESTINY", group: "battle", title: "Tháp Thiên Mệnh", text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp", status: "Mỗi chu kỳ một vận · tranh hạng thiên hạ", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
   { scene: "SURVIVAL", group: "battle", title: "Trấn Ải", text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Sinh tồn", status: "Ghi danh bảng xếp hạng mỗi tuần", cta: "Giữ ải" },
   { scene: "DAILY", group: "battle", title: "Nhật Lệnh", text: MODE_TEXT.DAILY, art: "daily", kicker: "Mỗi ngày", status: "Lệnh mới ban mỗi ngày", cta: "Nhận lệnh" },

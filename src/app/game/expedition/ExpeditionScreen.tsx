@@ -260,7 +260,7 @@ export default function ExpeditionScreen() {
 
   if (!overview || !profile)
     return (
-      <ModeScreen label="Viễn Chinh">
+      <ModeScreen card label="Viễn Chinh">
         <div className="py-24 text-center text-on-wood-soft">
         {failed ? (
           <div className="text-center">
@@ -279,7 +279,7 @@ export default function ExpeditionScreen() {
   const mapOf = (id: string) => overview.maps.find((m) => m.id === id)!;
 
   return (
-    <ModeScreen wide label="Viễn Chinh">
+    <ModeScreen card label="Viễn Chinh">
       <div className="space-y-5">
         <ModeBanner
           title="Viễn Chinh"

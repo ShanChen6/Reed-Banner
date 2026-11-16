@@ -119,7 +119,7 @@ export default function SurvivalScreen() {
 
   if (!profile) {
     return (
-      <ModeScreen label="Trấn Ải">
+      <ModeScreen card label="Trấn Ải">
         <div className="py-24 text-center text-on-wood-soft">
           {loadError ? (
             <>
@@ -263,7 +263,7 @@ export default function SurvivalScreen() {
   };
 
   return (
-    <ModeScreen wide label="Trấn Ải">
+    <ModeScreen card label="Trấn Ải">
       <ModeBanner
         title="Trấn Ải"
         kicker="Giữ ải · vô hạn"

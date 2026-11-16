@@ -13,7 +13,7 @@
 | **Giao Tranh** (tên cũ Thường, Normal) | Trận sinh ngẫu nhiên đấu Tianwu; chọn độ khó; lương reset mỗi trận | Người chơi chọn 1vs1 hoặc 3vs3 | 2–3 |
 | **Bình Loạn** (tên cũ Chiến dịch, Campaign V2) | 6 chương, 24 nhiệm vụ (sự kiện, ngoại giao, trận); lương mang sang; địa hình theo nhiệm vụ | Mỗi nhiệm vụ có trận quy định | 4 |
 | **Tái đấu sứ quân** (tên cũ Đánh trùm) | Tái đấu 6 sứ quân bị đánh dẹp ở mức khó cao hơn, mở theo mốc Bình Loạn, có luật "sân nhà" và phần thưởng riêng | Mỗi sứ quân quy định | 4 |
-| **Tháp Thí Luyện (Trial)** | 20 tầng cố định, luật đội hình/bàn cờ và thưởng đá lần đầu | 3vs3 | Song Tháp V1.0 |
+| **Tháp Thí Luyện (Trial)** | 100 tầng cố định (10 chặng), luật đội hình/bàn cờ và thưởng đá lần đầu | 3vs3 | Song Tháp V1.0 |
 | **Tháp Thiên Mệnh (Destiny, tên cũ Tháp Vận Mệnh)** | Run 20 tầng theo chu kỳ tuần (10 tầng trước chu kỳ 16/11/2026), roster khóa và tài nguyên xuyên tầng | 3vs3 | Song Tháp V1.0; 20 tầng từ 11/11/2026 |
 | **Trấn Ải** (tên cũ Sinh tồn) | Một trận không kết thúc, đối thủ theo đợt, báo trước đợt kế tiếp | 3vs3 | Sau giai đoạn 4 |
 | **Trận Đồ** | Game xếp quân theo nghề/hệ, không đánh nhau; chơi thử offline (không thưởng) và xếp hạng có thưởng trên server (tắt mặc định, `FORMATION_RANKED_ENABLED`). Luật ở [GDD Binh Pháp](tran-do/gdd.md#11-bản-triển-khai-đầu-tiên-chơi-thử-offline) | Một người, 4 bậc 3×3–8×8 | Sau Song Tháp |
@@ -80,7 +80,7 @@
 
 Song Tháp gồm hai chế độ hiện hành: Tháp Thí Luyện và Tháp Thiên Mệnh (tên cũ trong tài liệu: Tháp Vận Mệnh).
 
-- **Trial — Tháp Thí Luyện:** 20 tầng cố định; mỗi lần thử reset HP/lương; chọn ba active từ tướng đã sở hữu.
+- **Trial — Tháp Thí Luyện:** 100 tầng cố định; mỗi lần thử reset HP/lương; chọn ba active từ tướng đã sở hữu.
   Đinh Bộ Lĩnh bắt buộc ở slot thủ lĩnh, được đổi nghề/hệ miễn phí trước tầng và phải hợp luật. Tầng đã qua được
   đánh lại nhưng đá first-clear chỉ nhận một lần. Quét dùng tiến độ phía server, nhận 1/2/3/4 đá mỗi ngày theo
   mốc tầng 1–5/6–10/11–15/16–20, đổi ngày lúc 00:00 Việt Nam và không tích lượt bỏ lỡ.
