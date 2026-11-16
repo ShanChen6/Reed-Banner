@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import ScrollbarAutoHide from "./ScrollbarAutoHide";
 import { TileDefs } from "./game/art/tiles";
 
 const gameFont = localFont({
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="vi" className={`${gameFont.variable} scroll-smooth`}>
       <body className="min-h-dvh antialiased">
         <TileDefs />
+        <ScrollbarAutoHide />
         {children}
       </body>
     </html>
