@@ -85,27 +85,34 @@ export const FACTION_STATUS_TEXT: Record<CampaignFactionStatus, string> = {
 export function SourceNotes({
   nodeId,
   label = "Ghi chú nguồn",
+  bare = false,
 }: {
   nodeId: string;
   label?: string;
+  /** Chỉ phần nội dung, không bọc khung mở/đóng: dùng khi gộp vào khung Sử liệu của nhiệm vụ. */
+  bare?: boolean;
 }) {
   const notes = missionCopy(nodeId)?.sourceNotes;
   if (!notes?.length) return null;
+  const body = (
+    <div className={bare ? "flex flex-col gap-3" : "mt-2 flex flex-col gap-3"}>
+      {notes.map((n) => (
+        <section key={n.title}>
+          <h3 className="mb-1 text-caption font-semibold text-info">
+            {n.title}
+          </h3>
+          <Beats beats={n.beats} />
+        </section>
+      ))}
+    </div>
+  );
+  if (bare) return body;
   return (
     <details className="rounded-md border border-info/30 bg-info/5 p-2 text-sm">
       <summary className="flex min-h-11 cursor-pointer items-center rounded font-semibold text-info focus-visible:ring-2 focus-visible:ring-info focus-visible:outline-none">
         {label}
       </summary>
-      <div className="mt-2 flex flex-col gap-3">
-        {notes.map((n) => (
-          <section key={n.title}>
-            <h3 className="mb-1 text-caption font-semibold text-info">
-              {n.title}
-            </h3>
-            <Beats beats={n.beats} />
-          </section>
-        ))}
-      </div>
+      {body}
     </details>
   );
 }
