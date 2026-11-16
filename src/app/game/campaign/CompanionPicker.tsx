@@ -23,6 +23,8 @@ export default function CompanionPicker({
   marks = [],
   onToggle,
   labelId,
+  pageSize = PAGE,
+  narrow = false,
 }: {
   owned: readonly string[];
   team: readonly string[];
@@ -31,6 +33,10 @@ export default function CompanionPicker({
   marks?: readonly Element[];
   onToggle: (id: string) => void;
   labelId: string;
+  /** Số người mỗi trang; cột hẹp (Bày trận) dùng ít hơn để khỏi kéo dài trang. */
+  pageSize?: number;
+  /** Cột hẹp: thẻ nhỏ hơn để vừa hai cột. */
+  narrow?: boolean;
 }) {
   const [query, setQuery] = useState("");
   const [element, setElement] = useState<Element | "counter" | null>(null);
@@ -59,7 +65,7 @@ export default function CompanionPicker({
     .filter((c) => !team.includes(c.id))
     .sort((a, b) => Number(marks.includes(b.element)) - Number(marks.includes(a.element)));
   const list = [...chosen, ...rest];
-  const paged = usePagedItems(list, PAGE);
+  const paged = usePagedItems(list, pageSize);
   const shown = paged.pageItems;
   // Đổi bộ lọc thì về trang đầu.
   const filter = <T,>(set: (v: T) => void) => (v: T) => {
@@ -123,7 +129,7 @@ export default function CompanionPicker({
         </select>
       </div>
 
-      <ul className="grid grid-cols-[repeat(auto-fill,minmax(12.5rem,1fr))] gap-1.5" role="group" aria-labelledby={labelId}>
+      <ul className={`grid gap-1.5 ${narrow ? "grid-cols-2" : "grid-cols-[repeat(auto-fill,minmax(12.5rem,1fr))]"}`} role="group" aria-labelledby={labelId}>
         {shown.map((c) => {
           const on = team.includes(c.id);
           return (
