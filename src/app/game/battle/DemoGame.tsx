@@ -213,6 +213,11 @@ export default function DemoGame({
     readonly side: 0 | 1;
   } | null>(null);
   const [floats, setFloats] = useState<Float[]>([]);
+  /**
+   * Phe của phần đang diễn. `state` chỉ cập nhật khi diễn xong cả lượt (kể cả lượt đối thủ server chạy luôn), nên
+   * trong lúc diễn đòn đối thủ, `state.turn` vẫn là lượt mình; thanh lượt và khung người đang đi phải theo phe này.
+   */
+  const [shownSide, setShownSide] = useState<0 | 1 | null>(null);
   /** Kênh động tác cho sân khấu trận. */
   const [cueBus] = useState(createCueBus);
   // Âm thanh trận: cue theo sự kiện (start/end khớp đạo diễn trận), tiếng ghép ô theo từng khung, nhạc nền theo loại trận.
@@ -261,6 +266,10 @@ export default function DemoGame({
     : undefined;
   const phaseAdvanced = scenarioStatus === "advance";
   const scenarioFailed = scenarioStatus === "failed" || state.winner === AI;
+  /** Phe đang đi theo những gì đang hiện trên màn (xem shownSide). */
+  const turnSide = shownSide ?? state.turn.side;
+  /** Đang diễn lượt của phe khác với `state.turn`: chưa biết ai đi kế, thanh lượt không đếm giờ. */
+  const replaying = shownSide !== null && shownSide !== state.turn.side;
   const playerTurn =
     started &&
     state.winner === null &&
@@ -465,6 +474,7 @@ export default function DemoGame({
         setState(shown);
         setHeldBoard(null);
         setHeldSides(null);
+        setShownSide(null);
         // Trận online: server cộng thưởng và gửi `outcome` (xem receive).
         if (
           !online &&
@@ -503,6 +513,7 @@ export default function DemoGame({
       const present = (index: number) => {
         const current = batches[index];
         if (!current) return finish();
+        setShownSide(current.side);
         const cues = stageCues(before, current.events);
         let frames = eventFrames(board, current.events);
         if (index === 0 && swapShown.current && current.events[0]?.type === "swap")
@@ -523,6 +534,7 @@ export default function DemoGame({
           if (!next || next.side === current.side) return present(index + 1);
           const beginPause = () => afterPacingDelay(COMBAT_PACING.turnPauseMs, () => {
             setTurnBanner({ id: turnBannerId.current++, side: next.side });
+            setShownSide(next.side);
             const bannerMs = next.side === AI
               ? COMBAT_PACING.enemyTurnBannerMs
               : COMBAT_PACING.playerTurnBannerMs;
@@ -915,6 +927,7 @@ export default function DemoGame({
     afterAnim.current = null;
     setHeldBoard(null);
     setHeldSides(null);
+    setShownSide(null);
     setFloats([]);
     setState(null);
     setOutcome(null);
@@ -1130,6 +1143,7 @@ export default function DemoGame({
         skillBar={skillBar}
         started={started}
         state={state}
+        turnSide={replaying ? turnSide : null}
       />
     );
   };
@@ -1231,7 +1245,7 @@ export default function DemoGame({
             <BattleStage
               sides={[(heldSides ?? state.sides)[PLAYER].fighters, (heldSides ?? state.sides)[AI].fighters]}
               actor={
-                state.winner === null
+                state.winner === null && !replaying
                   ? { side: state.turn.side, fighter: state.turn.actor }
                   : null
               }
@@ -1248,9 +1262,9 @@ export default function DemoGame({
           <div className="order-2 mx-auto flex w-full min-w-0 flex-1 flex-col gap-2 md:order-none xl:max-w-[46rem] 3xl:max-w-[56rem]">
             {started && state.winner === null && !atBreak && (
               <TurnClock
-                seconds={playerTurn ? secondsLeft : null}
-                mine={playerTurn}
-                extra={state.turn.extra}
+                seconds={playerTurn && !replaying ? secondsLeft : null}
+                mine={playerTurn && !replaying}
+                extra={state.turn.extra && !replaying}
                 waiting={pending}
               />
             )}
