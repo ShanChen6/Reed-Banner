@@ -1,6 +1,6 @@
 # Giao diện
 
-> Cập nhật: 02/11/2026
+> Cập nhật: 16/11/2026
 > Trạng thái: **IMPLEMENTED**
 
 ## 1. Bố cục màn hình trận đấu
@@ -19,7 +19,10 @@ Bố cục **ngang** (landscape), cả trên desktop lẫn điện thoại xoay 
 ```
 
 - **Giữa:** bàn cờ 12×8.
-- **Trên cùng, giữa:** báo lượt của ai ("Lượt của bạn" / "Lượt đối thủ") và đồng hồ đếm ngược 30 giây.
+- **Trên cùng, giữa:** báo lượt của ai ("Lượt của bạn" / "Lượt đối thủ") và đồng hồ đếm ngược 30 giây. Là một dải mảnh (chữ cỡ chú thích, vạch 4px, rộng tối đa 28rem) để không lấn bàn cờ.
+- **Tên phe:** cột trái ghi "Phe bạn", cột phải ghi "Đối thủ" (tên AI Tianwu chỉ ở trang giới thiệu).
+- **Bị động** không hiện trong trận; mô tả bị động chỉ đọc ở thẻ nhân vật trong Doanh Trại. Thanh kỹ năng trong trận chỉ có các nút kỹ năng.
+- **Hết trận:** chỉ còn kết quả trên bàn cờ, không hiện khối đội hình 3vs3 bên dưới. Màn trận không có nhật ký trận.
 - **Góc trên trái / phải:** khung từng nhân vật của mỗi phe: tên, cấp, thanh máu, thanh năng lượng, thanh nộ (chỉ ở thủ lĩnh), biểu tượng hiệu ứng trạng thái kèm số lượt còn lại.
   - 1vs1: mỗi bên một khung.
   - 3vs3: mỗi bên ba khung xếp dọc; khung của người hành động được làm sáng; chạm vào khung để đổi người hành động.
@@ -56,7 +59,7 @@ Ba cách điều khiển dùng song song; người chơi đổi qua lại bất 
 | 1 – 6 | Chọn kỹ năng chủ động 1 – 6 của người hành động |
 
 - **Ngắm kỹ năng bằng bàn phím:** sau khi chọn kỹ năng, ← → đổi mục tiêu (đồng đội hoặc đối thủ) rồi Enter để dùng. Kỹ năng có vùng trên bàn cờ thì con trỏ chuyển vào bàn, di chuyển để chọn tâm rồi Enter. Kỹ năng lốc xoáy (hệ Phong) chọn tâm bằng con trỏ và Enter, rồi Q xoay ngược, E xoay theo chiều kim đồng hồ (giữ Shift để xoay 2 nấc).
-- **Nhân vật dung hợp (Đinh Ngọc, Vũ Phong):** thẻ nhân vật dùng hai biểu tượng riêng (`tongHop` trong code) với tên hiển thị **Vạn nghề** và **Vạn hệ**, thay cho biểu tượng nghề và hệ thường. Vì biểu tượng Vạn hệ không cho biết khắc chế, biểu tượng **hệ phòng thủ** nhỏ nằm ở góc dưới biểu tượng Vạn hệ (biểu tượng Vạn nghề không có biểu tượng phụ); thẻ không ghi thêm chữ cho gọn, tooltip giải thích hệ phòng thủ (quyết định khắc chế) và liệt kê bốn nội tại. Khung "Bộ 6 chủ động · 4 nội tại dung hợp" liệt kê Nội tại 1–4 kèm mô tả đầy đủ; chiêu của họ ghi "Chiêu dung hợp · đòn hệ X" (ô4: "Tuyệt chiêu nhân vật · đòn hệ X") vì hệ của đòn khác hệ phòng thủ. Nhân vật thường giữ nhãn Nghề 1/Nghề 2/Hệ 1/Hệ 2 như cũ. Mã: `FighterKindIcons.tsx`, `special-labels.ts`, `SkillDetails.tsx` trong `src/app/game/battle/`; tên hiển thị đổi ở `FUSION_PROFESSION_NAME`/`FUSION_ELEMENT_NAME`.
+- **Nhân vật dung hợp (Đinh Ngọc, Vũ Phong):** thẻ nhân vật dùng hai biểu tượng riêng (`tongHop` trong code) với tên hiển thị **Vạn nghề** và **Vạn hệ**, thay cho biểu tượng nghề và hệ thường. Vì biểu tượng Vạn hệ không cho biết khắc chế, biểu tượng **hệ phòng thủ** nhỏ nằm ở góc dưới biểu tượng Vạn hệ (biểu tượng Vạn nghề không có biểu tượng phụ); thẻ không ghi thêm chữ cho gọn, tooltip giải thích hệ phòng thủ (quyết định khắc chế) và liệt kê bốn nội tại. Ở Doanh Trại, khung "Bộ 6 chủ động · 4 nội tại dung hợp" liệt kê Nội tại 1–4 kèm mô tả đầy đủ; chiêu của họ ghi "Chiêu dung hợp · đòn hệ X" (ô4: "Tuyệt chiêu nhân vật · đòn hệ X") vì hệ của đòn khác hệ phòng thủ. Nhân vật thường giữ nhãn Nghề 1/Nghề 2/Hệ 1/Hệ 2 như cũ. Mã: `FighterKindIcons.tsx`, `special-labels.ts`, `SkillDetails.tsx` trong `src/app/game/battle/`; tên hiển thị đổi ở `FUSION_PROFESSION_NAME`/`FUSION_ELEMENT_NAME`.
 - **Chọn và xem trước lốc xoáy:** bấm kỹ năng có bước xoay (chiêu hệ Phong, ô1 và ô6 của Vũ Phong), rồi chạm một ô không sát mép làm tâm; chạm ô mép hiện lời nhắc, chạm lại tâm để bỏ. Vòng 8 ô quanh tâm viền xanh. Mỗi nút xoay (↺, ↻, thêm ×2 khi được 2 nấc) ghi sẵn **số ô sẽ ghép ngay** ("ghép 3" hoặc "không ghép"); rê chuột hoặc focus vào nút để xem vòng 8 ô sau khi xoay và các ô sẽ ghép viền vàng (chưa đổi bàn cờ). Với kỹ năng còn phải chọn mục tiêu (ô1 ở 3vs3), sau khi chọn chiều xoay vòng xoay vẫn được giữ viền và dòng nhắc "Đã chọn xoay …" hiện cùng lời nhắc chọn đối thủ. Esc hủy ở mọi bước. Phần tính xem trước là `previewWhirl` trong `src/core/board/resolve.ts` (hàm thuần, có test).
 - Con trỏ bàn phím là một khung viền rõ trên ô; tự ẩn khi người chơi dùng chuột hoặc chạm, hiện lại khi bấm phím.
 - Đồng hồ 30 giây áp như nhau cho mọi cách điều khiển.
