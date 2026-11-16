@@ -99,7 +99,7 @@ Không đặt kích thước battle board bằng CSS cố định gây tràn. Sc
 
 ## 5. Tháp Thí Luyện — 'Thư viện thử thách'
 
-**Chế độ:** 3v3, 100 tầng live (10 chặng), Đinh Bộ Lĩnh bắt buộc; chọn 2 tướng kèm, đổi nghề/hệ thủ lĩnh tự do bằng hai hàng chip có icon (chấm ngọc = chọn vào thì đội hợp luật, hệ/nghề bị cấm gạch ngang); đội chưa hợp luật thì khóa nút Vào tầng và liệt kê luật chưa đạt, kèm nút đổi nhanh sang nghề/hệ hợp luật gần nhất. Full HP/lương mới mỗi lần. Hết trận về thẳng màn chuẩn bị tầng kế (thắng) hoặc tầng vừa đánh (thua), không qua màn nâng kỹ năng. Thưởng first-clear và quét ngày do server chốt.
+**Chế độ:** 3v3, 100 tầng live (10 chặng), Đinh Bộ Lĩnh bắt buộc; chọn 2 tướng kèm, hai tướng kèm đã chọn ở hai ô riêng phía trên, danh sách bên dưới chỉ còn tướng chưa chọn (tướng bị cấm mờ, xếp cuối, không ghi lý do dưới tên vì Luật tầng đã ghi); đổi nghề/hệ thủ lĩnh tự do bằng hai hàng chip có icon (chấm ngọc = chọn vào thì đội hợp luật, hệ/nghề bị cấm gạch ngang); đội chưa hợp luật thì khóa nút Vào tầng và liệt kê luật chưa đạt, kèm nút đổi nhanh sang nghề/hệ hợp luật gần nhất. Full HP/lương mới mỗi lần. Hết trận về thẳng màn chuẩn bị tầng kế (thắng) hoặc tầng vừa đánh (thua), không qua màn nâng kỹ năng. Thưởng first-clear và quét ngày do server chốt.
 
 ```text
 [HEADER]

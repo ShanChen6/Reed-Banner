@@ -37,6 +37,7 @@ import {
   previewLineup,
   RULE_TAG,
   sweepButtonState,
+  type CompanionOption,
   type LeaderBuild,
   type LeaderPick,
   type TrialFloorEntry,
@@ -210,6 +211,26 @@ function LeaderPickRow<T extends string>({
   );
 }
 
+/** Chân dung, tên, hệ/nghề của một tướng kèm. Lý do bị cấm không ghi dưới tên (luật tầng đã ghi), chỉ ở tooltip. */
+function CompanionCardBody({ option: o }: { option: CompanionOption }) {
+  return (
+    <>
+      <Portrait id={o.id} element={o.element} profession={o.profession} className="size-9 shrink-0 sm:size-10" />
+      <span className="min-w-0 text-caption">
+        <span className="block truncate text-sm font-semibold">{o.name}</span>
+        <span className="flex items-center gap-1 opacity-80">
+          <ElementIcon element={o.element} className="size-3.5 shrink-0" />
+          <span className="truncate">
+            {/* Thẻ hẹp trên điện thoại: biểu tượng đã cho biết hệ, chữ chỉ còn nghề để không bị cắt. */}
+            <span className="max-sm:sr-only">{ELEMENT_NAME[o.element]} · </span>
+            {PROFESSION_NAME[o.profession]}
+          </span>
+        </span>
+      </span>
+    </>
+  );
+}
+
 function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className?: string }) {
   const { entry, profile, companions, busy, message } = props;
   const f = entry.floor;
@@ -217,7 +238,10 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
   const win = describeWin(f.win);
   const options = companionOptions(profile, f.rules, companions);
   // Hàng chục tướng kèm: cắt trang 12 để không dài trên điện thoại (lựa chọn giữ nguyên khi sang trang).
-  const pagedOptions = usePagedItems(options, 12);
+  // Tướng đã chọn nằm ở hai ô riêng phía trên; danh sách dưới chỉ còn tướng chưa chọn, tướng bị luật cấm xếp cuối.
+  const picked = companions.flatMap((id) => options.filter((o) => o.id === id));
+  const candidates = options.filter((o) => !o.selected).sort((a, b) => Number(a.reason !== null) - Number(b.reason !== null));
+  const pagedOptions = usePagedItems(candidates, 12);
   const build = props.build ?? defaultBuild(profile);
   const preview = previewLineup(profile, f.rules, companions, build);
   const picker = leaderPicker(profile, f.rules, companions, build);
@@ -314,30 +338,46 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
         <>
           <div>
             <h3 className="ui-title-on-wood mb-1.5 text-base">Chọn 2 tướng kèm <span className="text-sm font-normal text-on-wood-soft">(đã chọn {companions.length}/2)</span></h3>
-            <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <ul aria-label="Tướng kèm đã chọn" className="mb-3 grid grid-cols-2 gap-2">
+              {[0, 1].map((slot) => {
+                const o = picked[slot];
+                return (
+                  <li key={o?.id ?? `empty-${slot}`}>
+                    {o ? (
+                      <button
+                        type="button"
+                        aria-pressed
+                        aria-label={`Bỏ chọn ${o.name}`}
+                        disabled={busy}
+                        onClick={() => props.onToggleCompanion(o.id)}
+                        className={choiceVariants({ className: "min-h-14 w-full justify-start p-2 text-left font-normal" })}
+                      >
+                        <CompanionCardBody option={o} />
+                        <span aria-hidden className="ml-auto shrink-0 self-start text-caption opacity-70">Bỏ</span>
+                      </button>
+                    ) : (
+                      <div className="ui-frame-inset flex min-h-14 items-center justify-center p-2 text-caption text-on-wood-soft">
+                        Chưa chọn tướng kèm {slot + 1}
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+            <ul aria-label="Tướng kèm có thể chọn" className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {pagedOptions.pageItems.map((o) => (
                 <li key={o.id}>
                   <button
                     type="button"
-                    aria-pressed={o.selected}
+                    aria-pressed={false}
                     aria-disabled={o.disabled}
+                    aria-label={o.reason ? `${o.name}, ${o.reason.toLowerCase()}` : undefined}
+                    title={o.reason ?? undefined}
                     disabled={o.disabled || busy}
                     onClick={() => props.onToggleCompanion(o.id)}
                     className={choiceVariants({ className: "min-h-14 w-full justify-start p-2 text-left font-normal" })}
                   >
-                    <Portrait id={o.id} element={o.element} profession={o.profession} className="size-9 shrink-0 sm:size-10" />
-                    <span className="min-w-0 text-caption">
-                      <span className="block truncate text-sm font-semibold">{o.name}</span>
-                      <span className="flex items-center gap-1 opacity-80">
-                        <ElementIcon element={o.element} className="size-3.5 shrink-0" />
-                        <span className="truncate">
-                          {/* Thẻ hẹp trên điện thoại: biểu tượng đã cho biết hệ, chữ chỉ còn nghề để không bị cắt. */}
-                          <span className="max-sm:sr-only">{ELEMENT_NAME[o.element]} · </span>
-                          {PROFESSION_NAME[o.profession]}
-                        </span>
-                      </span>
-                      {o.reason && <span className={`block text-caption ${o.selected ? "text-lacquer" : "text-danger"}`}>{o.reason}</span>}
-                    </span>
+                    <CompanionCardBody option={o} />
                   </button>
                 </li>
               ))}
