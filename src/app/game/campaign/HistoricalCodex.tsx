@@ -7,6 +7,7 @@
 // Mọi câu ở đây là tóm tắt của sổ nguồn (docs/02-game-modes/campaign/history-sources.md), không phải lời nhân vật hay trích
 // nguyên văn.
 
+import type { ReactNode } from "react";
 import {
   BASIS_LABEL,
   historySource,
@@ -74,17 +75,18 @@ function SourceList({ sources }: { sources: readonly HistorySource[] }) {
   );
 }
 
-export function MissionSources({ nodeId }: { nodeId: CampaignMissionId }) {
+export function MissionSources({ nodeId, children }: { nodeId: CampaignMissionId; children?: ReactNode }) {
   const h = missionHistory(nodeId);
   return (
     <details className="rounded-md border border-info/40 bg-info/10 p-2 text-sm">
       <summary className="flex min-h-11 cursor-pointer items-center gap-2 rounded font-semibold text-info focus-visible:ring-2 focus-visible:ring-info focus-visible:outline-none">
         Sử liệu
         <span className="text-caption font-normal text-on-wood-soft">
-          sự kiện, nguồn và phần game dựng
+          ghi chú nguồn, sự kiện và phần game dựng
         </span>
       </summary>
       <div className="mt-2 flex flex-col gap-3">
+        {children}
         <p className="text-caption text-on-wood-soft">
           Đây là ghi chú nguồn của game, tóm tắt theo sổ nguồn, không phải lời
           nhân vật và không phải trích nguyên văn.
