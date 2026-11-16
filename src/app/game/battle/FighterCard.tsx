@@ -19,9 +19,7 @@ import {
   type Fighter,
 } from "@/core";
 import {
-  EFFECT_NAME,
   passiveText,
-  GOOD_EFFECTS,
 } from "./labels";
 
 import {
@@ -33,6 +31,7 @@ import {
 import { Portrait } from "../art/portraits";
 
 import { PassiveIcon, ragePassiveId } from "../art/passives";
+import { EffectBadge } from "../art/effects";
 
 export function Bar({
   value,
@@ -206,7 +205,7 @@ export function FighterCard({
         )}
       </div>
       {(fighter.effects.length > 0 || fighter.comboReady || rageTurns > 0) && (
-        <div className="mt-1.5 flex flex-wrap gap-1">
+        <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1.5">
           {rageTurns > 0 && (
             <span
               className="inline-flex items-center gap-1 rounded bg-stat-rage/40 px-1 py-0.5 text-caption"
@@ -227,17 +226,7 @@ export function FighterCard({
             </span>
           )}
           {fighter.effects.map((e) => (
-            <span
-              key={e.kind}
-              className={`rounded px-1 py-0.5 text-caption ${GOOD_EFFECTS.includes(e.kind) ? "bg-stat-spirit/40" : "bg-stat-hp/40"}`}
-            >
-              {EFFECT_NAME[e.kind]}
-              {e.kind === "shield"
-                ? ` ${Math.round(e.value)}`
-                : e.turns !== null
-                  ? ` ${e.turns}`
-                  : ""}
-            </span>
+            <EffectBadge key={e.kind} kind={e.kind} value={e.value} turns={e.turns} />
           ))}
         </div>
       )}
