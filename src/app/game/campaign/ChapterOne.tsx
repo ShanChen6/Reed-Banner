@@ -9,7 +9,7 @@ import { Alert, Button, buttonVariants, choiceVariants } from "@/components/ui";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import StartBar from "./StartBar";
 import BattlePrep, { type BattleChoice } from "./BattlePrep";
-import { startTarget } from "./startMission";
+import { nextMissionAfter, startTarget } from "./startMission";
 import {
   CAMPAIGN_CHAPTERS,
   CAMPAIGN_FINAL_NODE,
@@ -114,25 +114,6 @@ const CERTAINTY_TEXT = {
 } as const;
 
 /** Nhiệm vụ kế tiếp sau khi hoàn thành: trong chương, hết chương thì sang chương sau nếu đã mở. */
-function nextMission(
-  profile: Profile,
-  nodeId: CampaignMissionId,
-): CampaignMissionId | null {
-  const chapter = chapterContentOf(nodeId);
-  if (!chapter) return null;
-  // Khép Chương III thì ở lại xem Hội quân Hoa Lư trước khi chọn tuyến.
-  if (chapter.chapter === 3 && campaignMusterReady(profile.campaign))
-    return null;
-  const index = CAMPAIGN_CHAPTERS.indexOf(chapter);
-  for (const c of CAMPAIGN_CHAPTERS.slice(index)) {
-    const next = chapterStatus(profile.campaign, c).find(
-      (m) => m.status === "open" || m.status === "inProgress",
-    );
-    if (next) return next.id;
-  }
-  return null;
-}
-
 /** Lời đáp đã chọn rồi (nếu có) kết thúc nhiệm vụ, phát từng câu. Chỉ trình diễn, không gửi gì lên server. */
 function StoryLines({
   profile,
@@ -182,7 +163,7 @@ function RewardModal({
   if (!reward) return null;
   const node = storyNodeById(reward.nodeId)!;
   const copy = missionCopy(reward.nodeId);
-  const nextId = nextMission(profile, reward.nodeId);
+  const nextId = nextMissionAfter(profile.campaign, reward.nodeId);
   return (
     <div
       role="dialog"
@@ -796,6 +777,36 @@ export default function ChapterOne({
                         {busy ? "Đang ghi…" : "Hoàn thành nhiệm vụ"}
                       </button>
                     )}
+                    {done &&
+                      (() => {
+                        // Xong nhiệm vụ: luôn có lối đi tiếp, kể cả khi đã đóng màn thưởng (sang nhiệm vụ kế, hoặc chương kế).
+                        const nextId = nextMissionAfter(profile.campaign, step.nodeId);
+                        const nextChapter = nextId ? chapterContentOf(nextId) : null;
+                        return (
+                          <div className="mt-1 flex flex-wrap items-center gap-2 border-t border-frame-line-soft pt-3">
+                            <span className="text-sm text-jade">Đã hoàn thành nhiệm vụ.</span>
+                            {nextId ? (
+                              <Button
+                                variant="ornate"
+                                type="button"
+                                onClick={() => openMission(nextId)}
+                              >
+                                {nextChapter && nextChapter.chapter !== chapterContentOf(step.nodeId)?.chapter
+                                  ? `Sang Chương ${ROMAN[nextChapter.chapter]}: ${storyNodeById(nextId)!.title}`
+                                  : `Tiếp: ${storyNodeById(nextId)!.title}`}
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="secondary"
+                                type="button"
+                                onClick={() => updateAtlas({ ...atlas, view: "atlas" })}
+                              >
+                                Về bản đồ Sử ký
+                              </Button>
+                            )}
+                          </div>
+                        );
+                      })()}
                   </div>
                 )}
               </>

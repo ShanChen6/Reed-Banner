@@ -18,6 +18,8 @@ Bố cục hai cột từ `lg` (1024px):
 - **Cột phải, "Bày trận", dính khi cuộn:** mục tiêu (luật riêng của trận gập trong "Luật trận này"); một dòng chip thể thức, độ khó, cấp đối thủ, cấp gợi ý; ba chân dung đối thủ; ba ô đội (chủ tướng, hai phó tướng). Bấm ô chủ tướng mới mở chọn nghề/hệ, bấm ô phó tướng mới mở bộ chọn người. Lương là một chip, thiếu thì hiện nút mua. Nút Xuất quân ở cuối cột.
 - Cột Bày trận có ngay từ đầu nhiệm vụ; chưa chọn lời kế thì nút ghi "Chọn lời kế trước". Không còn bước "Chuẩn bị xuất quân" riêng.
 - **Điện thoại:** cốt truyện trước, Bày trận bên dưới, nút Xuất quân dính đáy màn.
+- **Bộ chọn phó tướng** trong cột Bày trận: hai cột, 6 người mỗi trang (phân trang dùng chung `usePagedItems`/`PageControls`).
+- **Xong nhiệm vụ** (mọi loại): cuối cột trái có dòng "Đã hoàn thành nhiệm vụ" kèm nút sang nhiệm vụ kế ("Tiếp: …", hoặc "Sang Chương … : …" khi qua chương); không còn nhiệm vụ mở (như lúc chờ Hội quân) thì là nút "Về bản đồ Sử ký". Nút này có cả khi đã đóng màn thưởng.
 
 Code: `BattlePrep.tsx` (cột Bày trận), `ChapterOne.tsx` (khung hai cột).
 

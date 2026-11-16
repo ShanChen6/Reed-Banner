@@ -340,6 +340,8 @@ export default function BattlePrep({
                   marks={advice.counterElements}
                   onToggle={toggleTeam}
                   labelId={`team-${nodeId}`}
+                  pageSize={6}
+                  narrow
                 />
               </div>
             )}
