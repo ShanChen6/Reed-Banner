@@ -101,7 +101,6 @@ export const EFFECT_NAME: Record<EffectKind, string> = {
   silence: "Câm lặng",
 };
 
-export const GOOD_EFFECTS: readonly EffectKind[] = ["shield", "atkUp", "defUp", "regen", "reflect", "taunt", "freezeImmune"];
 
 export const DIFFICULTY_NAME: Record<Difficulty, string> = {
   easy: "Dễ",
