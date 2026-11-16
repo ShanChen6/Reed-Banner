@@ -53,7 +53,8 @@ export default function MusterPanel({
         <p className="text-kicker text-frame-gold">
           Tổng kết Chương III · Hội quân Hoa Lư
         </p>
-        <h2 id="muster-title" className="text-xl font-black text-title-on-wood">
+        <h2 id="muster-title"
+          tabIndex={-1} className="text-xl font-black text-title-on-wood">
           Giai đoạn hội kiến khép lại
         </h2>
         <p className="mt-1 flex flex-wrap items-center gap-1.5 text-sm text-on-wood-soft">

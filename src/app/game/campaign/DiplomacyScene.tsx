@@ -38,6 +38,8 @@ export default function DiplomacyScene({
   choice: viewChoice,
   onMove,
   onProfile,
+  finishLabel,
+  onFinished,
 }: {
   profile: Profile;
   nodeId: CampaignMissionId;
@@ -45,6 +47,9 @@ export default function DiplomacyScene({
   choice?: string;
   onMove: (phase: DiplomacyPhase, choice?: string) => void;
   onProfile: (p: Profile) => void;
+  /** Nút đi tiếp ở câu cuối của thoại kết: chỉ có khi đã hoàn thành, phải đọc hết thoại mới hiện. */
+  finishLabel?: string;
+  onFinished?: () => void;
 }) {
   const node = storyNodeById(nodeId)!;
   const copy = missionCopy(nodeId)!;
@@ -258,15 +263,29 @@ export default function DiplomacyScene({
                 </span>
               )}
             </p>
-            <div className="mt-2">
-              <DialoguePlayer
-                key={`${nodeId}:outro`}
-                missionId={nodeId}
-                sequence="outro"
-                label={`Kết cục ${node.id}`}
-                segments={[{ section: "outro", beats: copy.outro }]}
-                main={profile}
-              />
+            <div className="mt-2 flex flex-col">
+              {copy.outro.length > 0 ? (
+                <DialoguePlayer
+                  key={`${nodeId}:outro`}
+                  missionId={nodeId}
+                  sequence="outro"
+                  label={`Kết cục ${node.id}`}
+                  segments={[{ section: "outro", beats: copy.outro }]}
+                  main={profile}
+                  {...(finishLabel && onFinished ? { finishLabel, onFinished } : {})}
+                />
+              ) : (
+                finishLabel &&
+                onFinished && (
+                  <button
+                    type="button"
+                    onClick={onFinished}
+                    className={buttonVariants({ variant: "ornate", className: "self-start" })}
+                  >
+                    {finishLabel}
+                  </button>
+                )
+              )}
             </div>
           </div>
         )}
