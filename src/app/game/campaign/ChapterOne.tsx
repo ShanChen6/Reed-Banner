@@ -8,28 +8,15 @@ import { Alert, Button, buttonVariants, choiceVariants } from "@/components/ui";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import StartBar from "./StartBar";
-import LeaderBuild from "../profile/LeaderBuild";
-import CompanionPicker from "./CompanionPicker";
+import BattlePrep, { type BattleChoice } from "./BattlePrep";
 import { startTarget } from "./startMission";
 import {
   CAMPAIGN_CHAPTERS,
   CAMPAIGN_FINAL_NODE,
   CAMPAIGN_UNIFICATION_NODE,
   campaignCompleted,
-  CAMPAIGN_FOOD_MAX,
-  FOOD_PRICE,
-  MAIN_ID,
-  loadoutOf,
-  ownsCompanion,
-  campaignBattleAdvice,
   campaignEventByNode,
   campaignBattleScenario,
-  campaignEncounter,
-  campaignEncounterFoes,
-  campaignSurviveTurns,
-  campaignTerrain,
-  campaignPhaseLabels,
-  campaignScenarioByNode,
   campaignFocusChapter,
   campaignMusterReady,
   chapterContentOf,
@@ -43,19 +30,9 @@ import {
   storyNodeById,
   type CampaignMissionId,
   type ChapterContent,
-  type Element,
-  type Profession,
   type Profile,
   type ProfileAction,
 } from "@/core";
-import { ElementIcon } from "../art/icons";
-import { Portrait } from "../art/portraits";
-import {
-  DIFFICULTY_NAME,
-  ELEMENT_NAME,
-  PROFESSION_NAME,
-  gearText,
-} from "../battle/labels";
 import {
   completeCampaignEventOnline,
   createOnline,
@@ -285,319 +262,6 @@ function RewardModal({
   );
 }
 
-interface BattleChoice {
-  readonly element: Element;
-  readonly profession: Profession;
-  readonly team: readonly string[];
-}
-
-function BattlePrep({
-  profile,
-  nodeId,
-  busy,
-  resumeId,
-  onAction,
-  onStart,
-  onResume,
-}: {
-  profile: Profile;
-  nodeId: CampaignMissionId;
-  busy: boolean;
-  resumeId: string | null;
-  onAction: (a: ProfileAction) => void;
-  onStart: (choice: BattleChoice) => void;
-  onResume: () => void;
-}) {
-  const [element, setElement] = useState<Element>(profile.element);
-  const [profession, setProfession] = useState<Profession>(profile.profession);
-  // Đội 3vs3: hai người đi cùng, chọn trong số nhân vật đã có (kể cả người mới gia nhập). Server kiểm lại.
-  const owned = Object.keys(profile.companions).filter((id) =>
-    ownsCompanion(profile, id),
-  );
-  const [team, setTeam] = useState<readonly string[]>(() => {
-    const kept = profile.team.filter((id) => owned.includes(id));
-    return kept.length === 2 ? kept : owned.slice(0, 2);
-  });
-  const toggleTeam = (id: string) =>
-    setTeam((t) =>
-      t.includes(id)
-        ? t.filter((x) => x !== id)
-        : t.length < 2
-          ? [...t, id]
-          : t,
-    );
-  const weapon = loadoutOf(profile, MAIN_ID).weapons[profession];
-  // Công thành nhiều trận: phase kế tiếp do server ghi trong hồ sơ.
-  const phase = profile.campaign.siegePhases[nodeId] ?? 0;
-  const labels = campaignPhaseLabels(nodeId);
-  const objective = campaignScenarioByNode(nodeId)?.phases[phase]?.objective;
-  const bossHp = profile.campaign.phaseBossHp[nodeId];
-  const advice = campaignBattleAdvice(
-    { ...profile, element, profession },
-    nodeId,
-    phase,
-  );
-  const scenario = campaignBattleScenario(nodeId);
-  const encounter = campaignEncounter(nodeId, phase);
-  const foes = campaignEncounterFoes(nodeId, phase);
-  const copy = missionCopy(nodeId);
-  const turns = campaignSurviveTurns(nodeId, phase);
-  const stage = objective?.type === "breakSiege" ? objective.stage : undefined;
-  const terrain = campaignTerrain(nodeId);
-  if (!advice || !scenario || !encounter || !foes) return null;
-  const counters = advice.counterElements.includes(element);
-  const weak = advice.weakElements.includes(element);
-  const missing = Math.max(0, advice.suggestedFood - advice.food);
-  const teamReady = advice.mode === "1v1" || team.length === 2;
-  return (
-    <div className="flex flex-col gap-3">
-      {profile.campaign.completed.includes(nodeId) && (
-        <p className="rounded-md border border-info/40 bg-info/10 p-2 text-caption text-info">
-          Đánh lại: chỉ nhận thưởng trận thường và có thể ghi số lượt tốt hơn.
-          Thưởng nhiệm vụ, thế cục sứ quân và lựa chọn đã ghi không đổi.
-        </p>
-      )}
-      {labels.length > 1 && (
-        <ol className="flex flex-wrap gap-1 text-caption" aria-label="Các giai đoạn">
-          {labels.map((label, i) => (
-            <li
-              key={label}
-              aria-current={i === phase ? "step" : undefined}
-              className={`rounded border px-2 py-1 ${
-                i < phase
-                  ? "border-jade/50 bg-jade/15 text-jade"
-                  : i === phase
-                    ? "border-frame-gold bg-frame-gold/25 font-semibold text-on-wood"
-                    : "border-frame-line-soft bg-wood-inset text-on-wood-soft"
-              }`}
-            >
-              {i < phase ? "✓ " : ""}Giai đoạn {i + 1}/{labels.length}: {label}
-            </li>
-          ))}
-        </ol>
-      )}
-      {stage === "escort" && (
-        <p className="rounded-md border border-info/50 bg-info-surface p-2 text-caption text-info">
-          <span className="font-semibold">Tình tiết phục vụ gameplay.</span>{" "}
-          Đoàn lương và toán chặn đường do game sáng tác; sử không chép trận nào
-          trên đường tiếp viện.
-        </p>
-      )}
-      <div className="rounded-md border border-frame-line bg-frame-gold/10 p-2 text-sm text-title-on-wood">
-        <p className="font-semibold">Mục tiêu</p>
-        <p>
-          {stage === "escort"
-            ? `Giữ đoàn lương ${turns} lượt của bạn hoặc hạ hết toán chặn đường.`
-            : stage === "breach"
-              ? `${labels[phase] ?? "Phá lũy"}: hạ hết quân giữ đường để mở lối vào thành.`
-              : objective?.type === "bossPhases" && objective.hpThreshold
-                ? `Đẩy ${foes[0]?.name} xuống còn ${Math.round(objective.hpThreshold * 100)}% máu. Trận dừng ở đó và chuyển sang giai đoạn sau; máu đã mất không hồi lại.`
-                : objective?.type === "bossPhases" && labels.length > 1
-                  ? `Hạ ${foes[0]?.name}${bossHp ? `, vào trận với ${Math.round(bossHp * 100)}% máu còn lại từ giai đoạn trước` : ""}, cùng hai tùy tướng.`
-                  : turns
-                    ? `Cầm cự ${turns} lượt của bạn hoặc hạ ${scenario.mode === "3v3" ? "hết đối thủ" : "thủ lĩnh"}.`
-                    : copy?.objective}
-        </p>
-        {labels.length > 1 && (
-          <p className="mt-1 text-caption text-frame-gold/80">
-            Mỗi giai đoạn là một trận. Qua giai đoạn chưa hoàn thành nhiệm vụ; thua thì
-            đánh lại đúng giai đoạn đó. Lương còn lại mang sang giai đoạn sau.
-          </p>
-        )}
-        {terrain && (
-          <p className="mt-1 text-caption text-frame-gold/80">
-            {terrain.name}: {terrain.summary}. Địa hình do game dựng, không phải
-            sơ đồ một trận có sử chép.
-          </p>
-        )}
-        {encounter.foeFood !== undefined && (
-          <p className="mt-1 text-caption text-frame-gold/80">
-            Đối thủ vào trận với {encounter.foeFood} lương (luật game). Mang đủ
-            lương để không đói giữa trận.
-          </p>
-        )}
-      </div>
-      <dl className="ui-frame-inset grid grid-cols-2 gap-x-3 gap-y-1 p-2 text-sm sm:grid-cols-4">
-        <dt className="text-on-wood-soft">Thể thức</dt>
-        <dd className="font-semibold">
-          {scenario.mode === "3v3" ? "3vs3" : "1vs1"}
-        </dd>
-        <dt className="text-on-wood-soft">Độ khó</dt>
-        <dd className="font-semibold">
-          {DIFFICULTY_NAME[scenario.difficulty]}
-        </dd>
-        <dt className="text-on-wood-soft">Cấp đối thủ</dt>
-        <dd className="font-semibold">{encounter.level}</dd>
-        <dt className="text-on-wood-soft">Cấp gợi ý</dt>
-        <dd
-          className={`font-semibold ${advice.underLevel ? "text-danger" : "text-jade"}`}
-        >
-          {advice.recommendedLevel}
-        </dd>
-      </dl>
-      <ul className="grid gap-2 sm:grid-cols-3">
-        {foes.map((f, i) => (
-          <li
-            key={f.id}
-            className="ui-frame-inset flex items-center gap-2 p-2"
-          >
-            <Portrait
-              id={f.id}
-              element={f.element}
-              profession={f.profession}
-              className="size-12 shrink-0"
-            />
-            <div className="min-w-0 text-caption">
-              <p className="truncate text-sm font-semibold">{f.name}</p>
-              <p className="flex items-center gap-1 text-on-wood-soft">
-                <ElementIcon element={f.element} className="size-3.5" />
-                {ELEMENT_NAME[f.element]} · {PROFESSION_NAME[f.profession]}
-              </p>
-              <p className="text-on-wood-soft">
-                {encounter.foes[i]?.hero
-                  ? "Sứ quân có tên trong sử · trận do game dựng"
-                  : "Nhân vật hư cấu"}
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
-
-      <section
-        className="ui-frame-inset p-2 text-sm"
-        aria-label="Gợi ý đội hình"
-      >
-        <h3 className="mb-1 font-semibold text-frame-gold">Gợi ý đội hình</h3>
-        <p className="text-on-wood-soft">
-          {advice.mode === "1v1"
-            ? "Trận 1vs1: chỉ Đinh Bộ Lĩnh ra trận."
-            : "Trận 3vs3: Đinh Bộ Lĩnh cùng hai người bạn chọn dưới đây."}{" "}
-          Thủ lĩnh hệ {ELEMENT_NAME[advice.leaderElement]}: hệ{" "}
-          {advice.counterElements.map((e) => ELEMENT_NAME[e]).join(", ")} khắc
-          được.
-        </p>
-        <div className="mt-2 flex flex-col gap-2 border-t border-frame-line-soft pt-2">
-          <p className="flex items-center gap-2 font-semibold text-title-on-wood">
-            <Portrait
-              id={MAIN_ID}
-              element={element}
-              profession={profession}
-              className="size-10 shrink-0"
-            />
-            <span>
-              Thủ lĩnh: Đinh Bộ Lĩnh
-              <span className="block text-caption font-normal text-on-wood-soft">
-                {ELEMENT_NAME[element]} · {PROFESSION_NAME[profession]}
-              </span>
-            </span>
-          </p>
-          <LeaderBuild
-            labeled
-            element={element}
-            profession={profession}
-            onChange={(b) => {
-              setElement(b.element);
-              setProfession(b.profession);
-              // Lưu ngay vào hồ sơ để mọi chế độ khác cũng dùng lựa chọn này, khỏi sang Doanh Trại.
-              onAction({ type: "chooseLeader", ...b });
-            }}
-            marks={advice.counterElements}
-            hint={`Đổi tại đây là lưu luôn cho mọi chế độ. Vũ khí nghề ${PROFESSION_NAME[profession]}: ${weapon ? gearText(weapon) : "chưa trang bị (mặc ở Doanh Trại)"}.`}
-          />
-          <p
-            className={`text-caption ${counters ? "text-jade" : weak ? "text-danger" : "text-on-wood-soft"}`}
-          >
-            {counters
-              ? "Hệ đang chọn khắc thủ lĩnh đối phương."
-              : weak
-                ? "Hệ đang chọn bị thủ lĩnh đối phương khắc; vẫn đánh được nhưng sẽ vất vả hơn."
-                : "Hệ đang chọn không khắc cũng không bị khắc."}
-          </p>
-        </div>
-        {advice.mode === "3v3" && (
-          <div className="mt-2 flex flex-col gap-1.5 border-t border-frame-line-soft pt-2">
-            <p className="font-semibold text-title-on-wood" id={`team-${nodeId}`}>
-              Người đi cùng ({team.length}/2)
-              <span className="ml-1 font-normal text-on-wood-soft">
-                {team.map((id) => companionById(id)?.name ?? id).join(", ") ||
-                  "chưa chọn"}
-              </span>
-            </p>
-            <CompanionPicker
-              owned={owned}
-              team={team}
-              marks={advice.counterElements}
-              onToggle={toggleTeam}
-              labelId={`team-${nodeId}`}
-            />
-          </div>
-        )}
-      </section>
-
-      <section
-        className="ui-frame-inset p-2 text-sm"
-        aria-label="Gợi ý lương"
-      >
-        <h3 className="mb-1 font-semibold text-frame-gold">Lương mang theo</h3>
-        <p className={advice.lowFood ? "text-danger" : "text-on-wood-soft"}>
-          Đang có {advice.food}/{CAMPAIGN_FOOD_MAX} lương; gợi ý từ{" "}
-          {advice.suggestedFood} để quân không đói suốt trận.
-          {advice.lowFood &&
-            ` Thiếu ${missing} lương: quân đói sẽ đánh yếu hơn.`}
-        </p>
-        {advice.lowFood && (
-          <Button variant="primary"
-            type="button"
-            disabled={busy || profile.gold < missing * FOOD_PRICE}
-            onClick={() => onAction({ type: "buyFood", amount: missing })}
-            className="mt-1"
-          >
-            Mua {missing} lương ({missing * FOOD_PRICE} vàng)
-          </Button>
-        )}
-      </section>
-
-      {advice.underLevel && (
-        <p className="rounded-md border border-danger/50 bg-danger/10 p-2 text-sm text-danger">
-          Đinh Bộ Lĩnh mới cấp {advice.playerLevel}, thấp hơn cấp gợi ý{" "}
-          {advice.recommendedLevel}. Bạn vẫn có thể xuất quân; thua thì giữ
-          nguyên tiến độ và thử lại.
-        </p>
-      )}
-
-      <div className="flex flex-wrap items-center gap-2">
-        {resumeId ? (
-          <Button variant="ornate"
-            type="button"
-            disabled={busy}
-            onClick={onResume}
-            className="tracking-wider uppercase"
-          >
-            Tiếp tục trận
-          </Button>
-        ) : (
-          <Button variant="ornate"
-            type="button"
-            disabled={busy || !teamReady}
-            onClick={() => onStart({ element, profession, team })}
-            className="tracking-wider uppercase"
-          >
-            {!teamReady
-              ? "Chọn đủ 2 người đi cùng"
-              : busy
-                ? "Đang xuất quân…"
-                : phase > 0
-                  ? `Vào giai đoạn ${phase + 1}/${labels.length}`
-                  : profile.campaign.completed.includes(nodeId)
-                    ? "Đánh lại"
-                    : "Xuất quân"}
-          </Button>
-        )}
-      </div>
-    </div>
-  );
-}
-
 export default function ChapterOne({
   profile,
   onProfile,
@@ -744,6 +408,8 @@ export default function ChapterOne({
   const recorded = campaign.storyChoices[step.nodeId];
   const choice = step.choice ?? recorded;
   const done = status === "completed";
+  /** Nhiệm vụ có trận: cột Bày trận bên phải (máy tính) hoặc dưới cốt truyện (điện thoại), luôn có từ đầu nhiệm vụ. */
+  const prepSide = isBattle && !!copy && node.type !== "diplomacy";
 
   const submitEvent = async () => {
     if (!choice) return;
@@ -928,7 +594,14 @@ export default function ChapterOne({
             </p>
           </nav>
 
-          <article className="flex flex-col gap-3 border-t border-frame-line-soft px-1 pt-3 sm:px-2">
+          <article
+            className={`border-t border-frame-line-soft px-1 pt-3 sm:px-2 ${
+              prepSide
+                ? "grid gap-4 pb-24 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start lg:pb-0 xl:grid-cols-[minmax(0,1fr)_26rem]"
+                : "flex flex-col gap-3"
+            }`}
+          >
+           <div className="flex min-w-0 flex-col gap-3">
             <header>
               <p className="text-kicker text-frame-gold">
                 {node.location.name} ·{" "}
@@ -940,18 +613,20 @@ export default function ChapterOne({
                   </span>
                 )}
               </p>
-              <h2
-                id="mission-title"
-                ref={missionHeadingRef}
-                tabIndex={-1}
-                className="text-xl font-bold text-title-on-wood focus:outline-none"
-              >
-                {node.title}
-              </h2>
-              <div className="mt-1 flex flex-wrap gap-1">
-                {node.historicalBasis.map((b) => (
-                  <BasisBadge key={b} basis={b} />
-                ))}
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <h2
+                  id="mission-title"
+                  ref={missionHeadingRef}
+                  tabIndex={-1}
+                  className="text-xl font-bold text-title-on-wood focus:outline-none"
+                >
+                  {node.title}
+                </h2>
+                <div className="flex flex-wrap gap-1">
+                  {node.historicalBasis.map((b) => (
+                    <BasisBadge key={b} basis={b} />
+                  ))}
+                </div>
               </div>
               {node.type === "diplomacy" && !copy && (
                 <p className="mt-2 text-caption text-on-wood-soft">
@@ -1061,7 +736,6 @@ export default function ChapterOne({
                 {step.nodeId === CAMPAIGN_UNIFICATION_NODE && (
                   <FactionDossiers campaign={campaign} />
                 )}
-                <SourceNotes nodeId={step.nodeId} />
                 {step.phase !== "intro" && (
                   <div className="flex flex-col gap-2">
                     <p className="font-semibold text-frame-gold">
@@ -1122,42 +796,40 @@ export default function ChapterOne({
                         {busy ? "Đang ghi…" : "Hoàn thành nhiệm vụ"}
                       </button>
                     )}
-                    {isBattle && step.phase === "choice" && (
-                      <button
-                        type="button"
-                        disabled={!choice}
-                        onClick={() =>
-                          move({ nodeId: step.nodeId, phase: "prep", choice })
-                        }
-                        className={buttonVariants({ className: "min-h-11 self-start" })}
-                      >
-                        Chuẩn bị xuất quân
-                      </button>
-                    )}
-                    {isBattle && step.phase === "prep" && (
-                      <BattlePrep
-                        profile={profile}
-                        nodeId={step.nodeId}
-                        busy={busy || actionBusy}
-                        resumeId={
-                          resumable?.nodeId === step.nodeId
-                            ? resumable.id
-                            : null
-                        }
-                        onAction={onAction}
-                        onStart={(c) => void startBattle(c)}
-                        onResume={resumeBattle}
-                      />
-                    )}
                   </div>
                 )}
               </>
             )}
-            {copy && <MissionSources nodeId={step.nodeId} />}
+            {copy && (
+              <MissionSources nodeId={step.nodeId}>
+                <SourceNotes nodeId={step.nodeId} bare />
+              </MissionSources>
+            )}
             {message && (
               <Alert tone="error" className="p-3 text-sm">
                 {message}
               </Alert>
+            )}
+           </div>
+            {prepSide && (
+              <aside
+                aria-label="Bày trận"
+                className="ui-frame-inset rounded-xl p-3 lg:sticky lg:top-[4.5rem] lg:max-h-[calc(100dvh-5.5rem)] lg:overflow-y-auto xl:top-[80px]"
+              >
+                <BattlePrep
+                  key={step.nodeId}
+                  profile={profile}
+                  nodeId={step.nodeId}
+                  busy={busy || actionBusy}
+                  resumeId={
+                    resumable?.nodeId === step.nodeId ? resumable.id : null
+                  }
+                  needChoice={!choice}
+                  onAction={onAction}
+                  onStart={(c) => void startBattle(c)}
+                  onResume={resumeBattle}
+                />
+              </aside>
             )}
           </article>
         </>
