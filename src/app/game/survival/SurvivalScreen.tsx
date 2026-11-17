@@ -28,6 +28,7 @@ import {
   type Element,
   type FighterConfig,
   type MatchView,
+  type SurvivalAction,
   type Profile,
 } from "@/core";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
@@ -56,6 +57,7 @@ import {
   type SurvivalSlots,
 } from "./roster-selection";
 import { ModeGuideTabs } from "../ModeGuide";
+import SurvivalBreakScreen from "./SurvivalBreakScreen";
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
@@ -247,6 +249,19 @@ export default function SurvivalScreen() {
     setBusy(false);
   };
 
+  const nextWave = async (run: OpenRun, action: SurvivalAction) => {
+    setBusy(true);
+    setMessage(null);
+    const res = await actOnline(run.id, run.view.seq, action);
+    if (res.view && !res.error) {
+      enterBattle(run.id);
+      return;
+    }
+    setMessage(ONLINE_ERROR_TEXT[res.error ?? "network"] ?? "Máy chủ chưa nhận đội hình này. Xin xem lại rồi thử lại.");
+    await load();
+    setBusy(false);
+  };
+
   const slotCard = (index: number) => {
     const id = slots[index] ?? "";
     const entry = fighterById.get(id);
@@ -299,9 +314,20 @@ export default function SurvivalScreen() {
     );
   };
 
-  const runPanel = openRun && (
-    <OpenRunPanel run={openRun} busy={busy} onResume={() => enterBattle(openRun.id)} onEnd={() => void endRun(openRun)} />
-  );
+  // Đang nghỉ giữa đợt: màn chuẩn bị đợt kế ngay tại đây (không còn khung nổi trên bàn cờ).
+  const runPanel = openRun && (openRun.view.battle.winner === 0 && openRun.view.survival ? (
+    <SurvivalBreakScreen
+      key={openRun.view.seq}
+      survival={openRun.view.survival}
+      pending={busy}
+      error={null}
+      onRefresh={() => void load()}
+      onNext={(action) => void nextWave(openRun, action)}
+      onEnd={() => void endRun(openRun)}
+    />
+  ) : (
+    <OpenRunPanel run={openRun} busy={busy} onResume={() => enterBattle(openRun.id)} />
+  ));
 
   const newRunPanel = !openRun && (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
@@ -502,99 +528,41 @@ export default function SurvivalScreen() {
   );
 }
 
-/** Lượt chơi chưa kết thúc: tiến độ, đội hình hiện tại và nút vào lại hoặc dừng ghi điểm. */
-function OpenRunPanel({
-  run,
-  busy,
-  onResume,
-  onEnd,
-}: {
-  run: OpenRun;
-  busy: boolean;
-  onResume: () => void;
-  onEnd: () => void;
-}) {
-  const [confirmEnd, setConfirmEnd] = useState(false);
+/** Lượt chơi đang đánh dở một đợt: máu ba tướng ra trận và nút vào lại trận. */
+function OpenRunPanel({ run, busy, onResume }: { run: OpenRun; busy: boolean; onResume: () => void }) {
   const survival = run.view.survival!;
-  const atBreak = run.view.battle.winner === 0;
   const fighters = run.view.battle.sides[0].fighters;
-  const reserves = survival.break?.fighters.filter((f) => f.location === "reserve") ?? [];
   return (
     <OrnateFrame level="raised" className="flex flex-col gap-4">
       <SectionTitle
-        description={
-          atBreak
-            ? `Đang nghỉ sau đợt ${survival.wave}. Tiến độ được giữ trên máy chủ tới hết mùa tuần này (thứ Hai 0 giờ); mở ở thiết bị nào cũng vào lại được.`
-            : `Đang đánh dở đợt ${survival.wave}. Đồng hồ lượt vẫn chạy khi bạn rời trận; bỏ quá 24 giờ thì lượt chơi dừng ở đợt ${survival.cleared}.`
-        }
+        description={`Đồng hồ lượt vẫn chạy khi bạn rời trận; bỏ quá 24 giờ thì lượt chơi dừng ở đợt ${survival.cleared}.`}
       >
-        Lượt chơi đang dở · đã vượt {survival.cleared} đợt
+        Đang đánh dở đợt {survival.wave} · đã vượt {survival.cleared} đợt
       </SectionTitle>
-      <div className="grid gap-3 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-        <ul className="grid gap-2 sm:grid-cols-3">
-          {fighters.map((f) => {
-            const ratio = f.maxHp > 0 ? Math.max(0, Math.min(100, (100 * f.hp) / f.maxHp)) : 0;
-            return (
-              <li key={f.id} className={cn("min-w-0 rounded-lg border border-frame-line-soft bg-wood-inset p-2", f.hp <= 0 && "opacity-70")}>
-                <div className="flex items-center gap-2">
-                  <Portrait id={f.id} element={f.element} profession={f.profession} className={cn("size-10 shrink-0", f.hp <= 0 && "grayscale")} />
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-on-wood">{f.name}</p>
-                    <p className={cn("text-caption", f.hp <= 0 ? "text-danger" : "text-on-wood-soft")}>
-                      {f.hp <= 0 ? "Đã gục" : `Máu ${f.hp}/${f.maxHp}`}
-                    </p>
-                  </div>
+      <ul className="grid gap-2 sm:grid-cols-3">
+        {fighters.map((f) => {
+          const ratio = f.maxHp > 0 ? Math.max(0, Math.min(100, (100 * f.hp) / f.maxHp)) : 0;
+          return (
+            <li key={f.id} className={cn("min-w-0 rounded-lg border border-frame-line-soft bg-wood-inset p-2", f.hp <= 0 && "opacity-70")}>
+              <div className="flex items-center gap-2">
+                <Portrait id={f.id} element={f.element} profession={f.profession} className={cn("size-10 shrink-0", f.hp <= 0 && "grayscale")} />
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-on-wood">{f.name}</p>
+                  <p className={cn("text-caption", f.hp <= 0 ? "text-danger" : "text-on-wood-soft")}>
+                    {f.hp <= 0 ? "Đã gục" : `Máu ${f.hp}/${f.maxHp}`}
+                  </p>
                 </div>
-                <div className="mt-1.5 h-1.5 overflow-hidden rounded bg-black/40" aria-hidden>
-                  <div className={cn("h-full", ratio < 30 ? "bg-danger" : "bg-jade")} style={{ width: `${ratio}%` }} />
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-        <div className="ui-frame-inset flex flex-col gap-1 p-3 text-sm">
-          {survival.next && atBreak ? (
-            <p>
-              Đợt kế: <strong>{survival.next.wave}</strong> · {survival.next.foes.length} đối thủ cấp {survival.next.level}
-              {survival.next.boss && <strong className="ml-1 text-danger">· đợt trùm</strong>}
-            </p>
-          ) : (
-            <p>
-              Đợt đang đánh: <strong>{survival.wave}</strong> · {survival.current.foes.length} đối thủ cấp {survival.current.level}
-            </p>
-          )}
-          {reserves.length > 0 && (
-            <p className="text-on-wood-soft">
-              Dự bị: {reserves.map((f) => `${f.name} (${f.hpAfterRecovery > 0 ? `${f.hpAfterRecovery}/${f.maxHp} máu` : "gục"})`).join(", ")}
-            </p>
-          )}
-          <p className="text-on-wood-soft">Dừng bây giờ: ghi {survival.cleared} đợt, nhận {survival.cleared * SURVIVAL_WAVE_GOLD} vàng.</p>
-        </div>
-      </div>
-      {confirmEnd ? (
-        <Alert className="p-3 text-sm">
-          <p>
-            <strong>Dừng hẳn lượt chơi?</strong> Ghi {survival.cleared} đợt vào bảng; lượt sau phải đánh lại từ đợt 1.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Button variant="secondary" disabled={busy} onClick={onEnd} className="min-h-11">
-              {busy ? "Đang dừng…" : `Dừng · ghi ${survival.cleared} đợt`}
-            </Button>
-            <Button disabled={busy} onClick={() => setConfirmEnd(false)} className="min-h-11">Giữ lượt chơi</Button>
-          </div>
-        </Alert>
-      ) : (
-        <div className="flex flex-wrap gap-2">
-          <Button size="lg" disabled={busy} onClick={onResume} className="min-h-11">
-            {atBreak ? `Tiếp tục · chuẩn bị đợt ${survival.next?.wave ?? survival.wave + 1}` : `Vào lại đợt ${survival.wave}`}
-          </Button>
-          {atBreak && (
-            <Button variant="secondary" disabled={busy} onClick={() => setConfirmEnd(true)} className="min-h-11">
-              Dừng và ghi điểm
-            </Button>
-          )}
-        </div>
-      )}
+              </div>
+              <div className="mt-1.5 h-1.5 overflow-hidden rounded bg-black/40" aria-hidden>
+                <div className={cn("h-full", ratio < 30 ? "bg-danger" : "bg-jade")} style={{ width: `${ratio}%` }} />
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      <Button size="lg" disabled={busy} onClick={onResume} className="min-h-11 self-start">
+        Vào lại đợt {survival.wave}
+      </Button>
     </OrnateFrame>
   );
 }

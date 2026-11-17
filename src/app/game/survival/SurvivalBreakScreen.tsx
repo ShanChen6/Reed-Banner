@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { OrnateFrame } from "@/components/game-ui";
 import { Alert, Button, ChoiceChip } from "@/components/ui";
 import { cn } from "@/lib/cn";
-import { useAudio } from "../audio/AudioProvider";
 
 import {
   ELEMENTS,
@@ -35,23 +35,15 @@ type SurvivalBreakScreenProps = {
   onRefresh: () => void;
   onNext: (action: SurvivalAction) => void;
   onEnd: () => void;
-  /** Rời màn nghỉ, giữ nguyên tiến độ trên máy chủ để quay lại sau. */
-  onPause?: () => void;
 };
 
 export default function SurvivalBreakScreen(props: SurvivalBreakScreenProps) {
   const { survival, pending, error, onRefresh } = props;
   const preview = survival.break;
   const next = survival.next;
-  const { play: playSound } = useAudio();
-  // Báo trước đợt kế: một tiếng cảnh báo khi màn nghỉ hiện ra.
-  useEffect(() => playSound("survival.warn"), [playSound]);
   if (!preview || !next) {
     return (
-      <section
-        role="alert"
-        className="fixed inset-2 z-40 m-auto flex max-h-[90dvh] max-w-3xl flex-col justify-center gap-4 overflow-y-auto rounded-xl border border-danger/70 bg-wood-lo/[.98] p-4 text-on-wood shadow-2xl sm:p-6"
-      >
+      <OrnateFrame role="alert" className="flex flex-col gap-4">
         <h2 className="text-xl font-bold text-title-on-wood">Chưa nhận được tin lúc nghỉ giữa đợt</h2>
         <p className="text-sm text-on-wood-soft">
           Máy chủ chưa gửi bản xem trước đội hình, hồi phục và lương. Không thể tự tính thay hoặc tự bắt đầu đợt kế.
@@ -65,7 +57,7 @@ export default function SurvivalBreakScreen(props: SurvivalBreakScreenProps) {
         >
           {pending ? "Đang tải dữ liệu…" : "Tải lại dữ liệu nghỉ"}
         </Button>
-      </section>
+      </OrnateFrame>
     );
   }
   return <SurvivalBreakReady {...props} preview={preview} next={next} />;
@@ -89,7 +81,7 @@ function HpMeter({ fighter }: { fighter: BreakFighter }) {
   return (
     <div className="mt-1.5">
       <div className="mb-0.5 flex justify-between gap-2 text-caption text-on-wood-soft">
-        <span>Máu</span>
+        <span>Năng lượng: {fighter.energy}</span>
         <span className={isDown ? "text-danger" : "text-on-wood"}>
           {fighter.hpBeforeRecovery} → {fighter.hpAfterRecovery}/{fighter.maxHp}
         </span>
@@ -104,7 +96,6 @@ function HpMeter({ fighter }: { fighter: BreakFighter }) {
       >
         <div className={`h-full ${isDown ? "bg-danger" : "bg-jade"}`} style={{ width: `${width}%` }} />
       </div>
-      <p className="mt-0.5 text-right text-caption text-on-wood-soft">Năng lượng: {fighter.energy}</p>
     </div>
   );
 }
@@ -115,7 +106,6 @@ function SurvivalBreakReady({
   error,
   onNext,
   onEnd,
-  onPause,
   preview,
   next,
 }: SurvivalBreakScreenProps & {
@@ -193,18 +183,15 @@ function SurvivalBreakReady({
       : "Đội hình chưa hợp lệ: cần đủ hai đồng đội sống; tướng gục chỉ được giữ nguyên vị trí khi không còn dự bị sống.";
 
   return (
-    <section
-      aria-labelledby="survival-break-title"
-      className="fixed inset-x-2 bottom-2 z-40 m-auto flex max-h-[92dvh] w-[calc(100%-1rem)] max-w-5xl flex-col overflow-hidden rounded-xl border border-frame-gold/70 bg-wood-lo/[.98] text-on-wood shadow-2xl sm:inset-4 sm:w-auto lg:inset-8"
-    >
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-frame-line-soft px-3 py-3 sm:px-5">
+    <section aria-labelledby="survival-break-title" className="flex flex-col gap-4">
+      <OrnateFrame level="raised" className="flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-kicker text-jade">Nghỉ giữa các đợt · tiến độ đã lưu</p>
+          <p className="text-kicker text-jade">Nghỉ giữa các đợt · tiến độ đã lưu, rời trang lúc nào cũng được</p>
           <h2 id="survival-break-title" className="text-xl font-black text-title-on-wood sm:text-2xl">
-            Đã thắng đợt {survival.wave}
+            Đã thắng đợt {survival.wave} · chuẩn bị đợt {next.wave}
           </h2>
           <p className="text-sm text-on-wood-soft">
-            Đợt tiếp theo: {next.wave} · cấp {next.level}
+            Đã vượt {survival.cleared} đợt · đợt {next.wave} có {next.foes.length} đối thủ cấp {next.level}
             {next.boss && (
               <span className="ml-2 inline-flex rounded-full bg-lacquer px-2 py-0.5 text-caption font-bold uppercase text-on-wood">
                 Cảnh báo trùm
@@ -224,12 +211,11 @@ function SurvivalBreakReady({
             </>
           )}
         </dl>
-      </header>
+      </OrnateFrame>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3 sm:px-5">
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(15rem,2fr)]">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(16rem,2fr)]">
           <div className="flex min-w-0 flex-col gap-4">
-            <section aria-labelledby="survival-force-title">
+            <OrnateFrame as="section" aria-labelledby="survival-force-title">
               <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
                 <h3 id="survival-force-title" className="font-bold text-frame-gold">
                   Đội hình đợt {next.wave} · ra trận {picked}/2
@@ -312,9 +298,9 @@ function SurvivalBreakReady({
               <p role={lineupValid ? "status" : "alert"} className={`mt-2 text-caption ${lineupValid ? "text-jade" : "text-danger"}`}>
                 {lineupMessage}
               </p>
-            </section>
+            </OrnateFrame>
 
-            <section aria-labelledby="survival-leader-title" className="ui-frame-inset p-3">
+            <OrnateFrame as="section" aria-labelledby="survival-leader-title">
               <h3 id="survival-leader-title" className="font-bold text-frame-gold">Cấu hình Đinh Bộ Lĩnh</h3>
               {preview.leaderBuildBasis && leaderPreview ? (
                 <>
@@ -374,11 +360,45 @@ function SurvivalBreakReady({
                   Bản lưu này thiếu dữ liệu tiến trình để xem trước cấu hình. Cấu hình hiện tại được giữ nguyên.
                 </p>
               )}
-            </section>
+            </OrnateFrame>
           </div>
 
-          <aside className="flex min-w-0 flex-col gap-4">
-            <section aria-labelledby="survival-enemy-title" className="ui-frame-inset p-3">
+          <aside className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-4 lg:self-start">
+            <OrnateFrame level="raised" className="flex flex-col gap-2">
+              {error && <Alert>Máy chủ báo lỗi: {error}</Alert>}
+              {pending && <p role="status" className="text-sm text-frame-gold">Đang chờ máy chủ xác nhận…</p>}
+              {confirmEnd ? (
+                <>
+                  <p className="text-sm">
+                    <strong>Dừng hẳn lượt chơi?</strong> Ghi {survival.cleared} đợt vào bảng; lượt sau phải đánh lại từ đợt 1.
+                  </p>
+                  <Button disabled={pending} onClick={onEnd} className="min-h-11">Dừng · ghi {survival.cleared} đợt</Button>
+                  <Button variant="secondary" disabled={pending} onClick={() => setConfirmEnd(false)} className="min-h-11">Giữ lượt chơi</Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="primary" type="button" disabled={pending || !lineupValid} onClick={() => onNext(action)} className="min-h-11 max-lg:hidden">
+                    {pending ? "Đang xử lý…" : `Xác nhận và vào đợt ${next.wave}`}
+                  </Button>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="secondary" size="sm" type="button" disabled={pending || !hasDraftChanges}
+                      onClick={() => {
+                        setDraftActiveIds([...originalActiveIds]);
+                        setDraftProfession(currentProfession);
+                        setDraftElement(currentElement);
+                        setDraftReviveId(undefined);
+                      }}
+                      className="min-h-11 flex-1">
+                      Hoàn tác bản nháp
+                    </Button>
+                    <Button variant="secondary" size="sm" type="button" disabled={pending} onClick={() => setConfirmEnd(true)} className="min-h-11 flex-1">
+                      Dừng Trấn Ải
+                    </Button>
+                  </div>
+                </>
+              )}
+            </OrnateFrame>
+            <OrnateFrame as="section" aria-labelledby="survival-enemy-title">
               <h3 id="survival-enemy-title" className="font-bold text-frame-gold">
                 Đối thủ đợt {next.wave} · cấp {next.level}
               </h3>
@@ -399,9 +419,9 @@ function SurvivalBreakReady({
                   </li>
                 ))}
               </ul>
-            </section>
+            </OrnateFrame>
 
-            <section aria-labelledby="survival-revive-title" className="ui-frame-inset flex flex-col gap-2 p-3">
+            <OrnateFrame as="section" aria-labelledby="survival-revive-title" className="flex flex-col gap-2">
               <h3 id="survival-revive-title" className="font-bold text-frame-gold">Hồi sinh</h3>
               {autoRevive ? (
                 <Alert tone="success">
@@ -430,49 +450,17 @@ function SurvivalBreakReady({
                   ))}
                 </>
               )}
-            </section>
+            </OrnateFrame>
           </aside>
         </div>
-      </div>
-
-      <footer className="flex flex-col gap-2 border-t border-frame-line-soft bg-wood-lo px-3 py-3 sm:px-5">
-        {error && <Alert>Máy chủ báo lỗi: {error}</Alert>}
-        {pending && <p role="status" className="text-sm text-frame-gold">Đang chờ máy chủ xác nhận…</p>}
-        {confirmEnd ? (
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="mr-auto text-sm">
-              <strong>Dừng hẳn lượt chơi?</strong> Ghi {survival.cleared} đợt vào bảng; lượt sau phải đánh lại từ đợt 1.
-            </p>
-            <Button variant="secondary" disabled={pending} onClick={() => setConfirmEnd(false)} className="min-h-11">Ở lại</Button>
-            <Button disabled={pending} onClick={onEnd} className="min-h-11">Dừng · ghi {survival.cleared} đợt</Button>
-          </div>
-        ) : (
-          <div className="flex flex-wrap items-center gap-2">
-            <Button variant="ghost" size="sm" type="button" disabled={pending || !hasDraftChanges}
-              onClick={() => {
-                setDraftActiveIds([...originalActiveIds]);
-                setDraftProfession(currentProfession);
-                setDraftElement(currentElement);
-                setDraftReviveId(undefined);
-              }}
-              className="min-h-11">
-              Hoàn tác bản nháp
-            </Button>
-            <span className="mr-auto" />
-            <Button variant="secondary" type="button" disabled={pending} onClick={() => setConfirmEnd(true)} className="min-h-11">
-              Dừng Trấn Ải
-            </Button>
-            {onPause && (
-              <Button variant="secondary" type="button" disabled={pending} onClick={onPause} className="min-h-11">
-                Tạm nghỉ · lưu tiến độ
-              </Button>
-            )}
-            <Button variant="primary" type="button" disabled={pending || !lineupValid} onClick={() => onNext(action)} className="min-h-11">
-              {pending ? "Đang xử lý…" : `Xác nhận và vào đợt ${next.wave}`}
-            </Button>
-          </div>
-        )}
-      </footer>
+      {/* Điện thoại: nút vào đợt luôn trong tầm tay khi cuộn qua đội hình. */}
+      {!confirmEnd && (
+        <div className="sticky bottom-2 z-10 lg:hidden">
+          <Button variant="primary" type="button" fullWidth disabled={pending || !lineupValid} onClick={() => onNext(action)} className="min-h-12 shadow-2xl">
+            {pending ? "Đang xử lý…" : `Xác nhận và vào đợt ${next.wave}`}
+          </Button>
+        </div>
+      )}
     </section>
   );
 }
