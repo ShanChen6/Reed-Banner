@@ -87,10 +87,18 @@ test.describe("tài khoản đã đăng nhập", () => {
     await expect(page.getByRole("grid", { name: "Bàn cờ" })).toBeVisible();
     // Lượt chơi lưu trên máy chủ: về màn Trấn Ải thấy tiến độ và nút vào lại, không mở lượt mới chồng lên.
     await page.goto("/game/survival");
-    await expect(page.getByRole("heading", { name: /Lượt chơi đang dở/ })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Đang đánh dở đợt 1/ })).toBeVisible();
     await expect(page.getByRole("button", { name: "Bắt đầu Trấn Ải" })).toHaveCount(0);
     await page.getByRole("button", { name: "Vào lại đợt 1" }).click();
     await expect(page.getByRole("grid", { name: "Bàn cờ" })).toBeVisible();
+    expectClean(problems);
+  });
+
+  test("Nhật Lệnh: có khung nhiệm vụ ngày", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game/daily");
+    await expect(page.getByRole("heading", { name: "Nhiệm vụ ngày" })).toBeVisible();
+    await expect(page.getByRole("meter", { name: "Nhận Nhật Lệnh" })).toBeVisible();
     expectClean(problems);
   });
 
