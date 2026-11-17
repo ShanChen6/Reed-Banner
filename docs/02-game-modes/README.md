@@ -88,7 +88,7 @@ Song Tháp gồm hai chế độ hiện hành: Tháp Thí Luyện và Tháp Thi�
   khó 5 tầng (Dễ, Thường, Khó, Trùm); thắng tầng cuối là hoàn thành run. Số liệu ở
   [luật Song Tháp §11](dual-tower/00-02-rules.md#11-destiny-v2--20-tầng-shan-chốt-11112026), 15 Phúc ở
   [T04.06](dual-tower/04-06-destiny-boons.md). Chu kỳ 7 ngày từ thứ Hai 00:00 Việt Nam; luật được snapshot và không đổi trong
-  chu kỳ. Run khóa roster từ toàn bộ tướng đã sở hữu, không giới hạn tối đa, giữ HP, energy và lương qua
+  chu kỳ. Run khóa roster từ toàn bộ tướng đã sở hữu, tối đa 8 tướng kèm ngoài Đinh Bộ Lĩnh (17/11/2026), giữ HP, energy và lương qua
   tầng; dự bị không tự hồi. Sau tầng chọn hồi phục, Phúc hoặc tài nguyên theo offer; không có đá trong reward
   giữa tầng. Đá tài khoản chỉ đến từ mốc và settlement cuối chu kỳ.
 - Cả hai mode giữ battle 3vs3 và không cho đổi tướng trong combat. Không phát vàng, EXP hay trang bị riêng từ

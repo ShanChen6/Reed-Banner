@@ -8,13 +8,14 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react
 import {
   DESTINY_BOON_CATALOG,
   DESTINY_FOOD_MAX,
+  DESTINY_ROSTER_MAX,
   DESTINY_ROSTER_MIN,
   ELEMENTS,
   MAIN_ID,
   PROFESSIONS,
   RAGE_MAX,
   companionById,
-  destinyAverageLevel,
+  destinyFloorFoeLevel,
   destinyRageOf,
   progressOf,
   type DestinyLeaderBuild,
@@ -40,6 +41,7 @@ import {
   DESTINY_ERROR_TEXT,
   DESTINY_RARITY_NAME,
   aliveIds,
+  companionsByLevel,
   defaultDestinyBuild,
   destinyCompanionOptions,
   destinyTierSpans,
@@ -237,7 +239,10 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
             <li key={span.tier} className={cn("ui-frame-inset min-w-0 px-1 pb-2 pt-2.5 sm:px-2", active && "border-frame-gold/60")}>
               <p className="mb-2.5 flex items-baseline justify-between gap-2 px-1 text-caption">
                 <strong className={cn("text-sm", active ? "text-frame-gold" : "text-on-wood")}>{difficultyName(span.difficulty)}</strong>
-                <span className="text-on-wood-soft">Tầng {span.from === span.to ? span.from : `${span.from}–${span.to}`}</span>
+                <span className="truncate text-on-wood-soft">
+                  Tầng {span.from === span.to ? span.from : `${span.from}–${span.to}`}
+                  <span className="max-sm:hidden"> · Cấp {destinyFloorFoeLevel(span.from)}–{destinyFloorFoeLevel(span.to)}</span>
+                </span>
               </p>
               <ol className="flex" aria-label={`Chặng ${difficultyName(span.difficulty)}`}>
                 {floors.map((floor, index) => {
@@ -298,8 +303,8 @@ export default function DestinyScreen() {
   const [confirmStop, setConfirmStop] = useState(false);
   /** Giờ lúc tải, để tính thời gian còn lại của chu kỳ mà không đọc đồng hồ trong lúc vẽ. */
   const [loadedAt, setLoadedAt] = useState<number | null>(null);
-  // Danh sách tướng chọn vào đội: cắt trang 12 (chọn giữ nguyên khi sang trang). Hook đặt trước các return sớm.
-  const rosterIds = useMemo(() => (profile ? Object.keys(profile.companions).sort() : []), [profile]);
+  // Danh sách tướng chọn vào đội, cấp cao trước: cắt trang 12 (chọn giữ nguyên khi sang trang). Hook đặt trước các return sớm.
+  const rosterIds = useMemo(() => (profile ? companionsByLevel(profile) : []), [profile]);
   const pagedRoster = usePagedItems(rosterIds, 12);
 
   const load = useCallback(async () => {
@@ -327,7 +332,8 @@ export default function DestinyScreen() {
       }
       setActive([MAIN_ID, ...pair]);
     } else {
-      setRoster([MAIN_ID, ...Object.keys(stored.profile.companions).sort()]);
+      // Gợi ý sẵn các tướng cấp cao nhất, vừa đủ giới hạn đội hình.
+      setRoster([MAIN_ID, ...companionsByLevel(stored.profile).slice(0, DESTINY_ROSTER_MAX - 1)]);
     }
     setBuild(null);
     setOfferIndex(null);
@@ -430,7 +436,8 @@ export default function DestinyScreen() {
   const clearedInRun = run?.active ? (run.phase === "reward" ? run.floor : run.floor - 1) : run?.completed ? run.floor : 0;
   const currentFloor = run?.active && run.phase !== "reward" ? run.floor : null;
   const foeLevel = overview.floor?.foeLevel;
-  const rosterLevel = destinyAverageLevel(roster.map((id) => progressOf(profile, id).level));
+  const companionMax = Math.min(DESTINY_ROSTER_MAX - 1, rosterIds.length);
+  const rosterFull = roster.length >= DESTINY_ROSTER_MAX;
   const pickedCount = active.filter((id) => id !== MAIN_ID).length;
   const pickBuild = (next: Partial<DestinyLeaderBuild>) => {
     if (!chosenBuild) return;
@@ -497,18 +504,20 @@ export default function DestinyScreen() {
             Khóa đội hình
           </SectionTitle>
           <ul className="list-disc space-y-1 pl-5 text-sm text-on-wood">
-            <li>Đinh Bộ Lĩnh luôn ra trận; chọn thêm ít nhất {DESTINY_ROSTER_MIN - 1} tướng, nhiều nhất là mọi tướng bạn có.</li>
+            <li>Đinh Bộ Lĩnh luôn ra trận; chọn thêm ít nhất {DESTINY_ROSTER_MIN - 1} và nhiều nhất {DESTINY_ROSTER_MAX - 1} tướng.</li>
             <li>Đội hình khóa tới hết lượt leo: không thêm, bớt hay đổi tướng giữa chừng.</li>
             <li>Mỗi tầng ba người ra trận, số còn lại dự bị. Mang nhiều tướng thì có người thay khi đồng đội bị thương và dễ đáp ứng luật từng tầng.</li>
-            <li>Đối thủ ở mọi tầng có cấp bằng cấp trung bình của đội hình khóa, tính cả Đinh Bộ Lĩnh.</li>
+            <li>Đối thủ mạnh dần theo tầng: tầng 1 cấp 1, mỗi tầng thêm một cấp, tầng {floorCount} cấp {destinyFloorFoeLevel(floorCount)}.</li>
           </ul>
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
             <h3 className="ui-title-on-wood text-base">
-              Đã chọn {Math.max(0, roster.length - 1)}/{rosterIds.length} tướng{" "}
-              <span className="text-sm font-normal text-on-wood-soft">· đối thủ sẽ ở cấp {rosterLevel}</span>
+              Đã chọn {Math.max(0, roster.length - 1)}/{companionMax} tướng{" "}
+              <span className="text-sm font-normal text-on-wood-soft">· bạn có {rosterIds.length} tướng</span>
             </h3>
             <div className="flex flex-wrap gap-2">
-              <ChoiceChip selected={false} disabled={roster.length - 1 >= rosterIds.length} onClick={() => setRoster([MAIN_ID, ...rosterIds])}>Chọn tất cả</ChoiceChip>
+              <ChoiceChip selected={false} onClick={() => setRoster([MAIN_ID, ...rosterIds.slice(0, DESTINY_ROSTER_MAX - 1)])}>
+                {rosterIds.length > companionMax ? `Chọn ${companionMax} tướng cấp cao nhất` : "Chọn tất cả"}
+              </ChoiceChip>
               <ChoiceChip selected={false} disabled={roster.length <= 1} onClick={() => setRoster([MAIN_ID])}>Bỏ chọn hết</ChoiceChip>
             </div>
           </div>
@@ -518,7 +527,8 @@ export default function DestinyScreen() {
               if (!companion) return null;
               const selected = roster.includes(id);
               return (
-                <ChoiceChip key={id} size="md" selected={selected}
+                <ChoiceChip key={id} size="md" selected={selected} disabled={!selected && rosterFull}
+                  title={!selected && rosterFull ? `Đã đủ ${DESTINY_ROSTER_MAX - 1} tướng, bỏ chọn một người để đổi` : undefined}
                   onClick={() => setRoster(selected ? roster.filter((x) => x !== id) : [...roster, id])}
                   className="items-center justify-start gap-2.5 p-2.5 text-left">
                   <Portrait id={id} element={companion.element} profession={companion.profession} className="size-12 shrink-0" />
@@ -531,10 +541,13 @@ export default function DestinyScreen() {
             })}
           </div>
           <PageControls paged={pagedRoster} label="Phân trang tướng" className="mt-2" />
+          {rosterFull && rosterIds.length > companionMax && (
+            <p className="mt-3 text-sm text-on-wood-soft">Đã đủ {companionMax} tướng. Muốn đổi thì bỏ chọn một người trước.</p>
+          )}
           {roster.length < DESTINY_ROSTER_MIN && (
             <p className="mt-3 text-sm text-danger">Cần chọn thêm {DESTINY_ROSTER_MIN - roster.length} tướng nữa.</p>
           )}
-          <Button disabled={busy || roster.length < DESTINY_ROSTER_MIN} onClick={() => void startRun()} className="mt-4 min-h-11">
+          <Button disabled={busy || roster.length < DESTINY_ROSTER_MIN || roster.length > DESTINY_ROSTER_MAX} onClick={() => void startRun()} className="mt-4 min-h-11">
             {busy ? "Đang khóa đội hình…" : `Khóa đội hình và bắt đầu leo`}
           </Button>
         </OrnateFrame>
@@ -634,7 +647,7 @@ export default function DestinyScreen() {
                 </ul>
                 {foeLevel !== undefined && (
                   <p className="mt-1.5 text-caption text-on-wood-soft">
-                    Cấp đối thủ bằng cấp trung bình của đội hình đã khóa; máu và công tăng dần theo tầng.
+                    Đối thủ thêm một cấp sau mỗi tầng: tầng 1 cấp 1, tầng {floorCount} cấp {destinyFloorFoeLevel(floorCount)}.
                   </p>
                 )}
 

@@ -5,6 +5,7 @@ import {
   destinyFloorTier,
   destinyTierDifficulty,
   leaderBuildOptions,
+  progressOf,
   vnDay,
   validateLineup,
   type DestinyBoon,
@@ -15,6 +16,7 @@ import {
   type DestinyRun,
   type Element,
   type FloorRules,
+  type Profile,
   type Profession,
 } from "@/core";
 import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
@@ -23,7 +25,7 @@ import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 export const DESTINY_ERROR_TEXT: Readonly<Record<string, string>> = {
   featureDisabled: "Tháp Thiên Mệnh đang tạm đóng. Tiến trình và trận đang dở được giữ nguyên.",
   bad_request: "Lệnh không hợp lệ. Xin tải lại trang rồi thử lại.",
-  invalid_roster: "Đội hình này không xếp được ba tướng hợp luật cho mọi tầng của chu kỳ. Xin chọn thêm tướng.",
+  invalid_roster: "Đội hình này quá số tướng cho phép, hoặc không xếp được ba tướng hợp luật cho mọi tầng của chu kỳ. Xin đổi tướng cho đủ hệ và nghề.",
   invalid_lineup: "Ba tướng ra trận chưa hợp luật tầng, hoặc có tướng đã gục.",
   invalid_phase: "Lượt leo vừa thay đổi ở một thiết bị hoặc thẻ khác. Xin tải lại trang.",
   stale_reward: "Phần thưởng này đã được nhận hoặc không còn hiệu lực.",
@@ -36,6 +38,12 @@ export const DESTINY_ERROR_TEXT: Readonly<Record<string, string>> = {
   unsupported_schema: "Dữ liệu Tháp Thiên Mệnh thuộc phiên bản mới hơn, bản này chưa đọc được. Xin tải lại trang.",
   network: "Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin kiểm tra mạng rồi thử lại.",
 };
+
+/** Tướng kèm đang có, cấp cao xếp trước (bằng cấp thì theo id) để chọn đội hình khóa. */
+export function companionsByLevel(profile: Profile): readonly string[] {
+  const level = (id: string) => progressOf(profile, id).level;
+  return Object.keys(profile.companions).sort((a, b) => level(b) - level(a) || a.localeCompare(b));
+}
 
 export function aliveIds(run: DestinyRun): readonly string[] {
   return run.roster.filter((id) => {

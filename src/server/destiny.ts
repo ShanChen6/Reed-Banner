@@ -1,5 +1,6 @@
 import {
   AI_SIDE,
+  DESTINY_FOE_LEVEL_VERSION,
   HUMAN,
   applyDestinyBoonReward,
   applyDestinyRecovery,
@@ -251,7 +252,7 @@ export async function startDestinyBattle(
             ...profile.dualTower,
             destiny: {
               ...profile.dualTower.destiny,
-              run: { ...current, phase: "battle" as const, matchId, offer: null, foeLevelVersion: 2 as const },
+              run: { ...current, phase: "battle" as const, matchId, offer: null, foeLevelVersion: DESTINY_FOE_LEVEL_VERSION },
             },
           },
         },
