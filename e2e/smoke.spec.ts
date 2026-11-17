@@ -102,7 +102,11 @@ test.describe("tài khoản đã đăng nhập", () => {
     await page.getByRole("link", { name: "Sang Nhật Lệnh" }).click();
     await expect(page.getByRole("heading", { name: "Nhiệm vụ ngày" })).toBeVisible();
     await page.getByRole("button", { name: "Điểm danh", exact: true }).click();
-    await expect(page.getByRole("button", { name: "Hôm nay đã điểm danh" })).toBeVisible();
+    // Đã điểm danh thì khung thu thành một dòng; bấm mới mở chuỗi 7 ngày.
+    await expect(page.getByText("Đã điểm danh hôm nay")).toBeVisible();
+    await expect(page.getByText("Ngày 7")).toBeHidden();
+    await page.getByText("Xem chuỗi").click();
+    await expect(page.getByText("Ngày 7")).toBeVisible();
     await expect(page.getByRole("meter", { name: "Nhận Nhật Lệnh" })).toBeVisible();
     expectClean(problems);
   });
