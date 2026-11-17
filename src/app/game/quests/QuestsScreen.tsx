@@ -1,9 +1,9 @@
 "use client";
 
-import { Alert, Button } from "@/components/ui";
+import { Alert, Button, buttonVariants } from "@/components/ui";
 import { ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 
-// Nhiệm vụ: điểm danh 7 ngày, nhiệm vụ ngày/tuần, thành tựu. Tiến độ do server cộng khi trận kết thúc; bấm
+// Nhiệm vụ: điểm danh 7 ngày, nhiệm vụ tuần, thành tựu; nhiệm vụ ngày nằm ở Nhật Lệnh (ở đây chỉ còn thẻ dẫn sang). Tiến độ do server cộng khi trận kết thúc; bấm
 // Nhận thì server kiểm tra lại rồi cộng vàng.
 
 import { useState } from "react";
@@ -11,7 +11,6 @@ import {
   ACHIEVEMENTS,
   achievementProgress,
   TTK_TICKETS_CHECKIN7,
-  TTK_TICKETS_DAILY_ALL,
   TTK_TICKETS_WEEKLY_WIN15,
   CHECKIN_GOLD,
   DAILY_QUESTS,
@@ -23,6 +22,7 @@ import PlacesPanel from "./PlacesPanel";
 import { QuestItem, claimable, questRow, type Row } from "./QuestItem";
 import SpecialQuestsPanel from "./SpecialQuestsPanel";
 import { useProfile } from "../profile/useProfile";
+import { SceneLink } from "../SceneContext";
 
 /** Thành tựu Tầm Tướng Ký (`ttk.*`) chỉ hiện khi chế độ đã bật, để không lộ chế độ chưa phát hành. */
 export const isTamTuongKyAchievement = (id: string) => id.startsWith("ttk.");
@@ -63,14 +63,11 @@ export default function QuestsScreen({
     ? profile.quests.checkIn.streak
     : nextStreak(profile.quests, now);
 
+  const dailyRows = DAILY_QUESTS.map((q) => questRow(profile, q, now));
+  const dailyReady = dailyRows.filter(claimable).length;
+  const dailyClaimed = dailyRows.filter((r) => r.claimed).length;
+
   const sections: { title: string; note: string; rows: Row[]; grouped?: boolean }[] = [
-    {
-      title: "Nhiệm vụ ngày",
-      note: ttk
-        ? `Làm lại lúc 0 giờ mỗi ngày. Nhận đủ nhiệm vụ ngày: +${TTK_TICKETS_DAILY_ALL} phiếu Tầm Tướng Ký.`
-        : "Làm lại lúc 0 giờ mỗi ngày.",
-      rows: DAILY_QUESTS.map((q) => questRow(profile, q, now)),
-    },
     {
       title: "Nhiệm vụ tuần",
       note: "Làm lại lúc 0 giờ thứ Hai.",
@@ -142,6 +139,19 @@ export default function QuestsScreen({
       <SpecialQuestsPanel profile={profile} />
 
       <div className="grid gap-4 lg:grid-cols-3">
+        <OrnateFrame className="flex flex-col gap-3 self-start">
+          <SectionTitle description="Nhiệm vụ ngày đã chuyển sang Nhật Lệnh, làm và nhận thưởng ngay cạnh đề hôm nay.">
+            Nhiệm vụ ngày
+          </SectionTitle>
+          <p className="text-sm text-on-wood">
+            {dailyReady > 0
+              ? `${dailyReady} nhiệm vụ ngày đang chờ nhận thưởng.`
+              : `Đã nhận ${dailyClaimed}/${DAILY_QUESTS.length} nhiệm vụ hôm nay.`}
+          </p>
+          <SceneLink scene="DAILY" className={buttonVariants({ className: "min-h-11 self-start" })}>
+            Sang Nhật Lệnh
+          </SceneLink>
+        </OrnateFrame>
         {sections.map((sec) => (
           <OrnateFrame key={sec.title} className="flex flex-col">
             <SectionTitle description={sec.note}>{sec.title}</SectionTitle>
