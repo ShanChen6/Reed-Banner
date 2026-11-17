@@ -354,7 +354,9 @@ describe("Destiny server lifecycle", () => {
     assert.deepEqual(Array.from({ length: 20 }, (_, i) => destinyFoeLevel({ ...started.run, floor: i + 1 })),
       [1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28, 30]);
     assert.equal(destinyFoeLevel({ ...started.run, floor: 99 }), 30, "không vượt cấp tối đa");
-    assert.deepEqual([1, 20].map((floor) => Number(destinyFoePower({ ...started.run, floor }).toFixed(2))), [0.68, 1.15]);
+    assert.deepEqual([1, 20].map((floor) => Number(destinyFoePower({ ...started.run, floor }).toFixed(2))), [0.68, 0.9]);
+    assert.equal(Number(destinyFoePower({ ...started.run, foeLevelVersion: 4, floor: 20 }).toFixed(2)), 1.15, "trận dựng theo bản thử đầu giữ hệ số 1,15");
+    assert.equal(destinyFoeLevel({ ...started.run, foeLevelVersion: 4, floor: 20 }), 30);
     assert.equal(Number(destinyFoePower({ ...started.run, foeLevelVersion: 3, floor: 20 }).toFixed(2)), 1.12, "run cũ giữ đường hệ số cũ");
     assert.equal(destinyFoeLevel({ ...started.run, foeLevelVersion: 3, floor: 12 }), 12, "run cấp bằng số tầng");
     assert.equal(destinyFoeLevel({ ...started.run, foeLevelVersion: 2 }), 6, "run cấp trung bình: (4 + 30 + 1 × 4) / 6");

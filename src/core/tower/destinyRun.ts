@@ -7,6 +7,7 @@ import {
 } from "../progress/dualTowerState";
 import {
   DESTINY_CYCLE_FLOORS,
+  DESTINY_POWER_LAST_V4,
   destinyEnemyPower,
   destinyFloorCount,
   destinyRulesVersionForCycle,
@@ -30,7 +31,7 @@ export const clampDestinyFood = (food: number) =>
   Math.max(DESTINY_FOOD_MIN, Math.min(DESTINY_FOOD_MAX, Math.round(food)));
 
 /** Cách tính sức đối thủ đang dùng cho run mới (xem `destinyFoeLevel`, `destinyFoePower`). */
-export const DESTINY_FOE_LEVEL_VERSION = 4;
+export const DESTINY_FOE_LEVEL_VERSION = 5;
 
 /**
  * Cấp đối thủ theo luật hiện hành: tăng đều từ cấp 1 ở tầng 1 tới cấp tối đa (30) ở tầng cuối.
@@ -44,11 +45,11 @@ export function destinyFloorFoeLevel(floor: number, floorCount: number = DESTINY
 type FoeScaledRun = Pick<DestinyRun, "fighters" | "foeLevelVersion" | "floor" | "rulesVersion">;
 
 /**
- * Cấp đối thủ ở tầng run đang đứng. Luật hiện hành (`foeLevelVersion` 4) theo `destinyFloorFoeLevel`, không phụ thuộc
+ * Cấp đối thủ ở tầng run đang đứng. Luật hiện hành (`foeLevelVersion` 5, và 4) theo `destinyFloorFoeLevel`, không phụ thuộc
  * đội hình. Run cũ đang dở trận: 3 là cấp bằng số tầng, 2 là cấp trung bình đội hình khóa, thiếu là cấp cao nhất.
  */
 export function destinyFoeLevel(run: FoeScaledRun): number {
-  if (run.foeLevelVersion === 4) return destinyFloorFoeLevel(run.floor, destinyFloorCount(destinyRunRulesVersion(run)));
+  if (run.foeLevelVersion === 5 || run.foeLevelVersion === 4) return destinyFloorFoeLevel(run.floor, destinyFloorCount(destinyRunRulesVersion(run)));
   if (run.foeLevelVersion === 3) return Math.max(1, Math.min(MAX_LEVEL, Math.round(run.floor)));
   const levels = Object.values(run.fighters ?? {}).map(({ level }) => level);
   if (levels.length === 0) return 1;
@@ -60,8 +61,9 @@ export function destinyFoeLevel(run: FoeScaledRun): number {
 /** Hệ số nhân máu và công của đối thủ ở tầng run đang đứng; run cũ đang dở trận giữ đường hệ số cũ. */
 export function destinyFoePower(run: FoeScaledRun): number {
   const version = destinyRunRulesVersion(run);
-  if (run.foeLevelVersion !== 4) return destinyEnemyPower(run.floor, version);
-  return destinyScaledEnemyPower(run.floor, destinyFloorCount(version));
+  if (run.foeLevelVersion === 5) return destinyScaledEnemyPower(run.floor, destinyFloorCount(version));
+  if (run.foeLevelVersion === 4) return destinyScaledEnemyPower(run.floor, destinyFloorCount(version), DESTINY_POWER_LAST_V4);
+  return destinyEnemyPower(run.floor, version);
 }
 
 /**

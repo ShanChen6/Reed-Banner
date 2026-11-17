@@ -149,10 +149,11 @@ export interface DestinyRun {
   /** Version catalog luật dùng để tái dựng cycle; run cũ có thể chưa có. */
   readonly rulesVersion?: number;
   /**
-   * Cách tính sức đối thủ. 4 (hiện hành): cấp tăng đều từ 1 ở tầng 1 tới cấp tối đa ở tầng cuối, kèm đường hệ số sức địch mới.
-   * Bản cũ chỉ còn ở run đang dở trận: 3 là cấp bằng số tầng, 2 là cấp trung bình đội hình khóa, thiếu là cấp cao nhất.
+   * Cách tính sức đối thủ. 5 (hiện hành): cấp tăng đều từ 1 ở tầng 1 tới cấp tối đa ở tầng cuối, hệ số sức địch 0,68 → 0,90.
+   * Bản cũ chỉ còn ở run đang dở trận: 4 cùng cấp nhưng hệ số 0,68 → 1,15, 3 là cấp bằng số tầng,
+   * 2 là cấp trung bình đội hình khóa, thiếu là cấp cao nhất.
    */
-  readonly foeLevelVersion?: 2 | 3 | 4;
+  readonly foeLevelVersion?: 2 | 3 | 4 | 5;
   /** Roster sở hữu được khóa đầu run, thủ lĩnh ở đầu. */
   readonly roster: readonly string[];
   /** Snapshot bất biến và runtime theo fighter ID. */
@@ -446,7 +447,8 @@ function parseDestinyRun(raw: unknown): DestinyRun | null {
     stateVersion: 1,
     cycleId: raw.cycleId,
     ...(raw.rulesVersion === undefined ? {} : { rulesVersion: raw.rulesVersion as number }),
-    ...(raw.foeLevelVersion === 2 || raw.foeLevelVersion === 3 || raw.foeLevelVersion === 4 ? { foeLevelVersion: raw.foeLevelVersion } : {}),
+    ...(raw.foeLevelVersion === 2 || raw.foeLevelVersion === 3 || raw.foeLevelVersion === 4 || raw.foeLevelVersion === 5
+      ? { foeLevelVersion: raw.foeLevelVersion } : {}),
     fighters,
     boons,
     phase: raw.phase as DestinyRunPhase,
