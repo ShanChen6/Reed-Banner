@@ -186,13 +186,16 @@ Khi fighter bị hạ trong round, chỉ cập nhật HP/downedAt; không tự c
 | Người chơi dừng ở break | `cleared` gồm wave vừa thắng; không chạy break recovery/food/revive tiếp wave. Ghi thưởng run theo cơ chế final reward hiện tại. |
 | Mất kết nối/F5 trong break | Resume fetch state server; nếu action confirm chưa commit, break vẫn nguyên; nếu đã commit, wave kế đã bắt đầu. Không tin state roster staging từ client như state đã lưu. |
 | Hai request confirm cùng lúc | Một request thắng compare-and-swap theo `seq`; request còn lại conflict/stale, fetch state mới. Không settlement hai lần. |
-| Bỏ dở quá 24 giờ | `FINISHED` theo luật hiện hành; `cleared` chỉ tính wave hoàn thành. Không hồi phục/tiếp tế/revive cho wave chưa xác nhận. |
+| Tạm nghỉ ở break (17/11/2026) | Run giữ nguyên trên server, không có hạn 24 giờ. Hồ sơ trỏ tới run qua `profile.survival.run`; màn Trấn Ải đọc trận đó và cho vào lại hoặc `endRun`. Break hết hạn khi sang mùa tuần mới (thứ Hai 0 giờ giờ Việt Nam) so với lần ra tay cuối: `FINISHED`, `cleared` gồm wave vừa thắng. |
+| Bỏ dở quá 24 giờ giữa một wave | `FINISHED` theo luật hiện hành; `cleared` chỉ tính wave hoàn thành. Không hồi phục/tiếp tế/revive cho wave chưa xác nhận. Đồng hồ lượt vẫn chạy khi người chơi rời trận. |
+| Mở run mới khi run cũ chưa kết thúc | Server từ chối `survivalActive` (409). Trận hồ sơ trỏ tới đã mất hoặc đã kết thúc thì không chặn. |
 
 ## 9. Thưởng và chống áp dụng hai lần
 
 - **Recovery/tiếp tế/revive** là settlement của một break và chỉ xảy ra khi `confirmNextRound` chuyển break sang wave kế. Không settlement ở thời điểm riêng khác (render UI, fetch/resume, timeout, endRun).
 - **Vàng Survival** tiếp tục được tính cuối run bằng `SURVIVAL_WAVE_GOLD × cleared`; không cộng vàng ở mỗi break. Như vậy `cleared` là nguồn đếm duy nhất, không có bộ đếm vàng song song cần đồng bộ.
 - **Vàng/sách trên bàn** vẫn là số tích lũy trong battle side, không cộng lại khi sang wave.
+- **Điểm mùa** (bảng tuần) ghi ngay khi run vào break (`best = cleared`), để run đang tạm nghỉ vẫn có tên trên bảng. Lúc kết thúc ghi lại vào mùa của lần ra tay cuối (`lastHumanAt`), nên run chốt vì sang tuần không đẩy điểm sang tuần mới. Hàm: `survivalPauseExpired` (`src/core/match/match.ts`), `recordSurvivalBreak` (`src/server/battles.ts`).
 - **Thưởng cuối run** chỉ áp dụng khi Match kết thúc và claim reward thành công một lần. Kết quả `cleared`, best, quests, leaderboard và phần thưởng không được cộng từ client.
 - Thay người trong roster không tạo thêm lượt thưởng. Để giữ behavior tương thích, đặc tả này mặc định XP cuối run tiếp tục theo danh sách fighter active trong battle state lúc kết thúc; reserve không tự nhận XP nếu không active tại thời điểm kết thúc. Đây là bảo toàn quy tắc `reward` hiện tại, không phải luật đã có về reserve.
 

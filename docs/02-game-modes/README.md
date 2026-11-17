@@ -111,7 +111,7 @@ balance và release: [T06.04](dual-tower/06-04-final-acceptance.md).
   - Sau mỗi đợt thắng: active còn sống +20% max HP, reserve còn sống +10%; lương +25 (tối đa 100).
   - Hồi sinh: tự động sau 2 đợt hoặc trả 40 lương ở BREAK, 30% máu và 0 năng lượng; mỗi BREAK tối đa 1 người, tự động được ưu tiên.
   - Cả ba active gục thì lượt chơi kết thúc ngay, kể cả khi còn reserve.
-- **Lưu điểm theo đợt:** bỏ dở quá 24 giờ thì không xử thua; lượt chơi kết thúc ở đợt cuối cùng đã hoàn thành, và điểm vẫn được ghi.
+- **Lưu tiến độ (17/11/2026):** lúc nghỉ giữa đợt có thể tạm nghỉ và quay lại sau, ở thiết bị nào cũng được; tiến độ giữ tới hết mùa tuần. Đang đánh dở một đợt mà bỏ quá 24 giờ thì không xử thua: lượt chơi kết thúc ở đợt cuối cùng đã hoàn thành, và điểm vẫn được ghi. Mỗi người một lượt chơi mở. Chi tiết ở [Rules & State Machine](survival/02-rules-state-machine.md).
 - Điểm = số đợt đã vượt qua.
 
 ### 4.1 Bản đầu (Claude đặt 20/10/2026, chờ Shan duyệt; baseline trước V1.1)
@@ -134,7 +134,7 @@ Trang `/survival`, code ở `src/core/survival/`. Cả lượt chơi là **một
   - Lương để trả tính sau khi đã cộng +25.
 - **Dừng:**
   - Lúc nghỉ giữa đợt có nút dừng để ghi điểm.
-  - Bỏ dở quá 24 giờ thì lượt chơi dừng ở đợt cuối đã vượt qua, không tính là thua.
+  - Bỏ dở quá 24 giờ thì lượt chơi dừng ở đợt cuối đã vượt qua, không tính là thua. Từ 17/11/2026 luật này chỉ áp cho đợt đang đánh dở; lúc nghỉ thì giữ tới hết tuần (xem mục 4).
 - **Thưởng khi kết thúc:**
   - 10 vàng mỗi đợt vượt qua.
   - Vàng và sách nhặt trên bàn cờ cả lượt chơi.
