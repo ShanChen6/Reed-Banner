@@ -31,14 +31,16 @@ export const destinyEnemyPower = (floor: number, version: DestinyRulesVersion = 
   version >= 2 ? 0.72 + 0.02 * floor : 0.72 + 0.03 * floor;
 
 /**
- * Hệ số sức địch khi cấp địch tăng theo tầng (`foeLevelVersion` 4): tăng đều từ 0,68 ở tầng 1 tới 1,15 ở tầng cuối.
- * So với đường cũ (0,74 → 1,12) thì đầu tháp nhẹ hơn, cuối tháp gắt hơn; số chọn từ mô phỏng 8 chu kỳ
- * (docs/reports/2026-11-17-destiny-cap-theo-tang-balance.md).
+ * Hệ số sức địch khi cấp địch tăng theo tầng (`foeLevelVersion` 5): tăng đều từ 0,68 ở tầng 1 tới 0,90 ở tầng cuối.
+ * Mục tiêu Shan đặt 17/11/2026: đội cấp 30 qua đủ 20 tầng khoảng 85% số lượt leo; mô phỏng 12 chu kỳ ra 41/48
+ * (docs/reports/2026-11-17-destiny-cap-theo-tang-balance.md). Đổi hai số này thì phải chạy lại mô phỏng.
  */
 const POWER_FIRST = 0.68;
-const POWER_LAST = 1.15;
-export const destinyScaledEnemyPower = (floor: number, floorCount: number): number =>
-  POWER_FIRST + (POWER_LAST - POWER_FIRST) * (floor - 1) / Math.max(1, floorCount - 1);
+const POWER_LAST = 0.9;
+/** Hệ số tầng cuối của bản thử đầu (`foeLevelVersion` 4); chỉ còn dùng cho trận dựng trước khi chốt 0,90. */
+export const DESTINY_POWER_LAST_V4 = 1.15;
+export const destinyScaledEnemyPower = (floor: number, floorCount: number, last: number = POWER_LAST): number =>
+  POWER_FIRST + (last - POWER_FIRST) * (floor - 1) / Math.max(1, floorCount - 1);
 
 export type DestinyFloorTier = 1 | 2 | 3 | 4;
 
