@@ -1,5 +1,5 @@
 import {
-  destinyEnemyPower,
+  destinyFoePower,
   destinyFoeLevel,
   destinyFloorCount,
   destinyRunRulesVersion,
@@ -46,7 +46,7 @@ export function resolveDestinyFloor(run: DestinyRun, secret: string) {
     rules: rule.rules,
     enemy: {
       level: foeLevel,
-      power: destinyEnemyPower(run.floor, version),
+      power: destinyFoePower(run),
       count: 3,
       difficulty,
     },

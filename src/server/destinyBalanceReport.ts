@@ -85,7 +85,7 @@ function chooseReward(run: DestinyRun, policy: DestinySimPolicy): { offer: Desti
   return null;
 }
 
-export function simulateDestinyCycle(cycleId: string, rosterCap: 3 | 5 | 8, level: 5 | 10 | 20 | 30, policy: DestinySimPolicy): DestinySimResult {
+export function simulateDestinyCycle(cycleId: string, rosterCap: 3 | 5 | 8 | 9, level: 5 | 10 | 20 | 30, policy: DestinySimPolicy): DestinySimResult {
   const cycle = destinyCycleById(cycleId);
   if (!cycle) throw new Error(`cycle không hợp lệ: ${cycleId}`);
   const profile = profileAt(level, rosterCap - 1);
@@ -96,7 +96,11 @@ export function simulateDestinyCycle(cycleId: string, rosterCap: 3 | 5 | 8, leve
   if (!rules.ok) throw new Error(`không sinh được luật cap ${rosterCap}`);
   const created = createDestinyRun(profile, cycle.startAt, roster, rules.snapshot.floors.map((floor) => floor.rules));
   if (!created.ok) throw new Error(`không tạo được run: ${created.error}`);
-  let run: DestinyRun = { ...created.run, rulesVersion: cycle.rulesVersion };
+  // FOE_LEVEL=max đo lại cách tính cũ (địch theo cấp cao nhất của roster) để so với cấp theo tầng hiện hành.
+  let run: DestinyRun = {
+    ...created.run, rulesVersion: cycle.rulesVersion,
+    ...(process.env.FOE_LEVEL === "max" ? { foeLevelVersion: undefined } : {}),
+  };
   let turns = 0, revives = 0, boonPicks = 0, recoveryPicks = 0, floors = 0;
   const version = destinyRunRulesVersion(run);
   for (let floor = 1; floor <= destinyFloorCount(version); floor++) {

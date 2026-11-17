@@ -114,7 +114,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     rules: [
       "Đội hình khóa gồm Đinh Bộ Lĩnh và nhiều nhất 8 tướng.",
-      "Đối thủ mạnh dần từ chặng Dễ tới chặng Trùm: tầng 1 cấp 1, mỗi tầng thêm một cấp, tầng 20 cấp 20.",
+      "Đối thủ mạnh dần từ chặng Dễ tới chặng Trùm: tầng 1 cấp 1, tăng đều tới tầng 20 cấp 30, không phụ thuộc đội hình của bạn.",
       "Dự bị không tự hồi, trừ khi bạn đã chọn Phúc Hậu quân.",
       "Phúc giữ tới hết lượt leo. Chọn lại một Phúc thì cộng dồn.",
       "Nếu thắng tầng mà Đinh Bộ Lĩnh đã gục, bạn phải chọn Cứu viện cho ông mới lên được tầng kế. Tải lại trang không hồi miễn phí.",

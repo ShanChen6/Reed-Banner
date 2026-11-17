@@ -5,7 +5,7 @@
 ## 17/11/2026
 
 **Tháp Thiên Mệnh: cấp đối thủ và giao diện (Shan yêu cầu)**
-- Cấp đối thủ đổi từ cấp cao nhất trong đội hình sang **cấp bằng số tầng**: tầng 1 cấp 1, tăng dần tới tầng 20 cấp 20 ([luật §11.2](../02-game-modes/dual-tower/00-02-rules.md#112-tầng-nhóm-khó-và-sức-địch)). Lý do: thủ lĩnh cấp 4 mang theo một hai tướng cấp 30 thì gặp đối thủ cấp 30. Lượt leo đang mở chuyển sang cách mới từ trận kế tiếp. Màn chuẩn bị hiện cấp, hệ, nghề, máu của đối thủ; thẻ tướng hiện cấp.
+- Cấp đối thủ đổi từ cấp cao nhất trong đội hình sang **cấp tăng đều theo tầng**: tầng 1 cấp 1, tầng 20 cấp 30; hệ số sức địch đổi thành 0,68 → 1,15 theo [mô phỏng 8 chu kỳ](../reports/2026-11-17-destiny-cap-theo-tang-balance.md) ([luật §11.2](../02-game-modes/dual-tower/00-02-rules.md#112-tầng-nhóm-khó-và-sức-địch)). Lý do: thủ lĩnh cấp 4 mang theo một hai tướng cấp 30 thì gặp đối thủ cấp 30. Lượt leo đang mở chuyển sang cách mới từ trận kế tiếp. Màn chuẩn bị hiện cấp, hệ, nghề, máu của đối thủ; thẻ tướng hiện cấp.
 - Hành trình tầng vẽ lại: ba ô tóm tắt (lượt leo này, kỷ lục, mốc đá kế), thanh tiến độ, bốn chặng độ khó với các nút tầng nối nhau.
 - Đội hình và danh sách chọn tướng ra trận chia trang 6; hai tướng đã chọn tách thành hai ô riêng như Tháp Thí Luyện. Hệ và nghề Đinh Bộ Lĩnh chọn bằng chip có icon.
 - Bảng xếp hạng chu kỳ chuyển thành thẻ **BXH tuần** nằm giữa Chơi và Hướng dẫn.
@@ -56,7 +56,7 @@
 - Áp dụng từ chu kỳ thứ Hai **16/11/2026** (luật V2); run 10 tầng đang chạy giữ luật V1 tới khi kết thúc. Bốn nhóm khó mỗi nhóm 5 tầng (Dễ, Thường, Khó, Trùm), mỗi nhóm 8 luật và không lặp luật trong một chu kỳ. Vàng theo hạng không đổi. Nguồn chính: [luật Song Tháp §11](../02-game-modes/dual-tower/00-02-rules.md#11-destiny-v2--20-tầng-shan-chốt-11112026), [Phúc](../02-game-modes/dual-tower/04-06-destiny-boons.md), [đá](../02-game-modes/dual-tower/05-04-destiny-stones.md).
 - Sửa lỗi: thắng tầng cuối trước đây vẫn mở phần thưởng rồi đưa run sang "chuẩn bị tầng 11" không có nội dung; nay thắng tầng cuối là hoàn thành run (cả V1).
 - Giao diện hiện tên và mô tả Phúc bằng tiếng Việt (trước đây hiện mã), tiến độ `tầng x/20`.
-- Mô phỏng 4 chu kỳ: AI đánh thay trung bình tới tầng 4–6 (roster 3), 8–11 (roster 5), 7–14 (roster 8), có run qua đủ 20 tầng; đá mỗi tuần thấp hơn V1 ([báo cáo](../reports/2026-11-11-destiny-v2-balance.md)). Chưa đo riêng từng Phúc mới.
+- Mô phỏng 4 chu kỳ: AI đánh thay trung bình tới tầng 4–6 (roster 3), 8–11 (roster 5), 7–14 (roster 8), có run qua đủ 20 tầng; đá mỗi tuần thấp hơn V1 (báo cáo 11/11/2026, đã thay bằng [báo cáo 17/11/2026](../reports/2026-11-17-destiny-cap-theo-tang-balance.md)). Chưa đo riêng từng Phúc mới.
 
 **Tháp Thiên Mệnh: làm lại giao diện và câu chữ (có code)**
 - Shan yêu cầu ưu tiên giao diện và rà câu chữ, tránh từ như "run". Chữ hiện cho người chơi bỏ run, roster, active, build, HP, NL, stack, clear, tab; quy ước ghi ở [thuật ngữ](../00-overview/thuat-ngu.md#từ-không-dùng-trên-giao-diện). [Hướng dẫn người chơi](../02-game-modes/dual-tower/player-help.md) viết lại theo cùng bộ từ.

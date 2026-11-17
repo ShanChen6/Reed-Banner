@@ -30,6 +30,16 @@ export const destinyFloorCount = (version: DestinyRulesVersion = DESTINY_RULE_DA
 export const destinyEnemyPower = (floor: number, version: DestinyRulesVersion = DESTINY_RULE_DATA_VERSION): number =>
   version >= 2 ? 0.72 + 0.02 * floor : 0.72 + 0.03 * floor;
 
+/**
+ * Hệ số sức địch khi cấp địch tăng theo tầng (`foeLevelVersion` 4): tăng đều từ 0,68 ở tầng 1 tới 1,15 ở tầng cuối.
+ * So với đường cũ (0,74 → 1,12) thì đầu tháp nhẹ hơn, cuối tháp gắt hơn; số chọn từ mô phỏng 8 chu kỳ
+ * (docs/reports/2026-11-17-destiny-cap-theo-tang-balance.md).
+ */
+const POWER_FIRST = 0.68;
+const POWER_LAST = 1.15;
+export const destinyScaledEnemyPower = (floor: number, floorCount: number): number =>
+  POWER_FIRST + (POWER_LAST - POWER_FIRST) * (floor - 1) / Math.max(1, floorCount - 1);
+
 export type DestinyFloorTier = 1 | 2 | 3 | 4;
 
 export interface DestinyCycleRuleFloor {

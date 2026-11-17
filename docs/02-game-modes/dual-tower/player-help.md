@@ -30,8 +30,8 @@ hoặc chọn tướng khác. Ở Tháp Thí Luyện, mọi hệ và nghề củ
 làm đội hợp luật, và đội chưa hợp luật thì nút Vào tầng khóa, kèm dòng ghi luật nào chưa đạt. Khi khóa đội hình, Tháp Thiên Mệnh kiểm tra trước rằng đội hình xếp được ba người hợp luật
 cho mọi tầng của chu kỳ.
 
-Ở Tháp Thiên Mệnh, đội hình khóa gồm Đinh Bộ Lĩnh và nhiều nhất 8 tướng. Đối thủ thêm một cấp sau mỗi tầng
-(tầng 1 cấp 1, tầng 20 cấp 20);
+Ở Tháp Thiên Mệnh, đội hình khóa gồm Đinh Bộ Lĩnh và nhiều nhất 8 tướng. Cấp đối thủ tăng đều theo tầng
+(tầng 1 cấp 1, tầng 20 cấp 30), không phụ thuộc đội hình của bạn;
 màn chuẩn bị ghi cấp, hệ, nghề và máu của ba đối thủ. Đội hình và danh sách chọn tướng chia trang 6 người.
 Bảng xếp hạng chu kỳ nằm ở thẻ BXH tuần, giữa thẻ Chơi và Hướng dẫn.
 

@@ -126,6 +126,7 @@ Các bản dưới đây bị xóa theo yêu cầu người dùng; tra lịch s�
 
 | Đường dẫn | Lý do |
 |---|---|
+| `docs/reports/2026-11-11-destiny-v2-balance.md` | Xóa 17/11/2026: đo khi địch theo cấp cao nhất của roster; thay bằng [báo cáo 17/11/2026](reports/2026-11-17-destiny-cap-theo-tang-balance.md) |
 | `docs/02-game-modes/campaign/qa-chapter-1.md` | Xóa 12/11/2026: audit, QA, nghiệm thu hoặc kế hoạch của task đã xong |
 | `docs/02-game-modes/campaign/regression-report.md` | Xóa 12/11/2026: audit, QA, nghiệm thu hoặc kế hoạch của task đã xong |
 | `docs/02-game-modes/dual-tower/00-01-audit.md` | Xóa 12/11/2026: audit, QA, nghiệm thu hoặc kế hoạch của task đã xong |
