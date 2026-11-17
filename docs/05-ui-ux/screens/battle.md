@@ -1,6 +1,6 @@
 # Giao diện
 
-> Cập nhật: 16/11/2026
+> Cập nhật: 17/11/2026
 > Trạng thái: **IMPLEMENTED**
 
 ## 1. Bố cục màn hình trận đấu
@@ -23,6 +23,9 @@ Bố cục **ngang** (landscape), cả trên desktop lẫn điện thoại xoay 
 - **Tên phe:** cột trái ghi "Phe bạn", cột phải ghi "Đối thủ" (tên AI Tianwu chỉ ở trang giới thiệu).
 - **Bị động** không hiện trong trận; mô tả bị động chỉ đọc ở thẻ nhân vật trong Doanh Trại. Thanh kỹ năng trong trận chỉ có các nút kỹ năng.
 - **Hết trận:** chỉ còn kết quả trên bàn cờ, không hiện khối đội hình 3vs3 bên dưới. Màn trận không có nhật ký trận.
+  - Trận thuộc một chế độ (Tháp Thiên Mệnh, Thí Luyện, Viễn Chinh, Trấn Ải, Nhật Lệnh, Quần Hùng, Bình Loạn) chỉ có nút quay về màn của chế độ đó; nút "Nâng kỹ năng & đánh tiếp" (mở sảnh Giao Tranh) chỉ còn ở trận Giao Tranh và Thao Luyện thường.
+  - Tháp Thiên Mệnh có lớp kết quả riêng (`DestinyResult`): tầng vừa vượt hoặc gục trên tổng số tầng, dải tiến độ tháp, số lượt, Đá Cường Hóa mốc vừa nhận, máu còn lại của ba tướng ra trận và một nút "Chọn thưởng tầng N" (thua hoặc hoàn thành tháp thì "Về Tháp Thiên Mệnh"). Không ghi kinh nghiệm, vàng hay đồ rơi vì chế độ này không có.
+- **Độ khó:** chỉ trận offline (Thao Luyện) có ô chọn độ khó ở thanh đầu trận. Trận online do máy chủ chốt độ khó lúc dựng nên không hiện ô này.
 - **Góc trên trái / phải:** khung từng nhân vật của mỗi phe: tên, cấp, thanh máu, thanh năng lượng, thanh nộ (chỉ ở thủ lĩnh), biểu tượng hiệu ứng trạng thái (ảnh tròn `public/art/effects/`, viền vàng có lợi, đỏ thẫm bất lợi) kèm số nhỏ ở góc: số lượt còn lại, riêng Khiên là lượng hấp thụ.
   - 1vs1: mỗi bên một khung.
   - 3vs3: mỗi bên ba khung xếp dọc; khung của người hành động được làm sáng; chạm vào khung để đổi người hành động.
@@ -82,6 +85,11 @@ Màn Trial/Destiny phải giải thích luật cấm/bắt buộc trước khi k
 và giữ Đinh Bộ Lĩnh ở active slot thủ lĩnh. Trạng thái loading/error/locked/claimed phải đọc được bằng bàn phím,
 touch và screen reader; nút settlement bị khóa trong lúc request đang chờ. UI chỉ đổi số dư hoặc hiện “đã nhận”
 sau response thành công từ server.
+
+**Ngôi sao khắc chế (★):** ở mọi màn chuẩn bị trận đã biết đối thủ, tướng có hệ khắc ít nhất một đối thủ được gắn ★ xanh
+cạnh tên (chú thích ghi khắc ai). Áp dụng ở Tháp Thiên Mệnh (tướng ra trận, Đinh Bộ Lĩnh và hàng chọn Hệ), Thí Luyện,
+Viễn Chinh (theo trận ở ô đang chọn), Trấn Ải (đợt kế), Nhật Lệnh và sảnh Giao Tranh; Bình Loạn đánh dấu theo thủ lĩnh
+địch như trước. Component dùng chung: `src/app/game/art/CounterStar.tsx`.
 
 Nội dung trợ giúp, reset giờ Việt Nam và bảng đá canonical cho người chơi nằm tại
 [Song Tháp cho người chơi](../../02-game-modes/dual-tower/player-help.md).

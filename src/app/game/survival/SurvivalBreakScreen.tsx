@@ -15,6 +15,7 @@ import {
   type SurvivalAction,
   type SurvivalView,
 } from "@/core";
+import { CounterStar } from "../art/CounterStar";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { SkillIcon } from "../art/skills";
@@ -272,7 +273,10 @@ function SurvivalBreakReady({
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-x-2">
-                          <p className="truncate text-sm font-bold text-on-wood">{fighter.name}</p>
+                          <p className="flex min-w-0 items-center gap-1 text-sm font-bold text-on-wood">
+                            <span className="truncate">{fighter.name}</span>
+                            <CounterStar element={fighter.element} foes={next?.foes ?? []} />
+                          </p>
                           <span className={`text-caption font-semibold ${isDown ? "text-danger" : "text-jade"}`}>
                             {status}
                           </span>

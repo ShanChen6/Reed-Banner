@@ -39,6 +39,43 @@ export const DESTINY_ERROR_TEXT: Readonly<Record<string, string>> = {
   network: "Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin kiểm tra mạng rồi thử lại.",
 };
 
+/** Bộ lọc danh sách tướng ở bước khóa đội hình. Ô trống hoặc null là không lọc theo tiêu chí đó. */
+export interface RosterFilter {
+  /** Chữ người chơi gõ để tìm theo tên; so khớp không dấu, không phân biệt hoa thường. */
+  readonly query: string;
+  readonly element: Element | null;
+  readonly profession: Profession | null;
+  /** Chỉ hiện tướng đã chọn vào đội hình. */
+  readonly pickedOnly: boolean;
+}
+
+export const NO_ROSTER_FILTER: RosterFilter = { query: "", element: null, profession: null, pickedOnly: false };
+
+export const rosterFilterActive = (filter: RosterFilter): boolean =>
+  filter.query.trim() !== "" || filter.element !== null || filter.profession !== null || filter.pickedOnly;
+
+/**
+ * Lọc danh sách tướng (giữ nguyên thứ tự đầu vào). `foldName` bỏ dấu cả tên lẫn chữ tìm (ví dụ `fold`);
+ * tướng không còn trong dữ liệu nhân vật thì bị bỏ.
+ */
+export function filterRosterIds(
+  ids: readonly string[],
+  picked: readonly string[],
+  filter: RosterFilter,
+  info: (id: string) => { readonly name: string; readonly element: Element; readonly profession: Profession } | undefined,
+  foldName: (name: string) => string,
+): readonly string[] {
+  const query = foldName(filter.query.trim());
+  return ids.filter((id) => {
+    const c = info(id);
+    if (!c) return false;
+    return (query === "" || foldName(c.name).includes(query)) &&
+      (filter.element === null || c.element === filter.element) &&
+      (filter.profession === null || c.profession === filter.profession) &&
+      (!filter.pickedOnly || picked.includes(id));
+  });
+}
+
 /** Tướng kèm đang có, cấp cao xếp trước (bằng cấp thì theo id) để chọn đội hình khóa. */
 export function companionsByLevel(profile: Profile): readonly string[] {
   const level = (id: string) => progressOf(profile, id).level;

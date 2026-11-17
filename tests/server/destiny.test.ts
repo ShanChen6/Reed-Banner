@@ -252,7 +252,12 @@ describe("Destiny server lifecycle", () => {
       await finishMatch(deps, opened.id, 0);
       const settled = await getBattle(opened.id, "u1", deps);
       assert.ok(settled.ok);
-      if (settled.ok) assert.equal(settled.outcome?.destiny?.completed === true, floor === 20);
+      if (settled.ok) {
+        assert.equal(settled.outcome?.destiny?.completed === true, floor === 20);
+        assert.equal(settled.outcome?.destiny?.floorCount, 20);
+        assert.equal(settled.outcome?.destiny?.stones, { 5: 3, 10: 4, 15: 5, 20: 6 }[floor] ?? 0, "đá mốc vừa nhận ở tầng này");
+        assert.equal(typeof settled.outcome?.destiny?.turns, "number");
+      }
 
       const stones = (await loadProfile(deps.profiles, "u1")).profile.stones;
       assert.equal(stones, floor >= 20 ? 18 : floor >= 15 ? 12 : floor >= 10 ? 7 : floor >= 5 ? 3 : 0);

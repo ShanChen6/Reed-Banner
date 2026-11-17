@@ -33,6 +33,7 @@ import {
   type Profile,
 } from "@/core";
 import { ElementIcon, FoodIcon, ProfessionIcon } from "../art/icons";
+import { CounterStar } from "../art/CounterStar";
 import { Portrait } from "../art/portraits";
 import { ONLINE_BATTLE_KEY } from "../battle/online";
 import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, TIER_COLOR_NAME } from "../battle/labels";
@@ -863,6 +864,8 @@ function RunView(props: {
 
         {run.armies.map((a, i) => {
           const at = map.nodes.find((n) => n.id === a.at);
+          // Đối thủ đạo này sẽ gặp ở ô đang chọn (đạo đang chọn có thể gặp truy binh), để gắn ★ khắc hệ.
+          const armyFoes = (i === army ? preview : target ? encounters[target]?.[i as ArmyIndex] : undefined)?.foes ?? [];
           return (
             <button
               key={i}
@@ -883,7 +886,7 @@ function RunView(props: {
                     <div key={id} className="flex items-center gap-2">
                       <Portrait id={id} element={f.config.element} profession={f.config.profession} className="size-7" />
                       <div className="flex-1">
-                        <div className="flex justify-between text-caption"><span>{f.config.name}</span><span className={f.hp <= 0 ? "text-danger" : "text-on-wood-soft"}>{f.hp <= 0 ? "Gục" : `${f.hp}/${f.config.maxHp}`}</span></div>
+                        <div className="flex justify-between text-caption"><span className="flex items-center gap-1">{f.config.name}<CounterStar element={f.config.element} foes={armyFoes} /></span><span className={f.hp <= 0 ? "text-danger" : "text-on-wood-soft"}>{f.hp <= 0 ? "Gục" : `${f.hp}/${f.config.maxHp}`}</span></div>
                         <HpBar ratio={f.hp / f.config.maxHp} />
                       </div>
                     </div>

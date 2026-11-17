@@ -14,6 +14,7 @@ import {
   type DailyScore,
   type FighterConfig,
 } from "@/core";
+import { CounterStar, type CounterFoe } from "../art/CounterStar";
 import { ElementIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
@@ -34,7 +35,7 @@ function scoreText(s: DailyScore): string {
     : `Thua · gây ${Math.round(s.permille / 10)}% sát thương`;
 }
 
-function Fighters({ list }: { list: readonly FighterConfig[] }) {
+function Fighters({ list, foes = [] }: { list: readonly FighterConfig[]; foes?: readonly CounterFoe[] }) {
   return (
     <ul className="flex flex-col gap-2">
       {list.map((f) => (
@@ -49,7 +50,10 @@ function Fighters({ list }: { list: readonly FighterConfig[] }) {
             className="size-10 shrink-0"
           />
           <div className="min-w-0 text-caption">
-            <p className="truncate text-sm font-semibold text-on-wood">{f.name}</p>
+            <p className="flex min-w-0 items-center gap-1 text-sm font-semibold text-on-wood">
+              <span className="truncate">{f.name}</span>
+              <CounterStar element={f.element} foes={foes} />
+            </p>
             <p className="flex items-center gap-1 text-on-wood-soft">
               <ElementIcon element={f.element} className="size-3.5" />
               {ELEMENT_NAME[f.element]} · {PROFESSION_NAME[f.profession]} ·{" "}
@@ -157,7 +161,7 @@ export default function DailyScreen() {
               <h3 className="mb-1 text-sm font-semibold text-frame-gold">
                 Đội của bạn
               </h3>
-              <Fighters list={setup.team} />
+              <Fighters list={setup.team} foes={setup.foes} />
             </div>
             <div>
               <h3 className="mb-1 text-sm font-semibold text-frame-gold">
