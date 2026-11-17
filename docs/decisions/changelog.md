@@ -5,7 +5,7 @@
 ## 17/11/2026
 
 **Tháp Thiên Mệnh và màn trận: góp ý sau khi chơi thử (Shan yêu cầu)**
-- Hành trình tầng bỏ dòng "Tầng 1–5 · Cấp 1–7" và nhãn "+3 đá" dưới nút; mốc đá thành dấu ◆ nhỏ ở góc nút tầng, cấp đối thủ ghi ở chú thích khi rê chuột.
+- Hành trình tầng bỏ dòng "Tầng 1–5 · Cấp 1–7" và nhãn "+3 đá" dưới nút; mốc đá thành dấu ◆ nhỏ ở góc nút tầng. Bấm một tầng (mặc định tầng sắp đánh) thì dòng dưới hành trình ghi độ khó, cấp đối thủ, trạng thái và mốc đá; dùng được cả trên điện thoại.
 - Khóa đội hình có bộ lọc: tìm tên (không dấu), lọc hệ, nghề, chỉ đã chọn; tướng đã chọn hiện thành dải phía trên, bấm để bỏ.
 - Ngôi sao khắc chế ★ ở mọi màn chuẩn bị trận đã biết đối thủ: Thiên Mệnh, Thí Luyện, Viễn Chinh, Trấn Ải, Nhật Lệnh, sảnh Giao Tranh (Bình Loạn đã có). Chi tiết: [giao diện trận §4](../05-ui-ux/screens/battle.md#4-trợ-giúp-song-tháp).
 - Hết trận ở chế độ có màn riêng (tháp, Viễn Chinh, Trấn Ải, Nhật Lệnh, Quần Hùng, Bình Loạn) bỏ nút "Nâng kỹ năng & đánh tiếp".
