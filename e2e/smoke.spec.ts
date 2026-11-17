@@ -76,6 +76,24 @@ test.describe("tài khoản đã đăng nhập", () => {
     expectClean(problems);
   });
 
+  test("Trấn Ải: chọn đội, vào đợt 1, quay lại thấy lượt chơi đang dở", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game/survival");
+    await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
+    await expect(page.getByRole("heading", { name: "Bảng xếp hạng mùa này" })).toBeVisible();
+    await page.getByRole("tab", { name: "Chơi" }).click();
+    await page.getByRole("button", { name: "Tự chọn đội mạnh" }).click();
+    await page.getByRole("button", { name: "Bắt đầu Trấn Ải" }).click();
+    await expect(page.getByRole("grid", { name: "Bàn cờ" })).toBeVisible();
+    // Lượt chơi lưu trên máy chủ: về màn Trấn Ải thấy tiến độ và nút vào lại, không mở lượt mới chồng lên.
+    await page.goto("/game/survival");
+    await expect(page.getByRole("heading", { name: /Lượt chơi đang dở/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Bắt đầu Trấn Ải" })).toHaveCount(0);
+    await page.getByRole("button", { name: "Vào lại đợt 1" }).click();
+    await expect(page.getByRole("grid", { name: "Bàn cờ" })).toBeVisible();
+    expectClean(problems);
+  });
+
   test("Tháp Thí Luyện: mở tầng 1 và thấy nút vào tầng", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/trial");

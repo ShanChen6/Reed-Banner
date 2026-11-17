@@ -108,13 +108,20 @@ export interface Profile {
 
 export interface SurvivalState {
   readonly best: number;
+  /** Id trận của lượt chơi Trấn Ải chưa kết thúc (đang nghỉ giữa đợt hoặc đánh dở); mất khi lượt chơi ghi điểm. */
+  readonly run?: string;
 }
 
 export const NEW_SURVIVAL: SurvivalState = { best: 0 };
 
 function parseSurvival(raw: unknown): SurvivalState {
-  const best = (raw as Partial<SurvivalState> | null)?.best;
-  return { best: Number.isInteger(best) && best! > 0 ? best! : 0 };
+  const value = raw as Partial<SurvivalState> | null;
+  const best = value?.best;
+  const run = value?.run;
+  return {
+    best: Number.isInteger(best) && best! > 0 ? best! : 0,
+    ...(typeof run === "string" && run.length > 0 && run.length <= 100 ? { run } : {}),
+  };
 }
 
 export function newProfile(): Profile {

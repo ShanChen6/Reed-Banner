@@ -49,6 +49,7 @@ import {
   type SurvivalDownedFighter,
   type WavePreview,
 } from "../survival";
+import { vnWeek } from "../vnTime";
 
 /** Trận dở không có hành động nào của người chơi quá mốc này thì xử thua. */
 export const ABANDON_MS = 24 * 60 * 60 * 1000;
@@ -198,13 +199,23 @@ function runAi(m: Match, at: number, difficulty: Difficulty): MatchStep {
 }
 
 /**
+ * Sinh tồn hết hạn giữ chỗ. Đang nghỉ giữa đợt là tiến độ đã lưu: giữ tới hết mùa tuần (thứ Hai 0 giờ giờ Việt
+ * Nam) của lần ra tay cuối, để điểm mùa không lẫn sang tuần sau. Đang đánh dở một đợt thì vẫn tính bỏ dở sau 24 giờ.
+ */
+export function survivalPauseExpired(m: Match, now: number): boolean {
+  if (!m.survival || m.survival.done) return false;
+  if (survivalBreak(m.survival, m.battle)) return vnWeek(now) !== vnWeek(m.lastHumanAt);
+  return now - m.lastHumanAt > ABANDON_MS;
+}
+
+/**
  * Đưa trận về đúng thời điểm `now`: xử thua nếu bỏ dở quá 24 giờ, rồi lần lượt cho người chơi mất các
  * lượt đã quá hạn (kể cả ân hạn) và AI đánh lượt của mình, theo đúng mốc thời gian lúc đó.
  */
 export function settle(start: Match, now: number): MatchStep {
   let m = start;
   const events: BattleEvent[] = [];
-  if (m.survival && !m.survival.done && now - m.lastHumanAt > ABANDON_MS) {
+  if (m.survival && !m.survival.done && survivalPauseExpired(m, now)) {
     // Sinh tồn bỏ dở không xử thua: lượt chơi dừng ở đợt cuối đã vượt qua và vẫn ghi điểm.
     const battle = structuredClone(m.battle);
     if (battle.winner === null) battle.winner = AI_SIDE;

@@ -306,4 +306,5 @@ export const ONLINE_ERROR_TEXT: Record<string, string> = {
   locked: "Nhiệm vụ này chưa mở.",
   invalidChoice: "Lời đáp này không hợp với nhiệm vụ. Xin chọn lại.",
   notEvent: "Nhiệm vụ này phải xuất quân mới xong.",
+  survivalActive: "Đang có lượt Trấn Ải chưa kết thúc. Xin tiếp tục hoặc dừng lượt đó trước khi mở lượt mới.",
 };

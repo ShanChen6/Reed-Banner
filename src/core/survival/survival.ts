@@ -1027,15 +1027,18 @@ export interface SurvivalResult {
 export function applySurvivalResult(
   profile: Profile,
   cleared: number,
+  /** Id trận vừa kết thúc; hồ sơ đang trỏ tới trận này thì bỏ con trỏ lượt chơi dở. */
+  matchId?: string,
 ): { profile: Profile; result: SurvivalResult } {
   const newBest = cleared > profile.survival.best;
   const best = newBest ? cleared : profile.survival.best;
   const gold = SURVIVAL_WAVE_GOLD * cleared;
+  const run = profile.survival.run;
   return {
     profile: {
       ...profile,
       gold: profile.gold + gold,
-      survival: { best },
+      survival: { best, ...(run && matchId !== undefined && run !== matchId ? { run } : {}) },
     },
     result: { cleared, best, newBest, gold },
   };

@@ -158,6 +158,11 @@ Không đặt kích thước battle board bằng CSS cố định gây tràn. Sc
 - Không bao giờ cho swap giữa wave; không có HP thành. Ảnh 'thủ thành' chỉ mang tính hình tượng.
 - Nêu giới hạn một lần hồi sinh trong mỗi break, auto revive ưu tiên, dự bị không tự vào active; giải thích lý do disable nút.
 - Kỷ lục/wave reward từ server, không vẽ số tự cộng.
+- **Bản đang chạy (17/11/2026):**
+  - Thẻ Chơi / Bảng xếp hạng / Hướng dẫn dưới banner; bảng mùa và thưởng hạng nằm ở thẻ Bảng xếp hạng.
+  - Có lượt chơi đang dở (`profile.survival.run`) thì thẻ Chơi chỉ hiện khung tiến độ: đã vượt mấy đợt, máu ba tướng ra trận, dự bị, đợt kế; nút Tiếp tục và Dừng và ghi điểm (xác nhận hai bước). Không có lượt dở mới hiện màn chọn đội.
+  - Chọn đội: bốn ô (Phó tướng 1–2, Dự bị 1–2) và lưới tướng đã có, xếp theo cấp, lọc theo hệ, cắt trang 12. Bấm tướng thì vào ô đang chọn hoặc ô trống đầu tiên; bấm lại thì rút ra; có Tự chọn đội mạnh và Bỏ chọn hết. Bản chọn nhớ trong trình duyệt (`coLau.survival.slots`). Logic thuần ở `survival/roster-selection.ts`.
+  - Màn nghỉ (`SurvivalBreakScreen`): đầu khung là đợt vừa thắng, đợt kế, lương; giữa khung cuộn được gồm thẻ tướng (bấm để đưa ra trận hoặc về dự bị), cấu hình Đinh Bộ Lĩnh bằng chip nghề/hệ (kỹ năng thu gọn), cột phải là đối thủ đợt kế và hồi sinh; chân khung cố định có Hoàn tác, Dừng Trấn Ải (xác nhận), Tạm nghỉ · lưu tiến độ (về màn Trấn Ải, giữ lượt chơi) và Xác nhận vào đợt.
 
 ## 8. Thử thách ngày — 'Chiếu thư hôm nay'
 
@@ -307,6 +312,7 @@ Shan yêu cầu mỗi chế độ chơi có một thẻ Hướng dẫn. Đã là
 
 - **Nội dung** nằm ở `src/app/game/modeGuides.ts`, mỗi chế độ có Mục tiêu, Cách chơi, Luật cần nhớ, Phần thưởng, Mẹo nhỏ. Số liệu lấy từ hằng số trong `src/core` khi có (số tầng Thí Luyện, vàng Nhật Lệnh, lượt Quần Hùng, vàng mỗi đợt Trấn Ải, cỡ bàn Khai Lộ), còn lại lấy từ luật ở `docs/02-game-modes/`. Đổi luật thì sửa cả hai nơi.
 - **Thành phần** `src/app/game/ModeGuide.tsx`: `ModeGuideTabs` thêm hai thẻ Chơi và Hướng dẫn dưới banner, thẻ Chơi giữ nguyên nội dung màn; `ModeGuidePanel` là khối nội dung. Chuyển thẻ không gọi API.
+- **Thẻ Bảng xếp hạng (17/11/2026):** `extraTabs` của `ModeGuideTabs` chèn thẻ riêng giữa Chơi và Hướng dẫn. Trấn Ải dùng cho thẻ Bảng xếp hạng (thưởng hạng chờ nhận rồi bảng mùa tuần), giống thẻ BXH tuần của Tháp Thiên Mệnh; thẻ Chơi không còn bảng ở đầu màn.
 - **Màn đã có thẻ riêng:** Bình Loạn thêm thẻ Hướng dẫn vào thanh Bản đồ, Nhiệm vụ, Sử ký, Tái đấu (`AtlasShell.tsx`); Trận Đồ thêm vào hàng thẻ Xếp hạng, Chơi thường, Bảng xếp hạng, Ban thưởng. Khối Luật chơi cũ ở cuối màn Trận Đồ và ô Luật chơi của Khai Lộ đã bỏ vì trùng với Hướng dẫn (nội dung đã gộp vào guide); luật ngắn trong ván Trận Đồ (`FormationScreen`) giữ lại vì không mở được thẻ Hướng dẫn khi đang chơi. Mở Hướng dẫn thì Bộ sưu tập ở cuối màn Trận Đồ ẩn.
 - **Văn phong** theo [Văn phong giao diện](../../00-overview/thuat-ngu.md#văn-phong-giao-diện): gọi bạn, câu ngắn có dấu chấm, tên chế độ hoa mọi chữ, tài nguyên viết thường. `tests/game/mode-guides.test.ts` kiểm tra đủ mười một chế độ, câu kết thúc bằng dấu chấm, không dùng "người chơi" và từ tiếng Anh; `tests/game/ui-wording.test.ts` quét cả nội dung này.
 - **Màn khóa:** khách chưa đăng nhập chỉ thấy màn nhắc đăng nhập (`LoginGate`) của Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh, Quần Hùng, Tầm Tướng Ký, nên chưa thấy thẻ Hướng dẫn; mô tả ngắn ở màn khóa vẫn là `MODE_INFO`.

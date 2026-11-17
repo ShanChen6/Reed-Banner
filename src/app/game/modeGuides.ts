@@ -143,11 +143,13 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Sau mỗi đợt thắng, tướng còn sống đang ra trận hồi 20% máu tối đa, dự bị hồi 10%, lương cộng 25 (tối đa 100).",
       "Tướng gục tự đứng dậy sau 2 đợt, hoặc bạn trả 40 lương để hồi sinh ngay ở lúc nghỉ. Mỗi lần nghỉ được một người, với 30% máu.",
       "Bàn cờ giữ nguyên qua các đợt. Năng lượng và Nộ giữ lại, hiệu ứng thì xóa.",
-      "Bỏ dở quá 24 giờ không bị xử thua: lượt chơi dừng ở đợt cuối đã vượt qua.",
+      "Lúc nghỉ giữa đợt, bạn có thể tạm nghỉ rồi quay lại sau, kể cả ở thiết bị khác. Tiến độ giữ tới hết mùa tuần (thứ Hai 0 giờ).",
+      "Đang đánh dở một đợt mà bỏ quá 24 giờ thì không bị xử thua: lượt chơi dừng ở đợt cuối đã vượt qua.",
+      "Mỗi lúc chỉ có một lượt chơi. Muốn mở lượt mới thì tiếp tục hoặc dừng lượt đang dở trước.",
     ],
     rewards: [
       `${SURVIVAL_WAVE_GOLD} vàng cho mỗi đợt vượt qua, cộng vàng và sách nhặt trên bàn cờ.`,
-      "Xếp hạng theo số đợt giữ được, có bảng mùa theo tuần và thưởng vàng theo hạng cuối mùa.",
+      "Xếp hạng theo số đợt giữ được, có bảng mùa theo tuần và thưởng vàng theo hạng cuối mùa. Số đợt lên bảng ngay khi bạn vượt qua, không cần dừng lượt chơi.",
     ],
     tips: [
       "Xoay người giữa các đợt để tướng yếu có lúc hồi sức.",

@@ -447,7 +447,7 @@ export async function reward(
         specialQuest = { id: specialId, joined: joined.joined };
       }
       if (match.survival) {
-        const c = applySurvivalResult(next, cleared);
+        const c = applySurvivalResult(next, cleared, r.id);
         next = c.profile;
         survival = c.result;
       } else if (raidBoss && match.raid) {
@@ -478,9 +478,10 @@ export async function reward(
       u.stored.profile,
       deps.now,
     );
-  // Điểm mùa Trấn Ải: số đợt đã vượt của lượt chơi này; giữ điểm cao nhất trong tuần.
+  // Điểm mùa Trấn Ải: số đợt đã vượt của lượt chơi này; giữ điểm cao nhất trong tuần. Ghi vào mùa của lần ra tay
+  // cuối: lượt chơi nghỉ giữa đợt qua thứ Hai chỉ chốt lúc tuần mới, điểm vẫn thuộc tuần cũ.
   if (match.survival && cleared > 0)
-    await recordSeason(deps.seasons, { mode: "survival", ownerId: r.ownerId, now: deps.now, best: cleared });
+    await recordSeason(deps.seasons, { mode: "survival", ownerId: r.ownerId, now: Math.min(deps.now, match.lastHumanAt), best: cleared });
   const arena = await settleArena(r.ownerId, match, rewards.won, deps);
   // Viễn Chinh: thưởng trận như trận thường ở trên, rồi chốt kết quả vào sa bàn.
   const expedition = match.expedition

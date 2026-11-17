@@ -34,7 +34,10 @@ import {
   newSurvivalRun,
   survivalActiveSideConfig,
   syncSurvivalRosterState,
+  survivalBreak,
+  survivalCleared,
   survivalWave,
+  matchOver,
   ownsCompanion,
   isLeaderProfession,
   profileTeam,
@@ -74,7 +77,7 @@ import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 import type { MatchRecord, MatchStore } from "./store";
 import { dailySeed, type DailyStore } from "./daily";
 import { type LeaderboardStore } from "./leaderboard";
-import { type SeasonStore } from "./seasons";
+import { recordSeason, type SeasonStore } from "./seasons";
 import { offerDefense, type ArenaStore } from "./arena";
 import { type TrialResult } from "./trialSettle";
 import { type DestinyResult } from "./destinySettle";
@@ -174,6 +177,8 @@ export type ServiceError =
   | "arenaGone"
   /** Trận Destiny thuộc chu kỳ đã đóng. */
   | "cycleExpired"
+  /** Đang có lượt Trấn Ải chưa kết thúc: tiếp tục hoặc dừng lượt đó trước khi mở lượt mới. */
+  | "survivalActive"
   /** Chế độ online có bảng xếp hạng và thưởng chỉ cho tài khoản đã đăng nhập; khách chơi thường thoải mái. */
   | "loginRequired"
   | typeof FEATURE_DISABLED_ERROR;
@@ -737,6 +742,8 @@ async function createSurvivalBattle(
   deps: Deps,
 ): Promise<ServiceResult> {
   const { profile } = await loadProfile(deps.profiles, ownerId);
+  if (profile.survival.run && (await survivalRunOpen(profile.survival.run, ownerId, deps)))
+    return { ok: false, error: "survivalActive" };
   const roster = createSurvivalRoster(
     profile,
     [MAIN_ID, ...input.companions],
@@ -771,7 +778,46 @@ async function createSurvivalBattle(
     updatedAt: deps.now,
   };
   await deps.store.create(record);
+  // Hồ sơ trỏ tới lượt chơi đang dở để màn Trấn Ải mở lại được, kể cả ở thiết bị khác.
+  const pointed = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => ({ ok: true, profile: { ...p, survival: { ...p.survival, run: record.id } } }),
+    deps.now,
+  );
+  if (!pointed.ok) console.error("Không ghi được lượt Trấn Ải đang dở", record.id);
   return { ok: true, id: record.id, view: viewOf(match), events };
+}
+
+/**
+ * Lượt Trấn Ải mà hồ sơ đang trỏ tới còn chơi tiếp được không. Chạy bù trận trước (hết hạn giữ chỗ thì chốt và
+ * cộng thưởng ngay, con trỏ trong hồ sơ cũng được bỏ); trận không còn hoặc đã xong thì không chặn lượt mới.
+ */
+async function survivalRunOpen(id: string, ownerId: string, deps: Deps): Promise<boolean> {
+  const r = await load(id, ownerId, deps.store);
+  if (!r?.match.survival) return false;
+  const settled = await settleRecord(r, deps);
+  if (!settled.ok) return true;
+  const current = await deps.store.get(id);
+  return !!current?.match.survival && !matchOver(current.match);
+}
+
+/** Trấn Ải vừa sang nghỉ giữa đợt: ghi ngay số đợt đã vượt vào bảng mùa, để lượt chơi tạm nghỉ vẫn có tên trên bảng. */
+async function recordSurvivalBreak(
+  r: MatchRecord,
+  match: Match,
+  deps: Omit<Deps, "seed" | "newId">,
+): Promise<void> {
+  const run = match.survival;
+  if (!run || match.seq === r.match.seq || !survivalBreak(run, match.battle)) return;
+  const before = r.match.survival;
+  if (before && survivalBreak(before, r.match.battle) && before.wave === run.wave) return;
+  await recordSeason(deps.seasons, {
+    mode: "survival",
+    ownerId: r.ownerId,
+    now: deps.now,
+    best: survivalCleared(run, match.battle),
+  });
 }
 
 /** Thử thách hằng ngày: giữ chỗ lượt của hôm nay trước rồi mới tạo trận, nên mỗi người chỉ một trận một ngày. */
@@ -912,6 +958,7 @@ async function settleRecord(
   ) {
     return { ok: false, error: "conflict" };
   }
+  await recordSurvivalBreak(r, match, deps);
   const outcome = await reward(r, match, deps);
   return {
     ok: true,
@@ -1017,6 +1064,7 @@ export async function actBattle(
   }
   if (!result.ok)
     return { ok: false, error: result.error, view: viewOf(match) };
+  await recordSurvivalBreak(r, match, deps);
   const outcome = await reward(r, match, deps);
   return {
     ok: true,
@@ -1037,7 +1085,8 @@ export function httpStatus(error: ServiceError): number {
     error === "staleSeq" ||
     error === "dailyDone" ||
     error === "arenaLimit" ||
-    error === "cycleExpired"
+    error === "cycleExpired" ||
+    error === "survivalActive"
   )
     return 409;
   return error === "badRequest" ? 400 : 422;
