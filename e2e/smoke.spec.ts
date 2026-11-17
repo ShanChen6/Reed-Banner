@@ -131,6 +131,12 @@ test.describe("tài khoản đã đăng nhập", () => {
   test("Quần Hùng: bảng xếp hạng ở hàng thẻ, đối thủ có nhãn so lực chiến, 1vs1 chọn nghề hệ bằng chip", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/arena");
+    await expect(page.getByRole("heading", { name: "Đội ra trận" })).toBeVisible();
+    await page.getByText(/Đổi tướng ra trận/).click();
+    await page.getByRole("button", { name: "Bỏ Hà Vân khỏi đội ra trận" }).click();
+    await expect(page.getByRole("button", { name: "Đánh" }).first()).toBeDisabled();
+    await page.getByRole("button", { name: "Lấy theo Doanh Trại" }).click();
+    await expect(page.getByRole("button", { name: "Đánh" }).first()).toBeEnabled();
     await expect(page.getByText("Ngang sức").first()).toBeVisible();
     await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
     await expect(page.getByRole("heading", { name: "Đấu bóng ma" })).toBeVisible();

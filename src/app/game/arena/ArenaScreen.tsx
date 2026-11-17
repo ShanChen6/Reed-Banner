@@ -6,8 +6,8 @@ import { Alert, Button, ChoiceChip, buttonVariants } from "@/components/ui";
 // Quần Hùng: điểm và thành tích, đội phòng thủ (bản chụp đội 3vs3 đang chọn), 3 đối thủ đang bày.
 // Đánh dùng đội 3vs3 đang chọn ở hồ sơ; đối thủ do AI điều khiển.
 
-import { useEffect, useState } from "react";
-import { ARENA_DIFFICULTY, ARENA_WIN_GOLD, type ArenaMember } from "@/core";
+import { useEffect, useMemo, useState } from "react";
+import { ARENA_DIFFICULTY, ARENA_WIN_GOLD, MAIN_ID, arenaTeam, companionById, ownsCompanion, progressOf, teamPower, type ArenaMember } from "@/core";
 import { ElementIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
@@ -23,6 +23,10 @@ import { SeasonBoardPanel } from "../leaderboard/boards";
 import { SceneLink, useScene } from "../SceneContext";
 import { ModeGuideTabs } from "../ModeGuide";
 import PvpPanel, { probePvp } from "./PvpPanel";
+import HeroGrid from "./HeroGrid";
+import { useProfile } from "../profile/useProfile";
+
+const ATTACK_KEY = "coLau.arena.attack";
 
 function Members({ list }: { list: readonly ArenaMember[] }) {
   return (
@@ -63,6 +67,43 @@ export default function ArenaScreen() {
   const [pvpOpen, setPvpOpen] = useState(false);
   const [mode, setMode] = useState<"ghost" | "pvp">("ghost");
   const [pvpBusy, setPvpBusy] = useState(false);
+  /** Hai tướng đi cùng Đinh Bộ Lĩnh khi đánh bóng ma; null là chưa chọn, lấy theo đội 3vs3 ở Doanh Trại. */
+  const [picks, setPicks] = useState<readonly string[] | null>(null);
+  const { profile } = useProfile();
+  const owned = useMemo(
+    () => (profile ? Object.keys(profile.companions).filter((id) => ownsCompanion(profile, id) && companionById(id)) : []),
+    [profile],
+  );
+  const savedPicks = useMemo(() => {
+    try {
+      const raw = JSON.parse(window.localStorage.getItem(ATTACK_KEY) ?? "null") as unknown;
+      return Array.isArray(raw) ? raw.filter((id): id is string => typeof id === "string" && owned.includes(id)).slice(0, 2) : null;
+    } catch {
+      return null;
+    }
+  }, [owned]);
+  const lineup = picks ?? (savedPicks && savedPicks.length === 2 ? savedPicks : profile ? profile.team.filter((id) => owned.includes(id)).slice(0, 2) : []);
+  const choosePicks = (next: readonly string[]) => {
+    setPicks(next);
+    try {
+      window.localStorage.setItem(ATTACK_KEY, JSON.stringify(next));
+    } catch {
+      // Không nhớ được thì lần sau lấy theo Doanh Trại.
+    }
+  };
+  const attackPower = profile && lineup.length === 2 ? teamPower(arenaTeam(profile, lineup)) : 0;
+  const heroes = useMemo(
+    () =>
+      profile
+        ? owned
+            .map((id) => {
+              const c = companionById(id)!;
+              return { id, name: c.name, element: c.element, profession: c.profession, level: progressOf(profile, id).level };
+            })
+            .sort((a, b) => b.level - a.level || a.name.localeCompare(b.name, "vi"))
+        : [],
+    [owned, profile],
+  );
 
   useEffect(() => {
     void fetchArena().then(setData);
@@ -83,8 +124,8 @@ export default function ArenaScreen() {
   }
 
   const left = data.attacksLeft ?? 0;
-  // Lực chiến đội phòng thủ của mình (bản chụp đội 3vs3, đã kẹp trang bị) để so với đối thủ.
-  const myPower = data.defense?.power ?? 0;
+  // Lực chiến đội ra trận (đã kẹp trang bị) để so với đối thủ; chưa tải hồ sơ thì tạm lấy đội phòng thủ.
+  const myPower = attackPower || (data.defense?.power ?? 0);
   const offers = data.offers ?? [];
 
   const command = async (action: "defend" | "refresh") => {
@@ -107,7 +148,7 @@ export default function ArenaScreen() {
       mode: "3v3",
       element: "moc",
       profession: "tuongSi",
-      companions: [],
+      companions: lineup,
       difficulty: "hard",
       arena: index,
     });
@@ -178,6 +219,78 @@ export default function ArenaScreen() {
         {pvpOpen && mode === "pvp" ? <PvpPanel onBusyChange={setPvpBusy} /> : (
           <>
 
+      {profile && (
+        <OrnateFrame className="flex flex-col gap-3">
+          <SectionTitle
+            description="Đinh Bộ Lĩnh và hai tướng bạn chọn ra trận đánh bóng ma. Đội phòng thủ là bản chụp riêng, đổi ở khung Đội phòng thủ."
+            action={<span className="text-sm text-on-wood-soft">Lực chiến <strong className="text-title-on-wood">{attackPower || "–"}</strong></span>}
+          >
+            Đội ra trận
+          </SectionTitle>
+          <ul className="grid gap-2 sm:grid-cols-3">
+            {[MAIN_ID, lineup[0], lineup[1]].map((id, slot) => {
+              const c = id && id !== MAIN_ID ? companionById(id) : null;
+              return (
+                <li key={slot} className="ui-frame-inset flex min-w-0 items-center gap-2 p-2">
+                  {id ? (
+                    <>
+                      <Portrait
+                        id={id}
+                        element={c?.element ?? profile.element}
+                        profession={c?.profession ?? profile.profession}
+                        className="size-10 shrink-0"
+                      />
+                      <div className="min-w-0 flex-1 text-caption">
+                        <p className="truncate text-sm font-semibold text-on-wood">{c?.name ?? "Đinh Bộ Lĩnh"}</p>
+                        <p className="text-on-wood-soft">
+                          {slot === 0 ? "Thủ lĩnh · " : ""}
+                          {ELEMENT_NAME[c?.element ?? profile.element]} · {PROFESSION_NAME[c?.profession ?? profile.profession]} · cấp {progressOf(profile, id).level}
+                        </p>
+                      </div>
+                      {slot > 0 && (
+                        <button
+                          type="button"
+                          aria-label={`Bỏ ${c?.name ?? id} khỏi đội ra trận`}
+                          onClick={() => choosePicks(lineup.filter((x) => x !== id))}
+                          className="grid size-8 shrink-0 place-items-center rounded text-on-wood-soft hover:bg-black/30 hover:text-on-wood pointer-coarse:size-11"
+                        >
+                          ×
+                        </button>
+                      )}
+                    </>
+                  ) : (
+                    <p className="flex h-10 items-center text-caption text-on-wood-soft">Ô trống · chọn tướng bên dưới</p>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+          <details className="group" open={lineup.length < 2 || undefined}>
+            <summary className="flex min-h-11 cursor-pointer items-center gap-2 text-sm font-semibold text-frame-gold">
+              <span aria-hidden className="transition group-open:rotate-90">›</span>
+              Đổi tướng ra trận ({owned.length} tướng)
+            </summary>
+            <div className="mt-2 flex flex-col gap-2">
+              <div className="flex flex-wrap gap-2">
+                <Button variant="secondary" size="sm" onClick={() => choosePicks(profile.team.filter((id) => owned.includes(id)).slice(0, 2))}>
+                  Lấy theo Doanh Trại
+                </Button>
+                <Button variant="secondary" size="sm" disabled={heroes.length < 2} onClick={() => choosePicks(heroes.slice(0, 2).map((h) => h.id))}>
+                  Hai tướng cấp cao nhất
+                </Button>
+              </div>
+              <HeroGrid
+                label="Tướng ra trận"
+                items={heroes.map((h) => ({ ...h, blocked: lineup.length >= 2 && !lineup.includes(h.id) ? "Bỏ bớt một tướng để đổi" : null }))}
+                selected={null}
+                isSelected={(id) => lineup.includes(id)}
+                onSelect={(id) => choosePicks(lineup.includes(id) ? lineup.filter((x) => x !== id) : [...lineup, id].slice(0, 2))}
+              />
+            </div>
+          </details>
+        </OrnateFrame>
+      )}
+
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <div className="order-2 flex min-w-0 flex-col gap-4 lg:order-1">
           <OrnateFrame className="grid grid-cols-3 gap-2 text-center">
@@ -228,7 +341,7 @@ export default function ArenaScreen() {
 
         <OrnateFrame level="raised" className="order-1 flex min-w-0 flex-col gap-3 self-start lg:order-2">
           <SectionTitle
-            description="Bạn ra trận với đội 3vs3 đang chọn ở Doanh Trại. Đối thủ được bày theo điểm và lực chiến gần bạn; điểm càng cao, thắng càng được nhiều điểm. Trang bị cộng tối đa 30% công và máu gốc theo cấp."
+            description="Bạn ra trận với Đội ra trận ở trên. Đối thủ được bày theo điểm và lực chiến gần đội 3vs3 ở Doanh Trại; nhãn mạnh yếu so với đội ra trận. Điểm càng cao, thắng càng được nhiều điểm. Trang bị cộng tối đa 30% công và máu gốc theo cấp."
             action={
               <Button
                 variant="secondary"
@@ -270,7 +383,7 @@ export default function ArenaScreen() {
                 <Members list={o.members} />
                 <Button
                   type="button"
-                  disabled={busy !== null || left <= 0}
+                  disabled={busy !== null || left <= 0 || lineup.length < 2}
                   onClick={() => void attack(i)}
                   className="mt-auto min-h-11"
                 >

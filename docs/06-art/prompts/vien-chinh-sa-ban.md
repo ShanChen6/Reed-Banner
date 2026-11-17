@@ -1,7 +1,7 @@
 # Prompt tranh sa bàn Viễn Chinh
 
 > Cập nhật: 18/11/2026
-> Trạng thái: **DRAFT** — Claude soạn theo yêu cầu của Shan (04/11/2026: mỗi sa bàn một tranh mới). Đã có tranh vẽ tay 5/6 sa bàn (18/11/2026, mục 0); Quần Đảo còn dùng tranh tạm dựng bằng code.
+> Trạng thái: **DRAFT** — Claude soạn theo yêu cầu của Shan (04/11/2026: mỗi sa bàn một tranh mới). Đã có tranh vẽ tay đủ 6 sa bàn (18/11/2026, mục 0).
 
 Mỗi sa bàn của [Viễn Chinh](../../02-game-modes/expedition/01-vien-chinh-gdd.md) cần một tranh nền riêng. Tranh là
 bản đồ địa hình vẽ tay nhìn từ trên cao, cùng chất liệu với bản đồ tổng Bình Loạn (`public/art/campaign/world-map.webp`)
@@ -18,10 +18,10 @@ thung lũng, Ngã Ba Sông ba nhánh sông và ruộng, Kinh Thành đất đỏ
 (1600×960), khai báo trong `EXPEDITION_MAP_IMAGES`. Đổi ô hoặc đường của sa bàn thì chạy lại script. Có tranh vẽ tay
 theo các mục dưới thì ghi đè đúng tên file.
 
-**Tranh vẽ tay (Shan gửi 18/11/2026):** Ải Bắc, Thượng Du, Cửa Biển, Ngã Ba Sông, Kinh Thành đã thay bằng tranh vẽ theo
+**Tranh vẽ tay (Shan gửi 18/11/2026):** Ải Bắc, Thượng Du, Cửa Biển, Ngã Ba Sông, Kinh Thành, Quần Đảo đã thay bằng tranh vẽ theo
 prompt dưới, xuất WebP 1440×864 (khoảng 380 KB), và tọa độ từng ô trong `src/core/expedition/maps.ts` đã dời cho khớp
-trại, làng, đồn, lũy, cầu, thành trên tranh. Script dựng tranh tạm bỏ qua năm sa bàn này (`PAINTED`). Còn thiếu
-`quan-dao.png`.
+trại, làng, đồn, lũy, cầu, thành trên tranh. Script dựng tranh tạm bỏ qua sa bàn đã có tranh vẽ tay (`PAINTED`);
+chỉ dùng lại khi thêm sa bàn mới.
 
 ## 1. Cách dùng
 
