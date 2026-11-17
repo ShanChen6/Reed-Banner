@@ -188,7 +188,8 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     rules: [
       `Mỗi ngày có ${ARENA_ATTACKS_PER_DAY} lượt đánh, đổi lúc 0 giờ giờ Việt Nam.`,
       "Nâng cấp tướng hoặc đổi đội xong thì bấm Cập nhật theo đội hiện tại để đội phòng thủ theo kịp.",
-      "Đối thủ ưu tiên người có điểm gần bạn. Thiếu người thì máy tạo bóng ma luyện tập 1000 điểm; càng lên cao, đánh bóng ma càng ít điểm.",
+      "Đối thủ ưu tiên người có điểm và lực chiến gần bạn; thẻ đối thủ ghi mạnh hơn, ngang sức hay yếu hơn. Thiếu người thì máy tạo bóng ma luyện tập cùng cấp, 1000 điểm; càng lên cao, đánh bóng ma càng ít điểm.",
+      "Trong Quần Hùng, trang bị cộng tối đa 30% công và máu gốc theo cấp (thủ tối đa gấp đôi), nên cấp tướng quan trọng hơn đồ.",
       "Điểm hạng bắt đầu từ 1000, tăng giảm theo sức đối thủ và không xuống dưới 0.",
     ],
     rewards: [

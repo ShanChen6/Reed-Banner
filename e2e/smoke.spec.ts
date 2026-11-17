@@ -111,6 +111,19 @@ test.describe("tài khoản đã đăng nhập", () => {
     expectClean(problems);
   });
 
+  test("Quần Hùng: bảng xếp hạng ở hàng thẻ, đối thủ có nhãn so lực chiến, 1vs1 chọn nghề hệ bằng chip", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game/arena");
+    await expect(page.getByText("Ngang sức").first()).toBeVisible();
+    await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
+    await expect(page.getByRole("heading", { name: "Đấu bóng ma" })).toBeVisible();
+    await page.getByRole("tab", { name: "Chơi" }).click();
+    await page.getByRole("button", { name: "Đấu người" }).click();
+    await page.getByRole("group", { name: "Hệ của Đinh Bộ Lĩnh" }).getByRole("button", { name: "Lôi" }).click();
+    await expect(page.getByText("Tướng sĩ · Lôi")).toBeVisible();
+    expectClean(problems);
+  });
+
   test("Tháp Thí Luyện: mở tầng 1 và thấy nút vào tầng", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/trial");

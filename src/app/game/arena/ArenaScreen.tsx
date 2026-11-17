@@ -83,6 +83,8 @@ export default function ArenaScreen() {
   }
 
   const left = data.attacksLeft ?? 0;
+  // Lực chiến đội phòng thủ của mình (bản chụp đội 3vs3, đã kẹp trang bị) để so với đối thủ.
+  const myPower = data.defense?.power ?? 0;
   const offers = data.offers ?? [];
 
   const command = async (action: "defend" | "refresh") => {
@@ -138,7 +140,31 @@ export default function ArenaScreen() {
           { label: "Lượt hôm nay", value: `${left}/${data.attacksPerDay ?? 0}` },
         ]}
       />
-      <ModeGuideTabs scene="ARENA">
+      <ModeGuideTabs
+        scene="ARENA"
+        extraTabs={[
+          {
+            value: "board",
+            label: "Bảng xếp hạng",
+            content: (
+              <>
+                <section aria-labelledby="arena-board-ghost" className="flex flex-col gap-4">
+                  <h2 id="arena-board-ghost" className="ui-title-on-wood text-title">Đấu bóng ma</h2>
+                  <RankRewardsPanel mode="arena" />
+                  <SeasonBoardPanel board="arena" />
+                </section>
+                {pvpOpen && (
+                  <section aria-labelledby="arena-board-pvp" className="flex flex-col gap-4">
+                    <h2 id="arena-board-pvp" className="ui-title-on-wood text-title">Đấu người</h2>
+                    <RankRewardsPanel mode="pvp" />
+                    <SeasonBoardPanel board="pvp" />
+                  </section>
+                )}
+              </>
+            ),
+          },
+        ]}
+      >
         {pvpOpen && (
           <div className="flex flex-wrap gap-2" role="group" aria-label="Cách đấu">
             <ChoiceChip selected={mode === "ghost"} size="md" disabled={pvpBusy} onClick={() => setMode("ghost")}>
@@ -151,9 +177,6 @@ export default function ArenaScreen() {
         )}
         {pvpOpen && mode === "pvp" ? <PvpPanel onBusyChange={setPvpBusy} /> : (
           <>
-
-      <RankRewardsPanel mode="arena" />
-      <SeasonBoardPanel board="arena" />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <div className="order-2 flex min-w-0 flex-col gap-4 lg:order-1">
@@ -205,7 +228,7 @@ export default function ArenaScreen() {
 
         <OrnateFrame level="raised" className="order-1 flex min-w-0 flex-col gap-3 self-start lg:order-2">
           <SectionTitle
-            description="Bạn ra trận với đội 3vs3 đang chọn ở Doanh Trại. Đối thủ có điểm càng cao, thắng càng được nhiều điểm."
+            description="Bạn ra trận với đội 3vs3 đang chọn ở Doanh Trại. Đối thủ được bày theo điểm và lực chiến gần bạn; điểm càng cao, thắng càng được nhiều điểm. Trang bị cộng tối đa 30% công và máu gốc theo cấp."
             action={
               <Button
                 variant="secondary"
@@ -242,6 +265,7 @@ export default function ArenaScreen() {
                     {o.rating} điểm · lực chiến {o.power}
                     {o.bot && " · bóng ma luyện tập"}
                   </p>
+                  {myPower > 0 && <PowerTag mine={myPower} theirs={o.power} />}
                 </div>
                 <Members list={o.members} />
                 <Button
@@ -262,6 +286,18 @@ export default function ArenaScreen() {
       </ModeGuideTabs>
     </ModeScreen>
   );
+}
+
+/** So lực chiến đối thủ với đội mình: chênh dưới 10% là ngang sức. */
+function PowerTag({ mine, theirs }: { mine: number; theirs: number }) {
+  const ratio = theirs / mine;
+  const [text, tone] =
+    ratio > 1.25 ? ["Mạnh hơn nhiều", "bg-danger/25 text-danger"]
+    : ratio > 1.1 ? ["Mạnh hơn", "bg-danger/15 text-danger"]
+    : ratio < 0.8 ? ["Yếu hơn nhiều", "bg-jade/25 text-jade"]
+    : ratio < 0.9 ? ["Yếu hơn", "bg-jade/15 text-jade"]
+    : ["Ngang sức", "bg-frame-gold/20 text-frame-gold"];
+  return <span className={`self-start rounded px-2 py-0.5 text-caption font-bold ${tone}`}>{text}</span>;
 }
 
 function Stat({ label, value }: { label: string; value: string }) {

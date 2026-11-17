@@ -65,6 +65,8 @@ Quy trình (số lượng cấm do Shan chốt; thứ tự và giờ là đề x
 4. **Đội trưởng** (người vào trước, hoặc chủ phòng) xếp **vị trí 1 / 2 / 3** cho phe mình sau khi các tướng đã chọn xong.
 5. Hai phe **thấy tướng của nhau** từ lúc chọn. Cấp và trang bị chi tiết hiện sau khi vào trận.
 
+**Giao diện cấm chọn (18/11/2026, `PvpDraft.tsx`):** đầu khung là lượt hiện tại kèm đồng hồ đếm lùi và thanh thời gian, dải các bước (viền xanh là lượt phe mình, viền đỏ là phe đối thủ). Hai phe hiện ba ô tướng đã chọn có chân dung và các mục đã cấm (gạch đỏ). Tới lượt cấm: chip cấm hệ, nghề của Đinh Bộ Lĩnh và lưới tướng có tìm tên (không dấu), lọc hệ, lọc nghề, cắt trang 12 (`HeroGrid.tsx`); tới lượt chọn: cùng lưới đó với tướng của mình, tướng không chọn được ghi lý do. Chọn Đinh Bộ Lĩnh thì hiện chip nghề, hệ có biểu tượng và chân dung xem trước, mục bị cấm gạch ngang (`LeaderBuildPicker.tsx`, dùng chung với 1vs1). Nút xác nhận dính đáy màn khi cuộn.
+
 **Cấp trong trận:** mỗi tướng vào trận ở **cấp hiện có của chính tướng đó** trong hồ sơ người chơi. Ví dụ Hà Vân cấp 2 thì đánh ở cấp 2; Đinh Bộ Lĩnh cấp 5 thì đánh ở cấp 5. Không có bước đưa về cùng một cấp. Chọn tướng là chọn cả cấp của tướng đó, nên người chơi cân nhắc giữa tướng mạnh về chiêu và tướng đã nâng cấp.
 
 ### 3.4 Màn chờ chuẩn bị (sau khi chọn tướng)

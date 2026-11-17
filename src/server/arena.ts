@@ -9,7 +9,10 @@ import {
   botDefense,
   botName,
   createRng,
+  arenaTeam,
   defenseOf,
+  defensePower,
+  teamPower,
   type ArenaDefense,
   type ArenaMember,
 } from "@/core";
@@ -176,27 +179,34 @@ export class MemoryArenaStore implements ArenaStore {
   }
 }
 
-/** Bày đối thủ: tối đa ARENA_OFFERS người chơi thật có điểm gần nhất (chọn ngẫu nhiên trong nhóm gần), thiếu thì thêm bóng ma máy tạo. */
+/** Lực chiến đối thủ thật được bày: trong khoảng này so với lực chiến người đánh (ngoài khoảng chỉ bày khi thiếu người). */
+export const ARENA_POWER_BAND = 0.25;
+
+/**
+ * Bày đối thủ: người chơi thật có điểm gần nhất, ưu tiên người có lực chiến (đã kẹp trang bị) gần lực chiến người
+ * đánh, chọn ngẫu nhiên trong nhóm gần; thiếu thì thêm bóng ma máy tạo cùng cấp. `power` là lực chiến người đánh,
+ * bỏ trống thì chỉ xét điểm.
+ */
 export async function makeOffers(
   store: ArenaStore,
   ownerId: string,
   rating: number,
   level: number,
   seed: number,
+  power?: number,
 ): Promise<ArenaOffer[]> {
   const rng = createRng(seed >>> 0);
-  const pool = await store.candidates(ownerId, rating, ARENA_OFFERS * 4);
+  const candidates = (await store.candidates(ownerId, rating, ARENA_OFFERS * 8)).map((c) => ({ ...c, power: defensePower(c.defense) }));
+  const gap = (p: number) => (power ? Math.abs(p - power) / power : 0);
+  // Người trong khoảng lực chiến đứng trước; ngoài khoảng xếp theo độ chênh, chỉ dùng khi không đủ người.
+  const near = candidates.filter((c) => gap(c.power) <= ARENA_POWER_BAND);
+  const far = candidates.filter((c) => gap(c.power) > ARENA_POWER_BAND).sort((a, b) => gap(a.power) - gap(b.power));
   const real: ArenaOffer[] = [];
-  while (real.length < ARENA_OFFERS && pool.length > 0) {
-    const c = pool.splice(rng.int(0, pool.length - 1), 1)[0]!;
-    real.push({
-      owner: c.ownerId,
-      name: c.name ?? guestName(c.ownerId),
-      rating: c.rating,
-      members: c.defense.members,
-      power: c.defense.power,
-    });
-  }
+  const take = (c: (typeof candidates)[number]) =>
+    real.push({ owner: c.ownerId, name: c.name ?? guestName(c.ownerId), rating: c.rating, members: c.defense.members, power: c.power });
+  while (real.length < ARENA_OFFERS && near.length > 0) take(near.splice(rng.int(0, near.length - 1), 1)[0]!);
+  // Không có ai trong khoảng thì để bóng ma cùng cấp lấp chỗ, chỉ lấy người ngoài khoảng gần nhất cho đủ một người.
+  if (real.length === 0 && far.length > 0) take(far[0]!);
   const bots = Array.from({ length: ARENA_OFFERS - real.length }, () => {
     const s = rng.int(0, 2 ** 31 - 1);
     const d = botDefense(s, level);
@@ -283,6 +293,7 @@ export async function arenaView(
         row.rating,
         profile.main.level,
         deps.seed,
+        teamPower(arenaTeam(profile, profile.team)),
       ),
     );
   row = (await arena.get(ownerId)) ?? row;
@@ -300,7 +311,7 @@ export async function arenaView(
     attacksLeft: ARENA_ATTACKS_PER_DAY - (row.day === day ? row.attacks : 0),
     attacksPerDay: ARENA_ATTACKS_PER_DAY,
     defense: row.defense
-      ? { members: row.defense.members, power: row.defense.power }
+      ? { members: row.defense.members, power: defensePower(row.defense) }
       : null,
     offers: row.offers.map((o) => ({
       name: o.name,
