@@ -15,11 +15,13 @@ import { WARLORD_ENCOUNTERS } from "../campaign";
 import {
   autoProgress,
   leveledFoe,
+  MAIN_ID,
   newProfile,
   profileTeam,
   progressOf,
   type Profile,
 } from "../progress";
+import { companionById } from "../roster/roster";
 import { createRng, type Rng } from "../rng";
 import { vnDay } from "../vnTime";
 import { SHOP_COMPANIONS, STARTER_COMPANIONS } from "../roster";
@@ -39,6 +41,35 @@ export const ARENA_DIFFICULTY: Difficulty = "hard";
 export const ARENA_WIN_GOLD = 50;
 
 export const arenaDay = vnDay;
+
+/**
+ * Trần phần trang bị cộng thêm trong Quần Hùng, tính theo chỉ số gốc của cấp (Shan 18/11/2026). Không có trần thì
+ * đội cấp 5 mặc đủ đồ Thần phẩm thắng đội cấp 30 không đồ khoảng 90% (mô phỏng 60 trận); trần 30% công và máu đưa
+ * về khoảng 13%, còn cùng cấp thì đồ tốt vẫn hơn rõ. Thủ gốc nhỏ nên cho cộng gấp đôi.
+ */
+export const ARENA_GEAR_CAP = { atk: 0.3, maxHp: 0.3, def: 1 } as const;
+
+/** Chỉ số trong Quần Hùng: không thấp hơn chỉ số gốc của cấp, phần cộng từ trang bị không quá trần. */
+export function capArenaGear(config: FighterConfig, base: FighterConfig): FighterConfig {
+  const clamp = (stat: keyof typeof ARENA_GEAR_CAP) =>
+    Math.max(base[stat], Math.min(config[stat], Math.round(base[stat] * (1 + ARENA_GEAR_CAP[stat]))));
+  return { ...config, maxHp: clamp("maxHp"), atk: clamp("atk"), def: clamp("def") };
+}
+
+/** Đội ra trận Quần Hùng của một hồ sơ: như đội thường, trang bị theo trần ARENA_GEAR_CAP. */
+export function arenaTeam(profile: Profile, companionIds: readonly string[]): FighterConfig[] {
+  const geared = profileTeam(profile, companionIds);
+  const bare = profileTeam({ ...profile, loadouts: {} }, companionIds);
+  return geared.map((f, i) => capArenaGear(f, bare[i] ?? f));
+}
+
+/** Chỉ số gốc (không trang bị) của một người trong đội phòng thủ, dựng lại theo công thức hiện hành. */
+function memberBase(m: ArenaMember): FighterConfig | null {
+  if (m.id === MAIN_ID)
+    return profileTeam({ ...newProfile(), element: m.element, profession: m.profession, main: autoProgress(m.level, null) })[0] ?? null;
+  const companion = companionById(m.id);
+  return companion ? leveledFoe(companion, m.level) : null;
+}
 
 /** Một người trong đội phòng thủ, đủ để hiện cho người đánh xem trước. */
 export interface ArenaMember {
@@ -80,7 +111,7 @@ function defenseFrom(
 
 /** Chụp đội 3vs3 đang chọn ở hồ sơ làm đội phòng thủ. */
 export function defenseOf(profile: Profile): ArenaDefense {
-  const team = profileTeam(profile, profile.team);
+  const team = arenaTeam(profile, profile.team);
   return defenseFrom(
     team,
     team.map((f) => progressOf(profile, f.id).level),
@@ -130,13 +161,25 @@ export function botDefense(seed: number, level: number): ArenaDefense {
   );
 }
 
-/** Đổi tên nhân vật chính của đội phòng thủ thành tên người chơi, để hai Đinh Bộ Lĩnh không trùng tên. */
+/**
+ * Đội phòng thủ đưa vào trận: bản chụp giữ kỹ năng người chơi đã chọn, chỉ số kẹp lại theo cấp đã chụp (bản chụp cũ
+ * đặt trước khi có trần trang bị cũng bị kẹp). Đổi tên nhân vật chính thành tên người chơi, để hai Đinh Bộ Lĩnh
+ * không trùng tên.
+ */
 export function ghostTeam(
   defense: ArenaDefense,
   name: string,
 ): FighterConfig[] {
-  return defense.team.map((f, i) => withComboPassive(i === 0 ? { ...f, name } : f));
+  return defense.team.map((f, i) => {
+    const member = defense.members[i];
+    const base = member ? memberBase(member) : null;
+    const capped = base ? capArenaGear(f, base) : f;
+    return withComboPassive(i === 0 ? { ...capped, name } : capped);
+  });
 }
+
+/** Lực chiến của đội phòng thủ như khi vào trận (đã kẹp trang bị). */
+export const defensePower = (defense: ArenaDefense): number => teamPower(ghostTeam(defense, ""));
 
 /** Điểm thay đổi sau một trận: người đánh theo ARENA_K, người phòng thủ ngược dấu theo ARENA_DEFENDER_K. */
 export function arenaDelta(

@@ -87,10 +87,44 @@ test.describe("tài khoản đã đăng nhập", () => {
     await expect(page.getByRole("grid", { name: "Bàn cờ" })).toBeVisible();
     // Lượt chơi lưu trên máy chủ: về màn Trấn Ải thấy tiến độ và nút vào lại, không mở lượt mới chồng lên.
     await page.goto("/game/survival");
-    await expect(page.getByRole("heading", { name: /Lượt chơi đang dở/ })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Đang đánh dở đợt 1/ })).toBeVisible();
     await expect(page.getByRole("button", { name: "Bắt đầu Trấn Ải" })).toHaveCount(0);
     await page.getByRole("button", { name: "Vào lại đợt 1" }).click();
     await expect(page.getByRole("grid", { name: "Bàn cờ" })).toBeVisible();
+    expectClean(problems);
+  });
+
+  test("Điểm danh và nhiệm vụ ngày nằm ở Nhật Lệnh, màn Nhiệm vụ chỉ dẫn sang", async ({ page }) => {
+    const problems = watchProblems(page);
+    // Màn Nhiệm vụ chỉ còn thẻ dẫn sang Nhật Lệnh.
+    await page.goto("/game/quests");
+    const link = page.getByRole("link", { name: "Sang Nhật Lệnh" });
+    await expect(link).toBeVisible();
+    await expect(page.getByRole("meter", { name: "Nhận Nhật Lệnh", exact: true })).toHaveCount(0);
+    await link.click();
+    await expect(page.getByRole("heading", { name: "Nhiệm vụ ngày" })).toBeVisible();
+    await page.getByRole("button", { name: "Điểm danh", exact: true }).click();
+    // Đã điểm danh thì khung thu thành một dòng; bấm mới mở chuỗi 7 ngày.
+    await expect(page.getByText("Đã điểm danh hôm nay")).toBeVisible();
+    await expect(page.getByText("Ngày 7")).toBeHidden();
+    await page.getByText("Xem chuỗi").click();
+    await expect(page.getByText("Ngày 7")).toBeVisible();
+    await expect(page.getByRole("meter", { name: "Nhận Nhật Lệnh", exact: true })).toBeVisible();
+    await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
+    await expect(page.getByRole("heading", { name: "Bảng hôm nay" })).toBeVisible();
+    expectClean(problems);
+  });
+
+  test("Quần Hùng: bảng xếp hạng ở hàng thẻ, đối thủ có nhãn so lực chiến, 1vs1 chọn nghề hệ bằng chip", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game/arena");
+    await expect(page.getByText("Ngang sức").first()).toBeVisible();
+    await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
+    await expect(page.getByRole("heading", { name: "Đấu bóng ma" })).toBeVisible();
+    await page.getByRole("tab", { name: "Chơi" }).click();
+    await page.getByRole("button", { name: "Đấu người" }).click();
+    await page.getByRole("group", { name: "Hệ của Đinh Bộ Lĩnh" }).getByRole("button", { name: "Lôi" }).click();
+    await expect(page.getByText("Tướng sĩ · Lôi")).toBeVisible();
     expectClean(problems);
   });
 

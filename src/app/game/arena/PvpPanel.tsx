@@ -37,8 +37,7 @@ import { ElementIcon } from "../art/icons";
 import { TileArt } from "../art/tiles";
 import { EffectBadge } from "../art/effects";
 import PvpDraftScreen from "./PvpDraft";
-import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
-import { SeasonBoardPanel } from "../leaderboard/boards";
+import LeaderBuildPicker from "./LeaderBuildPicker";
 import { describe } from "../battle/battleLog";
 import { ELEMENT_NAME, ERROR_TEXT, PROFESSION_NAME, skillText } from "../battle/labels";
 
@@ -232,39 +231,13 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
       ) : (
         <div className="flex flex-col gap-3">
           {o && (
-            <div className="flex flex-wrap items-end gap-3" role="group" aria-label="Chuẩn bị Đinh Bộ Lĩnh">
-              <label className="flex flex-col gap-1 text-sm text-on-wood-soft">
-                Nghề
-                <select
-                  className="min-h-11 rounded-control border border-frame-line bg-wood-inset px-3 text-on-wood"
-                  value={pick.profession ?? o.build.profession}
-                  onChange={(e) => setPick((p) => ({ ...p, profession: e.target.value as Profession }))}
-                >
-                  {PROFESSIONS.map((x) => (
-                    <option key={x} value={x}>
-                      {PROFESSION_NAME[x as keyof typeof PROFESSION_NAME] ?? x}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="flex flex-col gap-1 text-sm text-on-wood-soft">
-                Hệ
-                <select
-                  className="min-h-11 rounded-control border border-frame-line bg-wood-inset px-3 text-on-wood"
-                  value={pick.element ?? o.build.element}
-                  onChange={(e) => setPick((p) => ({ ...p, element: e.target.value as Element }))}
-                >
-                  {ELEMENTS.map((x) => (
-                    <option key={x} value={x}>
-                      {ELEMENT_NAME[x]}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <p className="text-sm text-on-wood-soft">
-                Cấp và trang bị theo Doanh Trại. Nghề và hệ khóa khi vào trận.
-              </p>
-            </div>
+            <LeaderBuildPicker
+              element={pick.element ?? o.build.element}
+              profession={pick.profession ?? o.build.profession}
+              onChange={(next) => setPick(next)}
+              disabled={busy}
+              note="Cấp và trang bị theo Doanh Trại. Nghề và hệ khóa khi vào trận."
+            />
           )}
         <div className="flex flex-wrap items-center gap-3">
           <Button size="lg" disabled={busy || !o || !!o.banUntil} onClick={() => void queue()}>
@@ -304,8 +277,6 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
           </Button>
         </OrnateFrame>
       )}
-      <RankRewardsPanel mode="pvp" />
-      <SeasonBoardPanel board="pvp" />
     </div>
   );
 }

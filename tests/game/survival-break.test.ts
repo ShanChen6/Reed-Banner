@@ -145,7 +145,6 @@ function render(
       onRefresh: () => {},
       onNext: () => {},
       onEnd: () => {},
-      onPause: () => {},
     }),
   );
 }
@@ -166,7 +165,7 @@ describe("màn nghỉ Sinh tồn", () => {
     assert.match(html, /aria-label="Hà Vân: đang ra trận, bấm để về dự bị"/);
     // Tướng gục chưa được hồi sinh không đưa ra trận được.
     assert.match(html, /aria-label="Lê Thạch: dự bị, bấm để ra trận" disabled=""/);
-    assert.match(html, /Tạm nghỉ · lưu tiến độ/);
+    assert.match(html, /tiến độ đã lưu, rời trang lúc nào cũng được/);
     assert.match(html, /Dừng Trấn Ải/);
     assert.match(html, /Nghề Đinh Bộ Lĩnh/);
     assert.match(html, /Nguyên tố Đinh Bộ Lĩnh/);
@@ -174,8 +173,9 @@ describe("màn nghỉ Sinh tồn", () => {
     assert.match(html, /Đối thủ đợt 5 · cấp 5/);
     assert.match(html, /Kỹ năng dự kiến/);
     assert.match(html, /Xác nhận và vào đợt 5/);
-    assert.match(html, /sm:inset-4/);
-    assert.match(html, /max-h-\[92dvh\]/);
+    // Màn chuẩn bị là trang thường, không còn khung nổi trên bàn cờ.
+    assert.doesNotMatch(html, /fixed inset/);
+    assert.match(html, /Đã thắng đợt 4 · chuẩn bị đợt 5/);
   });
 
   it("hiển thị thiếu lương, trạng thái hồi sinh tự động và chờ server", () => {

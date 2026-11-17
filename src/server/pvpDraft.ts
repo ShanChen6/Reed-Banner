@@ -47,8 +47,8 @@ export interface PvpDraftView {
   readonly turn: { readonly kind: "ban" | "pick"; readonly side: SideIndex; readonly name: string; readonly mine: boolean; readonly deadline: number; readonly remainingMs: number } | null;
   readonly bans: readonly { readonly side: SideIndex; readonly kind: DraftBan["kind"]; readonly value: string; readonly name: string; readonly auto: boolean }[];
   readonly picks: readonly { readonly side: SideIndex; readonly owner: string; readonly name: string; readonly hero: DraftHero }[];
-  /** Tướng còn cấm được (chưa bị cấm). */
-  readonly roster: readonly { readonly id: string; readonly name: string }[];
+  /** Tướng còn cấm được (chưa bị cấm), kèm hệ và nghề để hiện chân dung và lọc. */
+  readonly roster: readonly { readonly id: string; readonly name: string; readonly element?: Element; readonly profession?: Profession }[];
   /** Màn chuẩn bị (status "prep"): đội hình của phe người xem theo vị trí 1, 2, 3, tướng phe kia, ai đã sẵn sàng. */
   readonly prep: {
     readonly deadline: number;
@@ -96,7 +96,12 @@ function viewOf(rec: PvpDraftRecord, owner: string, now: number): PvpDraftView {
       auto: b.auto,
     })),
     picks: d.picks.map((p) => ({ side: p.side, owner: p.owner, name: nameOf(p.owner), hero: p.hero })),
-    roster: d.roster.filter((id) => !d.bans.some((b) => b.ban.kind === "hero" && b.ban.id === id)).map((id) => ({ id, name: heroName(id) })),
+    roster: d.roster
+      .filter((id) => !d.bans.some((b) => b.ban.kind === "hero" && b.ban.id === id))
+      .map((id) => {
+        const c = companionById(id);
+        return { id, name: heroName(id), ...(c ? { element: c.element, profession: c.profession } : {}) };
+      }),
     prep: d.prep
       ? {
           deadline: d.prep.deadline,

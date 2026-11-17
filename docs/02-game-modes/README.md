@@ -182,10 +182,11 @@ Trang `/daily`, code ở `src/core/daily/` (đề và điểm), `src/server/dail
   - Bảng hiện 20 người đầu, kèm hạng của mình. Khách hiện "Khách" kèm 4 ký tự cuối của id.
 - **Thưởng:** 150 vàng khi thắng, 50 vàng khi thua. Không có kinh nghiệm hay món rơi, vì đội là đội của đề.
 - Mô phỏng 60 đề: AI Thường thắng AI Khó 65%, trung bình 39 lượt (hai phe).
+- **Nhiệm vụ ngày ngay trong Nhật Lệnh (17/11/2026):** thẻ Chơi có khung Nhiệm vụ ngày ở cột phải (Bảng hôm nay và thưởng hạng ngày nằm ở thẻ Bảng xếp hạng cạnh Chơi và Hướng dẫn, 18/11/2026) (tiến độ, nút nhận vàng, số chờ nhận) và lối sang màn Nhiệm vụ cho nhiệm vụ tuần, thành tựu. Điểm danh 7 ngày cũng chuyển sang đây, nằm đầu thẻ Chơi (Shan 17/11/2026); đã điểm danh trong ngày thì khung thu thành một dòng (ngày mấy của chuỗi, mai nhận bao nhiêu), bấm Xem chuỗi mới mở 7 ô. Màn Nhiệm vụ chỉ còn thẻ dẫn sang Nhật Lệnh (đã điểm danh chưa, số nhiệm vụ chờ nhận, nút Sang Nhật Lệnh). Khách chưa đăng nhập vẫn được cộng tiến độ nhưng phải ghi danh mới mở được Nhật Lệnh để nhận. Danh sách và luật ở mục 5.2; code `src/app/game/quests/DailyQuestsPanel.tsx`, `quests/CheckInPanel.tsx`, dòng nhiệm vụ dùng chung `quests/QuestItem.tsx`.
 
 ### 5.2 Nhiệm vụ, thành tựu, điểm danh (Claude đặt 20/10/2026, chờ Shan duyệt)
 
-Trang `/quests`, code ở `src/core/progress/quests.ts` và `achievements.ts`, lưu trong hồ sơ (`quests`).
+Trang `/quests`, code ở `src/core/progress/quests.ts` và `achievements.ts`, lưu trong hồ sơ (`quests`). Điểm danh và nhiệm vụ ngày hiển thị và nhận ở màn Nhật Lệnh (mục 5.1); trang `/quests` chỉ còn thẻ dẫn sang.
 
 - **Thời điểm đổi:** ngày đổi lúc 0 giờ giờ Việt Nam, tuần bắt đầu thứ Hai.
 - **Cách đếm:** server cộng tiến độ khi trận online kết thúc (cùng lúc cộng thưởng). Trận ở /demo không tính.
@@ -227,11 +228,12 @@ Trang `/quests`, code ở `src/core/progress/quests.ts` và `achievements.ts`, l
 Trang `/arena`, code ở `src/core/arena/` (đội phòng thủ, bóng ma máy tạo, điểm), `src/server/arena.ts` (kho, bày đối thủ), bảng `arena_players`.
 
 - **Đội phòng thủ:** bản chụp đội 3vs3 đang chọn ở hồ sơ (chỉ số, kỹ năng, trang bị lúc chụp). Tự chụp khi mở Quần Hùng lần đầu; nâng cấp hay đổi đội xong thì bấm "Cập nhật theo đội hiện tại". Nhân vật chính của đội phòng thủ mang tên chủ đội.
-- **Đánh:** mỗi lần bày 3 đối thủ, ưu tiên người chơi thật có điểm gần mình nhất (chọn ngẫu nhiên trong 12 người gần nhất), thiếu thì thêm "bóng ma luyện tập" do máy tạo (đội ngẫu nhiên cùng cấp, không trang bị, 1000 điểm). Bấm "Đổi đối thủ" thì bày lại, miễn phí. Người đánh dùng đội 3vs3 đang chọn; đội phòng thủ do AI mức Khó điều khiển. Ai đi trước bốc ngẫu nhiên.
+- **Đánh:** mỗi lần bày 3 đối thủ từ 24 người chơi thật có điểm gần mình nhất, chỉ lấy người có lực chiến (đã kẹp trang bị) trong khoảng ±25% lực chiến đội mình, chọn ngẫu nhiên (18/11/2026). Không ai trong khoảng thì lấy một người gần nhất; còn thiếu thì thêm "bóng ma luyện tập" do máy tạo (đội ngẫu nhiên cùng cấp, không trang bị, 1000 điểm). Thẻ đối thủ ghi so lực chiến: Mạnh hơn nhiều / Mạnh hơn / Ngang sức / Yếu hơn / Yếu hơn nhiều. Bấm "Đổi đối thủ" thì bày lại, miễn phí. Người đánh dùng đội 3vs3 đang chọn; đội phòng thủ do AI mức Khó điều khiển. Ai đi trước bốc ngẫu nhiên.
+- **Trần trang bị (Shan 18/11/2026):** trong Quần Hùng, phần trang bị cộng thêm không quá 30% công và máu gốc theo cấp, thủ không quá 100% (`ARENA_GEAR_CAP`), áp cho cả người đánh lẫn đội phòng thủ; bản chụp đội phòng thủ cũ cũng bị kẹp khi vào trận. Lý do: đồ Thần phẩm cộng phẳng nên đội cấp 5 mặc đủ đồ thắng đội cấp 30 không đồ khoảng 90% (mô phỏng 60 trận AI Thường đánh AI Khó); có trần thì còn khoảng 13%, còn cùng cấp thì đồ tốt vẫn hơn rõ (cấp 20 đồ Lục phẩm đánh đồ Thần phẩm khoảng 50%).
 - **Lượt:** 10 trận mỗi ngày, đổi lúc 0 giờ giờ Việt Nam. Đánh xong thì đối thủ đã bày bị xóa, mở lại trang có đối thủ mới.
 - **Điểm (kiểu Elo):** bắt đầu 1000. Người đánh đổi 32 × (kết quả − kỳ vọng), người phòng thủ đổi ngược dấu một nửa (16 ×). Ngang điểm thì thắng +16, thua −16, người phòng thủ −8/+8. Điểm không xuống dưới 0. Bóng ma máy tạo luôn 1000 điểm, nên càng lên cao đánh bóng ma càng ít điểm.
 - **Thưởng:** thưởng trận thường (kinh nghiệm, vàng nhặt, món rơi theo độ khó Khó) và thêm 50 vàng khi thắng.
-- **Bảng xếp hạng:** bảng Quần Hùng ở Công Trạng (`/leaderboard`), theo điểm; lên bảng khi có đội phòng thủ.
+- **Bảng xếp hạng:** bảng Quần Hùng ở Công Trạng (`/leaderboard`), theo điểm; lên bảng khi có đội phòng thủ. Ở màn Quần Hùng, thẻ Bảng xếp hạng nằm cạnh Chơi và Hướng dẫn, gồm thưởng hạng và bảng mùa của Đấu bóng ma, kèm Đấu người khi cờ bật.
 - **Mùa và thưởng:** có mùa theo tuần và thưởng vàng theo hạng, xem [mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng).
 - **Chưa làm:** nhật ký bị đánh (chỉ có số trận giữ được và bị mất), chặn đánh lại cùng một người.
 - **Hướng sắp tới:** chế độ online hai người chơi đấu trực tiếp, xem [mục 6.2](#62-quần-hùng-online-hai-người-chơi-phát-triển-sau). Quần Hùng bất đồng bộ hiện tại giữ nguyên.

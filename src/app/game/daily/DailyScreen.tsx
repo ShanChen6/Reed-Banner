@@ -3,7 +3,7 @@
 import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { Alert, Button, buttonVariants } from "@/components/ui";
 
-// Thử thách hằng ngày: đề chung hôm nay (đội cho sẵn, đối thủ, sân nhà), lượt của mình và bảng xếp hạng.
+// Thử thách hằng ngày: đề chung hôm nay (đội cho sẵn, đối thủ, sân nhà), lượt của mình, bảng xếp hạng, điểm danh và nhiệm vụ ngày.
 // Mỗi người một lượt mỗi ngày; server giữ chỗ lượt trước khi tạo trận.
 
 import { useEffect, useState } from "react";
@@ -28,6 +28,9 @@ import {
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { SceneLink, useScene } from "../SceneContext";
 import { ModeGuideTabs } from "../ModeGuide";
+import CheckInPanel from "../quests/CheckInPanel";
+import DailyQuestsPanel from "../quests/DailyQuestsPanel";
+import { useProfile } from "../profile/useProfile";
 
 function scoreText(s: DailyScore): string {
   return s.won
@@ -71,6 +74,9 @@ export default function DailyScreen() {
   const [data, setData] = useState<DailyResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  // Hồ sơ cho điểm danh và nhiệm vụ ngày; nhận thưởng cập nhật cả hai khung.
+  const quests = useProfile();
+  const [now] = useState(() => Date.now());
 
   useEffect(() => {
     void fetchDaily().then(setData);
@@ -140,9 +146,53 @@ export default function DailyScreen() {
           { label: "Thua", value: `${DAILY_GOLD.loss} vàng` },
         ]}
       />
-      <ModeGuideTabs scene="DAILY">
+      <ModeGuideTabs
+        scene="DAILY"
+        extraTabs={[
+          {
+            value: "board",
+            label: "Bảng xếp hạng",
+            content: (
+              <>
+                <RankRewardsPanel mode="daily" />
+                <OrnateFrame className="flex min-w-0 flex-col gap-2">
+                  <SectionTitle>Bảng hôm nay</SectionTitle>
+                  {top.length === 0 ? (
+                    <p className="text-sm text-on-wood-soft">Chưa ai đánh xong hôm nay.</p>
+                  ) : (
+                    <ol className="flex flex-col gap-1.5 text-sm">
+                      {top.map((r) => (
+                        <li
+                          key={r.rank}
+                          className={`flex items-center gap-2 rounded-control border px-2.5 py-2 ${r.mine ? "ui-choice is-selected font-semibold" : "border-frame-line-soft bg-wood-inset text-on-wood"}`}
+                        >
+                          <span className={`w-6 text-right tabular-nums ${r.rank <= 3 ? "font-black" : ""} ${r.mine ? "" : r.rank <= 3 ? "text-frame-gold" : "text-on-wood-soft"}`}>
+                            {r.rank}
+                          </span>
+                          <span className="min-w-0 flex-1 truncate">
+                            {r.name}
+                            {r.mine && " (bạn)"}
+                          </span>
+                          <span className={`text-caption ${r.mine ? "" : "text-on-wood-soft"}`}>
+                            {scoreText(r.score)}
+                          </span>
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+                  {mine?.rank != null && !top.some((r) => r.mine) && (
+                    <p className="text-sm text-frame-gold">Hạng của bạn: {mine.rank}</p>
+                  )}
+                </OrnateFrame>
+              </>
+            ),
+          },
+        ]}
+      >
 
-      <RankRewardsPanel mode="daily" />
+
+      {quests.message && <Alert className="p-3 text-sm">{quests.message}</Alert>}
+      {quests.profile && <CheckInPanel profile={quests.profile} now={now} busy={quests.busy} act={quests.act} />}
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <OrnateFrame level="raised" className="flex min-w-0 flex-col gap-3">
@@ -207,35 +257,9 @@ export default function DailyScreen() {
           </div>
         </OrnateFrame>
 
-        <OrnateFrame className="flex min-w-0 flex-col gap-2 self-start">
-          <SectionTitle>Bảng hôm nay</SectionTitle>
-          {top.length === 0 ? (
-            <p className="text-sm text-on-wood-soft">Chưa ai đánh xong hôm nay.</p>
-          ) : (
-            <ol className="flex flex-col gap-1.5 text-sm">
-              {top.map((r) => (
-                <li
-                  key={r.rank}
-                  className={`flex items-center gap-2 rounded-control border px-2.5 py-2 ${r.mine ? "ui-choice is-selected font-semibold" : "border-frame-line-soft bg-wood-inset text-on-wood"}`}
-                >
-                  <span className={`w-6 text-right tabular-nums ${r.rank <= 3 ? "font-black" : ""} ${r.mine ? "" : r.rank <= 3 ? "text-frame-gold" : "text-on-wood-soft"}`}>
-                    {r.rank}
-                  </span>
-                  <span className="min-w-0 flex-1 truncate">
-                    {r.name}
-                    {r.mine && " (bạn)"}
-                  </span>
-                  <span className={`text-caption ${r.mine ? "" : "text-on-wood-soft"}`}>
-                    {scoreText(r.score)}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          )}
-          {mine?.rank != null && !top.some((r) => r.mine) && (
-            <p className="text-sm text-frame-gold">Hạng của bạn: {mine.rank}</p>
-          )}
-        </OrnateFrame>
+        <div className="flex min-w-0 flex-col gap-4 self-start">
+        {quests.profile && <DailyQuestsPanel profile={quests.profile} now={now} busy={quests.busy} act={quests.act} />}
+        </div>
       </div>
       </ModeGuideTabs>
     </ModeScreen>
