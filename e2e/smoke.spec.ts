@@ -65,7 +65,7 @@ test.describe("tài khoản đã đăng nhập", () => {
   test("Tháp Thiên Mệnh: khóa đội hình, chuẩn bị tầng 1, vào trận", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/destiny");
-    // Mặc định đã chọn mọi tướng đang có.
+    // Mặc định đã chọn các tướng cấp cao nhất, tối đa 8 (tài khoản mới có 5 tướng nên chọn hết).
     await page.getByRole("button", { name: "Khóa đội hình và bắt đầu leo" }).click();
     await expect(page.getByRole("heading", { name: /Chuẩn bị tầng 1\// })).toBeVisible();
     // Dừng phải xác nhận; bấm Leo tiếp thì giữ nguyên lượt leo.

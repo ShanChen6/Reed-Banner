@@ -1,5 +1,5 @@
 "use client";
-// Thanh đầu màn trận: tên chế độ, trạng thái lượt, nút đổi đội hình ở Thao Luyện, chọn độ khó.
+// Thanh đầu màn trận: tên chế độ, trạng thái lượt, nút đổi đội hình và chọn độ khó ở Thao Luyện (trận offline).
 
 import type { Dispatch, SetStateAction } from "react";
 import {
@@ -97,20 +97,23 @@ export function BattleHeader({
           Đổi đội hình
         </button>
       )}
-      <label className="flex items-center gap-2 text-caption text-on-wood-soft">
-        Độ khó
-        <select
-          value={difficulty}
-          onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-          className="min-h-9 pointer-coarse:min-h-11 rounded-control border border-frame-line-soft bg-wood-inset px-2 py-1 text-on-wood"
-        >
-          {DIFFICULTIES.map((d) => (
-            <option key={d} value={d}>
-              {DIFFICULTY_NAME[d]}
-            </option>
-          ))}
-        </select>
-      </label>
+      {/* Trận online: máy chủ đã chốt độ khó lúc dựng trận nên đổi ở đây không có tác dụng; chỉ trận offline đổi được. */}
+      {!online && (
+        <label className="flex items-center gap-2 text-caption text-on-wood-soft">
+          Độ khó
+          <select
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value as Difficulty)}
+            className="min-h-9 pointer-coarse:min-h-11 rounded-control border border-frame-line-soft bg-wood-inset px-2 py-1 text-on-wood"
+          >
+            {DIFFICULTIES.map((d) => (
+              <option key={d} value={d}>
+                {DIFFICULTY_NAME[d]}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
     </header>
   );
 }

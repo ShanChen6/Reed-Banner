@@ -1,5 +1,6 @@
 import {
   AI_SIDE,
+  DESTINY_FOE_LEVEL_VERSION,
   HUMAN,
   applyDestinyBoonReward,
   applyDestinyRecovery,
@@ -17,6 +18,7 @@ import {
   matchOver,
   profileTeam,
   viewOf,
+  withCurrentFoeLevel,
   type DestinyLeaderBuild,
   type DestinyRulesVersion,
   type DestinyRewardOffer,
@@ -75,7 +77,7 @@ export async function destinyOverview(ownerId: string | null, deps: Deps) {
     ? { ...run, offer: generateDestinyOffer(run) }
     : run;
   const resolved = run && secretValid(deps) && run.cycleId === cycleId
-    ? resolveDestinyFloor(run, deps.destinySecret)
+    ? resolveDestinyFloor(withCurrentFoeLevel(run), deps.destinySecret)
     : null;
   const viewVersion = run && run.cycleId === cycleId ? destinyRunRulesVersion(run) : cycleVersion;
   return {
@@ -85,7 +87,11 @@ export async function destinyOverview(ownerId: string | null, deps: Deps) {
     stones: profile.stones,
     progress: { ...progress, run: visibleRun },
     floor: resolved?.ok
-      ? { floor: resolved.floor.floor, rules: resolved.floor.rules, difficulty: resolved.floor.difficulty, foes: resolved.floor.foes }
+      ? {
+          floor: resolved.floor.floor, rules: resolved.floor.rules, difficulty: resolved.floor.difficulty,
+          foeLevel: resolved.foeLevel,
+          foes: resolved.floor.foes.map(({ id, name, element, profession, maxHp }) => ({ id, name, element, profession, maxHp })),
+        }
       : null,
     rulesVersion: viewVersion ?? null,
     floorCount: destinyFloorCount(viewVersion),
@@ -202,6 +208,8 @@ export async function startDestinyBattle(
     if (!run || run.phase !== "prepare") return { ok: false, error: "invalid_phase" };
   }
   if (run.phase !== "prepare") return { ok: false, error: "invalid_phase" };
+  // Run mở trước khi đổi cách tính cấp đối thủ chuyển sang cách mới từ trận này; ghi cùng lúc với phase battle.
+  run = withCurrentFoeLevel(run);
   const resolved = resolveDestinyFloor(run, deps.destinySecret);
   if (!resolved.ok) return { ok: false, error: resolved.error === "floor_not_found" ? "floor_not_found" : "bad_request" };
   const battleSeed = destinyCycleSeed(scheduled.cycle, deps.destinySecret, "battle");
@@ -244,7 +252,7 @@ export async function startDestinyBattle(
             ...profile.dualTower,
             destiny: {
               ...profile.dualTower.destiny,
-              run: { ...current, phase: "battle" as const, matchId, offer: null },
+              run: { ...current, phase: "battle" as const, matchId, offer: null, foeLevelVersion: DESTINY_FOE_LEVEL_VERSION },
             },
           },
         },

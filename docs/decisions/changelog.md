@@ -2,6 +2,23 @@
 
 > Trạng thái: **REFERENCE** — nhật ký quyết định theo ngày.
 
+## 17/11/2026
+
+**Tháp Thiên Mệnh và màn trận: góp ý sau khi chơi thử (Shan yêu cầu)**
+- Hành trình tầng bỏ dòng "Tầng 1–5 · Cấp 1–7" và nhãn "+3 đá" dưới nút; mốc đá thành dấu ◆ nhỏ ở góc nút tầng. Bấm một tầng (mặc định tầng sắp đánh) thì dòng dưới hành trình ghi độ khó, cấp đối thủ, trạng thái và mốc đá; dùng được cả trên điện thoại.
+- Khóa đội hình có bộ lọc: tìm tên (không dấu), lọc hệ, nghề, chỉ đã chọn; tướng đã chọn hiện thành dải phía trên, bấm để bỏ.
+- Ngôi sao khắc chế ★ ở mọi màn chuẩn bị trận đã biết đối thủ: Thiên Mệnh, Thí Luyện, Viễn Chinh, Trấn Ải, Nhật Lệnh, sảnh Giao Tranh (Bình Loạn đã có). Chi tiết: [giao diện trận §4](../05-ui-ux/screens/battle.md#4-trợ-giúp-song-tháp).
+- Hết trận ở chế độ có màn riêng (tháp, Viễn Chinh, Trấn Ải, Nhật Lệnh, Quần Hùng, Bình Loạn) bỏ nút "Nâng kỹ năng & đánh tiếp".
+- Trận online bỏ ô Độ khó ở thanh đầu trận (máy chủ đã chốt độ khó; ô cũ không có tác dụng). Thao Luyện offline giữ.
+- Màn thắng Thiên Mệnh làm lại: tầng/tổng tầng, dải tiến độ, số lượt, đá mốc vừa nhận, máu ba tướng, một nút "Chọn thưởng tầng N". Kết quả trận Thiên Mệnh từ máy chủ thêm `floorCount`, `stones`, `turns`.
+
+**Tháp Thiên Mệnh: cấp đối thủ và giao diện (Shan yêu cầu)**
+- Cấp đối thủ đổi từ cấp cao nhất trong đội hình sang **cấp tăng đều theo tầng**: tầng 1 cấp 1, tầng 20 cấp 30; hệ số sức địch đổi thành 0,68 → 0,90 để đội cấp 30 qua đủ 20 tầng khoảng 85% số lượt (mục tiêu Shan đặt), theo [mô phỏng 12 chu kỳ](../reports/2026-11-17-destiny-cap-theo-tang-balance.md) ([luật §11.2](../02-game-modes/dual-tower/00-02-rules.md#112-tầng-nhóm-khó-và-sức-địch)). Lý do: thủ lĩnh cấp 4 mang theo một hai tướng cấp 30 thì gặp đối thủ cấp 30. Lượt leo đang mở chuyển sang cách mới từ trận kế tiếp. Màn chuẩn bị hiện cấp, hệ, nghề, máu của đối thủ; thẻ tướng hiện cấp.
+- Hành trình tầng vẽ lại: ba ô tóm tắt (lượt leo này, kỷ lục, mốc đá kế), thanh tiến độ, bốn chặng độ khó với các nút tầng nối nhau.
+- Đội hình và danh sách chọn tướng ra trận chia trang 6; hai tướng đã chọn tách thành hai ô riêng như Tháp Thí Luyện. Hệ và nghề Đinh Bộ Lĩnh chọn bằng chip có icon.
+- Bảng xếp hạng chu kỳ chuyển thành thẻ **BXH tuần** nằm giữa Chơi và Hướng dẫn.
+- Đội hình khóa giới hạn **Đinh Bộ Lĩnh và 8 tướng kèm** (trước đây chọn được mọi tướng). Màn khóa đội hình gợi ý sẵn 8 tướng cấp cao nhất. Lượt leo đã khóa đội hình lớn hơn vẫn chạy tiếp.
+
 ## 16/11/2026
 
 **Tháp Thí Luyện: chọn đội và kết thúc trận (Shan yêu cầu)**
@@ -47,7 +64,7 @@
 - Áp dụng từ chu kỳ thứ Hai **16/11/2026** (luật V2); run 10 tầng đang chạy giữ luật V1 tới khi kết thúc. Bốn nhóm khó mỗi nhóm 5 tầng (Dễ, Thường, Khó, Trùm), mỗi nhóm 8 luật và không lặp luật trong một chu kỳ. Vàng theo hạng không đổi. Nguồn chính: [luật Song Tháp §11](../02-game-modes/dual-tower/00-02-rules.md#11-destiny-v2--20-tầng-shan-chốt-11112026), [Phúc](../02-game-modes/dual-tower/04-06-destiny-boons.md), [đá](../02-game-modes/dual-tower/05-04-destiny-stones.md).
 - Sửa lỗi: thắng tầng cuối trước đây vẫn mở phần thưởng rồi đưa run sang "chuẩn bị tầng 11" không có nội dung; nay thắng tầng cuối là hoàn thành run (cả V1).
 - Giao diện hiện tên và mô tả Phúc bằng tiếng Việt (trước đây hiện mã), tiến độ `tầng x/20`.
-- Mô phỏng 4 chu kỳ: AI đánh thay trung bình tới tầng 4–6 (roster 3), 8–11 (roster 5), 7–14 (roster 8), có run qua đủ 20 tầng; đá mỗi tuần thấp hơn V1 ([báo cáo](../reports/2026-11-11-destiny-v2-balance.md)). Chưa đo riêng từng Phúc mới.
+- Mô phỏng 4 chu kỳ: AI đánh thay trung bình tới tầng 4–6 (roster 3), 8–11 (roster 5), 7–14 (roster 8), có run qua đủ 20 tầng; đá mỗi tuần thấp hơn V1 (báo cáo 11/11/2026, đã thay bằng [báo cáo 17/11/2026](../reports/2026-11-17-destiny-cap-theo-tang-balance.md)). Chưa đo riêng từng Phúc mới.
 
 **Tháp Thiên Mệnh: làm lại giao diện và câu chữ (có code)**
 - Shan yêu cầu ưu tiên giao diện và rà câu chữ, tránh từ như "run". Chữ hiện cho người chơi bỏ run, roster, active, build, HP, NL, stack, clear, tab; quy ước ghi ở [thuật ngữ](../00-overview/thuat-ngu.md#từ-không-dùng-trên-giao-diện). [Hướng dẫn người chơi](../02-game-modes/dual-tower/player-help.md) viết lại theo cùng bộ từ.

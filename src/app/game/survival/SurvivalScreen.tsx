@@ -472,12 +472,18 @@ export default function SurvivalScreen() {
       />
       <ModeGuideTabs
         scene="SURVIVAL"
-        board={
-          <>
-            <RankRewardsPanel mode="survival" />
-            <SeasonBoardPanel board="survival" />
-          </>
-        }
+        extraTabs={[
+          {
+            value: "board",
+            label: "Bảng xếp hạng",
+            content: (
+              <>
+                <RankRewardsPanel mode="survival" />
+                <SeasonBoardPanel board="survival" />
+              </>
+            ),
+          },
+        ]}
       >
         {notice && (
           <Alert tone="success" className="p-3 text-sm" role="status">
