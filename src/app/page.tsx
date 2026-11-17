@@ -407,7 +407,7 @@ export default function Home() {
           <p className="mt-6 text-center text-sm text-on-wood-soft">
             Kèm theo:{" "}
             {[
-              ["quests", "Nhiệm vụ và điểm danh"],
+              ["quests", "Nhiệm vụ và thành tựu"],
               ["leaderboard", "Bảng xếp hạng"],
               ["profile", "Doanh Trại, trang bị, Cửa Hàng"],
             ].map(([slug, label], i) => (

@@ -173,6 +173,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       `Thắng ${DAILY_GOLD.win} vàng, thua vẫn được ${DAILY_GOLD.loss} vàng. Không có kinh nghiệm hay đồ rơi.`,
       "Xếp hạng: thắng đứng trên thua; cùng thắng thì ít lượt hơn đứng trên, rồi tới còn nhiều máu hơn. Thua thì xếp theo sát thương đã gây.",
       "Bảng hiện 20 người đầu, có thưởng vàng theo hạng cuối ngày.",
+      "Điểm danh mỗi ngày ở đầu màn: liền 7 ngày thì vàng tăng dần, bỏ một ngày thì chuỗi về ngày 1.",
       "Nhiệm vụ ngày nằm ngay cạnh đề hôm nay: đánh đủ trận, thắng, nhặt ô vàng và nhận Nhật Lệnh để lấy thêm vàng.",
     ],
     tips: ["Chưa nghĩ ra thế đánh thì cứ thử một nước nhỏ: đề chỉ chơi một lần nên hãy đọc kỹ đội trước."],
