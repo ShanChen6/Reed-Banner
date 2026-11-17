@@ -1,6 +1,6 @@
 # T00.02 — Chốt luật Song Tháp
 
-> Cập nhật: 12/11/2026 (thêm §11: Tháp Thiên Mệnh 20 tầng; §12: Tháp Thí Luyện 100 tầng)
+> Cập nhật: 17/11/2026 (§11.2: cấp địch Tháp Thiên Mệnh tăng theo tầng 1–30, hệ số sức địch 0,68–0,90, mục tiêu cấp 30 qua tháp 85%; roster khóa tối đa 8 tướng kèm)
 > Trạng thái: **IMPLEMENTED** — §1–§10 là luật gốc Song Tháp, §11 là Tháp Thiên Mệnh 20 tầng, §12 là Tháp Thí Luyện 100 tầng (mở rộng từ 50 tầng ngày 14/11/2026).
 
 Design-only (§1–§10). Số liệu Destiny đang chạy nằm ở [§11](#11-destiny-v2--20-tầng-shan-chốt-11112026). Mọi con số ghi **[TBD]** hoặc **[TEST]** chưa được duyệt, không được coi là balance chính thức. Nâng cấp trang bị nằm ở [equipment-enhancement-todo.md](../../04-equipment/cuong-hoa-todo.md) (GEAR-01–08), ngoài phạm vi.
@@ -84,7 +84,7 @@ Settle phải idempotent: settle lặp cùng trận không cộng đá lần hai
 | Chu kỳ | Mặc định 7 ngày, bắt đầu thứ Hai 00:00 VN. Độ dài **[TEST]** (cấu hình được). |
 | Luật tầng | Cố định trong cả chu kỳ, sinh xác định từ id chu kỳ (không đổi giữa chừng). Nội dung luật **[TBD]**. |
 | Run | Một run hoạt động mỗi người mỗi chu kỳ [giả định, xem D-04]. |
-| Roster khóa | Lúc bắt đầu run chọn từ toàn bộ tướng sở hữu, bắt buộc có Đinh Bộ Lĩnh. Không giới hạn tối đa; khóa suốt run, không thêm/bớt. |
+| Roster khóa | Lúc bắt đầu run chọn từ toàn bộ tướng sở hữu, bắt buộc có Đinh Bộ Lĩnh. Tối đa 8 tướng kèm (`DESTINY_ROSTER_MAX` = 9 tính cả thủ lĩnh, Shan chốt 17/11/2026); khóa suốt run, không thêm/bớt. |
 | Active | Mỗi tầng chọn 3 active từ roster (thủ lĩnh bắt buộc), hợp luật tầng. Được thay tướng **giữa các tầng**, không trong trận. |
 | HP / lương | Xuyên tầng, HP theo **id tướng** (không theo vị trí). Tướng ở dự bị giữ nguyên HP, **không hồi tự động**. |
 | Tướng ngã | HP 0 = ngã, không thể ra trận cho tới khi được hồi bằng lựa chọn trong run. |
@@ -184,7 +184,7 @@ Quy tắc chung: mọi action kiểm tra ở server, xác thực chủ sở hữ
 
 | Tham số | Giá trị | Trạng thái |
 |---|---|---|
-| Giới hạn roster Destiny | Không giới hạn tối đa; có thể mang toàn bộ tướng sở hữu | Đã chốt |
+| Giới hạn roster Destiny | Đinh Bộ Lĩnh và tối đa 8 tướng kèm (17/11/2026; trước đó không giới hạn) | Đã chốt |
 | Độ dài chu kỳ | 7 ngày, thứ Hai 00:00 VN | Mặc định, cấu hình được |
 | Số tầng Trial | 100 | 20 tầng ở bản đầu, thêm 30 tầng ngày 11/11/2026 và 50 tầng ngày 14/11/2026 ([§12](#12-trial-100-tầng-50-tầng-shan-yêu-cầu-11112026-mở-rộng-lên-100-tầng-14112026)) |
 | Mọi lượng đá, mốc, mức HP/lương khởi đầu, lượng hồi, giá trị Phúc, số tầng Destiny | — | [TBD] ở thời điểm T00.02; giá trị đang chạy xem [§11](#11-destiny-v2--20-tầng-shan-chốt-11112026) |
@@ -232,12 +232,14 @@ Tháp Thiên Mệnh (tên trong tài liệu cũ: Tháp Vận Mệnh, tên mã `d
 
 | Tầng | Nhóm luật | AI địch | Hệ số sức địch |
 |---|---:|---|---|
-| 1–5 | 1 | Dễ | 0,74 – 0,82 |
-| 6–10 | 2 | Thường | 0,84 – 0,92 |
-| 11–15 | 3 | Khó | 0,94 – 1,02 |
-| 16–20 | 4 | Trùm | 1,04 – 1,12 |
+| 1–5 | 1 | Dễ | 0,68 – 0,73 |
+| 6–10 | 2 | Thường | 0,74 – 0,78 |
+| 11–15 | 3 | Khó | 0,80 – 0,84 |
+| 16–20 | 4 | Trùm | 0,85 – 0,90 |
 
-- Hệ số sức địch V2 = `0,72 + 0,02 × tầng` (V1: `0,72 + 0,03 × tầng`, tầng 10 là 1,02). Cấp địch vẫn bằng cấp cao nhất trong roster khóa.
+- **Cấp địch** tăng đều theo tầng, không phụ thuộc roster (Shan chốt 17/11/2026): `1 + 29 × (tầng − 1) / 19` làm tròn, tức tầng 1 cấp 1 và tầng 20 cấp 30 (`destinyFloorFoeLevel`; chặng Dễ cấp 1–7, Thường 9–15, Khó 16–22, Trùm 24–30). Trước đó lấy cấp cao nhất trong roster nên một hai tướng cấp 30 kéo địch lên cấp 30 dù thủ lĩnh mới cấp 4.
+- **Hệ số sức địch** (nhân máu và công) tăng đều từ 0,68 ở tầng 1 tới 0,90 ở tầng 20 (`destinyScaledEnemyPower`). **Mục tiêu cân bằng (Shan chốt 17/11/2026): đội cấp 30 qua đủ 20 tầng khoảng 85% số lượt leo**, 15% còn lại là do đánh ẩu; số chọn từ mô phỏng ở §11.5. Đường cũ `0,72 + 0,02 × tầng` (V1: `0,72 + 0,03 × tầng`) chỉ còn dùng cho run đang dở trận.
+- Run mở trước ngày đổi chuyển sang cấp và hệ số mới từ trận kế tiếp; trận đang dở giữ cách tính lúc dựng (`foeLevelVersion`; bản hiện hành là 5, bản 4 là bản thử cùng ngày với hệ số 0,68 → 1,15).
 - Mỗi nhóm có **8 luật** (V1: 4/6/4/3). Trong một chu kỳ, một nhóm không lặp luật chừng nào pool còn luật khả thi với roster đã khóa; hết thì mới dùng lại, không còn luật nào khả thi thì tầng đó không có luật (như V1).
 - Luật mới so với V1: cấm hệ Thủy/Thổ, cấm nghề Binh lính/Y sư, bắt buộc Pháp sư/Tướng sĩ, cấm hai hệ Kim và Hỏa cùng lúc, và các tổ hợp cấm + bắt buộc + giới hạn trùng ở nhóm 3–4. Danh sách đầy đủ: `POOLS_V2` trong `src/core/tower/destinyRules.ts`.
 
@@ -255,7 +257,7 @@ Tháp Thiên Mệnh (tên trong tài liệu cũ: Tháp Vận Mệnh, tên mã `d
 
 ### 11.5 Cân bằng
 
-Mô phỏng 4 chu kỳ V2 bằng `pnpm exec tsx scripts/destiny-stone-sim.ts` (thêm `--v1` để đo luật cũ): [báo cáo 11/11/2026](../../reports/2026-11-11-destiny-v2-balance.md).
+Mô phỏng 12 chu kỳ bằng `pnpm exec tsx scripts/destiny-stone-sim.ts --cycles 12 --caps 5,9`: [báo cáo 17/11/2026](../../reports/2026-11-17-destiny-cap-theo-tang-balance.md). AI đánh thay tới trung bình tầng 9 (đội cấp 5), 10 (cấp 10), 17 (cấp 20, qua đủ 20 tầng 44%), 19,7 (cấp 30, qua đủ 20 tầng 85%).
 
 ## 12. Trial 100 tầng (50 tầng Shan yêu cầu 11/11/2026, mở rộng lên 100 tầng 14/11/2026)
 

@@ -136,7 +136,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 
 ## Báo cáo (không phải luật hiện hành)
 
-- [reports/](reports/2026-11-11-destiny-v2-balance.md): báo cáo mô phỏng và kiểm kê còn dùng làm căn cứ cho luật hiện hành. Chỉ giữ bản tóm tắt `.md`; dữ liệu thô không commit.
+- [reports/](reports/2026-11-17-destiny-cap-theo-tang-balance.md): báo cáo mô phỏng và kiểm kê còn dùng làm căn cứ cho luật hiện hành. Chỉ giữ bản tóm tắt `.md`; dữ liệu thô không commit.
 - Tài liệu đã xóa (kế hoạch, prompt giao việc, audit, báo cáo cũ) tra ở [MOVED.md](MOVED.md#đã-xóa).
 
 ## Quy ước viết docs

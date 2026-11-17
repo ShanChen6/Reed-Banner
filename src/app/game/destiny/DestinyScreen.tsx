@@ -2,30 +2,36 @@
 import { requestJson, postJson } from "../api";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { FrameInset, ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
-import { Alert, Button, ChoiceChip } from "@/components/ui";
+import { Alert, Button, ChoiceChip, choiceVariants } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   DESTINY_BOON_CATALOG,
   DESTINY_FOOD_MAX,
+  DESTINY_ROSTER_MAX,
   DESTINY_ROSTER_MIN,
   ELEMENTS,
   MAIN_ID,
   PROFESSIONS,
   RAGE_MAX,
   companionById,
+  destinyFloorFoeLevel,
   destinyRageOf,
+  progressOf,
   type DestinyLeaderBuild,
   type DestinyProgress,
   type DestinyRewardOffer,
   type DestinyRulesVersion,
   type DestinyRun,
+  type Element,
   type FloorRules,
+  type Profession,
   type Profile,
 } from "@/core";
 import { cn } from "@/lib/cn";
 import { ONLINE_BATTLE_KEY } from "../battle/online";
 import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
+import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { DestinyBoardPanel } from "../leaderboard/boards";
 import { useScene } from "../SceneContext";
@@ -35,6 +41,7 @@ import {
   DESTINY_ERROR_TEXT,
   DESTINY_RARITY_NAME,
   aliveIds,
+  companionsByLevel,
   defaultDestinyBuild,
   destinyCompanionOptions,
   destinyTierSpans,
@@ -63,7 +70,15 @@ interface DestinyOverview {
     readonly floor: number;
     readonly rules: FloorRules;
     readonly difficulty: string;
-    readonly foes: readonly { readonly id: string; readonly name: string }[];
+    /** Cấp của cả ba đối thủ; thiếu khi máy chủ còn bản cũ. */
+    readonly foeLevel?: number;
+    readonly foes: readonly {
+      readonly id: string;
+      readonly name: string;
+      readonly element?: Element;
+      readonly profession?: Profession;
+      readonly maxHp?: number;
+    }[];
   } | null;
   /** Số tầng, version luật và mốc đá của lượt leo đang xem (chưa có lượt leo thì của chu kỳ này). */
   readonly floorCount?: number;
@@ -76,8 +91,6 @@ interface ApiResult {
   readonly id?: string;
   readonly error?: string;
 }
-
-
 
 interface OfferText { readonly tag: string; readonly title: string; readonly body: string; readonly note?: string }
 
@@ -116,7 +129,59 @@ function HpBar({ hp, maxHp }: { hp: number; maxHp: number }) {
   );
 }
 
-/** Hành trình các tầng: chia theo chặng độ khó, đánh dấu tầng đã vượt, tầng đang đứng và mốc Đá Cường Hóa. */
+/** Hệ, nghề (biểu tượng kèm chữ) và cấp của một tướng, dùng chung cho mọi thẻ tướng của màn. */
+function FighterMeta({ element, profession, level, children }: {
+  element: Element;
+  profession: Profession;
+  level?: number;
+  children?: ReactNode;
+}) {
+  return (
+    <span className="flex min-w-0 items-center gap-x-1 text-caption font-normal opacity-80">
+      <ElementIcon element={element} className="size-3.5 shrink-0" />
+      <ProfessionIcon profession={profession} className="size-3.5 shrink-0" />
+      <span className="truncate">{ELEMENT_NAME[element]} · {PROFESSION_NAME[profession]}{level === undefined ? "" : ` · Cấp ${level}`}</span>
+      {children}
+    </span>
+  );
+}
+
+/** Một hàng nút chọn hệ hoặc nghề của Đinh Bộ Lĩnh: biểu tượng lớn, tên nhỏ bên dưới; lựa chọn không hợp luật thì mờ. */
+function BuildRow<T extends string>({ label, values, value, names, icon, allowed, onPick }: {
+  label: string;
+  values: readonly T[];
+  value: T;
+  names: Readonly<Record<T, string>>;
+  icon: (value: T) => ReactNode;
+  allowed: (value: T) => boolean;
+  onPick: (value: T) => void;
+}) {
+  return (
+    <div role="group" aria-label={`${label} của Đinh Bộ Lĩnh`} className="flex flex-col gap-1.5">
+      <span className="text-caption text-on-wood-soft">{label}</span>
+      <div className="flex flex-wrap gap-1.5">
+        {values.map((v) => {
+          const ok = allowed(v);
+          return (
+            <ChoiceChip key={v} selected={v === value} disabled={!ok} onClick={() => onPick(v)}
+              aria-label={ok ? names[v] : `${names[v]}, không hợp luật tầng`}
+              title={ok ? names[v] : `${names[v]}: không hợp luật tầng với hai tướng đang chọn`}
+              className="min-h-14 w-[4.25rem] flex-col gap-0.5 px-1 py-1.5 pointer-coarse:min-h-14">
+              {icon(v)}
+              <span className="whitespace-nowrap text-caption font-normal">{names[v]}</span>
+            </ChoiceChip>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Hành trình các tầng: dòng tóm tắt (đang ở đâu, kỷ lục, mốc đá kế) và một đường đi gồm các chặng độ khó.
+ * Mỗi tầng là một nút tròn nối nhau: xanh là đã vượt trong lượt leo này, vàng là tầng sắp đánh,
+ * viền vàng đứt là tầng đã vượt ở lượt leo trước của chu kỳ. Tầng có mốc mang nhãn Đá Cường Hóa bên dưới.
+ */
 function FloorTrack({ floorCount, version, cleared, current, best, milestones, claimed }: {
   floorCount: number;
   version: DestinyRulesVersion;
@@ -129,53 +194,96 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
   claimed: readonly string[];
 }) {
   const spans = destinyTierSpans(floorCount, version);
+  const nextMilestone = milestones.find((m) => !claimed.includes(m.id)) ?? null;
+  const percent = Math.round(100 * Math.min(cleared, floorCount) / Math.max(1, floorCount));
+  const here = current ?? (cleared > 0 ? cleared : null);
   return (
-    <OrnateFrame className="flex flex-col gap-3">
-      <SectionTitle description={current !== null
-        ? `Đang ở tầng ${current}. Kỷ lục chu kỳ này: tầng ${best}.`
-        : cleared > 0 ? `Đã vượt tầng ${cleared}. Kỷ lục chu kỳ này: tầng ${best}.`
-        : best > 0 ? `Kỷ lục chu kỳ này: tầng ${best}.` : "Chưa vượt tầng nào trong chu kỳ này."}>
-        Hành trình {floorCount} tầng
-      </SectionTitle>
-      <ol className="grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-4" aria-label="Các tầng của tháp">
-        {spans.map((span) => (
-          <li key={span.tier} className="min-w-0">
-            <p className="mb-1.5 text-caption text-on-wood-soft">
-              Tầng {span.from === span.to ? span.from : `${span.from}–${span.to}`} · <strong className="text-on-wood">{difficultyName(span.difficulty)}</strong>
-            </p>
-            <ol className="grid grid-cols-5 gap-1">
-              {Array.from({ length: span.to - span.from + 1 }, (_, i) => span.from + i).map((floor) => {
-                const milestone = milestones.find((m) => m.floor === floor);
-                const got = milestone ? claimed.includes(milestone.id) : false;
-                const state = floor <= cleared ? "cleared" : floor === current ? "current" : "ahead";
-                const label = `Tầng ${floor}: ${state === "cleared" ? "đã vượt" : state === "current" ? "đang ở đây" : "chưa tới"}` +
-                  (milestone ? `, mốc ${milestone.stones} Đá Cường Hóa${got ? " (đã nhận)" : ""}` : "");
-                return (
-                  <li key={floor} title={label} aria-label={label} aria-current={state === "current" ? "step" : undefined}
-                    className={cn(
-                      "flex min-h-11 flex-col items-center justify-center rounded border text-sm leading-tight",
-                      state === "cleared" && "border-jade/50 bg-jade/15 text-jade",
-                      state === "current" && "border-frame-gold bg-frame-gold/15 font-bold text-frame-gold",
-                      state === "ahead" && "border-white/10 bg-black/20 text-on-wood-soft",
-                    )}>
-                    <span aria-hidden>{floor}</span>
-                    {milestone && (
-                      <span aria-hidden className={cn("text-caption font-semibold", got ? "text-jade" : "text-frame-gold")}>
-                        {got ? "✓" : "+"}{milestone.stones}
+    <OrnateFrame className="flex flex-col gap-4">
+      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+        <div className="min-w-0">
+          <h2 className="ui-title-on-wood text-lg">Hành trình {floorCount} tầng</h2>
+          <p className="text-sm text-on-wood-soft">
+            {current !== null ? `Sắp đánh tầng ${current}.`
+              : cleared >= floorCount ? "Đã chinh phục trọn tháp."
+              : cleared > 0 ? `Vừa vượt tầng ${cleared}, chờ nhận thưởng.`
+              : "Chưa có lượt leo. Khóa đội hình để bắt đầu từ tầng 1."}
+          </p>
+        </div>
+        <dl className="grid grid-cols-3 gap-2 text-center max-sm:w-full">
+          {[
+            { label: "Lượt leo này", value: `${cleared}/${floorCount}` },
+            { label: "Kỷ lục", value: `${best}/${floorCount}` },
+            {
+              label: "Mốc đá kế",
+              value: nextMilestone ? `Tầng ${nextMilestone.floor} · +${nextMilestone.stones}` : milestones.length > 0 ? "Đã nhận đủ" : "—",
+            },
+          ].map((item) => (
+            <div key={item.label} className="ui-frame-inset min-w-24 px-3 py-1.5">
+              <dt className="text-caption text-on-wood-soft">{item.label}</dt>
+              <dd className="text-sm font-bold text-title-on-wood tabular-nums">{item.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <div className="h-1.5 overflow-hidden rounded bg-black/40" role="progressbar" aria-label="Tiến độ lượt leo"
+        aria-valuemin={0} aria-valuemax={floorCount} aria-valuenow={Math.min(cleared, floorCount)}>
+        <div className="h-full bg-jade" style={{ width: `${percent}%` }} />
+      </div>
+
+      <ol className="grid grid-cols-2 gap-2 sm:gap-4 xl:grid-cols-4" aria-label="Các chặng của tháp">
+        {spans.map((span) => {
+          const floors = Array.from({ length: span.to - span.from + 1 }, (_, i) => span.from + i);
+          const active = here !== null && here >= span.from && here <= span.to;
+          return (
+            <li key={span.tier} className={cn("ui-frame-inset min-w-0 px-1 pb-2 pt-2.5 sm:px-2", active && "border-frame-gold/60")}>
+              <p className="mb-2.5 flex items-baseline justify-between gap-2 px-1 text-caption">
+                <strong className={cn("text-sm", active ? "text-frame-gold" : "text-on-wood")}>{difficultyName(span.difficulty)}</strong>
+                <span className="truncate text-on-wood-soft">
+                  Tầng {span.from === span.to ? span.from : `${span.from}–${span.to}`}
+                  <span className="max-sm:hidden"> · Cấp {destinyFloorFoeLevel(span.from, floorCount)}–{destinyFloorFoeLevel(span.to, floorCount)}</span>
+                </span>
+              </p>
+              <ol className="flex" aria-label={`Chặng ${difficultyName(span.difficulty)}`}>
+                {floors.map((floor, index) => {
+                  const milestone = milestones.find((m) => m.floor === floor);
+                  const got = milestone ? claimed.includes(milestone.id) : false;
+                  const state = floor <= cleared ? "cleared" : floor === current ? "current" : floor <= best ? "record" : "ahead";
+                  const label = `Tầng ${floor}: ` +
+                    (state === "cleared" ? "đã vượt" : state === "current" ? "sắp đánh" : state === "record" ? "đã vượt ở lượt leo trước" : "chưa tới") +
+                    (milestone ? `, mốc ${milestone.stones} Đá Cường Hóa${got ? " (đã nhận)" : ""}` : "");
+                  return (
+                    <li key={floor} title={label} aria-label={label} aria-current={state === "current" ? "step" : undefined}
+                      className="relative flex min-w-0 flex-1 flex-col items-center gap-1">
+                      {index > 0 && (
+                        <span aria-hidden className={cn(
+                          "absolute right-1/2 top-3.5 h-0.5 w-full -translate-y-1/2 sm:top-4",
+                          floor <= cleared || floor === current ? "bg-jade/60" : "bg-white/10",
+                        )} />
+                      )}
+                      <span aria-hidden className={cn(
+                        "relative flex size-7 items-center justify-center rounded-full border-2 text-caption leading-none tabular-nums sm:size-8 sm:text-sm",
+                        state === "cleared" && "border-jade bg-wood-inset font-semibold text-jade",
+                        state === "current" && "border-frame-gold bg-frame-gold font-bold text-brand-ink shadow-[0_0_0_3px_rgb(212_162_76/0.25)]",
+                        state === "record" && "border-dashed border-frame-gold/70 bg-wood-inset text-frame-gold",
+                        state === "ahead" && "border-white/15 bg-wood-inset text-on-wood-soft",
+                      )}>
+                        {state === "cleared" ? "✓" : floor}
                       </span>
-                    )}
-                  </li>
-                );
-              })}
-            </ol>
-          </li>
-        ))}
+                      <span aria-hidden className={cn(
+                        "h-4 whitespace-nowrap text-caption font-semibold leading-4",
+                        got ? "text-jade" : "text-frame-gold",
+                      )}>
+                        {milestone ? `${got ? "✓" : "+"}${milestone.stones} đá` : state === "cleared" ? <span className="font-normal text-on-wood-soft">{floor}</span> : ""}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ol>
+            </li>
+          );
+        })}
       </ol>
-      {milestones.length > 0 && (
-        <p className="text-caption text-on-wood-soft">
-          Số có dấu + là Đá Cường Hóa nhận khi lần đầu vượt tầng đó trong chu kỳ; dấu ✓ là đã nhận.
-        </p>
-      )}
     </OrnateFrame>
   );
 }
@@ -195,8 +303,8 @@ export default function DestinyScreen() {
   const [confirmStop, setConfirmStop] = useState(false);
   /** Giờ lúc tải, để tính thời gian còn lại của chu kỳ mà không đọc đồng hồ trong lúc vẽ. */
   const [loadedAt, setLoadedAt] = useState<number | null>(null);
-  // Danh sách tướng chọn vào đội: cắt trang 12 (chọn giữ nguyên khi sang trang). Hook đặt trước các return sớm.
-  const rosterIds = useMemo(() => (profile ? Object.keys(profile.companions).sort() : []), [profile]);
+  // Danh sách tướng chọn vào đội, cấp cao trước: cắt trang 12 (chọn giữ nguyên khi sang trang). Hook đặt trước các return sớm.
+  const rosterIds = useMemo(() => (profile ? companionsByLevel(profile) : []), [profile]);
   const pagedRoster = usePagedItems(rosterIds, 12);
 
   const load = useCallback(async () => {
@@ -224,7 +332,8 @@ export default function DestinyScreen() {
       }
       setActive([MAIN_ID, ...pair]);
     } else {
-      setRoster([MAIN_ID, ...Object.keys(stored.profile.companions).sort()]);
+      // Gợi ý sẵn các tướng cấp cao nhất, vừa đủ giới hạn đội hình.
+      setRoster([MAIN_ID, ...companionsByLevel(stored.profile).slice(0, DESTINY_ROSTER_MAX - 1)]);
     }
     setBuild(null);
     setOfferIndex(null);
@@ -239,6 +348,16 @@ export default function DestinyScreen() {
 
   const run = overview?.progress?.run ?? null;
   const rules = overview?.floor?.rules ?? null;
+  // Bước chuẩn bị: hai tướng đang chọn nằm ở hàng "Ra trận", phần còn lại cắt trang 6; tướng chọn được xếp trước.
+  const companions = useMemo(() => (run && rules ? destinyCompanionOptions(run, rules, active) : []), [run, rules, active]);
+  const picked = companions.filter((c) => c.selected);
+  const bench = useMemo(() => {
+    const rank = (c: (typeof companions)[number]) => (c.hp <= 0 ? 2 : c.reason && !c.reason.startsWith("Đã đủ") ? 1 : 0);
+    return companions.filter((c) => !c.selected).sort((x, y) => rank(x) - rank(y));
+  }, [companions]);
+  const pagedBench = usePagedItems(bench, 6);
+  // Đội hình đã khóa: cắt trang 6 để hai cột Đội hình và Chuẩn bị cao gần bằng nhau.
+  const pagedSquad = usePagedItems(run?.roster ?? [], 6);
   const builds = useMemo(() => run && rules ? legalLeaderBuilds(run, rules, active) : [], [run, rules, active]);
   const chosenBuild = build ?? (run && rules ? defaultDestinyBuild(run, rules, active) : null);
   const chosenOffer = run?.offer && offerIndex !== null ? run.offer[offerIndex] : null;
@@ -316,7 +435,9 @@ export default function DestinyScreen() {
   // Trong lượt leo: tầng đã vượt là tầng trước tầng đang đứng; đang chờ nhận thưởng thì tính cả tầng vừa thắng.
   const clearedInRun = run?.active ? (run.phase === "reward" ? run.floor : run.floor - 1) : run?.completed ? run.floor : 0;
   const currentFloor = run?.active && run.phase !== "reward" ? run.floor : null;
-  const companions = run && rules ? destinyCompanionOptions(run, rules, active) : [];
+  const foeLevel = overview.floor?.foeLevel;
+  const companionMax = Math.min(DESTINY_ROSTER_MAX - 1, rosterIds.length);
+  const rosterFull = roster.length >= DESTINY_ROSTER_MAX;
   const pickedCount = active.filter((id) => id !== MAIN_ID).length;
   const pickBuild = (next: Partial<DestinyLeaderBuild>) => {
     if (!chosenBuild) return;
@@ -362,7 +483,7 @@ export default function DestinyScreen() {
           { label: "Đá Cường Hóa", value: overview.stones },
         ]}
       />
-      <ModeGuideTabs scene="DESTINY">
+      <ModeGuideTabs scene="DESTINY" extraTabs={[{ value: "board", label: "BXH tuần", content: <DestinyBoardPanel /> }]}>
 
       {message && <Alert className="p-3 text-sm" role="alert">{message}</Alert>}
 
@@ -383,14 +504,20 @@ export default function DestinyScreen() {
             Khóa đội hình
           </SectionTitle>
           <ul className="list-disc space-y-1 pl-5 text-sm text-on-wood">
-            <li>Đinh Bộ Lĩnh luôn ra trận; chọn thêm ít nhất {DESTINY_ROSTER_MIN - 1} tướng, nhiều nhất là mọi tướng bạn có.</li>
+            <li>Đinh Bộ Lĩnh luôn ra trận; chọn thêm ít nhất {DESTINY_ROSTER_MIN - 1} và nhiều nhất {DESTINY_ROSTER_MAX - 1} tướng.</li>
             <li>Đội hình khóa tới hết lượt leo: không thêm, bớt hay đổi tướng giữa chừng.</li>
             <li>Mỗi tầng ba người ra trận, số còn lại dự bị. Mang nhiều tướng thì có người thay khi đồng đội bị thương và dễ đáp ứng luật từng tầng.</li>
+            <li>Đối thủ mạnh dần theo tầng, không phụ thuộc đội hình: tầng 1 cấp 1, tăng đều tới tầng {floorCount} cấp {destinyFloorFoeLevel(floorCount, floorCount)}.</li>
           </ul>
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-            <h3 className="ui-title-on-wood text-base">Đã chọn {Math.max(0, roster.length - 1)}/{rosterIds.length} tướng</h3>
+            <h3 className="ui-title-on-wood text-base">
+              Đã chọn {Math.max(0, roster.length - 1)}/{companionMax} tướng{" "}
+              <span className="text-sm font-normal text-on-wood-soft">· bạn có {rosterIds.length} tướng</span>
+            </h3>
             <div className="flex flex-wrap gap-2">
-              <ChoiceChip selected={false} disabled={roster.length - 1 >= rosterIds.length} onClick={() => setRoster([MAIN_ID, ...rosterIds])}>Chọn tất cả</ChoiceChip>
+              <ChoiceChip selected={false} onClick={() => setRoster([MAIN_ID, ...rosterIds.slice(0, DESTINY_ROSTER_MAX - 1)])}>
+                {rosterIds.length > companionMax ? `Chọn ${companionMax} tướng cấp cao nhất` : "Chọn tất cả"}
+              </ChoiceChip>
               <ChoiceChip selected={false} disabled={roster.length <= 1} onClick={() => setRoster([MAIN_ID])}>Bỏ chọn hết</ChoiceChip>
             </div>
           </div>
@@ -400,23 +527,27 @@ export default function DestinyScreen() {
               if (!companion) return null;
               const selected = roster.includes(id);
               return (
-                <ChoiceChip key={id} size="md" selected={selected}
+                <ChoiceChip key={id} size="md" selected={selected} disabled={!selected && rosterFull}
+                  title={!selected && rosterFull ? `Đã đủ ${DESTINY_ROSTER_MAX - 1} tướng, bỏ chọn một người để đổi` : undefined}
                   onClick={() => setRoster(selected ? roster.filter((x) => x !== id) : [...roster, id])}
                   className="items-center justify-start gap-2.5 p-2.5 text-left">
                   <Portrait id={id} element={companion.element} profession={companion.profession} className="size-12 shrink-0" />
                   <span className="flex min-w-0 flex-col">
                     <strong>{companion.name}</strong>
-                    <span className="text-caption font-normal opacity-80">{ELEMENT_NAME[companion.element]} · {PROFESSION_NAME[companion.profession]}</span>
+                    <FighterMeta element={companion.element} profession={companion.profession} level={progressOf(profile, id).level} />
                   </span>
                 </ChoiceChip>
               );
             })}
           </div>
           <PageControls paged={pagedRoster} label="Phân trang tướng" className="mt-2" />
+          {rosterFull && rosterIds.length > companionMax && (
+            <p className="mt-3 text-sm text-on-wood-soft">Đã đủ {companionMax} tướng. Muốn đổi thì bỏ chọn một người trước.</p>
+          )}
           {roster.length < DESTINY_ROSTER_MIN && (
             <p className="mt-3 text-sm text-danger">Cần chọn thêm {DESTINY_ROSTER_MIN - roster.length} tướng nữa.</p>
           )}
-          <Button disabled={busy || roster.length < DESTINY_ROSTER_MIN} onClick={() => void startRun()} className="mt-4 min-h-11">
+          <Button disabled={busy || roster.length < DESTINY_ROSTER_MIN || roster.length > DESTINY_ROSTER_MAX} onClick={() => void startRun()} className="mt-4 min-h-11">
             {busy ? "Đang khóa đội hình…" : `Khóa đội hình và bắt đầu leo`}
           </Button>
         </OrnateFrame>
@@ -425,9 +556,9 @@ export default function DestinyScreen() {
       {run && run.active && (
         <section className="grid gap-4 sm:gap-5 lg:grid-cols-[1fr_1.4fr]">
           <OrnateFrame className="order-2 min-w-0 self-start lg:order-1">
-            <SectionTitle description={`Lương ${run.food}/${DESTINY_FOOD_MAX} · Mỗi tướng có thanh Nộ riêng, giữ qua các tầng`}>Đội hình</SectionTitle>
+            <SectionTitle description={`${run.roster.length} tướng · Lương ${run.food}/${DESTINY_FOOD_MAX} · Mỗi tướng có thanh Nộ riêng, giữ qua các tầng`}>Đội hình</SectionTitle>
             <ul className="space-y-2">
-              {run.roster.map((id) => {
+              {pagedSquad.pageItems.map((id) => {
                 const f = run.fighters?.[id];
                 if (!f) return null;
                 const onField = run.phase === "prepare" && active.includes(id);
@@ -442,11 +573,15 @@ export default function DestinyScreen() {
                             {f.downed ? "Đã gục" : `Máu ${f.hp}/${f.config.maxHp}`}
                           </span>
                         </div>
-                        <p className="text-caption text-on-wood-soft">
-                          {id === MAIN_ID ? "Thủ lĩnh · đổi nghề và hệ trước mỗi tầng" : `${ELEMENT_NAME[f.config.element]} · ${PROFESSION_NAME[f.config.profession]}`}
-                          {!f.downed && ` · Năng lượng ${f.energy} · Nộ ${destinyRageOf(run, id)}/${RAGE_MAX}`}
-                          {onField && id !== MAIN_ID && " · Ra trận"}
-                        </p>
+                        <div className="text-on-wood-soft">
+                          {id === MAIN_ID
+                            ? <p className="text-caption">Thủ lĩnh · Cấp {f.level} · đổi nghề và hệ trước mỗi tầng</p>
+                            : <FighterMeta element={f.config.element} profession={f.config.profession} level={f.level} />}
+                          <p className="text-caption">
+                            {f.downed ? "Cần Cứu viện để ra trận lại" : `Năng lượng ${f.energy} · Nộ ${destinyRageOf(run, id)}/${RAGE_MAX}`}
+                            {onField && id !== MAIN_ID && <strong className="text-frame-gold"> · Ra trận</strong>}
+                          </p>
+                        </div>
                         <div className="mt-1.5"><HpBar hp={f.hp} maxHp={f.config.maxHp} /></div>
                       </div>
                     </FrameInset>
@@ -454,6 +589,7 @@ export default function DestinyScreen() {
                 );
               })}
             </ul>
+            <PageControls paged={pagedSquad} label="Phân trang đội hình" className="mt-2" />
             <h3 className="ui-title-on-wood mt-4 text-base">Phúc đang có</h3>
             {run.boons?.length ? (
               <ul className="mt-1.5 space-y-1.5">
@@ -488,10 +624,34 @@ export default function DestinyScreen() {
 
             {run.phase === "prepare" && rules && (
               <>
-                <SectionTitle description={`Đối thủ: ${overview.floor?.foes.map((f) => f.name).join(", ") ?? ""} · Độ khó ${difficultyName(overview.floor?.difficulty)}`}>
+                <SectionTitle description={`Độ khó ${difficultyName(overview.floor?.difficulty)}${foeLevel ? ` · Đối thủ cấp ${foeLevel}` : ""}`}>
                   Chuẩn bị tầng {run.floor}/{floorCount}
                 </SectionTitle>
-                <h3 className="ui-title-on-wood mb-1.5 text-base">Luật tầng</h3>
+
+                <h3 className="ui-title-on-wood mb-1.5 text-base">Đối thủ</h3>
+                <ul className="grid gap-2 sm:grid-cols-3">
+                  {(overview.floor?.foes ?? []).map((foe) => (
+                    <li key={foe.id} className="ui-frame-inset flex min-w-0 items-center gap-2 p-2">
+                      {foe.element && foe.profession && (
+                        <Portrait id={foe.id} element={foe.element} profession={foe.profession} className="size-10 shrink-0" />
+                      )}
+                      <span className="flex min-w-0 flex-col text-on-wood-soft">
+                        <strong className="truncate text-sm text-on-wood">{foe.name}</strong>
+                        {foe.element && foe.profession && (
+                          <FighterMeta element={foe.element} profession={foe.profession} level={foeLevel} />
+                        )}
+                        {foe.maxHp !== undefined && <span className="text-caption">Máu {foe.maxHp}</span>}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                {foeLevel !== undefined && (
+                  <p className="mt-1.5 text-caption text-on-wood-soft">
+                    Cấp đối thủ tăng đều theo tầng: tầng 1 cấp 1, tầng {floorCount} cấp {destinyFloorFoeLevel(floorCount, floorCount)}.
+                  </p>
+                )}
+
+                <h3 className="ui-title-on-wood mt-4 mb-1.5 text-base">Luật tầng</h3>
                 {describeRules(rules).length > 0 ? (
                   <ul className="flex flex-col gap-1.5 text-sm text-on-wood">
                     {describeRules(rules).map((line) => (
@@ -503,50 +663,78 @@ export default function DestinyScreen() {
                   </ul>
                 ) : <p className="text-sm text-on-wood-soft">Tầng này không giới hạn nghề hay hệ.</p>}
 
-                <h3 className="ui-title-on-wood mt-4 mb-1.5 text-base">Chọn 2 tướng ra trận ({pickedCount}/2)</h3>
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {companions.map((c) => (
-                    <ChoiceChip key={c.id} size="md" selected={c.selected} disabled={c.disabled}
-                      onClick={() => { setActive(c.selected ? active.filter((x) => x !== c.id) : [...active, c.id]); setBuild(null); }}
-                      className="items-center justify-start gap-2.5 p-2.5 text-left">
-                      <Portrait id={c.id} element={c.element} profession={c.profession} className="size-11 shrink-0" />
-                      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                        <strong>{c.name}</strong>
-                        <span className="text-caption font-normal opacity-80">
-                          {ELEMENT_NAME[c.element]} · {PROFESSION_NAME[c.profession]} · Máu {c.hp}/{c.maxHp}
+                <h3 className="ui-title-on-wood mt-4 mb-1.5 text-base">
+                  Chọn 2 tướng ra trận <span className="text-sm font-normal text-on-wood-soft">(đã chọn {pickedCount}/2)</span>
+                </h3>
+                <ul aria-label="Tướng ra trận đã chọn" className="mb-3 grid gap-2 sm:grid-cols-2">
+                  {[0, 1].map((slot) => {
+                    const c = picked[slot];
+                    return (
+                      <li key={c?.id ?? `empty-${slot}`}>
+                        {c ? (
+                          <button type="button" aria-pressed aria-label={`Bỏ chọn ${c.name}`}
+                            onClick={() => { setActive(active.filter((x) => x !== c.id)); setBuild(null); }}
+                            className={choiceVariants({ className: "w-full items-center justify-start gap-2.5 p-2.5 text-left" })}>
+                            <Portrait id={c.id} element={c.element} profession={c.profession} className="size-11 shrink-0" />
+                            <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                              <strong className="truncate">{c.name}</strong>
+                              <FighterMeta element={c.element} profession={c.profession} level={run.fighters?.[c.id]?.level} />
+                              <span className="text-caption font-normal opacity-80">Máu {c.hp}/{c.maxHp}</span>
+                              <HpBar hp={c.hp} maxHp={c.maxHp} />
+                            </span>
+                            <span aria-hidden className="shrink-0 self-start text-caption font-normal opacity-70">Bỏ</span>
+                          </button>
+                        ) : (
+                          <div className="ui-frame-inset flex h-full min-h-14 items-center justify-center p-2 text-center text-caption text-on-wood-soft">
+                            Chưa chọn tướng thứ {slot + 1}
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+                <ul aria-label="Tướng có thể chọn" className="grid gap-2 sm:grid-cols-2">
+                  {pagedBench.pageItems.map((c) => (
+                    <li key={c.id}>
+                      <ChoiceChip size="md" selected={false} disabled={c.disabled} title={c.reason ?? undefined}
+                        aria-label={c.reason ? `${c.name}, ${c.reason.toLowerCase()}` : undefined}
+                        onClick={() => { setActive([...active, c.id]); setBuild(null); }}
+                        className="w-full items-center justify-start gap-2.5 p-2.5 text-left">
+                        <Portrait id={c.id} element={c.element} profession={c.profession} className="size-11 shrink-0" />
+                        <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                          <strong className="truncate">{c.name}</strong>
+                          <FighterMeta element={c.element} profession={c.profession} level={run.fighters?.[c.id]?.level} />
+                          <span className="text-caption font-normal opacity-80">{c.hp > 0 ? `Máu ${c.hp}/${c.maxHp}` : "Đã gục, cần Cứu viện"}</span>
+                          {c.hp > 0 && <HpBar hp={c.hp} maxHp={c.maxHp} />}
                         </span>
-                        {c.hp > 0 && <HpBar hp={c.hp} maxHp={c.maxHp} />}
-                        {c.reason && <span className="text-caption font-normal">{c.reason}</span>}
-                      </span>
-                    </ChoiceChip>
+                      </ChoiceChip>
+                    </li>
                   ))}
-                </div>
+                </ul>
+                <PageControls paged={pagedBench} label="Phân trang tướng ra trận" className="mt-2" />
 
                 <h3 className="ui-title-on-wood mt-4 mb-1.5 text-base">Nghề và hệ của Đinh Bộ Lĩnh</h3>
                 <p className="mb-2 text-sm text-on-wood-soft">
                   Đổi miễn phí trước mỗi tầng. Lựa chọn bị mờ là không hợp luật tầng với hai tướng đang chọn.
                 </p>
                 {pickedCount === 2 && chosenBuild && builds.length > 0 && (
-                  <div className="flex flex-col gap-2">
-                    <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Hệ của Đinh Bộ Lĩnh">
-                      <span className="w-12 shrink-0 text-sm text-on-wood-soft">Hệ</span>
-                      {ELEMENTS.map((element) => (
-                        <ChoiceChip key={element} selected={chosenBuild.element === element}
-                          disabled={!builds.some((b) => b.element === element)} onClick={() => pickBuild({ element })}>
-                          {ELEMENT_NAME[element]}
-                        </ChoiceChip>
-                      ))}
+                  <FrameInset className="flex flex-col gap-3">
+                    <div className="flex items-center gap-3">
+                      <Portrait id={MAIN_ID} element={chosenBuild.element} profession={chosenBuild.profession} className="size-12 shrink-0" />
+                      <div className="min-w-0 text-sm text-on-wood">
+                        <p className="font-semibold">Đinh Bộ Lĩnh <span className="font-normal text-on-wood-soft">(thủ lĩnh, luôn ra trận)</span></p>
+                        <FighterMeta element={chosenBuild.element} profession={chosenBuild.profession} level={run.fighters?.[MAIN_ID]?.level} />
+                      </div>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Nghề của Đinh Bộ Lĩnh">
-                      <span className="w-12 shrink-0 text-sm text-on-wood-soft">Nghề</span>
-                      {PROFESSIONS.map((profession) => (
-                        <ChoiceChip key={profession} selected={chosenBuild.profession === profession}
-                          disabled={!builds.some((b) => b.profession === profession)} onClick={() => pickBuild({ profession })}>
-                          {PROFESSION_NAME[profession]}
-                        </ChoiceChip>
-                      ))}
-                    </div>
-                  </div>
+                    <BuildRow label="Hệ" values={ELEMENTS} value={chosenBuild.element} names={ELEMENT_NAME}
+                      icon={(element) => <ElementIcon element={element} className="size-5" />}
+                      allowed={(element) => builds.some((b) => b.element === element)}
+                      onPick={(element) => pickBuild({ element })} />
+                    <BuildRow label="Nghề" values={PROFESSIONS} value={chosenBuild.profession} names={PROFESSION_NAME}
+                      icon={(profession) => <ProfessionIcon profession={profession} className="size-5" />}
+                      allowed={(profession) => builds.some((b) => b.profession === profession)}
+                      onPick={(profession) => pickBuild({ profession })} />
+                  </FrameInset>
                 )}
                 {lineupHint && <p className="mt-2 text-sm text-danger" role="status">{lineupHint}</p>}
                 {!confirmStop && (
@@ -617,7 +805,6 @@ export default function DestinyScreen() {
       )}
 
       <RankRewardsPanel mode="destiny" />
-      <DestinyBoardPanel />
       </ModeGuideTabs>
     </ModeScreen>
   );
