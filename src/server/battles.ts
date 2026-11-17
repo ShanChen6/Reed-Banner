@@ -8,6 +8,7 @@ import {
   arenaDay,
   defenseOf,
   ghostTeam,
+  arenaTeam,
   beginCampaignNode,
   CAMPAIGN_CHOICE_IDS,
   campaignBattleScenario,
@@ -898,7 +899,7 @@ async function createArenaBattle(
       : ((await arena.get(offer.owner))?.rating ?? offer.rating);
   const { match, events } = startMatch({
     sides: [
-      { fighters: profileTeam(profile, profile.team), leader: 0 },
+      { fighters: arenaTeam(profile, profile.team), leader: 0 },
       { fighters: ghostTeam(defense, offer.name), leader: 0 },
     ],
     difficulty: ARENA_DIFFICULTY,
