@@ -190,7 +190,8 @@ function BuildRow<T extends string>({ label, values, value, names, icon, allowed
  * Hành trình các tầng: dòng tóm tắt (đang ở đâu, kỷ lục, mốc đá kế) và một đường đi gồm các chặng độ khó.
  * Mỗi tầng là một nút tròn nối nhau: xanh là đã vượt trong lượt leo này, vàng là tầng sắp đánh,
  * viền vàng đứt là tầng đã vượt ở lượt leo trước của chu kỳ. Tầng có mốc Đá Cường Hóa mang dấu ◆ nhỏ ở góc nút
- * (vàng là chưa nhận, xanh là đã nhận); số đá ghi ở ô "Mốc đá kế" và chú thích khi rê chuột.
+ * (vàng là chưa nhận, xanh là đã nhận). Bấm một tầng (mặc định là tầng sắp đánh) thì dòng dưới hành trình ghi độ khó,
+ * cấp đối thủ, trạng thái và mốc đá của tầng đó; cách này dùng được cả trên điện thoại, nơi không rê chuột được.
  */
 function FloorTrack({ floorCount, version, cleared, current, best, milestones, claimed }: {
   floorCount: number;
@@ -207,6 +208,17 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
   const nextMilestone = milestones.find((m) => !claimed.includes(m.id)) ?? null;
   const percent = Math.round(100 * Math.min(cleared, floorCount) / Math.max(1, floorCount));
   const here = current ?? (cleared > 0 ? cleared : null);
+  const [picked, setPicked] = useState<number | null>(null);
+  const shown = Math.max(1, Math.min(floorCount, picked ?? here ?? 1));
+  const floorInfo = (floor: number) => {
+    const milestone = milestones.find((m) => m.floor === floor) ?? null;
+    const got = milestone ? claimed.includes(milestone.id) : false;
+    const state = floor <= cleared ? "cleared" : floor === current ? "current" : floor <= best ? "record" : "ahead";
+    const status = state === "cleared" ? "đã vượt" : state === "current" ? "sắp đánh" : state === "record" ? "đã vượt ở lượt leo trước" : "chưa tới";
+    return { milestone, got, state, status, level: destinyFloorFoeLevel(floor, floorCount) } as const;
+  };
+  const shownInfo = floorInfo(shown);
+  const shownSpan = spans.find((span) => shown >= span.from && shown <= span.to);
   return (
     <OrnateFrame className="flex flex-col gap-4">
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
@@ -257,14 +269,11 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
               </p>
               <ol className="flex" aria-label={`Chặng ${difficultyName(span.difficulty)}`}>
                 {floors.map((floor, index) => {
-                  const milestone = milestones.find((m) => m.floor === floor);
-                  const got = milestone ? claimed.includes(milestone.id) : false;
-                  const state = floor <= cleared ? "cleared" : floor === current ? "current" : floor <= best ? "record" : "ahead";
-                  const label = `Tầng ${floor} (đối thủ cấp ${destinyFloorFoeLevel(floor, floorCount)}): ` +
-                    (state === "cleared" ? "đã vượt" : state === "current" ? "sắp đánh" : state === "record" ? "đã vượt ở lượt leo trước" : "chưa tới") +
+                  const { milestone, got, state, status, level } = floorInfo(floor);
+                  const label = `Tầng ${floor}, đối thủ cấp ${level}, ${status}` +
                     (milestone ? `, mốc ${milestone.stones} Đá Cường Hóa${got ? " (đã nhận)" : ""}` : "");
                   return (
-                    <li key={floor} title={label} aria-label={label} aria-current={state === "current" ? "step" : undefined}
+                    <li key={floor} aria-current={state === "current" ? "step" : undefined}
                       className="relative flex min-w-0 flex-1 flex-col items-center">
                       {index > 0 && (
                         <span aria-hidden className={cn(
@@ -272,8 +281,12 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
                           floor <= cleared || floor === current ? "bg-jade/60" : "bg-white/10",
                         )} />
                       )}
+                      <button type="button" title={label} aria-label={label} aria-pressed={floor === shown}
+                        aria-controls="destiny-floor-detail" onClick={() => setPicked(floor)}
+                        className="relative flex min-h-9 w-full items-start justify-center rounded focus-visible:outline-2 focus-visible:outline-frame-gold pointer-coarse:min-h-11">
                       <span aria-hidden className={cn(
                         "relative flex size-7 items-center justify-center rounded-full border-2 text-caption leading-none tabular-nums sm:size-8 sm:text-sm",
+                        floor === shown && "ring-2 ring-on-wood/70 ring-offset-1 ring-offset-wood-inset",
                         state === "cleared" && "border-jade bg-jade/20 font-semibold text-jade",
                         state === "current" && "border-frame-gold bg-frame-gold font-bold text-brand-ink shadow-[0_0_0_3px_rgb(212_162_76/0.25)]",
                         state === "record" && "border-dashed border-frame-gold/70 bg-wood-inset text-frame-gold",
@@ -287,6 +300,7 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
                           )}>◆</span>
                         )}
                       </span>
+                      </button>
                     </li>
                   );
                 })}
@@ -295,6 +309,20 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
           );
         })}
       </ol>
+
+      <p id="destiny-floor-detail" aria-live="polite"
+        className="ui-frame-inset flex flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2 text-sm text-on-wood">
+        <strong className="text-title-on-wood">Tầng {shown}</strong>
+        {shownSpan && <span>{difficultyName(shownSpan.difficulty)}</span>}
+        <span>Đối thủ <strong className="text-frame-gold">cấp {shownInfo.level}</strong></span>
+        <span className="text-on-wood-soft">{shownInfo.status.charAt(0).toUpperCase() + shownInfo.status.slice(1)}</span>
+        {shownInfo.milestone && (
+          <span className={shownInfo.got ? "text-jade" : "text-frame-gold"}>
+            ◆ Mốc {shownInfo.milestone.stones} Đá Cường Hóa{shownInfo.got ? " (đã nhận)" : ""}
+          </span>
+        )}
+        <span className="ml-auto text-caption text-on-wood-soft">Bấm tầng khác để xem</span>
+      </p>
     </OrnateFrame>
   );
 }
