@@ -182,11 +182,11 @@ Trang `/daily`, code ở `src/core/daily/` (đề và điểm), `src/server/dail
   - Bảng hiện 20 người đầu, kèm hạng của mình. Khách hiện "Khách" kèm 4 ký tự cuối của id.
 - **Thưởng:** 150 vàng khi thắng, 50 vàng khi thua. Không có kinh nghiệm hay món rơi, vì đội là đội của đề.
 - Mô phỏng 60 đề: AI Thường thắng AI Khó 65%, trung bình 39 lượt (hai phe).
-- **Nhiệm vụ ngày ngay trong Nhật Lệnh (17/11/2026):** thẻ Chơi có khung Nhiệm vụ ngày ở cột phải, trên Bảng hôm nay (tiến độ, nút nhận vàng, số chờ nhận) và lối sang màn Nhiệm vụ cho nhiệm vụ tuần, thành tựu. Màn Nhiệm vụ chỉ còn thẻ dẫn sang Nhật Lệnh (số chờ nhận, nút Sang Nhật Lệnh; Shan 17/11/2026). Khách chưa đăng nhập vẫn được cộng tiến độ nhưng phải ghi danh mới mở được Nhật Lệnh để nhận. Danh sách và luật ở mục 5.2; code `src/app/game/quests/DailyQuestsPanel.tsx`, dòng nhiệm vụ dùng chung `quests/QuestItem.tsx`.
+- **Nhiệm vụ ngày ngay trong Nhật Lệnh (17/11/2026):** thẻ Chơi có khung Nhiệm vụ ngày ở cột phải, trên Bảng hôm nay (tiến độ, nút nhận vàng, số chờ nhận) và lối sang màn Nhiệm vụ cho nhiệm vụ tuần, thành tựu. Điểm danh 7 ngày cũng chuyển sang đây, nằm đầu thẻ Chơi (Shan 17/11/2026). Màn Nhiệm vụ chỉ còn thẻ dẫn sang Nhật Lệnh (đã điểm danh chưa, số nhiệm vụ chờ nhận, nút Sang Nhật Lệnh). Khách chưa đăng nhập vẫn được cộng tiến độ nhưng phải ghi danh mới mở được Nhật Lệnh để nhận. Danh sách và luật ở mục 5.2; code `src/app/game/quests/DailyQuestsPanel.tsx`, `quests/CheckInPanel.tsx`, dòng nhiệm vụ dùng chung `quests/QuestItem.tsx`.
 
 ### 5.2 Nhiệm vụ, thành tựu, điểm danh (Claude đặt 20/10/2026, chờ Shan duyệt)
 
-Trang `/quests`, code ở `src/core/progress/quests.ts` và `achievements.ts`, lưu trong hồ sơ (`quests`). Nhiệm vụ ngày hiển thị và nhận ở màn Nhật Lệnh (mục 5.1); trang `/quests` chỉ còn thẻ dẫn sang.
+Trang `/quests`, code ở `src/core/progress/quests.ts` và `achievements.ts`, lưu trong hồ sơ (`quests`). Điểm danh và nhiệm vụ ngày hiển thị và nhận ở màn Nhật Lệnh (mục 5.1); trang `/quests` chỉ còn thẻ dẫn sang.
 
 - **Thời điểm đổi:** ngày đổi lúc 0 giờ giờ Việt Nam, tuần bắt đầu thứ Hai.
 - **Cách đếm:** server cộng tiến độ khi trận online kết thúc (cùng lúc cộng thưởng). Trận ở /demo không tính.

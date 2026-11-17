@@ -94,13 +94,15 @@ test.describe("tài khoản đã đăng nhập", () => {
     expectClean(problems);
   });
 
-  test("Nhiệm vụ ngày nằm ở Nhật Lệnh, màn Nhiệm vụ chỉ dẫn sang", async ({ page }) => {
+  test("Điểm danh và nhiệm vụ ngày nằm ở Nhật Lệnh, màn Nhiệm vụ chỉ dẫn sang", async ({ page }) => {
     const problems = watchProblems(page);
     // Màn Nhiệm vụ chỉ còn thẻ dẫn sang Nhật Lệnh.
     await page.goto("/game/quests");
     await expect(page.getByRole("meter", { name: "Nhận Nhật Lệnh" })).toHaveCount(0);
     await page.getByRole("link", { name: "Sang Nhật Lệnh" }).click();
     await expect(page.getByRole("heading", { name: "Nhiệm vụ ngày" })).toBeVisible();
+    await page.getByRole("button", { name: "Điểm danh", exact: true }).click();
+    await expect(page.getByRole("button", { name: "Hôm nay đã điểm danh" })).toBeVisible();
     await expect(page.getByRole("meter", { name: "Nhận Nhật Lệnh" })).toBeVisible();
     expectClean(problems);
   });

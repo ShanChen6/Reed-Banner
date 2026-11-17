@@ -3,7 +3,7 @@
 import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { Alert, Button, buttonVariants } from "@/components/ui";
 
-// Thử thách hằng ngày: đề chung hôm nay (đội cho sẵn, đối thủ, sân nhà), lượt của mình, bảng xếp hạng và nhiệm vụ ngày.
+// Thử thách hằng ngày: đề chung hôm nay (đội cho sẵn, đối thủ, sân nhà), lượt của mình, bảng xếp hạng, điểm danh và nhiệm vụ ngày.
 // Mỗi người một lượt mỗi ngày; server giữ chỗ lượt trước khi tạo trận.
 
 import { useEffect, useState } from "react";
@@ -28,7 +28,9 @@ import {
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { SceneLink, useScene } from "../SceneContext";
 import { ModeGuideTabs } from "../ModeGuide";
+import CheckInPanel from "../quests/CheckInPanel";
 import DailyQuestsPanel from "../quests/DailyQuestsPanel";
+import { useProfile } from "../profile/useProfile";
 
 function scoreText(s: DailyScore): string {
   return s.won
@@ -72,6 +74,9 @@ export default function DailyScreen() {
   const [data, setData] = useState<DailyResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  // Hồ sơ cho điểm danh và nhiệm vụ ngày; nhận thưởng cập nhật cả hai khung.
+  const quests = useProfile();
+  const [now] = useState(() => Date.now());
 
   useEffect(() => {
     void fetchDaily().then(setData);
@@ -145,6 +150,9 @@ export default function DailyScreen() {
 
       <RankRewardsPanel mode="daily" />
 
+      {quests.message && <Alert className="p-3 text-sm">{quests.message}</Alert>}
+      {quests.profile && <CheckInPanel profile={quests.profile} now={now} busy={quests.busy} act={quests.act} />}
+
       <div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <OrnateFrame level="raised" className="flex min-w-0 flex-col gap-3">
           <SectionTitle>Đề hôm nay</SectionTitle>
@@ -209,7 +217,7 @@ export default function DailyScreen() {
         </OrnateFrame>
 
         <div className="flex min-w-0 flex-col gap-4 self-start">
-        <DailyQuestsPanel />
+        {quests.profile && <DailyQuestsPanel profile={quests.profile} now={now} busy={quests.busy} act={quests.act} />}
         <OrnateFrame className="flex min-w-0 flex-col gap-2">
           <SectionTitle>Bảng hôm nay</SectionTitle>
           {top.length === 0 ? (
