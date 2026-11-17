@@ -4,6 +4,14 @@
 
 ## 17/11/2026
 
+**Tháp Thiên Mệnh và màn trận: góp ý sau khi chơi thử (Shan yêu cầu)**
+- Hành trình tầng bỏ dòng "Tầng 1–5 · Cấp 1–7" và nhãn "+3 đá" dưới nút; mốc đá thành dấu ◆ nhỏ ở góc nút tầng. Bấm một tầng (mặc định tầng sắp đánh) thì dòng dưới hành trình ghi độ khó, cấp đối thủ, trạng thái và mốc đá; dùng được cả trên điện thoại.
+- Khóa đội hình có bộ lọc: tìm tên (không dấu), lọc hệ, nghề, chỉ đã chọn; tướng đã chọn hiện thành dải phía trên, bấm để bỏ.
+- Ngôi sao khắc chế ★ ở mọi màn chuẩn bị trận đã biết đối thủ: Thiên Mệnh, Thí Luyện, Viễn Chinh, Trấn Ải, Nhật Lệnh, sảnh Giao Tranh (Bình Loạn đã có). Chi tiết: [giao diện trận §4](../05-ui-ux/screens/battle.md#4-trợ-giúp-song-tháp).
+- Hết trận ở chế độ có màn riêng (tháp, Viễn Chinh, Trấn Ải, Nhật Lệnh, Quần Hùng, Bình Loạn) bỏ nút "Nâng kỹ năng & đánh tiếp".
+- Trận online bỏ ô Độ khó ở thanh đầu trận (máy chủ đã chốt độ khó; ô cũ không có tác dụng). Thao Luyện offline giữ.
+- Màn thắng Thiên Mệnh làm lại: tầng/tổng tầng, dải tiến độ, số lượt, đá mốc vừa nhận, máu ba tướng, một nút "Chọn thưởng tầng N". Kết quả trận Thiên Mệnh từ máy chủ thêm `floorCount`, `stones`, `turns`.
+
 **Tháp Thiên Mệnh: cấp đối thủ và giao diện (Shan yêu cầu)**
 - Cấp đối thủ đổi từ cấp cao nhất trong đội hình sang **cấp tăng đều theo tầng**: tầng 1 cấp 1, tầng 20 cấp 30; hệ số sức địch đổi thành 0,68 → 0,90 để đội cấp 30 qua đủ 20 tầng khoảng 85% số lượt (mục tiêu Shan đặt), theo [mô phỏng 12 chu kỳ](../reports/2026-11-17-destiny-cap-theo-tang-balance.md) ([luật §11.2](../02-game-modes/dual-tower/00-02-rules.md#112-tầng-nhóm-khó-và-sức-địch)). Lý do: thủ lĩnh cấp 4 mang theo một hai tướng cấp 30 thì gặp đối thủ cấp 30. Lượt leo đang mở chuyển sang cách mới từ trận kế tiếp. Màn chuẩn bị hiện cấp, hệ, nghề, máu của đối thủ; thẻ tướng hiện cấp.
 - Hành trình tầng vẽ lại: ba ô tóm tắt (lượt leo này, kỷ lục, mốc đá kế), thanh tiến độ, bốn chặng độ khó với các nút tầng nối nhau.

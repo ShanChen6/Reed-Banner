@@ -23,6 +23,7 @@ import {
 } from "@/core";
 import { ELEMENT_TRAIT, PROFESSION_PERK } from "../../home/data";
 import { GearIcon, SetEmblem } from "../art/gear";
+import { CounterStar, type CounterFoe } from "../art/CounterStar";
 import { DongSonBand, ElementIcon, LeaderFlag, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import SkillDetails from "./SkillDetails";
@@ -51,7 +52,13 @@ function Row({ title, hint, children }: { title: string; hint?: string; children
   );
 }
 
-function TeamRow({ fighters, label, align }: { fighters: readonly Fighter[]; label: string; align: "start" | "end" }) {
+function TeamRow({ fighters, label, align, foes = [] }: {
+  fighters: readonly Fighter[];
+  label: string;
+  align: "start" | "end";
+  /** Đội bên kia, để gắn ★ cho người khắc hệ. */
+  foes?: readonly CounterFoe[];
+}) {
   return (
     <div className={`flex min-w-0 flex-1 flex-col items-center gap-1.5 ${align === "end" ? "sm:items-end" : "sm:items-start"}`}>
       <span className="text-kicker text-on-wood-soft">{label}</span>
@@ -72,7 +79,10 @@ function TeamRow({ fighters, label, align }: { fighters: readonly Fighter[]; lab
                 </span>
               )}
             </div>
-            <span className="w-full truncate text-caption font-semibold">{f.name}</span>
+            <span className="flex w-full items-center justify-center gap-0.5 text-caption font-semibold">
+              <span className="truncate">{f.name}</span>
+              <CounterStar element={f.element} foes={foes} />
+            </span>
           </div>
         ))}
       </div>
@@ -154,7 +164,7 @@ export default function SetupLobby({
         </p>
 
         <div className="flex flex-col items-center gap-2 ui-frame-inset rounded-xl p-3 sm:flex-row">
-          <TeamRow fighters={teams[0]} label="Phe bạn" align="start" />
+          <TeamRow fighters={teams[0]} label="Phe bạn" align="start" foes={teams[1]} />
           <span className="font-serif text-2xl font-bold text-frame-gold sm:text-3xl">VS</span>
           <TeamRow fighters={teams[1]} label="Đối thủ" align="end" />
         </div>
