@@ -182,6 +182,7 @@ Trang `/daily`, code ở `src/core/daily/` (đề và điểm), `src/server/dail
   - Bảng hiện 20 người đầu, kèm hạng của mình. Khách hiện "Khách" kèm 4 ký tự cuối của id.
 - **Thưởng:** 150 vàng khi thắng, 50 vàng khi thua. Không có kinh nghiệm hay món rơi, vì đội là đội của đề.
 - Mô phỏng 60 đề: AI Thường thắng AI Khó 65%, trung bình 39 lượt (hai phe).
+- **Nhiệm vụ ngày ngay trong Nhật Lệnh (17/11/2026):** thẻ Chơi có khung Nhiệm vụ ngày ở cột phải, trên Bảng hôm nay (tiến độ, nút nhận vàng, số chờ nhận) và lối sang màn Nhiệm vụ cho nhiệm vụ tuần, thành tựu. Màn Nhiệm vụ vẫn giữ cột nhiệm vụ ngày, vì khách chưa vào được Nhật Lệnh nhưng vẫn làm và nhận nhiệm vụ ngày. Danh sách và luật ở mục 5.2; code `src/app/game/quests/DailyQuestsPanel.tsx`, dòng nhiệm vụ dùng chung `quests/QuestItem.tsx`.
 
 ### 5.2 Nhiệm vụ, thành tựu, điểm danh (Claude đặt 20/10/2026, chờ Shan duyệt)
 

@@ -3,7 +3,7 @@
 import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { Alert, Button, buttonVariants } from "@/components/ui";
 
-// Thử thách hằng ngày: đề chung hôm nay (đội cho sẵn, đối thủ, sân nhà), lượt của mình và bảng xếp hạng.
+// Thử thách hằng ngày: đề chung hôm nay (đội cho sẵn, đối thủ, sân nhà), lượt của mình, bảng xếp hạng và nhiệm vụ ngày.
 // Mỗi người một lượt mỗi ngày; server giữ chỗ lượt trước khi tạo trận.
 
 import { useEffect, useState } from "react";
@@ -28,6 +28,7 @@ import {
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { SceneLink, useScene } from "../SceneContext";
 import { ModeGuideTabs } from "../ModeGuide";
+import DailyQuestsPanel from "../quests/DailyQuestsPanel";
 
 function scoreText(s: DailyScore): string {
   return s.won
@@ -207,7 +208,9 @@ export default function DailyScreen() {
           </div>
         </OrnateFrame>
 
-        <OrnateFrame className="flex min-w-0 flex-col gap-2 self-start">
+        <div className="flex min-w-0 flex-col gap-4 self-start">
+        <DailyQuestsPanel />
+        <OrnateFrame className="flex min-w-0 flex-col gap-2">
           <SectionTitle>Bảng hôm nay</SectionTitle>
           {top.length === 0 ? (
             <p className="text-sm text-on-wood-soft">Chưa ai đánh xong hôm nay.</p>
@@ -236,6 +239,7 @@ export default function DailyScreen() {
             <p className="text-sm text-frame-gold">Hạng của bạn: {mine.rank}</p>
           )}
         </OrnateFrame>
+        </div>
       </div>
       </ModeGuideTabs>
     </ModeScreen>

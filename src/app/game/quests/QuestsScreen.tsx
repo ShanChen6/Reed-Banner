@@ -1,7 +1,7 @@
 "use client";
 
 import { Alert, Button } from "@/components/ui";
-import { FrameInset, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 
 // Nhiệm vụ: điểm danh 7 ngày, nhiệm vụ ngày/tuần, thành tựu. Tiến độ do server cộng khi trận kết thúc; bấm
 // Nhận thì server kiểm tra lại rồi cộng vàng.
@@ -16,37 +16,13 @@ import {
   CHECKIN_GOLD,
   DAILY_QUESTS,
   nextStreak,
-  questProgress,
   vnDay,
   WEEKLY_QUESTS,
-  type Profile,
-  type ProfileAction,
-  type QuestDef,
 } from "@/core";
 import PlacesPanel from "./PlacesPanel";
+import { QuestItem, claimable, questRow, type Row } from "./QuestItem";
 import SpecialQuestsPanel from "./SpecialQuestsPanel";
 import { useProfile } from "../profile/useProfile";
-
-interface Row {
-  readonly id: string;
-  readonly title: string;
-  readonly gold: number;
-  readonly value: number;
-  readonly target: number;
-  readonly done: boolean;
-  readonly claimed: boolean;
-  readonly action: ProfileAction;
-  /** Phiếu Tầm Tướng Ký kèm thưởng (chỉ khi chế độ bật và người chơi đã vào chế độ). */
-  readonly tickets?: number;
-}
-
-function questRow(p: Profile, q: QuestDef, now: number): Row {
-  return {
-    ...q,
-    ...questProgress(p.quests, q, now),
-    action: { type: "claimQuest", id: q.id },
-  };
-}
 
 /** Thành tựu Tầm Tướng Ký (`ttk.*`) chỉ hiện khi chế độ đã bật, để không lộ chế độ chưa phát hành. */
 export const isTamTuongKyAchievement = (id: string) => id.startsWith("ttk.");
@@ -201,8 +177,6 @@ const ACHIEVEMENT_GROUPS: readonly { id: string; title: string; match: (id: stri
   { id: "ttk", title: "Tầm Tướng Ký", match: isTamTuongKyAchievement },
 ];
 
-const claimable = (r: Row) => r.done && !r.claimed;
-
 /** Chia thành tựu vào nhóm (giữ thứ tự khai báo); mỗi nhóm đưa món nhận được lên đầu, món đã nhận xuống cuối. */
 function groupRows(rows: readonly Row[]): { id: string; title: string; rows: Row[] }[] {
   const groups = [...ACHIEVEMENT_GROUPS, { id: "other", title: "Khác", match: () => true }].map((g) => ({ id: g.id, title: g.title, rows: [] as Row[] }));
@@ -212,40 +186,6 @@ function groupRows(rows: readonly Row[]): { id: string; title: string; rows: Row
   }
   const rank = (r: Row) => (claimable(r) ? 0 : r.claimed ? 2 : 1);
   return groups.filter((g) => g.rows.length > 0).map((g) => ({ ...g, rows: [...g.rows].sort((x, y) => rank(x) - rank(y)) }));
-}
-
-function QuestItem({ r, busy, onClaim }: { r: Row; busy: boolean; onClaim: (r: Row) => void }) {
-  return (
-    <FrameInset className="flex items-center gap-2 p-2.5">
-      <div className="min-w-0 flex-1">
-        <p className="font-semibold">{r.title}</p>
-        <div className="mt-1 flex items-center gap-2 text-caption text-on-wood-soft">
-          <div
-            className="h-2 flex-1 overflow-hidden rounded-full bg-black/50"
-            role="meter"
-            aria-label={r.title}
-            aria-valuenow={r.value}
-            aria-valuemin={0}
-            aria-valuemax={r.target}
-          >
-            <div className={`h-full ${r.done ? "bg-jade" : "bg-frame-gold"}`} style={{ width: `${(100 * r.value) / r.target}%` }} />
-          </div>
-          <span className="tabular-nums">
-            {r.value}/{r.target}
-          </span>
-        </div>
-      </div>
-      <Button
-        size="sm"
-        variant={claimable(r) ? "secondary" : "ghost"}
-        disabled={busy || !claimable(r)}
-        onClick={() => onClaim(r)}
-        className={`w-24 shrink-0 text-caption ${claimable(r) ? "border-frame-gold text-title-on-wood" : "text-on-wood-soft"}`}
-      >
-        {r.claimed ? "Đã nhận" : `${r.gold} vàng${r.tickets ? ` +${r.tickets} phiếu` : ""}`}
-      </Button>
-    </FrameInset>
-  );
 }
 
 /** Nhóm gập được: mở sẵn khi có thưởng chờ nhận; tiêu đề cho biết đã nhận bao nhiêu và còn bao nhiêu nhận được. */
