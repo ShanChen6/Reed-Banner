@@ -588,8 +588,7 @@ function NodeGlyph({ kind, x, y }: { kind: ExpeditionNodeKind; x: number; y: num
  * `scripts/expedition-map-art.ts` từ chính ô và đường của sa bàn nên công trình nằm đúng chỗ ô.
  */
 const EXPEDITION_MAP_IMAGES: Partial<Record<ExpeditionMap["id"], string>> = {
-  // Năm sa bàn đầu là tranh vẽ tay (18/11/2026), tọa độ ô trong maps.ts đã dời khớp công trình trên tranh. Quần Đảo
-  // còn tranh tạm dựng bằng scripts/expedition-map-art.ts, thay khi có tranh vẽ tay.
+  // Cả sáu sa bàn là tranh vẽ tay (18/11/2026), tọa độ ô trong maps.ts đã dời khớp công trình trên tranh.
   aiBac: "/art/expedition/ai-bac.webp",
   thuongDu: "/art/expedition/thuong-du.webp",
   cuaBien: "/art/expedition/cua-bien.webp",

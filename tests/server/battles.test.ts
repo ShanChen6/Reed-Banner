@@ -1566,6 +1566,11 @@ describe("đấu trường bóng ma", () => {
 
     assert.equal(parseNewBattle({ arena: ARENA_OFFERS }), null);
     assert.equal(parseNewBattle({ arena: "0" }), null);
+    // Chọn hai tướng ra trận: đúng hai id khác nhau, không phải Đinh Bộ Lĩnh.
+    assert.deepEqual(parseNewBattle({ arena: 0, companions: ["leThach", "haVan"] })!.companions, ["leThach", "haVan"]);
+    assert.equal(parseNewBattle({ arena: 0, companions: ["leThach"] }), null);
+    assert.equal(parseNewBattle({ arena: 0, companions: ["haVan", "haVan"] }), null);
+    assert.equal(parseNewBattle({ arena: 0, companions: ["dinhBoLinh", "haVan"] }), null);
     const deps = {
       store,
       profiles,
@@ -1575,12 +1580,18 @@ describe("đấu trường bóng ma", () => {
       seed: 6,
       newId: () => "m_a1",
     };
+    // Tướng chưa có thì từ chối, không mất lượt.
+    const notOwned = await createBattleFor("g_a", parseNewBattle({ arena: real, companions: ["leThach", "khongCo"] })!, deps);
+    assert.ok(!notOwned.ok);
+    assert.equal(notOwned.error, "badRequest");
+    assert.equal((await arenaView("g_a", "view", { ...base, seed: 2 })).attacksLeft, ARENA_ATTACKS_PER_DAY);
     const r = await createBattleFor(
       "g_a",
-      parseNewBattle({ arena: real })!,
+      parseNewBattle({ arena: real, companions: ["leThach", "haVan"] })!,
       deps,
     );
     assert.ok(r.ok);
+    assert.deepEqual(r.view.battle.sides[0].fighters.map((f) => f.id), ["dinhBoLinh", "leThach", "haVan"]);
     assert.equal(r.view.arena!.name, view.offers[real]!.name);
     assert.equal(
       r.view.battle.sides[1].fighters[0]!.name,

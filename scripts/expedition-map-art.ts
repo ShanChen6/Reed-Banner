@@ -23,7 +23,7 @@ export const MAP_FILE: Record<ExpeditionMapId, string> = {
 };
 
 /** Sa bàn đã có tranh vẽ tay (Shan gửi 18/11/2026); chạy không đối số thì bỏ qua để không ghi đè. */
-const PAINTED: readonly ExpeditionMapId[] = ["aiBac", "thuongDu", "cuaBien", "chauTho", "kinhThanh"];
+const PAINTED: readonly ExpeditionMapId[] = ["aiBac", "thuongDu", "cuaBien", "chauTho", "kinhThanh", "quanDao"];
 
 const W = 1600;
 const H = 960;
