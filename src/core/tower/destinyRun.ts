@@ -1,5 +1,5 @@
 // Khởi tạo run Destiny: snapshot roster một lần, không đọc lại Profile trong lúc chạy.
-import { loadoutOf, MAIN_ID, ownsCompanion, profileTeam, progressOf, type Profile } from "../progress";
+import { loadoutOf, MAIN_ID, MAX_LEVEL, ownsCompanion, profileTeam, progressOf, type Profile } from "../progress";
 import type { GearItem } from "../gear";
 import {
   type DestinyFighterSnapshot,
@@ -16,21 +16,29 @@ export const DESTINY_STARTING_FOOD = 60;
 export const DESTINY_FOOD_MIN = 20;
 export const DESTINY_FOOD_MAX = 100;
 export const DESTINY_ROSTER_MIN = 3;
+/** Tối đa 8 tướng kèm cộng Đinh Bộ Lĩnh (Shan chốt 17/11/2026). Run khóa trước đó với đội hình lớn hơn vẫn chạy tiếp. */
+export const DESTINY_ROSTER_MAX = 9;
 
 export const clampDestinyFood = (food: number) =>
   Math.max(DESTINY_FOOD_MIN, Math.min(DESTINY_FOOD_MAX, Math.round(food)));
 
-/** Cấp trung bình (làm tròn, tối thiểu 1) của một nhóm tướng; đội hình khóa tính cả Đinh Bộ Lĩnh. */
-export const destinyAverageLevel = (levels: readonly number[]): number =>
-  levels.length === 0 ? 1 : Math.max(1, Math.round(levels.reduce((sum, level) => sum + level, 0) / levels.length));
+/** Cách tính cấp đối thủ đang dùng cho run mới (xem `destinyFoeLevel`). */
+export const DESTINY_FOE_LEVEL_VERSION = 3;
+
+/** Cấp đối thủ theo luật hiện hành: bằng số tầng (tầng 1 cấp 1, tầng 20 cấp 20), không quá cấp tối đa. */
+export const destinyFloorFoeLevel = (floor: number): number => Math.max(1, Math.min(MAX_LEVEL, Math.round(floor)));
 
 /**
- * Cấp đối thủ của lượt leo. Luật hiện hành (`foeLevelVersion` 2): cấp trung bình của mọi tướng trong đội hình khóa,
- * để một hai tướng cấp cao không kéo đối thủ vượt xa phần còn lại của đội. Run cũ: cấp cao nhất.
+ * Cấp đối thủ ở tầng run đang đứng. Luật hiện hành (`foeLevelVersion` 3): cấp bằng số tầng, tăng dần từ chặng Dễ
+ * tới chặng Trùm và không phụ thuộc đội hình. Run cũ đang dở trận: 2 là cấp trung bình đội hình khóa, thiếu là cấp cao nhất.
  */
-export function destinyFoeLevel(run: Pick<DestinyRun, "fighters" | "foeLevelVersion">): number {
+export function destinyFoeLevel(run: Pick<DestinyRun, "fighters" | "foeLevelVersion" | "floor">): number {
+  if (run.foeLevelVersion === 3) return destinyFloorFoeLevel(run.floor);
   const levels = Object.values(run.fighters ?? {}).map(({ level }) => level);
-  return run.foeLevelVersion === 2 ? destinyAverageLevel(levels) : Math.max(1, ...levels);
+  if (levels.length === 0) return 1;
+  return Math.max(1, run.foeLevelVersion === 2
+    ? Math.round(levels.reduce((sum, level) => sum + level, 0) / levels.length)
+    : Math.max(...levels));
 }
 
 /**
@@ -38,7 +46,9 @@ export function destinyFoeLevel(run: Pick<DestinyRun, "fighters" | "foeLevelVers
  * và kết quả được đối chiếu với đúng đối thủ đó.
  */
 export const withCurrentFoeLevel = (run: DestinyRun): DestinyRun =>
-  run.foeLevelVersion === 2 || run.phase === "battle" ? run : { ...run, foeLevelVersion: 2 };
+  run.foeLevelVersion === DESTINY_FOE_LEVEL_VERSION || run.phase === "battle"
+    ? run
+    : { ...run, foeLevelVersion: DESTINY_FOE_LEVEL_VERSION };
 
 export type DestinyRunCreateError =
   | "invalid_time"
@@ -79,7 +89,7 @@ export function createDestinyRun(
 ): DestinyRunCreateResult {
   const cycleId = destinyCycleId(now);
   if (!cycleId) return { ok: false, error: "invalid_time" };
-  if (!Array.isArray(rosterIds) || rosterIds.length < DESTINY_ROSTER_MIN)
+  if (!Array.isArray(rosterIds) || rosterIds.length < DESTINY_ROSTER_MIN || rosterIds.length > DESTINY_ROSTER_MAX)
     return { ok: false, error: "invalid_roster_size" };
   if (rosterIds[0] !== MAIN_ID) return { ok: false, error: "leader_must_be_first" };
   if (new Set(rosterIds).size !== rosterIds.length) return { ok: false, error: "duplicate_fighter" };
@@ -117,7 +127,7 @@ export function createDestinyRun(
       stateVersion: 1,
       cycleId,
       rulesVersion: destinyRulesVersionForCycle(cycleId),
-      foeLevelVersion: 2,
+      foeLevelVersion: DESTINY_FOE_LEVEL_VERSION,
       roster: [...rosterIds],
       fighters,
       floor: 1,
