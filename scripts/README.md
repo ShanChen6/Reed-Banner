@@ -22,7 +22,8 @@ Nơi dùng trong quy trình: [quy trình test](../docs/07-architecture/quy-trinh
 | Dữ liệu và database | `export-skill-chase.ts` | Sinh `docs/03-characters/ky-nang/data/` từ code |
 | | `migrate.mts` | `pnpm db:migrate`, chạy trước `pnpm build`; bỏ qua khi không có `DATABASE_URL` |
 | | `neon-staging-audit.mts` | Đọc (không ghi) Neon staging: danh tính và số liệu tổng |
-| Tranh và âm thanh | `cutout-formation-icon.py` | Cắt nền giả của icon thành nền trong suốt |
+| Tranh và âm thanh | `expedition-map-art.ts` | Dựng tranh nền sáu sa bàn Viễn Chinh từ dữ liệu sa bàn, xuất `public/art/expedition/*.webp` |
+| | `cutout-formation-icon.py` | Cắt nền giả của icon thành nền trong suốt |
 | | `make-music-loop.py` | Biến bản nhạc dài thành vòng lặp liền mạch (.ogg, .m4a) |
 | | `slice-sfx.py` | Cắt tiếng đơn sạch nhất từ tệp âm thanh dài làm hiệu ứng |
 | | `slice-voice.py` | Cắt tệp giọng đọc dài thành từng câu thoại nhân vật |

@@ -1,8 +1,9 @@
 "use client";
 
-// Lưới tướng có tìm tên, lọc theo hệ và nghề, cắt trang: dùng cho lượt cấm và lượt chọn ở Đấu người 3vs3.
+// Lưới tướng có tìm tên, lọc theo hệ và nghề, cắt trang: dùng cho lượt cấm và lượt chọn ở Đấu người 3vs3, và chia hai
+// đạo quân ở Viễn Chinh.
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { ELEMENTS, PROFESSIONS, type Element, type Profession } from "@/core";
 import { ChoiceChip, Input } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
@@ -39,6 +40,10 @@ export default function HeroGrid({
   label,
   pageSize = 12,
   disabled = false,
+  isSelected,
+  badge,
+  cardStyle,
+  extraFilter,
 }: {
   items: readonly HeroGridItem[];
   selected: string | null;
@@ -46,11 +51,22 @@ export default function HeroGrid({
   label: string;
   pageSize?: number;
   disabled?: boolean;
+  /** Chọn nhiều: thay cho `selected`. */
+  isSelected?: (id: string) => boolean;
+  /** Nhãn ở góc phải thẻ (ví dụ đạo quân đang chứa tướng). */
+  badge?: (id: string) => ReactNode;
+  cardStyle?: (id: string) => CSSProperties | undefined;
+  /** Bộ lọc riêng của màn, nằm trên hàng lọc hệ; `matches` lọc thêm danh sách. */
+  extraFilter?: { readonly node: ReactNode; readonly matches: (id: string) => boolean };
 }) {
   const [query, setQuery] = useState("");
   const [element, setElement] = useState<Element | "all">("all");
   const [profession, setProfession] = useState<Profession | "all">("all");
-  const shown = useMemo(() => filterHeroes(items, query, element, profession), [items, query, element, profession]);
+  const matches = extraFilter?.matches;
+  const shown = useMemo(
+    () => filterHeroes(items, query, element, profession).filter((h) => !matches || matches(h.id)),
+    [items, query, element, profession, matches],
+  );
   const paged = usePagedItems(shown, pageSize);
   const resetPage = () => paged.setPage(0);
   return (
@@ -64,6 +80,7 @@ export default function HeroGrid({
           onChange={(e) => { setQuery(e.currentTarget.value); resetPage(); }}
           className="min-h-11 sm:max-w-xs"
         />
+        {extraFilter?.node}
         <div className="flex flex-wrap gap-1.5" role="group" aria-label="Lọc theo hệ">
           <ChoiceChip selected={element === "all"} onClick={() => { setElement("all"); resetPage(); }}>Mọi hệ</ChoiceChip>
           {ELEMENTS.map((e) => (
@@ -94,7 +111,8 @@ export default function HeroGrid({
             <ChoiceChip
               key={h.id}
               size="md"
-              selected={selected === h.id}
+              selected={isSelected ? isSelected(h.id) : selected === h.id}
+              style={cardStyle?.(h.id)}
               disabled={disabled || !!h.blocked}
               onClick={() => onSelect(h.id)}
               className={cn("items-center justify-start gap-2.5 p-2 text-left", h.blocked && "opacity-60")}
@@ -110,6 +128,7 @@ export default function HeroGrid({
                 )}
                 {h.blocked && <span className="text-caption font-normal">{h.blocked}</span>}
               </span>
+              {badge?.(h.id)}
             </ChoiceChip>
           ))}
         </div>
