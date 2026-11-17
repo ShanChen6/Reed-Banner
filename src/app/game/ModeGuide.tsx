@@ -5,8 +5,6 @@ import { FrameInset, OrnateFrame } from "@/components/game-ui";
 import { Tabs } from "@/components/ui";
 import { MODE_GUIDES, type GuideScene, type ModeGuide as ModeGuideData } from "./modeGuides";
 
-type View = "play" | "board" | "guide";
-
 const SECTIONS: readonly { readonly key: Exclude<keyof ModeGuideData, "goal">; readonly title: string }[] = [
   { key: "steps", title: "Cách chơi" },
   { key: "rules", title: "Luật cần nhớ" },
@@ -44,26 +42,38 @@ export function ModeGuidePanel({ scene, headingId }: { scene: GuideScene; headin
   );
 }
 
+/** Thẻ riêng của một màn, nằm giữa "Chơi" và "Hướng dẫn" (ví dụ bảng xếp hạng tuần của Tháp Thiên Mệnh). */
+export interface ModeExtraTab {
+  readonly value: string;
+  readonly label: string;
+  readonly content: ReactNode;
+}
+
 /**
- * Thêm thẻ Hướng dẫn cho màn chế độ: các thẻ "Chơi", "Bảng xếp hạng" (khi có `board`) và "Hướng dẫn" nằm dưới
- * banner. Thẻ Chơi giữ nguyên nội dung màn; thẻ Bảng xếp hạng hiện bảng và thưởng hạng; chọn Hướng dẫn thì thay bằng
- * luật và thưởng của chế độ. Chuyển thẻ không mất tiến độ ván.
+ * Thêm thẻ Hướng dẫn cho màn chế độ: hai thẻ "Chơi" và "Hướng dẫn" nằm dưới banner. Thẻ Chơi giữ nguyên nội dung
+ * màn; chọn Hướng dẫn thì thay bằng luật và thưởng của chế độ. Không gọi API, chuyển thẻ không mất tiến độ ván.
+ * `extraTabs` chèn thẻ riêng của màn vào giữa hai thẻ đó; nội dung thẻ chỉ dựng khi được chọn.
  */
-export function ModeGuideTabs({ scene, board, children }: { scene: GuideScene; board?: ReactNode; children: ReactNode }) {
-  const [view, setView] = useState<View>("play");
+export function ModeGuideTabs({ scene, extraTabs = [], children }: {
+  scene: GuideScene;
+  extraTabs?: readonly ModeExtraTab[];
+  children: ReactNode;
+}) {
+  const [view, setView] = useState<string>("play");
+  const extra = extraTabs.find((tab) => tab.value === view);
   return (
     <>
-      <Tabs<View>
+      <Tabs<string>
         label="Màn chế độ"
         value={view}
         onChange={setView}
         items={[
           { value: "play", label: "Chơi" },
-          ...(board ? [{ value: "board" as const, label: "Bảng xếp hạng" }] : []),
+          ...extraTabs.map(({ value, label }) => ({ value, label })),
           { value: "guide", label: "Hướng dẫn" },
         ]}
       />
-      {view === "guide" ? <ModeGuidePanel scene={scene} /> : view === "board" && board ? board : children}
+      {view === "guide" ? <ModeGuidePanel scene={scene} /> : extra ? extra.content : children}
     </>
   );
 }

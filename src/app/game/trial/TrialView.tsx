@@ -11,6 +11,7 @@ import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 
 import { useRef, useState } from "react";
 import { MAIN_ID, type Profile } from "@/core";
+import { CounterStar, type CounterFoe } from "../art/CounterStar";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
@@ -171,6 +172,7 @@ function LeaderPickRow<T extends string>({
   icon,
   busy,
   onPick,
+  badge,
 }: {
   label: string;
   picks: readonly LeaderPick<T>[];
@@ -179,6 +181,8 @@ function LeaderPickRow<T extends string>({
   icon: (value: T) => React.ReactNode;
   busy: boolean;
   onPick: (value: T) => void;
+  /** Dấu nhỏ ở góc trái trên (ví dụ ★ khắc địch cho hàng Hệ). */
+  badge?: (value: T) => React.ReactNode;
 }) {
   return (
     <div role="group" aria-label={`${label} của Đinh Bộ Lĩnh`} className="flex flex-col gap-1.5">
@@ -203,6 +207,7 @@ function LeaderPickRow<T extends string>({
               {icon(p.value)}
               <span className={cn("whitespace-nowrap text-caption font-normal", p.banned && "line-through")}>{names[p.value]}</span>
               {p.fits && <span aria-hidden className="absolute right-1 top-1 size-1.5 rounded-full bg-jade" />}
+              {badge && <span className="absolute left-1 top-0.5 text-caption leading-none">{badge(p.value)}</span>}
             </ChoiceChip>
           );
         })}
@@ -212,12 +217,15 @@ function LeaderPickRow<T extends string>({
 }
 
 /** Chân dung, tên, hệ/nghề của một tướng kèm. Lý do bị cấm không ghi dưới tên (luật tầng đã ghi), chỉ ở tooltip. */
-function CompanionCardBody({ option: o }: { option: CompanionOption }) {
+function CompanionCardBody({ option: o, foes }: { option: CompanionOption; foes: readonly CounterFoe[] }) {
   return (
     <>
       <Portrait id={o.id} element={o.element} profession={o.profession} className="size-9 shrink-0 sm:size-10" />
       <span className="min-w-0 text-caption">
-        <span className="block truncate text-sm font-semibold">{o.name}</span>
+        <span className="flex items-center gap-1 text-sm font-semibold">
+          <span className="truncate">{o.name}</span>
+          <CounterStar element={o.element} foes={foes} />
+        </span>
         <span className="flex items-center gap-1 opacity-80">
           <ElementIcon element={o.element} className="size-3.5 shrink-0" />
           <span className="truncate">
@@ -237,6 +245,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
   const rules = describeRules(f.rules);
   const win = describeWin(f.win);
   const options = companionOptions(profile, f.rules, companions);
+  const foes = f.foeIds.map(foeInfo);
   // Hàng chục tướng kèm: cắt trang 12 để không dài trên điện thoại (lựa chọn giữ nguyên khi sang trang).
   // Tướng đã chọn nằm ở hai ô riêng phía trên; danh sách dưới chỉ còn tướng chưa chọn, tướng bị luật cấm xếp cuối.
   const picked = companions.flatMap((id) => options.filter((o) => o.id === id));
@@ -311,7 +320,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
       <div>
         <h3 className="ui-title-on-wood mb-1.5 text-base">Đối thủ</h3>
         <ul className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-          {f.foeIds.map(foeInfo).map((foe) => (
+          {foes.map((foe) => (
             <li key={foe.id} className="ui-frame-inset flex min-w-0 items-center gap-2 p-2">
               {foe.element && foe.profession && (
                 <Portrait id={foe.id} element={foe.element} profession={foe.profession} className="size-10 shrink-0" />
@@ -338,6 +347,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
         <>
           <div>
             <h3 className="ui-title-on-wood mb-1.5 text-base">Chọn 2 tướng kèm <span className="text-sm font-normal text-on-wood-soft">(đã chọn {companions.length}/2)</span></h3>
+            <p className="mb-2 text-caption text-on-wood-soft"><span className="font-bold text-jade">★</span> tướng có hệ khắc ít nhất một đối thủ tầng này.</p>
             <ul aria-label="Tướng kèm đã chọn" className="mb-3 grid grid-cols-2 gap-2">
               {[0, 1].map((slot) => {
                 const o = picked[slot];
@@ -352,7 +362,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
                         onClick={() => props.onToggleCompanion(o.id)}
                         className={choiceVariants({ className: "min-h-14 w-full justify-start p-2 text-left font-normal" })}
                       >
-                        <CompanionCardBody option={o} />
+                        <CompanionCardBody option={o} foes={foes} />
                         <span aria-hidden className="ml-auto shrink-0 self-start text-caption opacity-70">Bỏ</span>
                       </button>
                     ) : (
@@ -377,7 +387,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
                     onClick={() => props.onToggleCompanion(o.id)}
                     className={choiceVariants({ className: "min-h-14 w-full justify-start p-2 text-left font-normal" })}
                   >
-                    <CompanionCardBody option={o} />
+                    <CompanionCardBody option={o} foes={foes} />
                   </button>
                 </li>
               ))}
@@ -389,7 +399,10 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
             <div className="flex flex-wrap items-center gap-3">
               <Portrait id={MAIN_ID} element={build.element} profession={build.profession} className="size-12 shrink-0" />
               <div className="min-w-0 flex-1 text-sm">
-                <p className="font-semibold">Đinh Bộ Lĩnh <span className="font-normal text-on-wood-soft">(thủ lĩnh, luôn ra trận)</span></p>
+                <p className="flex items-center gap-1 font-semibold">
+                  Đinh Bộ Lĩnh <CounterStar element={build.element} foes={foes} />
+                  <span className="font-normal text-on-wood-soft">(thủ lĩnh, luôn ra trận)</span>
+                </p>
                 <p className="flex items-center gap-1 text-on-wood-soft" data-testid="leader-preview">
                   <ElementIcon element={build.element} className="size-3.5" />
                   <ProfessionIcon profession={build.profession} className="size-3.5" />
@@ -414,6 +427,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
               value={build.element}
               names={ELEMENT_NAME}
               icon={(e) => <ElementIcon element={e} className="size-5" />}
+              badge={(e) => <CounterStar element={e} foes={foes} />}
               busy={busy}
               onPick={(element) => props.onBuild({ element, profession: build.profession })}
             />

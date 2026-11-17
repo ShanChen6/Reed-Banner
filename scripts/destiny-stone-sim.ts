@@ -1,5 +1,6 @@
-// Mô phỏng Tháp Thiên Mệnh và đá Cường Hóa mỗi tuần: 4 chu kỳ × roster 3/5/8 × cấp 5/10/20/30 × hai cách chọn thưởng.
-// Chạy: pnpm exec tsx scripts/destiny-stone-sim.ts [--v1]
+// Mô phỏng Tháp Thiên Mệnh và đá Cường Hóa mỗi tuần: 4 chu kỳ × roster 3/5/8/9 × cấp 5/10/20/30 × hai cách chọn thưởng.
+// Roster tính cả Đinh Bộ Lĩnh; 9 là giới hạn hiện hành (8 tướng kèm).
+// Chạy: pnpm exec tsx scripts/destiny-stone-sim.ts [--v1] [--cycles N] [--caps 5,9]; FOE_LEVEL=max đo cách tính cấp địch cũ.
 import { simulateDestinyCycle, summarize, type DestinySimPolicy } from "../src/server/destinyBalanceReport";
 
 // Mặc định đo luật V2 (20 tầng, chu kỳ từ 16/11/2026); thêm `--v1` để đo lại luật 10 tầng cũ.
@@ -11,7 +12,8 @@ const cycles = cycleCount > 0
   : process.argv.includes("--v1")
   ? ["2026-10-19", "2026-10-26", "2026-11-02", "2026-11-09"]
   : ["2026-11-16", "2026-11-23", "2026-11-30", "2026-12-07"];
-const caps = [3, 5, 8] as const;
+const capArg = process.argv.indexOf("--caps");
+const caps = ([3, 5, 8, 9] as const).filter((cap) => capArg < 0 || (process.argv[capArg + 1] ?? "").split(",").includes(String(cap)));
 const levels = [5, 10, 20, 30] as const;
 const policies: readonly DestinySimPolicy[] = ["boon_first", "recovery_first"];
 

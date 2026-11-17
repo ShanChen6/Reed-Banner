@@ -16,6 +16,7 @@ import {
   type SurvivalAction,
   type SurvivalView,
 } from "@/core";
+import { CounterStar } from "../art/CounterStar";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { SkillIcon } from "../art/skills";
@@ -243,7 +244,10 @@ function SurvivalBreakReady({
                     <div className="flex items-center gap-2">
                       <Portrait id="dinhBoLinh" element={draftElement} profession={draftProfession} className="size-11 shrink-0" />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-bold text-on-wood">{leaderFighter.name}</p>
+                        <p className="flex min-w-0 items-center gap-1 text-sm font-bold text-on-wood">
+                          <span className="truncate">{leaderFighter.name}</span>
+                          <CounterStar element={draftElement} foes={next.foes} />
+                        </p>
                         <p className="text-caption font-semibold text-frame-gold">
                           Thủ lĩnh · {fighterStatus(leaderFighter, next.wave)}
                         </p>
@@ -280,7 +284,10 @@ function SurvivalBreakReady({
                           />
                           <span className="min-w-0 flex-1">
                             <span className="flex flex-wrap items-center gap-x-2">
-                              <span className="truncate text-sm font-bold text-on-wood">{fighter.name}</span>
+                              <span className="flex min-w-0 items-center gap-1 text-sm font-bold text-on-wood">
+                                <span className="truncate">{fighter.name}</span>
+                                <CounterStar element={fighter.element} foes={next.foes} />
+                              </span>
                               <span className={cn("rounded px-1.5 text-caption font-bold", active ? "bg-jade/20 text-jade" : "bg-black/30 text-on-wood-soft")}>
                                 {active ? "Ra trận" : "Dự bị"}
                               </span>

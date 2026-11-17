@@ -17,6 +17,7 @@ import {
 } from "../../src/core";
 import { SceneContext, type SceneApi } from "../../src/app/game/SceneContext";
 import { BattleResult, type BattleResultProps } from "../../src/app/game/battle/BattleResult";
+import { BattleHeader } from "../../src/app/game/battle/BattleHeader";
 import { CampaignResult } from "../../src/app/game/battle/CampaignResult";
 import { SkillBar } from "../../src/app/game/battle/SkillBar";
 import { TeamColumn } from "../../src/app/game/battle/TeamColumn";
@@ -73,8 +74,49 @@ describe("mảng màn trận tách từ DemoGame", () => {
       online: true, mode: "progress", destinyFloorNo: 20,
       outcome: outcome(won, { destiny: { floor: 20, won: true, phase: "done", completed: true } }),
     })));
-    assert.match(tower, /tầng cuối của tháp/);
+    assert.match(tower, /Chinh phục Tháp Thiên Mệnh!/);
     assert.match(tower, /Về Tháp Thiên Mệnh/);
+  });
+
+  it("BattleResult Thiên Mệnh: tầng, đá mốc, máu đội, một nút chọn thưởng; không nâng kỹ năng, không kinh nghiệm", () => {
+    const won = battle(0);
+    const html = render(createElement(BattleResult, resultProps(won, {
+      online: true, mode: "progress", destinyFloorNo: 5,
+      outcome: outcome(won, { destiny: { floor: 5, won: true, phase: "reward", floorCount: 20, stones: 3, turns: 14 } }),
+    })));
+    assert.match(html, /Vượt tầng 5/);
+    assert.match(html, /Tầng 5\/20/);
+    assert.match(html, /\+3/);
+    assert.match(html, /Chọn thưởng tầng 5/);
+    assert.match(html, /Đã vượt 5\/20 tầng/);
+    assert.doesNotMatch(html, /Nâng kỹ năng/);
+    assert.doesNotMatch(html, /kinh nghiệm mỗi người/);
+
+    const lost = render(createElement(BattleResult, resultProps(battle(1), {
+      online: true, mode: "progress", destinyFloorNo: 7,
+      outcome: outcome(battle(1), { destiny: { floor: 7, won: false, phase: "done" } }),
+    })));
+    assert.match(lost, /Gục ở tầng 7/);
+    assert.match(lost, /Về Tháp Thiên Mệnh/);
+  });
+
+  it("BattleHeader: trận online không có ô độ khó (máy chủ đã chốt), trận offline vẫn đổi được", () => {
+    const props = {
+      atBreak: false, difficulty: "normal" as const, pending: false, playerTurn: true, profession: "tuongSi" as const,
+      scenarioFailed: false, scenarioOver: false, setDifficulty: noop, setProfile: noop, setStarted: noop,
+      started: true, state: battle(null), survival: null,
+    };
+    assert.doesNotMatch(render(createElement(BattleHeader, { ...props, online: true })), /Độ khó/);
+    assert.match(render(createElement(BattleHeader, { ...props, online: false })), /Độ khó/);
+  });
+
+  it("BattleResult chế độ có màn riêng (Viễn Chinh, Trấn Ải…) không có nút nâng kỹ năng", () => {
+    const won = battle(0);
+    const html = render(createElement(BattleResult, resultProps(won, { online: true, mode: "progress", expeditionMatch: true, outcome: outcome(won) })));
+    assert.match(html, /Về sa bàn Viễn Chinh/);
+    assert.doesNotMatch(html, /Nâng kỹ năng/);
+    const free = render(createElement(BattleResult, resultProps(won, { online: true, mode: "progress", outcome: outcome(won) })));
+    assert.match(free, /Nâng kỹ năng &amp; đánh tiếp/);
   });
 
   it("BattleResult Thí Luyện: về màn chuẩn bị tầng kế, không có nút nâng kỹ năng hay dòng kinh nghiệm", () => {
