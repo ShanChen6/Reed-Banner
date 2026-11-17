@@ -98,8 +98,10 @@ test.describe("tài khoản đã đăng nhập", () => {
     const problems = watchProblems(page);
     // Màn Nhiệm vụ chỉ còn thẻ dẫn sang Nhật Lệnh.
     await page.goto("/game/quests");
-    await expect(page.getByRole("meter", { name: "Nhận Nhật Lệnh" })).toHaveCount(0);
-    await page.getByRole("link", { name: "Sang Nhật Lệnh" }).click();
+    const link = page.getByRole("link", { name: "Sang Nhật Lệnh" });
+    await expect(link).toBeVisible();
+    await expect(page.getByRole("meter", { name: "Nhận Nhật Lệnh", exact: true })).toHaveCount(0);
+    await link.click();
     await expect(page.getByRole("heading", { name: "Nhiệm vụ ngày" })).toBeVisible();
     await page.getByRole("button", { name: "Điểm danh", exact: true }).click();
     // Đã điểm danh thì khung thu thành một dòng; bấm mới mở chuỗi 7 ngày.
@@ -107,7 +109,9 @@ test.describe("tài khoản đã đăng nhập", () => {
     await expect(page.getByText("Ngày 7")).toBeHidden();
     await page.getByText("Xem chuỗi").click();
     await expect(page.getByText("Ngày 7")).toBeVisible();
-    await expect(page.getByRole("meter", { name: "Nhận Nhật Lệnh" })).toBeVisible();
+    await expect(page.getByRole("meter", { name: "Nhận Nhật Lệnh", exact: true })).toBeVisible();
+    await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
+    await expect(page.getByRole("heading", { name: "Bảng hôm nay" })).toBeVisible();
     expectClean(problems);
   });
 
