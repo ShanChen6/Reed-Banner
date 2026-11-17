@@ -2,12 +2,15 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { MAIN_ID, createDestinyRun, newProfile, type DestinyRewardOffer } from "../../src/core";
 import {
+  NO_ROSTER_FILTER,
   aliveIds,
   defaultDestinyBuild,
+  filterRosterIds,
   legalLeaderBuilds,
   lineupLegal,
   rewardCandidates,
   rewardTargetLimit,
+  rosterFilterActive,
 } from "../../src/app/game/destiny/destiny-ui";
 
 const now = Date.UTC(2026, 9, 18, 17);
@@ -52,5 +55,29 @@ describe("Destiny UI helpers", () => {
     assert.deepEqual(rewardTargetLimit(medic), { min: 1, max: 3, downed: false });
     assert.deepEqual(rewardTargetLimit(rescue), { min: 1, max: 1, downed: true });
     assert.deepEqual(rewardCandidates(current, { kind: "boon", boonId: "atk" }), []);
+  });
+});
+
+describe("Destiny bộ lọc khóa đội hình", () => {
+  const info = (id: string) => ({
+    a: { name: "Đoàn Cự", element: "kim", profession: "xaThu" },
+    b: { name: "Bạch Sương", element: "phong", profession: "ySu" },
+    c: { name: "Trần Ngọc", element: "kim", profession: "ySu" },
+  } as const)[id as "a" | "b" | "c"];
+  const fold = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/gi, "d").toLowerCase();
+  const ids = ["a", "b", "c"];
+
+  it("không lọc thì giữ nguyên danh sách và thứ tự", () => {
+    assert.deepEqual(filterRosterIds(ids, [], NO_ROSTER_FILTER, info, fold), ids);
+    assert.equal(rosterFilterActive(NO_ROSTER_FILTER), false);
+    assert.equal(rosterFilterActive({ ...NO_ROSTER_FILTER, query: "  " }), false, "chỉ có khoảng trắng là chưa lọc");
+  });
+
+  it("tìm tên không dấu, lọc hệ, nghề và chỉ đã chọn, ghép được với nhau", () => {
+    assert.deepEqual(filterRosterIds(ids, [], { ...NO_ROSTER_FILTER, query: "doan" }, info, fold), ["a"]);
+    assert.deepEqual(filterRosterIds(ids, [], { ...NO_ROSTER_FILTER, element: "kim" }, info, fold), ["a", "c"]);
+    assert.deepEqual(filterRosterIds(ids, [], { ...NO_ROSTER_FILTER, element: "kim", profession: "ySu" }, info, fold), ["c"]);
+    assert.deepEqual(filterRosterIds(ids, ["b", "c"], { ...NO_ROSTER_FILTER, pickedOnly: true }, info, fold), ["b", "c"]);
+    assert.deepEqual(filterRosterIds(["a", "x"], [], NO_ROSTER_FILTER, info, fold), ["a"], "bỏ id không có dữ liệu");
   });
 });

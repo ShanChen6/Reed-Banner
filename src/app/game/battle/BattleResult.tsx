@@ -28,6 +28,7 @@ import {
   type Outcome,
 } from "./demoSetup";
 import { fighterName } from "./battleLog";
+import { DestinyResult } from "./DestinyResult";
 
 export interface BattleResultProps {
   readonly arenaFoe: { readonly name: string; readonly rating: number } | null;
@@ -78,6 +79,13 @@ export function BattleResult({
 }: BattleResultProps) {
   const trialMatch = trialFloorNo !== null;
   const won = state.winner === PLAYER;
+  // Trận Tháp Thiên Mệnh có lớp kết quả riêng: tầng, tiến độ tháp, máu mang sang tầng sau và một nút đi tiếp.
+  if (destinyFloorNo !== null && towerFeatures.destiny)
+    return <DestinyResult floor={destinyFloorNo} outcome={outcome} state={state} />;
+  // Trận thuộc một chế độ (tháp, Viễn Chinh, Trấn Ải, Nhật Lệnh, Quần Hùng, Bình Loạn) có nút quay về màn của chế độ đó;
+  // nút "Nâng kỹ năng & đánh tiếp" mở sảnh Giao Tranh nên chỉ để cho trận Giao Tranh và Thao Luyện thường.
+  const modeMatch = trialMatch || destinyFloorNo !== null || expeditionMatch || survival !== null ||
+    dailyDay !== null || arenaFoe !== null || raidBoss !== null || specialQuestId !== null;
   // Thắng thì mở sẵn tầng kế ở màn chuẩn bị; thua (hoặc tầng cuối) thì về đúng tầng vừa đánh để đổi đội.
   const trialNext = trialFloorNo !== null && won && trialFloorNo < TRIAL_FLOORS ? trialFloorNo + 1 : trialFloorNo;
   return (
@@ -317,8 +325,7 @@ export function BattleResult({
             Chơi lại
           </button>
         )}
-        {/* Thí Luyện đổi đội và nghề ở màn chuẩn bị tầng, không qua màn nâng kỹ năng. */}
-        {!(trialMatch && towerFeatures.trial) && (
+        {!modeMatch && (
           <button
             type="button"
             onClick={restart}

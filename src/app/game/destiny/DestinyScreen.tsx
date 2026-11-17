@@ -31,7 +31,9 @@ import {
 import { cn } from "@/lib/cn";
 import { ONLINE_BATTLE_KEY } from "../battle/online";
 import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
+import { CounterStar, type CounterFoe } from "../art/CounterStar";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
+import { fold } from "../profile/roster";
 import { Portrait } from "../art/portraits";
 import { DestinyBoardPanel } from "../leaderboard/boards";
 import { useScene } from "../SceneContext";
@@ -40,8 +42,12 @@ import {
   DESTINY_BOON_TEXT,
   DESTINY_ERROR_TEXT,
   DESTINY_RARITY_NAME,
+  NO_ROSTER_FILTER,
   aliveIds,
   companionsByLevel,
+  filterRosterIds,
+  rosterFilterActive,
+  type RosterFilter,
   defaultDestinyBuild,
   destinyCompanionOptions,
   destinyTierSpans,
@@ -147,7 +153,7 @@ function FighterMeta({ element, profession, level, children }: {
 }
 
 /** Một hàng nút chọn hệ hoặc nghề của Đinh Bộ Lĩnh: biểu tượng lớn, tên nhỏ bên dưới; lựa chọn không hợp luật thì mờ. */
-function BuildRow<T extends string>({ label, values, value, names, icon, allowed, onPick }: {
+function BuildRow<T extends string>({ label, values, value, names, icon, allowed, onPick, badge }: {
   label: string;
   values: readonly T[];
   value: T;
@@ -155,6 +161,8 @@ function BuildRow<T extends string>({ label, values, value, names, icon, allowed
   icon: (value: T) => ReactNode;
   allowed: (value: T) => boolean;
   onPick: (value: T) => void;
+  /** Dấu nhỏ ở góc trái trên (★ khắc địch cho hàng Hệ). */
+  badge?: (value: T) => ReactNode;
 }) {
   return (
     <div role="group" aria-label={`${label} của Đinh Bộ Lĩnh`} className="flex flex-col gap-1.5">
@@ -166,7 +174,8 @@ function BuildRow<T extends string>({ label, values, value, names, icon, allowed
             <ChoiceChip key={v} selected={v === value} disabled={!ok} onClick={() => onPick(v)}
               aria-label={ok ? names[v] : `${names[v]}, không hợp luật tầng`}
               title={ok ? names[v] : `${names[v]}: không hợp luật tầng với hai tướng đang chọn`}
-              className="min-h-14 w-[4.25rem] flex-col gap-0.5 px-1 py-1.5 pointer-coarse:min-h-14">
+              className="relative min-h-14 w-[4.25rem] flex-col gap-0.5 px-1 py-1.5 pointer-coarse:min-h-14">
+              {badge && <span className="absolute left-1 top-0.5 text-caption leading-none">{badge(v)}</span>}
               {icon(v)}
               <span className="whitespace-nowrap text-caption font-normal">{names[v]}</span>
             </ChoiceChip>
@@ -180,7 +189,8 @@ function BuildRow<T extends string>({ label, values, value, names, icon, allowed
 /**
  * Hành trình các tầng: dòng tóm tắt (đang ở đâu, kỷ lục, mốc đá kế) và một đường đi gồm các chặng độ khó.
  * Mỗi tầng là một nút tròn nối nhau: xanh là đã vượt trong lượt leo này, vàng là tầng sắp đánh,
- * viền vàng đứt là tầng đã vượt ở lượt leo trước của chu kỳ. Tầng có mốc mang nhãn Đá Cường Hóa bên dưới.
+ * viền vàng đứt là tầng đã vượt ở lượt leo trước của chu kỳ. Tầng có mốc Đá Cường Hóa mang dấu ◆ nhỏ ở góc nút
+ * (vàng là chưa nhận, xanh là đã nhận); số đá ghi ở ô "Mốc đá kế" và chú thích khi rê chuột.
  */
 function FloorTrack({ floorCount, version, cleared, current, best, milestones, claimed }: {
   floorCount: number;
@@ -230,6 +240,11 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
         aria-valuemin={0} aria-valuemax={floorCount} aria-valuenow={Math.min(cleared, floorCount)}>
         <div className="h-full bg-jade" style={{ width: `${percent}%` }} />
       </div>
+      {milestones.length > 0 && (
+        <p className="-mb-1 text-caption text-on-wood-soft">
+          <span className="text-frame-gold">◆</span> là mốc Đá Cường Hóa
+        </p>
+      )}
 
       <ol className="grid grid-cols-2 gap-2 sm:gap-4 xl:grid-cols-4" aria-label="Các chặng của tháp">
         {spans.map((span) => {
@@ -237,24 +252,20 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
           const active = here !== null && here >= span.from && here <= span.to;
           return (
             <li key={span.tier} className={cn("ui-frame-inset min-w-0 px-1 pb-2 pt-2.5 sm:px-2", active && "border-frame-gold/60")}>
-              <p className="mb-2.5 flex items-baseline justify-between gap-2 px-1 text-caption">
-                <strong className={cn("text-sm", active ? "text-frame-gold" : "text-on-wood")}>{difficultyName(span.difficulty)}</strong>
-                <span className="truncate text-on-wood-soft">
-                  Tầng {span.from === span.to ? span.from : `${span.from}–${span.to}`}
-                  <span className="max-sm:hidden"> · Cấp {destinyFloorFoeLevel(span.from, floorCount)}–{destinyFloorFoeLevel(span.to, floorCount)}</span>
-                </span>
+              <p className={cn("mb-2 px-1 text-sm font-bold", active ? "text-frame-gold" : "text-on-wood")}>
+                {difficultyName(span.difficulty)}
               </p>
               <ol className="flex" aria-label={`Chặng ${difficultyName(span.difficulty)}`}>
                 {floors.map((floor, index) => {
                   const milestone = milestones.find((m) => m.floor === floor);
                   const got = milestone ? claimed.includes(milestone.id) : false;
                   const state = floor <= cleared ? "cleared" : floor === current ? "current" : floor <= best ? "record" : "ahead";
-                  const label = `Tầng ${floor}: ` +
+                  const label = `Tầng ${floor} (đối thủ cấp ${destinyFloorFoeLevel(floor, floorCount)}): ` +
                     (state === "cleared" ? "đã vượt" : state === "current" ? "sắp đánh" : state === "record" ? "đã vượt ở lượt leo trước" : "chưa tới") +
                     (milestone ? `, mốc ${milestone.stones} Đá Cường Hóa${got ? " (đã nhận)" : ""}` : "");
                   return (
                     <li key={floor} title={label} aria-label={label} aria-current={state === "current" ? "step" : undefined}
-                      className="relative flex min-w-0 flex-1 flex-col items-center gap-1">
+                      className="relative flex min-w-0 flex-1 flex-col items-center">
                       {index > 0 && (
                         <span aria-hidden className={cn(
                           "absolute right-1/2 top-3.5 h-0.5 w-full -translate-y-1/2 sm:top-4",
@@ -263,18 +274,18 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
                       )}
                       <span aria-hidden className={cn(
                         "relative flex size-7 items-center justify-center rounded-full border-2 text-caption leading-none tabular-nums sm:size-8 sm:text-sm",
-                        state === "cleared" && "border-jade bg-wood-inset font-semibold text-jade",
+                        state === "cleared" && "border-jade bg-jade/20 font-semibold text-jade",
                         state === "current" && "border-frame-gold bg-frame-gold font-bold text-brand-ink shadow-[0_0_0_3px_rgb(212_162_76/0.25)]",
                         state === "record" && "border-dashed border-frame-gold/70 bg-wood-inset text-frame-gold",
                         state === "ahead" && "border-white/15 bg-wood-inset text-on-wood-soft",
                       )}>
-                        {state === "cleared" ? "✓" : floor}
-                      </span>
-                      <span aria-hidden className={cn(
-                        "h-4 whitespace-nowrap text-caption font-semibold leading-4",
-                        got ? "text-jade" : "text-frame-gold",
-                      )}>
-                        {milestone ? `${got ? "✓" : "+"}${milestone.stones} đá` : state === "cleared" ? <span className="font-normal text-on-wood-soft">{floor}</span> : ""}
+                        {floor}
+                        {milestone && (
+                          <span className={cn(
+                            "absolute -right-1 -top-1 text-[11px] leading-none drop-shadow",
+                            got ? "text-jade" : "text-frame-gold",
+                          )}>◆</span>
+                        )}
                       </span>
                     </li>
                   );
@@ -303,9 +314,23 @@ export default function DestinyScreen() {
   const [confirmStop, setConfirmStop] = useState(false);
   /** Giờ lúc tải, để tính thời gian còn lại của chu kỳ mà không đọc đồng hồ trong lúc vẽ. */
   const [loadedAt, setLoadedAt] = useState<number | null>(null);
-  // Danh sách tướng chọn vào đội, cấp cao trước: cắt trang 12 (chọn giữ nguyên khi sang trang). Hook đặt trước các return sớm.
+  // Danh sách tướng chọn vào đội, cấp cao trước, qua bộ lọc: cắt trang 12 (chọn giữ nguyên khi sang trang).
+  // Hook đặt trước các return sớm.
   const rosterIds = useMemo(() => (profile ? companionsByLevel(profile) : []), [profile]);
-  const pagedRoster = usePagedItems(rosterIds, 12);
+  const [rosterFilter, setRosterFilter] = useState<RosterFilter>(NO_ROSTER_FILTER);
+  const shownRosterIds = useMemo(
+    () => filterRosterIds(rosterIds, roster, rosterFilter, companionById, fold),
+    [rosterIds, roster, rosterFilter],
+  );
+  const pagedRoster = usePagedItems(shownRosterIds, 12);
+  const ownedProfessions = useMemo(
+    () => PROFESSIONS.filter((p) => rosterIds.some((id) => companionById(id)?.profession === p)),
+    [rosterIds],
+  );
+  const changeFilter = (next: Partial<RosterFilter>) => {
+    setRosterFilter((current) => ({ ...current, ...next }));
+    pagedRoster.setPage(0);
+  };
 
   const load = useCallback(async () => {
     const [destiny, stored] = await Promise.all([
@@ -436,6 +461,8 @@ export default function DestinyScreen() {
   const clearedInRun = run?.active ? (run.phase === "reward" ? run.floor : run.floor - 1) : run?.completed ? run.floor : 0;
   const currentFloor = run?.active && run.phase !== "reward" ? run.floor : null;
   const foeLevel = overview.floor?.foeLevel;
+  /** Đối thủ tầng sắp đánh, để gắn ★ cho tướng khắc hệ. */
+  const floorFoes: readonly CounterFoe[] = overview.floor?.foes ?? [];
   const companionMax = Math.min(DESTINY_ROSTER_MAX - 1, rosterIds.length);
   const rosterFull = roster.length >= DESTINY_ROSTER_MAX;
   const pickedCount = active.filter((id) => id !== MAIN_ID).length;
@@ -521,6 +548,67 @@ export default function DestinyScreen() {
               <ChoiceChip selected={false} disabled={roster.length <= 1} onClick={() => setRoster([MAIN_ID])}>Bỏ chọn hết</ChoiceChip>
             </div>
           </div>
+          {roster.length > 1 && (
+            <ul aria-label="Đội hình đang chọn" className="mt-3 flex flex-wrap gap-1.5">
+              {roster.filter((id) => id !== MAIN_ID).map((id) => {
+                const c = companionById(id);
+                if (!c) return null;
+                return (
+                  <li key={id}>
+                    <button type="button" onClick={() => setRoster(roster.filter((x) => x !== id))}
+                      aria-label={`Bỏ ${c.name} khỏi đội hình`} title={`Bỏ ${c.name} khỏi đội hình`}
+                      className={choiceVariants({ size: "sm", className: "gap-1.5 py-1 pl-1 pr-2 font-normal" })}>
+                      <Portrait id={id} element={c.element} profession={c.profession} className="size-7 shrink-0" />
+                      <span className="max-w-24 truncate text-caption">{c.name}</span>
+                      <span aria-hidden className="text-caption opacity-60">✕</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          <div role="group" aria-label="Lọc tướng" className="mt-3 flex flex-col gap-2">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <input type="search" value={rosterFilter.query} onChange={(e) => changeFilter({ query: e.target.value })}
+                placeholder="Tìm tên…" aria-label="Tìm tướng theo tên"
+                className="min-h-9 w-40 rounded-control border border-frame-line bg-wood-inset px-2 text-sm text-on-wood placeholder:text-on-wood-soft pointer-coarse:min-h-11" />
+              <ChoiceChip selected={rosterFilter.pickedOnly} onClick={() => changeFilter({ pickedOnly: !rosterFilter.pickedOnly })}>
+                Chỉ đã chọn
+              </ChoiceChip>
+              {rosterFilterActive(rosterFilter) && (
+                <ChoiceChip selected={false} onClick={() => changeFilter(NO_ROSTER_FILTER)}>
+                  Bỏ lọc
+                </ChoiceChip>
+              )}
+            </div>
+            <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Lọc theo hệ">
+              <span className="w-10 shrink-0 text-caption text-on-wood-soft">Hệ</span>
+              {ELEMENTS.map((element) => (
+                <ChoiceChip key={element} selected={rosterFilter.element === element} title={ELEMENT_NAME[element]}
+                  aria-label={`Hệ ${ELEMENT_NAME[element]}`} className="px-2"
+                  onClick={() => changeFilter({ element: rosterFilter.element === element ? null : element })}>
+                  <ElementIcon element={element} className="size-4" />
+                </ChoiceChip>
+              ))}
+            </div>
+            <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Lọc theo nghề">
+              <span className="w-10 shrink-0 text-caption text-on-wood-soft">Nghề</span>
+              {ownedProfessions.map((profession) => (
+                <ChoiceChip key={profession} selected={rosterFilter.profession === profession} title={PROFESSION_NAME[profession]}
+                  aria-label={`Nghề ${PROFESSION_NAME[profession]}`} className="px-2"
+                  onClick={() => changeFilter({ profession: rosterFilter.profession === profession ? null : profession })}>
+                  <ProfessionIcon profession={profession} className="size-4" />
+                </ChoiceChip>
+              ))}
+            </div>
+            {rosterFilterActive(rosterFilter) && (
+              <p className="text-caption text-on-wood-soft" role="status">
+                {shownRosterIds.length === 0 ? "Không có tướng nào khớp bộ lọc." : `${shownRosterIds.length} tướng khớp bộ lọc.`}
+              </p>
+            )}
+          </div>
+
           <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-3">
             {pagedRoster.pageItems.map((id) => {
               const companion = companionById(id);
@@ -666,6 +754,7 @@ export default function DestinyScreen() {
                 <h3 className="ui-title-on-wood mt-4 mb-1.5 text-base">
                   Chọn 2 tướng ra trận <span className="text-sm font-normal text-on-wood-soft">(đã chọn {pickedCount}/2)</span>
                 </h3>
+                <p className="mb-2 text-caption text-on-wood-soft"><span className="font-bold text-jade">★</span> tướng có hệ khắc ít nhất một đối thủ tầng này.</p>
                 <ul aria-label="Tướng ra trận đã chọn" className="mb-3 grid gap-2 sm:grid-cols-2">
                   {[0, 1].map((slot) => {
                     const c = picked[slot];
@@ -677,7 +766,7 @@ export default function DestinyScreen() {
                             className={choiceVariants({ className: "w-full items-center justify-start gap-2.5 p-2.5 text-left" })}>
                             <Portrait id={c.id} element={c.element} profession={c.profession} className="size-11 shrink-0" />
                             <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                              <strong className="truncate">{c.name}</strong>
+                              <span className="flex min-w-0 items-center gap-1"><strong className="truncate">{c.name}</strong><CounterStar element={c.element} foes={floorFoes} /></span>
                               <FighterMeta element={c.element} profession={c.profession} level={run.fighters?.[c.id]?.level} />
                               <span className="text-caption font-normal opacity-80">Máu {c.hp}/{c.maxHp}</span>
                               <HpBar hp={c.hp} maxHp={c.maxHp} />
@@ -702,7 +791,7 @@ export default function DestinyScreen() {
                         className="w-full items-center justify-start gap-2.5 p-2.5 text-left">
                         <Portrait id={c.id} element={c.element} profession={c.profession} className="size-11 shrink-0" />
                         <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                          <strong className="truncate">{c.name}</strong>
+                          <span className="flex min-w-0 items-center gap-1"><strong className="truncate">{c.name}</strong><CounterStar element={c.element} foes={floorFoes} /></span>
                           <FighterMeta element={c.element} profession={c.profession} level={run.fighters?.[c.id]?.level} />
                           <span className="text-caption font-normal opacity-80">{c.hp > 0 ? `Máu ${c.hp}/${c.maxHp}` : "Đã gục, cần Cứu viện"}</span>
                           {c.hp > 0 && <HpBar hp={c.hp} maxHp={c.maxHp} />}
@@ -722,12 +811,16 @@ export default function DestinyScreen() {
                     <div className="flex items-center gap-3">
                       <Portrait id={MAIN_ID} element={chosenBuild.element} profession={chosenBuild.profession} className="size-12 shrink-0" />
                       <div className="min-w-0 text-sm text-on-wood">
-                        <p className="font-semibold">Đinh Bộ Lĩnh <span className="font-normal text-on-wood-soft">(thủ lĩnh, luôn ra trận)</span></p>
+                        <p className="flex flex-wrap items-center gap-x-1 font-semibold">
+                          Đinh Bộ Lĩnh <CounterStar element={chosenBuild.element} foes={floorFoes} />
+                          <span className="font-normal text-on-wood-soft">(thủ lĩnh, luôn ra trận)</span>
+                        </p>
                         <FighterMeta element={chosenBuild.element} profession={chosenBuild.profession} level={run.fighters?.[MAIN_ID]?.level} />
                       </div>
                     </div>
                     <BuildRow label="Hệ" values={ELEMENTS} value={chosenBuild.element} names={ELEMENT_NAME}
                       icon={(element) => <ElementIcon element={element} className="size-5" />}
+                      badge={(element) => <CounterStar element={element} foes={floorFoes} />}
                       allowed={(element) => builds.some((b) => b.element === element)}
                       onPick={(element) => pickBuild({ element })} />
                     <BuildRow label="Nghề" values={PROFESSIONS} value={chosenBuild.profession} names={PROFESSION_NAME}

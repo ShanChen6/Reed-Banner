@@ -1,6 +1,7 @@
 import {
   HUMAN,
   applyStoneAward,
+  destinyFloorCount,
   destinyRunRulesVersion,
   destinyStoneMilestones,
   generateDestinyOffer,
@@ -25,6 +26,12 @@ export interface DestinyResult {
   readonly phase: "reward" | "done";
   /** Vừa thắng tầng cuối của run. */
   readonly completed?: boolean;
+  /** Số tầng của tháp theo luật của lượt leo (20 ở V2). */
+  readonly floorCount?: number;
+  /** Đá Cường Hóa mốc tầng vừa cộng nhờ thắng tầng này (0 khi tầng không có mốc hoặc mốc đã nhận). */
+  readonly stones?: number;
+  /** Số lượt của trận vừa đánh. */
+  readonly turns?: number;
 }
 
 /**
@@ -88,7 +95,10 @@ export async function settleDestinyMatch(
       });
       if (!awarded.ok) return { ok: false as const, error: awarded.error };
       result = { floor: tag.floor, won: match.battle.winner === HUMAN, phase: nextRun.phase === "reward" ? "reward" : "done",
-        ...(nextRun.completed ? { completed: true } : {}) };
+        ...(nextRun.completed ? { completed: true } : {}),
+        floorCount: destinyFloorCount(destinyRunRulesVersion(run)),
+        stones: planned.events.reduce((sum, event) => sum + event.amount, 0),
+        turns: Math.max(0, Math.round(match.battle.turn.number)) };
       leaderboard = settled.won ? {
         eventId: matchId,
         cycleId: tag.cycleId,

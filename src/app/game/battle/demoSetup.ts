@@ -188,7 +188,16 @@ export interface Outcome {
   };
   /** Chỉ có ở trận đánh trùm online. */
   readonly raid?: RaidResult;
-  readonly destiny?: { readonly floor: number; readonly won: boolean; readonly phase: "reward" | "done"; readonly completed?: boolean };
+  readonly destiny?: {
+    readonly floor: number;
+    readonly won: boolean;
+    readonly phase: "reward" | "done";
+    readonly completed?: boolean;
+    /** Thiếu khi máy chủ còn bản cũ. */
+    readonly floorCount?: number;
+    readonly stones?: number;
+    readonly turns?: number;
+  };
   /** Tháp Thí Luyện: tầng vừa đánh và đá lần đầu server vừa cộng (khớp `TrialResult` ở server). */
   readonly trial?: {
     readonly floor: number;
