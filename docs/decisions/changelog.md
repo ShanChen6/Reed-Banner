@@ -2,6 +2,15 @@
 
 > Trạng thái: **REFERENCE** — nhật ký quyết định theo ngày.
 
+## 17/11/2026
+
+**Tháp Thiên Mệnh: cấp đối thủ và giao diện (Shan yêu cầu)**
+- Cấp đối thủ đổi từ cấp cao nhất sang **cấp trung bình của đội hình khóa**, tính cả Đinh Bộ Lĩnh ([luật §11.2](../02-game-modes/dual-tower/00-02-rules.md#112-tầng-nhóm-khó-và-sức-địch)). Lý do: thủ lĩnh cấp 4 mang theo một hai tướng cấp 30 thì gặp đối thủ cấp 30. Lượt leo đang mở chuyển sang cách mới từ trận kế tiếp. Màn chuẩn bị hiện cấp, hệ, nghề, máu của đối thủ; thẻ tướng hiện cấp.
+- Hành trình tầng vẽ lại: ba ô tóm tắt (lượt leo này, kỷ lục, mốc đá kế), thanh tiến độ, bốn chặng độ khó với các nút tầng nối nhau.
+- Đội hình và danh sách chọn tướng ra trận chia trang 6; hai tướng đã chọn tách thành hai ô riêng như Tháp Thí Luyện. Hệ và nghề Đinh Bộ Lĩnh chọn bằng chip có icon.
+- Bảng xếp hạng chu kỳ chuyển thành thẻ **BXH tuần** nằm giữa Chơi và Hướng dẫn.
+- Chưa quyết: giới hạn số tướng mang theo (hiện vẫn cho chọn mọi tướng).
+
 ## 16/11/2026
 
 **Tháp Thí Luyện: chọn đội và kết thúc trận (Shan yêu cầu)**
