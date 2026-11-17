@@ -6,7 +6,7 @@
 import { useState } from "react";
 import { OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { Alert } from "@/components/ui";
-import { DAILY_QUESTS } from "@/core";
+import { DAILY_QUESTS, TTK_TICKETS_DAILY_ALL } from "@/core";
 import { SceneLink } from "../SceneContext";
 import { useProfile } from "../profile/useProfile";
 import { QuestItem, claimable, questRow } from "./QuestItem";
@@ -22,7 +22,10 @@ export default function DailyQuestsPanel() {
     <OrnateFrame className="flex min-w-0 flex-col gap-2" aria-labelledby="daily-quests-title">
       <SectionTitle
         id="daily-quests-title"
-        description={`Làm lại lúc 0 giờ mỗi ngày · đã nhận ${done}/${DAILY_QUESTS.length}${ready > 0 ? ` · ${ready} chờ nhận` : ""}.`}
+        description={`Làm lại lúc 0 giờ mỗi ngày · đã nhận ${done}/${DAILY_QUESTS.length}${ready > 0 ? ` · ${ready} chờ nhận` : ""}.${
+          // Phiếu Tầm Tướng Ký chỉ cộng cho người đã vào chế độ đó.
+          profile?.tamTuongKy ? ` Nhận đủ: +${TTK_TICKETS_DAILY_ALL} phiếu Tầm Tướng Ký.` : ""
+        }`}
         action={
           <SceneLink scene="QUESTS" className="inline-flex min-h-11 items-center text-sm text-frame-gold underline underline-offset-2">
             Nhiệm vụ tuần
