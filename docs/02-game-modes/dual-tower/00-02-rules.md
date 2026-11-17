@@ -1,6 +1,6 @@
 # T00.02 — Chốt luật Song Tháp
 
-> Cập nhật: 12/11/2026 (thêm §11: Tháp Thiên Mệnh 20 tầng; §12: Tháp Thí Luyện 100 tầng)
+> Cập nhật: 17/11/2026 (§11.2: cấp địch Tháp Thiên Mệnh theo cấp trung bình roster khóa)
 > Trạng thái: **IMPLEMENTED** — §1–§10 là luật gốc Song Tháp, §11 là Tháp Thiên Mệnh 20 tầng, §12 là Tháp Thí Luyện 100 tầng (mở rộng từ 50 tầng ngày 14/11/2026).
 
 Design-only (§1–§10). Số liệu Destiny đang chạy nằm ở [§11](#11-destiny-v2--20-tầng-shan-chốt-11112026). Mọi con số ghi **[TBD]** hoặc **[TEST]** chưa được duyệt, không được coi là balance chính thức. Nâng cấp trang bị nằm ở [equipment-enhancement-todo.md](../../04-equipment/cuong-hoa-todo.md) (GEAR-01–08), ngoài phạm vi.
@@ -237,7 +237,7 @@ Tháp Thiên Mệnh (tên trong tài liệu cũ: Tháp Vận Mệnh, tên mã `d
 | 11–15 | 3 | Khó | 0,94 – 1,02 |
 | 16–20 | 4 | Trùm | 1,04 – 1,12 |
 
-- Hệ số sức địch V2 = `0,72 + 0,02 × tầng` (V1: `0,72 + 0,03 × tầng`, tầng 10 là 1,02). Cấp địch vẫn bằng cấp cao nhất trong roster khóa.
+- Hệ số sức địch V2 = `0,72 + 0,02 × tầng` (V1: `0,72 + 0,03 × tầng`, tầng 10 là 1,02). Cấp địch bằng **cấp trung bình của roster khóa** (tính cả Đinh Bộ Lĩnh, làm tròn; `destinyFoeLevel`), đổi ngày 17/11/2026: trước đó lấy cấp cao nhất nên một hai tướng cấp 30 kéo địch lên cấp 30 dù thủ lĩnh mới cấp 4. Run mở trước ngày đổi chuyển sang cách mới từ trận kế tiếp; trận đang dở giữ cấp cũ (`foeLevelVersion`).
 - Mỗi nhóm có **8 luật** (V1: 4/6/4/3). Trong một chu kỳ, một nhóm không lặp luật chừng nào pool còn luật khả thi với roster đã khóa; hết thì mới dùng lại, không còn luật nào khả thi thì tầng đó không có luật (như V1).
 - Luật mới so với V1: cấm hệ Thủy/Thổ, cấm nghề Binh lính/Y sư, bắt buộc Pháp sư/Tướng sĩ, cấm hai hệ Kim và Hỏa cùng lúc, và các tổ hợp cấm + bắt buộc + giới hạn trùng ở nhóm 3–4. Danh sách đầy đủ: `POOLS_V2` trong `src/core/tower/destinyRules.ts`.
 

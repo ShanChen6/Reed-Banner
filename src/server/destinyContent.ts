@@ -1,5 +1,6 @@
 import {
   destinyEnemyPower,
+  destinyFoeLevel,
   destinyFloorCount,
   destinyRunRulesVersion,
   destinyTierDifficulty,
@@ -37,14 +38,14 @@ export function resolveDestinyFloor(run: DestinyRun, secret: string) {
   const version = destinyRunRulesVersion(run);
   const rule = snapshot.snapshot.floors.find(({ floor }) => floor === run.floor);
   if (!rule) return { ok: false as const, error: "floor_not_found" as const };
-  const maxLevel = Math.max(1, ...Object.values(run.fighters ?? {}).map(({ level }) => level));
+  const foeLevel = destinyFoeLevel(run);
   const difficulty = destinyTierDifficulty(rule.tier);
   const definition: FloorDefinition = {
     mode: "destiny",
     floor: run.floor,
     rules: rule.rules,
     enemy: {
-      level: maxLevel,
+      level: foeLevel,
       power: destinyEnemyPower(run.floor, version),
       count: 3,
       difficulty,
@@ -52,6 +53,6 @@ export function resolveDestinyFloor(run: DestinyRun, secret: string) {
   };
   const resolved = resolveFloor(definition, snapshot.snapshot.cycleId);
   return resolved.ok
-    ? { ok: true as const, floor: resolved.floor, cycle: snapshot.snapshot, floorCount: destinyFloorCount(version) }
+    ? { ok: true as const, floor: resolved.floor, foeLevel, cycle: snapshot.snapshot, floorCount: destinyFloorCount(version) }
     : { ok: false as const, error: "invalid_run" as const };
 }
