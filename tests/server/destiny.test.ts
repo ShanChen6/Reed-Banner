@@ -8,6 +8,7 @@ import {
   PROFESSIONS,
   SHOP_COMPANIONS,
   destinyFoeLevel,
+  destinyFoePower,
   isDualTowerV1,
   validateLineup,
   withCurrentFoeLevel,
@@ -332,7 +333,7 @@ describe("Destiny server lifecycle", () => {
     assert.equal((await loadProfile(deps.profiles, "u1")).profile.stones, 8, "run V2 cùng chu kỳ không phát chồng mốc");
   });
 
-  it("cấp đối thủ bằng số tầng, không phụ thuộc cấp của đội hình", async () => {
+  it("cấp đối thủ tăng đều theo tầng từ 1 tới 30, không phụ thuộc cấp của đội hình", async () => {
     const deps = setup(NOW_V2);
     const initial = await loadProfile(deps.profiles, "u1");
     const companions = Object.keys(initial.profile.companions).slice(0, 5);
@@ -350,8 +351,12 @@ describe("Destiny server lifecycle", () => {
     if (!started.ok) return;
     assert.equal(started.run.foeLevelVersion, DESTINY_FOE_LEVEL_VERSION);
     assert.equal(destinyFoeLevel(started.run), 1);
-    assert.deepEqual([1, 5, 12, 20].map((floor) => destinyFoeLevel({ ...started.run, floor })), [1, 5, 12, 20]);
+    assert.deepEqual(Array.from({ length: 20 }, (_, i) => destinyFoeLevel({ ...started.run, floor: i + 1 })),
+      [1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28, 30]);
     assert.equal(destinyFoeLevel({ ...started.run, floor: 99 }), 30, "không vượt cấp tối đa");
+    assert.deepEqual([1, 20].map((floor) => Number(destinyFoePower({ ...started.run, floor }).toFixed(2))), [0.68, 1.15]);
+    assert.equal(Number(destinyFoePower({ ...started.run, foeLevelVersion: 3, floor: 20 }).toFixed(2)), 1.12, "run cũ giữ đường hệ số cũ");
+    assert.equal(destinyFoeLevel({ ...started.run, foeLevelVersion: 3, floor: 12 }), 12, "run cấp bằng số tầng");
     assert.equal(destinyFoeLevel({ ...started.run, foeLevelVersion: 2 }), 6, "run cấp trung bình: (4 + 30 + 1 × 4) / 6");
     assert.equal(destinyFoeLevel({ ...started.run, foeLevelVersion: undefined }), 30, "run cũ nhất: cấp cao nhất");
     const overview = await destinyOverview("u1", deps);
@@ -377,7 +382,7 @@ describe("Destiny server lifecycle", () => {
     assert.ok(started.ok);
   });
 
-  it("run mở trước khi đổi cách tính cấp chuyển sang cấp theo tầng từ trận kế, trận đang dở giữ cấp cũ", async () => {
+  it("run mở trước khi đổi cách tính cấp chuyển sang cách hiện hành từ trận kế, trận đang dở giữ cấp cũ", async () => {
     const deps = setup(NOW_V2);
     const initial = await loadProfile(deps.profiles, "u1");
     const companions = Object.keys(initial.profile.companions).slice(0, 5);
@@ -405,7 +410,8 @@ describe("Destiny server lifecycle", () => {
     assert.equal(legacy.foeLevelVersion, undefined);
     assert.equal(destinyFoeLevel(legacy), 30);
     assert.equal(withCurrentFoeLevel({ ...legacy, phase: "battle" }).foeLevelVersion, undefined, "trận đang dở không đổi cấp đối thủ");
-    assert.equal(withCurrentFoeLevel({ ...legacy, foeLevelVersion: 2, phase: "battle" }).foeLevelVersion, 2);
+    assert.equal(withCurrentFoeLevel({ ...legacy, foeLevelVersion: 3, phase: "battle" }).foeLevelVersion, 3);
+    assert.equal(withCurrentFoeLevel({ ...legacy, foeLevelVersion: 3 }).foeLevelVersion, DESTINY_FOE_LEVEL_VERSION);
     assert.equal((await destinyOverview("u1", deps)).floor?.foeLevel, 1);
 
     const content = resolveDestinyFloor(withCurrentFoeLevel(legacy), SECRET);

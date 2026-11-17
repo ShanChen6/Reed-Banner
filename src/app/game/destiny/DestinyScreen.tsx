@@ -241,7 +241,7 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
                 <strong className={cn("text-sm", active ? "text-frame-gold" : "text-on-wood")}>{difficultyName(span.difficulty)}</strong>
                 <span className="truncate text-on-wood-soft">
                   Tầng {span.from === span.to ? span.from : `${span.from}–${span.to}`}
-                  <span className="max-sm:hidden"> · Cấp {destinyFloorFoeLevel(span.from)}–{destinyFloorFoeLevel(span.to)}</span>
+                  <span className="max-sm:hidden"> · Cấp {destinyFloorFoeLevel(span.from, floorCount)}–{destinyFloorFoeLevel(span.to, floorCount)}</span>
                 </span>
               </p>
               <ol className="flex" aria-label={`Chặng ${difficultyName(span.difficulty)}`}>
@@ -507,7 +507,7 @@ export default function DestinyScreen() {
             <li>Đinh Bộ Lĩnh luôn ra trận; chọn thêm ít nhất {DESTINY_ROSTER_MIN - 1} và nhiều nhất {DESTINY_ROSTER_MAX - 1} tướng.</li>
             <li>Đội hình khóa tới hết lượt leo: không thêm, bớt hay đổi tướng giữa chừng.</li>
             <li>Mỗi tầng ba người ra trận, số còn lại dự bị. Mang nhiều tướng thì có người thay khi đồng đội bị thương và dễ đáp ứng luật từng tầng.</li>
-            <li>Đối thủ mạnh dần theo tầng: tầng 1 cấp 1, mỗi tầng thêm một cấp, tầng {floorCount} cấp {destinyFloorFoeLevel(floorCount)}.</li>
+            <li>Đối thủ mạnh dần theo tầng, không phụ thuộc đội hình: tầng 1 cấp 1, tăng đều tới tầng {floorCount} cấp {destinyFloorFoeLevel(floorCount, floorCount)}.</li>
           </ul>
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
             <h3 className="ui-title-on-wood text-base">
@@ -647,7 +647,7 @@ export default function DestinyScreen() {
                 </ul>
                 {foeLevel !== undefined && (
                   <p className="mt-1.5 text-caption text-on-wood-soft">
-                    Đối thủ thêm một cấp sau mỗi tầng: tầng 1 cấp 1, tầng {floorCount} cấp {destinyFloorFoeLevel(floorCount)}.
+                    Cấp đối thủ tăng đều theo tầng: tầng 1 cấp 1, tầng {floorCount} cấp {destinyFloorFoeLevel(floorCount, floorCount)}.
                   </p>
                 )}
 

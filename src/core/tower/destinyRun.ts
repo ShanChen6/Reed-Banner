@@ -5,7 +5,14 @@ import {
   type DestinyFighterSnapshot,
   type DestinyRun,
 } from "../progress/dualTowerState";
-import { destinyRulesVersionForCycle } from "./destinyRules";
+import {
+  DESTINY_CYCLE_FLOORS,
+  destinyEnemyPower,
+  destinyFloorCount,
+  destinyRulesVersionForCycle,
+  destinyRunRulesVersion,
+  destinyScaledEnemyPower,
+} from "./destinyRules";
 import { analyzeFeasibility } from "./puzzleValidator";
 import { VN_UTC_OFFSET_MS, vnWeek } from "../vnTime";
 import type { FloorRules, LineupMember } from "./floorRules";
@@ -22,23 +29,39 @@ export const DESTINY_ROSTER_MAX = 9;
 export const clampDestinyFood = (food: number) =>
   Math.max(DESTINY_FOOD_MIN, Math.min(DESTINY_FOOD_MAX, Math.round(food)));
 
-/** Cách tính cấp đối thủ đang dùng cho run mới (xem `destinyFoeLevel`). */
-export const DESTINY_FOE_LEVEL_VERSION = 3;
-
-/** Cấp đối thủ theo luật hiện hành: bằng số tầng (tầng 1 cấp 1, tầng 20 cấp 20), không quá cấp tối đa. */
-export const destinyFloorFoeLevel = (floor: number): number => Math.max(1, Math.min(MAX_LEVEL, Math.round(floor)));
+/** Cách tính sức đối thủ đang dùng cho run mới (xem `destinyFoeLevel`, `destinyFoePower`). */
+export const DESTINY_FOE_LEVEL_VERSION = 4;
 
 /**
- * Cấp đối thủ ở tầng run đang đứng. Luật hiện hành (`foeLevelVersion` 3): cấp bằng số tầng, tăng dần từ chặng Dễ
- * tới chặng Trùm và không phụ thuộc đội hình. Run cũ đang dở trận: 2 là cấp trung bình đội hình khóa, thiếu là cấp cao nhất.
+ * Cấp đối thủ theo luật hiện hành: tăng đều từ cấp 1 ở tầng 1 tới cấp tối đa (30) ở tầng cuối.
+ * Tháp 20 tầng: 1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28, 30.
  */
-export function destinyFoeLevel(run: Pick<DestinyRun, "fighters" | "foeLevelVersion" | "floor">): number {
-  if (run.foeLevelVersion === 3) return destinyFloorFoeLevel(run.floor);
+export function destinyFloorFoeLevel(floor: number, floorCount: number = DESTINY_CYCLE_FLOORS): number {
+  const step = (MAX_LEVEL - 1) / Math.max(1, floorCount - 1);
+  return Math.max(1, Math.min(MAX_LEVEL, Math.round(1 + step * (floor - 1))));
+}
+
+type FoeScaledRun = Pick<DestinyRun, "fighters" | "foeLevelVersion" | "floor" | "rulesVersion">;
+
+/**
+ * Cấp đối thủ ở tầng run đang đứng. Luật hiện hành (`foeLevelVersion` 4) theo `destinyFloorFoeLevel`, không phụ thuộc
+ * đội hình. Run cũ đang dở trận: 3 là cấp bằng số tầng, 2 là cấp trung bình đội hình khóa, thiếu là cấp cao nhất.
+ */
+export function destinyFoeLevel(run: FoeScaledRun): number {
+  if (run.foeLevelVersion === 4) return destinyFloorFoeLevel(run.floor, destinyFloorCount(destinyRunRulesVersion(run)));
+  if (run.foeLevelVersion === 3) return Math.max(1, Math.min(MAX_LEVEL, Math.round(run.floor)));
   const levels = Object.values(run.fighters ?? {}).map(({ level }) => level);
   if (levels.length === 0) return 1;
   return Math.max(1, run.foeLevelVersion === 2
     ? Math.round(levels.reduce((sum, level) => sum + level, 0) / levels.length)
     : Math.max(...levels));
+}
+
+/** Hệ số nhân máu và công của đối thủ ở tầng run đang đứng; run cũ đang dở trận giữ đường hệ số cũ. */
+export function destinyFoePower(run: FoeScaledRun): number {
+  const version = destinyRunRulesVersion(run);
+  if (run.foeLevelVersion !== 4) return destinyEnemyPower(run.floor, version);
+  return destinyScaledEnemyPower(run.floor, destinyFloorCount(version));
 }
 
 /**
