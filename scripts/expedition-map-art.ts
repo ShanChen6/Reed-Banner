@@ -2,8 +2,9 @@
 // chỗ các ô mà không phải dời tọa độ. Tranh kiểu bản đồ giấy cổ: núi, rừng, ruộng, sông, biển, đảo, công trình dưới
 // từng ô. Đường đi và ô do giao diện vẽ đè lên. Là tranh tạm cho tới khi có tranh vẽ tay theo
 // docs/06-art/prompts/vien-chinh-sa-ban.md.
-//   pnpm exec tsx scripts/expedition-map-art.ts            dựng cả sáu, ghi public/art/expedition/<tên>.webp
-//   pnpm exec tsx scripts/expedition-map-art.ts aiBac      chỉ một sa bàn
+//   pnpm exec tsx scripts/expedition-map-art.ts            dựng các sa bàn chưa có tranh vẽ tay (PAINTED), ghi
+//                                                          public/art/expedition/<tên>.webp
+//   pnpm exec tsx scripts/expedition-map-art.ts aiBac      chỉ một sa bàn (kể cả sa bàn đã có tranh vẽ tay: ghi đè!)
 // Cần Chromium của Playwright (đã cài sẵn) để vẽ SVG ra WebP.
 
 import { writeFileSync } from "node:fs";
@@ -20,6 +21,9 @@ export const MAP_FILE: Record<ExpeditionMapId, string> = {
   kinhThanh: "kinh-thanh",
   quanDao: "quan-dao",
 };
+
+/** Sa bàn đã có tranh vẽ tay (Shan gửi 18/11/2026); chạy không đối số thì bỏ qua để không ghi đè. */
+const PAINTED: readonly ExpeditionMapId[] = ["aiBac", "thuongDu", "cuaBien", "chauTho", "kinhThanh"];
 
 const W = 1600;
 const H = 960;
@@ -361,7 +365,7 @@ ${layers.join("\n")}
 
 async function main() {
   const wanted = process.argv.slice(2) as ExpeditionMapId[];
-  const ids = wanted.length ? wanted : EXPEDITION_MAP_IDS;
+  const ids = wanted.length ? wanted : EXPEDITION_MAP_IDS.filter((id) => !PAINTED.includes(id));
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: W, height: H } });
   for (const id of ids) {
