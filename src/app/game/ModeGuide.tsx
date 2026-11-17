@@ -5,7 +5,7 @@ import { FrameInset, OrnateFrame } from "@/components/game-ui";
 import { Tabs } from "@/components/ui";
 import { MODE_GUIDES, type GuideScene, type ModeGuide as ModeGuideData } from "./modeGuides";
 
-type View = "play" | "guide";
+type View = "play" | "board" | "guide";
 
 const SECTIONS: readonly { readonly key: Exclude<keyof ModeGuideData, "goal">; readonly title: string }[] = [
   { key: "steps", title: "Cách chơi" },
@@ -45,10 +45,11 @@ export function ModeGuidePanel({ scene, headingId }: { scene: GuideScene; headin
 }
 
 /**
- * Thêm thẻ Hướng dẫn cho màn chế độ: hai thẻ "Chơi" và "Hướng dẫn" nằm dưới banner. Thẻ Chơi giữ nguyên nội dung
- * màn; chọn Hướng dẫn thì thay bằng luật và thưởng của chế độ. Không gọi API, chuyển thẻ không mất tiến độ ván.
+ * Thêm thẻ Hướng dẫn cho màn chế độ: các thẻ "Chơi", "Bảng xếp hạng" (khi có `board`) và "Hướng dẫn" nằm dưới
+ * banner. Thẻ Chơi giữ nguyên nội dung màn; thẻ Bảng xếp hạng hiện bảng và thưởng hạng; chọn Hướng dẫn thì thay bằng
+ * luật và thưởng của chế độ. Chuyển thẻ không mất tiến độ ván.
  */
-export function ModeGuideTabs({ scene, children }: { scene: GuideScene; children: ReactNode }) {
+export function ModeGuideTabs({ scene, board, children }: { scene: GuideScene; board?: ReactNode; children: ReactNode }) {
   const [view, setView] = useState<View>("play");
   return (
     <>
@@ -58,10 +59,11 @@ export function ModeGuideTabs({ scene, children }: { scene: GuideScene; children
         onChange={setView}
         items={[
           { value: "play", label: "Chơi" },
+          ...(board ? [{ value: "board" as const, label: "Bảng xếp hạng" }] : []),
           { value: "guide", label: "Hướng dẫn" },
         ]}
       />
-      {view === "guide" ? <ModeGuidePanel scene={scene} /> : children}
+      {view === "guide" ? <ModeGuidePanel scene={scene} /> : view === "board" && board ? board : children}
     </>
   );
 }

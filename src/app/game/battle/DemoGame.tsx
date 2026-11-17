@@ -50,6 +50,7 @@ import {
   ERROR_TEXT,
 } from "./labels";
 import { useAudio } from "../audio/AudioProvider";
+import { useScene } from "../SceneContext";
 import type { MusicId } from "../audio/cues";
 import { bounceFrames, eventFrames, type Frame } from "./animation";
 import { BATTLE_PRELOAD, frameCue, soundsForEvents, type CuePlay } from "./sounds";
@@ -142,6 +143,7 @@ export default function DemoGame({
   autoResume?: boolean;
   towerFeatures?: { readonly trial: boolean; readonly destiny: boolean };
 }) {
+  const scene = useScene();
   const [round, setRound] = useState(0);
   const [seed, setSeed] = useState(DEMO_SEED);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
@@ -1354,6 +1356,7 @@ export default function DemoGame({
                     }}
                     onNext={(action) => sendOnline(action)}
                     onEnd={() => sendOnline({ type: "endRun" })}
+                    onPause={() => scene.go("SURVIVAL")}
                   />
                 )}
                 {scenario && (scenarioOver || state.winner !== null) && (

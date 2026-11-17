@@ -30,6 +30,7 @@ import {
   WARLORD_ENCOUNTERS,
   readSurvivalFighterState,
   settle,
+  survivalPauseExpired,
   selectableActors,
   startMatch,
   SURVIVAL_FOOD,
@@ -1826,6 +1827,34 @@ describe("sinh tồn", () => {
     assert.equal(viewOf(s).survival!.cleared, 3);
   });
 
+  it("nghỉ giữa đợt là tiến độ đã lưu: quá 24 giờ vẫn giữ, sang tuần mới mới chốt", () => {
+    const p = profile();
+    const run = { ...newSurvivalRun(p, 7), wave: 4 };
+    const started = startMatch({
+      sides: [
+        { fighters: profileTeam(p, p.team), leader: 0 },
+        { fighters: survivalWave(run, 4).foes, leader: 0 },
+      ],
+      difficulty: "normal",
+      seed: 3,
+      firstSide: 0,
+      now: 0,
+      survival: run,
+    }).match;
+    const m: Match = { ...started, battle: { ...started.battle, winner: 0 } };
+    // Giờ 0 (UTC) là thứ Năm giờ Việt Nam; thứ Hai kế tiếp 0 giờ là 4 ngày 17 giờ sau.
+    const sunday = 3 * ABANDON_MS;
+    assert.equal(survivalPauseExpired(m, sunday), false);
+    const kept = settle(m, sunday).match;
+    assert.equal(kept.survival!.done, false);
+    assert.equal(viewOf(kept).survival!.cleared, 4);
+    const monday = 5 * ABANDON_MS;
+    assert.equal(survivalPauseExpired(m, monday), true);
+    const closed = settle(m, monday).match;
+    assert.ok(matchOver(closed));
+    assert.equal(viewOf(closed).survival!.cleared, 4);
+  });
+
   it("kết quả: kỷ lục và vàng theo số đợt, hồ sơ cũ đọc ra kỷ lục 0", () => {
     const p = profile();
     const a = applySurvivalResult(p, 6);
@@ -1836,6 +1865,10 @@ describe("sinh tồn", () => {
       gold: 60,
     });
     assert.equal(a.profile.gold, p.gold + 60);
+    // Con trỏ lượt dở chỉ mất khi đúng trận đó kết thúc.
+    const pointed = { ...p, survival: { best: 0, run: "m1" } };
+    assert.equal(applySurvivalResult(pointed, 1, "m2").profile.survival.run, "m1");
+    assert.equal(applySurvivalResult(pointed, 1, "m1").profile.survival.run, undefined);
     const b = applySurvivalResult(a.profile, 3);
     assert.equal(b.result.newBest, false);
     assert.equal(b.profile.survival.best, 6);

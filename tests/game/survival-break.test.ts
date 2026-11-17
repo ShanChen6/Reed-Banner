@@ -145,6 +145,7 @@ function render(
       onRefresh: () => {},
       onNext: () => {},
       onEnd: () => {},
+      onPause: () => {},
     }),
   );
 }
@@ -156,16 +157,21 @@ describe("màn nghỉ Sinh tồn", () => {
     assert.match(html, /Cảnh báo trùm/);
     assert.match(html, /300 → 400\/500/);
     assert.match(html, /Năng lượng: 28/);
-    assert.match(html, /Lương hiện tại: <strong>35/);
-    assert.match(html, /Sau tiếp tế: <strong class="text-jade">60/);
-    assert.match(html, /Sau hồi sinh: <strong>20/);
+    assert.match(html, /Lương hiện tại<\/dt><dd[^>]*>35/);
+    assert.match(html, /Sau tiếp tế<\/dt><dd[^>]*>60/);
+    assert.match(html, /Sau hồi sinh<\/dt><dd[^>]*>20/);
     assert.match(html, /Dự bị/);
     assert.match(html, /Đủ điều kiện · chờ lượt hồi sinh/);
     assert.match(html, /Hồi sinh Lê Thạch · 40 lương · dự bị/);
-    assert.match(html, /Chọn phó tướng vị trí 1/);
+    assert.match(html, /aria-label="Hà Vân: đang ra trận, bấm để về dự bị"/);
+    // Tướng gục chưa được hồi sinh không đưa ra trận được.
+    assert.match(html, /aria-label="Lê Thạch: dự bị, bấm để ra trận" disabled=""/);
+    assert.match(html, /Tạm nghỉ · lưu tiến độ/);
+    assert.match(html, /Dừng Trấn Ải/);
     assert.match(html, /Nghề Đinh Bộ Lĩnh/);
     assert.match(html, /Nguyên tố Đinh Bộ Lĩnh/);
     assert.match(html, /Máu 400\/500 →/);
+    assert.match(html, /Đối thủ đợt 5 · cấp 5/);
     assert.match(html, /Kỹ năng dự kiến/);
     assert.match(html, /Xác nhận và vào đợt 5/);
     assert.match(html, /sm:inset-4/);

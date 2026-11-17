@@ -18,6 +18,7 @@ import {
   SURVIVAL_RESERVE_HEAL,
   SURVIVAL_REVIVE_FOOD,
   SURVIVAL_REVIVE_HP,
+  vnWeek,
   type Match,
 } from "../../src/core";
 import {
@@ -37,6 +38,7 @@ import {
 import { MemoryMatchStore } from "../../src/server/store";
 import { dailyBoard, MemoryDailyStore } from "../../src/server/daily";
 import { MemoryLeaderboardStore } from "../../src/server/leaderboard";
+import { MemorySeasonStore } from "../../src/server/seasons";
 import { arenaView, MemoryArenaStore } from "../../src/server/arena";
 import {
   ARENA_ATTACKS_PER_DAY,
@@ -471,12 +473,76 @@ describe("trận sinh tồn", () => {
     });
     assert.ok(created.ok);
 
-    assert.deepEqual((await loadProfile(profiles, ownerId)).profile, original);
+    // Hồ sơ chỉ thêm con trỏ tới lượt chơi đang dở, không đổi nghề/hệ.
+    assert.deepEqual((await loadProfile(profiles, ownerId)).profile, {
+      ...original,
+      survival: { ...original.survival, run: created.id },
+    });
     const saved = await store.get(created.id);
     assert.deepEqual(
       saved!.match.survival!.roster.entries.dinhBoLinh!.snapshot.leaderBuildChoice,
       { profession: original.profession, element: original.element },
     );
+  });
+
+  it("lưu tiến độ: nghỉ giữa đợt giữ qua 24 giờ trong tuần, chặn lượt mới, hết tuần thì chốt điểm vào tuần cũ", async () => {
+    const store = new MemoryMatchStore();
+    const profiles = new MemoryProfileStore();
+    const seasons = new MemorySeasonStore();
+    const owner = "g_pause";
+    const parsed = parseNewBattle({ ...input, survival: true });
+    assert.ok(parsed);
+    let n = 0;
+    const deps = (now: number) => ({ store, profiles, seasons, now, seed: 40 + n, newId: () => `m_pause_${n++}` });
+    const created = await createBattleFor(owner, parsed, deps(T0));
+    assert.ok(created.ok);
+    assert.equal((await loadProfile(profiles, owner)).profile.survival.run, created.id);
+
+    // Đang có lượt dở thì không mở lượt mới.
+    const blocked = await createBattleFor(owner, parsed, deps(T0 + 10));
+    assert.ok(!blocked.ok);
+    assert.equal(blocked.error, "survivalActive");
+    assert.equal(httpStatus("survivalActive"), 409);
+
+    // Thắng đợt 1 rồi rời màn nghỉ.
+    const record = (await store.get(created.id))!;
+    const battle = structuredClone(record.match.battle);
+    battle.sides[1].fighters.forEach((fighter) => (fighter.hp = 0));
+    battle.winner = 0;
+    battle.turn.deadline = null;
+    assert.ok(await store.save({ ...record, match: { ...record.match, battle, seq: record.match.seq + 1 } }, record.match.seq));
+
+    // T0 là thứ Năm (giờ Việt Nam): hai ngày sau vẫn cùng tuần, lượt chơi vẫn chờ.
+    const later = await getBattle(created.id, owner, deps(T0 + 2 * ABANDON_MS));
+    assert.ok(later.ok);
+    assert.equal(later.view.survival!.done, false);
+    assert.equal(later.view.survival!.cleared, 1);
+    assert.equal(later.outcome, undefined);
+
+    // Sang tuần mới: lượt chơi chốt ở đợt đã vượt, bỏ con trỏ, điểm ghi vào tuần của lần ra tay cuối.
+    const nextWeek = T0 + 5 * ABANDON_MS;
+    const closed = await getBattle(created.id, owner, deps(nextWeek));
+    assert.ok(closed.ok);
+    assert.equal(closed.view.survival!.done, true);
+    assert.equal(closed.outcome?.survival?.cleared, 1);
+    assert.equal((await loadProfile(profiles, owner)).profile.survival.run, undefined);
+    assert.deepEqual((await seasons.top("survival", vnWeek(T0), 5)).map((e) => e.score), [1]);
+    assert.deepEqual(await seasons.top("survival", vnWeek(nextWeek), 5), []);
+
+    const fresh = await createBattleFor(owner, parsed, deps(nextWeek + 10));
+    assert.ok(fresh.ok);
+    assert.equal((await loadProfile(profiles, owner)).profile.survival.run, fresh.id);
+  });
+
+  it("trận hồ sơ trỏ tới đã mất thì vẫn mở lượt mới", async () => {
+    const store = new MemoryMatchStore();
+    const profiles = new MemoryProfileStore();
+    await updateProfile(profiles, "g_lost", (p) => ({ ok: true, profile: { ...p, survival: { best: 0, run: "m_missing" } } }), T0);
+    const parsed = parseNewBattle({ ...input, survival: true });
+    assert.ok(parsed);
+    const created = await createBattleFor("g_lost", parsed, { store, profiles, now: T0, seed: 9, newId: () => "m_new" });
+    assert.ok(created.ok);
+    assert.equal((await loadProfile(profiles, "g_lost")).profile.survival.run, "m_new");
   });
 
   it("tạo trận từ active và reserve được chọn trong màn chuẩn bị", async () => {

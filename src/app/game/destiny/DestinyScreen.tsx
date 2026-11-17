@@ -362,7 +362,10 @@ export default function DestinyScreen() {
           { label: "Đá Cường Hóa", value: overview.stones },
         ]}
       />
-      <ModeGuideTabs scene="DESTINY">
+      <ModeGuideTabs scene="DESTINY" board={<>
+        <RankRewardsPanel mode="destiny" />
+        <DestinyBoardPanel />
+      </>}>
 
       {message && <Alert className="p-3 text-sm" role="alert">{message}</Alert>}
 
@@ -616,8 +619,6 @@ export default function DestinyScreen() {
         </section>
       )}
 
-      <RankRewardsPanel mode="destiny" />
-      <DestinyBoardPanel />
       </ModeGuideTabs>
     </ModeScreen>
   );
