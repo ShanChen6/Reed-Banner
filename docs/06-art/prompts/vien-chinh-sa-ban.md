@@ -1,12 +1,22 @@
 # Prompt tranh sa bàn Viễn Chinh
 
-> Cập nhật: 04/11/2026
-> Trạng thái: **DRAFT** — Claude soạn theo yêu cầu của Shan (04/11/2026: mỗi sa bàn một tranh mới); chưa có tranh.
+> Cập nhật: 18/11/2026
+> Trạng thái: **DRAFT** — Claude soạn theo yêu cầu của Shan (04/11/2026: mỗi sa bàn một tranh mới); chưa có tranh vẽ tay. Từ 18/11/2026 sáu sa bàn dùng tranh tạm dựng bằng code (mục 0).
 
 Mỗi sa bàn của [Viễn Chinh](../../02-game-modes/expedition/01-vien-chinh-gdd.md) cần một tranh nền riêng. Tranh là
 bản đồ địa hình vẽ tay nhìn từ trên cao, cùng chất liệu với bản đồ tổng Bình Loạn (`public/art/campaign/world-map.webp`)
 nhưng **là tranh mới**, không cắt từ bản đồ tổng. Trên tranh, code vẽ thêm ô, đường đi, cờ đạo quân và sương mù.
 Prompt viết bằng tiếng Anh, giải thích bằng tiếng Việt.
+
+## 0. Tranh tạm dựng bằng code (18/11/2026)
+
+Shan yêu cầu mỗi sa bàn có ảnh bản đồ riêng. Chưa có tranh vẽ tay nên `scripts/expedition-map-art.ts` dựng tranh từ chính
+dữ liệu sa bàn (`src/core/expedition/maps.ts`): nền giấy cổ, núi, rừng, ruộng, sông chảy qua các đường vượt nước, biển
+và đảo quanh các ô (Cửa Biển, Quần Đảo), đầm, bãi cạn, cầu, và công trình đặt đúng dưới từng ô (trại lều, làng nhà sàn,
+đồn, lũy, thành có lầu mái đỏ). Mỗi sa bàn một tông theo hệ: Ải Bắc núi đá phủ tuyết, Thượng Du rừng dày và suối giữa
+thung lũng, Ngã Ba Sông ba nhánh sông và ruộng, Kinh Thành đất đỏ và sông hào. Ảnh ở `public/art/expedition/<tên>.webp`
+(1600×960), khai báo trong `EXPEDITION_MAP_IMAGES`. Đổi ô hoặc đường của sa bàn thì chạy lại script. Có tranh vẽ tay
+theo các mục dưới thì ghi đè đúng tên file.
 
 ## 1. Cách dùng
 
