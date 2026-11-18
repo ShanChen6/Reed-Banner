@@ -16,6 +16,21 @@ export interface RankEntry {
   readonly score: ReactNode;
   /** Dòng phụ dưới tên. */
   readonly detail?: ReactNode;
+  /** Thưởng cuối kỳ của hạng này (vàng), hiện cùng hàng với hạng và điểm. */
+  readonly reward?: number | null;
+}
+
+/** Chip thưởng cuối kỳ cạnh điểm: đồng xu và số vàng. */
+export function RewardChip({ gold, className }: { gold: number; className?: string }) {
+  return (
+    <span className={cn("inline-flex shrink-0 items-center gap-1 rounded-full border border-frame-gold/50 bg-frame-gold/15 px-2 py-0.5 text-caption font-bold tabular-nums text-frame-gold", className)} title={`Thưởng cuối kỳ ${gold} vàng`}>
+      <svg viewBox="0 0 16 16" className="size-3.5" aria-hidden>
+        <circle cx="8" cy="8" r="6.5" fill="#e9c25a" stroke="#8a6214" strokeWidth="1.2" />
+        <rect x="6" y="6" width="4" height="4" fill="none" stroke="#8a6214" strokeWidth="1.1" />
+      </svg>
+      <span className="sr-only">Thưởng </span>{gold}<span className="sr-only"> vàng</span>
+    </span>
+  );
 }
 
 const MEDAL = {
@@ -82,7 +97,12 @@ function Podium({ entries }: { entries: readonly RankEntry[] }) {
               {e ? e.name : "Còn trống"}
               {e?.mine && <span className="sr-only"> (bạn)</span>}
             </p>
-            {e && <p className="rounded-full bg-black/35 px-2.5 py-0.5 text-caption font-bold tabular-nums text-on-wood">{e.score}</p>}
+            {e && (
+              <p className="flex flex-wrap items-center justify-center gap-1">
+                <span className="rounded-full bg-black/35 px-2.5 py-0.5 text-caption font-bold tabular-nums text-on-wood">{e.score}</span>
+                {e.reward != null && <RewardChip gold={e.reward} />}
+              </p>
+            )}
             {e?.detail && <p className="text-caption text-on-wood-soft">{e.detail}</p>}
             <div
               className={cn("relative mt-1 grid w-full place-items-center rounded-t-lg border-x-2 border-t-2", height[r as 1 | 2 | 3])}
@@ -113,6 +133,7 @@ function RankLine({ e }: { e: RankEntry }) {
         </p>
         {e.detail && <p className="truncate text-caption text-on-wood-soft">{e.detail}</p>}
       </div>
+      {e.reward != null && <RewardChip gold={e.reward} />}
       <span className="shrink-0 rounded-full bg-black/35 px-3 py-1 text-sm font-bold tabular-nums text-title-on-wood">{e.score}</span>
     </li>
   );
@@ -129,7 +150,7 @@ export function RankBoard({
   initial = 7,
 }: {
   entries: readonly RankEntry[];
-  mine?: { readonly rank: number | null; readonly score: ReactNode } | null;
+  mine?: { readonly rank: number | null; readonly score: ReactNode; readonly reward?: number | null } | null;
   myExtra?: ReactNode;
   initial?: number;
 }) {
@@ -139,6 +160,7 @@ export function RankBoard({
   const meEntry = entries.find((e) => e.mine);
   const myRank = mine?.rank ?? meEntry?.rank ?? null;
   const myScore = mine?.score ?? meEntry?.score ?? null;
+  const myReward = mine?.reward ?? meEntry?.reward ?? null;
   return (
     <div className="flex flex-col gap-3">
       <Podium entries={entries.filter((e) => e.rank <= 3)} />
@@ -157,6 +179,7 @@ export function RankBoard({
             <p className="text-caption text-on-wood-soft">{myRank !== null ? `Đứng thứ ${myRank}` : "Chưa có tên trên bảng"}</p>
           </div>
           {myExtra}
+          {myReward != null && <RewardChip gold={myReward} className="text-sm" />}
           {myScore !== null && <span className="shrink-0 rounded-full bg-black/35 px-3 py-1 text-sm font-bold tabular-nums text-title-on-wood">{myScore}</span>}
         </div>
       )}

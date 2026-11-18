@@ -152,7 +152,7 @@ export const TIER_CLASS: Record<Tier, string> = {
 export function gearText(item: GearItem): string {
   const set = getGearSet(item.set)?.name ?? item.set;
   const prof = item.profession ? ` (${PROFESSION_NAME[item.profession]})` : "";
-  return `${SLOT_NAME[item.slot]}${prof} ${TIER_INFO[item.tier].name} hệ ${ELEMENT_NAME[item.element]}, bộ ${set}`;
+  return `${SLOT_NAME[item.slot]}${item.enhance ? ` +${item.enhance}` : ""}${prof} ${TIER_INFO[item.tier].name} hệ ${ELEMENT_NAME[item.element]}, bộ ${set}`;
 }
 
 /** Mô tả lấy từ các bước thực thi, dùng chung ở trước trận, quản lý và trong trận. */

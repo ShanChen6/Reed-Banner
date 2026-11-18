@@ -1,10 +1,17 @@
 "use client";
 
-// Tab Vật phẩm của Cửa Hàng: mỗi vật phẩm một thẻ (hình, mô tả, số đang có, nút mua theo gói). Hiện chỉ có lương
-// cho Bình Loạn; giá, mức chứa và tinh thần theo lương nằm trong @/core (FOOD_PRICE, CAMPAIGN_FOOD_MAX, moraleOf).
+// Tab Vật phẩm của Cửa Hàng: mỗi vật phẩm một thẻ (hình, mô tả, số đang có, nút mua theo gói). Lương cho Bình Loạn,
+// Đá Cường Hóa (cường hóa trang bị) và sách kinh nghiệm (19/11/2026); giá, mức chứa nằm trong @/core (FOOD_PRICE,
+// CAMPAIGN_FOOD_MAX, moraleOf, SHOP_ITEM_PRICE, XP_BOOK_XP, ITEM_STACK_MAX).
 
 import {
   CAMPAIGN_FOOD_MAX,
+  ENHANCE_BONUS,
+  ENHANCE_MAX,
+  ITEM_STACK_MAX,
+  SHOP_ITEM_PRICE,
+  XP_BOOK_XP,
+  type ShopItemId,
   FOOD_PRICE,
   MORALE_DAMAGE,
   moraleOf,
@@ -93,6 +100,60 @@ function FoodCard({ profile, busy, onAction }: { profile: Profile; busy: boolean
   );
 }
 
+const ITEM_INFO: Readonly<Record<ShopItemId, { name: string; art: string; text: string; have: (p: Profile) => number }>> = {
+  stone: {
+    name: "Đá Cường Hóa",
+    art: "/art/elements/kim.webp",
+    text: `Cường hóa trang bị ở Kho đồ (Doanh Trại): mỗi cấp +${Math.round(ENHANCE_BONUS * 100)}% chỉ số của món, tối đa +${ENHANCE_MAX}. Cũng nhận được khi leo Tháp Thí Luyện, Tháp Thiên Mệnh.`,
+    have: (p) => p.stones,
+  },
+  xpBook: {
+    name: "Sách kinh nghiệm",
+    art: "/art/tiles/sach.webp",
+    text: `Mỗi cuốn +${XP_BOOK_XP} kinh nghiệm cho một tướng quân. Dùng ở thẻ Tổng quan của tướng trong Doanh Trại.`,
+    have: (p) => p.xpBooks ?? 0,
+  },
+};
+
+function ItemCard({ id, profile, busy, onAction }: { id: ShopItemId; profile: Profile; busy: boolean; onAction: (a: ProfileAction) => void }) {
+  const info = ITEM_INFO[id];
+  const price = SHOP_ITEM_PRICE[id];
+  const have = info.have(profile);
+  const room = ITEM_STACK_MAX - have;
+  return (
+    <li className="ui-frame-inset flex flex-col gap-3 p-3 sm:flex-row sm:items-start">
+      <svg viewBox="0 0 96 96" aria-hidden focusable="false" className="size-20 shrink-0 self-center sm:size-24 sm:self-start">
+        <image href={info.art} width={96} height={96} />
+      </svg>
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+          <h2 className="ui-title-on-wood text-title">{info.name}</h2>
+          <span className="text-caption text-on-wood-soft tabular-nums">{price} vàng / {id === "stone" ? "viên" : "cuốn"}</span>
+        </div>
+        <p className="text-caption text-on-wood-soft">{info.text}</p>
+        <p className="text-caption text-on-wood tabular-nums">Đang có {have}</p>
+        <div className="flex flex-wrap gap-2">
+          {[1, 5, 10].map((n) => (
+            <Button
+              key={n}
+              type="button"
+              size="sm"
+              variant={n === 1 ? "primary" : "secondary"}
+              disabled={busy || n > room || profile.gold < n * price}
+              title={profile.gold < n * price ? `Cần ${n * price} vàng` : undefined}
+              aria-label={`Mua ${n} ${info.name}, ${n * price} vàng`}
+              onClick={() => onAction({ type: "buyItem", item: id, amount: n })}
+              className="min-h-11 tabular-nums"
+            >
+              +{n} · {n * price} vàng
+            </Button>
+          ))}
+        </div>
+      </div>
+    </li>
+  );
+}
+
 export default function ItemsStore({
   profile,
   busy,
@@ -107,6 +168,8 @@ export default function ItemsStore({
       {/* Lưới để thêm vật phẩm mới sau này: mỗi vật phẩm một thẻ. */}
       <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <FoodCard profile={profile} busy={busy} onAction={onAction} />
+        <ItemCard id="stone" profile={profile} busy={busy} onAction={onAction} />
+        <ItemCard id="xpBook" profile={profile} busy={busy} onAction={onAction} />
       </ul>
     </section>
   );

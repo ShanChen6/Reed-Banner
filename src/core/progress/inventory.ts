@@ -10,6 +10,8 @@ import {
 } from "../battle";
 import {
   EMPTY_LOADOUT,
+  ENHANCE_MAX,
+  enhanceCost,
   equip,
   GEAR_SLOTS,
   getGearSet,
@@ -59,6 +61,8 @@ export type InventoryError =
   | "invalidItem"
   | "notOwned"
   | "notEnoughGold"
+  | "notEnoughStones"
+  | "maxEnhance"
   | "bagFull";
 export type InventoryResult =
   | { readonly ok: true; readonly profile: Profile }
@@ -232,6 +236,26 @@ export function mergeGear(
   };
 }
 
+/** Cường hóa một món trong kho lên cấp kế: trừ Đá Cường Hóa và vàng (enhanceCost); món đang mặc vẫn ở nguyên chỗ. */
+export function enhanceItem(profile: Profile, itemId: string): InventoryResult {
+  const item = profile.bag.find((it) => it.id === itemId);
+  if (!item) return { ok: false, error: "invalidItem" };
+  const cost = enhanceCost(item);
+  if (!cost) return { ok: false, error: "maxEnhance" };
+  if (profile.stones < cost.stones) return { ok: false, error: "notEnoughStones" };
+  if (profile.gold < cost.gold) return { ok: false, error: "notEnoughGold" };
+  const next: GearItem = { ...item, enhance: (item.enhance ?? 0) + 1 };
+  return {
+    ok: true,
+    profile: {
+      ...profile,
+      stones: profile.stones - cost.stones,
+      gold: profile.gold - cost.gold,
+      bag: profile.bag.map((it) => (it.id === itemId ? next : it)),
+    },
+  };
+}
+
 export function sellItem(profile: Profile, itemId: string): InventoryResult {
   const item = profile.bag.find((it) => it.id === itemId);
   if (!item) return { ok: false, error: "invalidItem" };
@@ -291,6 +315,7 @@ export function isGearItem(x: unknown): x is GearItem {
     ELEMENTS.includes(x.element as Element) &&
     TIERS.includes(x.tier as Tier) &&
     typeof x.set === "string" &&
+    (x.enhance === undefined || (Number.isInteger(x.enhance) && (x.enhance as number) >= 1 && (x.enhance as number) <= ENHANCE_MAX)) &&
     (weapon
       ? normalizeProfession(x.profession) !== undefined && normalizeProfession(x.profession) === x.profession
       : x.profession === undefined)

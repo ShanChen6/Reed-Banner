@@ -36,6 +36,10 @@ export const PROFILE_ERROR: Record<
   string
 > = {
   maxLevel: "Đã đạt cấp tối đa",
+  notEnoughStones: "Không đủ Đá Cường Hóa. Mua thêm ở Cửa Hàng hoặc leo tháp.",
+  maxEnhance: "Món này đã cường hóa tối đa.",
+  stackFull: "Đã giữ tối đa 999 món loại này.",
+  noBooks: "Không đủ sách kinh nghiệm. Mua thêm ở Cửa Hàng.",
   notEnoughPoints: "Không đủ điểm kỹ năng",
   locked: "Chưa mở khóa",
   owned: "Đã có",

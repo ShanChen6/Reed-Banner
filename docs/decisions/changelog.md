@@ -4,6 +4,13 @@
 
 ## 19/11/2026
 
+**Cường hóa, vật phẩm, kỹ năng, Phối Hợp, Công trạng (Shan yêu cầu)**
+- **Cường hóa trang bị** +0..+5 bằng Đá Cường Hóa và vàng, mỗi cấp +4% chỉ số của món; **Đá Cường Hóa** và **sách kinh nghiệm** (+250 kinh nghiệm) bán ở Cửa Hàng › Vật phẩm; dùng sách ở thẻ Tổng quan của tướng. Luật và giá: [Cường hóa](../04-equipment/cuong-hoa-todo.md).
+- Thẻ Kỹ năng ở Doanh Trại chỉ còn một danh sách: mỗi thẻ chiêu có sao cấp, dòng "Lên cấp…" và nút Nâng ngay trên thẻ.
+- Phối Hợp: ba ô chọn tự do (đội 3vs3 có thể không có Đinh Bộ Lĩnh), nút Ngẫu nhiên, chọn hệ và nghề cho Đinh Bộ Lĩnh ngay trong ô của ông.
+- Trận Đồ: bỏ dải "Thưởng cuối kỳ theo hạng"; thưởng hiện cùng hàng với hạng và điểm (`RewardChip`, trường `reward` của `RankBoard`).
+- Viễn Chinh: tên sa bàn dùng một icon bản đồ chung thay cho icon hệ.
+
 **Bộ kỹ năng, điểm kỹ năng, trang Phối Hợp (Shan yêu cầu)**
 - Khung **Bộ 6 chủ động · 4 bị động** làm lại (`SkillDetails.tsx`): chủ động và bị động cùng một khuôn thẻ (biểu tượng, tên, nhãn ngắn, tác dụng). Thẻ chủ động ghi tín hiệu phối hợp chiêu phát (phá giáp, khống chế, xua tan, hồi máu, gây mất máu, khiên đỡ đòn) thay cho chuỗi "Có thể mở" liệt kê cả danh mục; thẻ bị động ghi vị trí (Nghề 1 · Cơ hội, Nghề 2 · Truy kích, Hệ 1, Hệ 2), tín hiệu kích hoạt và nhận từ ai (đồng đội, bản thân, phe mình). Màn chi tiết tướng mở sẵn khung này.
 - **Nâng điểm kỹ năng** ở Doanh Trại ghi rõ tác dụng: mỗi chiêu hiện cấp kế tăng gì ("Lên cấp 3: Sát thương 231% → 252%…"), đầu thẻ Kỹ năng ghi luật (mỗi cấp +10% sát thương, hồi máu, hiệu ứng; cấp 5 giảm 10% năng lượng). Luật trong core không đổi.

@@ -63,7 +63,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | File | Nội dung |
 |---|---|
 | ★ [trang-bi.md](04-equipment/trang-bi.md) | 9 ô trang bị, thưởng bộ, phẩm màu, ghép nâng bậc |
-| [cuong-hoa-todo.md](04-equipment/cuong-hoa-todo.md) | Cường hóa bằng Đá (DEFERRED, chưa triển khai) |
+| ★ [cuong-hoa-todo.md](04-equipment/cuong-hoa-todo.md) | Cường hóa trang bị, Đá Cường Hóa, sách kinh nghiệm (đã có code 19/11/2026) |
 
 ## 05 · Giao diện (`05-ui-ux/`)
 

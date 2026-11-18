@@ -7,6 +7,9 @@
 import { useState } from "react";
 import {
   BAG_LIMIT,
+  ENHANCE_BONUS,
+  ENHANCE_MAX,
+  enhanceCost,
   GEAR_SLOTS,
   itemStat,
   MAIN_ID,
@@ -14,6 +17,7 @@ import {
   SELL_GOLD,
   SLOT_STAT,
   wearerOf,
+  type Element,
   type GearItem,
   type GearSlot,
   type Profile,
@@ -181,6 +185,11 @@ export default function Armory({
                     >
                       <GearIcon slot={it.slot} element={it.element} tier={it.tier} set={it.set} profession={it.profession} className="size-full" />
                     </button>
+                    {!!it.enhance && (
+                      <span className="pointer-events-none absolute top-1 left-1 rounded bg-black/70 px-1 text-[11px] leading-tight font-bold text-frame-gold-hi tabular-nums" aria-hidden>
+                        +{it.enhance}
+                      </span>
+                    )}
                     {by && (
                       <span className="pointer-events-none absolute right-1 bottom-1 rounded bg-success-surface px-1 text-[11px] leading-tight font-bold text-success" aria-hidden>
                         Mặc
@@ -296,10 +305,71 @@ function ItemPanel({
         </div>
       </div>
 
+      <EnhanceBox profile={profile} item={item} element={element} who={nameOf(to)} busy={busy} onAction={onAction} />
+
       <button type="button" disabled={busy} onClick={() => onAction({ type: "sell", item: item.id }, onSold)} className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 self-start rounded-md px-3 disabled:opacity-50">
         <GearActionIcon action="sell" className="size-6" />
         Bán lấy {SELL_GOLD[item.tier]} vàng{wearer ? " (tháo ra trước)" : ""}
       </button>
+    </div>
+  );
+}
+
+/** Cường hóa món đang chọn: cấp hiện tại, chỉ số trước/sau, giá Đá Cường Hóa và vàng (enhanceCost của @/core). */
+function EnhanceBox({
+  profile,
+  item,
+  element,
+  who,
+  busy,
+  onAction,
+}: {
+  profile: Profile;
+  item: GearItem;
+  element: Element;
+  who: string;
+  busy: boolean;
+  onAction: (a: ProfileAction, after?: () => void) => void;
+}) {
+  const level = item.enhance ?? 0;
+  const cost = enhanceCost(item);
+  const now = itemStat(item, element);
+  const next = cost ? itemStat({ ...item, enhance: level + 1 }, element) : now;
+  const short = cost ? (profile.stones < cost.stones ? "Thiếu Đá Cường Hóa" : profile.gold < cost.gold ? "Thiếu vàng" : null) : null;
+  return (
+    <div className="barracks-inset flex flex-col gap-2 rounded-md p-2.5" aria-label="Cường hóa">
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-serif font-bold text-title-on-wood">Cường hóa +{level}/{ENHANCE_MAX}</span>
+        <span className="text-sm text-[var(--on-wood-soft)] tabular-nums">Có {profile.stones} Đá Cường Hóa</span>
+      </div>
+      <div className="flex gap-1" aria-hidden>
+        {Array.from({ length: ENHANCE_MAX }, (_, i) => (
+          <span key={i} className={`h-1.5 flex-1 rounded-full ${i < level ? "bg-frame-gold" : "bg-black/40"}`} />
+        ))}
+      </div>
+      {cost ? (
+        <>
+          <p className="text-sm tabular-nums">
+            {STAT_NAME[SLOT_STAT[item.slot]]} khi {who} mặc: {now} → <b className="text-success">{next}</b> (mỗi cấp +{Math.round(ENHANCE_BONUS * 100)}% chỉ số món)
+          </p>
+          <button
+            type="button"
+            disabled={busy || short !== null}
+            onClick={() => onAction({ type: "enhance", item: item.id })}
+            className="barracks-btn is-action min-h-10 pointer-coarse:min-h-11 self-start rounded-md px-3 disabled:opacity-50"
+          >
+            Cường hóa lên +{level + 1} · {cost.stones} đá, {cost.gold} vàng
+          </button>
+          {short && (
+            <p className="text-sm text-[var(--on-wood-soft)]">
+              {short}.{" "}
+              <SceneLink scene="SHOP" className="ui-link text-frame-gold underline underline-offset-2">Mua ở Cửa Hàng</SceneLink>
+            </p>
+          )}
+        </>
+      ) : (
+        <p className="text-sm text-success">Đã cường hóa tối đa.</p>
+      )}
     </div>
   );
 }
