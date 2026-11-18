@@ -142,10 +142,10 @@ export default function ArenaScreen() {
   const myPower = attackPower || (data.defense?.power ?? 0);
   const offers = data.offers ?? [];
 
-  const claimTier = async (tier: string) => {
+  const claimTier = async (tier: string, gearOnly = false) => {
     setBusy(`tier-${tier}`);
     setTierNote(null);
-    const next = await fetchArena("claimTier", tier);
+    const next = await fetchArena(gearOnly ? "claimTierGear" : "claimTier", tier);
     setBusy(null);
     if (next.rating === undefined) return setMessage(ONLINE_ERROR_TEXT[next.error ?? "network"] ?? "Có trục trặc chưa rõ. Xin thử lại.");
     setData(next);
@@ -153,11 +153,18 @@ export default function ArenaScreen() {
       const c = next.claimed;
       const tierName = CORE_ARENA_TIERS.find((t) => t.id === c.tier)?.name ?? "";
       setTierNote(
-        `Đã nhận ${c.gold} vàng thưởng bậc ${tierName}` +
-          (c.item ? ` và ${gearText(c.item)} (đã vào túi đồ).` : c.soldFor > 0 ? `; túi đồ đầy nên món thưởng được bán ngay, thêm ${c.soldFor} vàng.` : "."),
+        (c.gold > 0 ? `Đã nhận ${c.gold} vàng thưởng bậc ${tierName}` : `Đã nhận bù thưởng bậc ${tierName}`) +
+          (c.item ? `${c.gold > 0 ? " và" : ":"} ${gearText(c.item)} (đã vào túi đồ).` : c.soldFor > 0 ? `; túi đồ đầy nên món thưởng được bán ngay, thêm ${c.soldFor} vàng.` : "."),
       );
       void fetchProfile();
-    } else setTierNote(next.claimError === "claimed" ? "Bậc này đã nhận thưởng." : "Chưa đủ điểm hạng để nhận bậc này.");
+    } else
+      setTierNote(
+        next.claimError === "claimed" || next.claimError === "gearClaimed"
+          ? "Bậc này đã nhận thưởng."
+          : next.claimError === "notClaimed"
+            ? "Bậc này chưa nhận thưởng; hãy nhận thưởng bậc trước."
+            : "Chưa đủ điểm hạng để nhận bậc này.",
+      );
   };
 
   const command = async (action: "defend" | "refresh") => {
@@ -233,7 +240,12 @@ export default function ArenaScreen() {
                         gold: t.gold,
                         claimed: (data.tierClaims ?? []).includes(t.id),
                         extra: <span className={TIER_CLASS[t.gear]}>+ món {TIER_COLOR_NAME[t.gear]}</span>,
+                        // Bậc nhận vàng trước khi có thưởng trang bị: được nhận bù món.
+                        ...((data.tierClaims ?? []).includes(t.id) && !(data.tierGearClaims ?? []).includes(t.id)
+                          ? { owed: `Nhận bù món ${TIER_COLOR_NAME[t.gear]}` }
+                          : {}),
                       }))}
+                      onClaimOwed={(i) => void claimTier(CORE_ARENA_TIERS[i]!.id, true)}
                       onClaim={(i) => void claimTier(CORE_ARENA_TIERS[i]!.id)}
                       busy={busy !== null}
                     />

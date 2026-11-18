@@ -12,6 +12,8 @@ import {
   ARENA_TIERS,
   arenaTierIndex,
   claimArenaTier,
+  claimArenaTierGear,
+  arenaTierGearOwed,
   parseProfile,
   createRng,
   BAG_LIMIT,
@@ -154,5 +156,25 @@ describe("đấu trường bóng ma", () => {
     assert.equal(sold.item, null);
     assert.ok(sold.soldFor > 0);
     assert.equal(sold.profile.gold, full.gold + ARENA_TIERS[0]!.gold + sold.soldFor);
+  });
+
+  it("nhận bù món: bậc nhận vàng trước khi có thưởng trang bị được nhận món một lần, không thêm vàng", () => {
+    const old = { ...newProfile(), element: "kim" as const, arenaTiers: ["dong", "bac"] };
+    assert.deepEqual(arenaTierGearOwed(old), ["dong", "bac"]);
+    assert.deepEqual(claimArenaTierGear(old, "vang", createRng(1)), { ok: false, error: "notClaimed" });
+    assert.deepEqual(claimArenaTierGear(old, "khong-co", createRng(1)), { ok: false, error: "badTier" });
+    const a = claimArenaTierGear(old, "bac", createRng(1));
+    assert.ok(a.ok);
+    assert.equal(a.profile.gold, old.gold);
+    assert.equal(a.item?.tier, ARENA_TIERS[1]!.gear);
+    assert.equal(a.item?.element, "kim");
+    assert.deepEqual(arenaTierGearOwed(a.profile), ["dong"]);
+    assert.deepEqual(claimArenaTierGear(a.profile, "bac", createRng(1)), { ok: false, error: "gearClaimed" });
+    assert.deepEqual(parseProfile(JSON.parse(JSON.stringify(a.profile))).arenaTierGear, ["bac"]);
+    // Nhận bậc mới từ nay ghi luôn món, không còn nợ.
+    const fresh = claimArenaTier(a.profile, "vang", 1200, createRng(2));
+    assert.ok(fresh.ok);
+    assert.deepEqual(arenaTierGearOwed(fresh.profile), ["dong"]);
+    assert.deepEqual(claimArenaTierGear(fresh.profile, "vang", createRng(2)), { ok: false, error: "gearClaimed" });
   });
 });

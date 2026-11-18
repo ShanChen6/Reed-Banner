@@ -245,9 +245,39 @@ export function claimArenaTier(
   if (rating < tier.min) return { ok: false, error: "notReached" };
   const claimed = profile.arenaTiers ?? [];
   if (claimed.includes(tier.id)) return { ok: false, error: "claimed" };
-  const paid: Profile = { ...profile, gold: profile.gold + tier.gold, arenaTiers: [...claimed, tier.id] };
+  const paid: Profile = {
+    ...profile,
+    gold: profile.gold + tier.gold,
+    arenaTiers: [...claimed, tier.id],
+    arenaTierGear: [...new Set([...(profile.arenaTierGear ?? []), tier.id])],
+  };
   const got = receiveDrop(paid, arenaTierGear(rng, tier, profile));
   return { ok: true, gold: tier.gold, profile: got.profile, item: got.item, soldFor: got.soldFor };
+}
+
+/** Bậc đã nhận vàng nhưng chưa nhận món (nhận trước khi có thưởng trang bị), còn được nhận bù. */
+export function arenaTierGearOwed(profile: Profile): readonly string[] {
+  const got = profile.arenaTierGear ?? [];
+  return (profile.arenaTiers ?? []).filter((id) => !got.includes(id));
+}
+
+export type ArenaTierGearError = "badTier" | "notClaimed" | "gearClaimed";
+
+/** Nhận bù món trang bị của một bậc đã nhận vàng trước khi có thưởng trang bị; mỗi bậc một lần, không cộng thêm vàng. */
+export function claimArenaTierGear(
+  profile: Profile,
+  tierId: string,
+  rng: Rng,
+):
+  | { readonly ok: true; readonly profile: Profile; readonly item: GearItem | null; readonly soldFor: number }
+  | { readonly ok: false; readonly error: ArenaTierGearError } {
+  const tier = ARENA_TIERS.find((t) => t.id === tierId);
+  if (!tier) return { ok: false, error: "badTier" };
+  if (!(profile.arenaTiers ?? []).includes(tier.id)) return { ok: false, error: "notClaimed" };
+  if ((profile.arenaTierGear ?? []).includes(tier.id)) return { ok: false, error: "gearClaimed" };
+  const marked: Profile = { ...profile, arenaTierGear: [...(profile.arenaTierGear ?? []), tier.id] };
+  const got = receiveDrop(marked, arenaTierGear(rng, tier, profile));
+  return { ok: true, profile: got.profile, item: got.item, soldFor: got.soldFor };
 }
 
 /** Điểm thay đổi sau một trận: người đánh theo ARENA_K, người phòng thủ ngược dấu theo ARENA_DEFENDER_K. */
