@@ -8,6 +8,7 @@ import {
   arenaDay,
   botDefense,
   botName,
+  claimArenaTier,
   createRng,
   arenaTeam,
   defenseOf,
@@ -17,7 +18,7 @@ import {
   type ArenaMember,
 } from "@/core";
 import type { LeaderboardStore } from "./leaderboard";
-import { loadProfile, type ProfileStore } from "./profiles";
+import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 
 /** Một đối thủ đang bày ra. `owner` chỉ nằm trên server; bóng ma máy tạo có `owner` null và dựng lại từ seed. */
 export interface ArenaOffer {
@@ -258,6 +259,8 @@ export interface ArenaView {
     readonly power: number;
     readonly bot: boolean;
   }[];
+  /** Id các bậc hạng đã nhận thưởng. */
+  readonly tierClaims: readonly string[];
 }
 
 export type ArenaCommand = "view" | "defend" | "refresh";
@@ -313,6 +316,7 @@ export async function arenaView(
     defense: row.defense
       ? { members: row.defense.members, power: defensePower(row.defense) }
       : null,
+    tierClaims: ((await loadProfile(deps.profiles, ownerId)).profile.arenaTiers ?? []),
     offers: row.offers.map((o) => ({
       name: o.name,
       rating: o.rating,
@@ -321,4 +325,30 @@ export async function arenaView(
       bot: o.owner === null,
     })),
   };
+}
+
+/**
+ * Nhận thưởng một bậc hạng Quần Hùng: điểm hạng lấy từ kho đấu trường trên server, vàng cộng vào hồ sơ; mỗi bậc một lần
+ * (ghi id bậc vào `profile.arenaTiers` cùng lần cộng vàng nên bấm hai lần không nhận hai lần).
+ */
+export async function claimArenaTierReward(
+  ownerId: string,
+  tierId: string,
+  deps: Pick<ArenaDeps, "arena" | "profiles" | "now">,
+): Promise<{ readonly ok: true; readonly gold: number } | { readonly ok: false; readonly error: string }> {
+  const row = await deps.arena.get(ownerId);
+  if (!row) return { ok: false, error: "notReached" };
+  let gold = 0;
+  const r = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => {
+      const c = claimArenaTier(p, tierId, row.rating);
+      if (!c.ok) return c;
+      gold = c.gold;
+      return { ok: true, profile: c.profile };
+    },
+    deps.now,
+  );
+  return r.ok ? { ok: true, gold } : { ok: false, error: String(r.error) };
 }

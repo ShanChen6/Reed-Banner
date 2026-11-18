@@ -181,12 +181,18 @@ export interface ArenaResponse {
     readonly power: number;
     readonly bot: boolean;
   }[];
+  /** Id các bậc hạng đã nhận thưởng. */
+  readonly tierClaims?: readonly string[];
+  /** Kết quả lệnh nhận thưởng bậc. */
+  readonly claimed?: { readonly tier: string; readonly gold: number };
+  readonly claimError?: string;
   readonly error?: string;
 }
 
-/** Xem đấu trường; `action` đặt lại đội phòng thủ hoặc đổi đối thủ. */
+/** Xem đấu trường; `action` đặt lại đội phòng thủ, đổi đối thủ, hoặc nhận thưởng bậc `tier`. */
 export async function fetchArena(
-  action?: "defend" | "refresh",
+  action?: "defend" | "refresh" | "claimTier",
+  tier?: string,
 ): Promise<ArenaResponse> {
   try {
     const res = await fetch("/api/arena", {
@@ -195,7 +201,7 @@ export async function fetchArena(
         ? {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ action }),
+            body: JSON.stringify(tier ? { action, tier } : { action }),
           }
         : {}),
     });

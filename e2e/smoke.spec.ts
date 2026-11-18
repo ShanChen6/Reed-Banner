@@ -141,6 +141,9 @@ test.describe("tài khoản đã đăng nhập", () => {
     await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
     await expect(page.getByRole("heading", { name: "Đấu bóng ma" })).toBeVisible();
     await expect(page.getByRole("region", { name: "Bậc hạng Quần Hùng" })).toBeVisible();
+    await page.getByRole("button", { name: "Nhận 50 vàng" }).click();
+    await expect(page.getByText("Đã nhận 50 vàng thưởng bậc Đồng.")).toBeVisible();
+    await expect(page.getByText("✓ Đã nhận 50")).toBeVisible();
     await page.getByRole("tab", { name: "Chơi" }).click();
     await page.getByRole("button", { name: "Đấu người" }).click();
     await page.getByRole("group", { name: "Hệ của Đinh Bộ Lĩnh" }).getByRole("button", { name: "Lôi" }).click();

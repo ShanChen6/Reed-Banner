@@ -9,6 +9,10 @@ import {
   ghostTeam,
   newProfile,
   ARENA_GEAR_CAP,
+  ARENA_TIERS,
+  arenaTierIndex,
+  claimArenaTier,
+  parseProfile,
   arenaTeam,
   autoProgress,
   defensePower,
@@ -116,5 +120,23 @@ describe("đấu trường bóng ma", () => {
     const real = offers.filter((o) => o.owner !== null).map((o) => o.owner);
     assert.deepEqual(real, ["manh"]);
     assert.equal(offers.filter((o) => o.owner === null).length, 2);
+  });
+
+  it("thưởng bậc hạng: đủ điểm mới nhận, mỗi bậc một lần, lưu qua đọc lại hồ sơ", () => {
+    assert.equal(arenaTierIndex(1000), 0);
+    assert.equal(arenaTierIndex(1050), 1);
+    assert.equal(arenaTierIndex(5000), ARENA_TIERS.length - 1);
+    const p = newProfile();
+    assert.deepEqual(claimArenaTier(p, "bac", 1049), { ok: false, error: "notReached" });
+    assert.deepEqual(claimArenaTier(p, "khong-co", 2000), { ok: false, error: "badTier" });
+    const a = claimArenaTier(p, "bac", 1100);
+    assert.ok(a.ok);
+    assert.equal(a.profile.gold, p.gold + ARENA_TIERS[1]!.gold);
+    assert.deepEqual(a.profile.arenaTiers, ["bac"]);
+    assert.deepEqual(claimArenaTier(a.profile, "bac", 1100), { ok: false, error: "claimed" });
+    // Bậc thấp hơn vẫn nhận được khi đã ở bậc cao.
+    assert.ok(claimArenaTier(a.profile, "dong", 1100).ok);
+    assert.deepEqual(parseProfile(JSON.parse(JSON.stringify(a.profile))).arenaTiers, ["bac"]);
+    assert.equal(parseProfile(JSON.parse(JSON.stringify(p))).arenaTiers, undefined);
   });
 });

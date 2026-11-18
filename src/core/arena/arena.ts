@@ -181,6 +181,54 @@ export function ghostTeam(
 /** Lực chiến của đội phòng thủ như khi vào trận (đã kẹp trang bị). */
 export const defensePower = (defense: ArenaDefense): number => teamPower(ghostTeam(defense, ""));
 
+/** Một bậc hạng Quần Hùng: vào bậc khi điểm hạng từ `min` trở lên; lần đầu đạt bậc thì nhận `gold` một lần. */
+export interface ArenaTier {
+  readonly id: string;
+  readonly name: string;
+  readonly min: number;
+  readonly gold: number;
+}
+
+/**
+ * Bậc hạng theo điểm hạng (Elo, bắt đầu 1000) và thưởng vàng lần đầu đạt bậc (Shan 18/11/2026, theo mẫu Đấu Trường
+ * Ngày). Mỗi bậc nhận một lần trọn đời, không reset theo mùa: điểm hạng không reset nên thưởng theo tuần sẽ thành vàng
+ * cho người điểm cao mà không cần đánh. Mốc và số vàng là đề xuất của Claude, chờ Shan duyệt: thắng ngang điểm +16 nên
+ * Đồng lên Bạc khoảng 4 trận thắng; tổng cả sáu bậc 3 000 vàng, bằng khoảng 5 tuần hạng nhất mùa Quần Hùng (600 vàng).
+ */
+export const ARENA_TIERS: readonly ArenaTier[] = [
+  { id: "dong", name: "Đồng", min: 0, gold: 50 },
+  { id: "bac", name: "Bạc", min: 1050, gold: 150 },
+  { id: "vang", name: "Vàng", min: 1150, gold: 300 },
+  { id: "bachKim", name: "Bạch Kim", min: 1300, gold: 500 },
+  { id: "kimCuong", name: "Kim Cương", min: 1500, gold: 800 },
+  { id: "huyenThoai", name: "Huyền Thoại", min: 1750, gold: 1200 },
+];
+
+/** Vị trí bậc đang đứng của một điểm hạng. */
+export function arenaTierIndex(rating: number): number {
+  let at = 0;
+  ARENA_TIERS.forEach((t, i) => {
+    if (rating >= t.min) at = i;
+  });
+  return at;
+}
+
+export type ArenaTierClaimError = "badTier" | "notReached" | "claimed";
+
+/** Nhận thưởng một bậc: điểm hạng hiện tại phải đủ bậc và bậc đó chưa nhận. */
+export function claimArenaTier(
+  profile: Profile,
+  tierId: string,
+  rating: number,
+): { readonly ok: true; readonly profile: Profile; readonly gold: number } | { readonly ok: false; readonly error: ArenaTierClaimError } {
+  const tier = ARENA_TIERS.find((t) => t.id === tierId);
+  if (!tier) return { ok: false, error: "badTier" };
+  if (rating < tier.min) return { ok: false, error: "notReached" };
+  const claimed = profile.arenaTiers ?? [];
+  if (claimed.includes(tier.id)) return { ok: false, error: "claimed" };
+  return { ok: true, gold: tier.gold, profile: { ...profile, gold: profile.gold + tier.gold, arenaTiers: [...claimed, tier.id] } };
+}
+
 /** Điểm thay đổi sau một trận: người đánh theo ARENA_K, người phòng thủ ngược dấu theo ARENA_DEFENDER_K. */
 export function arenaDelta(
   attacker: number,
