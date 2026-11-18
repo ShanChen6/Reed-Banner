@@ -34,25 +34,25 @@ export const LEGACY_IDS: Readonly<Record<string, string>> = {
   rb074_passive: "tanVuHoiNhip",
   rb075_passive: "duAmTiepVan",
   // Minh Nguyệt: id nhân vật (tướng đã có, đội, trang bị, nhiệm vụ phụ), node và công thức Tầm Tướng Ký, kỹ năng, bị động.
-  minhNguyet: "minhNguyet",
-  "hero.minhNguyet": "hero.minhNguyet",
-  "r.minhNguyet": "r.minhNguyet",
-  mn_kimQuangPhaTran: "mn_kimQuangPhaTran",
-  mn_thuyAnhXuyenLuu: "mn_thuyAnhXuyenLuu",
-  mn_hoaBoDoatMenh: "mn_hoaBoDoatMenh",
-  mn_vanTuongQuyNhat: "mn_vanTuongQuyNhat",
-  mn_thoAnTranTam: "mn_thoAnTranTam",
-  mn_loiVanKhaiLo: "mn_loiVanKhaiLo",
-  mn_thoMachHoThan: "mn_thoMachHoThan",
-  mn_mocTucDuongSinh: "mn_mocTucDuongSinh",
-  mn_loiYDoatCo: "mn_loiYDoatCo",
+  dinhNgoc: "minhNguyet",
+  "hero.dinhNgoc": "hero.minhNguyet",
+  "r.dinhNgoc": "r.minhNguyet",
+  dn_kimQuangPhaTran: "mn_kimQuangPhaTran",
+  dn_thuyAnhXuyenLuu: "mn_thuyAnhXuyenLuu",
+  dn_hoaBoDoatMenh: "mn_hoaBoDoatMenh",
+  dn_vanTuongQuyNhat: "mn_vanTuongQuyNhat",
+  dn_thoAnTranTam: "mn_thoAnTranTam",
+  dn_loiVanKhaiLo: "mn_loiVanKhaiLo",
+  dn_thoMachHoThan: "mn_thoMachHoThan",
+  dn_mocTucDuongSinh: "mn_mocTucDuongSinh",
+  dn_loiYDoatCo: "mn_loiYDoatCo",
 };
 
 /**
  * Mã cũ nằm bên trong một chuỗi ghép (cặp đã thử của Tầm Tướng Ký `hero.x>elt.kim`), không phải cả chuỗi: thay khi đứng
  * giữa dấu nháy và dấu `>`.
  */
-const LEGACY_INNER: readonly (readonly [RegExp, string])[] = [[/(?<=[">])hero\.minhNguyet(?=[">])/g, "hero.minhNguyet"]];
+const LEGACY_INNER: readonly (readonly [RegExp, string])[] = [[/(?<=[">])hero\.dinhNgoc(?=[">])/g, "hero.minhNguyet"]];
 
 const escape = (id: string) => id.replace(/\./g, "\\.");
 const LEGACY_PATTERN = new RegExp(`"(${Object.keys(LEGACY_IDS).map(escape).join("|")})"`, "g");

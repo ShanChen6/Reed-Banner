@@ -29,10 +29,10 @@ test("hồ sơ cũ có Minh Nguyệt theo mã cũ: giữ tướng, đội, cấp
       team: ["haVan", "minhNguyet"],
       loadouts: { minhNguyet: { slots: {}, weapons: {} } },
       tamTuongKy: { discovery: { discoveredNodeIds: ["elt.kim", "hero.minhNguyet"], discoveredRecipeIds: ["r.minhNguyet"] }, triedPairs: ["hero.minhNguyet>elt.kim"] },
-    }).replace(/minhNguyet/g, "minhNguyet"),
+    }).replace(/minhNguyet/g, "dinhNgoc"),
   );
   const migrated = migrateLegacyIds(old) as typeof old;
-  assert.ok(!JSON.stringify(migrated).includes("minhNguyet"));
+  assert.ok(!JSON.stringify(migrated).includes("dinhNgoc"));
   const profile = parseProfile(migrated);
   assert.equal(profile.companions.minhNguyet?.level, 7);
   assert.equal(profile.companions.minhNguyet?.skillLevels.o1, 2);
@@ -40,7 +40,7 @@ test("hồ sơ cũ có Minh Nguyệt theo mã cũ: giữ tướng, đội, cấp
   assert.deepEqual(migrated.tamTuongKy.triedPairs, ["hero.minhNguyet>elt.kim"]);
   assert.deepEqual(migrated.tamTuongKy.discovery.discoveredRecipeIds, ["r.minhNguyet"]);
   // Kỹ năng, bị động riêng theo mã cũ trong trận đang chơi.
-  assert.deepEqual(migrateLegacyIds({ skills: ["mn_vanTuongQuyNhat"], chasePassives: ["mn_loiYDoatCo"] }), { skills: ["mn_vanTuongQuyNhat"], chasePassives: ["mn_loiYDoatCo"] });
+  assert.deepEqual(migrateLegacyIds({ skills: ["dn_vanTuongQuyNhat"], chasePassives: ["dn_loiYDoatCo"] }), { skills: ["mn_vanTuongQuyNhat"], chasePassives: ["mn_loiYDoatCo"] });
 });
 
 test("migrateLegacyIds đổi cả giá trị lẫn khóa, giữ nguyên chuỗi chỉ chứa mã cũ ở giữa", () => {
