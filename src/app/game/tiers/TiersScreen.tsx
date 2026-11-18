@@ -23,6 +23,7 @@ interface LadderView {
   readonly score: number;
   readonly tiers: readonly ArenaTier[];
   readonly claimed: readonly string[];
+  readonly locked?: boolean;
 }
 
 type ClaimBody = { ladders?: LadderView[]; claimed?: { tier: string; gold: number; item: GearItem | null; soldFor: number }; error?: string };
@@ -30,8 +31,8 @@ type ClaimBody = { ladders?: LadderView[]; claimed?: { tier: string; gold: numbe
 const asScene = (s: string): Scene | null => ((SCENES as readonly string[]).includes(s) ? (s as Scene) : null);
 
 /** Số bậc đã đạt mà chưa nhận. */
-export const readyCount = (l: Pick<LadderView, "score" | "tiers" | "claimed">): number =>
-  l.tiers.filter((t) => l.score >= t.min && !l.claimed.includes(t.id)).length;
+export const readyCount = (l: Pick<LadderView, "score" | "tiers" | "claimed" | "locked">): number =>
+  l.locked ? 0 : l.tiers.filter((t) => l.score >= t.min && !l.claimed.includes(t.id)).length;
 
 export default function TiersScreen() {
   const [ladders, setLadders] = useState<LadderView[] | null>(null);
@@ -112,6 +113,7 @@ export default function TiersScreen() {
                 <p className="text-caption text-on-wood-soft">
                   {l.measure} Hiện: <span className="font-bold tabular-nums text-title-on-wood">{l.score}</span> {l.unit}.
                 </p>
+                {l.locked && <p className="text-sm text-warning">Vào {l.mode} một lần để mở dải bậc này.</p>}
                 <TierLadder
                   tiers={ladderOf(l.tiers)}
                   score={l.score}
@@ -120,6 +122,7 @@ export default function TiersScreen() {
                   rewards={tierRewards((id) => l.claimed.includes(id), l.tiers)}
                   onClaim={(i) => void claim(l, l.tiers[i]!.id)}
                   busy={busy !== null}
+                  locked={l.locked === true}
                 />
                 {note?.id === l.id && <Alert tone={note.ok ? "success" : "error"}>{note.text}</Alert>}
               </section>
