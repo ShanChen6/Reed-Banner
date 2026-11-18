@@ -169,6 +169,7 @@ test.describe("tài khoản đã đăng nhập", () => {
     await expect(page.getByRole("button", { name: "Chơi", exact: true }).first()).toBeVisible();
     await page.getByRole("tab", { name: /Chiến tích/ }).click();
     await expect(page.getByText(/Bộ sưu tập địa danh/)).toBeVisible();
+    await expect(page.getByRole("region", { name: "Bậc Trận Đồ" }).getByRole("button", { name: "Bậc Đồng: chưa đạt mốc" })).toHaveText("Còn 1 ván");
     await expect(page.getByRole("group", { name: "Thang thưởng theo hạng" }).or(page.getByRole("list", { name: "Thang thưởng theo hạng" })).first()).toBeVisible();
     expectClean(problems);
   });
