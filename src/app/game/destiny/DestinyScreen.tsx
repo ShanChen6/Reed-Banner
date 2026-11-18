@@ -59,6 +59,7 @@ import {
   rewardTargetLimit,
 } from "./destiny-ui";
 import { ModeGuideTabs } from "../ModeGuide";
+import ModeTierPanel from "../leaderboard/ModeTierPanel";
 
 interface DestinyMilestoneView {
   readonly id: string;
@@ -538,7 +539,7 @@ export default function DestinyScreen() {
           { label: "Đá Cường Hóa", value: overview.stones },
         ]}
       />
-      <ModeGuideTabs scene="DESTINY" extraTabs={[{ value: "board", label: "BXH tuần", content: <DestinyBoardPanel /> }]}>
+      <ModeGuideTabs scene="DESTINY" extraTabs={[{ value: "board", label: "BXH tuần", content: <><ModeTierPanel mode="destiny" /><DestinyBoardPanel /></> }]}>
 
       {message && <Alert className="p-3 text-sm" role="alert">{message}</Alert>}
 

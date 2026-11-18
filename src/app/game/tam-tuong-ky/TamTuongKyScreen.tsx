@@ -61,6 +61,10 @@ import {
   type TtkView,
 } from "./client";
 import { ModeGuideTabs } from "../ModeGuide";
+import ModeTierPanel from "../leaderboard/ModeTierPanel";
+
+/** Thẻ Bậc thưởng của Tầm Tướng Ký: bậc theo số tướng đã khám phá (cả chế độ Thường và Hạng). */
+const TTK_TIER_TAB = [{ value: "tier", label: "Bậc thưởng", content: <ModeTierPanel mode="tamTuongKy" /> }];
 
 /** Sổ đang chạy, theo `packId` server trả về (Gói 1, hoặc Gói 1 + Gói 2). */
 const CatalogContext = createContext<Catalog>(catalogForPack(undefined));
@@ -257,7 +261,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
           description="Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng. Công thức biểu trưng của trò chơi, không phải diễn giải sử học."
           stats={[{ label: "Phiếu", value: `${view.tickets}/${view.maxTickets}` }]}
         />
-        <ModeGuideTabs scene="TAM_TUONG_KY">
+        <ModeGuideTabs scene="TAM_TUONG_KY" extraTabs={TTK_TIER_TAB}>
 
         <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
           <Altar
@@ -425,7 +429,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
             { label: "Đã tiêu", value: view.unitsSpent },
           ]}
         />
-        <ModeGuideTabs scene="TAM_TUONG_KY">
+        <ModeGuideTabs scene="TAM_TUONG_KY" extraTabs={TTK_TIER_TAB}>
 
         <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
           <Panel id="ttk-ranked-altar" title="Đài Hợp Nguyên">

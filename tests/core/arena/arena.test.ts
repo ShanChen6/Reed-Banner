@@ -13,6 +13,8 @@ import {
   arenaTierIndex,
   claimArenaTier,
   claimSurvivalTier,
+  claimModeTier,
+  MODE_TIERS,
   SURVIVAL_TIERS,
   parseProfile,
   createRng,
@@ -174,5 +176,30 @@ describe("đấu trường bóng ma", () => {
     // Bậc Trấn Ải ghi riêng, không đụng bậc Quần Hùng.
     assert.equal(a.profile.arenaTiers, undefined);
     assert.deepEqual(parseProfile(JSON.parse(JSON.stringify(a.profile))).survivalTiers, ["vang"]);
+  });
+
+  it("bậc chế độ xếp hạng: Nhật Lệnh theo số ngày đã đánh, Thiên Mệnh theo tầng cao nhất mọi chu kỳ, Tầm Tướng Ký theo số tướng", () => {
+    const p = newProfile();
+    assert.deepEqual(Object.keys(MODE_TIERS).sort(), ["daily", "destiny", "tamTuongKy"]);
+    assert.equal(MODE_TIERS.daily.score(p), 0);
+    assert.deepEqual(claimModeTier(p, "daily", "dong", createRng(1)), { ok: false, error: "notReached" });
+    const played = { ...p, quests: { ...p.quests, totals: { ...p.quests.totals, daily: 8 } } };
+    const a = claimModeTier(played, "daily", "bac", createRng(1));
+    assert.ok(a.ok);
+    assert.equal(a.gold, MODE_TIERS.daily.tiers[1]!.gold);
+    assert.deepEqual(a.profile.modeTiers, { daily: ["bac"] });
+    assert.deepEqual(claimModeTier(a.profile, "daily", "bac", createRng(1)), { ok: false, error: "claimed" });
+    assert.deepEqual(claimModeTier(a.profile, "daily", "vang", createRng(1)), { ok: false, error: "notReached" });
+    // Bậc mỗi chế độ ghi riêng.
+    assert.equal(claimModeTier(a.profile, "destiny", "bac", createRng(1)).ok, false);
+    assert.deepEqual(parseProfile(JSON.parse(JSON.stringify(a.profile))).modeTiers, { daily: ["bac"] });
+    assert.equal(parseProfile(JSON.parse(JSON.stringify(p))).modeTiers, undefined);
+    // Thiên Mệnh: lấy tầng cao nhất cả chu kỳ đã đóng.
+    const tower = p.dualTower as { destiny: { cycleBest: number; history?: unknown[] } };
+    const withHistory = {
+      ...p,
+      dualTower: { ...p.dualTower, destiny: { ...tower.destiny, cycleBest: 3, history: [{ cycleId: "c", bestFloor: 9, clearedFloor: 9, closedAt: 0, phaseAtClose: "done", pendingRewardDropped: false, cycleRewardClaimed: true }] } },
+    } as typeof p;
+    assert.equal(MODE_TIERS.destiny.score(withHistory), 9);
   });
 });

@@ -18,6 +18,7 @@ import {
   MAIN_ID,
   newProfile,
   profileTeam,
+  isDualTowerV1,
   progressOf,
   receiveDrop,
   type Profile,
@@ -319,6 +320,82 @@ export const FORMATION_TIERS: readonly ArenaTier[] = [
 /** Nhận thưởng một bậc Trận Đồ: số ván xếp hạng đã thắng phải đủ mốc; mỗi bậc một lần. */
 export function claimFormationTier(profile: Profile, tierId: string, rng: Rng): TierClaimResult {
   return claimTier(profile, FORMATION_TIERS, "formationTiers", tierId, tierId, profile.formationWins ?? 0, rng);
+}
+
+/** Sáu bậc với mốc `mins` (Đồng → Huyền Thoại), cùng vàng và phẩm món với Quần Hùng. */
+const tiersAt = (mins: readonly [number, number, number, number, number, number]): readonly ArenaTier[] =>
+  ARENA_TIERS.map((t, i) => ({ ...t, min: mins[i]! }));
+
+export type ModeTierId = "daily" | "destiny" | "tamTuongKy";
+
+/** Dải bậc của một chế độ: thước đo đọc từ hồ sơ trên server, đơn vị để hiện "Còn N …", mốc từng bậc. */
+export interface ModeTierLadder {
+  readonly id: ModeTierId;
+  readonly title: string;
+  /** Câu mô tả thước đo, hiện dưới dải bậc. */
+  readonly measure: string;
+  readonly unit: string;
+  readonly tiers: readonly ArenaTier[];
+  readonly score: (profile: Profile) => number;
+}
+
+const towerOf = (p: Profile) => (isDualTowerV1(p.dualTower) ? p.dualTower : null);
+
+/**
+ * Thưởng theo bậc cho các chế độ có xếp hạng còn lại (Shan 18/11/2026: chỉ chế độ chơi tính hạng): Nhật Lệnh, Tháp Thiên
+ * Mệnh, Tầm Tướng Ký. Quần Hùng, Đấu người, Trấn Ải, Trận Đồ có dải riêng ở trên. Thước đo đều do server ghi vào hồ sơ
+ * (không nhận số từ client); mốc là đề xuất của Claude, chờ Shan duyệt.
+ */
+export const MODE_TIERS: Readonly<Record<ModeTierId, ModeTierLadder>> = {
+  daily: {
+    id: "daily",
+    title: "Bậc Nhật Lệnh",
+    measure: "Số ngày đã đánh Nhật Lệnh (thắng hay thua đều tính).",
+    unit: "ngày",
+    tiers: tiersAt([1, 7, 20, 50, 100, 200]),
+    score: (p) => p.quests.totals.daily ?? 0,
+  },
+  destiny: {
+    id: "destiny",
+    title: "Bậc Tháp Thiên Mệnh",
+    measure: "Tầng Tháp Thiên Mệnh cao nhất từng vượt trong mọi chu kỳ (20 tầng).",
+    unit: "tầng",
+    tiers: tiersAt([1, 4, 8, 12, 16, 20]),
+    score: (p) => {
+      const d = towerOf(p)?.destiny;
+      return d ? Math.max(d.cycleBest, ...(d.history ?? []).map((h) => h.bestFloor)) : 0;
+    },
+  },
+  tamTuongKy: {
+    id: "tamTuongKy",
+    title: "Bậc Tầm Tướng Ký",
+    measure: "Số tướng đã khám phá trong Tướng Lục (76 tướng, kể cả tướng khởi đầu).",
+    unit: "tướng",
+    tiers: tiersAt([10, 20, 35, 50, 65, 76]),
+    score: (p) => p.tamTuongKy?.discovery.discoveredNodeIds.length ?? 0,
+  },
+};
+
+export const isModeTierId = (x: unknown): x is ModeTierId => typeof x === "string" && Object.hasOwn(MODE_TIERS, x);
+
+/** Id các bậc đã nhận của một chế độ (`profile.modeTiers`). */
+export const modeTierClaims = (profile: Profile, mode: ModeTierId): readonly string[] => profile.modeTiers?.[mode] ?? [];
+
+/** Nhận thưởng một bậc của chế độ `mode`: thước đo trong hồ sơ phải đủ mốc; mỗi bậc một lần. */
+export function claimModeTier(profile: Profile, mode: ModeTierId, tierId: string, rng: Rng): TierClaimResult {
+  const ladder = MODE_TIERS[mode];
+  const tier = ladder.tiers.find((t) => t.id === tierId);
+  if (!tier) return { ok: false, error: "badTier" };
+  if (ladder.score(profile) < tier.min) return { ok: false, error: "notReached" };
+  const claimed = modeTierClaims(profile, mode);
+  if (claimed.includes(tier.id)) return { ok: false, error: "claimed" };
+  const paid: Profile = {
+    ...profile,
+    gold: profile.gold + tier.gold,
+    modeTiers: { ...profile.modeTiers, [mode]: [...claimed, tier.id] },
+  };
+  const got = receiveDrop(paid, arenaTierGear(rng, tier, profile));
+  return { ok: true, gold: tier.gold, profile: got.profile, item: got.item, soldFor: got.soldFor };
 }
 
 /** Nhận thưởng một bậc Trấn Ải: kỷ lục số đợt trong hồ sơ phải đủ mốc; mỗi bậc một lần. */

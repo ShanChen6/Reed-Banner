@@ -31,6 +31,7 @@ import { ModeGuideTabs } from "../ModeGuide";
 import CheckInPanel from "../quests/CheckInPanel";
 import DailyQuestsPanel from "../quests/DailyQuestsPanel";
 import { RankBoard } from "../leaderboard/RankBoard";
+import ModeTierPanel from "../leaderboard/ModeTierPanel";
 import { useProfile } from "../profile/useProfile";
 
 function scoreText(s: DailyScore): string {
@@ -155,6 +156,7 @@ export default function DailyScreen() {
             label: "Bảng xếp hạng",
             content: (
               <>
+                <ModeTierPanel mode="daily" />
                 <RankRewardsPanel mode="daily" />
                 <OrnateFrame className="flex min-w-0 flex-col gap-2">
                   <SectionTitle>Bảng hôm nay</SectionTitle>

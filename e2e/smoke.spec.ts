@@ -127,6 +127,7 @@ test.describe("tài khoản đã đăng nhập", () => {
     await expect(page.getByRole("meter", { name: "Nhận Nhật Lệnh", exact: true })).toBeVisible();
     await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
     await expect(page.getByRole("heading", { name: "Bảng hôm nay" })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Bậc Nhật Lệnh" }).getByRole("button", { name: "Bậc Đồng: chưa đạt mốc" })).toHaveText("Còn 1 ngày");
     expectClean(problems);
   });
 
