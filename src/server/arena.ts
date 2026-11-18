@@ -101,7 +101,7 @@ export const RECORD_FIELD = {
   defenseLoss: "defenseLosses",
 } as const satisfies Record<ArenaRecord, keyof ArenaRow>;
 
-const guestName = (id: string) => `Khách ${id.slice(-4)}`;
+const guestName = (id: string) => `Lữ khách ${id.slice(-4)}`;
 
 const newRow = (ownerId: string, now: number): ArenaRow => ({
   ownerId,

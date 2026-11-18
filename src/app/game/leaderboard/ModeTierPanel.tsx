@@ -45,7 +45,7 @@ export default function ModeTierPanel({ mode }: { mode: ModeTierId }) {
       // Cập nhật số vàng trên thanh đầu trang.
       if (body.claimed) void fetchProfile();
     } catch {
-      setNote("Mất kết nối tới máy chủ, xin thử lại.");
+      setNote("Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin thử lại.");
     }
     setBusy(false);
   };

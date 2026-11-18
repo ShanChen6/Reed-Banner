@@ -192,7 +192,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       `Mỗi ngày có ${ARENA_ATTACKS_PER_DAY} lượt đánh, đổi lúc 0 giờ giờ Việt Nam.`,
       "Nâng cấp tướng hoặc đổi đội xong thì bấm Cập nhật theo đội hiện tại để đội phòng thủ theo kịp.",
       "Đối thủ ưu tiên người có điểm và lực chiến gần bạn; thẻ đối thủ ghi mạnh hơn, ngang sức hay yếu hơn. Thiếu người thì máy tạo bóng ma luyện tập cùng cấp, 1000 điểm; càng lên cao, đánh bóng ma càng ít điểm.",
-      "Trong Quần Hùng, trang bị cộng tối đa 30% công và máu gốc theo cấp (thủ tối đa gấp đôi), nên cấp tướng quan trọng hơn đồ.",
+      "Trong Quần Hùng, trang bị cộng tối đa 30% Công và máu gốc theo cấp (Thủ tối đa gấp đôi), nên cấp tướng quan trọng hơn đồ.",
       "Điểm hạng bắt đầu từ 1000, tăng giảm theo sức đối thủ và không xuống dưới 0.",
     ],
     rewards: [
@@ -315,7 +315,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     rules: [
       "Chế độ Thường: mỗi lượt chơi tốn một phiếu, nguyên liệu không mất. Có gợi ý, nhưng gợi ý không lộ đủ công thức.",
       "Chế độ Hạng tuần: mỗi lần ghép tiêu nguyên liệu, ghép sai cũng mất, không hoàn lại. Danh sách tướng đề cử đổi theo tuần.",
-      "Cần trình danh, khách không chơi được.",
+      "Cần trình danh, lữ khách không chơi được.",
     ],
     rewards: [
       "Bậc Tầm Tướng Ký theo số tướng đã khám phá: Đồng 10, Bạc 20, Vàng 35, Bạch Kim 50, Kim Cương 65, Huyền Thoại 76. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Ban thưởng, mỗi bậc một lần.",
@@ -341,7 +341,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     rewards: [
       "Thưởng trận như trận thường, lần đầu thắng mỗi bậc có thưởng lớn.",
-      "Khách chơi được, không có bảng công trạng.",
+      "Lữ khách chơi được, không có bảng công trạng.",
     ],
     tips: ["Đừng để một đạo đi quá xa: chờ đạo kia tới kề để giáp công thì trận nhẹ hơn nhiều."],
   },

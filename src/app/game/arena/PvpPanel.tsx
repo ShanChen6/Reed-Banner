@@ -73,12 +73,12 @@ export async function probePvp(): Promise<{ available: boolean; busy: boolean }>
 }
 
 const ERROR_NAME: Record<string, string> = {
-  network: "Mất kết nối tới máy chủ. Hãy kiểm tra mạng, ván vẫn chạy trong lúc bạn tải lại.",
-  inMatch: "Bạn đang có một trận dở. Hãy vào lại trận đó.",
+  network: "Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin kiểm tra mạng; ván vẫn chạy trong lúc tải lại.",
+  inMatch: "Đang có một trận dở. Xin vào lại trận đó.",
   badFormat: "Thể thức này chưa mở.",
   banned: "Bạn đang bị hạn chế ghép trận vì phá trận.",
   needHeroes: "Đấu 3vs3 xếp hạng cần từ 7 tướng trở lên (kể cả Đinh Bộ Lĩnh), vì sáu lượt cấm vẫn phải chừa tướng cho bạn chọn.",
-  conflict: "Máy chủ đang bận, hãy thử lại.",
+  conflict: "Máy chủ đang bận. Xin thử lại sau giây lát.",
   notYourTurn: "Chưa đến lượt bạn.",
   notCaptain: "Chỉ đội trưởng mới đổi được người hành động.",
   left: "Bạn đã mất kết nối quá lâu, tướng của bạn do máy điều khiển.",
@@ -94,7 +94,7 @@ const errorText = (data: Json): string => {
   if (data.error === "banned" && typeof data.until === "number") return `Bạn bị hạn chế ghép trận vì phá trận, được ghép lại sau ${clockTime(data.until)}.`;
   const detail = typeof data.detail === "string" ? data.detail : "";
   if (detail in ERROR_TEXT) return ERROR_TEXT[detail as keyof typeof ERROR_TEXT];
-  return ERROR_NAME[String(data.error)] ?? "Có lỗi xảy ra, hãy thử lại.";
+  return ERROR_NAME[String(data.error)] ?? "Có trục trặc chưa rõ. Xin thử lại.";
 };
 
 export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boolean) => void }) {
@@ -357,7 +357,7 @@ export function PvpTierPanel() {
 const ROOM_ERROR: Record<string, string> = {
   notFound: "Không có phòng với mã này.",
   inRoom: "Bạn đang ở một phòng khác.",
-  inMatch: "Bạn đang có một trận dở. Hãy vào lại trận đó.",
+  inMatch: "Đang có một trận dở. Xin vào lại trận đó.",
   full: "Phòng đã đủ người.",
   closed: "Phòng đã đóng.",
   started: "Phòng đã bắt đầu trận.",
@@ -371,11 +371,11 @@ const ROOM_ERROR: Record<string, string> = {
   slotTaken: "Chỗ đã có người.",
   needHero: "Mọi người cần chọn tướng trước khi bắt đầu.",
   needHumans: "Mỗi phe cần ít nhất một người thật.",
-  needFull: "Còn chỗ trống. Hãy bật máy điền chỗ hoặc chờ thêm người.",
-  conflict: "Máy chủ đang bận, hãy thử lại.",
+  needFull: "Còn chỗ trống. Xin bật máy điền chỗ hoặc chờ thêm người.",
+  conflict: "Máy chủ đang bận. Xin thử lại sau giây lát.",
 };
 
-const roomError = (data: Json): string => ROOM_ERROR[String(data.error)] ?? ERROR_NAME[String(data.error)] ?? "Có lỗi xảy ra, hãy thử lại.";
+const roomError = (data: Json): string => ROOM_ERROR[String(data.error)] ?? ERROR_NAME[String(data.error)] ?? "Có trục trặc chưa rõ. Xin thử lại.";
 
 /** Phòng giao hữu 3vs3: lập phòng hoặc vào bằng mã, chọn tướng, chủ phòng bắt đầu. */
 function PvpRoom({ onMatch, onExit }: { onMatch: (matchId: string) => void; onExit: () => void }) {

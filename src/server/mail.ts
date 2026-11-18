@@ -71,7 +71,7 @@ export function verifyMail(to: string, url: string, hours: number): Mail {
 
 export function resetMail(to: string, username: string, url: string, minutes: number): Mail {
   const lines = [
-    `Có người vừa yêu cầu đặt lại mật khẩu cho tên đăng nhập "${username}" trên Cờ Lau. Bấm nút dưới đây để đặt mật khẩu mới.`,
+    `Có người vừa yêu cầu đặt lại mật khẩu cho tên đăng nhập “${username}” trên Cờ Lau. Bấm nút dưới đây để đặt mật khẩu mới.`,
     `Đường dẫn dùng được một lần trong ${minutes} phút. Nếu không phải bạn thì cứ bỏ qua thư này, mật khẩu vẫn giữ nguyên.`,
   ];
   return {

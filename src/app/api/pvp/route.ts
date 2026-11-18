@@ -22,7 +22,7 @@ function deps(): PvpDeps {
     now: Date.now(),
     seed: randomInt(0, 2 ** 31),
     newId: () => randomUUID(),
-    nameOf: async (id) => (await accountStore().get(id))?.name ?? `Khách ${id.slice(-4)}`,
+    nameOf: async (id) => (await accountStore().get(id))?.name ?? `Lữ khách ${id.slice(-4)}`,
   };
 }
 

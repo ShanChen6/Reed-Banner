@@ -389,7 +389,7 @@ export async function formationOverview(deps: FormationDeps, ownerId: string | n
         top: top.map((e, i) => ({
           rank: i + 1,
           // Khách chưa đăng nhập không có tên: hiện 4 ký tự cuối của id để phân biệt (như Nhật Lệnh).
-          name: e.name ?? `Khách ${e.ownerId.slice(-4)}`,
+          name: e.name ?? `Lữ khách ${e.ownerId.slice(-4)}`,
           mine: e.ownerId === ownerId,
           score: e.score ?? 0,
           turns: e.turns ?? 0,

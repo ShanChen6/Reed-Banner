@@ -94,7 +94,7 @@ export async function seasonBoardView(store: SeasonStore, mode: SeasonMode, seas
   return {
     board: mode,
     season,
-    top: top.map((e, i) => ({ rank: i + 1, name: e.name ?? `Khách ${e.ownerId.slice(-4)}`, mine: e.ownerId === ownerId, score: e.score })),
+    top: top.map((e, i) => ({ rank: i + 1, name: e.name ?? `Lữ khách ${e.ownerId.slice(-4)}`, mine: e.ownerId === ownerId, score: e.score })),
     mine,
   };
 }

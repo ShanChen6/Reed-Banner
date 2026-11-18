@@ -4,6 +4,12 @@
 
 ## 19/11/2026
 
+**Rà soát văn phong toàn dự án (Shan yêu cầu)**
+- Quét mọi chữ người chơi thấy trong `src/app`, `src/core`, `src/server` theo [Văn phong giao diện](../00-overview/thuat-ngu.md#văn-phong-giao-diện): kiểu dấu cũ đã nhất quán; sửa 18 trích dẫn Sử Lộ sang ngoặc kép cong, chỉ số "công/thủ" viết thường ở mô tả Phúc Thiên Mệnh và hướng dẫn Quần Hùng, "EXP" ở Bình Loạn, chữ "slot/active" trong luật tầng tháp.
+- "Khách" thành **lữ khách** ở menu, hướng dẫn, trang chủ và tên mặc định trên bảng, Đấu người ("Lữ khách 1a2b").
+- Câu báo lỗi ở Đấu người, thanh Ban thưởng theo mẫu chung ("Tin báo đứt quãng…", "Máy chủ đang bận. Xin…", "Có trục trặc chưa rõ. Xin thử lại."), bỏ "hãy thử lại" và xưng "bạn" trong lỗi.
+- Test văn phong quét rộng thêm sáu luật để không lệch lại.
+
 **Cường hóa, vật phẩm, kỹ năng, Phối Hợp, Công trạng (Shan yêu cầu)**
 - **Cường hóa trang bị** +0..+5 bằng Đá Cường Hóa và vàng, mỗi cấp +4% chỉ số của món; **Đá Cường Hóa** và **sách kinh nghiệm** (+250 kinh nghiệm) bán ở Cửa Hàng › Vật phẩm; dùng sách ở thẻ Tổng quan của tướng. Luật và giá: [Cường hóa](../04-equipment/cuong-hoa-todo.md).
 - Thẻ Kỹ năng ở Doanh Trại chỉ còn một danh sách: mỗi thẻ chiêu có sao cấp, dòng "Lên cấp…" và nút Nâng ngay trên thẻ.

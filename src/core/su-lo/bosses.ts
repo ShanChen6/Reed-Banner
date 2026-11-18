@@ -22,7 +22,7 @@ export const SL_BOSSES: Readonly<Record<SlEra, SlBoss>> = {
     name: "Thủy quân Nam Hán",
     intro: "Chiến thuyền phương Bắc chắn lối ra. Phá được thủy quân thì mới thoát khỏi mê cung.",
     phases: [
-      "Sử gia Lê Văn Hưu khen Tiền Ngô vương đã \"phá trăm vạn binh của Lưu Hoằng Tháo\" (Toàn thư, đời Ngô, lời bàn).",
+      "Sử gia Lê Văn Hưu khen Tiền Ngô vương đã “phá trăm vạn binh của Lưu Hoằng Tháo” (Toàn thư, đời Ngô, lời bàn).",
       "Sau thắng lợi ấy, mùa xuân năm 939 Ngô Quyền xưng vương (Toàn thư, mục Kỷ Hợi 939).",
       "Ngô Quyền đóng đô ở Loa thành, tức thành Cổ Loa (Toàn thư, đoạn mở đầu đời Tiền Ngô vương).",
     ],

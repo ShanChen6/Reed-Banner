@@ -21,7 +21,7 @@ function deps(): PvpRoomDeps {
     seed: randomInt(0, 2 ** 31),
     newId: () => randomUUID(),
     newCode: () => makeRoomCode(() => randomInt(0, 2 ** 31) / 2 ** 31),
-    nameOf: async (id) => (await accountStore().get(id))?.name ?? `Khách ${id.slice(-4)}`,
+    nameOf: async (id) => (await accountStore().get(id))?.name ?? `Lữ khách ${id.slice(-4)}`,
   };
 }
 
