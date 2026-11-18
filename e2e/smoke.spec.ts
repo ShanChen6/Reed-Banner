@@ -94,6 +94,8 @@ test.describe("tài khoản đã đăng nhập", () => {
     await page.goto("/game/survival");
     await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
     await expect(page.getByRole("heading", { name: "Bảng xếp hạng mùa này" })).toBeVisible();
+    // Bậc Trấn Ải: tài khoản mới chưa vượt đợt nào nên bậc Đồng còn khóa.
+    await expect(page.getByRole("region", { name: "Bậc Trấn Ải" }).getByRole("button", { name: "Bậc Đồng: chưa đạt mốc" })).toHaveText("Còn 1 đợt");
     await page.getByRole("tab", { name: "Chơi" }).click();
     await page.getByRole("button", { name: "Tự chọn đội mạnh" }).click();
     await page.getByRole("button", { name: "Bắt đầu Trấn Ải" }).click();
@@ -125,6 +127,51 @@ test.describe("tài khoản đã đăng nhập", () => {
     await expect(page.getByRole("meter", { name: "Nhận Nhật Lệnh", exact: true })).toBeVisible();
     await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
     await expect(page.getByRole("heading", { name: "Bảng hôm nay" })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Bậc Nhật Lệnh" }).getByRole("button", { name: "Bậc Đồng: chưa đạt mốc" })).toHaveText("Còn 1 ngày");
+    expectClean(problems);
+  });
+
+  test("Thưởng Bậc: một trang gom dải bậc của mọi chế độ xếp hạng, nhận một lần rồi khóa", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game");
+    await page.getByRole("link", { name: "Thưởng Bậc" }).first().click();
+    await expect(page).toHaveURL(/\/game\/tier-rewards$/);
+    for (const mode of ["Quần Hùng", "Đấu người", "Trấn Ải", "Trận Đồ", "Nhật Lệnh", "Tháp Thiên Mệnh", "Tầm Tướng Ký"])
+      await expect(page.getByRole("region", { name: `Bậc ${mode}`, exact: true })).toBeVisible();
+    // Chưa vào Quần Hùng thì dải khóa; Đấu người nhận Đồng rồi khóa.
+    await expect(page.getByRole("region", { name: "Bậc Quần Hùng", exact: true }).getByRole("button", { name: "Bậc Đồng: chưa vào chế độ" })).toBeDisabled();
+    await expect(page.getByText("Vào Quần Hùng một lần để mở dải bậc này.")).toBeVisible();
+    const pvp = page.getByRole("region", { name: "Bậc Đấu người", exact: true });
+    await pvp.getByRole("button", { name: "Nhận thưởng bậc Đồng" }).click();
+    await expect(page.getByText(/Đã nhận 50 vàng thưởng bậc Đồng/)).toBeVisible();
+    await expect(pvp.getByRole("button", { name: "Bậc Đồng: đã nhận thưởng" })).toBeDisabled();
+    await expect(page.getByRole("region", { name: "Bậc Trấn Ải", exact: true }).getByRole("button", { name: "Bậc Đồng: chưa đạt mốc" })).toHaveText("Còn 1 đợt");
+    expectClean(problems);
+  });
+
+  test("Tầm Tướng Ký: bấm ô trống mở hộp thoại chọn nguyên liệu cho đúng ô đó", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game/tam-tuong-ky");
+    await page.getByRole("button", { name: "Chọn nguyên liệu cho ô sau" }).click();
+    const dialog = page.getByRole("dialog", { name: "Chọn nguyên liệu cho ô sau" });
+    await expect(dialog).toBeVisible();
+    await dialog.getByRole("searchbox").fill("thuy");
+    await dialog.getByRole("button", { name: /^Thủy/ }).click();
+    await expect(dialog).toBeHidden();
+    await expect(page.getByRole("button", { name: "Bỏ Thủy khỏi ô sau" })).toBeVisible();
+    // Ô trước vẫn trống, vẫn mở được hộp thoại; Esc đóng.
+    await page.getByRole("button", { name: "Chọn nguyên liệu cho ô trước" }).click();
+    await expect(page.getByRole("dialog", { name: "Chọn nguyên liệu cho ô trước" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog", { name: "Chọn nguyên liệu cho ô trước" })).toBeHidden();
+    expectClean(problems);
+  });
+
+  test("Sử Lộ: sa bàn vẽ trên bản đồ của thời kỳ", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game/maze");
+    await page.getByRole("button", { name: /Lên đường/ }).click();
+    await expect(page.getByRole("group", { name: /^Sa bàn mê cung .*, bản đồ sông Bạch Đằng$/ })).toBeVisible();
     expectClean(problems);
   });
 
@@ -140,10 +187,35 @@ test.describe("tài khoản đã đăng nhập", () => {
     await expect(page.getByText("Ngang sức").first()).toBeVisible();
     await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
     await expect(page.getByRole("heading", { name: "Đấu bóng ma" })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Bậc hạng Quần Hùng" })).toBeVisible();
+    await page.getByRole("region", { name: "Bậc hạng Quần Hùng" }).getByRole("button", { name: "Nhận thưởng bậc Đồng" }).click();
+    await expect(page.getByText(/Đã nhận 50 vàng thưởng bậc Đồng và .* Lương phẩm hệ .* \(đã vào túi đồ\)\./)).toBeVisible();
+    // Nhận một lần rồi nút khóa; bậc chưa đạt cũng khóa.
+    await expect(page.getByRole("region", { name: "Bậc hạng Quần Hùng" }).getByRole("button", { name: "Bậc Đồng: đã nhận thưởng" })).toBeDisabled();
+    await expect(page.getByRole("region", { name: "Bậc hạng Quần Hùng" }).getByRole("button", { name: "Bậc Bạc: chưa đạt mốc" })).toBeDisabled();
+    // Đấu người: một dải chung 1vs1 và 3vs3, nhận Đồng rồi khóa.
+    const pvpTiers = page.getByRole("region", { name: "Bậc hạng Đấu người" });
+    await pvpTiers.getByRole("button", { name: "Nhận thưởng bậc Đồng" }).click();
+    await expect(pvpTiers.getByRole("button", { name: "Bậc Đồng: đã nhận thưởng" })).toBeDisabled();
     await page.getByRole("tab", { name: "Chơi" }).click();
     await page.getByRole("button", { name: "Đấu người" }).click();
     await page.getByRole("group", { name: "Hệ của Đinh Bộ Lĩnh" }).getByRole("button", { name: "Lôi" }).click();
     await expect(page.getByText("Tướng sĩ · Lôi")).toBeVisible();
+    expectClean(problems);
+  });
+
+  test("Trận Đồ: mặc định Chơi thường, Chiến tích gộp bảng, thưởng và bộ sưu tập", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game/formation");
+    const tabs = page.getByRole("tablist", { name: "Chế độ" }).getByRole("tab");
+    await expect(tabs).toHaveText(["Chơi thường", "Xếp hạng", "Chiến tích", "Hướng dẫn"]);
+    await expect(page.getByRole("tab", { name: "Chơi thường" })).toHaveAttribute("aria-selected", "true");
+    await page.getByRole("tab", { name: "Xếp hạng" }).click();
+    await expect(page.getByRole("button", { name: "Chơi", exact: true }).first()).toBeVisible();
+    await page.getByRole("tab", { name: /Chiến tích/ }).click();
+    await expect(page.getByText(/Bộ sưu tập địa danh/)).toBeVisible();
+    await expect(page.getByRole("region", { name: "Bậc Trận Đồ" }).getByRole("button", { name: "Bậc Đồng: chưa đạt mốc" })).toHaveText("Còn 1 ván");
+    await expect(page.getByRole("group", { name: "Thang thưởng theo hạng" }).or(page.getByRole("list", { name: "Thang thưởng theo hạng" })).first()).toBeVisible();
     expectClean(problems);
   });
 

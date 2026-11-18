@@ -1,6 +1,6 @@
 # Giao diện Trận Đồ
 
-> Cập nhật: 02/11/2026
+> Cập nhật: 18/11/2026
 > Trạng thái: **DRAFT** — sa bàn là bản đồ, màn chế độ và màn chơi chi tiết đã có code; ô che, 4 icon chướng ngại v1 và đủ 30 ảnh bản đồ thật (Shan tạo) đã tích hợp; Shan test lần 1 rồi góp ý.
 
 Luật chơi ở [GDD Binh Pháp](../../02-game-modes/tran-do/gdd.md); tài liệu này chỉ nói về giao diện. Màn chơi nằm ở `src/app/game/formation/`.
@@ -42,15 +42,12 @@ Tóm tắt thông số: **tranh vẽ tay 2D điện ảnh đúng phong cách n�
 
 ## 5. Màn chế độ (đã code, chờ Shan test lần 1)
 
-Cấu trúc `ModeScreen.tsx`. Hai tab khi xếp hạng đang mở (**Xếp hạng · có thưởng**, **Chơi thường**); khi xếp hạng tắt chỉ có Chơi thường, không hiện tab.
+Cấu trúc `ModeScreen.tsx` (Shan 18/11/2026): hàng thẻ **Chơi thường** (mặc định khi vào Trận Đồ) · **Xếp hạng** (chỉ khi xếp hạng bật) · **Chiến tích** · **Hướng dẫn**. Tên thẻ và nút không ghi "có thưởng", "tính hạng"; nút thẻ xếp hạng là Chơi / Tiếp tục / Xem ván.
 
 - **Thẻ bậc dùng ảnh thumbnail cố định của bậc** (Shan chốt 06/11/2026, xem [lộ trình UI V2-02](../implementation/roadmap.md#v2-02--trận-đồ-ảnh-thumbnail-cố-định-cho-từng-bậc)). Thiết kế cũ (ảnh bản đồ phủ ô che lộ dần theo tiến độ, `MapCard.tsx`) đã bỏ; thành phần đó xóa 12/11/2026.
-- **Đồng hồ kỳ** trên thẻ xếp hạng ("Còn 5 giờ 12 phút" theo giờ server, tự tải lại bảng khi kỳ hết), số người đã thắng, trạng thái ván.
-- **Hạng hiện tại và thưởng dự kiến** (hạng/số người thắng, bậc thưởng, vàng) khi đã thắng, kèm lưu ý hạng còn đổi tới hết kỳ.
-- **Thang thưởng dạng bậc thang** (`RewardLadder.tsx`): năm bậc cao thấp khác nhau, vàng từng bậc, bậc hiện tại của người chơi sáng lên.
-- **Thưởng chờ nhận**, bảng xếp hạng top 10 mỗi bậc (gập), bảng thưởng đầy đủ (gập).
-- **Bộ sưu tập địa danh** `n/30` lưu ở máy: khai thông trọn một sa bàn (chơi thường hay xếp hạng) thì thêm địa danh; chưa có thì hiện "? ? ?".
-- Khách thấy tab xếp hạng chỉ có lời nhắc đăng nhập (không có bảng), chơi thường vẫn đầy đủ.
+- **Thẻ xếp hạng gọn**: hàng nhãn tròn (cỡ bàn, đồng hồ kỳ "Còn 5 giờ 12 phút" theo giờ server, số người đã thắng, vàng hạng nhất), một khối trạng thái ván (chưa chơi; đang dở kèm thanh khai thông; đã thắng kèm điểm, hạng và thưởng dự kiến; đã thua), rồi nút. Không còn thang thưởng trên thẻ và khoảng trống cố định.
+- **Chiến tích** gộp Bảng xếp hạng, Ban thưởng và Bộ sưu tập địa danh (thay hai thẻ Bảng xếp hạng, Ban thưởng cũ): khung **Bậc Trận Đồ** theo số ván xếp hạng đã thắng (dải sáu bậc, Nhận thưởng một lần mỗi bậc, xem [GDD mục 12](../../02-game-modes/tran-do/gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt)); thưởng chờ nhận và nút Nhận ở đầu (chấm đỏ trên tên thẻ khi còn thưởng); chọn bậc Thường/Khó/Đại trận để xem bảng kỳ hiện tại kiểu bục vinh danh (`RankBoard`, top 20, thanh "Bạn") kèm **thang thưởng cuối kỳ** (`RewardLadder.tsx`, bậc của mình sáng lên); bảng thưởng theo hạng (gập); **bộ sưu tập địa danh** `n/30` (khai thông trọn một sa bàn, chơi thường hay xếp hạng, thì thêm địa danh). Xếp hạng tắt thì Chiến tích chỉ còn bộ sưu tập.
+- Khách thấy thẻ Xếp hạng và Chiến tích có lời nhắc đăng nhập (không có bảng), chơi thường vẫn đầy đủ.
 
 ## 6. Màn chơi chi tiết (đã code, chờ Shan test lần 1)
 

@@ -9,6 +9,16 @@ import {
   ghostTeam,
   newProfile,
   ARENA_GEAR_CAP,
+  ARENA_TIERS,
+  arenaTierIndex,
+  claimArenaTier,
+  claimSurvivalTier,
+  claimModeTier,
+  MODE_TIERS,
+  SURVIVAL_TIERS,
+  parseProfile,
+  createRng,
+  BAG_LIMIT,
   arenaTeam,
   autoProgress,
   defensePower,
@@ -116,5 +126,80 @@ describe("đấu trường bóng ma", () => {
     const real = offers.filter((o) => o.owner !== null).map((o) => o.owner);
     assert.deepEqual(real, ["manh"]);
     assert.equal(offers.filter((o) => o.owner === null).length, 2);
+  });
+
+  it("thưởng bậc hạng: đủ điểm mới nhận, mỗi bậc một lần, kèm một món trang bị, lưu qua đọc lại hồ sơ", () => {
+    assert.equal(arenaTierIndex(1000), 0);
+    assert.equal(arenaTierIndex(1050), 1);
+    assert.equal(arenaTierIndex(5000), ARENA_TIERS.length - 1);
+    const rng = () => createRng(7);
+    const p = { ...newProfile(), element: "hoa" as const, profession: "ySu" as const };
+    assert.deepEqual(claimArenaTier(p, "bac", 1049, rng()), { ok: false, error: "notReached" });
+    assert.deepEqual(claimArenaTier(p, "khong-co", 2000, rng()), { ok: false, error: "badTier" });
+    const a = claimArenaTier(p, "bac", 1100, rng());
+    assert.ok(a.ok);
+    assert.equal(a.profile.gold, p.gold + ARENA_TIERS[1]!.gold);
+    assert.deepEqual(a.profile.arenaTiers, ["bac"]);
+    // Món phẩm theo bậc (Bạc: Lam), hệ theo Đinh Bộ Lĩnh, đã vào túi.
+    assert.ok(a.item);
+    assert.equal(a.item.tier, ARENA_TIERS[1]!.gear);
+    assert.equal(a.item.element, "hoa");
+    if (a.item.slot === "vuKhi") assert.equal(a.item.profession, "ySu");
+    assert.ok(a.profile.bag.some((it) => it.id === a.item!.id));
+    assert.deepEqual(claimArenaTier(a.profile, "bac", 1100, rng()), { ok: false, error: "claimed" });
+    // Bậc thấp hơn vẫn nhận được khi đã ở bậc cao.
+    assert.ok(claimArenaTier(a.profile, "dong", 1100, rng()).ok);
+    assert.deepEqual(parseProfile(JSON.parse(JSON.stringify(a.profile))).arenaTiers, ["bac"]);
+    assert.equal(parseProfile(JSON.parse(JSON.stringify(p))).arenaTiers, undefined);
+    // Túi đầy: món bán ngay thành vàng.
+    const full = { ...p, bag: Array.from({ length: BAG_LIMIT }, (_, k) => ({ ...a.item!, id: `x${k}` })) };
+    const sold = claimArenaTier(full, "dong", 1000, rng());
+    assert.ok(sold.ok);
+    assert.equal(sold.item, null);
+    assert.ok(sold.soldFor > 0);
+    assert.equal(sold.profile.gold, full.gold + ARENA_TIERS[0]!.gold + sold.soldFor);
+  });
+
+  it("bậc Trấn Ải theo kỷ lục số đợt: chưa vượt đợt nào thì chưa có bậc, mỗi bậc nhận một lần", () => {
+    const p = newProfile();
+    assert.equal(p.survival.best, 0);
+    assert.deepEqual(claimSurvivalTier(p, "dong", createRng(1)), { ok: false, error: "notReached" });
+    const best12 = { ...p, survival: { best: 12 } };
+    for (const id of ["dong", "bac", "vang"]) assert.ok(claimSurvivalTier(best12, id, createRng(1)).ok);
+    assert.deepEqual(claimSurvivalTier(best12, "bachKim", createRng(1)), { ok: false, error: "notReached" });
+    const a = claimSurvivalTier(best12, "vang", createRng(1));
+    assert.ok(a.ok);
+    assert.equal(a.gold, SURVIVAL_TIERS[2]!.gold);
+    assert.equal(a.item?.tier, SURVIVAL_TIERS[2]!.gear);
+    assert.deepEqual(a.profile.survivalTiers, ["vang"]);
+    assert.deepEqual(claimSurvivalTier(a.profile, "vang", createRng(1)), { ok: false, error: "claimed" });
+    // Bậc Trấn Ải ghi riêng, không đụng bậc Quần Hùng.
+    assert.equal(a.profile.arenaTiers, undefined);
+    assert.deepEqual(parseProfile(JSON.parse(JSON.stringify(a.profile))).survivalTiers, ["vang"]);
+  });
+
+  it("bậc chế độ xếp hạng: Nhật Lệnh theo số ngày đã đánh, Thiên Mệnh theo tầng cao nhất mọi chu kỳ, Tầm Tướng Ký theo số tướng", () => {
+    const p = newProfile();
+    assert.deepEqual(Object.keys(MODE_TIERS).sort(), ["daily", "destiny", "tamTuongKy"]);
+    assert.equal(MODE_TIERS.daily.score(p), 0);
+    assert.deepEqual(claimModeTier(p, "daily", "dong", createRng(1)), { ok: false, error: "notReached" });
+    const played = { ...p, quests: { ...p.quests, totals: { ...p.quests.totals, daily: 8 } } };
+    const a = claimModeTier(played, "daily", "bac", createRng(1));
+    assert.ok(a.ok);
+    assert.equal(a.gold, MODE_TIERS.daily.tiers[1]!.gold);
+    assert.deepEqual(a.profile.modeTiers, { daily: ["bac"] });
+    assert.deepEqual(claimModeTier(a.profile, "daily", "bac", createRng(1)), { ok: false, error: "claimed" });
+    assert.deepEqual(claimModeTier(a.profile, "daily", "vang", createRng(1)), { ok: false, error: "notReached" });
+    // Bậc mỗi chế độ ghi riêng.
+    assert.equal(claimModeTier(a.profile, "destiny", "bac", createRng(1)).ok, false);
+    assert.deepEqual(parseProfile(JSON.parse(JSON.stringify(a.profile))).modeTiers, { daily: ["bac"] });
+    assert.equal(parseProfile(JSON.parse(JSON.stringify(p))).modeTiers, undefined);
+    // Thiên Mệnh: lấy tầng cao nhất cả chu kỳ đã đóng.
+    const tower = p.dualTower as { destiny: { cycleBest: number; history?: unknown[] } };
+    const withHistory = {
+      ...p,
+      dualTower: { ...p.dualTower, destiny: { ...tower.destiny, cycleBest: 3, history: [{ cycleId: "c", bestFloor: 9, clearedFloor: 9, closedAt: 0, phaseAtClose: "done", pendingRewardDropped: false, cycleRewardClaimed: true }] } },
+    } as typeof p;
+    assert.equal(MODE_TIERS.destiny.score(withHistory), 9);
   });
 });

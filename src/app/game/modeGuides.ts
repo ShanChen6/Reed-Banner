@@ -122,6 +122,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Chu kỳ bắt đầu thứ Hai lúc 0 giờ giờ Việt Nam và kéo dài 7 ngày. Luật không đổi trong chu kỳ.",
     ],
     rewards: [
+      "Bậc Tháp Thiên Mệnh theo tầng cao nhất từng vượt: Đồng 1, Bạc 4, Vàng 8, Bạch Kim 12, Kim Cương 16, Huyền Thoại 20. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ BXH tuần, mỗi bậc một lần.",
       "Đá Cường Hóa khi lần đầu qua các mốc tầng và theo kỷ lục cuối chu kỳ. Chọn Phúc hoặc hồi phục giữa tầng không cho đá.",
       "Bảng xếp hạng riêng theo chu kỳ tuần (thẻ BXH tuần), có thưởng vàng theo hạng cuối kỳ cho tài khoản đã ghi danh.",
     ],
@@ -150,6 +151,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     rewards: [
       `${SURVIVAL_WAVE_GOLD} vàng cho mỗi đợt vượt qua, cộng vàng và sách nhặt trên bàn cờ.`,
       "Xếp hạng theo số đợt giữ được, có bảng mùa theo tuần và thưởng vàng theo hạng cuối mùa. Số đợt lên bảng ngay khi bạn vượt qua, không cần dừng lượt chơi.",
+      "Bậc theo kỷ lục số đợt: Đồng 1, Bạc 5, Vàng 10, Bạch Kim 15, Kim Cương 20, Huyền Thoại 25. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Bảng xếp hạng, mỗi bậc một lần.",
     ],
     tips: [
       "Xoay người giữa các đợt để tướng yếu có lúc hồi sức.",
@@ -170,6 +172,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Ai đi cùng một nước thì gặp cùng ô rơi.",
     ],
     rewards: [
+      "Bậc Nhật Lệnh theo số ngày đã đánh: Đồng 1, Bạc 7, Vàng 20, Bạch Kim 50, Kim Cương 100, Huyền Thoại 200. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Bảng xếp hạng, mỗi bậc một lần.",
       `Thắng ${DAILY_GOLD.win} vàng, thua vẫn được ${DAILY_GOLD.loss} vàng. Không có kinh nghiệm hay đồ rơi.`,
       "Xếp hạng: thắng đứng trên thua; cùng thắng thì ít lượt hơn đứng trên, rồi tới còn nhiều máu hơn. Thua thì xếp theo sát thương đã gây.",
       "Bảng hiện 20 người đầu, có thưởng vàng theo hạng cuối ngày.",
@@ -194,10 +197,12 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     rewards: [
       `Thắng nhận thưởng trận thường và thêm ${ARENA_WIN_GOLD} vàng.`,
+      "Bậc hạng theo điểm hạng: Đồng, Bạc, Vàng, Bạch Kim, Kim Cương, Huyền Thoại. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị (từ Lục tới Cam) ở thẻ Bảng xếp hạng, mỗi bậc một lần; tụt bậc không mất thưởng đã nhận.",
       "Bảng mùa theo tuần chỉ tính các trận bạn đi đánh, không tính phòng thủ. Hạng cuối mùa có thưởng vàng.",
     ],
     tips: [
       "Khi Đấu người được mở, bạn chọn Đấu người để đánh trực tiếp 1vs1 với người khác: ai cũng dùng Đinh Bộ Lĩnh, hệ thống ghép người có điểm gần bạn, mỗi lượt 30 giây.",
+      "Đấu người có một dải bậc hạng chung cho 1vs1 và 3vs3, tính theo điểm hạng cao hơn của hai thể thức, cùng mốc và thưởng với bóng ma; lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Bảng xếp hạng.",
       "Ở Đấu người, bỏ lượt liên tục là phá trận và không được tính điểm. Mất mạng được tha 3 lần mỗi ngày; mất mạng quá 90 giây thì máy điều khiển tướng của bạn.",
       "Thắng đối thủ mạnh hơn bạn được nhiều điểm hơn, thua đối thủ yếu hơn mất nhiều điểm hơn.",
       "Cần trình danh để chơi và lên bảng.",
@@ -221,6 +226,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     rewards: [
       "Chơi thường không thưởng, không xếp hạng, chơi bao nhiêu ván tùy ý.",
       "Xếp hạng có thưởng ở các bậc Thường, Khó và Đại trận khi chế độ này đang mở. Bậc Hướng dẫn không xếp hạng.",
+      "Bậc Trận Đồ theo số ván xếp hạng đã thắng: Đồng 1, Bạc 5, Vàng 15, Bạch Kim 30, Kim Cương 60, Huyền Thoại 100. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Chiến tích, mỗi bậc một lần.",
       "Điểm: đặt quân 10, mỗi quân kề khớp cả nghề lẫn hệ thêm 5, mỗi hàng hoặc cột dọn 50, thắng thêm 500 và thưởng theo bậc lửa còn trống.",
     ],
     tips: ["Bắt đầu ở bậc Hướng dẫn để quen luật khớp nghề và hệ."],
@@ -312,6 +318,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Cần trình danh, khách không chơi được.",
     ],
     rewards: [
+      "Bậc Tầm Tướng Ký theo số tướng đã khám phá: Đồng 10, Bạc 20, Vàng 35, Bạch Kim 50, Kim Cương 65, Huyền Thoại 76. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Bậc thưởng, mỗi bậc một lần.",
       "Mở đủ một bộ tướng thì nhận vàng và huy hiệu. Mở một tướng lẻ không có thành tựu.",
       "Hạng tuần có bảng và thưởng theo hạng. Nguyên liệu thêm kiếm từ thưởng hạng các chế độ và mua ở Cửa Hàng, có giới hạn mỗi tuần.",
     ],

@@ -102,6 +102,18 @@ export interface Profile {
   readonly expedition?: ExpeditionState;
   /** Chuỗi nhiệm vụ phụ mở Minh Nguyệt và Trần Vũ Phong. Chưa có tiến độ thì không có. */
   readonly specialQuests?: SpecialQuestState;
+  /** Quần Hùng: id các bậc hạng đã nhận thưởng (mỗi bậc một lần). Chưa nhận bậc nào thì không có. */
+  readonly arenaTiers?: readonly string[];
+  /** Đấu người: id các bậc đã nhận thưởng (một dải chung 1vs1 và 3vs3; khóa cũ "duel:bac" vẫn đọc được). */
+  readonly pvpTiers?: readonly string[];
+  /** Trấn Ải: id các bậc kỷ lục số đợt đã nhận thưởng. Chưa nhận bậc nào thì không có. */
+  readonly survivalTiers?: readonly string[];
+  /** Trận Đồ: số ván xếp hạng đã thắng (server cộng khi ván chuyển sang thắng). Chưa thắng ván nào thì không có. */
+  readonly formationWins?: number;
+  /** Trận Đồ: id các bậc đã nhận thưởng. */
+  readonly formationTiers?: readonly string[];
+  /** Các chế độ xếp hạng khác (Nhật Lệnh, Tháp Thiên Mệnh, Tầm Tướng Ký): id bậc đã nhận theo chế độ. */
+  readonly modeTiers?: Readonly<Record<string, readonly string[]>>;
   /** Trận Đồ: bộ sưu tập địa danh đã khai thông. Chưa có địa danh nào thì không có. */
   readonly formation?: FormationCollectionState;
 }
@@ -333,6 +345,37 @@ export function parseProfile(raw: unknown): Profile {
   const special = parseSpecialQuests(p.specialQuests);
   if (special) (next as { specialQuests?: SpecialQuestState }).specialQuests = special;
   else delete (next as { specialQuests?: SpecialQuestState }).specialQuests;
+  const ids = (raw: unknown) =>
+    Array.isArray(raw)
+      ? [...new Set(raw.filter((x): x is string => typeof x === "string" && x.length > 0 && x.length <= 20))].slice(0, 20)
+      : [];
+  const tiers = ids(p.arenaTiers);
+  if (tiers.length) (next as { arenaTiers?: readonly string[] }).arenaTiers = tiers;
+  else delete (next as { arenaTiers?: readonly string[] }).arenaTiers;
+  const pvpTiers = ids(p.pvpTiers);
+  if (pvpTiers.length) (next as { pvpTiers?: readonly string[] }).pvpTiers = pvpTiers;
+  else delete (next as { pvpTiers?: readonly string[] }).pvpTiers;
+  const modeTiers =
+    p.modeTiers && typeof p.modeTiers === "object" && !Array.isArray(p.modeTiers)
+      ? Object.fromEntries(
+          Object.entries(p.modeTiers as Record<string, unknown>)
+            .filter(([k]) => k.length > 0 && k.length <= 20)
+            .slice(0, 20)
+            .map(([k, v]) => [k, ids(v)] as const)
+            .filter(([, v]) => v.length > 0),
+        )
+      : {};
+  if (Object.keys(modeTiers).length) (next as { modeTiers?: Record<string, readonly string[]> }).modeTiers = modeTiers;
+  else delete (next as { modeTiers?: Record<string, readonly string[]> }).modeTiers;
+  const formationTiers = ids(p.formationTiers);
+  if (formationTiers.length) (next as { formationTiers?: readonly string[] }).formationTiers = formationTiers;
+  else delete (next as { formationTiers?: readonly string[] }).formationTiers;
+  const wins = p.formationWins;
+  if (Number.isInteger(wins) && (wins as number) > 0) (next as { formationWins?: number }).formationWins = Math.min(wins as number, 1_000_000);
+  else delete (next as { formationWins?: number }).formationWins;
+  const survivalTiers = ids(p.survivalTiers);
+  if (survivalTiers.length) (next as { survivalTiers?: readonly string[] }).survivalTiers = survivalTiers;
+  else delete (next as { survivalTiers?: readonly string[] }).survivalTiers;
   const formation = parseFormationCollection(p.formation);
   if (formation) (next as { formation?: FormationCollectionState }).formation = formation;
   else delete (next as { formation?: FormationCollectionState }).formation;

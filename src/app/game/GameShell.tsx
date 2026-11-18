@@ -33,6 +33,7 @@ import FullscreenToggle from "./FullscreenToggle";
 import GameHeader from "./header/GameHeader";
 import GameFooter, { FOOTER_SCENES } from "./GameFooter";
 import LoginGate from "./LoginGate";
+import TiersScreen from "./tiers/TiersScreen";
 
 export interface ShellAccount {
   readonly name: string;
@@ -159,6 +160,8 @@ function SceneView({
       return <SuLoScreen />;
     case "QUESTS":
       return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} tamTuongKyPack2={towerFeatures.tamTuongKyPack2 === true} tamTuongKyPack3={towerFeatures.tamTuongKyPack3 === true} />;
+    case "TIERS":
+      return account ? <TiersScreen /> : <LoginGate scene="TIERS" name={SCENE_TITLE.TIERS} />;
     case "SHOP":
       return <ShopScreen />;
     case "LEADERBOARD":

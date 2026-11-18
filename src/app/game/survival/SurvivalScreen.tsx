@@ -28,6 +28,8 @@ import {
   type Element,
   type FighterConfig,
   type MatchView,
+  type GearItem,
+  SURVIVAL_TIERS,
   type SurvivalAction,
   type Profile,
 } from "@/core";
@@ -58,6 +60,8 @@ import {
 } from "./roster-selection";
 import { ModeGuideTabs } from "../ModeGuide";
 import SurvivalBreakScreen from "./SurvivalBreakScreen";
+import { TierLadder } from "../leaderboard/RankBoard";
+import { SURVIVAL_LADDER, tierClaimNote, tierErrorNote, tierRewards } from "../arena/tiers";
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
@@ -105,6 +109,7 @@ export default function SurvivalScreen() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [tierNote, setTierNote] = useState<string | null>(null);
   const [slots, setSlots] = useState<SurvivalSlots>(EMPTY_SURVIVAL_SLOTS);
   const [focus, setFocus] = useState<number | null>(null);
   const [filter, setFilter] = useState<ElementFilter>("all");
@@ -236,6 +241,22 @@ export default function SurvivalScreen() {
       return;
     }
     enterBattle(res.id);
+  };
+
+  const claimTier = async (tier: string) => {
+    setBusy(true);
+    setTierNote(null);
+    try {
+      const res = await fetch("/api/survival/tier", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ tier }) });
+      const body = (await res.json()) as { claimed?: { tier: string; gold: number; item: GearItem | null; soldFor: number }; error?: string; profile?: Profile };
+      if (body.profile) setProfile(body.profile);
+      setTierNote(body.claimed ? tierClaimNote(body.claimed) : tierErrorNote(body.error, "kỷ lục số đợt"));
+      // Cập nhật số vàng trên thanh đầu trang.
+      if (body.claimed) void fetchProfile();
+    } catch {
+      setTierNote(ONLINE_ERROR_TEXT.network ?? "Mất kết nối, xin thử lại.");
+    }
+    setBusy(false);
   };
 
   const endRun = async (run: OpenRun) => {
@@ -504,6 +525,23 @@ export default function SurvivalScreen() {
             label: "Bảng xếp hạng",
             content: (
               <>
+                <OrnateFrame className="flex flex-col gap-2">
+                  <h3 className="font-bold text-frame-gold">Bậc Trấn Ải · kỷ lục {profile.survival.best} đợt</h3>
+                  <TierLadder
+                    tiers={SURVIVAL_LADDER}
+                    score={profile.survival.best}
+                    unit="đợt"
+                    label="Bậc Trấn Ải"
+                    rewards={tierRewards((id) => (profile.survivalTiers ?? []).includes(id), SURVIVAL_TIERS)}
+                    onClaim={(i) => void claimTier(SURVIVAL_TIERS[i]!.id)}
+                    busy={busy}
+                  />
+                  {tierNote && <p role="status" className="text-sm text-jade">{tierNote}</p>}
+                  <p className="text-caption text-on-wood-soft">
+                    Bậc theo kỷ lục số đợt vượt trong một lượt chơi. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị hệ của Đinh Bộ
+                    Lĩnh, mỗi bậc một lần.
+                  </p>
+                </OrnateFrame>
                 <RankRewardsPanel mode="survival" />
                 <SeasonBoardPanel board="survival" />
               </>

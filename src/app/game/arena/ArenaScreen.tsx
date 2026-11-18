@@ -7,13 +7,14 @@ import { Alert, Button, ChoiceChip, buttonVariants } from "@/components/ui";
 // Đánh dùng đội 3vs3 đang chọn ở hồ sơ; đối thủ do AI điều khiển.
 
 import { useEffect, useMemo, useState } from "react";
-import { ARENA_DIFFICULTY, ARENA_WIN_GOLD, MAIN_ID, arenaTeam, companionById, ownsCompanion, progressOf, teamPower, type ArenaMember } from "@/core";
+import { ARENA_DIFFICULTY, ARENA_TIERS as CORE_ARENA_TIERS, ARENA_WIN_GOLD, MAIN_ID, arenaTeam, companionById, ownsCompanion, progressOf, teamPower, type ArenaMember } from "@/core";
 import { ElementIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 import {
   createOnline,
   fetchArena,
+  fetchProfile,
   ONLINE_BATTLE_KEY,
   ONLINE_ERROR_TEXT,
   type ArenaResponse,
@@ -24,9 +25,13 @@ import { SceneLink, useScene } from "../SceneContext";
 import { ModeGuideTabs } from "../ModeGuide";
 import PvpPanel, { probePvp } from "./PvpPanel";
 import HeroGrid from "./HeroGrid";
+import { TierBadge, TierLadder, tierIndex } from "../leaderboard/RankBoard";
+import { TIERS, tierClaimNote, tierErrorNote, tierRewards } from "./tiers";
+import { PvpTierPanel } from "./PvpPanel";
 import { useProfile } from "../profile/useProfile";
 
 const ATTACK_KEY = "coLau.arena.attack";
+
 
 function Members({ list }: { list: readonly ArenaMember[] }) {
   return (
@@ -62,6 +67,7 @@ export default function ArenaScreen() {
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [tierNote, setTierNote] = useState<string | null>(null);
 
   /** Đấu người (PvP) chỉ hiện khi máy chủ bật cờ; đang có trận dở hoặc đang chờ ghép thì mở sẵn. */
   const [pvpOpen, setPvpOpen] = useState(false);
@@ -128,6 +134,19 @@ export default function ArenaScreen() {
   const myPower = attackPower || (data.defense?.power ?? 0);
   const offers = data.offers ?? [];
 
+  const claimTier = async (tier: string) => {
+    setBusy(`tier-${tier}`);
+    setTierNote(null);
+    const next = await fetchArena("claimTier", tier);
+    setBusy(null);
+    if (next.rating === undefined) return setMessage(ONLINE_ERROR_TEXT[next.error ?? "network"] ?? "Có trục trặc chưa rõ. Xin thử lại.");
+    setData(next);
+    if (next.claimed) {
+      setTierNote(tierClaimNote(next.claimed));
+      void fetchProfile();
+    } else setTierNote(tierErrorNote(next.claimError));
+  };
+
   const command = async (action: "defend" | "refresh") => {
     setBusy(action);
     setMessage(null);
@@ -178,6 +197,7 @@ export default function ArenaScreen() {
         stats={[
           { label: "Điểm", value: data.rating },
           { label: "Hạng", value: data.rank != null ? `#${data.rank}` : "–" },
+          { label: "Bậc", value: TIERS[tierIndex(TIERS, data.rating)]!.name },
           { label: "Lượt hôm nay", value: `${left}/${data.attacksPerDay ?? 0}` },
         ]}
       />
@@ -191,12 +211,28 @@ export default function ArenaScreen() {
               <>
                 <section aria-labelledby="arena-board-ghost" className="flex flex-col gap-4">
                   <h2 id="arena-board-ghost" className="ui-title-on-wood text-title">Đấu bóng ma</h2>
+                  <OrnateFrame>
+                    <TierLadder
+                      tiers={TIERS}
+                      score={data.rating}
+                      label="Bậc hạng Quần Hùng"
+                      rewards={tierRewards((id) => (data.tierClaims ?? []).includes(id))}
+                      onClaim={(i) => void claimTier(CORE_ARENA_TIERS[i]!.id)}
+                      busy={busy !== null}
+                    />
+                    {tierNote && <p role="status" className="mt-2 text-sm text-jade">{tierNote}</p>}
+                    <p className="mt-2 text-caption text-on-wood-soft">Lần đầu đạt mỗi bậc nhận vàng và một món trang bị hệ của Đinh Bộ Lĩnh, mỗi bậc một lần; tụt bậc không mất thưởng đã nhận.</p>
+                  </OrnateFrame>
                   <RankRewardsPanel mode="arena" />
-                  <SeasonBoardPanel board="arena" />
+                  <SeasonBoardPanel
+                    board="arena"
+                    myExtra={<TierBadge tier={TIERS[tierIndex(TIERS, data.rating)]!} index={tierIndex(TIERS, data.rating)} size="sm" />}
+                  />
                 </section>
                 {pvpOpen && (
                   <section aria-labelledby="arena-board-pvp" className="flex flex-col gap-4">
                     <h2 id="arena-board-pvp" className="ui-title-on-wood text-title">Đấu người</h2>
+                    <PvpTierPanel />
                     <RankRewardsPanel mode="pvp" />
                     <SeasonBoardPanel board="pvp" />
                   </section>

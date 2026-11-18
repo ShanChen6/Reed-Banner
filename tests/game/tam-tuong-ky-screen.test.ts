@@ -20,6 +20,7 @@ import {
   libraryNodes,
   noticeFor,
   pickInto,
+  putInto,
   recipeBook,
   swapSlots,
 } from "../../src/app/game/tam-tuong-ky/altar";
@@ -55,6 +56,11 @@ describe("Đài Hợp Nguyên: chọn ô", () => {
     s = pickInto(s, "elt.thuy");
     assert.deepEqual(s, ["elt.moc", "elt.thuy"]);
     assert.deepEqual(pickInto(s, "elt.kim"), ["elt.moc", "elt.kim"]);
+  });
+
+  it("chọn từ hộp thoại của một ô: đặt đúng ô đó, ô kia giữ nguyên", () => {
+    assert.deepEqual(putInto(EMPTY_SLOTS, 1, "elt.thuy"), [null, "elt.thuy"]);
+    assert.deepEqual(putInto(["elt.moc", "elt.thuy"], 0, "elt.kim"), ["elt.kim", "elt.thuy"]);
   });
 
   it("chọn cùng yếu tố hai lần (A+A)", () => {
@@ -262,8 +268,12 @@ describe("tab Tầm Tướng Ký trên trang Xếp hạng", () => {
     const html = renderToStaticMarkup(
       createElement(TtkBoard, { data: { week: "2026-11-02", top: [{ rank: 1, name: "Shan", mine: false, points: 500, unitsSpent: 90 }], mine: { rank: 7, points: 200, unitsSpent: 10 } } }),
     );
-    assert.match(html, /500 điểm · tiêu 90/);
-    assert.match(html, /Hạng của bạn: 7 · 200 điểm · tiêu 10/);
+    // Hạng 1 đứng trên bục, kèm số nguyên tố đã tiêu; thanh "Bạn" dính đáy ghi hạng và điểm của mình.
+    assert.match(html, /aria-label="Ba hạng đầu"/);
+    assert.match(html, />500 điểm</);
+    assert.match(html, /tiêu 90 nguyên tố/);
+    assert.match(html, /Đứng thứ 7/);
+    assert.match(html, />200 điểm</);
     assert.match(html, /tuần bắt đầu 2026-11-02/);
     assert.match(renderToStaticMarkup(createElement(TtkBoard, { data: { week: "2026-11-02", top: [], mine: null } })), /chưa có ai ghép ra tướng đề cử/);
   });

@@ -8,16 +8,21 @@ import {
   arenaDay,
   botDefense,
   botName,
+  claimArenaTier,
+  claimSurvivalTier,
+  claimModeTier,
+  type ModeTierId,
   createRng,
   arenaTeam,
   defenseOf,
   defensePower,
   teamPower,
   type ArenaDefense,
+  type GearItem,
   type ArenaMember,
 } from "@/core";
 import type { LeaderboardStore } from "./leaderboard";
-import { loadProfile, type ProfileStore } from "./profiles";
+import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 
 /** Một đối thủ đang bày ra. `owner` chỉ nằm trên server; bóng ma máy tạo có `owner` null và dựng lại từ seed. */
 export interface ArenaOffer {
@@ -258,6 +263,8 @@ export interface ArenaView {
     readonly power: number;
     readonly bot: boolean;
   }[];
+  /** Id các bậc hạng đã nhận thưởng. */
+  readonly tierClaims: readonly string[];
 }
 
 export type ArenaCommand = "view" | "defend" | "refresh";
@@ -313,6 +320,7 @@ export async function arenaView(
     defense: row.defense
       ? { members: row.defense.members, power: defensePower(row.defense) }
       : null,
+    tierClaims: ((await loadProfile(deps.profiles, ownerId)).profile.arenaTiers ?? []),
     offers: row.offers.map((o) => ({
       name: o.name,
       rating: o.rating,
@@ -321,4 +329,96 @@ export async function arenaView(
       bot: o.owner === null,
     })),
   };
+}
+
+/** Băm FNV-1a một chuỗi thành hạt giống (như `dropSeed`; viết lại ở đây để không nhập vòng qua battleRewards). */
+function seedOf(text: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+
+/**
+ * Nhận thưởng một bậc hạng Quần Hùng: điểm hạng lấy từ kho đấu trường trên server, vàng cộng vào hồ sơ; mỗi bậc một lần
+ * (ghi id bậc vào `profile.arenaTiers` cùng lần cộng vàng nên bấm hai lần không nhận hai lần).
+ */
+export async function claimArenaTierReward(
+  ownerId: string,
+  tierId: string,
+  deps: Pick<ArenaDeps, "arena" | "profiles" | "now">,
+): Promise<
+  | { readonly ok: true; readonly gold: number; readonly item: GearItem | null; readonly soldFor: number }
+  | { readonly ok: false; readonly error: string }
+> {
+  const row = await deps.arena.get(ownerId);
+  if (!row) return { ok: false, error: "notReached" };
+  let result = { gold: 0, item: null as GearItem | null, soldFor: 0 };
+  const r = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => {
+      // Hạt giống theo người và bậc: ghi lại sau xung đột vẫn ra cùng một món.
+      const c = claimArenaTier(p, tierId, row.rating, createRng(seedOf(`${ownerId}:arena-tier:${tierId}`)));
+      if (!c.ok) return c;
+      result = { gold: c.gold, item: c.item, soldFor: c.soldFor };
+      return { ok: true, profile: c.profile };
+    },
+    deps.now,
+  );
+  return r.ok ? { ok: true, ...result } : { ok: false, error: String(r.error) };
+}
+
+/**
+ * Nhận thưởng một bậc Trấn Ải: kỷ lục số đợt đọc trong hồ sơ trên server (`profile.survival.best`); vàng và món cộng
+ * cùng lần ghi id bậc vào `profile.survivalTiers`, nên mỗi bậc nhận một lần.
+ */
+export async function claimSurvivalTierReward(
+  ownerId: string,
+  tierId: string,
+  deps: Pick<ArenaDeps, "profiles" | "now">,
+): Promise<
+  | { readonly ok: true; readonly gold: number; readonly item: GearItem | null; readonly soldFor: number }
+  | { readonly ok: false; readonly error: string }
+> {
+  let result = { gold: 0, item: null as GearItem | null, soldFor: 0 };
+  const r = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => {
+      const c = claimSurvivalTier(p, tierId, createRng(seedOf(`${ownerId}:survival-tier:${tierId}`)));
+      if (!c.ok) return c;
+      result = { gold: c.gold, item: c.item, soldFor: c.soldFor };
+      return { ok: true, profile: c.profile };
+    },
+    deps.now,
+  );
+  return r.ok ? { ok: true, ...result } : { ok: false, error: String(r.error) };
+}
+
+/**
+ * Nhận thưởng một bậc của chế độ xếp hạng `mode` (Nhật Lệnh, Tháp Thiên Mệnh, Tầm Tướng Ký): thước đo đọc trong hồ sơ trên
+ * server; vàng và món cộng cùng lần ghi id bậc vào `profile.modeTiers[mode]`, nên mỗi bậc nhận một lần.
+ */
+export async function claimModeTierReward(
+  ownerId: string,
+  mode: ModeTierId,
+  tierId: string,
+  deps: Pick<ArenaDeps, "profiles" | "now">,
+): Promise<
+  | { readonly ok: true; readonly gold: number; readonly item: GearItem | null; readonly soldFor: number }
+  | { readonly ok: false; readonly error: string }
+> {
+  let result = { gold: 0, item: null as GearItem | null, soldFor: 0 };
+  const r = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => {
+      const c = claimModeTier(p, mode, tierId, createRng(seedOf(`${ownerId}:${mode}-tier:${tierId}`)));
+      if (!c.ok) return c;
+      result = { gold: c.gold, item: c.item, soldFor: c.soldFor };
+      return { ok: true, profile: c.profile };
+    },
+    deps.now,
+  );
+  return r.ok ? { ok: true, ...result } : { ok: false, error: String(r.error) };
 }

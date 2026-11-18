@@ -81,23 +81,25 @@ export default function HeroGrid({
           className="min-h-11 sm:max-w-xs"
         />
         {extraFilter?.node}
+        <div className="flex flex-col gap-1.5 lg:flex-row lg:flex-wrap lg:items-center lg:gap-4">
         <div className="flex flex-wrap gap-1.5" role="group" aria-label="Lọc theo hệ">
           <ChoiceChip selected={element === "all"} onClick={() => { setElement("all"); resetPage(); }}>Mọi hệ</ChoiceChip>
           {ELEMENTS.map((e) => (
-            <ChoiceChip key={e} selected={element === e} className="gap-1" onClick={() => { setElement(e); resetPage(); }}>
-              <ElementIcon element={e} className="size-4" />
-              {ELEMENT_NAME[e]}
+            <ChoiceChip key={e} selected={element === e} className="min-w-11 px-2" aria-label={`Hệ ${ELEMENT_NAME[e]}`} title={`Hệ ${ELEMENT_NAME[e]}`}
+              onClick={() => { setElement(e); resetPage(); }}>
+              <ElementIcon element={e} className="size-5" />
             </ChoiceChip>
           ))}
         </div>
         <div className="flex flex-wrap gap-1.5" role="group" aria-label="Lọc theo nghề">
           <ChoiceChip selected={profession === "all"} onClick={() => { setProfession("all"); resetPage(); }}>Mọi nghề</ChoiceChip>
           {PROFESSIONS.map((p) => (
-            <ChoiceChip key={p} selected={profession === p} className="gap-1" onClick={() => { setProfession(p); resetPage(); }}>
-              <ProfessionIcon profession={p} className="size-4" />
-              {PROFESSION_NAME[p]}
+            <ChoiceChip key={p} selected={profession === p} className="min-w-11 px-2" aria-label={`Nghề ${PROFESSION_NAME[p]}`} title={`Nghề ${PROFESSION_NAME[p]}`}
+              onClick={() => { setProfession(p); resetPage(); }}>
+              <ProfessionIcon profession={p} className="size-5" />
             </ChoiceChip>
           ))}
+        </div>
         </div>
       </div>
       <p className="text-caption text-on-wood-soft" role="status">
@@ -124,7 +126,11 @@ export default function HeroGrid({
                   {h.level !== undefined && <span className="shrink-0 text-caption font-normal opacity-80">cấp {h.level}</span>}
                 </span>
                 {h.element && h.profession && (
-                  <span className="text-caption font-normal opacity-80">{ELEMENT_NAME[h.element]} · {PROFESSION_NAME[h.profession]}</span>
+                  <span className="flex items-center gap-1 text-caption font-normal">
+                    <ElementIcon element={h.element} className="size-4" />
+                    <ProfessionIcon profession={h.profession} className="size-4" />
+                    <span className="sr-only">{ELEMENT_NAME[h.element]} · {PROFESSION_NAME[h.profession]}</span>
+                  </span>
                 )}
                 {h.blocked && <span className="text-caption font-normal">{h.blocked}</span>}
               </span>

@@ -113,6 +113,14 @@ balance và release: [T06.04](dual-tower/06-04-final-acceptance.md).
   - Cả ba active gục thì lượt chơi kết thúc ngay, kể cả khi còn reserve.
 - **Lưu tiến độ (17/11/2026):** lúc nghỉ giữa đợt có thể tạm nghỉ và quay lại sau, ở thiết bị nào cũng được; tiến độ giữ tới hết mùa tuần. Đang đánh dở một đợt mà bỏ quá 24 giờ thì không xử thua: lượt chơi kết thúc ở đợt cuối cùng đã hoàn thành, và điểm vẫn được ghi. Mỗi người một lượt chơi mở. Chi tiết ở [Rules & State Machine](survival/02-rules-state-machine.md).
 - Điểm = số đợt đã vượt qua.
+- **Bậc và thưởng bậc (Shan 18/11/2026, mốc Claude đề xuất, chờ duyệt):** bậc theo kỷ lục số đợt vượt trong một lượt chơi (`profile.survival.best`), cùng tên bậc, vàng và phẩm món với Quần Hùng (`SURVIVAL_TIERS`, `src/core/arena/arena.ts`). Lần đầu đạt mỗi bậc nhận vàng và một món hệ Đinh Bộ Lĩnh, mỗi bậc một lần (`profile.survivalTiers`), nhận rồi nút khóa; ở thẻ Bảng xếp hạng màn Trấn Ải. API POST `/api/survival/tier` `{ tier }` (chỉ tài khoản đăng nhập), server đọc kỷ lục trong hồ sơ.
+
+  | Bậc | Đồng | Bạc | Vàng | Bạch Kim | Kim Cương | Huyền Thoại |
+  |---|---|---|---|---|---|---|
+  | Kỷ lục từ (đợt) | 1 | 5 | 10 | 15 | 20 | 25 |
+  | Thưởng | 50 vàng + Lục | 150 + Lam | 300 + Lam | 500 + Tím | 800 + Tím | 1 200 + Cam |
+
+  Mốc theo [báo cáo cân bằng](survival/23-balance-report.md): đội không trang bị qua 10 đợt 60–100%, qua 15 đợt 10–60%, qua 20 đợt 0–10%; Huyền Thoại 25 đợt là mốc cho đội có trang bị và xoay dự bị tốt.
 
 ### 4.1 Bản đầu (Claude đặt 20/10/2026, chờ Shan duyệt; baseline trước V1.1)
 
@@ -235,12 +243,43 @@ Trang `/arena`, code ở `src/core/arena/` (đội phòng thủ, bóng ma máy t
 - **Thưởng:** thưởng trận thường (kinh nghiệm, vàng nhặt, món rơi theo độ khó Khó) và thêm 50 vàng khi thắng.
 - **Bảng xếp hạng:** bảng Quần Hùng ở Công Trạng (`/leaderboard`), theo điểm; lên bảng khi có đội phòng thủ. Ở màn Quần Hùng, thẻ Bảng xếp hạng nằm cạnh Chơi và Hướng dẫn, gồm thưởng hạng và bảng mùa của Đấu bóng ma, kèm Đấu người khi cờ bật.
 - **Mùa và thưởng:** có mùa theo tuần và thưởng vàng theo hạng, xem [mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng).
+- **Bậc hạng và thưởng bậc (Shan 18/11/2026, số liệu Claude đề xuất, chờ duyệt):** bậc theo điểm hạng hiện tại (`ARENA_TIERS`, `src/core/arena/arena.ts`). Lần đầu đạt mỗi bậc nhận vàng **một lần trọn đời** ở thẻ Bảng xếp hạng (POST `/api/arena` `{ action: "claimTier", tier }`, server đọc điểm hạng trong kho đấu trường, ghi id bậc vào `profile.arenaTiers` cùng lần cộng vàng). Không reset theo mùa vì điểm hạng không reset; tụt bậc không mất thưởng đã nhận; bậc thấp hơn bậc đang đứng vẫn nhận được.
+
+  | Bậc | Đồng | Bạc | Vàng | Bạch Kim | Kim Cương | Huyền Thoại |
+  |---|---|---|---|---|---|---|
+  | Điểm hạng từ | 0 | 1 050 | 1 150 | 1 300 | 1 500 | 1 750 |
+  | Vàng lần đầu | 50 | 150 | 300 | 500 | 800 | 1 200 |
+  | Trang bị lần đầu (Shan 18/11/2026) | Lục | Lam | Lam | Tím | Tím | Cam |
+
+  Tổng 3 000 vàng, khoảng 5 tuần hạng nhất mùa (600 vàng). Món trang bị mang hệ của Đinh Bộ Lĩnh lúc nhận, ô và bộ ngẫu nhiên theo hạt giống người chơi và bậc (ghi lại sau xung đột vẫn ra đúng món), vũ khí theo nghề Đinh Bộ Lĩnh; túi đầy thì bán ngay như món rơi sau trận (`arenaTierGear`, `claimArenaTier`). Món Cam chỉ rơi 2–13% ở trận Khó trở lên, nên bậc Huyền Thoại là mốc đáng giá. **Một lần duy nhất (Shan 18/11/2026):** đạt mốc thì bấm Nhận thưởng để nhận cả vàng và món trong một lần; nhận rồi nút khóa ("Đã nhận"), bậc chưa đạt thì nút khóa ghi số điểm còn thiếu. Không có nhận bù: bậc đã nhận vàng trước khi có thưởng trang bị không nhận thêm món. Ngang điểm thắng +16 nên Đồng lên Bạc khoảng 4 trận thắng.
 - **Chưa làm:** nhật ký bị đánh (chỉ có số trận giữ được và bị mất), chặn đánh lại cùng một người.
 - **Hướng sắp tới:** chế độ online hai người chơi đấu trực tiếp, xem [mục 6.2](#62-quần-hùng-online-hai-người-chơi-phát-triển-sau). Quần Hùng bất đồng bộ hiện tại giữ nguyên.
 
 ### 5.4 Viễn Chinh (Shan chọn cơ chế 04/11/2026)
 
 Hai đạo quân (Đinh Bộ Lĩnh + 2 tướng, và 3 tướng) hành quân trên một trong sáu sa bàn (Ải Bắc, Thượng Du, Cửa Biển, Ngã Ba Sông, Kinh Thành, Quần Đảo) tới thành đích, dưới sương mù (chỉ thấy ô đi được; chòi canh nhìn xa) và có đường vượt nước mất 2 ngày. Mỗi ngày một việc: một đạo tiến sang ô kề (gặp địch thì đánh) và đạo kia nghỉ hồi 15% máu, hoặc cả hai đóng quân. Giặc mạnh thêm 5% mỗi ngày; đạo kia đứng kề ô bị đánh thì giáp công (máu địch ×0,75). Thua trận chỉ rút về và gục cả đạo; hết ngày mà chưa chiếm thành là thua. Mỗi ngày 3 lượt xuất quân; chơi offline, không bảng xếp hạng, khách chơi được. Nguồn chính: [GDD Viễn Chinh](expedition/01-vien-chinh-gdd.md).
+
+## 5.9 Thưởng theo bậc của các chế độ xếp hạng (Shan 18/11/2026)
+
+Mỗi chế độ **có xếp hạng** có một dải sáu bậc Đồng, Bạc, Vàng, Bạch Kim, Kim Cương, Huyền Thoại. Lần đầu đạt mốc một bậc thì bấm Nhận thưởng để nhận vàng và một món trang bị (hệ Đinh Bộ Lĩnh, ô và bộ ngẫu nhiên theo hạt giống người chơi và bậc; túi đầy thì bán ngay), **mỗi bậc một lần**, nhận rồi nút khóa. Thước đo đều do server ghi vào hồ sơ, không nhận số từ client. Chỉ chế độ tính hạng (Shan: không làm cho Bình Loạn, hai tháp không xếp hạng, Viễn Chinh, các chế độ giải đố).
+
+| Bậc | Đồng | Bạc | Vàng | Bạch Kim | Kim Cương | Huyền Thoại |
+|---|---|---|---|---|---|---|
+| Thưởng | 50 vàng + Lục | 150 + Lam | 300 + Lam | 500 + Tím | 800 + Tím | 1 200 + Cam |
+
+| Chế độ | Thước đo | Mốc (Đồng → Huyền Thoại) | Code |
+|---|---|---|---|
+| Quần Hùng bóng ma | điểm hạng | 0 · 1 050 · 1 150 · 1 300 · 1 500 · 1 750 | `ARENA_TIERS`, mục 5.3 |
+| Đấu người | điểm hạng cao hơn của 1vs1, 3vs3 | như Quần Hùng | `claimPvpTier`, [PvP](future/quan-hung-pvp-truc-tiep.md) |
+| Trấn Ải | kỷ lục số đợt | 1 · 5 · 10 · 15 · 20 · 25 | `SURVIVAL_TIERS`, mục 4 |
+| Trận Đồ | số ván xếp hạng đã thắng | 1 · 5 · 15 · 30 · 60 · 100 | `FORMATION_TIERS`, [GDD mục 12](tran-do/gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt) |
+| Nhật Lệnh | số ngày đã đánh (`quests.totals.daily`) | 1 · 7 · 20 · 50 · 100 · 200 | `MODE_TIERS.daily` |
+| Tháp Thiên Mệnh | tầng cao nhất từng vượt mọi chu kỳ (`cycleBest`, `history`) | 1 · 4 · 8 · 12 · 16 · 20 | `MODE_TIERS.destiny` |
+| Tầm Tướng Ký | số tướng đã khám phá (76, kể cả khởi đầu) | 10 · 20 · 35 · 50 · 65 · 76 | `MODE_TIERS.tamTuongKy` |
+
+Ba chế độ cuối dùng khung chung: `MODE_TIERS`, `claimModeTier` (`src/core/arena/arena.ts`), lưu `profile.modeTiers[mode]`, API POST `/api/tiers` `{ mode, tier }` (chỉ tài khoản đăng nhập), giao diện `ModeTierPanel.tsx` ở thẻ Bảng xếp hạng (Nhật Lệnh), BXH tuần (Thiên Mệnh), Bậc thưởng (Tầm Tướng Ký). Mốc là đề xuất của Claude, chờ Shan duyệt. Một người đạt hết mọi dải nhận tối đa 7 × 3 000 vàng và 7 món Cam.
+
+**Trang Thưởng Bậc** (`/game/tier-rewards`, phân cảnh `TIERS`, Shan 18/11/2026): gom cả bảy dải vào một trang, mở từ thẻ Quân vụ ở màn chính và nút ở màn Nhiệm vụ; chỉ tài khoản đăng nhập. Mỗi dải hiện thước đo hiện tại, số bậc chờ nhận và nút vào chế độ; dải của chế độ đang tắt theo cờ (Đấu người, Trận Đồ xếp hạng, Tháp Thiên Mệnh, Tầm Tướng Ký) không hiện. Quần Hùng: phải vào chế độ một lần trước (có bản ghi đấu trường) mới nhận được, kể cả bậc Đồng; trước đó dải hiện khóa (`locked`) với lời nhắc vào chế độ (Shan 18/11/2026). GET `/api/tiers` trả `{ ladders }`; POST `/api/tiers` `{ mode, tier }` nhận mọi dải (`arena`, `pvp`, `survival`, `formation`, `daily`, `destiny`, `tamTuongKy`) bằng đúng hàm nhận của chế độ đó, nên nhận ở trang này hay trong chế độ đều là một lần. Code: `src/server/tierHub.ts`, `src/app/game/tiers/TiersScreen.tsx`.
 
 ## 6. Thưởng vàng theo hạng cuối kỳ (Claude đặt 01/11/2026, chờ Shan duyệt)
 

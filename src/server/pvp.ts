@@ -14,6 +14,9 @@ import {
   vnWeek,
   createPvpMatch,
   createRng,
+  claimPvpTier,
+  pvpTierClaims,
+  type GearItem,
   profileTeam,
   pvpActorOwner,
   pvpAdvanceAi,
@@ -524,6 +527,8 @@ export interface PvpOverview {
   readonly breakCount: number;
   /** Bị hạn chế ghép trận tới mốc này (ms), null nếu không. */
   readonly banUntil: number | null;
+  /** Id các bậc hạng Đấu người đã nhận thưởng (một dải chung 1vs1 và 3vs3). */
+  readonly tierClaims: readonly string[];
   readonly serverNow: number;
 }
 
@@ -581,6 +586,7 @@ export async function pvpOverview(ownerId: string, deps: PvpDeps): Promise<PvpOv
     matchId,
     draftId,
     forgiveLeft: r.forgiveDay === day ? Math.max(0, PVP_FORGIVE_PER_DAY - r.forgiveUsed) : PVP_FORGIVE_PER_DAY,
+    tierClaims: pvpTierClaims(profile),
     serverNow: deps.now,
   };
 }
@@ -814,4 +820,45 @@ export function pvpPlay(id: string, owner: string, action: BattleAction, deps: P
     }
     return { ok: true, state: r.state, events: r.events };
   });
+}
+
+/** Băm FNV-1a một chuỗi thành hạt giống cho món thưởng bậc (ghi lại sau xung đột vẫn ra cùng món). */
+function tierSeed(text: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+
+/**
+ * Nhận thưởng một bậc hạng Đấu người: một dải chung, tính theo điểm hạng cao hơn giữa 1vs1 và 3vs3 xếp hạng đọc trong
+ * kho PvP trên server; vàng và món cộng vào hồ sơ cùng lần ghi id bậc vào `profile.pvpTiers`, nên mỗi bậc nhận một lần.
+ */
+export async function claimPvpTierReward(
+  ownerId: string,
+  tierId: string,
+  deps: Pick<PvpDeps, "pvp" | "profiles" | "now">,
+): Promise<
+  | { readonly ok: true; readonly gold: number; readonly item: GearItem | null; readonly soldFor: number }
+  | { readonly ok: false; readonly error: string }
+> {
+  const rating = await pvpTierRating(ownerId, deps);
+  let result = { gold: 0, item: null as GearItem | null, soldFor: 0 };
+  const r = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => {
+      const c = claimPvpTier(p, tierId, rating, createRng(tierSeed(`${ownerId}:pvp-tier:${tierId}`)));
+      if (!c.ok) return c;
+      result = { gold: c.gold, item: c.item, soldFor: c.soldFor };
+      return { ok: true, profile: c.profile };
+    },
+    deps.now,
+  );
+  return r.ok ? { ok: true, ...result } : { ok: false, error: String(r.error) };
+}
+
+/** Điểm xét bậc Đấu người: điểm hạng cao hơn giữa 1vs1 và 3vs3 xếp hạng. */
+export async function pvpTierRating(ownerId: string, deps: Pick<PvpDeps, "pvp">): Promise<number> {
+  const [duel, team] = await Promise.all([deps.pvp.rating(ownerId, "duel"), deps.pvp.rating(ownerId, "team")]);
+  return Math.max(duel.rating, team.rating);
 }

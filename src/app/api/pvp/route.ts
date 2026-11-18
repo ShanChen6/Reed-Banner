@@ -1,13 +1,15 @@
 // GET /api/pvp: điểm hạng, trạng thái hàng đợi và trận đang chơi của người chơi hiện tại. Mỗi lần hỏi là một lần ghi nhận
 // tín hiệu còn sống và một lần thử ghép trận (không có tiến trình nền).
 // POST /api/pvp `{ action: "queue", format: "duel" } | { action: "leave" }`: vào hoặc rời hàng đợi ghép trận.
+// POST /api/pvp `{ action: "claimTier", tier }`: nhận thưởng một bậc hạng Đấu người (một dải chung 1vs1 và 3vs3, theo
+// điểm hạng cao hơn; mỗi bậc một lần), trả tổng quan kèm `claimed: { tier, gold, item, soldFor }` hoặc `claimError`.
 // Quần Hùng online là chế độ có xếp hạng: chỉ tài khoản đăng nhập, và chỉ khi bật cờ PVP_ENABLED.
 
 import { randomInt, randomUUID } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { pvpEnabled } from "@/server/featureFlags";
 import { guestOf, isSignedInAccount, loginRequiredResponse, readJson, sameOrigin } from "@/server/http";
-import { pvpEnqueue, pvpLeaveQueue, pvpOverview, type PvpDeps } from "@/server/pvp";
+import { claimPvpTierReward, pvpEnqueue, pvpLeaveQueue, pvpOverview, type PvpDeps } from "@/server/pvp";
 import { accountStore, profileStore, pvpStore, seasonStore } from "@/server/store";
 
 const noStore = { "cache-control": "no-store" };
@@ -41,8 +43,18 @@ export async function POST(request: NextRequest) {
   if (!sameOrigin(request)) return NextResponse.json({ error: "badRequest" }, { status: 403, headers: noStore });
   const who = await owner(request);
   if (typeof who !== "string") return who;
-  const body = (await readJson(request)) as { action?: unknown; format?: unknown; element?: unknown; profession?: unknown } | null;
+  const body = (await readJson(request)) as { action?: unknown; format?: unknown; element?: unknown; profession?: unknown; tier?: unknown } | null;
   const d = deps();
+  if (body?.action === "claimTier") {
+    if (typeof body.tier !== "string" || body.tier.length > 20)
+      return NextResponse.json({ error: "badRequest" }, { status: 400, headers: noStore });
+    const c = await claimPvpTierReward(who, body.tier, d);
+    const view = await pvpOverview(who, d);
+    return NextResponse.json(
+      c.ok ? { ...view, claimed: { tier: body.tier, gold: c.gold, item: c.item, soldFor: c.soldFor } } : { ...view, claimError: c.error },
+      { headers: noStore },
+    );
+  }
   if (body?.action === "leave") {
     await pvpLeaveQueue(who, d);
   } else if (body?.action === "queue") {
