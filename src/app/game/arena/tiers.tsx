@@ -31,7 +31,7 @@ export function tierRewards(claimed: (tierId: string) => boolean, list: readonly
   return list.map((t) => ({
     gold: t.gold,
     claimed: claimed(t.id),
-    extra: <span className={TIER_CLASS[t.gear]}>+ món {TIER_COLOR_NAME[t.gear]}</span>,
+    extra: <span className={TIER_CLASS[t.gear]}>món {TIER_COLOR_NAME[t.gear]}</span>,
   }));
 }
 
