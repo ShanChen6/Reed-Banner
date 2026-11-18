@@ -56,7 +56,7 @@ export function ProgressSection({
 
       {online ? (
         <p className="ui-frame-inset rounded-xl p-3 text-caption text-on-wood-soft">
-          Túi đồ {profile.bag.length}/{BAG_LIMIT} món. Mặc trang bị và nâng kỹ năng ở{" "}
+          Kho đồ {profile.bag.length}/{BAG_LIMIT} món. Mặc trang bị và nâng kỹ năng ở{" "}
           <SceneLink scene="PROFILE" className="ui-link text-frame-gold underline underline-offset-2">
             Doanh Trại
           </SceneLink>

@@ -522,7 +522,7 @@ export default function SurvivalScreen() {
         extraTabs={[
           {
             value: "board",
-            label: "Bảng xếp hạng",
+            label: "Công trạng",
             content: (
               <>
                 <OrnateFrame className="flex flex-col gap-2">

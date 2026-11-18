@@ -106,7 +106,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
         refs: ["W04"],
       },
       {
-        text: "Cách trao lời bạn chọn chỉ đổi cảnh kể, không đổi kết cục, phần thưởng hay quan hệ về sau.",
+        text: "Cách trao lời bạn chọn chỉ đổi cảnh kể, không đổi kết cục, ban thưởng hay quan hệ về sau.",
         basis: "reconstructed",
       },
     ],
@@ -201,7 +201,7 @@ export const CHAPTER_FOUR_COPY: readonly MissionCopy[] = [
         refs: ["S07", "W05", "U06"],
       },
       {
-        text: "Việc làm trước bạn chọn chỉ đổi cảnh kể, không đổi kết cục hay phần thưởng.",
+        text: "Việc làm trước bạn chọn chỉ đổi cảnh kể, không đổi kết cục hay ban thưởng.",
         basis: "reconstructed",
       },
     ],

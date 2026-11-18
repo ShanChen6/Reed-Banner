@@ -1,4 +1,5 @@
 import { Alert, buttonVariants } from "@/components/ui";
+import { ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 // Các phân cảnh tài khoản, dựng ở server từ cookie rồi truyền vào màn chơi: LOGIN (Google, GitHub, tên đăng
 // nhập + mật khẩu, hoặc chơi tiếp với tư cách khách), REGISTER (tài khoản mới giữ trận và tiến độ của khách),
 // ACCOUNT (nhà cung cấp đã liên kết, liên kết thêm, đặt hoặc đổi mật khẩu, email, đăng xuất), FORGOT_PASSWORD
@@ -9,6 +10,7 @@ import type { Account, ProviderId } from "@/server/accounts";
 import { RESET_TTL_MS } from "@/server/recovery";
 import { scenePath } from "../scene";
 import { SceneLink } from "../SceneContext";
+import { AccountStats } from "./AccountStats";
 import { AuthCard, Divider } from "./AuthCard";
 import { AuthSceneLink, OnArrival, ProviderButtons, ReturnLink } from "./AuthLinks";
 import type { readAuthParams } from "./params";
@@ -86,6 +88,21 @@ export function RegisterScene({ q, providers, mail }: { q: AuthParams; providers
   );
 }
 
+const dateVi = (ms: number) => new Date(ms).toLocaleDateString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh", day: "2-digit", month: "2-digit", year: "numeric" });
+
+/** Lối tắt từ trang Tài khoản tới các màn giữ tài sản của tài khoản. */
+const SHORTCUTS = [
+  { scene: "PROFILE", title: "Doanh Trại", note: "Tướng quân, đội hình, kho đồ" },
+  { scene: "TIERS", title: "Ban Thưởng", note: "Thưởng bậc của các chế độ xếp hạng" },
+  { scene: "LEADERBOARD", title: "Công Trạng", note: "Thứ hạng của bạn ở mọi bảng" },
+  { scene: "QUESTS", title: "Nhiệm vụ", note: "Nhiệm vụ tuần và thành tựu" },
+  { scene: "SHOP", title: "Cửa Hàng", note: "Tướng, trang bị, vật phẩm" },
+] as const;
+
+/**
+ * Trang Tài khoản (Shan 18/11/2026): thẻ đầu trang (ảnh, tên, ngày ghi danh, nút vào chơi), dải tài sản đọc từ hồ sơ,
+ * rồi các thẻ Liên kết, Danh hiệu và mật lệnh, Địa chỉ thư, Lối tắt, Rời trại. Form vẫn gửi tới /api/auth/*.
+ */
 export function AccountScene({
   q,
   account,
@@ -98,99 +115,146 @@ export function AccountScene({
   mail: boolean;
 }) {
   const here = scenePath("ACCOUNT");
+  const providers = [...account.providers, ...linkable];
   return (
-    <AuthCard title="Tài khoản" oauthError={q.oauthError}>
-      <div className="mt-5 flex flex-col items-center gap-4">
-        {account.avatarUrl ? (
-          // Ảnh đại diện từ Google/GitHub; nhỏ nên không cần tối ưu qua next/image.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={account.avatarUrl} alt="" className="size-16 rounded-full border-2 border-frame-gold" referrerPolicy="no-referrer" />
-        ) : (
-          <div className="flex size-16 items-center justify-center rounded-full border-2 border-frame-gold text-2xl font-bold">
-            {account.name.slice(0, 1).toUpperCase()}
-          </div>
-        )}
-        <div className="text-center">
-          <p className="text-lg font-semibold">{account.name}</p>
-          {account.providers.length > 0 && (
-            <p className="mt-1 flex items-center justify-center gap-2 text-sm text-on-wood-soft">
-              Đã liên kết:
-              {account.providers.map((p) => (
-                <span key={p} className="inline-flex items-center gap-1">
-                  <ProviderLogo provider={p} className="size-4" /> {PROVIDER_NAME[p]}
-                </span>
-              ))}
-            </p>
+    <ModeScreen label="Tài khoản">
+      {q.oauthError && (
+        <OnArrival>
+          <Alert>Liên kết chưa thành. Xin thử lại.</Alert>
+        </OnArrival>
+      )}
+      <OrnateFrame level="hero" className="flex flex-col gap-4">
+        <div className="flex flex-wrap items-center gap-4">
+          {account.avatarUrl ? (
+            // Ảnh đại diện từ Google/GitHub; nhỏ nên không cần tối ưu qua next/image.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={account.avatarUrl} alt="" className="size-20 shrink-0 rounded-full border-2 border-frame-gold" referrerPolicy="no-referrer" />
+          ) : (
+            <div aria-hidden className="flex size-20 shrink-0 items-center justify-center rounded-full border-2 border-frame-gold bg-lacquer font-serif text-3xl font-bold text-paper-hi">
+              {account.name.slice(0, 1).toUpperCase()}
+            </div>
           )}
+          <div className="min-w-0 flex-1">
+            <p className="text-caption font-semibold tracking-[0.15em] text-frame-gold uppercase">Tài khoản đã ghi danh</p>
+            <h1 className="ui-title-on-wood truncate font-serif text-2xl font-bold">{account.name}</h1>
+            <p className="mt-1 text-sm text-on-wood-soft">
+              {account.username ? <>Danh hiệu <span className="font-semibold text-on-wood">{account.username}</span> · </> : null}
+              Ghi danh từ {dateVi(account.createdAt)} · Trình danh gần nhất {dateVi(account.lastLoginAt)}
+            </p>
+          </div>
+          <div className="flex w-full flex-wrap gap-2 sm:w-auto">
+            <ReturnLink className={buttonVariants({ size: "lg", className: "flex-1 sm:flex-none" })}>Vào chơi</ReturnLink>
+            <SceneLink scene="PROFILE" className={buttonVariants({ variant: "secondary", size: "lg", className: "flex-1 sm:flex-none" })}>
+              Doanh Trại
+            </SceneLink>
+          </div>
         </div>
-        <ReturnLink className={buttonVariants({ size: "lg", fullWidth: true })}>
-          Vào chơi
-        </ReturnLink>
-        <SceneLink scene="PROFILE" className={buttonVariants({ variant: "secondary", fullWidth: true })}>
-          Doanh Trại
-        </SceneLink>
-        {linkable.map((p) => (
-          <a
-            key={p}
-            href={`/api/auth/${p}?returnTo=${encodeURIComponent(here)}`}
-            className={buttonVariants({ variant: "secondary", fullWidth: true, className: "font-normal" })}
-          >
-            <ProviderLogo provider={p} /> Liên kết thêm {PROVIDER_NAME[p]}
-          </a>
-        ))}
-        <div className="ui-frame-inset w-full p-3 text-sm">
+        <AccountStats />
+      </OrnateFrame>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <OrnateFrame className="flex flex-col gap-3">
+          <SectionTitle description="Liên kết thêm để trình danh nhanh và còn đường vào trại khi quên mật lệnh.">Liên kết</SectionTitle>
+          {providers.length === 0 ? (
+            <p className="text-sm text-on-wood-soft">Máy chủ chưa mở trình danh bằng Google hay GitHub.</p>
+          ) : (
+            <ul className="flex flex-col gap-2">
+              {providers.map((p) => {
+                const linked = account.providers.includes(p);
+                return (
+                  <li key={p} className="ui-frame-inset flex items-center gap-3 px-3 py-2">
+                    <ProviderLogo provider={p} className="size-6 shrink-0" />
+                    <span className="flex-1 font-semibold">{PROVIDER_NAME[p]}</span>
+                    {linked ? (
+                      <span className="rounded-full bg-jade/20 px-3 py-1 text-caption font-semibold text-jade">✓ Đã liên kết</span>
+                    ) : (
+                      <a href={`/api/auth/${p}?returnTo=${encodeURIComponent(here)}`} className={buttonVariants({ variant: "outline", size: "sm" })}>
+                        Liên kết thêm {PROVIDER_NAME[p]}
+                      </a>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </OrnateFrame>
+
+        <OrnateFrame className="flex flex-col gap-3">
+          <SectionTitle description={account.username ? "Danh hiệu dùng để trình danh cùng mật lệnh." : "Thêm danh hiệu và mật lệnh để trình danh không cần Google hay GitHub."}>
+            Danh hiệu và mật lệnh
+          </SectionTitle>
           {account.username ? (
             <>
-              <p>
+              <p className="text-sm">
                 Danh hiệu: <span className="font-semibold">{account.username}</span>
               </p>
               {(q.passwordChanged || q.passwordReset) && (
                 <OnArrival>
-                  <p className="mt-2 text-jade">{q.passwordReset ? "Đã đặt mật lệnh mới." : "Đã đổi mật lệnh."}</p>
+                  <Alert tone="success">{q.passwordReset ? "Đã đặt mật lệnh mới." : "Đã đổi mật lệnh."}</Alert>
                 </OnArrival>
               )}
-              <details open={q.error !== null} className="mt-2">
-                <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">Đổi mật lệnh</summary>
+              <details open={q.error !== null} className="ui-frame-inset px-3 py-2">
+                <summary className="cursor-pointer font-semibold text-on-wood pointer-coarse:py-3">Đổi mật lệnh</summary>
                 <div className="mt-3">
                   <ChangePasswordForm error={q.error} />
                 </div>
               </details>
             </>
           ) : (
-            <details open={q.error !== null}>
-              <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">Thêm danh hiệu và mật lệnh</summary>
+            <details open={q.error !== null} className="ui-frame-inset px-3 py-2">
+              <summary className="cursor-pointer font-semibold text-on-wood pointer-coarse:py-3">Thêm danh hiệu và mật lệnh</summary>
               <div className="mt-3">
                 <RegisterForm returnTo={here} username={q.username} error={q.error} label="Lưu danh hiệu" mail={mail} />
               </div>
             </details>
           )}
-        </div>
+        </OrnateFrame>
+
         {mail && (account.username || account.email) && (
-          <div className="ui-frame-inset flex w-full flex-col gap-2 p-3 text-sm">
-            <p>
-              Email:{" "}
-              {account.email ? <span className="font-semibold break-all">{account.email}</span> : <span className="text-on-wood-soft">chưa có</span>}
+          <OrnateFrame className="flex flex-col gap-3">
+            <SectionTitle description="Địa chỉ thư đã xác nhận là đường lấy lại mật lệnh.">Địa chỉ thư</SectionTitle>
+            <p className="text-sm">
+              {account.email ? <span className="font-semibold break-all">{account.email}</span> : <span className="text-on-wood-soft">Chưa có địa chỉ thư.</span>}
             </p>
             <Notice show={q.emailVerified}>Thư tín đã xác nhận. Quên mật lệnh thì lấy lại qua địa chỉ thư này.</Notice>
             <Notice show={q.emailSent}>Đã gửi thư xác nhận. Xin mở thư và bấm đường dẫn trong đó.</Notice>
-            {!account.email && (
-              <Alert tone="warning" className="p-2 text-caption">Chưa có địa chỉ thư thì quên mật lệnh là không lấy lại được.</Alert>
-            )}
-            <details open={q.emailError !== null}>
-              <summary className="cursor-pointer text-on-wood-soft pointer-coarse:py-3.5">{account.email ? "Đổi địa chỉ thư" : "Thêm địa chỉ thư để lấy lại mật lệnh"}</summary>
+            {!account.email && <Alert tone="warning" className="text-caption">Chưa có địa chỉ thư thì quên mật lệnh là không lấy lại được.</Alert>}
+            <details open={q.emailError !== null} className="ui-frame-inset px-3 py-2">
+              <summary className="cursor-pointer font-semibold text-on-wood pointer-coarse:py-3">{account.email ? "Đổi địa chỉ thư" : "Thêm địa chỉ thư để lấy lại mật lệnh"}</summary>
               <div className="mt-3">
                 <EmailForm current={account.email} error={q.emailError} />
               </div>
             </details>
-          </div>
+          </OrnateFrame>
         )}
-        <form action={`/api/auth/logout?returnTo=${encodeURIComponent(scenePath("LOGIN"))}`} method="post" className="w-full">
-          <button type="submit" className={buttonVariants({ variant: "ghost", fullWidth: true, className: "text-sm text-on-wood-soft" })}>
-            Đăng xuất
-          </button>
-        </form>
+
+        <OrnateFrame className="flex flex-col gap-3">
+          <SectionTitle>Lối tắt</SectionTitle>
+          <ul className="grid gap-2 sm:grid-cols-2">
+            {SHORTCUTS.map((c) => (
+              <li key={c.scene}>
+                <SceneLink scene={c.scene} className="ui-frame-inset flex min-h-14 items-center gap-3 px-3 py-2 hover:border-frame-gold">
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-serif font-semibold text-title-on-wood">{c.title}</span>
+                    <span className="block text-caption text-on-wood-soft">{c.note}</span>
+                  </span>
+                  <span aria-hidden className="text-frame-gold">›</span>
+                </SceneLink>
+              </li>
+            ))}
+          </ul>
+        </OrnateFrame>
+
+        <OrnateFrame className="flex flex-col gap-3">
+          <SectionTitle description="Rời trại trên máy này. Chiến công vẫn giữ trong tài khoản, trình danh lại là có.">Rời trại</SectionTitle>
+          <form action={`/api/auth/logout?returnTo=${encodeURIComponent(scenePath("LOGIN"))}`} method="post">
+            <button type="submit" className={buttonVariants({ variant: "danger", className: "w-full sm:w-auto" })}>
+              Đăng xuất
+            </button>
+          </form>
+        </OrnateFrame>
       </div>
-    </AuthCard>
+    </ModeScreen>
   );
 }
 

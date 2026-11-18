@@ -734,7 +734,7 @@ export default function SuLoScreen() {
               </details>
             )}
             <p className="text-sm text-on-wood-soft">
-              Bản chơi thử, không cần mạng: chưa có thưởng và bảng xếp hạng. Câu hỏi đã qua lần duyệt thứ nhất, đang chờ duyệt lần hai. Ván dở lưu trên
+              Bản chơi thử, không cần mạng: chưa có thưởng và bảng công trạng. Câu hỏi đã qua lần duyệt thứ nhất, đang chờ duyệt lần hai. Ván dở lưu trên
               trình duyệt này.
             </p>
           </aside>

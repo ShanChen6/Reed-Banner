@@ -783,7 +783,7 @@ export default function ChapterOne({
                       })}
                     </div>
                     <p className="text-caption text-on-wood-soft">
-                      Lựa chọn chỉ đổi lời kể; kết quả nhiệm vụ và phần thưởng
+                      Lựa chọn chỉ đổi lời kể; kết quả nhiệm vụ và ban thưởng
                       như nhau.
                     </p>
                     <StoryLines

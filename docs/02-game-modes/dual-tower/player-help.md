@@ -33,7 +33,7 @@ cho mọi tầng của chu kỳ.
 Ở Tháp Thiên Mệnh, đội hình khóa gồm Đinh Bộ Lĩnh và nhiều nhất 8 tướng. Cấp đối thủ tăng đều theo tầng
 (tầng 1 cấp 1, tầng 20 cấp 30), không phụ thuộc đội hình của bạn;
 màn chuẩn bị ghi cấp, hệ, nghề và máu của ba đối thủ. Đội hình và danh sách chọn tướng chia trang 6 người.
-Bấm một tầng ở Hành trình để xem độ khó, cấp đối thủ và mốc đá của tầng đó. Bảng xếp hạng chu kỳ nằm ở thẻ BXH tuần, giữa thẻ Chơi và Hướng dẫn. Ở bước khóa đội hình có thể tìm tướng theo tên,
+Bấm một tầng ở Hành trình để xem độ khó, cấp đối thủ và mốc đá của tầng đó. Bảng xếp hạng chu kỳ nằm ở thẻ Công trạng tuần, giữa thẻ Chơi và Hướng dẫn. Ở bước khóa đội hình có thể tìm tướng theo tên,
 lọc theo hệ, nghề hoặc chỉ xem tướng đã chọn; tướng đã chọn hiện thành một dải phía trên, bấm để bỏ. Ở màn chuẩn bị
 tầng, ★ xanh cạnh tên là tướng có hệ khắc ít nhất một đối thủ của tầng. Hết trận, màn kết quả ghi tầng vừa vượt, máu
 còn lại của ba tướng và đá mốc vừa nhận; bấm "Chọn thưởng tầng N" để về chọn phần thưởng.

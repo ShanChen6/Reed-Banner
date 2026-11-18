@@ -43,7 +43,7 @@ export const PROFILE_ERROR: Record<
   notEnoughGold: "Không đủ vàng",
   notOwned: "Chưa có tướng quân này",
   invalidItem: "Không có món này",
-  bagFull: "Túi đồ đã đầy, bán bớt rồi mua",
+  bagFull: "Kho đồ đã đầy, bán bớt rồi mua",
   notWeapon: "Món này không phải vũ khí",
   wrongProfession: "Vũ khí không đúng nghề",
   weaponNeedsProfession: "Vũ khí phải ghi nghề",

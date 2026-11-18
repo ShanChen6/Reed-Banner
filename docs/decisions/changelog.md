@@ -2,6 +2,16 @@
 
 > Trạng thái: **REFERENCE** — nhật ký quyết định theo ngày.
 
+## 18/11/2026
+
+**Ban Thưởng, Công Trạng, Tài khoản, Doanh Trại, Cửa Hàng (Shan yêu cầu)**
+- Trang **Ban Thưởng** (`/game/tier-rewards`) gom bảy dải thưởng bậc của các chế độ xếp hạng; nhận ở trang này hay trong chế độ đều một lần. Quần Hùng phải vào chế độ một lần trước mới nhận được. Dải bậc vẽ lại thành danh sách hàng, nút nhận ở bên phải ([mục 5.9](../02-game-modes/README.md#59-thưởng-theo-bậc-của-các-chế-độ-xếp-hạng-shan-18112026)).
+- Đổi từ trên giao diện: bảng xếp hạng, BXH → **công trạng** (thẻ "Công trạng", "Công trạng tuần"); phần thưởng → **ban thưởng** (thẻ "Ban thưởng"); túi đồ → **kho đồ**; "người chơi khác" → "hào kiệt khác". Test văn phong chặn các từ cũ và "người chơi", "..." ([thuật ngữ](../00-overview/thuat-ngu.md)).
+- Trang **Tài khoản** làm lại như các màn khác: thẻ đầu trang (ảnh, tên, ngày ghi danh, Vào chơi, Doanh Trại), dải tài sản (vàng, đá, tướng quân, cấp chủ tướng, trận thắng), thẻ Liên kết, Danh hiệu và mật lệnh, Địa chỉ thư, Lối tắt, Rời trại.
+- Doanh Trại: lưới tướng quân chia trang 15; kho đồ cao hết màn, hiện cả ô trống, chia trang 96 ô ([Doanh Trại](../05-ui-ux/screens/doanh-trai.md)).
+- **Cửa Hàng** làm lại: banner bến buôn kèm vàng, kho đồ, lương; cột quầy (Tướng, Trang bị, Vật phẩm) bên trái, hàng ngang trên điện thoại; quầy Trang bị có bảng Chọn hàng, thẻ bộ và thẻ món lớn ghi phẩm, chỉ số, số đang có.
+- Sử Lộ vẽ sa bàn trên bản đồ địa danh của thời kỳ; Tầm Tướng Ký bấm ô trống ở Đài Hợp Nguyên mở hộp thoại chọn nguyên liệu.
+
 ## 17/11/2026
 
 **Tháp Thiên Mệnh và màn trận: góp ý sau khi chơi thử (Shan yêu cầu)**

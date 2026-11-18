@@ -153,7 +153,7 @@ export default function DailyScreen() {
         extraTabs={[
           {
             value: "board",
-            label: "Bảng xếp hạng",
+            label: "Công trạng",
             content: (
               <>
                 <ModeTierPanel mode="daily" />
