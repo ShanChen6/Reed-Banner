@@ -24,6 +24,8 @@ import {
   type ProfileAction,
 } from "@/core";
 import { Pagination } from "@/components/ui/Pagination";
+import { ItemIcon, type ItemArtId } from "../art/items";
+import { ITEMS } from "../items/catalog";
 import { GearIcon, GearActionIcon } from "../art/gear";
 import { gearText, PROFESSION_NAME, SLOT_NAME, TIER_CLASS } from "../battle/labels";
 import { SceneLink } from "../SceneContext";
@@ -61,6 +63,9 @@ export default function Armory({
   focusCharacter: string;
 }) {
   const [shelf, setShelf] = useState<Shelf>("all");
+  /** Kệ Vật phẩm (lương, Đá Cường Hóa, sách kinh nghiệm) và vật phẩm đang xem. */
+  const [itemShelf, setItemShelf] = useState(false);
+  const [goodId, setGoodId] = useState<ItemArtId | null>(null);
   const [slotFilter, setSlotFilter] = useState<GearSlot | "all">("all");
   const [selected, setSelected] = useState<string | null>(null);
   const [merging, setMerging] = useState(false);
@@ -121,19 +126,32 @@ export default function Armory({
               <button
                 key={s.id}
                 type="button"
-                aria-pressed={shelf === s.id}
+                aria-pressed={!itemShelf && shelf === s.id}
                 onClick={() => {
+                  setItemShelf(false);
                   setShelf(s.id);
                   setSlotFilter("all");
                   setPage(0);
                 }}
-                className={`barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-3 text-[15px] ${shelf === s.id ? "is-on" : ""}`}
+                className={`barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-3 text-[15px] ${!itemShelf && shelf === s.id ? "is-on" : ""}`}
               >
                 {s.name} <span className="text-sm opacity-75 tabular-nums">{n}</span>
               </button>
             );
           })}
-          {slots.length > 1 && (
+          <button
+            type="button"
+            aria-pressed={itemShelf}
+            onClick={() => {
+              setItemShelf(true);
+              setMerging(false);
+              setTray([]);
+            }}
+            className={`barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-3 text-[15px] ${itemShelf ? "is-on" : ""}`}
+          >
+            Vật phẩm <span className="text-sm opacity-75 tabular-nums">{ITEMS.filter((g) => g.have(profile) > 0).length}</span>
+          </button>
+          {!itemShelf && slots.length > 1 && (
             <label className="barracks-field ml-auto flex min-h-9 pointer-coarse:min-h-11 items-center rounded-md">
               <span className="sr-only">Lọc theo ô</span>
               <select
@@ -158,6 +176,30 @@ export default function Armory({
           <p className="mt-2 text-sm text-[var(--on-wood-soft)]">Chọn 3 món cùng ô, cùng hệ, cùng phẩm (vũ khí cùng nghề). Món không ghép chung được sẽ mờ đi.</p>
         )}
 
+        {itemShelf ? (
+          <ul className="mt-2 grid grid-cols-4 gap-2 sm:grid-cols-6 xl:grid-cols-8" aria-label="Vật phẩm trong kho">
+            {ITEMS.map((g) => {
+              const n = g.have(profile);
+              return (
+                <li key={g.id}>
+                  <button
+                    type="button"
+                    aria-pressed={goodId === g.id}
+                    onClick={() => setGoodId(g.id)}
+                    aria-label={`${g.name}, có ${n} ${g.unit}`}
+                    title={g.name}
+                    className={`gear-slot relative flex aspect-square w-full items-center justify-center rounded-lg p-1 ${goodId === g.id ? "is-selected" : ""} ${n === 0 ? "opacity-45" : ""}`}
+                  >
+                    <ItemIcon id={g.id} className="size-full" />
+                    <span className="pointer-events-none absolute right-1 bottom-1 rounded bg-black/70 px-1 text-[11px] leading-tight font-bold text-frame-gold-hi tabular-nums" aria-hidden>
+                      {n}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
         <div className="mt-2 flex flex-1 flex-col gap-2">
           {items.length === 0 && (
             <div className="flex flex-wrap items-center justify-center gap-3 py-2 text-center text-[15px] text-[var(--on-wood-soft)]">
@@ -215,10 +257,13 @@ export default function Armory({
             </Pagination>
           )}
         </div>
+        )}
       </section>
 
-      <aside aria-label={merging ? "Ghép đồ" : "Chi tiết trang bị"} className="barracks-panel rounded-lg p-3 lg:sticky lg:top-3">
-        {merging ? (
+      <aside aria-label={itemShelf ? "Chi tiết vật phẩm" : merging ? "Ghép đồ" : "Chi tiết trang bị"} className="barracks-panel rounded-lg p-3 lg:sticky lg:top-3">
+        {itemShelf ? (
+          <GoodPanel profile={profile} id={goodId} />
+        ) : merging ? (
           <MergePanel profile={profile} items={trayItems} busy={busy} onRemove={(id) => setTray((t) => t.filter((x) => x !== id))} onMerge={() => run({ type: "merge", items: tray, main: 0 }, () => setTray([]))} />
         ) : item ? (
           <ItemPanel
@@ -311,6 +356,31 @@ function ItemPanel({
         <GearActionIcon action="sell" className="size-6" />
         Bán lấy {SELL_GOLD[item.tier]} vàng{wearer ? " (tháo ra trước)" : ""}
       </button>
+    </div>
+  );
+}
+
+/** Chi tiết một vật phẩm trong kho: số đang có, công dụng, nơi dùng, lối sang Cửa Hàng. */
+function GoodPanel({ profile, id }: { profile: Profile; id: ItemArtId | null }) {
+  const g = ITEMS.find((x) => x.id === id);
+  if (!g) return <p className="py-6 text-center text-[15px] text-[var(--on-wood-soft)]">Chọn một vật phẩm để xem số đang có và cách dùng.</p>;
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center gap-3">
+        <ItemIcon id={g.id} className="size-16 shrink-0" />
+        <div className="min-w-0">
+          <h3 className="barracks-title font-serif text-lg font-bold">{g.name}</h3>
+          <p className="text-[15px] tabular-nums">
+            Đang có <b className="text-title-on-wood">{g.have(profile)}</b> {g.unit}
+            {g.id === "food" && ` / ${g.max}`}
+          </p>
+        </div>
+      </div>
+      <p className="text-sm text-[var(--on-wood-soft)]">{g.text}</p>
+      <p className="text-sm"><b>Dùng ở:</b> {g.use}</p>
+      <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 self-start rounded-md px-4">
+        <ShopGlyph className="size-4" /> Mua thêm ở Cửa Hàng · {g.price} vàng/{g.unit}
+      </SceneLink>
     </div>
   );
 }

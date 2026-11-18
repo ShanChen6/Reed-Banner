@@ -4,7 +4,7 @@
 // giữa, cao nhất), từ hạng 4 là các dòng có huy hiệu số và ảnh đại diện, thanh "hạng của bạn" dính đáy khung khi cuộn.
 // Dải bậc hạng (Đồng → Huyền Thoại) dùng cho chế độ có điểm hạng lâu dài như Quần Hùng.
 
-import { Children, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { buttonVariants } from "@/components/ui";
 import { cn } from "@/lib/cn";
 
@@ -139,24 +139,38 @@ function RankLine({ e }: { e: RankEntry }) {
   );
 }
 
+/** Số hạng bảng luôn có chỗ: bục ba hạng đầu và các dòng tới hạng 10; thiếu người thì hiện ô trống (Shan 19/11/2026). */
+const BOARD_SLOTS = 10;
+
+/** Dòng hạng chưa có người: giữ chỗ để bảng luôn đủ 10 hạng. */
+function EmptyLine({ rank }: { rank: number }) {
+  return (
+    <li className="flex items-center gap-3 rounded-lg border border-dashed border-frame-line-soft px-3 py-2 opacity-60">
+      <RankMedal rank={rank} />
+      <span aria-hidden className="size-8 shrink-0 rounded-full border-2 border-dashed border-frame-line" />
+      <span className="flex-1 text-on-wood-soft">Còn trống</span>
+    </li>
+  );
+}
+
 /**
- * Bảng xếp hạng đầy đủ: bục ba hạng đầu, các dòng sau (hiện `initial` dòng, còn lại mở bằng nút), thanh hạng của mình
- * dính đáy. `mine` null là chưa có tên trên bảng; `myExtra` gắn thêm vào thanh (ví dụ huy hiệu bậc hạng).
+ * Bảng công trạng: bục ba hạng đầu, các dòng hạng 4 trở đi luôn đủ tới hạng 10 (ô trống khi chưa có người). Bảng có
+ * hơn 10 người (top 20, 50) thì danh sách cuộn trong khung cao đúng 7 dòng, nên mỗi lúc chỉ thấy 10 người. Thanh hạng
+ * của mình dính đáy. `mine` null là chưa có tên trên bảng; `myExtra` gắn thêm vào thanh (ví dụ huy hiệu bậc hạng).
  */
 export function RankBoard({
   entries,
   mine,
   myExtra,
-  initial = 7,
 }: {
   entries: readonly RankEntry[];
   mine?: { readonly rank: number | null; readonly score: ReactNode; readonly reward?: number | null } | null;
   myExtra?: ReactNode;
-  initial?: number;
 }) {
   const rest = entries.filter((e) => e.rank > 3);
-  const items = Children.toArray(rest.map((e) => <RankLine key={e.rank} e={e} />));
-  const [all, setAll] = useState(false);
+  const taken = new Set(rest.map((e) => e.rank));
+  const empties = Array.from({ length: BOARD_SLOTS - 3 }, (_, i) => i + 4).filter((r) => !taken.has(r));
+  const lines = [...rest.map((e) => ({ rank: e.rank, e })), ...empties.map((rank) => ({ rank, e: null }))].sort((a, b) => a.rank - b.rank);
   const meEntry = entries.find((e) => e.mine);
   const myRank = mine?.rank ?? meEntry?.rank ?? null;
   const myScore = mine?.score ?? meEntry?.score ?? null;
@@ -164,13 +178,12 @@ export function RankBoard({
   return (
     <div className="flex flex-col gap-3">
       <Podium entries={entries.filter((e) => e.rank <= 3)} />
-      {items.length > 0 && <ol className="flex flex-col gap-1.5">{all ? items : items.slice(0, initial)}</ol>}
-      {items.length > initial && (
-        <button type="button" aria-expanded={all} onClick={() => setAll((v) => !v)}
-          className={buttonVariants({ variant: "secondary", className: "w-full sm:w-auto sm:self-center" })}>
-          {all ? "Thu gọn" : `Xem thêm ${items.length - initial} hạng`}
-        </button>
-      )}
+      <ol
+        className={cn("flex flex-col gap-1.5", lines.length > BOARD_SLOTS - 3 && "barracks-scroll max-h-[calc(7*3.5rem)] overflow-y-auto overscroll-contain pr-1")}
+        aria-label={lines.length > BOARD_SLOTS - 3 ? `Hạng 4 tới ${lines.at(-1)!.rank}, cuộn để xem thêm` : "Hạng 4 tới 10"}
+      >
+        {lines.map((l) => (l.e ? <RankLine key={l.rank} e={l.e} /> : <EmptyLine key={l.rank} rank={l.rank} />))}
+      </ol>
       {(mine !== undefined || meEntry) && (
         <div role="status" className="sticky bottom-2 z-10 flex items-center gap-3 rounded-xl border-2 border-frame-gold bg-wood-lo/95 px-3 py-2 shadow-2xl backdrop-blur">
           {myRank !== null ? <RankMedal rank={myRank} /> : <span className="w-10 text-center text-xl font-black text-on-wood-soft">–</span>}

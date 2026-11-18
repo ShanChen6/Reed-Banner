@@ -1,175 +1,79 @@
 "use client";
 
-// Tab Vật phẩm của Cửa Hàng: mỗi vật phẩm một thẻ (hình, mô tả, số đang có, nút mua theo gói). Lương cho Bình Loạn,
-// Đá Cường Hóa (cường hóa trang bị) và sách kinh nghiệm (19/11/2026); giá, mức chứa nằm trong @/core (FOOD_PRICE,
-// CAMPAIGN_FOOD_MAX, moraleOf, SHOP_ITEM_PRICE, XP_BOOK_XP, ITEM_STACK_MAX).
+// Quầy Vật phẩm của Cửa Hàng (Shan 19/11/2026): lưới thẻ nhỏ, mỗi vật phẩm một thẻ (biểu tượng riêng, tên, giá, số đang
+// có, mô tả ngắn, nút mua theo gói) để thêm vật phẩm mới vẫn gọn. Danh mục ở ../items/catalog.ts; lương còn ghi tinh
+// thần theo mức lương (moraleOf, MORALE_DAMAGE của @/core).
 
-import {
-  CAMPAIGN_FOOD_MAX,
-  ENHANCE_BONUS,
-  ENHANCE_MAX,
-  ITEM_STACK_MAX,
-  SHOP_ITEM_PRICE,
-  XP_BOOK_XP,
-  type ShopItemId,
-  FOOD_PRICE,
-  MORALE_DAMAGE,
-  moraleOf,
-  type Morale,
-  type Profile,
-  type ProfileAction,
-} from "@/core";
+import { MORALE_DAMAGE, moraleOf, type Morale, type Profile, type ProfileAction } from "@/core";
 import { Button } from "@/components/ui";
 import { cn } from "@/lib/cn";
+import { ItemIcon } from "../art/items";
+import { ITEMS, type ItemDef } from "../items/catalog";
 
-const MORALE_NAME: Record<Morale, string> = {
-  eager: "Hăng hái",
-  normal: "Bình thường",
-  hungry: "Đói",
-  starving: "Cạn lương",
-};
+const MORALE_NAME: Record<Morale, string> = { eager: "Hăng hái", normal: "Bình thường", hungry: "Đói", starving: "Cạn lương" };
 
 const damageText = (m: Morale) => {
   const pct = Math.round((MORALE_DAMAGE[m] - 1) * 100);
   return pct === 0 ? "sát thương giữ nguyên" : `sát thương ${pct > 0 ? "+" : ""}${pct}%`;
 };
 
-function FoodCard({ profile, busy, onAction }: { profile: Profile; busy: boolean; onAction: (a: ProfileAction) => void }) {
-  const supply = profile.campaign.supply;
-  const room = CAMPAIGN_FOOD_MAX - supply;
-  const affordable = Math.floor(profile.gold / FOOD_PRICE);
-  const morale = moraleOf(supply);
-  // Gói mua: 1, 10 và vừa đầy kho; bỏ gói trùng hoặc vượt chỗ trống.
-  const packs = [1, 10, room].filter((n, i, a) => n > 0 && n <= room && a.indexOf(n) === i);
+function ItemCard({ item, profile, busy, onAction }: { item: ItemDef; profile: Profile; busy: boolean; onAction: (a: ProfileAction) => void }) {
+  const have = item.have(profile);
+  const room = item.max - have;
+  const affordable = Math.floor(profile.gold / item.price);
+  // Gói mua: 1, 10 và vừa đầy (lương) — bỏ gói trùng hoặc vượt chỗ trống.
+  const packs = [1, 10, ...(item.id === "food" ? [room] : [])].filter((n, i, a) => n > 0 && n <= room && a.indexOf(n) === i);
+  const morale = item.id === "food" ? moraleOf(have) : null;
   return (
-    <li className="ui-frame-inset flex flex-col gap-3 p-3 sm:flex-row sm:items-start">
-      <svg viewBox="0 0 96 96" aria-hidden focusable="false" className="size-20 shrink-0 self-center sm:size-24 sm:self-start">
-        <image href="/art/tiles/banhChung.webp" width={96} height={96} />
-      </svg>
-      <div className="flex min-w-0 flex-1 flex-col gap-2">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-          <h2 className="ui-title-on-wood text-title">Lương thực</h2>
-          <span className="text-caption text-on-wood-soft tabular-nums">{FOOD_PRICE} vàng / phần</span>
+    <li className="ui-frame-inset flex flex-col gap-2 p-3">
+      <div className="flex items-center gap-3">
+        <ItemIcon id={item.id} className="size-12 shrink-0" />
+        <div className="min-w-0 flex-1">
+          <h2 className="ui-title-on-wood truncate font-serif text-base font-bold">{item.name}</h2>
+          <p className="text-caption text-on-wood-soft tabular-nums">
+            {item.price} vàng / {item.unit} · đang có <b className="text-on-wood">{have}</b>
+            {item.id === "food" && `/${item.max}`}
+          </p>
         </div>
-        <p className="text-caption text-on-wood-soft">
-          Mang vào trận Bình Loạn kế tiếp. Lương quyết định tinh thần: từ 70 trở lên Hăng hái ({damageText("eager")}),
-          dưới 30 là Đói ({damageText("hungry")}), hết lương {damageText("starving")}.
+      </div>
+      <p className="text-caption text-on-wood-soft">{item.text}</p>
+      {morale && (
+        <p className={cn("text-caption", morale === "eager" ? "text-frame-gold" : morale === "normal" ? "text-on-wood-soft" : "text-danger")}>
+          {MORALE_NAME[morale]} · {damageText(morale)}
         </p>
-        <div>
-          <div className="mb-1 flex justify-between text-caption tabular-nums">
-            <span className="text-on-wood">Kho {supply}/{CAMPAIGN_FOOD_MAX}</span>
-            <span className={cn(morale === "eager" ? "text-frame-gold" : morale === "normal" ? "text-on-wood-soft" : "text-danger")}>
-              {MORALE_NAME[morale]} · {damageText(morale)}
-            </span>
-          </div>
-          <div
-            role="progressbar"
-            aria-label="Lương trong kho"
-            aria-valuemin={0}
-            aria-valuemax={CAMPAIGN_FOOD_MAX}
-            aria-valuenow={supply}
-            className="relative h-2.5 overflow-hidden rounded-full bg-wood-lo ring-1 ring-frame-gold/30"
-          >
-            <div className="h-full bg-frame-gold" style={{ width: `${(supply / CAMPAIGN_FOOD_MAX) * 100}%` }} />
-            {/* Vạch mốc Hăng hái (70). */}
-            <span aria-hidden className="absolute inset-y-0 left-[70%] w-px bg-on-wood/60" />
-          </div>
-        </div>
+      )}
+      <div className="mt-auto flex flex-wrap gap-1.5">
         {room <= 0 ? (
-          <p className="text-caption text-on-wood-soft">Kho lương đã đầy.</p>
+          <span className="text-caption text-on-wood-soft">Đã đầy.</span>
         ) : (
-          <div className="flex flex-wrap gap-2">
-            {packs.map((n) => (
-              <Button
-                key={n}
-                type="button"
-                size="sm"
-                variant={n === room ? "primary" : "secondary"}
-                disabled={busy || affordable < n}
-                title={affordable < n ? `Cần ${n * FOOD_PRICE} vàng` : undefined}
-                onClick={() => onAction({ type: "buyFood", amount: n })}
-                className="min-h-11 tabular-nums"
-              >
-                {n === room && n > 10 ? "Đầy kho" : `+${n}`} · {n * FOOD_PRICE} vàng
-              </Button>
-            ))}
-          </div>
+          packs.map((n) => (
+            <Button
+              key={n}
+              type="button"
+              size="sm"
+              variant={n === 1 ? "primary" : "secondary"}
+              disabled={busy || affordable < n}
+              title={affordable < n ? `Cần ${n * item.price} vàng` : undefined}
+              aria-label={`Mua ${n} ${item.unit} ${item.name}, ${n * item.price} vàng`}
+              onClick={() => onAction(item.buy(n))}
+              className="tabular-nums"
+            >
+              {item.id === "food" && n === room && n > 10 ? "Đầy" : `+${n}`} · {n * item.price}
+            </Button>
+          ))
         )}
       </div>
     </li>
   );
 }
 
-const ITEM_INFO: Readonly<Record<ShopItemId, { name: string; art: string; text: string; have: (p: Profile) => number }>> = {
-  stone: {
-    name: "Đá Cường Hóa",
-    art: "/art/elements/kim.webp",
-    text: `Cường hóa trang bị ở Kho đồ (Doanh Trại): mỗi cấp +${Math.round(ENHANCE_BONUS * 100)}% chỉ số của món, tối đa +${ENHANCE_MAX}. Cũng nhận được khi leo Tháp Thí Luyện, Tháp Thiên Mệnh.`,
-    have: (p) => p.stones,
-  },
-  xpBook: {
-    name: "Sách kinh nghiệm",
-    art: "/art/tiles/sach.webp",
-    text: `Mỗi cuốn +${XP_BOOK_XP} kinh nghiệm cho một tướng quân. Dùng ở thẻ Tổng quan của tướng trong Doanh Trại.`,
-    have: (p) => p.xpBooks ?? 0,
-  },
-};
-
-function ItemCard({ id, profile, busy, onAction }: { id: ShopItemId; profile: Profile; busy: boolean; onAction: (a: ProfileAction) => void }) {
-  const info = ITEM_INFO[id];
-  const price = SHOP_ITEM_PRICE[id];
-  const have = info.have(profile);
-  const room = ITEM_STACK_MAX - have;
-  return (
-    <li className="ui-frame-inset flex flex-col gap-3 p-3 sm:flex-row sm:items-start">
-      <svg viewBox="0 0 96 96" aria-hidden focusable="false" className="size-20 shrink-0 self-center sm:size-24 sm:self-start">
-        <image href={info.art} width={96} height={96} />
-      </svg>
-      <div className="flex min-w-0 flex-1 flex-col gap-2">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-          <h2 className="ui-title-on-wood text-title">{info.name}</h2>
-          <span className="text-caption text-on-wood-soft tabular-nums">{price} vàng / {id === "stone" ? "viên" : "cuốn"}</span>
-        </div>
-        <p className="text-caption text-on-wood-soft">{info.text}</p>
-        <p className="text-caption text-on-wood tabular-nums">Đang có {have}</p>
-        <div className="flex flex-wrap gap-2">
-          {[1, 5, 10].map((n) => (
-            <Button
-              key={n}
-              type="button"
-              size="sm"
-              variant={n === 1 ? "primary" : "secondary"}
-              disabled={busy || n > room || profile.gold < n * price}
-              title={profile.gold < n * price ? `Cần ${n * price} vàng` : undefined}
-              aria-label={`Mua ${n} ${info.name}, ${n * price} vàng`}
-              onClick={() => onAction({ type: "buyItem", item: id, amount: n })}
-              className="min-h-11 tabular-nums"
-            >
-              +{n} · {n * price} vàng
-            </Button>
-          ))}
-        </div>
-      </div>
-    </li>
-  );
-}
-
-export default function ItemsStore({
-  profile,
-  busy,
-  onAction,
-}: {
-  profile: Profile;
-  busy: boolean;
-  onAction: (a: ProfileAction) => void;
-}) {
+export default function ItemsStore({ profile, busy, onAction }: { profile: Profile; busy: boolean; onAction: (a: ProfileAction) => void }) {
   return (
     <section aria-label="Vật phẩm">
-      {/* Lưới để thêm vật phẩm mới sau này: mỗi vật phẩm một thẻ. */}
-      <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-        <FoodCard profile={profile} busy={busy} onAction={onAction} />
-        <ItemCard id="stone" profile={profile} busy={busy} onAction={onAction} />
-        <ItemCard id="xpBook" profile={profile} busy={busy} onAction={onAction} />
+      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        {ITEMS.map((it) => (
+          <ItemCard key={it.id} item={it} profile={profile} busy={busy} onAction={onAction} />
+        ))}
       </ul>
     </section>
   );

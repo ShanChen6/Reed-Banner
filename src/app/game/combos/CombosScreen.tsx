@@ -1,6 +1,6 @@
 "use client";
 
-// Phối Hợp (Shan 19/11/2026): ghép ba tướng quân bất kỳ (đội 3vs3 có thể không có Đinh Bộ Lĩnh) để xem kỹ năng của người
+// Hợp Kích (Shan 19/11/2026, trước gọi Phối Hợp): ghép ba tướng quân bất kỳ (đội 3vs3 có thể không có Đinh Bộ Lĩnh) để xem kỹ năng của người
 // này mở được bị động nào của người kia. Đinh Bộ Lĩnh chọn hệ, nghề ngay trong ô của ông (chỉ để tính, không đổi hồ sơ). Lưới chọn tướng xếp theo số liên kết tướng đó thêm vào đội, nên cũng là gợi ý đồng đội.
 // Chỉ đọc danh mục kỹ năng, bị động trong @/core (links.ts); không đổi đội hình thật (đổi ở Doanh Trại).
 
@@ -8,8 +8,6 @@ import { useMemo, useState } from "react";
 import {
   CHASE_PASSIVES,
   COMBO_PASSIVES,
-  ELEMENTS,
-  LEADER_PROFESSIONS,
   MAIN_ID,
   PLAYABLE_COMPANIONS,
   withComboPassive,
@@ -18,7 +16,7 @@ import {
   type Profession,
 } from "@/core";
 import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
-import { ChoiceChip, buttonVariants } from "@/components/ui";
+import { buttonVariants } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { PassiveIcon } from "../art/passives";
@@ -31,7 +29,7 @@ import { fighterOf } from "../profile/HeroDetail";
 import { ownedIds } from "../profile/roster";
 import { useProfile } from "../profile/useProfile";
 import { SceneLink } from "../SceneContext";
-import { comboLinks, comboMember, crossLinksWith, type ComboLink, type ComboMember } from "./links";
+import { bestChains, comboLinks, comboMember, crossLinksWith, type ComboChain, type ComboLink, type ComboMember } from "./links";
 
 const passiveName = (p: PassiveRef) => (p.kind === "combo" ? COMBO_PASSIVES[p.id].name : CHASE_PASSIVES[p.id].name);
 const passiveText = (p: PassiveRef) => (p.kind === "combo" ? COMBO_PASSIVES[p.id].description : CHASE_PASSIVES[p.id].description);
@@ -40,7 +38,6 @@ export default function CombosScreen() {
   const { profile, loadError } = useProfile();
   const [picks, setPicks] = useState<readonly (string | null)[]>([null, null, null]);
   const [slot, setSlot] = useState<0 | 1 | 2>(0);
-  const [ownedOnly, setOwnedOnly] = useState(true);
   /** Hệ, nghề Đinh Bộ Lĩnh dùng để tính trên trang; mặc định theo hồ sơ. */
   const [build, setBuild] = useState<{ element: Element; profession: Profession } | null>(null);
   const leader = build ?? (profile ? { element: profile.element, profession: profile.profession } : null);
@@ -62,6 +59,7 @@ export default function CombosScreen() {
   );
   const links = useMemo(() => comboLinks(team), [team]);
   const cross = links.filter((l) => l.from !== l.to);
+  const chains = useMemo(() => bestChains(team), [team]);
 
   // Gợi ý: số liên kết chéo mỗi tướng thêm vào đội hiện có (bỏ người đang ở ô đang chọn).
   const base = useMemo(() => team.filter((m) => m.id !== picks[slot]), [team, picks, slot]);
@@ -71,19 +69,22 @@ export default function CombosScreen() {
       .filter((id) => !picks.includes(id) || picks[slot] === id)
       .map((id) => {
         const cfg = configs.get(id)!;
-        return { id, name: cfg.name, element: cfg.element, profession: cfg.profession, score: crossLinksWith(base, comboMember(id, cfg)), owned: owned.has(id) };
+        return { id, name: cfg.name, element: cfg.element, profession: cfg.profession, anyBuild: id === MAIN_ID, score: crossLinksWith(base, comboMember(id, cfg)), owned: owned.has(id) };
       })
       .sort((a, b) => b.score - a.score || Number(b.owned) - Number(a.owned) || a.name.localeCompare(b.name, "vi"));
   }, [profile, picks, slot, base, configs, owned]);
 
   if (!profile)
     return (
-      <ModeScreen label="Phối Hợp">
+      <ModeScreen label="Hợp Kích">
         <p className="py-24 text-center text-on-wood-soft">{loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : "Đang tải…"}</p>
       </ModeScreen>
     );
 
-  const pick = (id: string) => {
+  /** Đinh Bộ Lĩnh đổi được hệ, nghề: bấm ông khi đang lọc một hệ hay nghề thì lấy luôn hệ, nghề đó làm bộ của ông. */
+  const pick = (id: string, filter: { readonly element: Element | "all"; readonly profession: Profession | "all" }) => {
+    if (id === MAIN_ID && leader)
+      setBuild({ element: filter.element === "all" ? leader.element : filter.element, profession: filter.profession === "all" ? leader.profession : filter.profession });
     setPicks((p) => {
       const next = [...p];
       next[slot] = id;
@@ -92,9 +93,9 @@ export default function CombosScreen() {
     const empty = [0, 1, 2].find((i) => i !== slot && picks[i] === null);
     if (empty !== undefined) setSlot(empty as 0 | 1 | 2);
   };
-  // Chọn nhanh ba tướng ngẫu nhiên trong phạm vi đang lọc (đã có hoặc mọi tướng).
+  // Chọn nhanh ba tướng ngẫu nhiên trong mọi tướng.
   const randomTeam = () => {
-    const pool = [MAIN_ID, ...PLAYABLE_COMPANIONS.map((c) => c.id)].filter((id) => !ownedOnly || owned.has(id));
+    const pool = [MAIN_ID, ...PLAYABLE_COMPANIONS.map((c) => c.id)];
     const chosen: string[] = [];
     while (chosen.length < Math.min(3, pool.length)) {
       const id = pool[Math.floor(Math.random() * pool.length)]!;
@@ -104,15 +105,15 @@ export default function CombosScreen() {
   };
 
   return (
-    <ModeScreen label="Phối Hợp" card>
+    <ModeScreen label="Hợp Kích" card>
       <ModeBanner
-        title="Phối Hợp"
+        title="Hợp Kích"
         kicker="Kết hợp tướng quân"
         description="Ghép ba tướng để xem chiêu của người này mở bị động nào của người kia. Tướng hợp đội nhất xếp đầu lưới chọn."
         art="/art/home/arena.webp"
         stats={[
           { label: "Liên kết chéo", value: cross.length },
-          { label: "Tự phối", value: links.length - cross.length },
+          { label: "Chuỗi dài nhất", value: chains[0] ? `${chains[0].steps.length} bước` : "–" },
         ]}
       />
 
@@ -146,26 +147,6 @@ export default function CombosScreen() {
                     <span className="w-full text-center text-on-wood-soft">{active ? `Tướng ${i + 1}: chọn ở lưới bên dưới` : `Tướng ${i + 1}: bấm để chọn`}</span>
                   )}
                 </button>
-                {m?.id === MAIN_ID && leader && (
-                  <div className="flex flex-col gap-1.5 border-t border-frame-line-soft pt-2">
-                    <div role="group" aria-label="Hệ Đinh Bộ Lĩnh" className="flex flex-wrap gap-1">
-                      {ELEMENTS.map((e) => (
-                        <ChoiceChip key={e} size="sm" selected={leader.element === e} onClick={() => setBuild({ ...leader, element: e })} title={ELEMENT_NAME[e]} className="px-1.5">
-                          <ElementIcon element={e} className="size-4" />
-                          <span className="sr-only">{ELEMENT_NAME[e]}</span>
-                        </ChoiceChip>
-                      ))}
-                    </div>
-                    <div role="group" aria-label="Nghề Đinh Bộ Lĩnh" className="flex flex-wrap gap-1">
-                      {LEADER_PROFESSIONS.map((pr) => (
-                        <ChoiceChip key={pr} size="sm" selected={leader.profession === pr} onClick={() => setBuild({ ...leader, profession: pr })} title={PROFESSION_NAME[pr]} className="px-1.5">
-                          <ProfessionIcon profession={pr} className="size-4" />
-                          <span className="sr-only">{PROFESSION_NAME[pr]}</span>
-                        </ChoiceChip>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             );
           })}
@@ -174,7 +155,7 @@ export default function CombosScreen() {
 
       <div className="grid items-start gap-4 lg:grid-cols-2">
         <OrnateFrame className="flex flex-col gap-3">
-          <SectionTitle description="Số ở góc thẻ là số liên kết chéo tướng đó thêm vào đội.">Chọn tướng {slot + 1}</SectionTitle>
+          <SectionTitle description="Số ở góc thẻ là số liên kết chéo tướng đó thêm vào đội. Đinh Bộ Lĩnh hiện ở mọi bộ lọc; bấm ông khi đang lọc hệ, nghề thì ông mang đúng hệ, nghề đó.">Chọn tướng {slot + 1}</SectionTitle>
           <HeroGrid
             label="Chọn tướng phối hợp"
             items={candidates}
@@ -184,15 +165,6 @@ export default function CombosScreen() {
             badge={(id) => {
               const c = candidates.find((x) => x.id === id);
               return c && c.score > 0 ? <span className="rounded-full bg-jade px-1.5 text-caption font-bold text-white">+{c.score}</span> : null;
-            }}
-            extraFilter={{
-              node: (
-                <div role="group" aria-label="Phạm vi tướng" className="flex flex-wrap gap-2">
-                  <ChoiceChip selected={ownedOnly} onClick={() => setOwnedOnly(true)}>Tướng đã có</ChoiceChip>
-                  <ChoiceChip selected={!ownedOnly} onClick={() => setOwnedOnly(false)}>Mọi tướng</ChoiceChip>
-                </div>
-              ),
-              matches: (id) => !ownedOnly || owned.has(id),
             }}
           />
         </OrnateFrame>
@@ -206,6 +178,8 @@ export default function CombosScreen() {
           ) : (
             <>
               <PairMatrix team={team} links={links} />
+              <ChainList team={team} chains={chains} />
+              <h3 className="font-serif text-lg font-bold text-title-on-wood">Liên kết theo cặp</h3>
               <PairGroups team={team} links={cross} />
               {links.length > cross.length && (
                 <details className="text-sm">
@@ -313,5 +287,54 @@ function LinkList({ team, links }: { team: readonly ComboMember[]; links: readon
         </li>
       ))}
     </ul>
+  );
+}
+
+/**
+ * Chuỗi phản ứng: kỹ năng mở bị động của một người, bị động đó phát tiếp tín hiệu mở bị động người kế, tối đa 4 bước
+ * (luật bộ máy). Mỗi kỹ năng hiện chuỗi dài nhất.
+ */
+function ChainList({ team, chains }: { team: readonly ComboMember[]; chains: readonly ComboChain[] }) {
+  return (
+    <section aria-labelledby="hk-chains" className="flex flex-col gap-2">
+      <h3 id="hk-chains" className="font-serif text-lg font-bold text-title-on-wood">Chuỗi phản ứng</h3>
+      {chains.length === 0 ? (
+        <p className="text-sm text-on-wood-soft">Đội này chưa nối được chuỗi từ ba bước trở lên.</p>
+      ) : (
+        <ol className="flex flex-col gap-2">
+          {chains.map((c, k) => (
+            <li key={k} className="rounded-lg border border-frame-line-soft bg-black/15 p-2">
+              <p className="mb-1.5 text-caption text-on-wood-soft">
+                Chuỗi {c.steps.length + 1} bước · mở từ chiêu <b className="text-on-wood">{c.skill.name}</b> của {team[c.from]!.name}
+              </p>
+              <div className="flex flex-wrap items-center gap-1.5">
+                <ChainNode icon={<SkillIcon def={c.skill} className="size-8" />} who={team[c.from]!.name} what={c.skill.name} />
+                {c.steps.map((st, i) => (
+                  <span key={i} className="contents">
+                    <span className="flex flex-col items-center text-caption leading-tight text-frame-gold" aria-label={`tín hiệu ${SIGNAL_NAME[st.signal]}`}>
+                      <span aria-hidden>→</span>
+                      <span>{SIGNAL_NAME[st.signal]}</span>
+                    </span>
+                    <ChainNode icon={<PassiveIcon id={st.passive.id} name={passiveName(st.passive)} className="size-8" />} who={team[st.fighter]!.name} what={passiveName(st.passive)} />
+                  </span>
+                ))}
+              </div>
+            </li>
+          ))}
+        </ol>
+      )}
+    </section>
+  );
+}
+
+function ChainNode({ icon, who, what }: { icon: React.ReactNode; who: string; what: string }) {
+  return (
+    <span className="flex items-center gap-1.5 rounded-md border border-frame-line-soft bg-wood-inset px-1.5 py-1">
+      {icon}
+      <span className="flex flex-col leading-tight">
+        <span className="text-caption font-semibold text-title-on-wood">{what}</span>
+        <span className="text-caption text-on-wood-soft">{who}</span>
+      </span>
+    </span>
   );
 }

@@ -1155,7 +1155,7 @@ export default function DemoGame({
       ref={rootRef}
       className={`${palette} ui-mode-screen`}
     >
-      <OrnateFrame level="raised" flush className={`mx-auto flex w-full flex-col gap-3 p-3 sm:p-5 ${MODE_CONTENT_WIDTH}`}>
+      <OrnateFrame level="raised" flush className={`mx-auto flex w-full flex-col gap-3 p-4 sm:p-6 ${MODE_CONTENT_WIDTH}`}>
         <BattleHeader
           atBreak={atBreak}
           difficulty={difficulty}

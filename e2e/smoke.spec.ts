@@ -186,18 +186,25 @@ test.describe("tài khoản đã đăng nhập", () => {
     expectClean(problems);
   });
 
-  test("Phối Hợp: ghép đồng đội, xem liên kết chiêu mở bị động theo từng cặp", async ({ page }) => {
+  test("Hợp Kích: ghép ba tướng bất kỳ, Đinh Bộ Lĩnh theo bộ lọc, chuỗi phản ứng và liên kết theo cặp", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/combos");
     const grid = page.getByRole("group", { name: "Chọn tướng phối hợp" });
-    await grid.getByRole("button").filter({ hasText: "Hà Vân" }).first().click();
+    // Lưới luôn có đủ mọi tướng (nhiều trang): tìm theo tên rồi chọn.
+    const choose = async (name: string) => {
+      await grid.getByRole("searchbox").fill(name);
+      await grid.getByRole("button").filter({ hasText: name }).first().click();
+    };
+    await choose("Hà Vân");
     await expect(page.getByRole("button", { name: "Ô tướng 1: Hà Vân" })).toBeVisible();
-    // Đinh Bộ Lĩnh không cố định: chọn như mọi tướng, rồi đổi hệ ngay trong ô của ông.
-    await grid.getByRole("button").filter({ hasText: "Đinh Bộ Lĩnh" }).first().click();
-    await page.getByRole("group", { name: "Hệ Đinh Bộ Lĩnh" }).getByRole("button", { name: "Hỏa" }).click();
+    // Đinh Bộ Lĩnh khớp mọi bộ lọc; bấm ông khi đang lọc hệ Hỏa thì ông mang hệ Hỏa.
+    await grid.getByRole("button", { name: "Hệ Hỏa" }).click();
+    await choose("Đinh Bộ Lĩnh");
     await expect(page.getByRole("button", { name: "Ô tướng 2: Đinh Bộ Lĩnh" })).toContainText("Hỏa");
+    await grid.getByRole("button", { name: "Mọi hệ" }).click();
+    await choose("Mai Thanh");
     await expect(page.getByRole("table", { name: /Số liên kết theo người phát tín hiệu/ })).toBeVisible();
-    await page.getByText(/Đinh Bộ Lĩnh→Hà Vân|Đinh Bộ Lĩnh → Hà Vân/).first().click().catch(() => {});
+    await expect(page.getByRole("heading", { name: "Chuỗi phản ứng" })).toBeVisible();
     await expect(page.locator("summary").filter({ hasText: "liên kết" }).first()).toBeVisible();
     expectClean(problems);
   });
@@ -242,8 +249,8 @@ test.describe("tài khoản đã đăng nhập", () => {
     await page.getByRole("tab", { name: /Chiến tích/ }).click();
     await expect(page.getByText(/Bộ sưu tập địa danh/)).toBeVisible();
     await expect(page.getByRole("region", { name: "Bậc Trận Đồ" }).getByRole("button", { name: "Bậc Đồng: chưa đạt mốc" })).toHaveText("Còn 1 ván");
-    // Thưởng cuối kỳ nằm cùng hàng hạng và điểm trên bảng; bảng đầy đủ gập ở dưới.
-    await expect(page.getByText("Bảng thưởng theo hạng")).toBeVisible();
+    // Bảng luôn đủ 10 hạng (ô trống khi chưa có người); thưởng cuối kỳ nằm cùng hàng hạng và điểm.
+    await expect(page.getByRole("list", { name: /^Hạng 4 tới/ }).first()).toBeVisible();
     expectClean(problems);
   });
 

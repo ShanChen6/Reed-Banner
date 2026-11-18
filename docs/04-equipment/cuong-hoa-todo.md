@@ -21,6 +21,10 @@ Tiền tệ tài khoản (`profile.stones`). Nhận khi leo Tháp Thí Luyện, 
 - Mỗi cuốn **+250 kinh nghiệm** (`XP_BOOK_XP`) cho một tướng đã có; lên cấp vẫn nhận điểm kỹ năng như thường. Dùng ở thẻ **Tổng quan** của tướng trong Doanh Trại (một cuốn, đủ để lên cấp kế, hoặc mười cuốn); không tiêu quá số cuốn cần để tới cấp 30.
 - Thao tác hồ sơ `{ type: "buyItem", item: "stone" | "xpBook", amount }` và `{ type: "useXpBook", character, amount }` (`src/core/progress/profile.ts`).
 
+## Giao diện vật phẩm
+
+Ba vật phẩm (lương, Đá Cường Hóa, sách kinh nghiệm) có biểu tượng SVG riêng (`src/app/game/art/items.tsx`), dùng chung một danh mục (`src/app/game/items/catalog.ts`) cho quầy **Vật phẩm** ở Cửa Hàng (lưới thẻ nhỏ: biểu tượng, giá, số đang có, nút +1/+10) và kệ **Vật phẩm** trong Kho đồ (Doanh Trại). Thêm vật phẩm mới là thêm một dòng danh mục và một hình.
+
 ## Còn mở
 
 - Mô phỏng kinh tế đá và vàng 7/30/90 ngày; có cần giới hạn mua đá theo tuần không.

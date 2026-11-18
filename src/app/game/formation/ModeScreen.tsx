@@ -298,10 +298,7 @@ export default function ModeScreen({
               {overview.levels.filter((l) => l.level === (boardLevel ?? overview.levels[0]!.level)).map((l) => (
                 <div key={l.level} className="ui-frame flex flex-col gap-4 p-4">
                   <p className="text-sm text-on-wood-soft">{CADENCE[l.cadence]} · còn {now ? formatRemaining(l.endsAt - now) : "…"} · {l.winners} người đã thắng</p>
-                  {l.top.length === 0 ? (
-                    <p className="py-4 text-center text-[15px] text-on-wood-soft">Chưa có ai thắng trong kỳ này.</p>
-                  ) : (
-                    <RankBoard
+                  <RankBoard
                       entries={l.top.slice(0, 20).map((r) => ({ rank: r.rank, name: r.name, mine: r.mine, score: `${r.score} đ`, detail: `${r.turns} nước`, reward: rewardGold(l.level, r.rank, l.winners)?.gold ?? null }))}
                       mine={
                         l.mine?.status === "won" && l.mine.rank
@@ -309,32 +306,9 @@ export default function ModeScreen({
                           : { rank: null, score: null }
                       }
                     />
-                  )}
                 </div>
               ))}
             </>
-          )}
-          {rankedOn && (
-            <details className="ui-frame p-4">
-              <summary className="cursor-pointer font-serif font-bold text-title-on-wood">Bảng thưởng theo hạng</summary>
-              <p className="mt-2 text-sm text-on-wood-soft">Mỗi người nhận đúng một bậc theo hạng cuối kỳ. Bảng ít người vẫn có thưởng; nửa trên tính làm tròn lên. Thưởng nhận được sau khi kỳ khép lại.</p>
-              <table className="mt-2 w-full text-left text-[15px]">
-                <thead>
-                  <tr className="text-on-wood-soft">
-                    <th className="py-1 pr-2 font-normal">Bậc</th>
-                    {REWARD_TIERS.map((t) => <th key={t.tier} className="py-1 pr-2 font-normal">{t.label}</th>)}
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.keys(REWARD_GOLD).map((id) => (
-                    <tr key={id}>
-                      <th scope="row" className="py-1 pr-2 text-left font-semibold">{RULESETS.find((r) => r.id === id)?.name}</th>
-                      {REWARD_TIERS.map((t) => <td key={t.tier} className="py-1 pr-2">{REWARD_GOLD[id]?.[t.tier]}</td>)}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </details>
           )}
           <Collection collected={collection} />
         </section>

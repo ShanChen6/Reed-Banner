@@ -39,7 +39,9 @@ describe("Doanh Trại: danh sách tướng sĩ", () => {
     const hv = visibleRoster(r, { ...NO_FILTER, query: "ha van" }, "name");
     assert.ok(hv.some((e) => e.name === "Hà Vân"));
     const hoaInTeam = visibleRoster(r, { ...NO_FILTER, elements: ["hoa"], team: "in" }, "team");
-    assert.ok(hoaInTeam.every((e) => e.element === "hoa" && e.team !== null));
+    // Đinh Bộ Lĩnh đổi được hệ, nghề nên khớp mọi bộ lọc hệ, nghề; người khác phải đúng hệ.
+    assert.ok(hoaInTeam.every((e) => (e.id === "dinhBoLinh" || e.element === "hoa") && e.team !== null));
+    assert.ok(visibleRoster(r, { ...NO_FILTER, elements: ["loi"], professions: ["xaThu"] }, "team").some((e) => e.id === "dinhBoLinh"));
     assert.equal(visibleRoster(r, { ...NO_FILTER, query: "khong co ai" }, "team").length, 0);
     assert.equal(isFiltered(NO_FILTER), false);
     assert.equal(isFiltered({ ...NO_FILTER, query: "   " }), false);

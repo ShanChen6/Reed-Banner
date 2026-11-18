@@ -1,6 +1,6 @@
 // Bộ kỹ năng của một tướng quân: 6 chủ động và 4 bị động hiện cùng một khuôn thẻ (Shan 19/11/2026): biểu tượng, tên,
 // nhãn ngắn (nguồn, ô, năng lượng hoặc tín hiệu kích hoạt), rồi tác dụng. Thẻ chủ động ghi tín hiệu phối hợp nó phát
-// thay cho chuỗi "Có thể mở" dài; ghép với đồng đội cụ thể xem ở trang Phối Hợp. Luật chung của phản ứng gom xuống cuối. Số liệu đọc từ @/core.
+// thay cho chuỗi "Có thể mở" dài; ghép với đồng đội cụ thể xem ở trang Hợp Kích. Luật chung của phản ứng gom xuống cuối. Số liệu đọc từ @/core.
 
 import {
   CHASE_PASSIVES,
@@ -46,11 +46,28 @@ export function passiveSource(p: PassiveRef): "ally" | "self" | "any" {
 
 const SOURCE_NAME = { ally: "đồng đội", self: "bản thân", any: "phe mình" } as const;
 
+/**
+ * Loại bị động theo đúng tác dụng, đặt tên một quy tắc cho mọi nghề và hệ (Shan 19/11/2026: bỏ "Nghề 1/2, Hệ 1/2"):
+ * bị động Cơ hội để dành cho đòn kế của chính mình; bị động phản ứng gọi theo việc nó làm ngay.
+ */
+const CHASE_KIND: Readonly<Record<string, string>> = {
+  damage: "Truy kích",
+  armor: "Giảm Thủ",
+  heal: "Hồi máu",
+  shield: "Cấp Khiên",
+  energy: "Tiếp năng lượng",
+  drain: "Rút năng lượng",
+  burn: "Thiêu đốt",
+  silence: "Câm lặng",
+  defUp: "Tăng Thủ",
+};
+export const passiveKind = (p: PassiveRef): string => (p.kind === "combo" ? "Cơ hội" : (CHASE_KIND[CHASE_PASSIVES[p.id].effect] ?? "Phản ứng"));
+
 function Tag({ children, strong = false }: { children: React.ReactNode; strong?: boolean }) {
   return <span className={`rounded-full border px-2 py-0.5 text-caption leading-tight whitespace-nowrap ${strong ? "border-current/40 font-semibold" : "border-current/20 opacity-80"}`}>{children}</span>;
 }
 
-/** Thẻ một kỹ năng chủ động: tác dụng và các tín hiệu phối hợp chiêu phát ra (bị động nào bắt được xem ở trang Phối Hợp). */
+/** Thẻ một kỹ năng chủ động: tác dụng và các tín hiệu phối hợp chiêu phát ra (bị động nào bắt được xem ở trang Hợp Kích). */
 export function ActiveSkillCard({ def, extra, dim = false }: { def: SkillDef; extra?: React.ReactNode; dim?: boolean }) {
   const emits = skillComboOpeners(def);
   return (
@@ -82,7 +99,7 @@ export function ActiveSkillCard({ def, extra, dim = false }: { def: SkillDef; ex
 }
 
 /** Thẻ một bị động, cùng khuôn với thẻ chủ động: nhãn vị trí, tín hiệu kích hoạt, ai phát tín hiệu, tác dụng. */
-export function PassiveCard({ passive, label }: { passive: PassiveRef; label: string }) {
+export function PassiveCard({ passive }: { passive: PassiveRef }) {
   const d = passiveDef(passive);
   const turnEnd = passive.kind === "chase" && "turnEnd" in CHASE_PASSIVES[passive.id];
   return (
@@ -91,7 +108,7 @@ export function PassiveCard({ passive, label }: { passive: PassiveRef; label: st
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <p className="flex flex-wrap items-center gap-1.5">
           <span className="font-serif font-bold">{d.name}</span>
-          <Tag strong>{label}</Tag>
+          <Tag strong>{passiveKind(passive)}</Tag>
           {turnEnd ? (
             <Tag>cuối lượt</Tag>
           ) : (
@@ -113,16 +130,16 @@ export function PassiveCard({ passive, label }: { passive: PassiveRef; label: st
 export function fighterPassives(
   fighter: Pick<FighterConfig, "profession" | "element" | "chasePassives" | "special" | "comboPassive">,
   passive?: ComboPassiveId,
-): { readonly passive: PassiveRef; readonly label: string }[] {
+): { readonly passive: PassiveRef }[] {
   const reactions = chasePassives(fighter);
   if (isFusion(fighter)) {
     const list: PassiveRef[] = reactions.map((id) => ({ kind: "chase", id }));
     if (fighter.comboPassive) list.push({ kind: "combo", id: fighter.comboPassive });
-    return list.map((p, i) => ({ passive: p, label: `Nội tại ${i + 1}` }));
+    return list.map((p) => ({ passive: p }));
   }
   return [
-    ...(passive ? [{ passive: { kind: "combo", id: passive } as const, label: "Nghề 1 · Cơ hội" }] : []),
-    ...reactions.map((id, i) => ({ passive: { kind: "chase", id } as const, label: i === 0 ? "Nghề 2 · Truy kích" : `Hệ ${i}` })),
+    ...(passive ? [{ passive: { kind: "combo", id: passive } as const }] : []),
+    ...reactions.map((id) => ({ passive: { kind: "chase", id } as const })),
   ];
 }
 
@@ -148,7 +165,7 @@ export default function SkillDetails({
   extra?: (def: SkillDef) => { readonly node: React.ReactNode; readonly dim?: boolean } | null;
 }) {
   const fusion = fighter ? isFusion(fighter) : false;
-  const passives = fighter ? fighterPassives(fighter, passive) : passive ? [{ passive: { kind: "combo", id: passive } as const, label: "Nghề 1 · Cơ hội" }] : [];
+  const passives = fighter ? fighterPassives(fighter, passive) : passive ? [{ passive: { kind: "combo", id: passive } as const }] : [];
   // Luật chi tiết là nội dung đọc dài: ở sảnh dùng giấy dó chữ mực, nơi khác giữ nền hiện có (docs/05-ui-ux/design-system/theme.md).
   const box = paper ? "ui-frame--paper col-span-full w-full rounded-lg border border-frame-bronze p-3 text-sm" : "col-span-full w-full rounded-lg border border-current/15 p-3 text-sm";
   const body = (
@@ -163,7 +180,7 @@ export default function SkillDetails({
       <h4 className="mt-4 mb-1.5 text-caption font-semibold tracking-[0.12em] uppercase opacity-80">{fusion ? "Nội tại dung hợp" : "Bị động"}</h4>
       <ul className="grid gap-2 xl:grid-cols-2">
         {passives.map((p) => (
-          <PassiveCard key={`${p.passive.kind}-${p.passive.id}`} passive={p.passive} label={p.label} />
+          <PassiveCard key={`${p.passive.kind}-${p.passive.id}`} passive={p.passive} />
         ))}
       </ul>
       <div className="mt-3 flex flex-col gap-1 text-caption opacity-75">
@@ -173,7 +190,7 @@ export default function SkillDetails({
         {fusion ? (
           <p>Tướng quân dung hợp không nhận bị động nghề mặc định, chỉ bốn nội tại này; nội tại cuối lượt vẫn chạy khi còn sống.</p>
         ) : (
-          <p>Cơ hội nghề 1 không tự tung chiêu, không cộng dồn; hết hạn sau hai lượt thường kế tiếp, lượt thêm không rút thời hạn. Xua tan xóa cơ hội.</p>
+          <p>Bị động Cơ hội không tự tung chiêu: đòn hợp lệ kế tiếp của chính tướng đó mới nhận thưởng; không cộng dồn, hết hạn sau hai lượt thường kế tiếp, lượt thêm không rút thời hạn. Xua tan xóa cơ hội.</p>
         )}
       </div>
     </>

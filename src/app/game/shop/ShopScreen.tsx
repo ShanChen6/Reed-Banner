@@ -12,7 +12,8 @@ import { ModeBanner, ModeScreen, OrnateFrame } from "@/components/game-ui";
 import { Alert } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { GearIcon } from "../art/gear";
-import { FoodIcon, ProfessionIcon } from "../art/icons";
+import { ProfessionIcon } from "../art/icons";
+import { ItemIcon } from "../art/items";
 import ShopPanel from "../battle/ShopPanel";
 import GearStore from "./GearStore";
 import ItemsStore from "./ItemsStore";
@@ -42,7 +43,7 @@ export default function ShopScreen() {
       note: `${GEAR_SETS.length} bộ · chín ô trang bị`,
       icon: <GearIcon slot="vuKhi" element={profile.element} tier={2} set={GEAR_SETS[0]!.id} profession={profile.profession} className="size-8" />,
     },
-    { value: "items", label: "Vật phẩm", note: "Lương, Đá Cường Hóa, sách", icon: <FoodIcon className="size-7" /> },
+    { value: "items", label: "Vật phẩm", note: "Lương, Đá Cường Hóa, sách", icon: <ItemIcon id="stone" className="size-8" /> },
   ];
 
   // Mũi tên đổi quầy như một nhóm thẻ (lên/xuống trên máy tính, trái/phải trên điện thoại).

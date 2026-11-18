@@ -34,3 +34,23 @@ describe("trang Phối Hợp: liên kết kỹ năng → bị động", () => {
     assert.ok(solo.every((l) => passiveSource(l.passive) !== "ally"));
   });
 });
+
+describe("trang Hợp Kích: chuỗi phản ứng", () => {
+  it("chuỗi theo luật bộ máy: tối đa 4 bước, mỗi bước bắt tín hiệu bước trước phát, Cơ hội chỉ ở bước đầu", async () => {
+    const { comboChains, bestChains } = await import("../../src/app/game/combos/links");
+    const team = [member("dinhBoLinh"), member("haVan"), member("maiThanh")];
+    const chains = comboChains(team);
+    assert.ok(chains.length > 0);
+    for (const c of chains) {
+      assert.ok(c.steps.length >= 2 && c.steps.length <= 4);
+      c.steps.forEach((s, i) => {
+        if (s.passive.kind === "combo") assert.equal(i, 0);
+        if (i === 0) assert.ok(skillComboOpeners(c.skill).includes(s.signal));
+      });
+      assert.equal(new Set(c.steps.map((s) => `${s.fighter}:${s.passive.id}`)).size, c.steps.length);
+    }
+    const best = bestChains(team);
+    assert.equal(new Set(best.map((c) => `${c.from}:${c.skill.id}`)).size, best.length);
+    assert.ok(best.every((c, i) => i === 0 || c.steps.length <= best[i - 1]!.steps.length));
+  });
+});
