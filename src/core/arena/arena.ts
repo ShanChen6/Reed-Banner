@@ -19,10 +19,12 @@ import {
   newProfile,
   profileTeam,
   progressOf,
+  receiveDrop,
   type Profile,
 } from "../progress";
 import { companionById } from "../roster/roster";
 import { createRng, type Rng } from "../rng";
+import { GEAR_SETS, GEAR_SLOTS, type GearItem, type Tier } from "../gear";
 import { vnDay } from "../vnTime";
 import { SHOP_COMPANIONS, STARTER_COMPANIONS } from "../roster";
 
@@ -181,12 +183,14 @@ export function ghostTeam(
 /** Lực chiến của đội phòng thủ như khi vào trận (đã kẹp trang bị). */
 export const defensePower = (defense: ArenaDefense): number => teamPower(ghostTeam(defense, ""));
 
-/** Một bậc hạng Quần Hùng: vào bậc khi điểm hạng từ `min` trở lên; lần đầu đạt bậc thì nhận `gold` một lần. */
+/** Một bậc hạng Quần Hùng: vào bậc khi điểm hạng từ `min` trở lên; lần đầu đạt bậc thì nhận `gold` và một món phẩm `gear`. */
 export interface ArenaTier {
   readonly id: string;
   readonly name: string;
   readonly min: number;
   readonly gold: number;
+  /** Phẩm món trang bị thưởng (2 Lục … 5 Cam). */
+  readonly gear: Tier;
 }
 
 /**
@@ -194,14 +198,16 @@ export interface ArenaTier {
  * Ngày). Mỗi bậc nhận một lần trọn đời, không reset theo mùa: điểm hạng không reset nên thưởng theo tuần sẽ thành vàng
  * cho người điểm cao mà không cần đánh. Mốc và số vàng là đề xuất của Claude, chờ Shan duyệt: thắng ngang điểm +16 nên
  * Đồng lên Bạc khoảng 4 trận thắng; tổng cả sáu bậc 3 000 vàng, bằng khoảng 5 tuần hạng nhất mùa Quần Hùng (600 vàng).
+ * Thêm một món trang bị mỗi bậc (Shan 18/11/2026): Lục, Lam, Lam, Tím, Tím, Cam; hệ theo Đinh Bộ Lĩnh lúc nhận, ô và bộ
+ * ngẫu nhiên, vũ khí theo nghề Đinh Bộ Lĩnh. Món Cam chỉ rơi 2–13% ở trận Khó trở lên nên bậc Huyền Thoại là mốc đáng giá.
  */
 export const ARENA_TIERS: readonly ArenaTier[] = [
-  { id: "dong", name: "Đồng", min: 0, gold: 50 },
-  { id: "bac", name: "Bạc", min: 1050, gold: 150 },
-  { id: "vang", name: "Vàng", min: 1150, gold: 300 },
-  { id: "bachKim", name: "Bạch Kim", min: 1300, gold: 500 },
-  { id: "kimCuong", name: "Kim Cương", min: 1500, gold: 800 },
-  { id: "huyenThoai", name: "Huyền Thoại", min: 1750, gold: 1200 },
+  { id: "dong", name: "Đồng", min: 0, gold: 50, gear: 2 },
+  { id: "bac", name: "Bạc", min: 1050, gold: 150, gear: 3 },
+  { id: "vang", name: "Vàng", min: 1150, gold: 300, gear: 3 },
+  { id: "bachKim", name: "Bạch Kim", min: 1300, gold: 500, gear: 4 },
+  { id: "kimCuong", name: "Kim Cương", min: 1500, gold: 800, gear: 4 },
+  { id: "huyenThoai", name: "Huyền Thoại", min: 1750, gold: 1200, gear: 5 },
 ];
 
 /** Vị trí bậc đang đứng của một điểm hạng. */
@@ -215,18 +221,33 @@ export function arenaTierIndex(rating: number): number {
 
 export type ArenaTierClaimError = "badTier" | "notReached" | "claimed";
 
-/** Nhận thưởng một bậc: điểm hạng hiện tại phải đủ bậc và bậc đó chưa nhận. */
+/** Món thưởng của một bậc: phẩm theo bậc, hệ theo Đinh Bộ Lĩnh, ô và bộ theo `rng`; vũ khí theo nghề Đinh Bộ Lĩnh. */
+export function arenaTierGear(rng: Rng, tier: ArenaTier, profile: Profile): GearItem {
+  const slot = GEAR_SLOTS[rng.int(0, GEAR_SLOTS.length - 1)]!;
+  const item: GearItem = { id: "", slot, element: profile.element, tier: tier.gear, set: GEAR_SETS[rng.int(0, GEAR_SETS.length - 1)]!.id };
+  return slot === "vuKhi" ? { ...item, profession: profile.profession } : item;
+}
+
+/**
+ * Nhận thưởng một bậc: điểm hạng hiện tại phải đủ bậc và bậc đó chưa nhận. Cộng vàng và một món trang bị (túi đầy thì
+ * bán ngay như món rơi sau trận, `soldFor` là vàng bán được).
+ */
 export function claimArenaTier(
   profile: Profile,
   tierId: string,
   rating: number,
-): { readonly ok: true; readonly profile: Profile; readonly gold: number } | { readonly ok: false; readonly error: ArenaTierClaimError } {
+  rng: Rng,
+):
+  | { readonly ok: true; readonly profile: Profile; readonly gold: number; readonly item: GearItem | null; readonly soldFor: number }
+  | { readonly ok: false; readonly error: ArenaTierClaimError } {
   const tier = ARENA_TIERS.find((t) => t.id === tierId);
   if (!tier) return { ok: false, error: "badTier" };
   if (rating < tier.min) return { ok: false, error: "notReached" };
   const claimed = profile.arenaTiers ?? [];
   if (claimed.includes(tier.id)) return { ok: false, error: "claimed" };
-  return { ok: true, gold: tier.gold, profile: { ...profile, gold: profile.gold + tier.gold, arenaTiers: [...claimed, tier.id] } };
+  const paid: Profile = { ...profile, gold: profile.gold + tier.gold, arenaTiers: [...claimed, tier.id] };
+  const got = receiveDrop(paid, arenaTierGear(rng, tier, profile));
+  return { ok: true, gold: tier.gold, profile: got.profile, item: got.item, soldFor: got.soldFor };
 }
 
 /** Điểm thay đổi sau một trận: người đánh theo ARENA_K, người phòng thủ ngược dấu theo ARENA_DEFENDER_K. */

@@ -1701,11 +1701,14 @@ describe("thưởng bậc hạng Quần Hùng", () => {
     await arenaView("g_t", "view", deps);
     const gold0 = (await loadProfile(profiles, "g_t")).profile.gold;
     assert.deepEqual(await claimArenaTierReward("g_t", "bac", deps), { ok: false, error: "notReached" });
-    assert.deepEqual(await claimArenaTierReward("g_t", "dong", deps), { ok: true, gold: 50 });
+    const dong = await claimArenaTierReward("g_t", "dong", deps);
+    assert.ok(dong.ok && dong.gold === 50 && dong.item?.tier === 2);
     assert.deepEqual(await claimArenaTierReward("g_t", "dong", deps), { ok: false, error: "claimed" });
     assert.equal((await loadProfile(profiles, "g_t")).profile.gold, gold0 + 50);
     await arena.record("g_t", 100, "win", T0);
-    assert.deepEqual(await claimArenaTierReward("g_t", "bac", deps), { ok: true, gold: 150 });
+    const bac = await claimArenaTierReward("g_t", "bac", deps);
+    assert.ok(bac.ok && bac.gold === 150 && bac.item?.tier === 3);
+    assert.equal((await loadProfile(profiles, "g_t")).profile.bag.filter((it) => it.id === bac.item?.id).length, 1);
     assert.deepEqual((await arenaView("g_t", "view", deps)).tierClaims, ["dong", "bac"]);
   });
 });

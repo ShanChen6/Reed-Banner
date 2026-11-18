@@ -184,7 +184,7 @@ export interface ArenaResponse {
   /** Id các bậc hạng đã nhận thưởng. */
   readonly tierClaims?: readonly string[];
   /** Kết quả lệnh nhận thưởng bậc. */
-  readonly claimed?: { readonly tier: string; readonly gold: number };
+  readonly claimed?: { readonly tier: string; readonly gold: number; readonly item: GearItem | null; readonly soldFor: number };
   readonly claimError?: string;
   readonly error?: string;
 }

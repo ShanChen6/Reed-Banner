@@ -241,8 +241,9 @@ Trang `/arena`, code ở `src/core/arena/` (đội phòng thủ, bóng ma máy t
   |---|---|---|---|---|---|---|
   | Điểm hạng từ | 0 | 1 050 | 1 150 | 1 300 | 1 500 | 1 750 |
   | Vàng lần đầu | 50 | 150 | 300 | 500 | 800 | 1 200 |
+  | Trang bị lần đầu (Shan 18/11/2026) | Lục | Lam | Lam | Tím | Tím | Cam |
 
-  Tổng 3 000 vàng, khoảng 5 tuần hạng nhất mùa (600 vàng). Ngang điểm thắng +16 nên Đồng lên Bạc khoảng 4 trận thắng.
+  Tổng 3 000 vàng, khoảng 5 tuần hạng nhất mùa (600 vàng). Món trang bị mang hệ của Đinh Bộ Lĩnh lúc nhận, ô và bộ ngẫu nhiên theo hạt giống người chơi và bậc (ghi lại sau xung đột vẫn ra đúng món), vũ khí theo nghề Đinh Bộ Lĩnh; túi đầy thì bán ngay như món rơi sau trận (`arenaTierGear`, `claimArenaTier`). Món Cam chỉ rơi 2–13% ở trận Khó trở lên, nên bậc Huyền Thoại là mốc đáng giá. Ngang điểm thắng +16 nên Đồng lên Bạc khoảng 4 trận thắng.
 - **Chưa làm:** nhật ký bị đánh (chỉ có số trận giữ được và bị mất), chặn đánh lại cùng một người.
 - **Hướng sắp tới:** chế độ online hai người chơi đấu trực tiếp, xem [mục 6.2](#62-quần-hùng-online-hai-người-chơi-phát-triển-sau). Quần Hùng bất đồng bộ hiện tại giữ nguyên.
 

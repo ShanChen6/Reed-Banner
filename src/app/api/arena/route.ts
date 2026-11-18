@@ -1,7 +1,7 @@
 // GET /api/arena: điểm, thành tích, đội phòng thủ và các đối thủ đang bày của người chơi hiện tại.
 // POST /api/arena `{ action: "defend" | "refresh" }`: đặt đội 3vs3 đang chọn làm đội phòng thủ, hoặc đổi đối thủ.
 // POST /api/arena `{ action: "claimTier", tier }`: nhận thưởng vàng một bậc hạng (mỗi bậc một lần), trả view mới kèm
-// `claimed: { tier, gold }` hoặc `claimError`.
+// `claimed: { tier, gold, item, soldFor }` (món trang bị thưởng; túi đầy thì item null và đã bán) hoặc `claimError`.
 // Lần đầu mở thì tạo khách (nếu chưa có), đặt đội phòng thủ và bày đối thủ.
 
 import { randomInt } from "node:crypto";
@@ -24,7 +24,7 @@ async function handle(request: NextRequest, command: ArenaCommand, tier?: string
   };
   const claim = tier === undefined ? null : await claimArenaTierReward(owner, tier, deps);
   const view = await arenaView(owner, command, deps);
-  const body = claim === null ? view : claim.ok ? { ...view, claimed: { tier, gold: claim.gold } } : { ...view, claimError: claim.error };
+  const body = claim === null ? view : claim.ok ? { ...view, claimed: { tier, gold: claim.gold, item: claim.item, soldFor: claim.soldFor } } : { ...view, claimError: claim.error };
   return NextResponse.json(body, { headers: { "cache-control": "no-store" } });
 }
 

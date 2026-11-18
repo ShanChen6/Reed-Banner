@@ -15,6 +15,7 @@ import {
   defensePower,
   teamPower,
   type ArenaDefense,
+  type GearItem,
   type ArenaMember,
 } from "@/core";
 import type { LeaderboardStore } from "./leaderboard";
@@ -327,6 +328,13 @@ export async function arenaView(
   };
 }
 
+/** Băm FNV-1a một chuỗi thành hạt giống (như `dropSeed`; viết lại ở đây để không nhập vòng qua battleRewards). */
+function seedOf(text: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+
 /**
  * Nhận thưởng một bậc hạng Quần Hùng: điểm hạng lấy từ kho đấu trường trên server, vàng cộng vào hồ sơ; mỗi bậc một lần
  * (ghi id bậc vào `profile.arenaTiers` cùng lần cộng vàng nên bấm hai lần không nhận hai lần).
@@ -335,20 +343,24 @@ export async function claimArenaTierReward(
   ownerId: string,
   tierId: string,
   deps: Pick<ArenaDeps, "arena" | "profiles" | "now">,
-): Promise<{ readonly ok: true; readonly gold: number } | { readonly ok: false; readonly error: string }> {
+): Promise<
+  | { readonly ok: true; readonly gold: number; readonly item: GearItem | null; readonly soldFor: number }
+  | { readonly ok: false; readonly error: string }
+> {
   const row = await deps.arena.get(ownerId);
   if (!row) return { ok: false, error: "notReached" };
-  let gold = 0;
+  let result = { gold: 0, item: null as GearItem | null, soldFor: 0 };
   const r = await updateProfile(
     deps.profiles,
     ownerId,
     (p) => {
-      const c = claimArenaTier(p, tierId, row.rating);
+      // Hạt giống theo người và bậc: ghi lại sau xung đột vẫn ra cùng một món.
+      const c = claimArenaTier(p, tierId, row.rating, createRng(seedOf(`${ownerId}:arena-tier:${tierId}`)));
       if (!c.ok) return c;
-      gold = c.gold;
+      result = { gold: c.gold, item: c.item, soldFor: c.soldFor };
       return { ok: true, profile: c.profile };
     },
     deps.now,
   );
-  return r.ok ? { ok: true, gold } : { ok: false, error: String(r.error) };
+  return r.ok ? { ok: true, ...result } : { ok: false, error: String(r.error) };
 }
