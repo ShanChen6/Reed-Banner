@@ -94,6 +94,8 @@ test.describe("tài khoản đã đăng nhập", () => {
     await page.goto("/game/survival");
     await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
     await expect(page.getByRole("heading", { name: "Bảng xếp hạng mùa này" })).toBeVisible();
+    // Bậc Trấn Ải: tài khoản mới chưa vượt đợt nào nên bậc Đồng còn khóa.
+    await expect(page.getByRole("region", { name: "Bậc Trấn Ải" }).getByRole("button", { name: "Bậc Đồng: chưa đạt mốc" })).toHaveText("Còn 1 đợt");
     await page.getByRole("tab", { name: "Chơi" }).click();
     await page.getByRole("button", { name: "Tự chọn đội mạnh" }).click();
     await page.getByRole("button", { name: "Bắt đầu Trấn Ải" }).click();

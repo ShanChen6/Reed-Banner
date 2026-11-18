@@ -39,7 +39,7 @@ import { MemoryMatchStore } from "../../src/server/store";
 import { dailyBoard, MemoryDailyStore } from "../../src/server/daily";
 import { MemoryLeaderboardStore } from "../../src/server/leaderboard";
 import { MemorySeasonStore } from "../../src/server/seasons";
-import { arenaView, claimArenaTierReward, MemoryArenaStore } from "../../src/server/arena";
+import { arenaView, claimArenaTierReward, claimSurvivalTierReward, MemoryArenaStore } from "../../src/server/arena";
 import {
   ARENA_ATTACKS_PER_DAY,
   ARENA_OFFERS,
@@ -1710,5 +1710,22 @@ describe("thưởng bậc hạng Quần Hùng", () => {
     assert.ok(bac.ok && bac.gold === 150 && bac.item?.tier === 3);
     assert.equal((await loadProfile(profiles, "g_t")).profile.bag.filter((it) => it.id === bac.item?.id).length, 1);
     assert.deepEqual((await arenaView("g_t", "view", deps)).tierClaims, ["dong", "bac"]);
+  });
+});
+
+describe("thưởng bậc Trấn Ải", () => {
+  it("đọc kỷ lục số đợt trong hồ sơ trên server, cộng vàng và món một lần mỗi bậc", async () => {
+    const profiles = new MemoryProfileStore();
+    const deps = { profiles, now: T0 };
+    assert.deepEqual(await claimSurvivalTierReward("g_s", "dong", deps), { ok: false, error: "notReached" });
+    await updateProfile(profiles, "g_s", (p) => ({ ok: true, profile: { ...p, survival: { best: 6 } } }), T0);
+    const gold0 = (await loadProfile(profiles, "g_s")).profile.gold;
+    const bac = await claimSurvivalTierReward("g_s", "bac", deps);
+    assert.ok(bac.ok && bac.gold === 150 && bac.item?.tier === 3);
+    assert.deepEqual(await claimSurvivalTierReward("g_s", "bac", deps), { ok: false, error: "claimed" });
+    assert.deepEqual(await claimSurvivalTierReward("g_s", "vang", deps), { ok: false, error: "notReached" });
+    const p = (await loadProfile(profiles, "g_s")).profile;
+    assert.equal(p.gold, gold0 + 150);
+    assert.deepEqual(p.survivalTiers, ["bac"]);
   });
 });

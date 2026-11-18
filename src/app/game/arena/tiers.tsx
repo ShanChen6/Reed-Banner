@@ -3,7 +3,7 @@
 // Bậc hạng dùng chung cho Quần Hùng (bóng ma) và Đấu người: màu khiên từng bậc, thưởng hiện trên dải bậc và câu báo
 // sau khi nhận. Mốc, vàng và phẩm món ở `ARENA_TIERS` (@/core).
 
-import { ARENA_TIERS, type GearItem } from "@/core";
+import { ARENA_TIERS, SURVIVAL_TIERS, type ArenaTier, type GearItem } from "@/core";
 import { TIER_CLASS, TIER_COLOR_NAME, gearText } from "../battle/labels";
 import type { Tier, TierReward } from "../leaderboard/RankBoard";
 
@@ -16,11 +16,17 @@ const TIER_COLOR: Record<string, string> = {
   huyenThoai: "#c070ff",
 };
 
-export const TIERS: readonly Tier[] = ARENA_TIERS.map((t) => ({ name: t.name, min: t.min, color: TIER_COLOR[t.id] ?? "#b87333" }));
+const ladder = (list: readonly ArenaTier[]): readonly Tier[] =>
+  list.map((t) => ({ name: t.name, min: t.min, color: TIER_COLOR[t.id] ?? "#b87333" }));
+
+/** Dải bậc Quần Hùng và Đấu người (điểm hạng). */
+export const TIERS = ladder(ARENA_TIERS);
+/** Dải bậc Trấn Ải (kỷ lục số đợt). */
+export const SURVIVAL_LADDER = ladder(SURVIVAL_TIERS);
 
 /** Thưởng từng bậc trên dải: vàng, món theo màu phẩm, đã nhận chưa (`claimed(id)`). */
-export function tierRewards(claimed: (tierId: string) => boolean): TierReward[] {
-  return ARENA_TIERS.map((t) => ({
+export function tierRewards(claimed: (tierId: string) => boolean, list: readonly ArenaTier[] = ARENA_TIERS): TierReward[] {
+  return list.map((t) => ({
     gold: t.gold,
     claimed: claimed(t.id),
     extra: <span className={TIER_CLASS[t.gear]}>+ món {TIER_COLOR_NAME[t.gear]}</span>,
@@ -36,5 +42,5 @@ export function tierClaimNote(c: { readonly tier: string; readonly gold: number;
   );
 }
 
-export const tierErrorNote = (error?: string) =>
-  error === "claimed" ? "Bậc này đã nhận thưởng." : "Chưa đủ điểm hạng để nhận bậc này.";
+export const tierErrorNote = (error?: string, need = "điểm hạng") =>
+  error === "claimed" ? "Bậc này đã nhận thưởng." : `Chưa đủ ${need} để nhận bậc này.`;

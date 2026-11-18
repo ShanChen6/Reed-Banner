@@ -9,6 +9,7 @@ import {
   botDefense,
   botName,
   claimArenaTier,
+  claimSurvivalTier,
   createRng,
   arenaTeam,
   defenseOf,
@@ -356,6 +357,33 @@ export async function claimArenaTierReward(
     (p) => {
       // Hạt giống theo người và bậc: ghi lại sau xung đột vẫn ra cùng một món.
       const c = claimArenaTier(p, tierId, row.rating, createRng(seedOf(`${ownerId}:arena-tier:${tierId}`)));
+      if (!c.ok) return c;
+      result = { gold: c.gold, item: c.item, soldFor: c.soldFor };
+      return { ok: true, profile: c.profile };
+    },
+    deps.now,
+  );
+  return r.ok ? { ok: true, ...result } : { ok: false, error: String(r.error) };
+}
+
+/**
+ * Nhận thưởng một bậc Trấn Ải: kỷ lục số đợt đọc trong hồ sơ trên server (`profile.survival.best`); vàng và món cộng
+ * cùng lần ghi id bậc vào `profile.survivalTiers`, nên mỗi bậc nhận một lần.
+ */
+export async function claimSurvivalTierReward(
+  ownerId: string,
+  tierId: string,
+  deps: Pick<ArenaDeps, "profiles" | "now">,
+): Promise<
+  | { readonly ok: true; readonly gold: number; readonly item: GearItem | null; readonly soldFor: number }
+  | { readonly ok: false; readonly error: string }
+> {
+  let result = { gold: 0, item: null as GearItem | null, soldFor: 0 };
+  const r = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => {
+      const c = claimSurvivalTier(p, tierId, createRng(seedOf(`${ownerId}:survival-tier:${tierId}`)));
       if (!c.ok) return c;
       result = { gold: c.gold, item: c.item, soldFor: c.soldFor };
       return { ok: true, profile: c.profile };

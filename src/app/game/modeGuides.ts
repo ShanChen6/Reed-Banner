@@ -150,6 +150,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     rewards: [
       `${SURVIVAL_WAVE_GOLD} vàng cho mỗi đợt vượt qua, cộng vàng và sách nhặt trên bàn cờ.`,
       "Xếp hạng theo số đợt giữ được, có bảng mùa theo tuần và thưởng vàng theo hạng cuối mùa. Số đợt lên bảng ngay khi bạn vượt qua, không cần dừng lượt chơi.",
+      "Bậc theo kỷ lục số đợt: Đồng 1, Bạc 5, Vàng 10, Bạch Kim 15, Kim Cương 20, Huyền Thoại 25. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Bảng xếp hạng, mỗi bậc một lần.",
     ],
     tips: [
       "Xoay người giữa các đợt để tướng yếu có lúc hồi sức.",

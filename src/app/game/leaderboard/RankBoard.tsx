@@ -215,10 +215,12 @@ export interface TierReward {
  * Dải bậc hạng cuộn ngang: bậc đang đứng sáng viền, kèm tiến độ tới bậc kế. Có `rewards` thì mỗi ô hiện thưởng và một
  * nút: đạt mốc mà chưa nhận thì bấm Nhận thưởng; đã nhận thì nút khóa "Đã nhận"; chưa đạt thì nút khóa ghi điểm còn thiếu.
  */
-export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false }: {
+export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false, unit = "điểm" }: {
   tiers: readonly Tier[];
   score: number;
   label: string;
+  /** Đơn vị của điểm xét bậc, hiện trong "Còn N …" (điểm hạng hoặc đợt). */
+  unit?: string;
   rewards?: readonly TierReward[];
   onClaim?: (index: number) => void;
   busy?: boolean;
@@ -231,13 +233,13 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false
     <section aria-label={label} className="flex flex-col gap-2">
       <ol className="flex gap-2 overflow-x-auto pb-1">
         {tiers.map((t, i) => (
-          <li key={t.name} aria-current={i === at ? "step" : undefined}
+          <li key={t.name} aria-current={i === at && score >= t.min ? "step" : undefined}
             className={cn(
               "flex min-w-20 flex-1 flex-col items-center gap-1 rounded-lg border px-2 py-2 text-center",
-              i === at ? "border-frame-gold bg-frame-gold/15" : "border-frame-line-soft bg-wood-inset",
+              i === at && score >= t.min ? "border-frame-gold bg-frame-gold/15" : "border-frame-line-soft bg-wood-inset",
             )}>
-            <TierBadge tier={t} index={i} dim={i > at} />
-            <span className={cn("text-caption font-bold", i <= at ? "text-title-on-wood" : "text-on-wood-soft")}>{t.name}</span>
+            <TierBadge tier={t} index={i} dim={score < t.min} />
+            <span className={cn("text-caption font-bold", score >= t.min ? "text-title-on-wood" : "text-on-wood-soft")}>{t.name}</span>
             <span className="text-caption tabular-nums text-on-wood-soft">{t.min}+</span>
             {rewards?.[i] ? (
               <>
@@ -246,16 +248,16 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false
                 {/* Một nút cho cả thưởng bậc: đạt mốc mới bấm được, nhận một lần rồi khóa hẳn. */}
                 <button
                   type="button"
-                  disabled={busy || rewards[i]!.claimed || i > at}
+                  disabled={busy || rewards[i]!.claimed || score < t.min}
                   onClick={() => onClaim?.(i)}
-                  aria-label={rewards[i]!.claimed ? `Bậc ${t.name}: đã nhận thưởng` : i > at ? `Bậc ${t.name}: chưa đạt mốc` : `Nhận thưởng bậc ${t.name}`}
+                  aria-label={rewards[i]!.claimed ? `Bậc ${t.name}: đã nhận thưởng` : score < t.min ? `Bậc ${t.name}: chưa đạt mốc` : `Nhận thưởng bậc ${t.name}`}
                   className={buttonVariants({
-                    variant: rewards[i]!.claimed || i > at ? "secondary" : "primary",
+                    variant: rewards[i]!.claimed || score < t.min ? "secondary" : "primary",
                     size: "sm",
                     className: cn("mt-1 min-h-9 w-full px-2 text-caption pointer-coarse:min-h-11", rewards[i]!.claimed && "text-jade"),
                   })}
                 >
-                  {rewards[i]!.claimed ? "✓ Đã nhận" : i > at ? `Còn ${t.min - score} điểm` : "Nhận thưởng"}
+                  {rewards[i]!.claimed ? "✓ Đã nhận" : score < t.min ? `Còn ${t.min - score} ${unit}` : "Nhận thưởng"}
                 </button>
               </>
             ) : (

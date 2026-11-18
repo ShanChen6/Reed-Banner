@@ -12,6 +12,8 @@ import {
   ARENA_TIERS,
   arenaTierIndex,
   claimArenaTier,
+  claimSurvivalTier,
+  SURVIVAL_TIERS,
   parseProfile,
   createRng,
   BAG_LIMIT,
@@ -154,5 +156,23 @@ describe("đấu trường bóng ma", () => {
     assert.equal(sold.item, null);
     assert.ok(sold.soldFor > 0);
     assert.equal(sold.profile.gold, full.gold + ARENA_TIERS[0]!.gold + sold.soldFor);
+  });
+
+  it("bậc Trấn Ải theo kỷ lục số đợt: chưa vượt đợt nào thì chưa có bậc, mỗi bậc nhận một lần", () => {
+    const p = newProfile();
+    assert.equal(p.survival.best, 0);
+    assert.deepEqual(claimSurvivalTier(p, "dong", createRng(1)), { ok: false, error: "notReached" });
+    const best12 = { ...p, survival: { best: 12 } };
+    for (const id of ["dong", "bac", "vang"]) assert.ok(claimSurvivalTier(best12, id, createRng(1)).ok);
+    assert.deepEqual(claimSurvivalTier(best12, "bachKim", createRng(1)), { ok: false, error: "notReached" });
+    const a = claimSurvivalTier(best12, "vang", createRng(1));
+    assert.ok(a.ok);
+    assert.equal(a.gold, SURVIVAL_TIERS[2]!.gold);
+    assert.equal(a.item?.tier, SURVIVAL_TIERS[2]!.gear);
+    assert.deepEqual(a.profile.survivalTiers, ["vang"]);
+    assert.deepEqual(claimSurvivalTier(a.profile, "vang", createRng(1)), { ok: false, error: "claimed" });
+    // Bậc Trấn Ải ghi riêng, không đụng bậc Quần Hùng.
+    assert.equal(a.profile.arenaTiers, undefined);
+    assert.deepEqual(parseProfile(JSON.parse(JSON.stringify(a.profile))).survivalTiers, ["vang"]);
   });
 });
