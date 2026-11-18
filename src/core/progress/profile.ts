@@ -104,6 +104,8 @@ export interface Profile {
   readonly specialQuests?: SpecialQuestState;
   /** Quần Hùng: id các bậc hạng đã nhận thưởng (mỗi bậc một lần). Chưa nhận bậc nào thì không có. */
   readonly arenaTiers?: readonly string[];
+  /** Đấu người: khóa các bậc đã nhận thưởng theo thể thức ("duel:bac", "team:vang"). Chưa nhận bậc nào thì không có. */
+  readonly pvpTiers?: readonly string[];
   /** Trận Đồ: bộ sưu tập địa danh đã khai thông. Chưa có địa danh nào thì không có. */
   readonly formation?: FormationCollectionState;
 }
@@ -335,11 +337,16 @@ export function parseProfile(raw: unknown): Profile {
   const special = parseSpecialQuests(p.specialQuests);
   if (special) (next as { specialQuests?: SpecialQuestState }).specialQuests = special;
   else delete (next as { specialQuests?: SpecialQuestState }).specialQuests;
-  const tiers = Array.isArray(p.arenaTiers)
-    ? [...new Set(p.arenaTiers.filter((x): x is string => typeof x === "string" && x.length > 0 && x.length <= 20))].slice(0, 20)
-    : [];
+  const ids = (raw: unknown) =>
+    Array.isArray(raw)
+      ? [...new Set(raw.filter((x): x is string => typeof x === "string" && x.length > 0 && x.length <= 20))].slice(0, 20)
+      : [];
+  const tiers = ids(p.arenaTiers);
   if (tiers.length) (next as { arenaTiers?: readonly string[] }).arenaTiers = tiers;
   else delete (next as { arenaTiers?: readonly string[] }).arenaTiers;
+  const pvpTiers = ids(p.pvpTiers);
+  if (pvpTiers.length) (next as { pvpTiers?: readonly string[] }).pvpTiers = pvpTiers;
+  else delete (next as { pvpTiers?: readonly string[] }).pvpTiers;
   const formation = parseFormationCollection(p.formation);
   if (formation) (next as { formation?: FormationCollectionState }).formation = formation;
   else delete (next as { formation?: FormationCollectionState }).formation;

@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ARENA_DIFFICULTY, ARENA_TIERS as CORE_ARENA_TIERS, ARENA_WIN_GOLD, MAIN_ID, arenaTeam, companionById, ownsCompanion, progressOf, teamPower, type ArenaMember } from "@/core";
 import { ElementIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
-import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME, TIER_CLASS, TIER_COLOR_NAME, gearText } from "../battle/labels";
+import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 import {
   createOnline,
   fetchArena,
@@ -25,21 +25,13 @@ import { SceneLink, useScene } from "../SceneContext";
 import { ModeGuideTabs } from "../ModeGuide";
 import PvpPanel, { probePvp } from "./PvpPanel";
 import HeroGrid from "./HeroGrid";
-import { TierBadge, TierLadder, tierIndex, type Tier } from "../leaderboard/RankBoard";
+import { TierBadge, TierLadder, tierIndex } from "../leaderboard/RankBoard";
+import { TIERS, tierClaimNote, tierErrorNote, tierRewards } from "./tiers";
+import { PvpTierPanel } from "./PvpPanel";
 import { useProfile } from "../profile/useProfile";
 
 const ATTACK_KEY = "coLau.arena.attack";
 
-/** Màu khiên từng bậc hạng Quần Hùng; mốc và vàng thưởng ở `ARENA_TIERS` (@/core). */
-const TIER_COLOR: Record<string, string> = {
-  dong: "#b87333",
-  bac: "#c0c7d0",
-  vang: "#e0b84a",
-  bachKim: "#6fd0c8",
-  kimCuong: "#6fa8ff",
-  huyenThoai: "#c070ff",
-};
-const TIERS: readonly Tier[] = CORE_ARENA_TIERS.map((t) => ({ name: t.name, min: t.min, color: TIER_COLOR[t.id] ?? "#b87333" }));
 
 function Members({ list }: { list: readonly ArenaMember[] }) {
   return (
@@ -150,14 +142,9 @@ export default function ArenaScreen() {
     if (next.rating === undefined) return setMessage(ONLINE_ERROR_TEXT[next.error ?? "network"] ?? "Có trục trặc chưa rõ. Xin thử lại.");
     setData(next);
     if (next.claimed) {
-      const c = next.claimed;
-      const tierName = CORE_ARENA_TIERS.find((t) => t.id === c.tier)?.name ?? "";
-      setTierNote(
-        `Đã nhận ${c.gold} vàng thưởng bậc ${tierName}` +
-          (c.item ? ` và ${gearText(c.item)} (đã vào túi đồ).` : c.soldFor > 0 ? `; túi đồ đầy nên món thưởng được bán ngay, thêm ${c.soldFor} vàng.` : "."),
-      );
+      setTierNote(tierClaimNote(next.claimed));
       void fetchProfile();
-    } else setTierNote(next.claimError === "claimed" ? "Bậc này đã nhận thưởng." : "Chưa đủ điểm hạng để nhận bậc này.");
+    } else setTierNote(tierErrorNote(next.claimError));
   };
 
   const command = async (action: "defend" | "refresh") => {
@@ -229,11 +216,7 @@ export default function ArenaScreen() {
                       tiers={TIERS}
                       score={data.rating}
                       label="Bậc hạng Quần Hùng"
-                      rewards={CORE_ARENA_TIERS.map((t) => ({
-                        gold: t.gold,
-                        claimed: (data.tierClaims ?? []).includes(t.id),
-                        extra: <span className={TIER_CLASS[t.gear]}>+ món {TIER_COLOR_NAME[t.gear]}</span>,
-                      }))}
+                      rewards={tierRewards((id) => (data.tierClaims ?? []).includes(id))}
                       onClaim={(i) => void claimTier(CORE_ARENA_TIERS[i]!.id)}
                       busy={busy !== null}
                     />
@@ -249,6 +232,7 @@ export default function ArenaScreen() {
                 {pvpOpen && (
                   <section aria-labelledby="arena-board-pvp" className="flex flex-col gap-4">
                     <h2 id="arena-board-pvp" className="ui-title-on-wood text-title">Đấu người</h2>
+                    <PvpTierPanel />
                     <RankRewardsPanel mode="pvp" />
                     <SeasonBoardPanel board="pvp" />
                   </section>

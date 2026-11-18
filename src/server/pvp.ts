@@ -14,6 +14,8 @@ import {
   vnWeek,
   createPvpMatch,
   createRng,
+  claimPvpTier,
+  type GearItem,
   profileTeam,
   pvpActorOwner,
   pvpAdvanceAi,
@@ -524,6 +526,8 @@ export interface PvpOverview {
   readonly breakCount: number;
   /** Bị hạn chế ghép trận tới mốc này (ms), null nếu không. */
   readonly banUntil: number | null;
+  /** Bậc hạng đã nhận thưởng theo thể thức ("duel:bac", "team:vang"). */
+  readonly tierClaims: readonly string[];
   readonly serverNow: number;
 }
 
@@ -581,6 +585,7 @@ export async function pvpOverview(ownerId: string, deps: PvpDeps): Promise<PvpOv
     matchId,
     draftId,
     forgiveLeft: r.forgiveDay === day ? Math.max(0, PVP_FORGIVE_PER_DAY - r.forgiveUsed) : PVP_FORGIVE_PER_DAY,
+    tierClaims: profile.pvpTiers ?? [],
     serverNow: deps.now,
   };
 }
@@ -814,4 +819,41 @@ export function pvpPlay(id: string, owner: string, action: BattleAction, deps: P
     }
     return { ok: true, state: r.state, events: r.events };
   });
+}
+
+/** Băm FNV-1a một chuỗi thành hạt giống cho món thưởng bậc (ghi lại sau xung đột vẫn ra cùng món). */
+function tierSeed(text: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+
+/**
+ * Nhận thưởng một bậc hạng Đấu người của thể thức `format`: điểm hạng đọc trong kho PvP trên server, vàng và món cộng
+ * vào hồ sơ cùng lần ghi khóa bậc vào `profile.pvpTiers`, nên mỗi bậc mỗi thể thức chỉ nhận một lần.
+ */
+export async function claimPvpTierReward(
+  ownerId: string,
+  format: PvpFormat,
+  tierId: string,
+  deps: Pick<PvpDeps, "pvp" | "profiles" | "now">,
+): Promise<
+  | { readonly ok: true; readonly gold: number; readonly item: GearItem | null; readonly soldFor: number }
+  | { readonly ok: false; readonly error: string }
+> {
+  if (format !== "duel" && format !== "team") return { ok: false, error: "badTier" };
+  const { rating } = await deps.pvp.rating(ownerId, format);
+  let result = { gold: 0, item: null as GearItem | null, soldFor: 0 };
+  const r = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => {
+      const c = claimPvpTier(p, format, tierId, rating, createRng(tierSeed(`${ownerId}:pvp-tier:${format}:${tierId}`)));
+      if (!c.ok) return c;
+      result = { gold: c.gold, item: c.item, soldFor: c.soldFor };
+      return { ok: true, profile: c.profile };
+    },
+    deps.now,
+  );
+  return r.ok ? { ok: true, ...result } : { ok: false, error: String(r.error) };
 }
