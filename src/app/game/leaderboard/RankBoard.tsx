@@ -212,14 +212,15 @@ export interface TierReward {
 }
 
 /**
- * Dải bậc hạng cuộn ngang: bậc đang đứng sáng viền, kèm tiến độ tới bậc kế. Có `rewards` thì mỗi ô hiện thưởng và một
- * nút: đạt mốc mà chưa nhận thì bấm Nhận thưởng; đã nhận thì nút khóa "Đã nhận"; chưa đạt thì nút khóa ghi điểm còn thiếu.
+ * Dải bậc hạng: thanh tiến độ tới bậc kế ở trên, dưới là danh sách mỗi bậc một hàng (khiên, tên và mốc, thưởng, nút
+ * bên phải), bậc đang đứng sáng viền. Có `rewards` thì nút: đạt mốc mà chưa nhận thì Nhận thưởng; đã nhận thì khóa
+ * "Đã nhận"; chưa đạt thì khóa, ghi điểm còn thiếu.
  */
 export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false, unit = "điểm", locked = false }: {
   tiers: readonly Tier[];
   score: number;
   label: string;
-  /** Đơn vị của điểm xét bậc, hiện trong "Còn N …" (điểm hạng hoặc đợt). */
+  /** Đơn vị của điểm xét bậc, hiện trong mốc và "Còn N …" (điểm hạng hoặc đợt). */
   unit?: string;
   rewards?: readonly TierReward[];
   onClaim?: (index: number) => void;
@@ -233,41 +234,6 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false
   const ratio = next ? Math.max(0, Math.min(1, (score - from) / (next.min - from))) : 1;
   return (
     <section aria-label={label} className="flex flex-col gap-2">
-      <ol className="flex gap-2 overflow-x-auto pb-1">
-        {tiers.map((t, i) => (
-          <li key={t.name} aria-current={i === at && score >= t.min ? "step" : undefined}
-            className={cn(
-              "flex min-w-20 flex-1 flex-col items-center gap-1 rounded-lg border px-2 py-2 text-center",
-              i === at && score >= t.min ? "border-frame-gold bg-frame-gold/15" : "border-frame-line-soft bg-wood-inset",
-            )}>
-            <TierBadge tier={t} index={i} dim={score < t.min} />
-            <span className={cn("text-caption font-bold", score >= t.min ? "text-title-on-wood" : "text-on-wood-soft")}>{t.name}</span>
-            <span className="text-caption tabular-nums text-on-wood-soft">{t.min}+</span>
-            {rewards?.[i] ? (
-              <>
-                <span className="text-caption text-on-wood">{rewards[i]!.gold} vàng</span>
-                {rewards[i]!.extra && <span className="text-caption font-semibold">{rewards[i]!.extra}</span>}
-                {/* Một nút cho cả thưởng bậc: đạt mốc mới bấm được, nhận một lần rồi khóa hẳn. */}
-                <button
-                  type="button"
-                  disabled={busy || locked || rewards[i]!.claimed || score < t.min}
-                  onClick={() => onClaim?.(i)}
-                  aria-label={rewards[i]!.claimed ? `Bậc ${t.name}: đã nhận thưởng` : locked ? `Bậc ${t.name}: chưa vào chế độ` : score < t.min ? `Bậc ${t.name}: chưa đạt mốc` : `Nhận thưởng bậc ${t.name}`}
-                  className={buttonVariants({
-                    variant: rewards[i]!.claimed || locked || score < t.min ? "secondary" : "primary",
-                    size: "sm",
-                    className: cn("mt-1 min-h-9 w-full px-2 text-caption pointer-coarse:min-h-11", rewards[i]!.claimed && "text-jade"),
-                  })}
-                >
-                  {rewards[i]!.claimed ? "✓ Đã nhận" : locked ? "Chưa mở" : score < t.min ? `Còn ${t.min - score} ${unit}` : "Nhận thưởng"}
-                </button>
-              </>
-            ) : (
-              i < at && <span className="text-caption font-bold text-jade" aria-label="Đã đạt">✓</span>
-            )}
-          </li>
-        ))}
-      </ol>
       <div className="flex items-center gap-2 text-caption text-on-wood-soft">
         <span className="shrink-0 font-semibold text-on-wood">{tiers[at]!.name}</span>
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-black/40" role="meter" aria-label="Tiến độ tới bậc kế" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(ratio * 100)}>
@@ -275,6 +241,52 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false
         </div>
         <span className="shrink-0 tabular-nums">{next ? `${score}/${next.min} · ${next.name}` : `${score} · bậc cao nhất`}</span>
       </div>
+      <ol className="flex flex-col gap-1.5">
+        {tiers.map((t, i) => {
+          const reached = score >= t.min;
+          const current = i === at && reached;
+          const r = rewards?.[i];
+          return (
+            <li key={t.name} aria-current={current ? "step" : undefined}
+              className={cn(
+                "flex items-center gap-3 rounded-lg border px-3 py-2",
+                current ? "border-frame-gold bg-frame-gold/15" : "border-frame-line-soft bg-wood-inset",
+              )}>
+              <TierBadge tier={t} index={i} size="sm" dim={!reached} />
+              <div className="min-w-0 flex-1">
+                <p className="flex flex-wrap items-baseline gap-x-2">
+                  <span className={cn("font-bold", reached ? "text-title-on-wood" : "text-on-wood-soft")}>{t.name}</span>
+                  <span className="text-caption tabular-nums text-on-wood-soft">từ {t.min} {unit}</span>
+                </p>
+                {r && (
+                  <p className="text-caption text-on-wood">
+                    <span className="tabular-nums">{r.gold} vàng</span>
+                    {r.extra && <span className="font-semibold"> · {r.extra}</span>}
+                  </p>
+                )}
+              </div>
+              {r ? (
+                /* Một nút cho cả thưởng bậc: đạt mốc mới bấm được, nhận một lần rồi khóa hẳn. */
+                <button
+                  type="button"
+                  disabled={busy || locked || r.claimed || !reached}
+                  onClick={() => onClaim?.(i)}
+                  aria-label={r.claimed ? `Bậc ${t.name}: đã nhận thưởng` : locked ? `Bậc ${t.name}: chưa vào chế độ` : !reached ? `Bậc ${t.name}: chưa đạt mốc` : `Nhận thưởng bậc ${t.name}`}
+                  className={buttonVariants({
+                    variant: r.claimed || locked || !reached ? "secondary" : "primary",
+                    size: "sm",
+                    className: cn("w-24 shrink-0 px-2 text-caption whitespace-nowrap sm:w-28", r.claimed && "text-jade"),
+                  })}
+                >
+                  {r.claimed ? "✓ Đã nhận" : locked ? "Chưa mở" : !reached ? `Còn ${t.min - score} ${unit}` : "Nhận thưởng"}
+                </button>
+              ) : (
+                i < at && <span className="text-caption font-bold text-jade" aria-label="Đã đạt">✓</span>
+              )}
+            </li>
+          );
+        })}
+      </ol>
     </section>
   );
 }
