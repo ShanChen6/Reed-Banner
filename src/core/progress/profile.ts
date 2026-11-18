@@ -106,6 +106,8 @@ export interface Profile {
   readonly arenaTiers?: readonly string[];
   /** Đấu người: id các bậc đã nhận thưởng (một dải chung 1vs1 và 3vs3; khóa cũ "duel:bac" vẫn đọc được). */
   readonly pvpTiers?: readonly string[];
+  /** Trấn Ải: id các bậc kỷ lục số đợt đã nhận thưởng. Chưa nhận bậc nào thì không có. */
+  readonly survivalTiers?: readonly string[];
   /** Trận Đồ: bộ sưu tập địa danh đã khai thông. Chưa có địa danh nào thì không có. */
   readonly formation?: FormationCollectionState;
 }
@@ -347,6 +349,9 @@ export function parseProfile(raw: unknown): Profile {
   const pvpTiers = ids(p.pvpTiers);
   if (pvpTiers.length) (next as { pvpTiers?: readonly string[] }).pvpTiers = pvpTiers;
   else delete (next as { pvpTiers?: readonly string[] }).pvpTiers;
+  const survivalTiers = ids(p.survivalTiers);
+  if (survivalTiers.length) (next as { survivalTiers?: readonly string[] }).survivalTiers = survivalTiers;
+  else delete (next as { survivalTiers?: readonly string[] }).survivalTiers;
   const formation = parseFormationCollection(p.formation);
   if (formation) (next as { formation?: FormationCollectionState }).formation = formation;
   else delete (next as { formation?: FormationCollectionState }).formation;

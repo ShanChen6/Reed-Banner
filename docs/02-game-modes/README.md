@@ -113,6 +113,14 @@ balance và release: [T06.04](dual-tower/06-04-final-acceptance.md).
   - Cả ba active gục thì lượt chơi kết thúc ngay, kể cả khi còn reserve.
 - **Lưu tiến độ (17/11/2026):** lúc nghỉ giữa đợt có thể tạm nghỉ và quay lại sau, ở thiết bị nào cũng được; tiến độ giữ tới hết mùa tuần. Đang đánh dở một đợt mà bỏ quá 24 giờ thì không xử thua: lượt chơi kết thúc ở đợt cuối cùng đã hoàn thành, và điểm vẫn được ghi. Mỗi người một lượt chơi mở. Chi tiết ở [Rules & State Machine](survival/02-rules-state-machine.md).
 - Điểm = số đợt đã vượt qua.
+- **Bậc và thưởng bậc (Shan 18/11/2026, mốc Claude đề xuất, chờ duyệt):** bậc theo kỷ lục số đợt vượt trong một lượt chơi (`profile.survival.best`), cùng tên bậc, vàng và phẩm món với Quần Hùng (`SURVIVAL_TIERS`, `src/core/arena/arena.ts`). Lần đầu đạt mỗi bậc nhận vàng và một món hệ Đinh Bộ Lĩnh, mỗi bậc một lần (`profile.survivalTiers`), nhận rồi nút khóa; ở thẻ Bảng xếp hạng màn Trấn Ải. API POST `/api/survival/tier` `{ tier }` (chỉ tài khoản đăng nhập), server đọc kỷ lục trong hồ sơ.
+
+  | Bậc | Đồng | Bạc | Vàng | Bạch Kim | Kim Cương | Huyền Thoại |
+  |---|---|---|---|---|---|---|
+  | Kỷ lục từ (đợt) | 1 | 5 | 10 | 15 | 20 | 25 |
+  | Thưởng | 50 vàng + Lục | 150 + Lam | 300 + Lam | 500 + Tím | 800 + Tím | 1 200 + Cam |
+
+  Mốc theo [báo cáo cân bằng](survival/23-balance-report.md): đội không trang bị qua 10 đợt 60–100%, qua 15 đợt 10–60%, qua 20 đợt 0–10%; Huyền Thoại 25 đợt là mốc cho đội có trang bị và xoay dự bị tốt.
 
 ### 4.1 Bản đầu (Claude đặt 20/10/2026, chờ Shan duyệt; baseline trước V1.1)
 

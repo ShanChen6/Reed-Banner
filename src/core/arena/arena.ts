@@ -238,7 +238,7 @@ export function claimArenaTier(
   rating: number,
   rng: Rng,
 ): TierClaimResult {
-  return claimTier(profile, "arenaTiers", tierId, tierId, rating, rng);
+  return claimTier(profile, ARENA_TIERS, "arenaTiers", tierId, tierId, rating, rng);
 }
 
 export type TierClaimResult =
@@ -248,13 +248,14 @@ export type TierClaimResult =
 /** Nhận một bậc, ghi `key` vào danh sách `field` của hồ sơ (mỗi khóa một lần). */
 function claimTier(
   profile: Profile,
-  field: "arenaTiers" | "pvpTiers",
+  tiers: readonly ArenaTier[],
+  field: "arenaTiers" | "pvpTiers" | "survivalTiers",
   tierId: string,
   key: string,
   rating: number,
   rng: Rng,
 ): TierClaimResult {
-  const tier = ARENA_TIERS.find((t) => t.id === tierId);
+  const tier = tiers.find((t) => t.id === tierId);
   if (!tier) return { ok: false, error: "badTier" };
   if (rating < tier.min) return { ok: false, error: "notReached" };
   const claimed = profile[field] ?? [];
@@ -283,7 +284,27 @@ export function claimPvpTier(
   rng: Rng,
 ): TierClaimResult {
   if (pvpTierClaims(profile).includes(tierId)) return { ok: false, error: "claimed" };
-  return claimTier(profile, "pvpTiers", tierId, tierId, rating, rng);
+  return claimTier(profile, ARENA_TIERS, "pvpTiers", tierId, tierId, rating, rng);
+}
+
+/**
+ * Bậc Trấn Ải theo kỷ lục số đợt đã vượt trong một lượt chơi (`profile.survival.best`, server ghi khi lượt chơi kết
+ * thúc), Shan 18/11/2026. Cùng tên bậc, vàng và phẩm món với Quần Hùng; mốc là đề xuất của Claude theo báo cáo cân bằng
+ * Trấn Ải (docs/02-game-modes/survival/23-balance-report.md: đội không trang bị qua 10 đợt 60–100%, qua 15 đợt 10–60%,
+ * qua 20 đợt 0–10%), chờ Shan duyệt. Đồng cần vượt ít nhất một đợt.
+ */
+export const SURVIVAL_TIERS: readonly ArenaTier[] = [
+  { id: "dong", name: "Đồng", min: 1, gold: 50, gear: 2 },
+  { id: "bac", name: "Bạc", min: 5, gold: 150, gear: 3 },
+  { id: "vang", name: "Vàng", min: 10, gold: 300, gear: 3 },
+  { id: "bachKim", name: "Bạch Kim", min: 15, gold: 500, gear: 4 },
+  { id: "kimCuong", name: "Kim Cương", min: 20, gold: 800, gear: 4 },
+  { id: "huyenThoai", name: "Huyền Thoại", min: 25, gold: 1200, gear: 5 },
+];
+
+/** Nhận thưởng một bậc Trấn Ải: kỷ lục số đợt trong hồ sơ phải đủ mốc; mỗi bậc một lần. */
+export function claimSurvivalTier(profile: Profile, tierId: string, rng: Rng): TierClaimResult {
+  return claimTier(profile, SURVIVAL_TIERS, "survivalTiers", tierId, tierId, profile.survival.best, rng);
 }
 
 /** Điểm thay đổi sau một trận: người đánh theo ARENA_K, người phòng thủ ngược dấu theo ARENA_DEFENDER_K. */
