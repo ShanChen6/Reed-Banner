@@ -79,7 +79,7 @@ builds.forEach((b, j) => {
     const r = runBattle({ sides: [team(me), team(b.unit)], seed: (1 + s * 7919 + j) >>> 0, firstSide: first });
     tally.n++; tally.turns += r.turns;
     if (r.winner === 0) tally.w++; else if (r.winner === null) tally.w += 0.5;
-    for (const [k, v] of Object.entries(r.skillUses)) if (k.startsWith(values.who === "vuPhong" ? "vp_" : "dn_")) tally.uses[k] = (tally.uses[k] ?? 0) + v;
+    for (const [k, v] of Object.entries(r.skillUses)) if (k.startsWith(values.who === "vuPhong" ? "vp_" : "mn_")) tally.uses[k] = (tally.uses[k] ?? 0) + v;
   }
 });
 console.log(JSON.stringify(tally));
