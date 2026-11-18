@@ -9,7 +9,6 @@ import {
   botDefense,
   botName,
   claimArenaTier,
-  claimArenaTierGear,
   createRng,
   arenaTeam,
   defenseOf,
@@ -263,8 +262,6 @@ export interface ArenaView {
   }[];
   /** Id các bậc hạng đã nhận thưởng. */
   readonly tierClaims: readonly string[];
-  /** Id các bậc đã nhận món trang bị thưởng (bậc đã nhận vàng mà thiếu ở đây thì nhận bù được). */
-  readonly tierGearClaims: readonly string[];
 }
 
 export type ArenaCommand = "view" | "defend" | "refresh";
@@ -320,8 +317,7 @@ export async function arenaView(
     defense: row.defense
       ? { members: row.defense.members, power: defensePower(row.defense) }
       : null,
-    tierClaims: profile.arenaTiers ?? [],
-    tierGearClaims: profile.arenaTierGear ?? [],
+    tierClaims: ((await loadProfile(deps.profiles, ownerId)).profile.arenaTiers ?? []),
     offers: row.offers.map((o) => ({
       name: o.name,
       rating: o.rating,
@@ -362,27 +358,6 @@ export async function claimArenaTierReward(
       const c = claimArenaTier(p, tierId, row.rating, createRng(seedOf(`${ownerId}:arena-tier:${tierId}`)));
       if (!c.ok) return c;
       result = { gold: c.gold, item: c.item, soldFor: c.soldFor };
-      return { ok: true, profile: c.profile };
-    },
-    deps.now,
-  );
-  return r.ok ? { ok: true, ...result } : { ok: false, error: String(r.error) };
-}
-
-/** Nhận bù món trang bị của một bậc đã nhận vàng trước khi có thưởng trang bị; cùng hạt giống với lần nhận thường. */
-export async function claimArenaTierGearReward(
-  ownerId: string,
-  tierId: string,
-  deps: Pick<ArenaDeps, "profiles" | "now">,
-): Promise<{ readonly ok: true; readonly item: GearItem | null; readonly soldFor: number } | { readonly ok: false; readonly error: string }> {
-  let result = { item: null as GearItem | null, soldFor: 0 };
-  const r = await updateProfile(
-    deps.profiles,
-    ownerId,
-    (p) => {
-      const c = claimArenaTierGear(p, tierId, createRng(seedOf(`${ownerId}:arena-tier:${tierId}`)));
-      if (!c.ok) return c;
-      result = { item: c.item, soldFor: c.soldFor };
       return { ok: true, profile: c.profile };
     },
     deps.now,
