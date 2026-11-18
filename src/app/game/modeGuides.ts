@@ -194,7 +194,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     rewards: [
       `Thắng nhận thưởng trận thường và thêm ${ARENA_WIN_GOLD} vàng.`,
-      "Bậc hạng theo điểm hạng: Đồng, Bạc, Vàng, Bạch Kim, Kim Cương, Huyền Thoại. Lần đầu đạt mỗi bậc nhận vàng một lần ở thẻ Bảng xếp hạng; tụt bậc không mất thưởng đã nhận.",
+      "Bậc hạng theo điểm hạng: Đồng, Bạc, Vàng, Bạch Kim, Kim Cương, Huyền Thoại. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị (từ Lục tới Cam) ở thẻ Bảng xếp hạng, mỗi bậc một lần; tụt bậc không mất thưởng đã nhận.",
       "Bảng mùa theo tuần chỉ tính các trận bạn đi đánh, không tính phòng thủ. Hạng cuối mùa có thưởng vàng.",
     ],
     tips: [

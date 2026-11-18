@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ARENA_DIFFICULTY, ARENA_TIERS as CORE_ARENA_TIERS, ARENA_WIN_GOLD, MAIN_ID, arenaTeam, companionById, ownsCompanion, progressOf, teamPower, type ArenaMember } from "@/core";
 import { ElementIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
-import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
+import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME, TIER_CLASS, TIER_COLOR_NAME, gearText } from "../battle/labels";
 import {
   createOnline,
   fetchArena,
@@ -150,7 +150,12 @@ export default function ArenaScreen() {
     if (next.rating === undefined) return setMessage(ONLINE_ERROR_TEXT[next.error ?? "network"] ?? "Có trục trặc chưa rõ. Xin thử lại.");
     setData(next);
     if (next.claimed) {
-      setTierNote(`Đã nhận ${next.claimed.gold} vàng thưởng bậc ${CORE_ARENA_TIERS.find((t) => t.id === next.claimed!.tier)?.name ?? ""}.`);
+      const c = next.claimed;
+      const tierName = CORE_ARENA_TIERS.find((t) => t.id === c.tier)?.name ?? "";
+      setTierNote(
+        `Đã nhận ${c.gold} vàng thưởng bậc ${tierName}` +
+          (c.item ? ` và ${gearText(c.item)} (đã vào túi đồ).` : c.soldFor > 0 ? `; túi đồ đầy nên món thưởng được bán ngay, thêm ${c.soldFor} vàng.` : "."),
+      );
       void fetchProfile();
     } else setTierNote(next.claimError === "claimed" ? "Bậc này đã nhận thưởng." : "Chưa đủ điểm hạng để nhận bậc này.");
   };
@@ -224,12 +229,16 @@ export default function ArenaScreen() {
                       tiers={TIERS}
                       score={data.rating}
                       label="Bậc hạng Quần Hùng"
-                      rewards={CORE_ARENA_TIERS.map((t) => ({ gold: t.gold, claimed: (data.tierClaims ?? []).includes(t.id) }))}
+                      rewards={CORE_ARENA_TIERS.map((t) => ({
+                        gold: t.gold,
+                        claimed: (data.tierClaims ?? []).includes(t.id),
+                        extra: <span className={TIER_CLASS[t.gear]}>+ món {TIER_COLOR_NAME[t.gear]}</span>,
+                      }))}
                       onClaim={(i) => void claimTier(CORE_ARENA_TIERS[i]!.id)}
                       busy={busy !== null}
                     />
                     {tierNote && <p role="status" className="mt-2 text-sm text-jade">{tierNote}</p>}
-                    <p className="mt-2 text-caption text-on-wood-soft">Lần đầu đạt mỗi bậc nhận vàng một lần; tụt bậc không mất thưởng đã nhận.</p>
+                    <p className="mt-2 text-caption text-on-wood-soft">Lần đầu đạt mỗi bậc nhận vàng và một món trang bị hệ của Đinh Bộ Lĩnh, mỗi bậc một lần; tụt bậc không mất thưởng đã nhận.</p>
                   </OrnateFrame>
                   <RankRewardsPanel mode="arena" />
                   <SeasonBoardPanel

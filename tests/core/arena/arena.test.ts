@@ -13,6 +13,8 @@ import {
   arenaTierIndex,
   claimArenaTier,
   parseProfile,
+  createRng,
+  BAG_LIMIT,
   arenaTeam,
   autoProgress,
   defensePower,
@@ -122,21 +124,35 @@ describe("đấu trường bóng ma", () => {
     assert.equal(offers.filter((o) => o.owner === null).length, 2);
   });
 
-  it("thưởng bậc hạng: đủ điểm mới nhận, mỗi bậc một lần, lưu qua đọc lại hồ sơ", () => {
+  it("thưởng bậc hạng: đủ điểm mới nhận, mỗi bậc một lần, kèm một món trang bị, lưu qua đọc lại hồ sơ", () => {
     assert.equal(arenaTierIndex(1000), 0);
     assert.equal(arenaTierIndex(1050), 1);
     assert.equal(arenaTierIndex(5000), ARENA_TIERS.length - 1);
-    const p = newProfile();
-    assert.deepEqual(claimArenaTier(p, "bac", 1049), { ok: false, error: "notReached" });
-    assert.deepEqual(claimArenaTier(p, "khong-co", 2000), { ok: false, error: "badTier" });
-    const a = claimArenaTier(p, "bac", 1100);
+    const rng = () => createRng(7);
+    const p = { ...newProfile(), element: "hoa" as const, profession: "ySu" as const };
+    assert.deepEqual(claimArenaTier(p, "bac", 1049, rng()), { ok: false, error: "notReached" });
+    assert.deepEqual(claimArenaTier(p, "khong-co", 2000, rng()), { ok: false, error: "badTier" });
+    const a = claimArenaTier(p, "bac", 1100, rng());
     assert.ok(a.ok);
     assert.equal(a.profile.gold, p.gold + ARENA_TIERS[1]!.gold);
     assert.deepEqual(a.profile.arenaTiers, ["bac"]);
-    assert.deepEqual(claimArenaTier(a.profile, "bac", 1100), { ok: false, error: "claimed" });
+    // Món phẩm theo bậc (Bạc: Lam), hệ theo Đinh Bộ Lĩnh, đã vào túi.
+    assert.ok(a.item);
+    assert.equal(a.item.tier, ARENA_TIERS[1]!.gear);
+    assert.equal(a.item.element, "hoa");
+    if (a.item.slot === "vuKhi") assert.equal(a.item.profession, "ySu");
+    assert.ok(a.profile.bag.some((it) => it.id === a.item!.id));
+    assert.deepEqual(claimArenaTier(a.profile, "bac", 1100, rng()), { ok: false, error: "claimed" });
     // Bậc thấp hơn vẫn nhận được khi đã ở bậc cao.
-    assert.ok(claimArenaTier(a.profile, "dong", 1100).ok);
+    assert.ok(claimArenaTier(a.profile, "dong", 1100, rng()).ok);
     assert.deepEqual(parseProfile(JSON.parse(JSON.stringify(a.profile))).arenaTiers, ["bac"]);
     assert.equal(parseProfile(JSON.parse(JSON.stringify(p))).arenaTiers, undefined);
+    // Túi đầy: món bán ngay thành vàng.
+    const full = { ...p, bag: Array.from({ length: BAG_LIMIT }, (_, k) => ({ ...a.item!, id: `x${k}` })) };
+    const sold = claimArenaTier(full, "dong", 1000, rng());
+    assert.ok(sold.ok);
+    assert.equal(sold.item, null);
+    assert.ok(sold.soldFor > 0);
+    assert.equal(sold.profile.gold, full.gold + ARENA_TIERS[0]!.gold + sold.soldFor);
   });
 });

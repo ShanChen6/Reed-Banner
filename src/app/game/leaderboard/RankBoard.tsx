@@ -207,6 +207,8 @@ export function tierIndex(tiers: readonly Tier[], score: number): number {
 export interface TierReward {
   readonly gold: number;
   readonly claimed: boolean;
+  /** Thưởng kèm ngoài vàng (ví dụ món trang bị), hiện dưới số vàng. */
+  readonly extra?: ReactNode;
 }
 
 /**
@@ -251,6 +253,7 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false
             ) : (
               i < at && <span className="text-caption font-bold text-jade" aria-label="Đã đạt">✓</span>
             )}
+            {rewards?.[i]?.extra && <span className="text-caption font-semibold">{rewards[i]!.extra}</span>}
           </li>
         ))}
       </ol>
