@@ -159,6 +159,20 @@ test.describe("tài khoản đã đăng nhập", () => {
     expectClean(problems);
   });
 
+  test("Trận Đồ: mặc định Chơi thường, Chiến tích gộp bảng, thưởng và bộ sưu tập", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game/formation");
+    const tabs = page.getByRole("tablist", { name: "Chế độ" }).getByRole("tab");
+    await expect(tabs).toHaveText(["Chơi thường", "Xếp hạng", "Chiến tích", "Hướng dẫn"]);
+    await expect(page.getByRole("tab", { name: "Chơi thường" })).toHaveAttribute("aria-selected", "true");
+    await page.getByRole("tab", { name: "Xếp hạng" }).click();
+    await expect(page.getByRole("button", { name: "Chơi", exact: true }).first()).toBeVisible();
+    await page.getByRole("tab", { name: /Chiến tích/ }).click();
+    await expect(page.getByText(/Bộ sưu tập địa danh/)).toBeVisible();
+    await expect(page.getByRole("group", { name: "Thang thưởng theo hạng" }).or(page.getByRole("list", { name: "Thang thưởng theo hạng" })).first()).toBeVisible();
+    expectClean(problems);
+  });
+
   test("Tháp Thí Luyện: mở tầng 1 và thấy nút vào tầng", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/trial");

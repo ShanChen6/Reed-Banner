@@ -1,8 +1,8 @@
 "use client";
 
-// Màn chọn chế độ Trận Đồ. Mỗi bậc có ảnh thumbnail cố định (V2-02): thẻ xếp hạng có đồng hồ
-// kỳ, hạng hiện tại và thang thưởng; thẻ chơi thường dẫn vào ván ngẫu nhiên. Có hai tab (Xếp hạng, Chơi thường) khi xếp
-// hạng đang mở, và bộ sưu tập địa danh đã khai thông.
+// Màn chọn chế độ Trận Đồ (Shan 18/11/2026): thẻ Chơi thường (mặc định), Xếp hạng, Chiến tích, Hướng dẫn. Mỗi bậc có ảnh
+// thumbnail cố định (V2-02). Thẻ xếp hạng gọn: đồng hồ kỳ, số người thắng, ván của mình và thưởng dự kiến. Chiến tích gộp
+// thưởng chờ nhận, bảng xếp hạng từng bậc (kiểu bục vinh danh) kèm thang thưởng, bảng thưởng theo hạng và bộ sưu tập địa danh.
 
 import { ModeBanner } from "@/components/game-ui";
 import { Tabs, buttonVariants } from "@/components/ui";
@@ -17,8 +17,9 @@ import type { LevelOverview, Overview } from "./rankedClient";
 import RewardLadder from "./RewardLadder";
 import { ModeGuidePanel } from "../ModeGuide";
 import { formatRemaining } from "./time";
+import { RankBoard } from "../leaderboard/RankBoard";
 
-type Tab = "ranked" | "practice" | "board" | "rewards" | "guide";
+type Tab = "practice" | "ranked" | "record" | "guide";
 const TIER_LABEL = Object.fromEntries(REWARD_TIERS.map((t) => [t.tier, t.label])) as Record<string, string>;
 const CADENCE = { day: "Kỳ theo ngày", week: "Kỳ theo tuần" } as const;
 
@@ -63,35 +64,50 @@ function RankedCard({ l, now, busy, canPlay, onPlay }: { l: LevelOverview; now: 
   const m = l.mine;
   const reveal = progressOf(l);
   const reward = m?.status === "won" && m.rank ? rewardGold(l.level, m.rank, l.winners) : null;
-  const action = !m ? "Chơi tính hạng" : m.status === "playing" ? "Tiếp tục" : "Xem ván";
-  const status = !m
-    ? "Chưa chơi kỳ này. Mỗi kỳ chỉ một ván."
-    : m.status === "playing"
-      ? `Đang chơi dở: đã khai thông ${Math.round(reveal * 100)}%.`
-      : m.status === "won"
-        ? `Đã thắng: ${m.score} điểm.`
-        : "Đã thua, không vào bảng xếp hạng.";
+  const top = REWARD_GOLD[l.level]?.top1;
+  const action = !m ? "Chơi" : m.status === "playing" ? "Tiếp tục" : "Xem ván";
+  const size = rules?.randomSize ? `cỡ ${rules.randomSize.min}–${rules.randomSize.max}` : `${rules?.width}×${rules?.height}`;
   return (
     <li className="home-mode ui-frame flex h-full flex-col">
       <LevelCard level={l.level} ranked name={rules?.name} caption={CADENCE[l.cadence]} />
       <div className="flex flex-1 flex-col gap-3 p-4">
-        <div className="flex items-baseline justify-between gap-2">
-          <h3 className="sr-only">{rules?.name}</h3>
-          <span className="text-sm text-on-wood-soft">{rules?.randomSize ? `cỡ ${rules.randomSize.min}–${rules.randomSize.max}` : `${rules?.width}×${rules?.height}`}</span>
-        </div>
-        <p className="text-sm text-on-wood-soft">
-          Còn <b className="text-title-on-wood">{now ? formatRemaining(l.endsAt - now) : "…"}</b> · {l.winners} người đã thắng
-        </p>
-        <div className="flex min-h-[7.5rem] flex-col gap-2">
-          <p className="text-[15px]">{status}</p>
-          {reward && m?.rank && (
-            <p className="rounded border border-frame-gold/50 bg-frame-gold/15 px-3 py-1.5 text-[15px]">
-              Hạng <b>{m.rank}/{l.winners}</b> ({TIER_LABEL[reward.tier]}) · thưởng dự kiến <b>{reward.gold} vàng</b>
-              <span className="block text-caption text-on-wood-soft">Hạng có thể đổi tới hết kỳ; thưởng nhận khi kỳ khép lại.</span>
+        <h3 className="sr-only">{rules?.name}</h3>
+        <ul className="flex flex-wrap gap-1.5 text-caption" aria-label="Thông tin kỳ">
+          <li className="rounded-full bg-black/30 px-2.5 py-1 text-on-wood-soft">{size}</li>
+          <li className="rounded-full bg-black/30 px-2.5 py-1 text-on-wood-soft">
+            Còn <b className="text-title-on-wood">{now ? formatRemaining(l.endsAt - now) : "…"}</b>
+          </li>
+          <li className="rounded-full bg-black/30 px-2.5 py-1 text-on-wood-soft">{l.winners} người đã thắng</li>
+          {top !== undefined && <li className="rounded-full bg-frame-gold/15 px-2.5 py-1 font-semibold text-frame-gold">Nhất {top} vàng</li>}
+        </ul>
+        {!m ? (
+          <p className="text-sm text-on-wood-soft">Mỗi kỳ một ván, cả kỳ cùng một bản đồ.</p>
+        ) : m.status === "playing" ? (
+          <div className="flex flex-col gap-1">
+            <p className="text-sm">Đang chơi dở · khai thông {Math.round(reveal * 100)}%</p>
+            <div className="h-1.5 overflow-hidden rounded-full bg-black/40" aria-hidden>
+              <div className="h-full bg-frame-gold" style={{ width: `${reveal * 100}%` }} />
+            </div>
+          </div>
+        ) : m.status === "won" ? (
+          <div className="rounded-lg border border-frame-gold/50 bg-frame-gold/10 px-3 py-2">
+            <p className="text-sm">
+              Đã thắng <b>{m.score} điểm</b>
+              {m.rank ? (
+                <>
+                  {" "}· hạng <b>{m.rank}/{l.winners}</b>
+                </>
+              ) : null}
             </p>
-          )}
-        </div>
-        <RewardLadder level={l.level} rank={m?.status === "won" ? (m.rank ?? null) : null} winners={l.winners} />
+            {reward && (
+              <p className="text-caption text-on-wood-soft">
+                {TIER_LABEL[reward.tier]} · dự kiến <b className="text-frame-gold">{reward.gold} vàng</b> khi kỳ khép lại
+              </p>
+            )}
+          </div>
+        ) : (
+          <p className="text-sm text-on-wood-soft">Đã thua kỳ này, không vào bảng.</p>
+        )}
         <button type="button" disabled={busy || !canPlay} onClick={() => onPlay(l.level)} className={buttonVariants({ className: "mt-auto min-h-12 px-4" })}>
           {canPlay ? action : "Trình danh để chơi"}
         </button>
@@ -151,9 +167,10 @@ export default function ModeScreen({
   onExpire: () => void;
 }) {
   const rankedOn = overview?.enabled === true;
-  const [tab, setTab] = useState<Tab | null>(null);
+  const [tab, setTab] = useState<Tab>("practice");
   const [boardLevel, setBoardLevel] = useState<string | null>(null);
-  const active = tab ?? (rankedOn && overview?.canPlay ? "ranked" : "practice");
+  // Vào Trận Đồ mặc định ở Chơi thường; xếp hạng tắt thì chỉ còn Chơi thường, Chiến tích (bộ sưu tập) và Hướng dẫn.
+  const active: Tab = !rankedOn && tab === "ranked" ? "practice" : tab;
   const now = useServerNow(overview, onExpire);
   const pending = (overview?.levels ?? []).flatMap((l) => l.claimable);
   // Năm giây cuối của một kỳ: mõ điểm từng giây (`now` cập nhật mỗi 20 giây nên hẹn giờ theo phần còn lại tại thời điểm đó).
@@ -203,22 +220,17 @@ export default function ModeScreen({
         value={active}
         onChange={setTab}
         items={[
-          ...(rankedOn
-            ? [
-                { value: "ranked" as const, label: "Xếp hạng · có thưởng" },
-                { value: "practice" as const, label: "Chơi thường" },
-                { value: "board" as const, label: "Bảng xếp hạng" },
-                {
-                  value: "rewards" as const,
-                  label: (
-                    <>
-                      Ban thưởng
-                      {overview?.canPlay && pending.length > 0 && <span role="img" aria-label={`${pending.length} thưởng chờ nhận`} className="ml-1.5 inline-block size-2 rounded-full bg-lacquer-hi align-middle" />}
-                    </>
-                  ),
-                },
-              ]
-            : [{ value: "practice" as const, label: "Chơi thường" }]),
+          { value: "practice" as const, label: "Chơi thường" },
+          ...(rankedOn ? [{ value: "ranked" as const, label: "Xếp hạng" }] : []),
+          {
+            value: "record" as const,
+            label: (
+              <>
+                Chiến tích
+                {overview?.canPlay && pending.length > 0 && <span role="img" aria-label={`${pending.length} thưởng chờ nhận`} className="ml-1.5 inline-block size-2 rounded-full bg-lacquer-hi align-middle" />}
+              </>
+            ),
+          },
           { value: "guide" as const, label: "Hướng dẫn" },
         ]}
       />
@@ -227,8 +239,8 @@ export default function ModeScreen({
 
       {active === "ranked" && rankedOn && (
         <section aria-label="Xếp hạng" className="flex flex-col gap-4">
-          <p className="max-w-2xl text-[15px] text-on-wood/90">
-            Mỗi kỳ mỗi bậc chỉ một ván, cả kỳ ai cũng gặp cùng một bản đồ. Thắng mới có hạng: điểm cao hơn, rồi ít nước hơn, rồi nộp sớm hơn thì đứng trên. Thưởng nhận sau khi kỳ khép lại.
+          <p className="max-w-3xl text-sm text-on-wood-soft">
+            Mỗi kỳ mỗi bậc một ván, cùng một bản đồ cho mọi người. Thắng mới có hạng: điểm cao hơn, rồi ít nước hơn, rồi nộp sớm hơn. Bảng và thưởng ở thẻ Chiến tích.
           </p>
           {gate}
           <p role="status" aria-live="polite" className="min-h-6 text-[15px] text-title-on-wood">{note}</p>
@@ -244,7 +256,7 @@ export default function ModeScreen({
 
       {active === "practice" && (
         <section aria-label="Chơi thường" className="flex flex-col gap-4">
-          <p className="max-w-2xl text-[15px] text-on-wood/90">Chơi thường: không thưởng, không xếp hạng, chơi bao nhiêu ván tùy thích. Bản đồ và chướng ngại ngẫu nhiên mỗi ván.</p>
+          <p className="max-w-2xl text-sm text-on-wood-soft">Chơi bao nhiêu ván tùy thích. Bản đồ và chướng ngại ngẫu nhiên mỗi ván.</p>
           <ul className="grid gap-4 sm:grid-cols-2">
             {RULESETS.map((r) => (
               <PracticeCard key={r.id} rules={r} best={best[r.id] ?? 0} onStart={onStart} />
@@ -254,49 +266,12 @@ export default function ModeScreen({
         </section>
       )}
 
-      {active === "board" && rankedOn && (
-        <section aria-label="Bảng xếp hạng" className="flex flex-col gap-4">
-          {gate}
-          {overview?.canPlay && overview.levels.length > 0 && (
-            <>
-              <Tabs
-                label="Bậc"
-                value={boardLevel ?? overview.levels[0]!.level}
-                onChange={setBoardLevel}
-                size="sm"
-                items={overview.levels.map((l) => ({ value: l.level, label: RULESETS.find((r) => r.id === l.level)?.name ?? l.level }))}
-              />
-              {overview.levels.filter((l) => l.level === (boardLevel ?? overview.levels[0]!.level)).map((l) => (
-                <div key={l.level} className="ui-frame p-4">
-                  <p className="mb-2 text-sm text-on-wood-soft">{CADENCE[l.cadence]} · còn {now ? formatRemaining(l.endsAt - now) : "…"} · {l.winners} người đã thắng</p>
-                  {l.top.length === 0 ? (
-                    <p className="text-[15px] text-on-wood-soft">Chưa có ai thắng trong kỳ này.</p>
-                  ) : (
-                    <ol className="flex flex-col gap-1 text-[15px]">
-                      {l.top.slice(0, 10).map((r) => (
-                        <li key={r.rank} className={`flex justify-between gap-2 ${r.mine ? "font-bold text-frame-gold" : ""}`}>
-                          <span className="truncate">{r.rank}. {r.name}</span>
-                          <span className="shrink-0">{r.score} đ · {r.turns} nước</span>
-                        </li>
-                      ))}
-                    </ol>
-                  )}
-                  {l.mine?.status === "won" && l.mine.rank && l.mine.rank > 10 && (
-                    <p className="mt-2 border-t border-frame-bronze/40 pt-2 text-[15px] font-bold text-frame-gold">Hạng của bạn: {l.mine.rank}/{l.winners} · {l.mine.score} đ</p>
-                  )}
-                </div>
-              ))}
-            </>
-          )}
-        </section>
-      )}
-
-      {active === "rewards" && rankedOn && (
-        <section aria-label="Ban thưởng" className="flex flex-col gap-4">
-          {gate}
+      {active === "record" && (
+        <section aria-label="Chiến tích" className="flex flex-col gap-4">
+          {rankedOn && gate}
           <p role="status" aria-live="polite" className="min-h-6 text-[15px] text-title-on-wood">{note}</p>
-          {overview?.canPlay && pending.length > 0 && (
-            <section aria-label="Thưởng chờ nhận" className="ui-frame p-4">
+          {rankedOn && overview?.canPlay && pending.length > 0 && (
+            <section aria-label="Thưởng chờ nhận" className="ui-frame border-frame-gold p-4">
               <h2 className="mb-2 font-serif text-xl font-bold text-title-on-wood">Thưởng chờ nhận</h2>
               <ul className="flex flex-col gap-2">
                 {pending.map((c) => (
@@ -310,41 +285,60 @@ export default function ModeScreen({
               </ul>
             </section>
           )}
-          {overview?.canPlay && pending.length === 0 && <p className="text-[15px] text-on-wood-soft">Chưa có thưởng chờ nhận. Thưởng nhận được sau khi kỳ khép lại.</p>}
-          {overview?.canPlay && overview.levels.length > 0 && (
-            <ul className="grid gap-4 lg:grid-cols-3">
-              {overview.levels.map((l) => (
-                <li key={l.level} className="ui-frame flex flex-col gap-2 p-4">
-                  <h3 className="font-serif text-lg font-bold text-title-on-wood">{RULESETS.find((r) => r.id === l.level)?.name}</h3>
-                  <RewardLadder level={l.level} rank={l.mine?.status === "won" ? (l.mine.rank ?? null) : null} winners={l.winners} />
-                </li>
+          {rankedOn && overview?.canPlay && overview.levels.length > 0 && (
+            <>
+              <Tabs
+                label="Bậc"
+                value={boardLevel ?? overview.levels[0]!.level}
+                onChange={setBoardLevel}
+                size="sm"
+                items={overview.levels.map((l) => ({ value: l.level, label: RULESETS.find((r) => r.id === l.level)?.name ?? l.level }))}
+              />
+              {overview.levels.filter((l) => l.level === (boardLevel ?? overview.levels[0]!.level)).map((l) => (
+                <div key={l.level} className="ui-frame flex flex-col gap-4 p-4">
+                  <p className="text-sm text-on-wood-soft">{CADENCE[l.cadence]} · còn {now ? formatRemaining(l.endsAt - now) : "…"} · {l.winners} người đã thắng</p>
+                  {l.top.length === 0 ? (
+                    <p className="py-4 text-center text-[15px] text-on-wood-soft">Chưa có ai thắng trong kỳ này.</p>
+                  ) : (
+                    <RankBoard
+                      entries={l.top.slice(0, 20).map((r) => ({ rank: r.rank, name: r.name, mine: r.mine, score: `${r.score} đ`, detail: `${r.turns} nước` }))}
+                      mine={l.mine?.status === "won" && l.mine.rank ? { rank: l.mine.rank, score: `${l.mine.score} đ` } : { rank: null, score: null }}
+                    />
+                  )}
+                  <div>
+                    <h3 className="mb-1.5 text-sm font-bold text-frame-gold">Thưởng cuối kỳ theo hạng</h3>
+                    <RewardLadder level={l.level} rank={l.mine?.status === "won" ? (l.mine.rank ?? null) : null} winners={l.winners} />
+                  </div>
+                </div>
               ))}
-            </ul>
+            </>
           )}
-          <details className="ui-frame p-4">
-            <summary className="cursor-pointer font-serif font-bold text-title-on-wood">Bảng thưởng theo hạng</summary>
-            <p className="mt-2 text-sm text-on-wood-soft">Mỗi người nhận đúng một bậc theo hạng cuối kỳ. Bảng ít người vẫn có thưởng; nửa trên tính làm tròn lên.</p>
-            <table className="mt-2 w-full text-left text-[15px]">
-              <thead>
-                <tr className="text-on-wood-soft">
-                  <th className="py-1 pr-2 font-normal">Bậc</th>
-                  {REWARD_TIERS.map((t) => <th key={t.tier} className="py-1 pr-2 font-normal">{t.label}</th>)}
-                </tr>
-              </thead>
-              <tbody>
-                {Object.keys(REWARD_GOLD).map((id) => (
-                  <tr key={id}>
-                    <th scope="row" className="py-1 pr-2 text-left font-semibold">{RULESETS.find((r) => r.id === id)?.name}</th>
-                    {REWARD_TIERS.map((t) => <td key={t.tier} className="py-1 pr-2">{REWARD_GOLD[id]?.[t.tier]}</td>)}
+          {rankedOn && (
+            <details className="ui-frame p-4">
+              <summary className="cursor-pointer font-serif font-bold text-title-on-wood">Bảng thưởng theo hạng</summary>
+              <p className="mt-2 text-sm text-on-wood-soft">Mỗi người nhận đúng một bậc theo hạng cuối kỳ. Bảng ít người vẫn có thưởng; nửa trên tính làm tròn lên. Thưởng nhận được sau khi kỳ khép lại.</p>
+              <table className="mt-2 w-full text-left text-[15px]">
+                <thead>
+                  <tr className="text-on-wood-soft">
+                    <th className="py-1 pr-2 font-normal">Bậc</th>
+                    {REWARD_TIERS.map((t) => <th key={t.tier} className="py-1 pr-2 font-normal">{t.label}</th>)}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </details>
+                </thead>
+                <tbody>
+                  {Object.keys(REWARD_GOLD).map((id) => (
+                    <tr key={id}>
+                      <th scope="row" className="py-1 pr-2 text-left font-semibold">{RULESETS.find((r) => r.id === id)?.name}</th>
+                      {REWARD_TIERS.map((t) => <td key={t.tier} className="py-1 pr-2">{REWARD_GOLD[id]?.[t.tier]}</td>)}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </details>
+          )}
+          <Collection collected={collection} />
         </section>
       )}
 
-      {active !== "guide" && <Collection collected={collection} />}
     </>
   );
 }
