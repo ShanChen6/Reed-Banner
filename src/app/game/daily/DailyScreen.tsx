@@ -30,6 +30,7 @@ import { SceneLink, useScene } from "../SceneContext";
 import { ModeGuideTabs } from "../ModeGuide";
 import CheckInPanel from "../quests/CheckInPanel";
 import DailyQuestsPanel from "../quests/DailyQuestsPanel";
+import { RankBoard } from "../leaderboard/RankBoard";
 import { useProfile } from "../profile/useProfile";
 
 function scoreText(s: DailyScore): string {
@@ -160,28 +161,16 @@ export default function DailyScreen() {
                   {top.length === 0 ? (
                     <p className="text-sm text-on-wood-soft">Chưa ai đánh xong hôm nay.</p>
                   ) : (
-                    <ol className="flex flex-col gap-1.5 text-sm">
-                      {top.map((r) => (
-                        <li
-                          key={r.rank}
-                          className={`flex items-center gap-2 rounded-control border px-2.5 py-2 ${r.mine ? "ui-choice is-selected font-semibold" : "border-frame-line-soft bg-wood-inset text-on-wood"}`}
-                        >
-                          <span className={`w-6 text-right tabular-nums ${r.rank <= 3 ? "font-black" : ""} ${r.mine ? "" : r.rank <= 3 ? "text-frame-gold" : "text-on-wood-soft"}`}>
-                            {r.rank}
-                          </span>
-                          <span className="min-w-0 flex-1 truncate">
-                            {r.name}
-                            {r.mine && " (bạn)"}
-                          </span>
-                          <span className={`text-caption ${r.mine ? "" : "text-on-wood-soft"}`}>
-                            {scoreText(r.score)}
-                          </span>
-                        </li>
-                      ))}
-                    </ol>
-                  )}
-                  {mine?.rank != null && !top.some((r) => r.mine) && (
-                    <p className="text-sm text-frame-gold">Hạng của bạn: {mine.rank}</p>
+                    <RankBoard
+                      entries={top.map((r) => ({
+                        rank: r.rank,
+                        name: r.name,
+                        mine: r.mine,
+                        score: r.score.won ? `Thắng · ${r.score.turns} lượt` : "Thua",
+                        detail: r.score.won ? `còn ${Math.round(r.score.permille / 10)}% máu` : `gây ${Math.round(r.score.permille / 10)}% sát thương`,
+                      }))}
+                      mine={mine?.result ? { rank: mine.rank ?? null, score: scoreText(mine.result) } : { rank: null, score: null }}
+                    />
                   )}
                 </OrnateFrame>
               </>

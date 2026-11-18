@@ -262,8 +262,12 @@ describe("tab Tầm Tướng Ký trên trang Xếp hạng", () => {
     const html = renderToStaticMarkup(
       createElement(TtkBoard, { data: { week: "2026-11-02", top: [{ rank: 1, name: "Shan", mine: false, points: 500, unitsSpent: 90 }], mine: { rank: 7, points: 200, unitsSpent: 10 } } }),
     );
-    assert.match(html, /500 điểm · tiêu 90/);
-    assert.match(html, /Hạng của bạn: 7 · 200 điểm · tiêu 10/);
+    // Hạng 1 đứng trên bục, kèm số nguyên tố đã tiêu; thanh "Bạn" dính đáy ghi hạng và điểm của mình.
+    assert.match(html, /aria-label="Ba hạng đầu"/);
+    assert.match(html, />500 điểm</);
+    assert.match(html, /tiêu 90 nguyên tố/);
+    assert.match(html, /Đứng thứ 7/);
+    assert.match(html, />200 điểm</);
     assert.match(html, /tuần bắt đầu 2026-11-02/);
     assert.match(renderToStaticMarkup(createElement(TtkBoard, { data: { week: "2026-11-02", top: [], mine: null } })), /chưa có ai ghép ra tướng đề cử/);
   });

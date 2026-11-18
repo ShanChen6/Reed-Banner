@@ -6,6 +6,7 @@
 import { OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { buttonVariants } from "@/components/ui";
 import { Children, useEffect, useState, type ReactNode } from "react";
+import { RankBoard } from "./RankBoard";
 
 export interface SeasonBoardResponse {
   readonly board?: string;
@@ -72,24 +73,6 @@ export function RankList({ children, initial = 10 }: { children: ReactNode; init
     </>
   );
 }
-export function MyRank({ children }: { children: ReactNode }) {
-  return <p className="text-sm font-semibold text-title-on-wood">{children}</p>;
-}
-
-/** Một dòng bảng: hạng 1–3 vàng đậm, dòng của mình nền giấy dó. */
-export function RankRow({ rank, name, mine, score }: { rank: number; name: string; mine?: boolean; score: ReactNode }) {
-  return (
-    <li className={`flex items-center gap-2 rounded-control border px-2.5 py-2 ${mine ? "ui-choice is-selected font-semibold" : "border-frame-line-soft bg-wood-inset"}`}>
-      <span className={`w-7 text-right tabular-nums ${rank <= 3 ? "font-black" : ""} ${mine ? "" : rank <= 3 ? "text-frame-gold" : "text-on-wood-soft"}`}>{rank}</span>
-      <span className="min-w-0 flex-1 truncate">
-        {name}
-        {mine && " (bạn)"}
-      </span>
-      <span className={`text-caption tabular-nums ${mine ? "" : "text-on-wood-soft"}`}>{score}</span>
-    </li>
-  );
-}
-
 /** Tải JSON một lần cho `url`; `url` null thì không tải (kết quả luôn null). */
 function useJson<T extends { error?: string }>(url: string | null): T | null {
   const [data, setData] = useState<T | null>(null);
@@ -109,8 +92,8 @@ function useJson<T extends { error?: string }>(url: string | null): T | null {
 
 const seasonScore = (board: "survival" | "arena" | "pvp", score: number) => (board === "survival" ? `${score} đợt` : `+${score} điểm`);
 
-/** Bảng mùa tuần hiện tại của Trấn Ải hoặc Quần Hùng. */
-export function SeasonBoardPanel({ board }: { board: "survival" | "arena" | "pvp" }) {
+/** Bảng mùa tuần hiện tại của Trấn Ải hoặc Quần Hùng; `myExtra` gắn vào thanh hạng của mình (ví dụ bậc hạng). */
+export function SeasonBoardPanel({ board, myExtra }: { board: "survival" | "arena" | "pvp"; myExtra?: ReactNode }) {
   const data = useJson<SeasonBoardResponse>(board === "pvp" ? "/api/pvp/board" : `/api/leaderboard?board=${board}&season=current`);
   return (
     <OrnateFrame className="flex flex-col gap-3">
@@ -120,13 +103,12 @@ export function SeasonBoardPanel({ board }: { board: "survival" | "arena" | "pvp
       ) : data.top.length === 0 ? (
         <BoardEmpty>Chưa có ai trên bảng mùa này.</BoardEmpty>
       ) : (
-        <RankList>
-          {data.top.slice(0, 20).map((r) => (
-            <RankRow key={r.rank} rank={r.rank} name={r.name} mine={r.mine} score={seasonScore(board, r.score)} />
-          ))}
-        </RankList>
+        <RankBoard
+          entries={data.top.slice(0, 20).map((r) => ({ rank: r.rank, name: r.name, mine: r.mine, score: seasonScore(board, r.score) }))}
+          mine={data.mine ? { rank: data.mine.rank, score: seasonScore(board, data.mine.score) } : { rank: null, score: null }}
+          myExtra={myExtra}
+        />
       )}
-      {data?.mine && !data.top?.slice(0, 20).some((r) => r.mine) && <MyRank>Hạng của bạn: {data.mine.rank} · {seasonScore(board, data.mine.score)}</MyRank>}
     </OrnateFrame>
   );
 }
@@ -142,14 +124,10 @@ export function DestinyBoardPanel() {
       ) : data.entries.length === 0 ? (
         <BoardEmpty>Chưa có thành tích trong chu kỳ này.</BoardEmpty>
       ) : (
-        <RankList>
-          {data.entries.map((e) => (
-            <RankRow key={e.rank} rank={e.rank} name={e.name} mine={e.mine} score={`Tầng ${e.clearedFloor} · ${e.totalTurns} lượt`} />
-          ))}
-        </RankList>
-      )}
-      {data?.mine && !data.entries?.some((e) => e.mine) && (
-        <MyRank>Hạng của bạn: {data.mine.rank} · tầng {data.mine.clearedFloor} · {data.mine.totalTurns} lượt</MyRank>
+        <RankBoard
+          entries={data.entries.map((e) => ({ rank: e.rank, name: e.name, mine: e.mine, score: `Tầng ${e.clearedFloor}`, detail: `${e.totalTurns} lượt đánh` }))}
+          mine={data.mine ? { rank: data.mine.rank, score: `Tầng ${data.mine.clearedFloor}` } : { rank: null, score: null }}
+        />
       )}
     </OrnateFrame>
   );
@@ -165,16 +143,10 @@ export function TtkBoard({ data }: { data: TtkBoardResponse | null }) {
       ) : data.top.length === 0 ? (
         <BoardEmpty>Tuần này chưa có ai ghép ra tướng đề cử.</BoardEmpty>
       ) : (
-        <RankList>
-          {data.top.map((r) => (
-            <RankRow key={r.rank} rank={r.rank} name={r.name} mine={r.mine} score={`${r.points} điểm · tiêu ${r.unitsSpent}`} />
-          ))}
-        </RankList>
-      )}
-      {data?.mine && !data.top?.some((r) => r.mine) && (
-        <MyRank>
-          Hạng của bạn: {data.mine.rank} · {data.mine.points} điểm · tiêu {data.mine.unitsSpent}
-        </MyRank>
+        <RankBoard
+          entries={data.top.map((r) => ({ rank: r.rank, name: r.name, mine: r.mine, score: `${r.points} điểm`, detail: `tiêu ${r.unitsSpent} nguyên tố` }))}
+          mine={data.mine ? { rank: data.mine.rank, score: `${data.mine.points} điểm` } : { rank: null, score: null }}
+        />
       )}
     </OrnateFrame>
   );

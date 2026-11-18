@@ -24,9 +24,23 @@ import { SceneLink, useScene } from "../SceneContext";
 import { ModeGuideTabs } from "../ModeGuide";
 import PvpPanel, { probePvp } from "./PvpPanel";
 import HeroGrid from "./HeroGrid";
+import { TierBadge, TierLadder, tierIndex, type Tier } from "../leaderboard/RankBoard";
 import { useProfile } from "../profile/useProfile";
 
 const ATTACK_KEY = "coLau.arena.attack";
+
+/**
+ * Bậc hạng Quần Hùng theo điểm hạng (Elo, bắt đầu 1000), chỉ để hiển thị, chưa có thưởng theo bậc (Shan 18/11/2026,
+ * theo mẫu Đấu Trường Ngày). Mốc là đề xuất của Claude: thắng ngang điểm +16, nên từ Đồng lên Bạc khoảng 4 trận thắng.
+ */
+export const ARENA_TIERS: readonly Tier[] = [
+  { name: "Đồng", min: 0, color: "#b87333" },
+  { name: "Bạc", min: 1050, color: "#c0c7d0" },
+  { name: "Vàng", min: 1150, color: "#e0b84a" },
+  { name: "Bạch Kim", min: 1300, color: "#6fd0c8" },
+  { name: "Kim Cương", min: 1500, color: "#6fa8ff" },
+  { name: "Huyền Thoại", min: 1750, color: "#c070ff" },
+];
 
 function Members({ list }: { list: readonly ArenaMember[] }) {
   return (
@@ -178,6 +192,7 @@ export default function ArenaScreen() {
         stats={[
           { label: "Điểm", value: data.rating },
           { label: "Hạng", value: data.rank != null ? `#${data.rank}` : "–" },
+          { label: "Bậc", value: ARENA_TIERS[tierIndex(ARENA_TIERS, data.rating)]!.name },
           { label: "Lượt hôm nay", value: `${left}/${data.attacksPerDay ?? 0}` },
         ]}
       />
@@ -191,8 +206,14 @@ export default function ArenaScreen() {
               <>
                 <section aria-labelledby="arena-board-ghost" className="flex flex-col gap-4">
                   <h2 id="arena-board-ghost" className="ui-title-on-wood text-title">Đấu bóng ma</h2>
+                  <OrnateFrame>
+                    <TierLadder tiers={ARENA_TIERS} score={data.rating} label="Bậc hạng Quần Hùng" />
+                  </OrnateFrame>
                   <RankRewardsPanel mode="arena" />
-                  <SeasonBoardPanel board="arena" />
+                  <SeasonBoardPanel
+                    board="arena"
+                    myExtra={<TierBadge tier={ARENA_TIERS[tierIndex(ARENA_TIERS, data.rating)]!} index={tierIndex(ARENA_TIERS, data.rating)} size="sm" />}
+                  />
                 </section>
                 {pvpOpen && (
                   <section aria-labelledby="arena-board-pvp" className="flex flex-col gap-4">
