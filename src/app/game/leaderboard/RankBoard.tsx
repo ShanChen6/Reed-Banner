@@ -203,8 +203,24 @@ export function tierIndex(tiers: readonly Tier[], score: number): number {
   return at;
 }
 
-/** Dải bậc hạng cuộn ngang: bậc đã qua có dấu tích, bậc đang đứng sáng viền, kèm tiến độ tới bậc kế. */
-export function TierLadder({ tiers, score, label }: { tiers: readonly Tier[]; score: number; label: string }) {
+/** Thưởng một bậc trên dải bậc hạng: số vàng và trạng thái nhận. */
+export interface TierReward {
+  readonly gold: number;
+  readonly claimed: boolean;
+}
+
+/**
+ * Dải bậc hạng cuộn ngang: bậc đang đứng sáng viền, kèm tiến độ tới bậc kế. Có `rewards` thì mỗi ô hiện vàng thưởng:
+ * đủ điểm mà chưa nhận có nút Nhận, đã nhận có dấu tích, chưa tới thì mờ.
+ */
+export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false }: {
+  tiers: readonly Tier[];
+  score: number;
+  label: string;
+  rewards?: readonly TierReward[];
+  onClaim?: (index: number) => void;
+  busy?: boolean;
+}) {
   const at = tierIndex(tiers, score);
   const next = tiers[at + 1];
   const from = tiers[at]!.min;
@@ -221,7 +237,20 @@ export function TierLadder({ tiers, score, label }: { tiers: readonly Tier[]; sc
             <TierBadge tier={t} index={i} dim={i > at} />
             <span className={cn("text-caption font-bold", i <= at ? "text-title-on-wood" : "text-on-wood-soft")}>{t.name}</span>
             <span className="text-caption tabular-nums text-on-wood-soft">{t.min}+</span>
-            {i < at && <span className="text-caption font-bold text-jade" aria-label="Đã đạt">✓</span>}
+            {rewards?.[i] ? (
+              rewards[i]!.claimed ? (
+                <span className="text-caption font-bold text-jade">✓ Đã nhận {rewards[i]!.gold}</span>
+              ) : i <= at ? (
+                <button type="button" disabled={busy} onClick={() => onClaim?.(i)}
+                  className={buttonVariants({ size: "sm", className: "min-h-9 px-2 text-caption pointer-coarse:min-h-11" })}>
+                  Nhận {rewards[i]!.gold} vàng
+                </button>
+              ) : (
+                <span className="text-caption text-on-wood-soft">{rewards[i]!.gold} vàng</span>
+              )
+            ) : (
+              i < at && <span className="text-caption font-bold text-jade" aria-label="Đã đạt">✓</span>
+            )}
           </li>
         ))}
       </ol>

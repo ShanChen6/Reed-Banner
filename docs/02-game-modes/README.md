@@ -235,6 +235,14 @@ Trang `/arena`, code ở `src/core/arena/` (đội phòng thủ, bóng ma máy t
 - **Thưởng:** thưởng trận thường (kinh nghiệm, vàng nhặt, món rơi theo độ khó Khó) và thêm 50 vàng khi thắng.
 - **Bảng xếp hạng:** bảng Quần Hùng ở Công Trạng (`/leaderboard`), theo điểm; lên bảng khi có đội phòng thủ. Ở màn Quần Hùng, thẻ Bảng xếp hạng nằm cạnh Chơi và Hướng dẫn, gồm thưởng hạng và bảng mùa của Đấu bóng ma, kèm Đấu người khi cờ bật.
 - **Mùa và thưởng:** có mùa theo tuần và thưởng vàng theo hạng, xem [mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng).
+- **Bậc hạng và thưởng bậc (Shan 18/11/2026, số liệu Claude đề xuất, chờ duyệt):** bậc theo điểm hạng hiện tại (`ARENA_TIERS`, `src/core/arena/arena.ts`). Lần đầu đạt mỗi bậc nhận vàng **một lần trọn đời** ở thẻ Bảng xếp hạng (POST `/api/arena` `{ action: "claimTier", tier }`, server đọc điểm hạng trong kho đấu trường, ghi id bậc vào `profile.arenaTiers` cùng lần cộng vàng). Không reset theo mùa vì điểm hạng không reset; tụt bậc không mất thưởng đã nhận; bậc thấp hơn bậc đang đứng vẫn nhận được.
+
+  | Bậc | Đồng | Bạc | Vàng | Bạch Kim | Kim Cương | Huyền Thoại |
+  |---|---|---|---|---|---|---|
+  | Điểm hạng từ | 0 | 1 050 | 1 150 | 1 300 | 1 500 | 1 750 |
+  | Vàng lần đầu | 50 | 150 | 300 | 500 | 800 | 1 200 |
+
+  Tổng 3 000 vàng, khoảng 5 tuần hạng nhất mùa (600 vàng). Ngang điểm thắng +16 nên Đồng lên Bạc khoảng 4 trận thắng.
 - **Chưa làm:** nhật ký bị đánh (chỉ có số trận giữ được và bị mất), chặn đánh lại cùng một người.
 - **Hướng sắp tới:** chế độ online hai người chơi đấu trực tiếp, xem [mục 6.2](#62-quần-hùng-online-hai-người-chơi-phát-triển-sau). Quần Hùng bất đồng bộ hiện tại giữ nguyên.
 

@@ -39,7 +39,7 @@ import { MemoryMatchStore } from "../../src/server/store";
 import { dailyBoard, MemoryDailyStore } from "../../src/server/daily";
 import { MemoryLeaderboardStore } from "../../src/server/leaderboard";
 import { MemorySeasonStore } from "../../src/server/seasons";
-import { arenaView, MemoryArenaStore } from "../../src/server/arena";
+import { arenaView, claimArenaTierReward, MemoryArenaStore } from "../../src/server/arena";
 import {
   ARENA_ATTACKS_PER_DAY,
   ARENA_OFFERS,
@@ -1690,4 +1690,22 @@ it('API tạo trận không chuyển cấu hình Tinh thần thử nghiệm ho�
   assert.ok(input);
   assert.equal('experimentalSpirit' in input, false);
   assert.equal('audit' in input, false);
+});
+
+describe("thưởng bậc hạng Quần Hùng", () => {
+  it("lấy điểm hạng trên server, cộng vàng một lần mỗi bậc, view ghi bậc đã nhận", async () => {
+    const arena = new MemoryArenaStore();
+    const profiles = new MemoryProfileStore();
+    const deps = { arena, profiles, now: T0, seed: 1 };
+    assert.deepEqual(await claimArenaTierReward("g_t", "dong", deps), { ok: false, error: "notReached" });
+    await arenaView("g_t", "view", deps);
+    const gold0 = (await loadProfile(profiles, "g_t")).profile.gold;
+    assert.deepEqual(await claimArenaTierReward("g_t", "bac", deps), { ok: false, error: "notReached" });
+    assert.deepEqual(await claimArenaTierReward("g_t", "dong", deps), { ok: true, gold: 50 });
+    assert.deepEqual(await claimArenaTierReward("g_t", "dong", deps), { ok: false, error: "claimed" });
+    assert.equal((await loadProfile(profiles, "g_t")).profile.gold, gold0 + 50);
+    await arena.record("g_t", 100, "win", T0);
+    assert.deepEqual(await claimArenaTierReward("g_t", "bac", deps), { ok: true, gold: 150 });
+    assert.deepEqual((await arenaView("g_t", "view", deps)).tierClaims, ["dong", "bac"]);
+  });
 });
