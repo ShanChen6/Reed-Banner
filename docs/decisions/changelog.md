@@ -7,6 +7,7 @@
 **Toàn màn hình, ảnh đại diện, Sử Lộ, sảnh Thao Luyện (Shan yêu cầu)**
 - Nút toàn màn hình nổi ở góc dưới phải có ở **mọi màn**, kể cả Chiến Trường, Cửa Hàng, Doanh Trại, Công Trạng và tài khoản (`FULLSCREEN_SCENES` gồm mọi phân cảnh).
 - **Đổi ảnh đại diện** ở trang Tài khoản: hộp thoại chân dung các tướng quân đã về trại, hoặc dùng chữ cái đầu. POST `/api/auth/avatar` `{ hero }`, server kiểm tra đã có tướng (`src/server/avatar.ts`). Ảnh chọn trong game (`/art/...`) không bị ảnh Google/GitHub ghi đè khi trình danh lại.
+- **Tải ảnh đại diện từ máy** (cùng hộp thoại): JPG, PNG, WebP; trình duyệt cắt vuông giữa ảnh, thu về 256 × 256 WebP (không có WebP thì JPEG) rồi gửi `{ image }` dạng `data:` URL tới `/api/auth/avatar`; server chỉ nhận ba định dạng đó, kiểm tra byte đầu tệp, tối đa 120 000 ký tự, lưu thẳng vào cột ảnh đại diện (không cần kho tệp). Ảnh tải lên cũng không bị ảnh Google/GitHub ghi đè.
 - **Sử Lộ giao tranh** chạy hoạt ảnh đổi ô, xóa, rơi cùng tốc độ với trận thường (`swapFrames`, `destroyFrames` trong `battle/animation.ts`); trước đây bàn nhảy thẳng sang kết quả nên trông như bị khựng.
 - **Sảnh chuẩn bị xuất trận** (Thao Luyện, Giao Tranh) làm lại: banner tranh sân khấu theo hệ đang chọn kèm chọn chế độ; thẻ Thế trận hai phe; cột trái Chủ tướng (nguyên tố, nghề, kỹ năng), Trang bị mẫu, luật chi tiết; thẻ **Ra trận** (thủ lĩnh, độ khó, nút Vào trận) dính bên phải, lên đầu trên điện thoại. Thanh trận không còn ô độ khó trùng khi chưa vào trận.
 

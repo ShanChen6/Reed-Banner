@@ -58,14 +58,15 @@ export interface AccountStore {
   countTokens(accountId: string, purpose: TokenPurpose, since: number): Promise<number>;
   deleteTokens(accountId: string, purpose: TokenPurpose): Promise<void>;
   /**
-   * Đặt ảnh đại diện chọn trong game (đường dẫn `/art/...`), hoặc null để về chữ cái đầu. Ảnh trong game không bị
-   * ảnh Google/GitHub ghi đè khi trình danh lại (`link`). False nếu tài khoản không có.
+   * Đặt ảnh đại diện tự chọn (chân dung trong game `/art/...` hoặc ảnh tải lên `data:image/...`), hoặc null để về chữ
+   * cái đầu. Ảnh tự chọn không bị ảnh Google/GitHub ghi đè khi trình danh lại (`link`). False nếu tài khoản không có.
    */
   setAvatar(accountId: string, avatarUrl: string | null): Promise<boolean>;
 }
 
-/** Ảnh đại diện người chơi tự chọn trong game (chân dung tướng quân), khác ảnh từ Google/GitHub. */
-export const isGameAvatar = (url: string | null | undefined): url is string => typeof url === "string" && url.startsWith("/art/");
+/** Ảnh đại diện tự chọn (chân dung tướng quân trong game hoặc ảnh tải lên từ máy), khác ảnh từ Google/GitHub. */
+export const isGameAvatar = (url: string | null | undefined): url is string =>
+  typeof url === "string" && (url.startsWith("/art/") || url.startsWith("data:image/"));
 
 export type TokenPurpose = "verify" | "reset";
 

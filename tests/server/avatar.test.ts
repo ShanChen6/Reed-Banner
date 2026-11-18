@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { MemoryAccountStore } from "../../src/server/accounts";
-import { chooseAvatar } from "../../src/server/avatar";
+import { AVATAR_UPLOAD_MAX, checkAvatarImage, chooseAvatar, uploadAvatar } from "../../src/server/avatar";
 import { MemoryProfileStore } from "../../src/server/profiles";
 
 const T0 = Date.UTC(2026, 10, 18);
@@ -28,5 +28,26 @@ describe("ảnh đại diện chọn trong game", () => {
     await chooseAvatar("g_b", "dinhBoLinh", { accounts, profiles });
     await accounts.link("g_b", google, T0 + 1);
     assert.equal((await accounts.get("g_b"))?.avatarUrl, "/art/characters/dinh-bo-linh/portrait.webp");
+  });
+});
+
+describe("ảnh đại diện tải lên từ máy", () => {
+  const png = `data:image/png;base64,${Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0]).toString("base64")}`;
+
+  it("nhận PNG/JPEG/WebP đúng byte đầu, chặn SVG, sai đầu tệp và ảnh quá nặng", () => {
+    assert.deepEqual(checkAvatarImage(png), { ok: true });
+    assert.deepEqual(checkAvatarImage(`data:image/svg+xml;base64,${Buffer.from("<svg/>").toString("base64")}`), { ok: false, error: "badImage" });
+    assert.deepEqual(checkAvatarImage(`data:image/png;base64,${Buffer.from("not a png file").toString("base64")}`), { ok: false, error: "badImage" });
+    assert.deepEqual(checkAvatarImage(`data:image/png;base64,${"A".repeat(AVATAR_UPLOAD_MAX)}`), { ok: false, error: "tooLarge" });
+    assert.deepEqual(checkAvatarImage("javascript:alert(1)"), { ok: false, error: "badImage" });
+  });
+
+  it("lưu vào tài khoản và không bị Google ghi đè khi trình danh lại", async () => {
+    const accounts = new MemoryAccountStore();
+    const google = { provider: "google", subject: "s2", name: "Shan", avatarUrl: "https://example.com/a.png" } as const;
+    await accounts.link("g_c", google, T0);
+    assert.deepEqual(await uploadAvatar("g_c", png, { accounts }), { ok: true, avatarUrl: png });
+    await accounts.link("g_c", google, T0 + 1);
+    assert.equal((await accounts.get("g_c"))?.avatarUrl, png);
   });
 });

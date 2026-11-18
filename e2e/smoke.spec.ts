@@ -175,6 +175,17 @@ test.describe("tài khoản đã đăng nhập", () => {
     expectClean(problems);
   });
 
+  test("Tài khoản: tải ảnh đại diện từ máy, ảnh hiện ở thanh đầu trang", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game/account");
+    await page.getByRole("button", { name: "Đổi ảnh đại diện" }).click();
+    // Ảnh PNG 40×20 dựng ngay trong test; trình duyệt cắt vuông, thu về 256px rồi mới gửi.
+    const png = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAACgAAAAUCAIAAABwJOjsAAAAJ0lEQVR4nGPcoiHHMBCAaUBsHbV41OJRi0ctHrV41OJRi0ctHhAAAAEEASIER3dmAAAAAElFTkSuQmCC", "base64");
+    await page.getByRole("dialog", { name: "Chọn ảnh đại diện" }).locator('input[type="file"]').setInputFiles({ name: "anh.png", mimeType: "image/png", buffer: png });
+    await expect(page.getByRole("img", { name: "Ảnh đại diện" })).toHaveAttribute("src", /^data:image\/(webp|jpeg);base64,/);
+    expectClean(problems);
+  });
+
   test("Quần Hùng: bảng xếp hạng ở hàng thẻ, đối thủ có nhãn so lực chiến, 1vs1 chọn nghề hệ bằng chip", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/arena");

@@ -32,10 +32,10 @@ export class DrizzleAccountStore implements AccountStore {
     await this.db
       .insert(accounts)
       .values({ id: accountId, name: p.name, avatarUrl: p.avatarUrl, createdAt: now, lastLoginAt: now })
-      // Ảnh đại diện chọn trong game (`/art/...`) giữ nguyên, không bị ảnh của nhà cung cấp ghi đè.
+      // Ảnh đại diện tự chọn (`/art/...` hoặc ảnh tải lên `data:image/...`) giữ nguyên, không bị ảnh của nhà cung cấp ghi đè.
       .onConflictDoUpdate({
         target: accounts.id,
-        set: { name: p.name, avatarUrl: sql`case when ${accounts.avatarUrl} like '/art/%' then ${accounts.avatarUrl} else excluded.avatar_url end`, lastLoginAt: now },
+        set: { name: p.name, avatarUrl: sql`case when ${accounts.avatarUrl} like '/art/%' or ${accounts.avatarUrl} like 'data:image/%' then ${accounts.avatarUrl} else excluded.avatar_url end`, lastLoginAt: now },
       });
     await this.db
       .insert(identities)
