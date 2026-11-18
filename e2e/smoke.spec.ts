@@ -92,8 +92,8 @@ test.describe("tài khoản đã đăng nhập", () => {
   test("Trấn Ải: chọn đội, vào đợt 1, quay lại thấy lượt chơi đang dở", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/survival");
-    await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
-    await expect(page.getByRole("heading", { name: "Bảng xếp hạng mùa này" })).toBeVisible();
+    await page.getByRole("tab", { name: "Công trạng" }).click();
+    await expect(page.getByRole("heading", { name: "Công trạng mùa này" })).toBeVisible();
     // Bậc Trấn Ải: tài khoản mới chưa vượt đợt nào nên bậc Đồng còn khóa.
     await expect(page.getByRole("region", { name: "Bậc Trấn Ải" }).getByRole("button", { name: "Bậc Đồng: chưa đạt mốc" })).toHaveText("Còn 1 đợt");
     await page.getByRole("tab", { name: "Chơi" }).click();
@@ -125,16 +125,16 @@ test.describe("tài khoản đã đăng nhập", () => {
     await page.getByText("Xem chuỗi").click();
     await expect(page.getByText("Ngày 7")).toBeVisible();
     await expect(page.getByRole("meter", { name: "Nhận Nhật Lệnh", exact: true })).toBeVisible();
-    await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
+    await page.getByRole("tab", { name: "Công trạng" }).click();
     await expect(page.getByRole("heading", { name: "Bảng hôm nay" })).toBeVisible();
     await expect(page.getByRole("region", { name: "Bậc Nhật Lệnh" }).getByRole("button", { name: "Bậc Đồng: chưa đạt mốc" })).toHaveText("Còn 1 ngày");
     expectClean(problems);
   });
 
-  test("Thưởng Bậc: một trang gom dải bậc của mọi chế độ xếp hạng, nhận một lần rồi khóa", async ({ page }) => {
+  test("Ban Thưởng: một trang gom dải bậc của mọi chế độ xếp hạng, nhận một lần rồi khóa", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game");
-    await page.getByRole("link", { name: "Thưởng Bậc" }).first().click();
+    await page.getByRole("link", { name: "Ban Thưởng" }).first().click();
     await expect(page).toHaveURL(/\/game\/tier-rewards$/);
     for (const mode of ["Quần Hùng", "Đấu người", "Trấn Ải", "Trận Đồ", "Nhật Lệnh", "Tháp Thiên Mệnh", "Tầm Tướng Ký"])
       await expect(page.getByRole("region", { name: `Bậc ${mode}`, exact: true })).toBeVisible();
@@ -185,11 +185,11 @@ test.describe("tài khoản đã đăng nhập", () => {
     await page.getByRole("button", { name: "Lấy theo Doanh Trại" }).click();
     await expect(page.getByRole("button", { name: "Đánh" }).first()).toBeEnabled();
     await expect(page.getByText("Ngang sức").first()).toBeVisible();
-    await page.getByRole("tab", { name: "Bảng xếp hạng" }).click();
+    await page.getByRole("tab", { name: "Công trạng" }).click();
     await expect(page.getByRole("heading", { name: "Đấu bóng ma" })).toBeVisible();
     await expect(page.getByRole("region", { name: "Bậc hạng Quần Hùng" })).toBeVisible();
     await page.getByRole("region", { name: "Bậc hạng Quần Hùng" }).getByRole("button", { name: "Nhận thưởng bậc Đồng" }).click();
-    await expect(page.getByText(/Đã nhận 50 vàng thưởng bậc Đồng và .* Lương phẩm hệ .* \(đã vào túi đồ\)\./)).toBeVisible();
+    await expect(page.getByText(/Đã nhận 50 vàng thưởng bậc Đồng và .* Lương phẩm hệ .* \(đã vào kho đồ\)\./)).toBeVisible();
     // Nhận một lần rồi nút khóa; bậc chưa đạt cũng khóa.
     await expect(page.getByRole("region", { name: "Bậc hạng Quần Hùng" }).getByRole("button", { name: "Bậc Đồng: đã nhận thưởng" })).toBeDisabled();
     await expect(page.getByRole("region", { name: "Bậc hạng Quần Hùng" }).getByRole("button", { name: "Bậc Bạc: chưa đạt mốc" })).toBeDisabled();

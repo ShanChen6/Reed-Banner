@@ -208,7 +208,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
         refs: ["E09", "S01"],
       },
       {
-        text: "Kết cục: Đằng Châu quy phục, ghi vào thế cục sứ quân một lần. Không có trận nào được tính, lời đáp bạn chọn không đổi kết cục hay phần thưởng.",
+        text: "Kết cục: Đằng Châu quy phục, ghi vào thế cục sứ quân một lần. Không có trận nào được tính, lời đáp bạn chọn không đổi kết cục hay ban thưởng.",
         basis: "reconstructed",
       },
     ],
@@ -319,7 +319,7 @@ export const CHAPTER_THREE_COPY: readonly MissionCopy[] = [
         refs: ["W03"],
       },
       {
-        text: "Lời đáp bạn chọn chỉ đổi cảnh kể và ghi chú, không đổi kết cục hay phần thưởng.",
+        text: "Lời đáp bạn chọn chỉ đổi cảnh kể và ghi chú, không đổi kết cục hay ban thưởng.",
         basis: "reconstructed",
       },
     ],

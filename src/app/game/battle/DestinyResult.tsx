@@ -38,7 +38,7 @@ export function DestinyResult({ floor, outcome, state }: {
           </h2>
           <p className="mt-1 text-sm text-on-wood-soft">
             {!result ? "Đang chốt kết quả với máy chủ…"
-              : completed ? "Lượt leo hoàn thành. Thành tích đã ghi vào bảng xếp hạng tuần."
+              : completed ? "Lượt leo hoàn thành. Thành tích đã ghi vào bảng công trạng tuần."
               : won ? "Máu, năng lượng và Nộ của cả đội giữ nguyên sang tầng sau."
               : "Lượt leo kết thúc tại đây. Kỷ lục chu kỳ và đá đã nhận vẫn giữ."}
           </p>

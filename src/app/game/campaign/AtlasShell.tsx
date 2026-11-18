@@ -382,7 +382,7 @@ export function MissionRewardCard({
         id="atlas-reward-title"
         className="atlas-panel-heading flex items-baseline justify-between gap-2"
       >
-        Phần thưởng
+        Ban thưởng
         <span className="text-caption font-normal tracking-normal normal-case opacity-75">
           {node.title}
         </span>

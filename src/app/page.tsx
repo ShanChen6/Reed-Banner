@@ -82,8 +82,8 @@ const MODES: readonly { slug: ModeIconKind; name: string; body: string; flag?: k
   { slug: "trial", name: "Tháp Thí Luyện", body: "100 tầng cố định chia 10 chặng, tự chọn đội theo luật riêng từng tầng.", flag: "trial" },
   { slug: "destiny", name: "Tháp Thiên Mệnh", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng.", flag: "destiny" },
   { slug: "survival", name: "Trấn Ải", body: "Một bàn cờ, đối thủ kéo đến theo đợt, nghỉ giữa đợt để tính tiếp." },
-  { slug: "daily", name: "Nhật Lệnh", body: "Một đề chung cho mọi người, mỗi ngày một lần, có bảng xếp hạng." },
-  { slug: "arena", name: "Quần Hùng", body: "Đánh đội phòng thủ của người chơi khác, leo điểm mỗi ngày." },
+  { slug: "daily", name: "Nhật Lệnh", body: "Một đề chung cho mọi người, mỗi ngày một lần, có bảng công trạng." },
+  { slug: "arena", name: "Quần Hùng", body: "Đánh đội phòng thủ của hào kiệt khác, leo điểm mỗi ngày." },
 ];
 
 
@@ -408,7 +408,7 @@ export default function Home() {
             Kèm theo:{" "}
             {[
               ["quests", "Nhiệm vụ và thành tựu"],
-              ["leaderboard", "Bảng xếp hạng"],
+              ["leaderboard", "Công trạng"],
               ["profile", "Doanh Trại, trang bị, Cửa Hàng"],
             ].map(([slug, label], i) => (
               <span key={slug}>

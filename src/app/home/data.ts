@@ -59,6 +59,6 @@ export const FAQ: readonly { readonly q: string; readonly a: string }[] = [
   },
   {
     q: "Có những chế độ nào?",
-    a: "Thao Luyện không cần mạng, Giao Tranh trực tuyến, Bình Loạn dẹp 12 sứ quân kèm Tái đấu sứ quân, Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh và Quần Hùng. Thêm nhiệm vụ, điểm danh và bảng xếp hạng.",
+    a: "Thao Luyện không cần mạng, Giao Tranh trực tuyến, Bình Loạn dẹp 12 sứ quân kèm Tái đấu sứ quân, Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh và Quần Hùng. Thêm nhiệm vụ, điểm danh và bảng công trạng.",
   },
 ];

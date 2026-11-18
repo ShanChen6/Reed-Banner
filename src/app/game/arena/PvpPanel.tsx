@@ -472,7 +472,7 @@ function PvpRoom({ onMatch, onExit }: { onMatch: (matchId: string) => void; onEx
         <FrameInset key={x.slot} className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <p className="text-on-wood">
-              {x.occupied ? `${x.name ?? "Người chơi"}${x.host ? " (chủ phòng)" : ""}${x.mine ? " · bạn" : ""}` : "Chỗ trống"}
+              {x.occupied ? `${x.name ?? "Hào kiệt"}${x.host ? " (chủ phòng)" : ""}${x.mine ? " · bạn" : ""}` : "Chỗ trống"}
             </p>
             {x.hero && (
               <p className="text-sm text-on-wood-soft">

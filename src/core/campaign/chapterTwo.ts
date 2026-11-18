@@ -196,7 +196,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
         refs: [...TOAN_THU_967],
       },
       {
-        text: "Kết quả nhiệm vụ: Bố Hải và Hoa Lư kết thành liên minh, Đinh Bộ Lĩnh được giao trọng trách cầm quân. Lời đáp bạn chọn chỉ đổi lời kể; kết quả và phần thưởng như nhau.",
+        text: "Kết quả nhiệm vụ: Bố Hải và Hoa Lư kết thành liên minh, Đinh Bộ Lĩnh được giao trọng trách cầm quân. Lời đáp bạn chọn chỉ đổi lời kể; kết quả và ban thưởng như nhau.",
         basis: "reconstructed",
       },
       {
@@ -369,7 +369,7 @@ export const CHAPTER_TWO_COPY: readonly MissionCopy[] = [
         refs: ["E08"],
       },
       {
-        text: "Cho tướng quân gia nhập và mở Tập dượt với Trần Lãm là phần thưởng của game, không phải mốc lịch sử về việc ai gia nhập lúc nào.",
+        text: "Cho tướng quân gia nhập và mở Tập dượt với Trần Lãm là ban thưởng của game, không phải mốc lịch sử về việc ai gia nhập lúc nào.",
         basis: "fictional",
       },
     ],

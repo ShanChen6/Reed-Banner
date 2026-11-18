@@ -115,7 +115,7 @@ export default function QuestsScreen({
               Sang Nhật Lệnh
             </SceneLink>
             <SceneLink scene="TIERS" className={buttonVariants({ variant: "outline", className: "min-h-11" })}>
-              Thưởng Bậc
+              Ban Thưởng
             </SceneLink>
           </div>
         </OrnateFrame>

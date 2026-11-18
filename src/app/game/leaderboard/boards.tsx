@@ -97,9 +97,9 @@ export function SeasonBoardPanel({ board, myExtra }: { board: "survival" | "aren
   const data = useJson<SeasonBoardResponse>(board === "pvp" ? "/api/pvp/board" : `/api/leaderboard?board=${board}&season=current`);
   return (
     <OrnateFrame className="flex flex-col gap-3">
-      <SectionTitle description={`${SEASON_NOTE[board]}${data?.season ? ` (mùa bắt đầu ${data.season})` : ""}`}>Bảng xếp hạng mùa này</SectionTitle>
+      <SectionTitle description={`${SEASON_NOTE[board]}${data?.season ? ` (mùa bắt đầu ${data.season})` : ""}`}>Công trạng mùa này</SectionTitle>
       {!data?.top ? (
-        <BoardEmpty>{data?.error ? "Chưa mở được bảng xếp hạng. Xin tải lại trang." : "Đang tải…"}</BoardEmpty>
+        <BoardEmpty>{data?.error ? "Chưa mở được bảng công trạng. Xin tải lại trang." : "Đang tải…"}</BoardEmpty>
       ) : data.top.length === 0 ? (
         <BoardEmpty>Chưa có ai trên bảng mùa này.</BoardEmpty>
       ) : (
@@ -118,9 +118,9 @@ export function DestinyBoardPanel() {
   const data = useJson<DestinyBoardResponse>("/api/destiny/leaderboard?cursor=0&limit=20");
   return (
     <OrnateFrame className="flex flex-col gap-3">
-      <SectionTitle description="Xếp theo tầng cao nhất đã vượt. Bằng tầng thì ai dùng ít lượt đánh hơn đứng trên, rồi tới ai xong sớm hơn.">Bảng xếp hạng chu kỳ này</SectionTitle>
+      <SectionTitle description="Xếp theo tầng cao nhất đã vượt. Bằng tầng thì ai dùng ít lượt đánh hơn đứng trên, rồi tới ai xong sớm hơn.">Công trạng chu kỳ này</SectionTitle>
       {!data?.entries ? (
-        <BoardEmpty>{data?.error ? "Chưa mở được bảng xếp hạng. Xin tải lại trang." : "Đang tải…"}</BoardEmpty>
+        <BoardEmpty>{data?.error ? "Chưa mở được bảng công trạng. Xin tải lại trang." : "Đang tải…"}</BoardEmpty>
       ) : data.entries.length === 0 ? (
         <BoardEmpty>Chưa có thành tích trong chu kỳ này.</BoardEmpty>
       ) : (
@@ -139,7 +139,7 @@ export function TtkBoard({ data }: { data: TtkBoardResponse | null }) {
     <OrnateFrame className="flex flex-col gap-3">
       <BoardNote>{TTK_NOTE}{data?.week ? ` (tuần bắt đầu ${data.week})` : ""}</BoardNote>
       {!data?.top ? (
-        <BoardEmpty>{data?.error ? "Chưa mở được bảng xếp hạng. Xin tải lại trang." : "Đang tải…"}</BoardEmpty>
+        <BoardEmpty>{data?.error ? "Chưa mở được bảng công trạng. Xin tải lại trang." : "Đang tải…"}</BoardEmpty>
       ) : data.top.length === 0 ? (
         <BoardEmpty>Tuần này chưa có ai ghép ra tướng đề cử.</BoardEmpty>
       ) : (

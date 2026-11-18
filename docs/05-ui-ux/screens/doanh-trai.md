@@ -1,6 +1,6 @@
 # Doanh Trại
 
-> Cập nhật: 03/11/2026
+> Cập nhật: 18/11/2026 (phân trang tướng quân; kho đồ hiện ô trống)
 > Trạng thái: **IMPLEMENTED**
 
 Doanh Trại thay tên hiển thị của màn Hồ sơ cũ (phân cảnh `PROFILE`). Đường dẫn giữ nguyên `/game/profile` để link cũ không hỏng. Mục Tài khoản (`/game/account`) không đổi. Code ở `src/app/game/profile/`.
@@ -11,7 +11,7 @@ Doanh Trại thay tên hiển thị của màn Hồ sơ cũ (phân cảnh `PROFI
 |---|---|
 | Tướng sĩ | Danh sách mọi nhân vật đã có, chi tiết, trang bị, kỹ năng của từng người |
 | Đội hình | Đội 3vs3: chủ tướng Đinh Bộ Lĩnh cố định và 2 nhân vật kèm (`chooseTeam`) |
-| Kho đồ | Túi đồ (sức chứa `BAG_LIMIT`), lọc loại ô, mặc/tháo/bán, Ghép đồ |
+| Kho đồ | Kho đồ (sức chứa `BAG_LIMIT`), lọc loại ô, mặc/tháo/bán, Ghép đồ |
 | Cửa hàng | Nút riêng sang phân cảnh `SHOP` (tuyển tướng, mua trang bị, lương) |
 
 Kỹ năng nâng theo từng nhân vật nên nằm trong chi tiết tướng sĩ (thẻ Kỹ năng), không có mục riêng. Chức năng của thẻ cũ "Đội hình & cửa hàng" chia sang mục Đội hình và Cửa hàng.
@@ -19,6 +19,7 @@ Kỹ năng nâng theo từng nhân vật nên nằm trong chi tiết tướng s�
 ## 2. Tướng sĩ
 
 - Desktop (từ 1024px): vùng trái khoảng 38% (tìm, Bộ lọc, sắp xếp, nhãn lọc xóa được, "n / tổng tướng sĩ", lưới thẻ cuộn riêng), vùng phải khoảng 62% (chi tiết cuộn riêng). Khung cao theo màn hình, tối thiểu 34rem nên màn thấp vẫn cuộn trang được.
+- Lưới chia trang 15 tướng (Shan 18/11/2026, thay nút "Hiện thêm tướng"): Trang trước/Trang sau và "Trang x/y" dưới lưới. Đổi tướng đang chọn, lọc hoặc sắp xếp thì mở trang có tướng đang chọn (không có thì trang đầu).
 - Thẻ: chân dung, tên (tối đa 2 dòng), cấp, hệ, dấu cờ khi đang trong đội. Thẻ đang chọn viền vàng; lưới dùng mũi tên, Home, End.
 - Tìm theo tên không dấu, không phân biệt hoa thường. Lọc theo hệ, nghề, trong/ngoài đội. Sắp xếp: đội hình trước, cấp giảm/tăng, tên. Không có lực chiến hay phẩm chất vì game chưa có các thuộc tính đó.
 - Bộ lọc ẩn nhân vật đang xem thì chi tiết vẫn giữ người đó và danh sách báo rõ, có nút Bỏ lọc.
@@ -28,7 +29,7 @@ Kỹ năng nâng theo từng nhân vật nên nằm trong chi tiết tướng s�
 
 ## 3. Kho đồ
 
-Lưới chỉ gồm món có thật (không vẽ ô trống), lọc Tất cả/Vũ khí/Phục sức/Trang sức và theo ô. Chọn món xem chỉ số, người đang dùng, Mặc cho (chọn nhân vật), Tháo, Bán. "Ghép đồ" mới mở khay 3 món; món không ghép chung được với món đầu bị làm mờ. Điều kiện, phí và kết quả ghép giữ nguyên (`mergeGear`).
+Kho đồ cao hết màn (máy tính) và hiện **cả ô trống** (Shan 18/11/2026): không lọc thì lưới đủ `BAG_LIMIT` ô, có lọc thì đủ trang cuối của kết quả. Mỗi trang 96 ô (8 cột điện thoại và máy tính bảng, 12 cột màn rộng), Trang trước/Trang sau ở đáy. Lọc Tất cả/Vũ khí/Phục sức/Trang sức và theo ô. Chọn món xem chỉ số, người đang dùng, Mặc cho (chọn nhân vật), Tháo, Bán. "Ghép đồ" mới mở khay 3 món; món không ghép chung được với món đầu bị làm mờ. Điều kiện, phí và kết quả ghép giữ nguyên (`mergeGear`).
 
 ## 4. Xem thử
 

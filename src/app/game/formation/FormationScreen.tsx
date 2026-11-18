@@ -529,7 +529,7 @@ function RankedResult({ state, rank, score, period, map, onLeave }: { state: Puz
           Bạn đạt <b>{score ?? state.score} điểm</b>{rank ? `, hạng tạm thời ${rank}` : ""}. Hạng chốt và thưởng nhận được sau khi kỳ {period} khép lại.
         </p>
       ) : (
-        <p className="text-[15px]">Ván thua không vào bảng xếp hạng và không có thưởng. Mỗi kỳ chỉ có một ván tính hạng; hãy thử lại ở kỳ sau, hoặc luyện ở mục Chơi thường.</p>
+        <p className="text-[15px]">Ván thua không vào bảng công trạng và không có thưởng. Mỗi kỳ chỉ có một ván tính hạng; hãy thử lại ở kỳ sau, hoặc luyện ở mục Chơi thường.</p>
       )}
       {won && <CompletedMap map={map} />}
       <button type="button" onClick={onLeave} className={buttonVariants({ className: "min-h-12 w-fit px-6" })}>Về danh sách</button>
@@ -545,7 +545,7 @@ function Result({ state, best, map, custom, onRestart, onLeave }: { state: Puzzl
       <p className="text-[15px]">
         {won ? `Bạn đạt ${state.score} điểm${!custom && state.score >= best ? " (cao nhất từ trước tới nay)" : ""}.` : "Bỏ lệnh quá nhiều lần liên tiếp. Xin bày lại ván mới."}
       </p>
-      <p className="text-sm text-on-wood-soft">Chế độ chơi thường: không có thưởng và không lên bảng xếp hạng.</p>
+      <p className="text-sm text-on-wood-soft">Chế độ chơi thường: không có thưởng và không lên bảng công trạng.</p>
       {won && <CompletedMap map={map} />}
       <div className="flex flex-wrap gap-2">
         <button type="button" onClick={onRestart} className={buttonVariants({ className: "min-h-12 px-6" })}>Chơi lại</button>

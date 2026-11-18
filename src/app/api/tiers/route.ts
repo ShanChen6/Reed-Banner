@@ -1,4 +1,4 @@
-// GET /api/tiers: trang Thưởng Bậc, trả `{ ladders }` gồm mọi dải bậc của các chế độ xếp hạng đang bật (Quần Hùng,
+// GET /api/tiers: trang Ban Thưởng, trả `{ ladders }` gồm mọi dải bậc của các chế độ xếp hạng đang bật (Quần Hùng,
 // Đấu người, Trấn Ải, Trận Đồ, Nhật Lệnh, Tháp Thiên Mệnh, Tầm Tướng Ký) với thước đo hiện tại và các bậc đã nhận.
 // POST /api/tiers `{ mode, tier }`: nhận thưởng một bậc của dải `mode`; mỗi bậc một lần. Trả
 // `{ claimed: { tier, gold, item, soldFor }, profile, ladders }` hoặc `{ error, profile, ladders }`.

@@ -1,4 +1,4 @@
-// Trang Thưởng Bậc: gom mọi dải bậc của các chế độ xếp hạng (Quần Hùng, Đấu người, Trấn Ải, Trận Đồ, Nhật Lệnh, Tháp
+// Trang Ban Thưởng: gom mọi dải bậc của các chế độ xếp hạng (Quần Hùng, Đấu người, Trấn Ải, Trận Đồ, Nhật Lệnh, Tháp
 // Thiên Mệnh, Tầm Tướng Ký) vào một tổng quan và một lệnh nhận. Thước đo đọc trên server (hồ sơ, kho đấu trường, kho
 // PvP); nhận thưởng gọi đúng hàm nhận của từng chế độ, nên luật "mỗi bậc một lần" giữ nguyên. Luật ở
 // docs/02-game-modes/README.md mục 5.9.
@@ -25,7 +25,7 @@ export const TIER_HUB_IDS = ["arena", "pvp", "survival", "formation", "daily", "
 export type TierHubId = (typeof TIER_HUB_IDS)[number];
 export const isTierHubId = (x: unknown): x is TierHubId => typeof x === "string" && (TIER_HUB_IDS as readonly string[]).includes(x);
 
-/** Một dải trên trang Thưởng Bậc. */
+/** Một dải trên trang Ban Thưởng. */
 export interface TierLadderView {
   readonly id: TierHubId;
   /** Tên chế độ, đồng thời là phân cảnh để mở chế độ đó. */

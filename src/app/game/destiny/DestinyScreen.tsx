@@ -539,7 +539,7 @@ export default function DestinyScreen() {
           { label: "Đá Cường Hóa", value: overview.stones },
         ]}
       />
-      <ModeGuideTabs scene="DESTINY" extraTabs={[{ value: "board", label: "BXH tuần", content: <><ModeTierPanel mode="destiny" /><DestinyBoardPanel /></> }]}>
+      <ModeGuideTabs scene="DESTINY" extraTabs={[{ value: "board", label: "Công trạng tuần", content: <><ModeTierPanel mode="destiny" /><DestinyBoardPanel /></> }]}>
 
       {message && <Alert className="p-3 text-sm" role="alert">{message}</Alert>}
 
@@ -550,7 +550,7 @@ export default function DestinyScreen() {
         <OrnateFrame level="raised">
           {run?.completed && (
             <Alert className="mb-4 p-3 text-sm">
-              <strong>Đã chinh phục trọn {run.floor} tầng.</strong> Thành tích đã ghi vào bảng xếp hạng chu kỳ.
+              <strong>Đã chinh phục trọn {run.floor} tầng.</strong> Thành tích đã ghi vào bảng công trạng chu kỳ.
               Muốn lên hạng, hãy leo lại và vượt tháp với ít lượt đánh hơn.
             </Alert>
           )}
@@ -874,7 +874,7 @@ export default function DestinyScreen() {
             {run.phase === "reward" && run.offer && (
               <>
                 <SectionTitle description="Chọn một trong ba. Ba lựa chọn này cố định cho tầng, tải lại trang không đổi.">
-                  Phần thưởng tầng {run.floor}
+                  Ban thưởng tầng {run.floor}
                 </SectionTitle>
                 {leaderNeedsRescue && (
                   <Alert className="p-3 text-sm">Đinh Bộ Lĩnh đã gục. Phải chọn Cứu viện cho Đinh Bộ Lĩnh thì mới lên được tầng kế.</Alert>

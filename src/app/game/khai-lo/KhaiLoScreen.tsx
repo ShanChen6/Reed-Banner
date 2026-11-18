@@ -511,7 +511,7 @@ export default function KhaiLoScreen() {
               </div>
             </div>
           )}
-          <p className="text-sm text-on-wood-soft">Bản chơi thử, không cần mạng: chưa có thưởng và bảng xếp hạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.</p>
+          <p className="text-sm text-on-wood-soft">Bản chơi thử, không cần mạng: chưa có thưởng và bảng công trạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.</p>
         </aside>
       </div>
       </ModeGuideTabs>
