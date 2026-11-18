@@ -41,11 +41,15 @@ describe("trang Thưởng Bậc", () => {
     assert.deepEqual(survival.claimed, ["bac"]);
   });
 
-  it("chưa vào Quần Hùng vẫn nhận được bậc Đồng ở điểm khởi đầu đang hiện", async () => {
-    const deps: TierHubDeps = { profiles: new MemoryProfileStore(), arena: new MemoryArenaStore(), now: T0, enabled: off };
+  it("chưa vào Quần Hùng thì dải khóa và không nhận được; vào rồi mới nhận", async () => {
+    const arena = new MemoryArenaStore();
+    const deps: TierHubDeps = { profiles: new MemoryProfileStore(), arena, now: T0, enabled: off };
+    assert.equal((await tierOverview("g_a", deps))[0]!.locked, true);
+    assert.deepEqual(await claimHubTier("g_a", "arena", "dong", deps), { ok: false, error: "notReached" });
+    await arena.ensure("g_a", T0);
+    assert.equal((await tierOverview("g_a", deps))[0]!.locked, undefined);
     const r = await claimHubTier("g_a", "arena", "dong", deps);
     assert.ok(r.ok && r.gold === 50);
-    assert.deepEqual(await claimHubTier("g_a", "arena", "bac", deps), { ok: false, error: "notReached" });
   });
 
   it("chế độ tắt thì không nhận được", async () => {

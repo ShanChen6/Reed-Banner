@@ -215,7 +215,7 @@ export interface TierReward {
  * Dải bậc hạng cuộn ngang: bậc đang đứng sáng viền, kèm tiến độ tới bậc kế. Có `rewards` thì mỗi ô hiện thưởng và một
  * nút: đạt mốc mà chưa nhận thì bấm Nhận thưởng; đã nhận thì nút khóa "Đã nhận"; chưa đạt thì nút khóa ghi điểm còn thiếu.
  */
-export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false, unit = "điểm" }: {
+export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false, unit = "điểm", locked = false }: {
   tiers: readonly Tier[];
   score: number;
   label: string;
@@ -224,6 +224,8 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false
   rewards?: readonly TierReward[];
   onClaim?: (index: number) => void;
   busy?: boolean;
+  /** Chưa vào chế độ lần nào: mọi nút nhận khóa, kể cả bậc đã đạt mốc. */
+  locked?: boolean;
 }) {
   const at = tierIndex(tiers, score);
   const next = tiers[at + 1];
@@ -248,16 +250,16 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false
                 {/* Một nút cho cả thưởng bậc: đạt mốc mới bấm được, nhận một lần rồi khóa hẳn. */}
                 <button
                   type="button"
-                  disabled={busy || rewards[i]!.claimed || score < t.min}
+                  disabled={busy || locked || rewards[i]!.claimed || score < t.min}
                   onClick={() => onClaim?.(i)}
-                  aria-label={rewards[i]!.claimed ? `Bậc ${t.name}: đã nhận thưởng` : score < t.min ? `Bậc ${t.name}: chưa đạt mốc` : `Nhận thưởng bậc ${t.name}`}
+                  aria-label={rewards[i]!.claimed ? `Bậc ${t.name}: đã nhận thưởng` : locked ? `Bậc ${t.name}: chưa vào chế độ` : score < t.min ? `Bậc ${t.name}: chưa đạt mốc` : `Nhận thưởng bậc ${t.name}`}
                   className={buttonVariants({
-                    variant: rewards[i]!.claimed || score < t.min ? "secondary" : "primary",
+                    variant: rewards[i]!.claimed || locked || score < t.min ? "secondary" : "primary",
                     size: "sm",
                     className: cn("mt-1 min-h-9 w-full px-2 text-caption pointer-coarse:min-h-11", rewards[i]!.claimed && "text-jade"),
                   })}
                 >
-                  {rewards[i]!.claimed ? "✓ Đã nhận" : score < t.min ? `Còn ${t.min - score} ${unit}` : "Nhận thưởng"}
+                  {rewards[i]!.claimed ? "✓ Đã nhận" : locked ? "Chưa mở" : score < t.min ? `Còn ${t.min - score} ${unit}` : "Nhận thưởng"}
                 </button>
               </>
             ) : (

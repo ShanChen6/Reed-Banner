@@ -138,10 +138,13 @@ test.describe("tài khoản đã đăng nhập", () => {
     await expect(page).toHaveURL(/\/game\/tier-rewards$/);
     for (const mode of ["Quần Hùng", "Đấu người", "Trấn Ải", "Trận Đồ", "Nhật Lệnh", "Tháp Thiên Mệnh", "Tầm Tướng Ký"])
       await expect(page.getByRole("region", { name: `Bậc ${mode}`, exact: true })).toBeVisible();
-    const arena = page.getByRole("region", { name: "Bậc Quần Hùng", exact: true });
-    await arena.getByRole("button", { name: "Nhận thưởng bậc Đồng" }).click();
+    // Chưa vào Quần Hùng thì dải khóa; Đấu người nhận Đồng rồi khóa.
+    await expect(page.getByRole("region", { name: "Bậc Quần Hùng", exact: true }).getByRole("button", { name: "Bậc Đồng: chưa vào chế độ" })).toBeDisabled();
+    await expect(page.getByText("Vào Quần Hùng một lần để mở dải bậc này.")).toBeVisible();
+    const pvp = page.getByRole("region", { name: "Bậc Đấu người", exact: true });
+    await pvp.getByRole("button", { name: "Nhận thưởng bậc Đồng" }).click();
     await expect(page.getByText(/Đã nhận 50 vàng thưởng bậc Đồng/)).toBeVisible();
-    await expect(arena.getByRole("button", { name: "Bậc Đồng: đã nhận thưởng" })).toBeDisabled();
+    await expect(pvp.getByRole("button", { name: "Bậc Đồng: đã nhận thưởng" })).toBeDisabled();
     await expect(page.getByRole("region", { name: "Bậc Trấn Ải", exact: true }).getByRole("button", { name: "Bậc Đồng: chưa đạt mốc" })).toHaveText("Còn 1 đợt");
     expectClean(problems);
   });

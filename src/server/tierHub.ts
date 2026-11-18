@@ -36,6 +36,8 @@ export interface TierLadderView {
   readonly score: number;
   readonly tiers: readonly ArenaTier[];
   readonly claimed: readonly string[];
+  /** Chưa vào chế độ lần nào nên dải còn khóa (Quần Hùng: chưa có bản ghi đấu trường). */
+  readonly locked?: boolean;
 }
 
 export interface TierHubDeps {
@@ -59,7 +61,7 @@ export async function tierOverview(ownerId: string, deps: TierHubDeps): Promise<
   const out: TierLadderView[] = [];
   if (deps.arena) {
     const row = await deps.arena.get(ownerId);
-    out.push({ id: "arena", mode: "Quần Hùng", scene: "ARENA", measure: "Điểm hạng đấu bóng ma.", unit: "điểm", score: row?.rating ?? ARENA_START, tiers: ARENA_TIERS, claimed: profile.arenaTiers ?? [] });
+    out.push({ id: "arena", mode: "Quần Hùng", scene: "ARENA", measure: "Điểm hạng đấu bóng ma.", unit: "điểm", score: row?.rating ?? ARENA_START, tiers: ARENA_TIERS, claimed: profile.arenaTiers ?? [], ...(row ? {} : { locked: true }) });
   }
   if (deps.pvp)
     out.push({ id: "pvp", mode: "Đấu người", scene: "ARENA", measure: "Điểm hạng cao hơn giữa 1vs1 và 3vs3 xếp hạng.", unit: "điểm", score: await pvpTierRating(ownerId, { pvp: deps.pvp }), tiers: ARENA_TIERS, claimed: pvpTierClaims(profile) });
@@ -80,10 +82,8 @@ export type HubClaimResult =
 export async function claimHubTier(ownerId: string, id: TierHubId, tier: string, deps: TierHubDeps): Promise<HubClaimResult> {
   switch (id) {
     case "arena":
-      if (!deps.arena) return { ok: false, error: "featureDisabled" };
-      // Trang hiện điểm khởi đầu cho người chưa vào Quần Hùng; tạo bản ghi như lúc mở chế độ để nhận khớp với số đang thấy.
-      await deps.arena.ensure(ownerId, deps.now);
-      return claimArenaTierReward(ownerId, tier, { arena: deps.arena, profiles: deps.profiles, now: deps.now });
+      // Chưa vào Quần Hùng (chưa có bản ghi đấu trường) thì hàm nhận báo chưa đạt: phải vào chế độ trước (Shan 18/11/2026).
+      return deps.arena ? claimArenaTierReward(ownerId, tier, { arena: deps.arena, profiles: deps.profiles, now: deps.now }) : { ok: false, error: "featureDisabled" };
     case "pvp":
       return deps.pvp ? claimPvpTierReward(ownerId, tier, { pvp: deps.pvp, profiles: deps.profiles, now: deps.now }) : { ok: false, error: "featureDisabled" };
     case "survival":
