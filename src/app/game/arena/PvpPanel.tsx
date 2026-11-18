@@ -289,8 +289,8 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
 // ---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Bậc hạng Đấu người ở thẻ Bảng xếp hạng: hai dải, 1vs1 và 3vs3 xếp hạng, theo điểm hạng riêng của từng thể thức.
- * Cùng mốc và thưởng với Quần Hùng; mỗi bậc mỗi thể thức nhận một lần, nhận rồi nút khóa.
+ * Bậc hạng Đấu người ở thẻ Bảng xếp hạng: một dải chung cho 1vs1 và 3vs3 xếp hạng, tính theo điểm hạng cao hơn của hai
+ * thể thức. Cùng mốc và thưởng với Quần Hùng; mỗi bậc nhận một lần, nhận rồi nút khóa.
  */
 export function PvpTierPanel() {
   const [overview, setOverview] = useState<PvpOverview | null>(null);
@@ -307,11 +307,13 @@ export function PvpTierPanel() {
 
   if (!overview) return null;
   const claims = overview.tierClaims ?? [];
+  const { duel, team } = overview.ratings;
+  const score = Math.max(duel.rating, team.rating);
 
-  const claim = async (format: "duel" | "team", tier: string) => {
+  const claim = async (tier: string) => {
     setBusy(true);
     setNote(null);
-    const r = await call("/api/pvp", { action: "claimTier", format, tier });
+    const r = await call("/api/pvp", { action: "claimTier", tier });
     setBusy(false);
     if (r.status !== 200) return setNote(errorText(r.data));
     const next = r.data as unknown as PvpOverview & {
@@ -320,30 +322,31 @@ export function PvpTierPanel() {
     };
     setOverview(next);
     if (next.claimed) {
-      setNote(`${format === "duel" ? "1vs1" : "3vs3"}: ${tierClaimNote(next.claimed)}`);
+      setNote(tierClaimNote(next.claimed));
       void fetchProfile();
     } else setNote(tierErrorNote(next.claimError));
   };
 
   return (
-    <OrnateFrame className="flex flex-col gap-4">
-      {(["duel", "team"] as const).map((format) => (
-        <div key={format} className="flex flex-col gap-2">
-          <h3 className="font-bold text-frame-gold">{format === "duel" ? "Bậc hạng 1vs1" : "Bậc hạng 3vs3 xếp hạng"}</h3>
-          <TierLadder
-            tiers={TIERS}
-            score={overview.ratings[format].rating}
-            label={format === "duel" ? "Bậc hạng Đấu người 1vs1" : "Bậc hạng Đấu người 3vs3"}
-            rewards={tierRewards((id) => claims.includes(`${format}:${id}`))}
-            onClaim={(i) => void claim(format, ARENA_TIERS[i]!.id)}
-            busy={busy}
-          />
-        </div>
-      ))}
+    <OrnateFrame className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 className="font-bold text-frame-gold">Bậc hạng Đấu người</h3>
+        <p className="text-caption text-on-wood-soft">
+          Điểm xét bậc <strong className="text-title-on-wood">{score}</strong> · 1vs1 {duel.rating} · 3vs3 {team.rating}
+        </p>
+      </div>
+      <TierLadder
+        tiers={TIERS}
+        score={score}
+        label="Bậc hạng Đấu người"
+        rewards={tierRewards((id) => claims.includes(id))}
+        onClaim={(i) => void claim(ARENA_TIERS[i]!.id)}
+        busy={busy}
+      />
       {note && <p role="status" className="text-sm text-jade">{note}</p>}
       <p className="text-caption text-on-wood-soft">
-        Mỗi thể thức có bậc riêng theo điểm hạng của thể thức đó. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị hệ của
-        Đinh Bộ Lĩnh, mỗi bậc một lần; tụt bậc không mất thưởng đã nhận.
+        Một dải chung cho 1vs1 và 3vs3 xếp hạng, tính theo điểm hạng cao hơn của hai thể thức. Lần đầu đạt mỗi bậc nhận vàng và
+        một món trang bị hệ của Đinh Bộ Lĩnh, mỗi bậc một lần; tụt bậc không mất thưởng đã nhận.
       </p>
     </OrnateFrame>
   );

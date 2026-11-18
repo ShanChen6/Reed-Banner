@@ -264,21 +264,26 @@ function claimTier(
   return { ok: true, gold: tier.gold, profile: got.profile, item: got.item, soldFor: got.soldFor };
 }
 
-/** Khóa ghi trong `profile.pvpTiers`: thể thức và bậc, ví dụ "duel:bac". */
-export const pvpTierKey = (format: "duel" | "team", tierId: string) => `${format}:${tierId}`;
+/**
+ * Bậc Đấu người đã nhận: id bậc trong `profile.pvpTiers`. Khóa cũ "duel:bac", "team:bac" (bản tách hai dải, vài phút
+ * trên develop 18/11/2026) cũng tính là đã nhận bậc đó, để gộp dải không cho nhận lại.
+ */
+export function pvpTierClaims(profile: Profile): string[] {
+  return [...new Set((profile.pvpTiers ?? []).map((k) => k.replace(/^(duel|team):/, "")))];
+}
 
 /**
- * Đấu người: cùng bảng bậc, mốc và thưởng với Quần Hùng (Shan 18/11/2026), tính theo điểm hạng riêng của từng thể thức
- * (1vs1, 3vs3 xếp hạng; cùng bắt đầu 1000). Mỗi bậc của mỗi thể thức nhận một lần.
+ * Đấu người: một dải bậc chung cho 1vs1 và 3vs3 xếp hạng (Shan 18/11/2026), tính theo điểm hạng cao hơn của hai thể
+ * thức (`rating`), cùng mốc và thưởng với Quần Hùng bóng ma. Mỗi bậc nhận một lần.
  */
 export function claimPvpTier(
   profile: Profile,
-  format: "duel" | "team",
   tierId: string,
   rating: number,
   rng: Rng,
 ): TierClaimResult {
-  return claimTier(profile, "pvpTiers", tierId, pvpTierKey(format, tierId), rating, rng);
+  if (pvpTierClaims(profile).includes(tierId)) return { ok: false, error: "claimed" };
+  return claimTier(profile, "pvpTiers", tierId, tierId, rating, rng);
 }
 
 /** Điểm thay đổi sau một trận: người đánh theo ARENA_K, người phòng thủ ngược dấu theo ARENA_DEFENDER_K. */
