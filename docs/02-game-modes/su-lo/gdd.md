@@ -32,6 +32,7 @@ Một màn Thường nhắm **8–12 phút**, khoảng 15–20 câu hỏi và 1�
 - Mê cung là một **đồ thị ô** vẽ trên lưới (các ô nối nhau bằng lối đi). Có **ngã rẽ**, **ngõ cụt**, **vòng lặp** và **lối tắt** bị khóa.
 - Một ô xuất phát, một cổng thoát. Quãng ngắn nhất từ xuất phát tới cổng (điểm xuất phát): Dễ 14 bước, Thường 20, Khó 26.
 - Kích thước: Dễ khoảng 35 ô, Thường 50, Khó 70.
+- **Bản đồ nền** (Shan 18/11/2026): sa bàn vẽ trên tranh địa danh của thời kỳ, dùng lại bản đồ Trận Đồ (`public/art/formation/maps`): Ngô Quyền dựng nước là sông Bạch Đằng, Loạn sứ quân là thành đất của sứ quân, nhà Đinh là kinh thành Hoa Lư, nhà Tiền Lê là đất Ái Châu. Tranh phủ tối nhẹ, lối đi vẽ thành vệt đất sẫm để ô vẫn rõ (`ERA_MAP` trong `SuLoScreen.tsx`).
 - **Sương mù** (từ bậc Thường): chỉ thấy **loại ô** trong bán kính 2 bước đường đi quanh tướng và các ô đã đi qua; xa hơn chỉ thấy có lối. Dễ không có sương; Khó bán kính 1.
 
 Ví dụ một góc mê cung Dễ (`X` xuất phát, `C` cổng, `G` giao tranh, `B` bẫy đã lộ, `M` may mắn, `▣` cửa ải, `·` ô câu hỏi):

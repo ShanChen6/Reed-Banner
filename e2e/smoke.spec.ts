@@ -149,6 +149,32 @@ test.describe("tài khoản đã đăng nhập", () => {
     expectClean(problems);
   });
 
+  test("Tầm Tướng Ký: bấm ô trống mở hộp thoại chọn nguyên liệu cho đúng ô đó", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game/tam-tuong-ky");
+    await page.getByRole("button", { name: "Chọn nguyên liệu cho ô sau" }).click();
+    const dialog = page.getByRole("dialog", { name: "Chọn nguyên liệu cho ô sau" });
+    await expect(dialog).toBeVisible();
+    await dialog.getByRole("searchbox").fill("thuy");
+    await dialog.getByRole("button", { name: /^Thủy/ }).click();
+    await expect(dialog).toBeHidden();
+    await expect(page.getByRole("button", { name: "Bỏ Thủy khỏi ô sau" })).toBeVisible();
+    // Ô trước vẫn trống, vẫn mở được hộp thoại; Esc đóng.
+    await page.getByRole("button", { name: "Chọn nguyên liệu cho ô trước" }).click();
+    await expect(page.getByRole("dialog", { name: "Chọn nguyên liệu cho ô trước" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog", { name: "Chọn nguyên liệu cho ô trước" })).toBeHidden();
+    expectClean(problems);
+  });
+
+  test("Sử Lộ: sa bàn vẽ trên bản đồ của thời kỳ", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game/maze");
+    await page.getByRole("button", { name: /Lên đường/ }).click();
+    await expect(page.getByRole("group", { name: /^Sa bàn mê cung .*, bản đồ sông Bạch Đằng$/ })).toBeVisible();
+    expectClean(problems);
+  });
+
   test("Quần Hùng: bảng xếp hạng ở hàng thẻ, đối thủ có nhãn so lực chiến, 1vs1 chọn nghề hệ bằng chip", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/arena");

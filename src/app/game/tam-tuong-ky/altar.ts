@@ -27,6 +27,9 @@ export function pickInto(slots: Slots, id: NodeId): Slots {
   return [slots[0], id];
 }
 
+/** Chọn từ hộp thoại của một ô: đặt đúng vào ô đó, ô kia giữ nguyên. */
+export const putInto = (slots: Slots, index: 0 | 1, id: NodeId): Slots => (index === 0 ? [id, slots[1]] : [slots[0], id]);
+
 export const clearSlot = (slots: Slots, index: 0 | 1): Slots => (index === 0 ? [null, slots[1]] : [slots[0], null]);
 export const swapSlots = (slots: Slots): Slots => [slots[1], slots[0]];
 
