@@ -40,6 +40,7 @@ import {
   survivalWave,
   matchOver,
   ownsCompanion,
+  isReleasedCompanion,
   isLeaderProfession,
   profileTeam,
   raidBossById,
@@ -318,12 +319,22 @@ export function parseNewBattle(body: unknown): NewBattleInput | null {
       (body.arena as number) >= ARENA_OFFERS
     )
       return null;
-    // Đội là đội 3vs3 đang chọn ở hồ sơ, đối thủ là đội phòng thủ đã bày.
+    // Đội ra trận: hai tướng đi cùng Đinh Bộ Lĩnh do người chơi chọn; bỏ trống thì lấy đội 3vs3 đang chọn ở hồ sơ.
+    // Đối thủ là đội phòng thủ đã bày.
+    const picked = body.companions;
+    if (
+      picked !== undefined &&
+      (!Array.isArray(picked) ||
+        picked.length !== 2 ||
+        picked.some((id) => typeof id !== "string" || id === MAIN_ID) ||
+        picked[0] === picked[1])
+    )
+      return null;
     return {
       mode: "3v3",
       element: "moc",
       profession: "tuongSi",
-      companions: [],
+      companions: (picked as string[] | undefined) ?? [],
       difficulty: ARENA_DIFFICULTY,
       arena: body.arena as number,
     };
@@ -550,7 +561,7 @@ export async function createBattleFor(
   if (input.survival) return createSurvivalBattle(ownerId, input, deps);
   if (input.daily) return createDailyBattle(ownerId, deps);
   if (input.arena !== undefined)
-    return createArenaBattle(ownerId, input.arena, deps);
+    return createArenaBattle(ownerId, input.arena, input.companions, deps);
   if (input.campaignMission)
     return createCampaignMissionBattle(
       ownerId,
@@ -859,13 +870,15 @@ async function createDailyBattle(
 }
 
 /**
- * Đấu trường: đánh đối thủ thứ `index` đang bày bằng đội 3vs3 đang chọn ở hồ sơ. Dùng một trận của ngày rồi
+ * Đấu trường: đánh đối thủ thứ `index` đang bày bằng Đinh Bộ Lĩnh và hai tướng `companions` người chơi chọn (bỏ trống
+ * thì đội 3vs3 đang chọn ở hồ sơ). Dùng một trận của ngày rồi
  * xóa các đối thủ đã bày, để lần sau mở trang có đối thủ mới. Lần đầu đánh mà chưa có đội phòng thủ thì
  * lấy luôn đội này.
  */
 async function createArenaBattle(
   ownerId: string,
   index: number,
+  companions: readonly string[],
   deps: Deps,
 ): Promise<ServiceResult> {
   const arena = deps.arena;
@@ -880,6 +893,10 @@ async function createArenaBattle(
     return { ok: false, error: "arenaGone" };
   }
   const { profile } = await loadProfile(deps.profiles, ownerId);
+  // Chỉ ra trận tướng đã có; kiểm trước khi dùng lượt của ngày.
+  const lineup = companions.length > 0 ? companions : profile.team;
+  if (companions.length > 0 && !companions.every((id) => ownsCompanion(profile, id) && isReleasedCompanion(id)))
+    return { ok: false, error: "badRequest" };
   if (
     !(await arena.useAttack(
       ownerId,
@@ -899,7 +916,7 @@ async function createArenaBattle(
       : ((await arena.get(offer.owner))?.rating ?? offer.rating);
   const { match, events } = startMatch({
     sides: [
-      { fighters: arenaTeam(profile, profile.team), leader: 0 },
+      { fighters: arenaTeam(profile, lineup), leader: 0 },
       { fighters: ghostTeam(defense, offer.name), leader: 0 },
     ],
     difficulty: ARENA_DIFFICULTY,

@@ -6,7 +6,7 @@
 import { requestJson, postJson } from "../api";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ModeBanner, ModeScreen } from "@/components/game-ui";
-import { Alert, Button, choiceVariants } from "@/components/ui";
+import { Alert, Button, ChoiceChip, choiceVariants } from "@/components/ui";
 import {
   EXPEDITION_PINCER_HP,
   EXPEDITION_REINFORCE_PER_DAY,
@@ -36,9 +36,10 @@ import { ElementIcon, FoodIcon, ProfessionIcon } from "../art/icons";
 import { CounterStar } from "../art/CounterStar";
 import { Portrait } from "../art/portraits";
 import { ONLINE_BATTLE_KEY } from "../battle/online";
-import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME, SLOT_NAME, TIER_COLOR_NAME } from "../battle/labels";
+import { DIFFICULTY_NAME, ELEMENT_NAME, SLOT_NAME, TIER_COLOR_NAME } from "../battle/labels";
 import { useScene } from "../SceneContext";
 import { ModeGuideTabs } from "../ModeGuide";
+import HeroGrid from "../arena/HeroGrid";
 
 interface TierView {
   readonly tier: ExpeditionTier;
@@ -344,6 +345,14 @@ export default function ExpeditionScreen() {
 
 // ——— Chuẩn bị ———
 
+type ArmyFilter = "all" | "free" | "main" | "second";
+const ARMY_FILTERS: readonly { readonly value: ArmyFilter; readonly label: string }[] = [
+  { value: "all", label: "Mọi tướng" },
+  { value: "free", label: "Chưa chia" },
+  { value: "main", label: "Đạo Chính" },
+  { value: "second", label: "Biệt Đạo" },
+];
+
 function SetupView(props: {
   maps: readonly MapView[];
   mapId: string;
@@ -365,6 +374,25 @@ function SetupView(props: {
   const map = maps.find((m) => m.id === mapId) ?? maps[0]!;
   const info = map.tiers.find((t) => t.tier === tier)!;
   const ready = main.length === 2 && second.length === 3 && info.unlocked && props.runsLeft > 0;
+
+  const [armyFilter, setArmyFilter] = useState<ArmyFilter>("all");
+  // Lưới tướng: cấp cao trước, rồi theo tên.
+  const heroes = useMemo(
+    () =>
+      owned
+        .map((id) => {
+          const c = companionById(id)!;
+          return { id, name: c.name, element: c.element, profession: c.profession, level: profile.companions[id]?.level ?? 1 };
+        })
+        .sort((a, b) => b.level - a.level || a.name.localeCompare(b.name, "vi")),
+    [owned, profile],
+  );
+  /** Tự chia: năm tướng cấp cao nhất, hai người đầu đi Đạo Chính, ba người sau đi Biệt Đạo. */
+  const autoSplit = () => {
+    const top = heroes.slice(0, 5).map((h) => h.id);
+    setMain(top.slice(0, 2));
+    setSecond(top.slice(2, 5));
+  };
 
   // Bấm một tướng: chưa đi → Đạo Chính (nếu còn chỗ) → Biệt Đạo (nếu còn chỗ) → bỏ.
   const cycle = (id: string) => {
@@ -432,8 +460,17 @@ function SetupView(props: {
         <h2 className="font-serif text-xl font-bold">2. Chia hai đạo quân</h2>
         <p className="mt-1 text-sm text-on-wood-soft">
           Bấm tướng để đưa vào Đạo Chính (đi cùng Đinh Bộ Lĩnh, 2 chỗ), bấm lần nữa để chuyển sang Biệt Đạo (3 chỗ, người
-          đầu là thống lĩnh), bấm lần ba để bỏ ra. Chỉ số và trang bị được chụp lúc xuất quân.
+          đầu là thống lĩnh), bấm lần ba để bỏ ra. Tìm theo tên, lọc theo đạo quân, hệ, nghề; tướng xếp theo cấp. Chỉ số và
+          trang bị được chụp lúc xuất quân.
         </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Button variant="secondary" size="sm" disabled={heroes.length < 5} onClick={autoSplit}>
+            Tự chia theo cấp
+          </Button>
+          <Button variant="secondary" size="sm" disabled={main.length + second.length === 0} onClick={() => { setMain([]); setSecond([]); }}>
+            Bỏ chia hết
+          </Button>
+        </div>
         <div className="mt-3 grid gap-3 md:grid-cols-2">
           {([0, 1] as const).map((a) => {
             const ids = a === 0 ? [MAIN_ID, ...main] : second;
@@ -447,9 +484,19 @@ function SetupView(props: {
                     const element = c?.element ?? profile.element;
                     const profession = c?.profession ?? profile.profession;
                     return (
-                      <span key={id} className="flex items-center gap-1.5 rounded bg-wood-hi px-2 py-1 text-sm">
+                      <span key={id} className="flex items-center gap-1.5 rounded bg-wood-hi py-1 pl-2 pr-1 text-sm">
                         <Portrait id={id} element={element} profession={profession} className="size-7" />
                         {c?.name ?? "Đinh Bộ Lĩnh"}
+                        {id !== MAIN_ID && (
+                          <button
+                            type="button"
+                            aria-label={`Bỏ ${c?.name ?? id} khỏi ${ARMY_NAME[a]}`}
+                            onClick={() => (a === 0 ? setMain(main.filter((x) => x !== id)) : setSecond(second.filter((x) => x !== id)))}
+                            className="grid size-7 place-items-center rounded text-on-wood-soft hover:bg-black/30 hover:text-on-wood pointer-coarse:size-9"
+                          >
+                            ×
+                          </button>
+                        )}
                       </span>
                     );
                   })}
@@ -458,31 +505,40 @@ function SetupView(props: {
             );
           })}
         </div>
-        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {owned.map((id) => {
-            const c = companionById(id)!;
-            const where = main.includes(id) ? 0 : second.includes(id) ? 1 : null;
-            const lv = profile.companions[id]?.level ?? 1;
-            return (
-              <button
-                key={id}
-                type="button"
-                onClick={() => cycle(id)}
-                className={choiceVariants({ className: "justify-start p-2 text-left font-normal" })}
-                style={{ borderColor: where === null ? undefined : ARMY_COLOR[where] }}
-              >
-                <Portrait id={id} element={c.element} profession={c.profession} className="size-10" level={lv} />
-                <span className="min-w-0">
-                  <strong className="block truncate">{c.name}</strong>
-                  <span className="flex items-center gap-1 text-caption opacity-80">
-                    <ElementIcon element={c.element} className="size-3.5" /> {ELEMENT_NAME[c.element]}
-                    <ProfessionIcon profession={c.profession} className="size-3.5" /> {PROFESSION_NAME[c.profession]}
-                  </span>
-                </span>
-                {where !== null && <span className="ml-auto text-caption font-semibold" style={{ color: ARMY_COLOR[where] }}>{ARMY_NAME[where]}</span>}
-              </button>
-            );
-          })}
+        <div className="mt-3">
+          <HeroGrid
+            label="Tướng đi viễn chinh"
+            items={heroes}
+            selected={null}
+            isSelected={(id) => main.includes(id) || second.includes(id)}
+            onSelect={cycle}
+            cardStyle={(id) => {
+              const where = main.includes(id) ? 0 : second.includes(id) ? 1 : null;
+              return where === null ? undefined : { borderColor: ARMY_COLOR[where] };
+            }}
+            badge={(id) => {
+              const where = main.includes(id) ? 0 : second.includes(id) ? 1 : null;
+              return where === null ? null : (
+                <span className="ml-auto shrink-0 self-start text-caption font-semibold" style={{ color: ARMY_COLOR[where] }}>{ARMY_NAME[where]}</span>
+              );
+            }}
+            extraFilter={{
+              node: (
+                <div className="flex flex-wrap gap-1.5" role="group" aria-label="Lọc theo đạo quân">
+                  {ARMY_FILTERS.map((f) => (
+                    <ChoiceChip key={f.value} selected={armyFilter === f.value} onClick={() => setArmyFilter(f.value)}>
+                      {f.label}
+                    </ChoiceChip>
+                  ))}
+                </div>
+              ),
+              matches: (id) =>
+                armyFilter === "all" ? true
+                : armyFilter === "free" ? !main.includes(id) && !second.includes(id)
+                : armyFilter === "main" ? main.includes(id)
+                : second.includes(id),
+            }}
+          />
         </div>
         {owned.length < 5 && <p className="mt-2 text-sm text-danger">Cần ít nhất 5 tướng ngoài Đinh Bộ Lĩnh.</p>}
         <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -528,9 +584,18 @@ function NodeGlyph({ kind, x, y }: { kind: ExpeditionNodeKind; x: number; y: num
 
 /**
  * Tranh riêng của từng sa bàn (5:3, `public/art/expedition/<id>.webp`, vẽ theo docs/06-art/prompts/vien-chinh-sa-ban.md).
- * Sa bàn chưa có tranh thì tạm lấy một vùng của bản đồ tổng Bình Loạn (`ExpeditionMap.art`) cho tới khi có tranh.
+ * Sa bàn chưa có tranh thì tạm lấy một vùng của bản đồ tổng Bình Loạn (`ExpeditionMap.art`). Tranh hiện có dựng bằng
+ * `scripts/expedition-map-art.ts` từ chính ô và đường của sa bàn nên công trình nằm đúng chỗ ô.
  */
-const EXPEDITION_MAP_IMAGES: Partial<Record<ExpeditionMap["id"], string>> = {};
+const EXPEDITION_MAP_IMAGES: Partial<Record<ExpeditionMap["id"], string>> = {
+  // Cả sáu sa bàn là tranh vẽ tay (18/11/2026), tọa độ ô trong maps.ts đã dời khớp công trình trên tranh.
+  aiBac: "/art/expedition/ai-bac.webp",
+  thuongDu: "/art/expedition/thuong-du.webp",
+  cuaBien: "/art/expedition/cua-bien.webp",
+  chauTho: "/art/expedition/nga-ba-song.webp",
+  kinhThanh: "/art/expedition/kinh-thanh.webp",
+  quanDao: "/art/expedition/quan-dao.webp",
+};
 const WORLD_ART = "/art/campaign/world-map.webp";
 const WORLD_W = 1536;
 const WORLD_H = 1024;
