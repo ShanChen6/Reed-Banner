@@ -209,22 +209,18 @@ export interface TierReward {
   readonly claimed: boolean;
   /** Thưởng kèm ngoài vàng (ví dụ món trang bị), hiện dưới số vàng. */
   readonly extra?: ReactNode;
-  /** Đã nhận vàng nhưng còn thiếu phần thưởng kèm: nhãn nút nhận bù. */
-  readonly owed?: string;
 }
 
 /**
- * Dải bậc hạng cuộn ngang: bậc đang đứng sáng viền, kèm tiến độ tới bậc kế. Có `rewards` thì mỗi ô hiện vàng thưởng:
- * đủ điểm mà chưa nhận có nút Nhận, đã nhận có dấu tích, chưa tới thì mờ.
+ * Dải bậc hạng cuộn ngang: bậc đang đứng sáng viền, kèm tiến độ tới bậc kế. Có `rewards` thì mỗi ô hiện thưởng và một
+ * nút: đạt mốc mà chưa nhận thì bấm Nhận thưởng; đã nhận thì nút khóa "Đã nhận"; chưa đạt thì nút khóa ghi điểm còn thiếu.
  */
-export function TierLadder({ tiers, score, label, rewards, onClaim, onClaimOwed, busy = false }: {
+export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false }: {
   tiers: readonly Tier[];
   score: number;
   label: string;
   rewards?: readonly TierReward[];
   onClaim?: (index: number) => void;
-  /** Nhận bù phần thưởng kèm còn thiếu của bậc đã nhận (`TierReward.owed`). */
-  onClaimOwed?: (index: number) => void;
   busy?: boolean;
 }) {
   const at = tierIndex(tiers, score);
@@ -244,25 +240,26 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, onClaimOwed,
             <span className={cn("text-caption font-bold", i <= at ? "text-title-on-wood" : "text-on-wood-soft")}>{t.name}</span>
             <span className="text-caption tabular-nums text-on-wood-soft">{t.min}+</span>
             {rewards?.[i] ? (
-              rewards[i]!.claimed ? (
-                <span className="text-caption font-bold text-jade">✓ Đã nhận {rewards[i]!.gold}</span>
-              ) : i <= at ? (
-                <button type="button" disabled={busy} onClick={() => onClaim?.(i)}
-                  className={buttonVariants({ size: "sm", className: "min-h-9 px-2 text-caption pointer-coarse:min-h-11" })}>
-                  Nhận {rewards[i]!.gold} vàng
+              <>
+                <span className="text-caption text-on-wood">{rewards[i]!.gold} vàng</span>
+                {rewards[i]!.extra && <span className="text-caption font-semibold">{rewards[i]!.extra}</span>}
+                {/* Một nút cho cả thưởng bậc: đạt mốc mới bấm được, nhận một lần rồi khóa hẳn. */}
+                <button
+                  type="button"
+                  disabled={busy || rewards[i]!.claimed || i > at}
+                  onClick={() => onClaim?.(i)}
+                  aria-label={rewards[i]!.claimed ? `Bậc ${t.name}: đã nhận thưởng` : i > at ? `Bậc ${t.name}: chưa đạt mốc` : `Nhận thưởng bậc ${t.name}`}
+                  className={buttonVariants({
+                    variant: rewards[i]!.claimed || i > at ? "secondary" : "primary",
+                    size: "sm",
+                    className: cn("mt-1 min-h-9 w-full px-2 text-caption pointer-coarse:min-h-11", rewards[i]!.claimed && "text-jade"),
+                  })}
+                >
+                  {rewards[i]!.claimed ? "✓ Đã nhận" : i > at ? `Còn ${t.min - score} điểm` : "Nhận thưởng"}
                 </button>
-              ) : (
-                <span className="text-caption text-on-wood-soft">{rewards[i]!.gold} vàng</span>
-              )
+              </>
             ) : (
               i < at && <span className="text-caption font-bold text-jade" aria-label="Đã đạt">✓</span>
-            )}
-            {rewards?.[i]?.extra && <span className="text-caption font-semibold">{rewards[i]!.extra}</span>}
-            {rewards?.[i]?.claimed && rewards[i]!.owed && (
-              <button type="button" disabled={busy} onClick={() => onClaimOwed?.(i)}
-                className={buttonVariants({ size: "sm", className: "min-h-9 px-2 text-caption pointer-coarse:min-h-11" })}>
-                {rewards[i]!.owed}
-              </button>
             )}
           </li>
         ))}
