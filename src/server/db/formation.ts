@@ -1,6 +1,7 @@
 // Lưu ván Trận Đồ xếp hạng vào Postgres bằng Drizzle. Thứ tự hạng khớp compareResults: điểm ↓, số nước ↑, nộp sớm ↑.
 
 import { and, asc, count, desc, eq, getTableColumns, gt, isNotNull, isNull, lt, or, sql } from "drizzle-orm";
+import { migrateLegacyIds } from "@/core";
 import { parseStoredPuzzle } from "@/core/binh-phap";
 import type { FormationEntry, FormationStatus, FormationStore } from "../formation";
 import { accounts, formationEntries } from "./schema";
@@ -12,7 +13,7 @@ type Row = typeof formationEntries.$inferSelect & { name?: string | null };
 // khoản đã đăng nhập (bảng có dòng đó, hoặc chính người xem có ván cũ), client coi như chế độ tắt và mất thẻ
 // Xếp hạng/Chơi thường. Không đọc được thì `state` null, tầng trên tự bày lại bàn của kỳ.
 function toEntry(r: Row): FormationEntry {
-  const state = parseStoredPuzzle(r.state);
+  const state = parseStoredPuzzle(migrateLegacyIds(r.state));
   return {
     id: r.id,
     level: r.level,

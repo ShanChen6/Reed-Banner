@@ -12,6 +12,7 @@ import {
   companionById,
   leveledFoe,
   newProfile,
+  migrateLegacyIds,
   parseProfile,
   presetLoadout,
   profileTeam,
@@ -161,7 +162,7 @@ export const PROFILE_KEY = "coLau.profile.v1";
 export function loadProfile(): Profile {
   try {
     const raw = window.localStorage.getItem(PROFILE_KEY);
-    return parseProfile(raw ? JSON.parse(raw) : null);
+    return parseProfile(raw ? migrateLegacyIds(JSON.parse(raw)) : null);
   } catch {
     return newProfile();
   }

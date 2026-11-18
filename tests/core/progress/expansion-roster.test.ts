@@ -3,7 +3,7 @@ import {test} from 'node:test';
 import {LEGACY_IDS,EXPANSION_COMPANIONS,EXPANSION_SHOP_COMPANIONS,ALL_COMPANIONS,companionById,buildCompanion,autoProgress,characterSkills,chasePassives,COMBO_PASSIVES,CHASE_PASSIVES,scaleSkill,newProfile,parseProfile,parseInventory,isGearItem,loadoutOf,withGear,profileTeam,applyProfileAction,NEW_PROGRESS,mainCharacter,type CharacterProgress,type GearItem} from '../../../src/core';
 
 /** 14 bị động riêng của Xạ thủ/Sát thủ mở rộng (mã cũ rb0xx_…, nay theo tên). */
-const UNIQUE_PASSIVES=new Set(Object.values(LEGACY_IDS).filter(id=>id in CHASE_PASSIVES));
+const UNIQUE_PASSIVES=new Set(Object.entries(LEGACY_IDS).filter(([old,id])=>old.startsWith("rb")&&id in CHASE_PASSIVES).map(([,id])=>id));
 
 test('14 new registry entries have exact base stats, slots, P1+P2+P3+P4 and no second element chase',()=>{
  assert.equal(EXPANSION_COMPANIONS.length,14);assert.equal(UNIQUE_PASSIVES.size,14);assert.equal(new Set(EXPANSION_COMPANIONS.map(f=>f.id)).size,14);

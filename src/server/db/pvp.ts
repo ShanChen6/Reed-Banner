@@ -3,7 +3,7 @@
 
 import { and, asc, eq, gte, inArray, isNull, sql } from "drizzle-orm";
 import type { PvpDraft, PvpFormat, PvpPlayerResult, PvpState } from "@/core";
-import { PVP_ELO_START } from "@/core";
+import { migrateLegacyIds, PVP_ELO_START } from "@/core";
 import type { PvpDraftRecord, PvpDraftStatus, PvpMatchRecord, PvpMatchStatus, PvpQueueRow, PvpRatingRow, PvpResultInput, PvpSettled, PvpStore } from "../pvp";
 import { pvpDaily, pvpDrafts, pvpMatches, pvpPairs, pvpQueue, pvpRatings, pvpRoomMembers, pvpRooms } from "./schema";
 import type { PvpRoomRecord, PvpRoomSlot, PvpRoomStatus } from "../pvpRooms";
@@ -12,7 +12,7 @@ import type { Db } from "./store";
 const toMatch = (r: typeof pvpMatches.$inferSelect): PvpMatchRecord => ({
   id: r.id,
   format: r.format as PvpFormat,
-  state: r.state as PvpState,
+  state: migrateLegacyIds(r.state as PvpState),
   seq: r.seq,
   status: r.status as PvpMatchStatus,
   owners: r.owners as string[],
@@ -141,7 +141,7 @@ export class DrizzlePvpStore implements PvpStore {
 
   async getDraft(id: string): Promise<PvpDraftRecord | null> {
     const [r] = await this.db.select().from(pvpDrafts).where(eq(pvpDrafts.id, id)).limit(1);
-    return r ? { id: r.id, state: r.state as PvpDraft, seq: r.seq, status: r.status as PvpDraftStatus, owners: r.owners as string[], matchId: r.matchId, createdAt: r.createdAt, updatedAt: r.updatedAt } : null;
+    return r ? { id: r.id, state: migrateLegacyIds(r.state as PvpDraft), seq: r.seq, status: r.status as PvpDraftStatus, owners: r.owners as string[], matchId: r.matchId, createdAt: r.createdAt, updatedAt: r.updatedAt } : null;
   }
 
   async saveDraft(r: PvpDraftRecord, expectedSeq: number): Promise<boolean> {
@@ -231,7 +231,7 @@ export class DrizzlePvpStore implements PvpStore {
 
   async getRoom(code: string): Promise<PvpRoomRecord | null> {
     const [r] = await this.db.select().from(pvpRooms).where(eq(pvpRooms.code, code)).limit(1);
-    return r ? { ...r, status: r.status as PvpRoomStatus, slots: r.slots as PvpRoomSlot[] } : null;
+    return r ? { ...r, status: r.status as PvpRoomStatus, slots: migrateLegacyIds(r.slots as PvpRoomSlot[]) } : null;
   }
 
   async saveRoom(room: PvpRoomRecord, expectedSeq: number): Promise<boolean> {
