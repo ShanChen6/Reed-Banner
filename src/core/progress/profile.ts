@@ -12,6 +12,7 @@ import {
 import { warlordUnlockMission } from "../campaign/recruits";
 import {
   buyGear,
+  enhanceItem,
   equipItem,
   loadoutOf,
   mergeGear,
@@ -56,7 +57,9 @@ import {
   buildCompanion,
   buildMain,
   mainSlotKey,
+  MAX_LEVEL,
   NEW_PROGRESS,
+  totalXpFor,
   UPGRADE_COST,
   BRANCH_COST,
   upgradeSkill,
@@ -88,8 +91,10 @@ export interface Profile {
   readonly nextItemId: number;
   /** Campaign V2 graph progress, kèm bậc Đánh trùm. */
   readonly campaign: CampaignState;
-  /** Đá Cường Hóa của tài khoản: số nguyên không âm. */
+  /** Đá Cường Hóa của tài khoản: số nguyên không âm; tiêu khi cường hóa trang bị, mua thêm ở Cửa Hàng. */
   readonly stones: number;
+  /** Sách kinh nghiệm đang có (mua ở Cửa Hàng, dùng cho tướng ở Doanh Trại). Chưa có cuốn nào thì không có. */
+  readonly xpBooks?: number;
   /** Song Tháp (Trial/Destiny). */
   readonly dualTower: DualTowerState;
   /** Sinh tồn: kỷ lục số đợt (lượt chơi nằm trong trận, không lưu ở hồ sơ). */
@@ -332,6 +337,7 @@ export function parseProfile(raw: unknown): Profile {
     ...parseInventory(p),
     campaign: parseCampaign(p.campaign),
     stones: parseStones(p.stones),
+    ...(Number.isSafeInteger(p.xpBooks) && (p.xpBooks as number) > 0 ? { xpBooks: Math.min(p.xpBooks as number, ITEM_STACK_MAX) } : {}),
     dualTower: parseDualTower(p.dualTower),
     survival: parseSurvival(p.survival),
     quests: parseQuests(p.quests),
@@ -421,12 +427,61 @@ export type ProfileAction =
   | { readonly type: "claimQuest"; readonly id: string }
   | { readonly type: "claimAchievement"; readonly id: string }
   /** Ghi thêm địa danh Trận Đồ đã khai thông (id lạ bị bỏ qua). */
-  | { readonly type: "collectPlaces"; readonly ids: readonly string[] };
+  | { readonly type: "collectPlaces"; readonly ids: readonly string[] }
+  /** Cường hóa một món trong kho lên cấp kế (Đá Cường Hóa + vàng). */
+  | { readonly type: "enhance"; readonly item: string }
+  /** Mua vật phẩm ở Cửa Hàng: Đá Cường Hóa hoặc sách kinh nghiệm. */
+  | { readonly type: "buyItem"; readonly item: ShopItemId; readonly amount: number }
+  /** Dùng sách kinh nghiệm cho một tướng đã có. */
+  | { readonly type: "useXpBook"; readonly character: string; readonly amount: number };
+
+/**
+ * Vật phẩm bán ở Cửa Hàng (Shan 19/11/2026). Đá Cường Hóa cộng vào `stones`; sách kinh nghiệm vào `xpBooks`, mỗi cuốn
+ * +XP_BOOK_XP kinh nghiệm khi dùng. Giá là điểm xuất phát, chờ Shan duyệt.
+ */
+export type ShopItemId = "stone" | "xpBook";
+export const SHOP_ITEM_PRICE: Readonly<Record<ShopItemId, number>> = { stone: 200, xpBook: 120 };
+export const XP_BOOK_XP = 250;
+/** Số tối đa mỗi loại vật phẩm được giữ, và số tối đa mỗi lần mua hoặc dùng. */
+export const ITEM_STACK_MAX = 999;
+
+function buyItem(profile: Profile, item: ShopItemId, amount: number): ProfileActionResult {
+  const n = Math.floor(amount);
+  const have = item === "stone" ? profile.stones : (profile.xpBooks ?? 0);
+  if (!(item in SHOP_ITEM_PRICE) || n <= 0 || n > ITEM_STACK_MAX) return { ok: false, error: "invalidItem" };
+  if (have + n > ITEM_STACK_MAX) return { ok: false, error: "stackFull" };
+  const cost = n * SHOP_ITEM_PRICE[item];
+  if (profile.gold < cost) return { ok: false, error: "notEnoughGold" };
+  return {
+    ok: true,
+    profile: { ...profile, gold: profile.gold - cost, ...(item === "stone" ? { stones: have + n } : { xpBooks: have + n }) },
+  };
+}
+
+/** Dùng `amount` sách cho một tướng; không dùng quá số cuốn cần để lên cấp tối đa. */
+function readXpBooks(profile: Profile, character: string, amount: number): ProfileActionResult {
+  const n = Math.floor(amount);
+  if (n <= 0 || n > ITEM_STACK_MAX) return { ok: false, error: "invalidItem" };
+  if (character !== MAIN_ID && (!companionById(character) || !ownsCompanion(profile, character))) return { ok: false, error: "notOwned" };
+  const have = profile.xpBooks ?? 0;
+  if (have < n) return { ok: false, error: "noBooks" };
+  const p = progressOf(profile, character);
+  if (p.level >= MAX_LEVEL) return { ok: false, error: "maxLevel" };
+  const used = Math.min(n, Math.ceil(Math.max(0, totalXpFor(MAX_LEVEL) - p.xp) / XP_BOOK_XP));
+  const gain = addXp(p, used * XP_BOOK_XP);
+  const left = have - used;
+  const next: { -readonly [K in keyof Profile]: Profile[K] } = { ...withProgress(profile, character, gain.progress) };
+  if (left > 0) next.xpBooks = left;
+  else delete next.xpBooks;
+  return { ok: true, profile: next };
+}
 
 export type ProfileError =
   | ProgressError
   | InventoryError
   | "foodFull"
+  | "stackFull"
+  | "noBooks"
   | QuestError;
 
 /** Mua lương ở doanh trại; mua quá mức tối đa thì chỉ tính phần còn chứa được. */
@@ -582,6 +637,9 @@ export function applyProfileAction(
   if (action.type === "sell") return sellItem(profile, action.item);
   if (action.type === "buyGear") return buyGear(profile, action);
   if (action.type === "buyFood") return buyFood(profile, action.amount);
+  if (action.type === "enhance") return enhanceItem(profile, action.item);
+  if (action.type === "buyItem") return buyItem(profile, action.item, action.amount);
+  if (action.type === "useXpBook") return readXpBooks(profile, action.character, action.amount);
   // Còn lại là nâng kỹ năng: mọi nhân vật nâng theo ô.
   if (action.type !== "upgrade") return { ok: false, error: "invalidItem" };
   const isMain = action.character === MAIN_ID;
@@ -646,6 +704,11 @@ export function parseProfileAction(x: unknown): ProfileAction | null {
     return Number.isInteger(a.amount)
       ? { type: "buyFood", amount: a.amount as number }
       : null;
+  if (a.type === "enhance") return typeof a.item === "string" ? { type: "enhance", item: a.item } : null;
+  if (a.type === "buyItem")
+    return (a.item === "stone" || a.item === "xpBook") && Number.isInteger(a.amount) ? { type: "buyItem", item: a.item, amount: a.amount as number } : null;
+  if (a.type === "useXpBook")
+    return typeof a.character === "string" && Number.isInteger(a.amount) ? { type: "useXpBook", character: a.character, amount: a.amount as number } : null;
   if (a.type === "buyGear") {
     if (
       typeof a.slot !== "string" ||

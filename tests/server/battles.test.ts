@@ -1540,7 +1540,7 @@ describe("thử thách hằng ngày", () => {
     assert.equal(board.mine?.rank, 2);
     assert.equal(
       board.top[0]!.name,
-      "Khách g_b".replace("g_b", "g_b".slice(-4)),
+      "Lữ khách g_b".replace("g_b", "g_b".slice(-4)),
     );
   });
 });
@@ -1666,7 +1666,7 @@ describe("đấu trường bóng ma", () => {
     await arena.setOffers("g_a", [
       {
         owner: "g_xoa",
-        name: "Khách _xoa",
+        name: "Lữ khách _xoa",
         rating: 1000,
         members: [],
         power: 0,

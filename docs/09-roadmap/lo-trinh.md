@@ -29,7 +29,7 @@ Chưa xếp thứ tự; Shan chọn việc làm tiếp. Mỗi việc là một h
 | Âm thanh | Phần còn thiếu của nhạc và âm thanh theo chế độ | [Âm thanh](../05-ui-ux/campaign/audio-todo/README.md) |
 | Giao diện | Các việc Bản 2 UI còn mở | [Lộ trình UI](../05-ui-ux/implementation/roadmap.md) |
 | Chế độ mới | Quần Hùng đấu trực tiếp hai người chơi (thiết kế DRAFT, chưa có code) | [Đề xuất](../02-game-modes/future/quan-hung-pvp-truc-tiep.md) |
-| Hệ thống | Cường hóa trang bị bằng Đá Cường Hóa (đá hiện chưa có chỗ tiêu) | [Cường hóa](../04-equipment/cuong-hoa-todo.md) |
+| Hệ thống | Cân bằng kinh tế cường hóa trang bị, giá Đá Cường Hóa và sách kinh nghiệm (đã có code 19/11/2026) | [Cường hóa](../04-equipment/cuong-hoa-todo.md) |
 | Nội dung | Hậu truyện 970–971 của Bình Loạn (cần nguồn sử và freeze riêng); hướng dẫn chơi lần đầu | [Campaign design freeze](../02-game-modes/campaign/design-freeze.md) |
 
 ## 3. Cách làm để không mất việc

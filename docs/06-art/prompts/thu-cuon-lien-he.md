@@ -39,7 +39,7 @@ Transparent background outside the scroll, cords and tassels. Soft contact shadi
 Hand-painted 2D game illustration, front view, symmetrical hanging scroll on transparent background: two twisted vermilion silk cords from a bronze nail tied to a dark wooden top rod; paper rolled thickly around top and bottom rods with visible spiral layers; rods end in round aged gold-bronze finials; red silk tassels hang from the bottom rod ends; between the rolls a wide sheet of aged ivory giấy dó paper with torn edges, fibres and faint foxing only at the borders, and a calm bright flat centre for text. Vietnamese 10th century, warm parchment, bronze, vermilion. No text, no people, no background, 8:5.
 ```
 
-## 4. Ấn đỏ (tuỳ chọn, ảnh riêng)
+## 4. Ấn đỏ (tùy chọn, ảnh riêng)
 
 Ấn hai chữ "Cờ Lau" hiện vẽ bằng SVG có nét mực không đều. Nếu muốn nét ấn thật hơn, tạo thêm một ảnh nhỏ **vuông 1:1, 512×512, nền trong suốt**,
 `an-co-lau.png` → `public/art/footer/an-co-lau.webp`. Ấn là **chữ quốc ngữ "Cờ Lau" hai dòng** (không dùng chữ Hán), nên prompt mô tả hình thức,

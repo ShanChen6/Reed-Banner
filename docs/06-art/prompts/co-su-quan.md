@@ -15,7 +15,7 @@ Màu nền lá cờ trên bản đồ là **trạng thái thế cục** của ng
 |---|---|---|
 | **Ký hiệu giữa cờ** (12 hình, mục 3) | Tranh, nền trong suốt | Đặt lên vải cờ do code vẽ; thay hình `MarkGlyph` hiện tại. Cần đọc rõ trên mọi màu thế cục |
 | Dáng cờ (đuôi én, vuông, nhọn đáy) | Giữ bằng code | Dáng đã gắn cố định theo từng sứ quân (cột "Dáng cờ") |
-| Lá cờ đủ màu cho hồ sơ sứ quân (tuỳ chọn, mục 4) | Tranh | Chỉ để trang trí thẻ hồ sơ, không dùng trên bản đồ |
+| Lá cờ đủ màu cho hồ sơ sứ quân (tùy chọn, mục 4) | Tranh | Chỉ để trang trí thẻ hồ sơ, không dùng trên bản đồ |
 
 ## 2. Thông số chung của ký hiệu
 
@@ -133,7 +133,7 @@ Subject: emblem of a palisade rampart seen from the front: a wide wall topped wi
 Subject: emblem of a single upright spearhead, long leaf-shaped blade with a central ridge and a short socket below, one small notch scar cut into the left edge of the blade, bronze gold with ink outline. Tiny accent: the scar notch in earth-ochre (#a5772f). Veteran, scarred, last-stand feeling.
 ```
 
-## 4. Lá cờ đủ màu cho hồ sơ sứ quân (tuỳ chọn)
+## 4. Lá cờ đủ màu cho hồ sơ sứ quân (tùy chọn)
 
 Chỉ để trang trí thẻ hồ sơ sứ quân ở tab Sử ký, khi muốn một tranh lá cờ thật. Làm sau khi đã chốt 12 ký hiệu; dùng lại hình ký hiệu làm **ảnh tham chiếu** để giữ đúng hình. Khổ **dọc 3:4**, nền trong suốt, một lá cờ treo thẳng trên cán tre, chừa lề 8%.
 

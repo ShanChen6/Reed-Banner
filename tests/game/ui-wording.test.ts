@@ -8,6 +8,8 @@ import { describe, it } from "node:test";
 import ts from "typescript";
 
 const ROOTS = ["src/app", "src/core/progress"];
+/** Phạm vi rộng cho các luật về chữ: mọi chuỗi có dấu tiếng Việt trong app, core và server (cốt truyện, câu hỏi, tên lữ khách). */
+const WIDE_ROOTS = ["src/app", "src/core", "src/server"];
 /** Trang xem thử nội bộ, không phải giao diện người chơi. */
 const SKIP_DIRS = ["src/app/demo"];
 const VIETNAMESE = /[À-ỹĐđ]/;
@@ -41,8 +43,9 @@ function texts(file: string): Text[] {
 }
 
 const ALL = ROOTS.flatMap(files).flatMap(texts);
+const WIDE = WIDE_ROOTS.flatMap(files).flatMap(texts);
 
-interface Rule { readonly name: string; readonly pattern: RegExp; readonly allow?: (t: Text) => boolean }
+interface Rule { readonly name: string; readonly pattern: RegExp; readonly allow?: (t: Text) => boolean; readonly wide?: boolean }
 
 const RULES: readonly Rule[] = [
   { name: "tên chế độ cũ", pattern: /chiến dịch|thử thách ngày|đấu trường|(?<!\p{L})sinh tồn(?!\p{L})|Song Tháp|Tháp Vận Mệnh/iu,
@@ -64,13 +67,25 @@ const RULES: readonly Rule[] = [
   { name: "túi đồ", pattern: /túi đồ/iu },
   { name: "người chơi", pattern: /người chơi/iu },
   { name: "ba dấu chấm", pattern: /\.\.\./ },
+  // Rà soát 19/11/2026 (docs/00-overview/thuat-ngu.md mục Văn phong giao diện), quét cả core và server.
+  // Kiểu dấu cũ ở vần mở oa, oe, uy cuối tiếng: hòa, hóa, khỏe, thủy, tùy (không hoà, hoá, khoẻ, thuỷ, tuỳ).
+  { name: "kiểu dấu mới", pattern: /(?<![qQ])(?:[oO][àáảãạ]|[oO][èéẻẽẹ]|[uU][ỳýỷỹỵ])(?!\p{L})/u, wide: true },
+  // Ngoặc kép thẳng trong mẫu HTML (thuộc tính) là mã, không phải chữ.
+  { name: "ngoặc kép thẳng", pattern: /"[^"]+"/, wide: true, allow: (t) => t.text.includes("<") },
+  { name: "chỉ số Công, Thủ viết thường", pattern: /(?:%|\d) ?(?:công|thủ)(?!\p{L})/u, wide: true },
+  { name: "từ tiếng Anh (mở rộng)", pattern: /(?<![\p{L}\d])(?:EXP|XP|slot|active|level|item|combo)(?![\p{L}\d])/u, wide: true,
+    allow: (t) => t.file.includes(join("core", "tower", "puzzleValidator")) },
+  // Người chưa ghi danh là "lữ khách"; tên riêng có chữ Khách (Hàn Giang Khách, Thích khách) được giữ.
+  { name: "khách (thay bằng lữ khách)", pattern: /(?<!\p{L}|[Ll]ữ |Giang |Thích )[Kk]hách(?! giang hồ)(?!\p{L})/u, wide: true },
+  // Câu báo lỗi: điều xảy ra + việc nên làm, dùng "Xin…", không "hãy thử lại", không "Có lỗi xảy ra".
+  { name: "câu báo lỗi lệch giọng", pattern: /[,.] hãy thử lại\.|Có lỗi xảy ra|Mất kết nối tới máy chủ/u, wide: true },
 ];
 
 describe("văn phong giao diện", () => {
   it("quét được chữ hiển thị", () => assert.ok(ALL.length > 1000));
   for (const rule of RULES) {
     it(`không có ${rule.name}`, () => {
-      const hits = ALL.filter((t) => rule.pattern.test(t.text) && !rule.allow?.(t));
+      const hits = (rule.wide ? WIDE : ALL).filter((t) => rule.pattern.test(t.text) && !rule.allow?.(t));
       assert.deepEqual(hits.map((t) => `${t.file}:${t.line} ${t.text.slice(0, 80)}`), []);
     });
   }

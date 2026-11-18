@@ -27,6 +27,7 @@ import {
   SKILL_MAX_LEVEL_DISCOUNT,
   totalXpFor,
   upgradeCost,
+  XP_BOOK_XP,
   xpToNext,
   type ActiveBonus,
   type FighterConfig,
@@ -42,12 +43,12 @@ import { EmptySlotIcon, GearIcon, SetEmblem } from "../art/gear";
 import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
 import { ProfileArt } from "../art/ProfileArt";
 import { stageBackdropUrl } from "../art/portrait-data";
-import { ELEMENT_NAME, gearText, PROFESSION_NAME, skillLevelTable, skillStepTexts, SLOT_NAME, TIER_CLASS } from "../battle/labels";
-import { SkillIcon } from "../art/skills";
+import { ELEMENT_NAME, gearText, PROFESSION_NAME, skillLevelTable, SLOT_NAME, TIER_CLASS } from "../battle/labels";
 import SkillDetails from "../battle/SkillDetails";
 import { BackGlyph, InfoGlyph, PlusGlyph, TeamGlyph } from "./glyphs";
 import { nameOf } from "./roster";
 import Biography from "./Biography";
+import { SceneLink } from "../SceneContext";
 
 /** Ô trang bị hai bên tranh; vũ khí đứng giữa phía dưới. Đúng 9 ô như luật trang bị. */
 export const LEFT_SLOTS: readonly NonWeaponSlot[] = ["dinhMao", "yPhuc", "hoThu", "baoNgoa"];
@@ -211,7 +212,7 @@ export default function HeroDetail({
       </div>
 
       <div id="hero-sub-panel" role="tabpanel" aria-labelledby={`hero-sub-${sub}`} className="mt-3">
-        {sub === "overview" && <Overview profile={profile} id={id} fighter={fighter} bare={bare} worn={worn} />}
+        {sub === "overview" && <Overview profile={profile} id={id} fighter={fighter} bare={bare} worn={worn} busy={busy} onAction={onAction} />}
         {sub === "skills" && <Skills profile={profile} id={id} fighter={fighter} busy={busy} onAction={onAction} />}
         {sub === "details" && <Details profile={profile} id={id} fighter={fighter} bare={bare} worn={worn} />}
       </div>
@@ -341,7 +342,60 @@ function StatCard({ label, value, bonus }: { label: string; value: number | stri
   );
 }
 
-function Overview({ profile, id, fighter, bare, worn }: { profile: Profile; id: string; fighter: FighterConfig; bare: FighterConfig; worn: readonly GearItem[] }) {
+/**
+ * Dùng sách kinh nghiệm (mua ở Cửa Hàng) cho tướng đang xem: một cuốn, đủ để lên cấp kế, hoặc mười cuốn. Server không
+ * tiêu quá số cuốn cần để tới cấp tối đa.
+ */
+function XpBooks({ profile, id, busy, onAction }: { profile: Profile; id: string; busy: boolean; onAction: (a: ProfileAction) => Promise<string | null> }) {
+  const have = profile.xpBooks ?? 0;
+  const p = progressOf(profile, id);
+  if (p.level >= MAX_LEVEL) return null;
+  const toNext = Math.max(1, Math.ceil((totalXpFor(p.level + 1) - p.xp) / XP_BOOK_XP));
+  const packs = [...new Set([1, toNext, 10])].filter((n) => n <= Math.max(have, 1)).sort((a, b) => a - b);
+  return (
+    <div className="barracks-inset flex flex-wrap items-center gap-2 rounded-md px-2.5 py-2 text-sm">
+      <svg viewBox="0 0 48 48" aria-hidden focusable="false" className="size-8 shrink-0">
+        <image href="/art/tiles/sach.webp" width={48} height={48} />
+      </svg>
+      <span className="min-w-0 flex-1">
+        Sách kinh nghiệm: <b className="tabular-nums text-title-on-wood">{have}</b> cuốn · mỗi cuốn +{XP_BOOK_XP}
+      </span>
+      {have > 0 ? (
+        packs.map((n) => (
+          <button
+            key={n}
+            type="button"
+            disabled={busy || n > have}
+            onClick={() => void onAction({ type: "useXpBook", character: id, amount: n })}
+            className="barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-2.5 whitespace-nowrap disabled:opacity-45"
+          >
+            {n === toNext && n !== 1 ? `Dùng ${n} (lên cấp ${p.level + 1})` : `Dùng ${n}`}
+          </button>
+        ))
+      ) : (
+        <SceneLink scene="SHOP" className="barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-2.5 leading-9">Mua ở Cửa Hàng</SceneLink>
+      )}
+    </div>
+  );
+}
+
+function Overview({
+  profile,
+  id,
+  fighter,
+  bare,
+  worn,
+  busy,
+  onAction,
+}: {
+  profile: Profile;
+  id: string;
+  fighter: FighterConfig;
+  bare: FighterConfig;
+  worn: readonly GearItem[];
+  busy: boolean;
+  onAction: (a: ProfileAction) => Promise<string | null>;
+}) {
   const p = progressOf(profile, id);
   const maxed = p.level >= MAX_LEVEL;
   const xpMax = maxed ? 1 : xpToNext(p.level);
@@ -350,6 +404,7 @@ function Overview({ profile, id, fighter, bare, worn }: { profile: Profile; id: 
   return (
     <div className="flex flex-col gap-3">
       <Meter label="Kinh nghiệm" value={xpNow} max={xpMax} text={maxed ? "Cấp tối đa" : `${xpNow} / ${xpMax}`} />
+      <XpBooks profile={profile} id={id} busy={busy} onAction={onAction} />
       <dl className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         <StatCard label="Máu" value={fighter.maxHp} bonus={fighter.maxHp - bare.maxHp} />
         <StatCard label="Công" value={fighter.atk} bonus={fighter.atk - bare.atk} />
@@ -396,35 +451,37 @@ function Skills({
         </span>
         <span className="barracks-pill">Điểm kỹ năng: {p.skillPoints}</span>
       </p>
-      <ul className="flex flex-col gap-2" aria-label={`Kỹ năng của ${nameOf(id)}`}>
-        {defs.map((def) => {
-          const slot = def.slot!;
-          const unlock = MAIN_SLOT_UNLOCK[slot]!;
-          return (
-            <SkillLine
-              key={def.id}
-              def={def}
-              level={p.skillLevels[mainSlotKey(slot)] ?? 1}
-              unlock={p.level < unlock ? unlock : null}
-              disabled={busy}
-              points={p.skillPoints}
-              onUp={() => void onAction({ type: "upgrade", character: id, key: mainSlotKey(slot) })}
-            />
-          );
-        })}
-      </ul>
       <SkillDetails
-        open
+        flat
         fighter={fighter}
         passive={fighter.comboPassive ?? PROFESSION_COMBO[fighter.profession]}
         skills={defs.map((d) => scaleSkill(d, p.skillLevels[mainSlotKey(d.slot!)] ?? 1))}
+        extra={(scaled) => {
+          const def = defs.find((d) => d.id === scaled.id)!;
+          const slot = def.slot!;
+          const unlock = MAIN_SLOT_UNLOCK[slot]!;
+          const locked = p.level < unlock;
+          return {
+            dim: locked,
+            node: (
+              <SkillUpgrade
+                def={def}
+                level={p.skillLevels[mainSlotKey(slot)] ?? 1}
+                unlock={locked ? unlock : null}
+                disabled={busy}
+                points={p.skillPoints}
+                onUp={() => void onAction({ type: "upgrade", character: id, key: mainSlotKey(slot) })}
+              />
+            ),
+          };
+        }}
       />
     </div>
   );
 }
 
-/** Một kỹ năng: hình, tên, năng lượng, cấp sao và nút nâng (giá theo upgradeCost của @/core). */
-function SkillLine({
+/** Hàng cấp kỹ năng trong thẻ chiêu: sao cấp, cấp kế tăng gì (bảng cấp của core) và nút nâng (giá theo upgradeCost). */
+function SkillUpgrade({
   def,
   level,
   unlock,
@@ -440,7 +497,6 @@ function SkillLine({
   onUp: () => void;
 }) {
   const cost = upgradeCost(level);
-  const scaled = scaleSkill(def, level);
   // Cấp kế tăng gì: so từng hàng của bảng cấp (năng lượng, sát thương, hồi máu, hệ số hiệu ứng) giữa cấp này và cấp sau.
   const gains =
     level < SKILL_MAX_LEVEL
@@ -448,40 +504,30 @@ function SkillLine({
           .filter((r) => r.values[level - 1] !== r.values[level])
           .map((r) => `${r.label.replace(/ \(.*\)$/, "")} ${r.values[level - 1]} → ${r.values[level]}`)
       : [];
+  if (unlock) return <p className="mt-1 text-caption font-semibold opacity-80">Mở ở cấp {unlock}</p>;
   return (
-    <li className={`barracks-inset flex items-center gap-3 rounded-md px-2.5 py-2 ${unlock ? "opacity-55" : ""}`}>
-      <SkillIcon def={def} className="size-10 shrink-0" />
-      <div className="min-w-0 flex-1">
-        <p className="text-[15px] leading-snug font-semibold text-title-on-wood">
-          {def.name} <span className="text-sm font-normal text-[var(--on-wood-soft)]">· ô {def.slot} · {scaled.cost} NL</span>
-        </p>
-        <p className="text-sm text-[var(--on-wood-soft)]">{skillStepTexts(scaled).join(" · ")}</p>
-        {!unlock && (
-          <p className="text-sm text-frame-gold">
-            {level >= SKILL_MAX_LEVEL ? `Đã tối đa: mọi hệ số +${Math.round(SKILL_LEVEL_BONUS * (SKILL_MAX_LEVEL - 1) * 100)}%, năng lượng −${Math.round(SKILL_MAX_LEVEL_DISCOUNT * 100)}%.` : gains.length > 0 ? `Lên cấp ${level + 1}: ${gains.join(" · ")}` : `Lên cấp ${level + 1}: chiêu không có hệ số tăng theo cấp.`}
-          </p>
-        )}
-      </div>
-      {unlock ? (
-        <span className="shrink-0 text-sm text-[var(--on-wood-soft)]">Mở ở cấp {unlock}</span>
-      ) : (
-        <div className="flex shrink-0 flex-col items-end gap-1">
-          <span className="text-sm text-frame-gold tabular-nums" aria-label={`Cấp kỹ năng ${level}/${SKILL_MAX_LEVEL}`}>
-            {"★".repeat(level)}
-            <span className="text-ash">{"★".repeat(SKILL_MAX_LEVEL - level)}</span>
-          </span>
-          <button
-            type="button"
-            disabled={disabled || cost === null || points < cost}
-            onClick={onUp}
-            aria-label={cost === null ? `${def.name} đã tối đa` : `Nâng ${def.name} lên cấp ${level + 1}, tốn ${cost} điểm`}
-            className="barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-2.5 text-sm whitespace-nowrap disabled:opacity-45"
-          >
-            {cost === null ? "Tối đa" : `Nâng · ${cost} điểm`}
-          </button>
-        </div>
-      )}
-    </li>
+    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-current/10 pt-1.5">
+      <span className="text-frame-gold tabular-nums" aria-label={`Cấp kỹ năng ${level}/${SKILL_MAX_LEVEL}`}>
+        {"★".repeat(level)}
+        <span className="text-ash">{"★".repeat(SKILL_MAX_LEVEL - level)}</span>
+      </span>
+      <span className="min-w-0 flex-1 text-caption text-frame-gold">
+        {level >= SKILL_MAX_LEVEL
+          ? `Đã tối đa: mọi hệ số +${Math.round(SKILL_LEVEL_BONUS * (SKILL_MAX_LEVEL - 1) * 100)}%, năng lượng −${Math.round(SKILL_MAX_LEVEL_DISCOUNT * 100)}%.`
+          : gains.length > 0
+            ? `Lên cấp ${level + 1}: ${gains.join(" · ")}`
+            : `Lên cấp ${level + 1}: chiêu không có hệ số tăng theo cấp.`}
+      </span>
+      <button
+        type="button"
+        disabled={disabled || cost === null || points < cost}
+        onClick={onUp}
+        aria-label={cost === null ? `${def.name} đã tối đa` : `Nâng ${def.name} lên cấp ${level + 1}, tốn ${cost} điểm`}
+        className="barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-2.5 text-sm whitespace-nowrap disabled:opacity-45"
+      >
+        {cost === null ? "Tối đa" : `Nâng · ${cost} điểm`}
+      </button>
+    </div>
   );
 }
 

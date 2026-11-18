@@ -184,7 +184,7 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
             )}
             {!account && (
               <p className="text-sm text-[var(--on-wood)]/85 [text-shadow:0_1px_3px_var(--black)]">
-                Đang chơi với tư cách khách, tiến độ gắn với trình duyệt này.
+                Đang chơi với thân phận lữ khách, tiến độ gắn với trình duyệt này.
               </p>
             )}
           </div>

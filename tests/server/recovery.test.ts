@@ -74,7 +74,7 @@ describe("email và lấy lại mật khẩu", () => {
     const byName = await requestPasswordReset(store, " SHAN ", 100, ORIGIN);
     assert.equal(byName?.to, "shan@vi.du");
     assert.ok(byName?.text.includes(`${ORIGIN}/game/reset-password?token=`));
-    assert.ok(byName?.text.includes('"shan"'));
+    assert.ok(byName?.text.includes("“shan”"));
     const byEmail = await requestPasswordReset(store, "Shan@Vi.Du", 100, ORIGIN);
     assert.equal(byEmail?.to, "shan@vi.du");
 

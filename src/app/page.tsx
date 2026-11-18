@@ -368,7 +368,7 @@ export default function Home() {
           <SectionTitle
             kicker="Chế độ chơi"
             title="Từ Thao Luyện tới Bình Loạn"
-            sub="Chơi bằng tài khoản khách ngay, tiến trình gắn với trình duyệt. Trình danh để giữ tiến trình trên mọi máy."
+            sub="Chơi ngay với thân phận lữ khách, tiến trình gắn với trình duyệt. Trình danh để giữ tiến trình trên mọi máy."
           />
           <ul className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {MODES.map((m) => {

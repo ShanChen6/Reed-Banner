@@ -198,7 +198,7 @@ describe("thưởng hạng mùa Trấn Ải và Quần Hùng", () => {
     await s.best("survival", "2026-11-02", "g_me", 5, 2);
     const v = await seasonBoardView(s, "survival", "2026-11-02", "g_me");
     assert.equal(v.season, "2026-11-02");
-    assert.deepEqual(v.top.map((r) => [r.rank, r.name, r.mine, r.score]), [[1, "Khách cdef", false, 7], [2, "Khách g_me", true, 5]]);
+    assert.deepEqual(v.top.map((r) => [r.rank, r.name, r.mine, r.score]), [[1, "Lữ khách cdef", false, 7], [2, "Lữ khách g_me", true, 5]]);
     assert.deepEqual(v.mine, { rank: 2, score: 5 });
   });
 });

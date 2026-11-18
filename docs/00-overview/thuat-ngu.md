@@ -1,6 +1,6 @@
 # Thuật ngữ
 
-> Cập nhật: 18/11/2026 (công trạng, ban thưởng, kho đồ; 13/11: Xưng hô: vài chỗ gọi "Chúa công"; thêm mục Văn phong giao diện, Shan duyệt; 11/11: thêm từ của Tháp Thiên Mệnh; 27/10: tách từ `docs/README.md` ở DOC-02, nội dung giữ nguyên)
+> Cập nhật: 19/11/2026 (rà soát toàn dự án: lữ khách, câu báo lỗi, ngoặc cong, chỉ số; 18/11: công trạng, ban thưởng, kho đồ; 13/11: Xưng hô: vài chỗ gọi "Chúa công"; thêm mục Văn phong giao diện, Shan duyệt; 11/11: thêm từ của Tháp Thiên Mệnh; 27/10: tách từ `docs/README.md` ở DOC-02, nội dung giữ nguyên)
 > Trạng thái: **REFERENCE** — thuật ngữ dùng chung.
 
 | Thuật ngữ | Nghĩa |
@@ -34,22 +34,22 @@ Chữ hiện cho người chơi viết bằng tiếng Việt: run → lượt le
 
 ## Văn phong giao diện
 
-Quy ước Shan duyệt 13/11/2026. Áp cho mọi chữ người chơi thấy; test `tests/game/ui-wording.test.ts` chặn từ cấm và tên chế độ cũ.
+Quy ước Shan duyệt 13/11/2026, rà soát toàn dự án 19/11/2026. Áp cho mọi chữ người chơi thấy, kể cả chữ dựng trong `src/core` (cốt truyện, câu hỏi Sử Lộ, mô tả Phúc) và `src/server` (tên lữ khách trên bảng, thư gửi đi); test `tests/game/ui-wording.test.ts` chặn từ cấm, tên chế độ cũ, kiểu dấu mới, ngoặc kép thẳng, chỉ số viết thường, "khách" và câu báo lỗi lệch giọng.
 
 | Mảng | Quy ước |
 |---|---|
 | Xưng hô | Lời hệ thống gọi người chơi là **bạn**, không dùng "người chơi" trên giao diện. **Ngoại lệ (Shan, 13/11/2026): chỉ vài chỗ gọi "Chúa công"**, để giữ giọng quân doanh: dòng kết quả trận ("Chúa công thắng!", "Chúa công thua", cả nhật ký trận) và dòng "Chúa công đã đánh hôm nay" ở Nhật Lệnh. Hướng dẫn, nút, nhãn, thông báo lỗi và mọi chỗ khác vẫn là "bạn". Không đặt "Chúa công" vào lời nhân vật lịch sử (không bịa cách gọi cho người thật) và không dùng ở chương Đinh Bộ Lĩnh còn nhỏ Lời thoại nhân vật giữ giọng cổ (ta, ngươi, các ngươi) |
 | Phe trong trận | **Phe bạn** và **Đối thủ**. Kết quả: "Chúa công thắng!" / "Chúa công thua". "Tianwu" chỉ xuất hiện ở trang giới thiệu, nơi nói đó là AI của game; "địch" chỉ dùng trong mô tả kỹ năng |
 | Gọi nhân vật | Tướng quân, chủ tướng, phó tướng (bảng trên). "Tướng sĩ" chỉ là tên nghề |
-| Chỉ số | Máu, Công, Thủ (không HP, ATK, DEF) |
-| Màn tài khoản | Giọng giang hồ, quân doanh (Shan, 13/11/2026): tên đăng nhập → **danh hiệu**, mật khẩu → **mật lệnh**, đăng ký → **ghi danh**, email → **địa chỉ thư**, khách → **lữ khách**, đăng nhập → **trình danh** (tài khoản đã đăng nhập → "đã ghi danh"); nút gửi form là "Vào trại". Nhãn ô nhập ghi kèm từ quen trong ngoặc ở lần đầu ("Danh hiệu (tên đăng nhập)", "Mật lệnh (mật khẩu)") để người mới vẫn hiểu. "Đăng nhập" chỉ còn trong ngoặc của nhãn "Danh hiệu (tên đăng nhập)" |
+| Chỉ số | Máu, Công, Thủ (không HP, ATK, DEF); Công, Thủ luôn viết hoa kể cả giữa câu ("+8% Công", "Thủ +15%"), máu là tài nguyên nên viết thường giữa câu ("hồi 5% máu tối đa") |
+| Màn tài khoản | Giọng giang hồ, quân doanh (Shan, 13/11/2026): tên đăng nhập → **danh hiệu**, mật khẩu → **mật lệnh**, đăng ký → **ghi danh**, email → **địa chỉ thư**, khách → **lữ khách** (áp mọi nơi: menu, hướng dẫn, trang chủ, tên mặc định "Lữ khách 1a2b" trên bảng và Đấu người; tên riêng như Hàn Giang Khách, Thích khách và cụm "khách giang hồ" giữ nguyên), đăng nhập → **trình danh** (tài khoản đã đăng nhập → "đã ghi danh"); nút gửi form là "Vào trại". Nhãn ô nhập ghi kèm từ quen trong ngoặc ở lần đầu ("Danh hiệu (tên đăng nhập)", "Mật lệnh (mật khẩu)") để người mới vẫn hiểu. "Đăng nhập" chỉ còn trong ngoặc của nhãn "Danh hiệu (tên đăng nhập)" |
 | Giọng văn | Câu ngắn, nói việc cần làm. Thẻ chế độ và hero giữ giọng hào sảng ([spec thẻ chế độ](../05-ui-ux/design-system/game-mode-ui-spec.md)). Dấu chấm than chỉ cho khoảnh khắc thắng, kỷ lục, khai thông |
-| Thông báo lỗi | Giọng cổ trang, võ lâm nhưng vẫn rõ việc: *điều xảy ra* + *việc nên làm*, kết thúc bằng dấu chấm, không xưng "bạn", không "nhé". Giữ nguyên từ chức năng (đăng nhập, tải lại trang, máy chủ, mật khẩu). Ví dụ: "Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin thử lại sau giây lát." |
+| Thông báo lỗi | Giọng cổ trang, võ lâm nhưng vẫn rõ việc: *điều xảy ra* + *việc nên làm*, kết thúc bằng dấu chấm, không xưng "bạn", không "nhé", việc nên làm mở đầu bằng "Xin…" (không "hãy thử lại", không "Có lỗi xảy ra"). Giữ nguyên từ chức năng (đăng nhập, tải lại trang, máy chủ, mật khẩu). Mẫu dùng chung: mất mạng "Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin thử lại." (thêm "sau giây lát" hoặc "Xin kiểm tra mạng rồi thử lại." khi hợp); máy chủ bận "Máy chủ đang bận. Xin thử lại sau giây lát."; lỗi chưa rõ "Có trục trặc chưa rõ. Xin thử lại." |
 | Viết hoa tên riêng trong game | Hoa mọi chữ: tên chế độ, màn chức năng mang tên riêng (Chiến Trường, Doanh Trại, Cửa Hàng, Công Trạng), địa danh, đạo quân (Đạo Chính, Biệt Đạo), quân và công cụ có tên (Quân Lệnh, Thu Hồi, Lốc Phong), chiêu Hán Việt (tuyệt chiêu, chiêu riêng, chiêu hệ). Màn tiện ích tên chung (Nhiệm vụ, Tài khoản, Trình danh), chiêu nghề và bị động (Trảm kích, Tường khiên, Chờ thời phá giáp) chỉ hoa chữ đầu |
 | Viết hoa nút, tiêu đề, nhãn | Chỉ hoa chữ đầu (Thu hồi, Hoàn thành chương), trừ phần là tên riêng. Chữ in to làm bằng CSS `uppercase`, không gõ cứng |
 | Hiệu ứng và tài nguyên | Hiệu ứng hoa chữ đầu như tên riêng (Khiên, Đóng băng, Câm lặng, Phản đòn, Nộ). Tài nguyên viết thường giữa câu (máu, năng lượng, lương, vàng) |
 | Số | "12 sứ quân", "Loạn 12 sứ quân" dùng số; thẻ chế độ và hero viết chữ ("mười hai"). "sứ quân" luôn viết thường |
-| Dấu câu | Câu đầy đủ có dấu chấm; nhãn, nút không chấm. Luôn "…" (một ký tự), ngoặc kép cong “ ”, phân cách "·" |
+| Dấu câu | Câu đầy đủ có dấu chấm; nhãn, nút không chấm. Luôn "…" (một ký tự), ngoặc kép cong “ ” (cả trích sử trong câu hỏi Sử Lộ), phân cách "·" |
 | Chính tả | Kiểu dấu cũ: hòa, thủy, khóa, tùy, hủy; luôn "kỹ", "đăng ký" |
 
 Quy tắc commit và PR (Shan chốt cùng ngày) ở [AGENTS.md](../../AGENTS.md#commit-và-pr).

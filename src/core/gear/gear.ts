@@ -83,12 +83,26 @@ export interface GearItem {
   readonly set: string;
   /** Chỉ vũ khí: nghề dùng được. */
   readonly profession?: Profession;
+  /** Cấp cường hóa 1..ENHANCE_MAX bằng Đá Cường Hóa; không có là +0. Ghép ba món giữ cấp của món chính. */
+  readonly enhance?: number;
 }
 
-/** Chỉ số chính một món cộng cho người mặc, đã làm tròn. */
+/**
+ * Cường hóa trang bị (docs/04-equipment/cuong-hoa-todo.md): cấp +0..+5, thành công 100%, mỗi cấp +4% chỉ số riêng của món.
+ * Lên cấp +n+1 tốn n+1 Đá Cường Hóa và 50 × (n+1) × phẩm vàng. Số liệu là điểm xuất phát, chờ Shan duyệt.
+ */
+export const ENHANCE_MAX = 5;
+export const ENHANCE_BONUS = 0.04;
+export function enhanceCost(item: Pick<GearItem, "tier" | "enhance">): { readonly stones: number; readonly gold: number } | null {
+  const level = item.enhance ?? 0;
+  if (level >= ENHANCE_MAX) return null;
+  return { stones: level + 1, gold: 50 * (level + 1) * item.tier };
+}
+
+/** Chỉ số chính một món cộng cho người mặc, đã làm tròn (kể cả cấp cường hóa). */
 export function itemStat(item: GearItem, wearer: Element): number {
   const stat = SLOT_STAT[item.slot];
-  return Math.round(STAT_BASE[stat] * TIER_INFO[item.tier].multiplier * gearElementMultiplier(item.element, wearer));
+  return Math.round(STAT_BASE[stat] * TIER_INFO[item.tier].multiplier * gearElementMultiplier(item.element, wearer) * (1 + ENHANCE_BONUS * (item.enhance ?? 0)));
 }
 
 export type StatBonus = Partial<Record<GearStat, number>>;

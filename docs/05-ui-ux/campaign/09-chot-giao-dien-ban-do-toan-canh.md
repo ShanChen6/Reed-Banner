@@ -75,7 +75,7 @@ Các tên/nhóm/trạng thái hiện hành phải đọc lại ở `factions.ts`
 
 ## E. Phân lớp artwork và UI code
 
-**Không dùng nguyên tấm screenshot AI có chữ/cờ/nhiệm vụ làm giao diện production.** Nó gây chữ giả, sai lịch sử, zoom bị nhoè và không thể phản ánh trạng thái động.
+**Không dùng nguyên tấm screenshot AI có chữ/cờ/nhiệm vụ làm giao diện production.** Nó gây chữ giả, sai lịch sử, zoom bị nhòe và không thể phản ánh trạng thái động.
 
 - `world-map-art.webp`: tranh địa hình, cây, sông, làng, thành, không chứa chữ địa danh, cờ nhân vật, marker/nhiệm vụ hay status. Đây là **một map toàn cảnh** được ưu tiên trước ảnh riêng sáu chương.
 - `atlas-frame.webp` (tùy chọn): khung đồng cổ, viền; panel trái/phải dựng CSS/HTML có thể co giãn.

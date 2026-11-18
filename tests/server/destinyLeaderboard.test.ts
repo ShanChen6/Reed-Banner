@@ -57,7 +57,7 @@ describe("Destiny leaderboard theo cycle", () => {
     assert.deepEqual((await store.page(NEXT, 0, 10)).map(({ clearedFloor }) => clearedFloor), [8]);
     const cycle = destinyCycleById(CYCLE)!;
     const view = await destinyLeaderboardView(store, cycle, null, 0, 1);
-    assert.equal(view.entries[0]?.name, "Khách 1234");
+    assert.equal(view.entries[0]?.name, "Lữ khách 1234");
     assert.equal("ownerId" in (view.entries[0] ?? {}), false);
     assert.equal(view.nextCursor, null);
 

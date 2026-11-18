@@ -33,7 +33,7 @@ async function call(url: string, body?: unknown): Promise<{ status: number; data
 }
 
 const ERROR_TEXT: Record<string, string> = {
-  network: "Mất kết nối tới máy chủ, hãy kiểm tra mạng.",
+  network: "Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin kiểm tra mạng rồi thử lại.",
   notYourTurn: "Chưa đến lượt bạn.",
   draftOver: "Cấm chọn đã xong.",
   badBan: "Không cấm được mục này (đã bị cấm hoặc không hợp lệ).",
@@ -45,7 +45,7 @@ const ERROR_TEXT: Record<string, string> = {
   notCaptain: "Chỉ đội trưởng mới xếp được vị trí.",
   badSlot: "Vị trí không hợp lệ.",
   notPrep: "Chưa tới bước chuẩn bị.",
-  conflict: "Máy chủ đang bận, hãy thử lại.",
+  conflict: "Máy chủ đang bận. Xin thử lại sau giây lát.",
   notFound: "Không tìm thấy phiên cấm chọn này.",
 };
 
@@ -70,7 +70,7 @@ export default function PvpDraftScreen({ id, onMatch, onExit }: { id: string; on
       setMessage("");
       return true;
     }
-    setMessage(ERROR_TEXT[String(r.data.error)] ?? "Có lỗi xảy ra, hãy thử lại.");
+    setMessage(ERROR_TEXT[String(r.data.error)] ?? "Có trục trặc chưa rõ. Xin thử lại.");
     return false;
   }, []);
 

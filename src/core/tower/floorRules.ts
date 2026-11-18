@@ -147,12 +147,12 @@ export function validateFloorRules(rules: unknown): readonly RuleIssue[] {
     }
     const total = Object.values(min).reduce((a, b) => a + b, 0);
     if (total > LINEUP_SIZE)
-      add("min_total_exceeds_size", `min${group}`, `Tổng yêu cầu ${total} > ${LINEUP_SIZE} active`);
+      add("min_total_exceeds_size", `min${group}`, `Tổng yêu cầu ${total} > ${LINEUP_SIZE} tướng ra trận`);
   }
 
   // Có sai schema thì bỏ qua kiểm tra khả thi (kết quả không đáng tin).
   if (issues.length === 0 && !hasFeasibleLineup(rules as FloorRules))
-    add("unsatisfiable", "", "Không tồn tại đội 3 active nào hợp luật");
+    add("unsatisfiable", "", "Không có đội 3 tướng ra trận nào hợp luật");
   return issues;
 }
 
@@ -236,15 +236,15 @@ export function validateLineup(
 ): LineupResult {
   const errors: LineupError[] = [];
   if (team.length !== LINEUP_SIZE)
-    errors.push({ code: "size", members: [], message: `Cần đúng ${LINEUP_SIZE} active, có ${team.length}` });
+    errors.push({ code: "size", members: [], message: `Cần đúng ${LINEUP_SIZE} tướng ra trận, có ${team.length}` });
   if (team[0]?.id !== leaderId)
-    errors.push({ code: "leader_missing", subject: leaderId, members: [], message: "Thủ lĩnh phải ở slot đầu" });
+    errors.push({ code: "leader_missing", subject: leaderId, members: [], message: "Thủ lĩnh phải ở vị trí đầu" });
   const ids = new Set<string>();
   for (const m of team) {
     if (!isElement(m.element) || !isProfession(m.profession) || !m.id)
-      errors.push({ code: "invalid_member", subject: m.id, members: [m.id], message: "Active không hợp lệ" });
+      errors.push({ code: "invalid_member", subject: m.id, members: [m.id], message: "Tướng ra trận không hợp lệ" });
     else if (ids.has(m.id))
-      errors.push({ code: "duplicate_member", subject: m.id, members: [m.id], message: "Active bị trùng" });
+      errors.push({ code: "duplicate_member", subject: m.id, members: [m.id], message: "Tướng ra trận bị trùng" });
     ids.add(m.id);
   }
   if (errors.length === 0) errors.push(...checkBuilds(rules, team));

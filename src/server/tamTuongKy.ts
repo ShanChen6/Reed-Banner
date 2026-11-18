@@ -212,7 +212,7 @@ async function rankedView(deps: TamTuongKyDeps, account: TtkAccount, gold: numbe
   if (deps.seasons) {
     const [top, mine] = await Promise.all([deps.seasons.top("tamTuongKy", week, 10), deps.seasons.rankOf("tamTuongKy", week, ownerId)]);
     board = {
-      top: top.map((e, i) => ({ rank: i + 1, name: e.name ?? `Khách ${e.ownerId.slice(-4)}`, points: pointsOfSeasonScore(e.score), mine: e.ownerId === ownerId })),
+      top: top.map((e, i) => ({ rank: i + 1, name: e.name ?? `Lữ khách ${e.ownerId.slice(-4)}`, points: pointsOfSeasonScore(e.score), mine: e.ownerId === ownerId })),
       mine: mine ? { rank: mine.rank, points: pointsOfSeasonScore(mine.score) } : null,
     };
   }
@@ -332,7 +332,7 @@ export async function tamTuongKyBoard(deps: TamTuongKyDeps, ownerId: string | nu
   return {
     ok: true,
     week: key,
-    top: top.map((e, i) => ({ rank: i + 1, name: e.name ?? `Khách ${e.ownerId.slice(-4)}`, mine: e.ownerId === ownerId, points: pointsOfSeasonScore(e.score), unitsSpent: unitsOfSeasonScore(e.score) })),
+    top: top.map((e, i) => ({ rank: i + 1, name: e.name ?? `Lữ khách ${e.ownerId.slice(-4)}`, mine: e.ownerId === ownerId, points: pointsOfSeasonScore(e.score), unitsSpent: unitsOfSeasonScore(e.score) })),
     mine: mine ? { rank: mine.rank, points: pointsOfSeasonScore(mine.score), unitsSpent: unitsOfSeasonScore(mine.score) } : null,
   };
 }

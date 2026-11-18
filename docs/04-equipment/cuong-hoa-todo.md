@@ -1,31 +1,27 @@
-# Reed Banner — Equipment Enhancement (Future TODO)
+# Reed Banner — Cường hóa trang bị, Đá Cường Hóa và sách kinh nghiệm
 
-> Cập nhật: 24/10/2026
-> Trạng thái: **DEFERRED** — chưa làm; Đá Cường Hóa hiện chưa có chỗ tiêu.
+> Cập nhật: 19/11/2026 (Shan yêu cầu thêm đá nâng cấp, cường hóa trang bị và sách kinh nghiệm)
+> Trạng thái: **IMPLEMENTED** — đã có code; số liệu là điểm xuất phát, chờ Shan duyệt balance.
 
-## Mục tiêu
+## Cường hóa trang bị
 
-Đá Cường Hóa kiếm từ Song Tháp hiện được lưu ở Profile và có thể nhận theo reward events. Giai đoạn tiếp theo sẽ bổ sung cường hóa trang bị, tách biệt với cơ chế ghép ba món nâng phẩm đang có.
+- Mỗi món trong kho có cấp cường hóa **+0..+5** (`GearItem.enhance`, không có là +0), thành công 100%.
+- Mỗi cấp **+4% chỉ số riêng của món** (`ENHANCE_BONUS`), nhân vào `itemStat` sau phẩm và hệ; không thêm chỉ số phụ, không đổi 9 ô, phẩm Trắng–Cam, thưởng bộ hay cộng hưởng. Quần Hùng vẫn chặn trang bị bằng `ARENA_GEAR_CAP`.
+- Giá lên cấp +n+1: **n+1 Đá Cường Hóa** và **50 × (n+1) × phẩm** vàng (`enhanceCost`). Lên +5 tổng cộng 15 đá.
+- **Ghép ba món** giữ cấp cường hóa của món chính (luật ghép chép món chính rồi nâng phẩm); đá đã tiêu cho hai món kia không hoàn lại. Bán món không trả lại đá.
+- Thao tác hồ sơ `{ type: "enhance", item }` (`enhanceItem` trong `src/core/progress/inventory.ts`), server kiểm tra lại qua `/api/profile`. Giao diện: khung **Cường hóa** trong chi tiết món ở Kho đồ (Doanh Trại), nhãn `+n` ở góc ô món, tên món ghi `+n`.
 
-## Design candidates — chưa duyệt balance
+## Đá Cường Hóa
 
-- Cấp cường hóa +0..+5, thành công 100% (đề xuất).
-- Thử nghiệm 4% tăng trên chỉ số **riêng món**, không phải toàn bộ stats của tướng, mỗi cấp.
-- Ưu tiên áp dụng từ Tinh phẩm (Lam), chưa chốt.
-- Chi phí đá và vàng cần mô phỏng dựa trên stone emission thực tế.
-- Không thêm chỉ số phụ, không sửa 9 ô trang bị hoặc phẩm Trắng–Cam.
+Tiền tệ tài khoản (`profile.stones`). Nhận khi leo Tháp Thí Luyện, Tháp Thiên Mệnh như trước; từ 19/11/2026 mua thêm ở **Cửa Hàng › Vật phẩm** giá **200 vàng/viên** và tiêu khi cường hóa. Giữ tối đa 999.
 
-## Backlog
+## Sách kinh nghiệm
 
-- **GEAR-01:** Audit item/inventory, 9 slot, 5 phẩm, stat set/element.
-- **GEAR-02:** Thiết kế `enhancementLevel` gắn item ID, serialization/migration.
-- **GEAR-03:** Công thức stats và thứ tự nhân với phẩm, nguyên tố, thưởng bộ/cộng hưởng.
-- **GEAR-04:** Giá đá/vàng và kinh tế 7/30/90 ngày.
-- **GEAR-05:** Merge compatibility: xử lý ba món đã cường hóa, chọn món chính, hoàn đá nguyên liệu, anti-exploit.
-- **GEAR-06:** Server API tiêu đá/vàng và nâng cấp atomic/idempotent.
-- **GEAR-07:** UI cường hóa với preview và xác nhận chi phí.
-- **GEAR-08:** Simulation và regression Campaign/Survival/Tower/Arena.
+- Mua ở **Cửa Hàng › Vật phẩm** giá **120 vàng/cuốn** (`SHOP_ITEM_PRICE.xpBook`), giữ tối đa 999 (`profile.xpBooks`).
+- Mỗi cuốn **+250 kinh nghiệm** (`XP_BOOK_XP`) cho một tướng đã có; lên cấp vẫn nhận điểm kỹ năng như thường. Dùng ở thẻ **Tổng quan** của tướng trong Doanh Trại (một cuốn, đủ để lên cấp kế, hoặc mười cuốn); không tiêu quá số cuốn cần để tới cấp 30.
+- Thao tác hồ sơ `{ type: "buyItem", item: "stone" | "xpBook", amount }` và `{ type: "useXpBook", character, amount }` (`src/core/progress/profile.ts`).
 
-## Gate triển khai
+## Còn mở
 
-Chỉ bắt đầu sau khi Song Tháp PASS, đá cộng an toàn, emission được đo, công thức/merge policy được duyệt. Không tự triển khai GEAR-01..08 trong task Song Tháp.
+- Mô phỏng kinh tế đá và vàng 7/30/90 ngày; có cần giới hạn mua đá theo tuần không.
+- Hoàn một phần đá khi ghép món đã cường hóa.

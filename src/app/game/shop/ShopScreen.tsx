@@ -42,7 +42,7 @@ export default function ShopScreen() {
       note: `${GEAR_SETS.length} bộ · chín ô trang bị`,
       icon: <GearIcon slot="vuKhi" element={profile.element} tier={2} set={GEAR_SETS[0]!.id} profession={profile.profession} className="size-8" />,
     },
-    { value: "items", label: "Vật phẩm", note: "Lương thực cho Bình Loạn", icon: <FoodIcon className="size-7" /> },
+    { value: "items", label: "Vật phẩm", note: "Lương, Đá Cường Hóa, sách", icon: <FoodIcon className="size-7" /> },
   ];
 
   // Mũi tên đổi quầy như một nhóm thẻ (lên/xuống trên máy tính, trái/phải trên điện thoại).
@@ -68,6 +68,7 @@ export default function ShopScreen() {
           { label: "Vàng", value: profile.gold.toLocaleString("vi-VN") },
           { label: "Kho đồ", value: `${profile.bag.length}/${BAG_LIMIT}` },
           { label: "Lương", value: `${profile.campaign.supply}/${CAMPAIGN_FOOD_MAX}` },
+          { label: "Đá Cường Hóa", value: profile.stones },
         ]}
       />
       {message && <Alert className="p-3 text-sm">{message}</Alert>}

@@ -17,7 +17,7 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const panelId = useId();
-  const name = account?.name ?? "Khách";
+  const name = account?.name ?? "Lữ khách";
 
   // Đổi phân cảnh thì đóng menu (bấm một mục trong menu cũng đổi phân cảnh).
   if (openedAt !== scene) {

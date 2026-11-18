@@ -316,7 +316,7 @@ function focusMission(
 
 /**
  * Phần thưởng của một nhiệm vụ, chỉ gồm những gì server thật sự phát (applyCampaignFirstClear): vàng lần đầu theo
- * node, 250 vàng khi xong cả chương, tướng gia nhập khi chương xong, mở Đánh trùm. Trận còn cho EXP, vàng nhặt và
+ * node, 250 vàng khi xong cả chương, tướng gia nhập khi chương xong, mở Đánh trùm. Trận còn cho kinh nghiệm, vàng nhặt và
  * đồ rơi nhưng số không cố định nên chỉ ghi chú. Đã nhận hay chưa đọc từ phiếu thưởng (rewardReceipts).
  */
 export function MissionRewardCard({
@@ -416,7 +416,7 @@ export function MissionRewardCard({
           </ul>
           {isCombatStoryNode(node) && (
             <p className="mt-1.5 text-caption opacity-75">
-              Trận còn cho EXP, vàng nhặt được và đồ rơi; số lượng tùy trận.
+              Trận còn cho kinh nghiệm, vàng nhặt được và đồ rơi; số lượng tùy trận.
             </p>
           )}
           {status === "completed" && (

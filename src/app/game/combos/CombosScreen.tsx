@@ -1,11 +1,22 @@
 "use client";
 
-// Phối Hợp (Shan 19/11/2026): ghép ba tướng quân (Đinh Bộ Lĩnh và hai tướng kèm) để xem kỹ năng của người này mở được bị
-// động nào của người kia. Lưới chọn tướng xếp theo số liên kết tướng đó thêm vào đội, nên cũng là gợi ý đồng đội.
+// Phối Hợp (Shan 19/11/2026): ghép ba tướng quân bất kỳ (đội 3vs3 có thể không có Đinh Bộ Lĩnh) để xem kỹ năng của người
+// này mở được bị động nào của người kia. Đinh Bộ Lĩnh chọn hệ, nghề ngay trong ô của ông (chỉ để tính, không đổi hồ sơ). Lưới chọn tướng xếp theo số liên kết tướng đó thêm vào đội, nên cũng là gợi ý đồng đội.
 // Chỉ đọc danh mục kỹ năng, bị động trong @/core (links.ts); không đổi đội hình thật (đổi ở Doanh Trại).
 
 import { useMemo, useState } from "react";
-import { CHASE_PASSIVES, COMBO_PASSIVES, MAIN_ID, PLAYABLE_COMPANIONS, withComboPassive, type FighterConfig } from "@/core";
+import {
+  CHASE_PASSIVES,
+  COMBO_PASSIVES,
+  ELEMENTS,
+  LEADER_PROFESSIONS,
+  MAIN_ID,
+  PLAYABLE_COMPANIONS,
+  withComboPassive,
+  type Element,
+  type FighterConfig,
+  type Profession,
+} from "@/core";
 import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { ChoiceChip, buttonVariants } from "@/components/ui";
 import { cn } from "@/lib/cn";
@@ -27,22 +38,26 @@ const passiveText = (p: PassiveRef) => (p.kind === "combo" ? COMBO_PASSIVES[p.id
 
 export default function CombosScreen() {
   const { profile, loadError } = useProfile();
-  const [picks, setPicks] = useState<readonly (string | null)[]>([null, null]);
-  const [slot, setSlot] = useState<0 | 1>(0);
+  const [picks, setPicks] = useState<readonly (string | null)[]>([null, null, null]);
+  const [slot, setSlot] = useState<0 | 1 | 2>(0);
   const [ownedOnly, setOwnedOnly] = useState(true);
+  /** Hệ, nghề Đinh Bộ Lĩnh dùng để tính trên trang; mặc định theo hồ sơ. */
+  const [build, setBuild] = useState<{ element: Element; profession: Profession } | null>(null);
+  const leader = build ?? (profile ? { element: profile.element, profession: profile.profession } : null);
 
   const owned = useMemo(() => new Set(profile ? ownedIds(profile) : []), [profile]);
   /** Cấu hình trận của mọi tướng: tướng đã có lấy theo hồ sơ, tướng chưa có lấy cấu hình gốc trong danh sách. */
   const configs = useMemo(() => {
     const map = new Map<string, FighterConfig>();
     if (!profile) return map;
-    map.set(MAIN_ID, withComboPassive(fighterOf(profile, MAIN_ID, false)));
+    // Bỏ bị động cũ theo nghề hồ sơ để withComboPassive dựng lại theo hệ, nghề đang chọn trên trang.
+    map.set(MAIN_ID, withComboPassive({ ...fighterOf(profile, MAIN_ID, false), ...leader!, comboPassive: undefined, chasePassives: undefined }));
     for (const c of PLAYABLE_COMPANIONS) map.set(c.id, withComboPassive(owned.has(c.id) ? fighterOf(profile, c.id, false) : c));
     return map;
-  }, [profile, owned]);
+  }, [profile, owned, leader?.element, leader?.profession]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const team: ComboMember[] = useMemo(
-    () => [MAIN_ID, ...picks].flatMap((id) => (id && configs.has(id) ? [comboMember(id, configs.get(id)!)] : [])),
+    () => picks.flatMap((id) => (id && configs.has(id) ? [comboMember(id, configs.get(id)!)] : [])),
     [picks, configs],
   );
   const links = useMemo(() => comboLinks(team), [team]);
@@ -52,10 +67,11 @@ export default function CombosScreen() {
   const base = useMemo(() => team.filter((m) => m.id !== picks[slot]), [team, picks, slot]);
   const candidates = useMemo(() => {
     if (!profile) return [];
-    return PLAYABLE_COMPANIONS.filter((c) => !picks.includes(c.id) || picks[slot] === c.id)
-      .map((c) => {
-        const cfg = configs.get(c.id)!;
-        return { id: c.id, name: c.name, element: cfg.element, profession: cfg.profession, score: crossLinksWith(base, comboMember(c.id, cfg)), owned: owned.has(c.id) };
+    return [MAIN_ID, ...PLAYABLE_COMPANIONS.map((c) => c.id)]
+      .filter((id) => !picks.includes(id) || picks[slot] === id)
+      .map((id) => {
+        const cfg = configs.get(id)!;
+        return { id, name: cfg.name, element: cfg.element, profession: cfg.profession, score: crossLinksWith(base, comboMember(id, cfg)), owned: owned.has(id) };
       })
       .sort((a, b) => b.score - a.score || Number(b.owned) - Number(a.owned) || a.name.localeCompare(b.name, "vi"));
   }, [profile, picks, slot, base, configs, owned]);
@@ -73,7 +89,18 @@ export default function CombosScreen() {
       next[slot] = id;
       return next;
     });
-    if (slot === 0 && picks[1] === null) setSlot(1);
+    const empty = [0, 1, 2].find((i) => i !== slot && picks[i] === null);
+    if (empty !== undefined) setSlot(empty as 0 | 1 | 2);
+  };
+  // Chọn nhanh ba tướng ngẫu nhiên trong phạm vi đang lọc (đã có hoặc mọi tướng).
+  const randomTeam = () => {
+    const pool = [MAIN_ID, ...PLAYABLE_COMPANIONS.map((c) => c.id)].filter((id) => !ownedOnly || owned.has(id));
+    const chosen: string[] = [];
+    while (chosen.length < Math.min(3, pool.length)) {
+      const id = pool[Math.floor(Math.random() * pool.length)]!;
+      if (!chosen.includes(id)) chosen.push(id);
+    }
+    setPicks([chosen[0] ?? null, chosen[1] ?? null, chosen[2] ?? null]);
   };
 
   return (
@@ -89,38 +116,65 @@ export default function CombosScreen() {
         ]}
       />
 
-      <section aria-label="Đội phối hợp" className="grid gap-3 sm:grid-cols-3">
-        {[MAIN_ID, picks[0], picks[1]].map((id, i) => {
-          const m = id ? team.find((t) => t.id === id) : undefined;
-          const active = i > 0 && slot === i - 1;
-          const body = m ? (
-            <>
-              <Portrait id={m.id} element={m.fighter.element} profession={m.fighter.profession} className="size-14 shrink-0" />
-              <span className="min-w-0 text-left">
-                <span className="block truncate font-serif font-bold text-title-on-wood">{m.name}</span>
-                <span className="flex items-center gap-1 text-caption text-on-wood-soft">
-                  <ElementIcon element={m.fighter.element} className="size-4" /> {ELEMENT_NAME[m.fighter.element]} · <ProfessionIcon profession={m.fighter.profession} className="size-4" /> {PROFESSION_NAME[m.fighter.profession]}
-                </span>
-                <span className="block text-caption text-frame-gold">{i === 0 ? "Chủ tướng" : active ? "Đang chọn ô này" : "Bấm để đổi"}</span>
-              </span>
-            </>
-          ) : (
-            <span className="w-full text-center text-on-wood-soft">{active ? "Chọn tướng ở lưới bên dưới" : "Ô trống · bấm để chọn"}</span>
-          );
-          const cls = cn("ui-frame-inset flex min-h-20 items-center gap-3 rounded-xl p-3", active && "ring-2 ring-frame-gold");
-          return i === 0 ? (
-            <div key="main" className={cls}>{body}</div>
-          ) : (
-            <button key={i} type="button" aria-pressed={active} aria-label={`Ô đồng đội ${i}${m ? `: ${m.name}` : ""}`} onClick={() => setSlot((i - 1) as 0 | 1)} className={cls}>
-              {body}
-            </button>
-          );
-        })}
+      <section aria-label="Đội phối hợp" className="flex flex-col gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-sm text-on-wood-soft">Bấm một ô rồi chọn tướng ở lưới bên dưới. Đội 3vs3 không bắt buộc có Đinh Bộ Lĩnh.</p>
+          <div className="flex gap-2">
+            <button type="button" onClick={randomTeam} className={buttonVariants({ variant: "secondary", size: "sm" })}>Ngẫu nhiên</button>
+            <button type="button" onClick={() => { setPicks([null, null, null]); setSlot(0); }} className={buttonVariants({ variant: "ghost", size: "sm" })}>Xóa đội</button>
+          </div>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {picks.map((id, i) => {
+            const m = id ? team.find((t) => t.id === id) : undefined;
+            const active = slot === i;
+            return (
+              <div key={i} className={cn("ui-frame-inset flex flex-col gap-2 rounded-xl p-3", active && "ring-2 ring-frame-gold")}>
+                <button type="button" aria-pressed={active} aria-label={`Ô tướng ${i + 1}${m ? `: ${m.name}` : ""}`} onClick={() => setSlot(i as 0 | 1 | 2)} className="flex min-h-14 items-center gap-3 text-left">
+                  {m ? (
+                    <>
+                      <Portrait id={m.id} element={m.fighter.element} profession={m.fighter.profession} className="size-14 shrink-0" />
+                      <span className="min-w-0">
+                        <span className="block truncate font-serif font-bold text-title-on-wood">{m.name}</span>
+                        <span className="flex items-center gap-1 text-caption text-on-wood-soft">
+                          <ElementIcon element={m.fighter.element} className="size-4" /> {ELEMENT_NAME[m.fighter.element]} · <ProfessionIcon profession={m.fighter.profession} className="size-4" /> {PROFESSION_NAME[m.fighter.profession]}
+                        </span>
+                        <span className="block text-caption text-frame-gold">{active ? "Đang chọn ô này" : "Bấm để đổi"}</span>
+                      </span>
+                    </>
+                  ) : (
+                    <span className="w-full text-center text-on-wood-soft">{active ? `Tướng ${i + 1}: chọn ở lưới bên dưới` : `Tướng ${i + 1}: bấm để chọn`}</span>
+                  )}
+                </button>
+                {m?.id === MAIN_ID && leader && (
+                  <div className="flex flex-col gap-1.5 border-t border-frame-line-soft pt-2">
+                    <div role="group" aria-label="Hệ Đinh Bộ Lĩnh" className="flex flex-wrap gap-1">
+                      {ELEMENTS.map((e) => (
+                        <ChoiceChip key={e} size="sm" selected={leader.element === e} onClick={() => setBuild({ ...leader, element: e })} title={ELEMENT_NAME[e]} className="px-1.5">
+                          <ElementIcon element={e} className="size-4" />
+                          <span className="sr-only">{ELEMENT_NAME[e]}</span>
+                        </ChoiceChip>
+                      ))}
+                    </div>
+                    <div role="group" aria-label="Nghề Đinh Bộ Lĩnh" className="flex flex-wrap gap-1">
+                      {LEADER_PROFESSIONS.map((pr) => (
+                        <ChoiceChip key={pr} size="sm" selected={leader.profession === pr} onClick={() => setBuild({ ...leader, profession: pr })} title={PROFESSION_NAME[pr]} className="px-1.5">
+                          <ProfessionIcon profession={pr} className="size-4" />
+                          <span className="sr-only">{PROFESSION_NAME[pr]}</span>
+                        </ChoiceChip>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </section>
 
       <div className="grid items-start gap-4 lg:grid-cols-2">
         <OrnateFrame className="flex flex-col gap-3">
-          <SectionTitle description="Số ở góc thẻ là số liên kết chéo tướng đó thêm vào đội.">Chọn đồng đội {slot + 1}</SectionTitle>
+          <SectionTitle description="Số ở góc thẻ là số liên kết chéo tướng đó thêm vào đội.">Chọn tướng {slot + 1}</SectionTitle>
           <HeroGrid
             label="Chọn tướng phối hợp"
             items={candidates}

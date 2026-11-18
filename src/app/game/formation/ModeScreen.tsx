@@ -14,7 +14,6 @@ import CustomForm from "./CustomForm";
 import LevelCard from "./LevelCard";
 import { MAP_POOL } from "./maps";
 import type { LevelOverview, Overview } from "./rankedClient";
-import RewardLadder from "./RewardLadder";
 import { ModeGuidePanel } from "../ModeGuide";
 import { formatRemaining } from "./time";
 import { RankBoard } from "../leaderboard/RankBoard";
@@ -303,14 +302,14 @@ export default function ModeScreen({
                     <p className="py-4 text-center text-[15px] text-on-wood-soft">Chưa có ai thắng trong kỳ này.</p>
                   ) : (
                     <RankBoard
-                      entries={l.top.slice(0, 20).map((r) => ({ rank: r.rank, name: r.name, mine: r.mine, score: `${r.score} đ`, detail: `${r.turns} nước` }))}
-                      mine={l.mine?.status === "won" && l.mine.rank ? { rank: l.mine.rank, score: `${l.mine.score} đ` } : { rank: null, score: null }}
+                      entries={l.top.slice(0, 20).map((r) => ({ rank: r.rank, name: r.name, mine: r.mine, score: `${r.score} đ`, detail: `${r.turns} nước`, reward: rewardGold(l.level, r.rank, l.winners)?.gold ?? null }))}
+                      mine={
+                        l.mine?.status === "won" && l.mine.rank
+                          ? { rank: l.mine.rank, score: `${l.mine.score} đ`, reward: rewardGold(l.level, l.mine.rank, l.winners)?.gold ?? null }
+                          : { rank: null, score: null }
+                      }
                     />
                   )}
-                  <div>
-                    <h3 className="mb-1.5 text-sm font-bold text-frame-gold">Thưởng cuối kỳ theo hạng</h3>
-                    <RewardLadder level={l.level} rank={l.mine?.status === "won" ? (l.mine.rank ?? null) : null} winners={l.winners} />
-                  </div>
                 </div>
               ))}
             </>

@@ -422,7 +422,7 @@ function SetupView(props: {
                 <span aria-hidden className="block aspect-[5/2] w-full bg-no-repeat opacity-90" style={mapArtStyle(m)} />
                 <span className="block p-3">
                 <span className="flex items-center gap-2">
-                  <ElementIcon element={m.element} className="size-5" />
+                  <MapGlyph className="size-5 shrink-0 text-[var(--frame-gold)]" />
                   <strong className="font-serif text-lg">{m.name}</strong>
                   {best > 0 && <span className="ml-auto text-caption font-semibold">Đã thắng bậc {best}</span>}
                 </span>
@@ -1114,5 +1114,16 @@ function ResultView({ run, map, result, onNew }: { run: Omit<ExpeditionRun, "see
       )}
       <Button variant="primary" className="mt-4" onClick={onNew}>Viễn chinh mới</Button>
     </section>
+  );
+}
+
+/** Icon chung trước tên mọi sa bàn (Shan 19/11/2026): tấm bản đồ gấp ba, thay cho icon hệ của từng chiến địa. */
+function MapGlyph({ className }: { className?: string }) {
+  return (
+    <svg aria-hidden viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinejoin="round" strokeLinecap="round">
+      <path d="M3 6.5 8.5 4l7 2.5L21 4v13.5L15.5 20l-7-2.5L3 20z" fill="currentColor" fillOpacity={0.15} />
+      <path d="M8.5 4v13.5M15.5 6.5V20" />
+      <path d="M11 10.5l1.6 1.6M12.6 10.5 11 12.1" />
+    </svg>
   );
 }

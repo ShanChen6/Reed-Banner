@@ -100,7 +100,7 @@ export async function dailyBoard(store: DailyStore, day: string, ownerId: string
     top: top.map((e, i) => ({
       rank: i + 1,
       // Khách chưa đăng nhập không có tên: hiện 4 ký tự cuối của id để phân biệt.
-      name: e.name ?? `Khách ${e.ownerId.slice(-4)}`,
+      name: e.name ?? `Lữ khách ${e.ownerId.slice(-4)}`,
       mine: e.ownerId === ownerId,
       score: e.result!,
     })),

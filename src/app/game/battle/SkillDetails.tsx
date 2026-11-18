@@ -51,10 +51,10 @@ function Tag({ children, strong = false }: { children: React.ReactNode; strong?:
 }
 
 /** Thẻ một kỹ năng chủ động: tác dụng và các tín hiệu phối hợp chiêu phát ra (bị động nào bắt được xem ở trang Phối Hợp). */
-export function ActiveSkillCard({ def }: { def: SkillDef }) {
+export function ActiveSkillCard({ def, extra, dim = false }: { def: SkillDef; extra?: React.ReactNode; dim?: boolean }) {
   const emits = skillComboOpeners(def);
   return (
-    <li className="flex gap-3 rounded-lg border border-current/15 bg-black/10 p-2.5">
+    <li className={`flex gap-3 rounded-lg border border-current/15 bg-black/10 p-2.5 ${dim ? "opacity-60" : ""}`}>
       <SkillIcon def={def} className="size-11 shrink-0" />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <p className="flex flex-wrap items-center gap-1.5">
@@ -75,6 +75,7 @@ export function ActiveSkillCard({ def }: { def: SkillDef }) {
             ))}
           </p>
         )}
+        {extra}
       </div>
     </li>
   );
@@ -132,28 +133,32 @@ export default function SkillDetails({
   fighter,
   paper = false,
   open = false,
+  flat = false,
+  extra,
 }: {
   paper?: boolean;
   skills: readonly SkillDef[];
   passive?: ComboPassiveId;
   fighter?: Pick<FighterConfig, "profession" | "element" | "chasePassives" | "special" | "comboPassive">;
-  /** Mở sẵn (màn chi tiết tướng); sảnh trận để thu gọn. */
+  /** Mở sẵn; sảnh trận để thu gọn. */
   open?: boolean;
+  /** Hiện thẳng, không khung thu gọn (thẻ Kỹ năng ở Doanh Trại). */
+  flat?: boolean;
+  /** Nội dung thêm dưới mỗi thẻ chủ động (cấp kỹ năng và nút nâng ở Doanh Trại); `dim` làm mờ thẻ chưa mở. */
+  extra?: (def: SkillDef) => { readonly node: React.ReactNode; readonly dim?: boolean } | null;
 }) {
   const fusion = fighter ? isFusion(fighter) : false;
   const passives = fighter ? fighterPassives(fighter, passive) : passive ? [{ passive: { kind: "combo", id: passive } as const, label: "Nghề 1 · Cơ hội" }] : [];
   // Luật chi tiết là nội dung đọc dài: ở sảnh dùng giấy dó chữ mực, nơi khác giữ nền hiện có (docs/05-ui-ux/design-system/theme.md).
   const box = paper ? "ui-frame--paper col-span-full w-full rounded-lg border border-frame-bronze p-3 text-sm" : "col-span-full w-full rounded-lg border border-current/15 p-3 text-sm";
-  return (
-    <details className={box} open={open}>
-      <summary className="cursor-pointer font-semibold pointer-coarse:py-3.5">
-        Bộ {skills.length} chủ động · {passives.length} {fusion ? "nội tại dung hợp" : "bị động"}
-      </summary>
+  const body = (
+    <>
       <h4 className="mt-3 mb-1.5 text-caption font-semibold tracking-[0.12em] uppercase opacity-80">Chủ động</h4>
       <ul className="grid gap-2 xl:grid-cols-2">
-        {skills.map((s) => (
-          <ActiveSkillCard key={s.id} def={s} />
-        ))}
+        {skills.map((s) => {
+          const x = extra?.(s);
+          return <ActiveSkillCard key={s.id} def={s} extra={x?.node} dim={x?.dim} />;
+        })}
       </ul>
       <h4 className="mt-4 mb-1.5 text-caption font-semibold tracking-[0.12em] uppercase opacity-80">{fusion ? "Nội tại dung hợp" : "Bị động"}</h4>
       <ul className="grid gap-2 xl:grid-cols-2">
@@ -171,6 +176,15 @@ export default function SkillDetails({
           <p>Cơ hội nghề 1 không tự tung chiêu, không cộng dồn; hết hạn sau hai lượt thường kế tiếp, lượt thêm không rút thời hạn. Xua tan xóa cơ hội.</p>
         )}
       </div>
+    </>
+  );
+  if (flat) return <div className={box.replace("col-span-full ", "")}>{body}</div>;
+  return (
+    <details className={box} open={open}>
+      <summary className="cursor-pointer font-semibold pointer-coarse:py-3.5">
+        Bộ {skills.length} chủ động · {passives.length} {fusion ? "nội tại dung hợp" : "bị động"}
+      </summary>
+      {body}
     </details>
   );
 }

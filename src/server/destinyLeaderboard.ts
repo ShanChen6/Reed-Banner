@@ -109,7 +109,7 @@ export async function destinyLeaderboardView(
     cycle,
     entries: page.map((entry, index) => ({
       rank: offset + index + 1,
-      name: entry.name ?? `Khách ${entry.ownerId.slice(-4)}`,
+      name: entry.name ?? `Lữ khách ${entry.ownerId.slice(-4)}`,
       mine: entry.ownerId === ownerId,
       clearedFloor: entry.clearedFloor,
       totalTurns: entry.totalTurns,
