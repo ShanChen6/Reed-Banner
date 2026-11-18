@@ -279,6 +279,8 @@ Mỗi chế độ **có xếp hạng** có một dải sáu bậc Đồng, Bạc
 
 Ba chế độ cuối dùng khung chung: `MODE_TIERS`, `claimModeTier` (`src/core/arena/arena.ts`), lưu `profile.modeTiers[mode]`, API POST `/api/tiers` `{ mode, tier }` (chỉ tài khoản đăng nhập), giao diện `ModeTierPanel.tsx` ở thẻ Bảng xếp hạng (Nhật Lệnh), BXH tuần (Thiên Mệnh), Bậc thưởng (Tầm Tướng Ký). Mốc là đề xuất của Claude, chờ Shan duyệt. Một người đạt hết mọi dải nhận tối đa 7 × 3 000 vàng và 7 món Cam.
 
+**Trang Thưởng Bậc** (`/game/tier-rewards`, phân cảnh `TIERS`, Shan 18/11/2026): gom cả bảy dải vào một trang, mở từ thẻ Quân vụ ở màn chính và nút ở màn Nhiệm vụ; chỉ tài khoản đăng nhập. Mỗi dải hiện thước đo hiện tại, số bậc chờ nhận và nút vào chế độ; dải của chế độ đang tắt theo cờ (Đấu người, Trận Đồ xếp hạng, Tháp Thiên Mệnh, Tầm Tướng Ký) không hiện. GET `/api/tiers` trả `{ ladders }`; POST `/api/tiers` `{ mode, tier }` nhận mọi dải (`arena`, `pvp`, `survival`, `formation`, `daily`, `destiny`, `tamTuongKy`) bằng đúng hàm nhận của chế độ đó, nên nhận ở trang này hay trong chế độ đều là một lần. Code: `src/server/tierHub.ts`, `src/app/game/tiers/TiersScreen.tsx`.
+
 ## 6. Thưởng vàng theo hạng cuối kỳ (Claude đặt 01/11/2026, chờ Shan duyệt)
 
 Shan (01/11/2026): trước mắt thưởng xếp hạng của **mọi chế độ chỉ là vàng**; các loại thưởng khác (danh hiệu, trang bị, mở tướng) bàn sau khi các chế độ ổn định. Mỗi người nhận đúng một bậc theo hạng cuối kỳ; **bảng ít người vẫn có thưởng** (một mình một bảng là hạng nhất). Nhận sau khi kỳ khép lại, đúng một lần mỗi kỳ, và **chỉ tài khoản đã đăng nhập** nhận được (khách xem bảng, không nhận).

@@ -13,7 +13,7 @@ import { buildLabel, footerLinks, socialLinks, type FooterLink } from "./footerL
 import type { Scene } from "./scene";
 
 /** Các phân cảnh có footer. */
-export const FOOTER_SCENES: ReadonlySet<Scene> = new Set<Scene>(["MENU", "QUESTS", "LEADERBOARD", "SHOP", "ACCOUNT"]);
+export const FOOTER_SCENES: ReadonlySet<Scene> = new Set<Scene>(["MENU", "QUESTS", "TIERS", "LEADERBOARD", "SHOP", "ACCOUNT"]);
 
 const LINK =
   "inline-flex min-h-11 items-center rounded px-1 hover:text-title-on-wood focus-visible:outline-2 focus-visible:outline-frame-gold-hi";
