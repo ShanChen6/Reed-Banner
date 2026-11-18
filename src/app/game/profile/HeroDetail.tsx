@@ -22,7 +22,9 @@ import {
   profileTeam,
   progressOf,
   scaleSkill,
+  SKILL_LEVEL_BONUS,
   SKILL_MAX_LEVEL,
+  SKILL_MAX_LEVEL_DISCOUNT,
   totalXpFor,
   upgradeCost,
   xpToNext,
@@ -40,7 +42,7 @@ import { EmptySlotIcon, GearIcon, SetEmblem } from "../art/gear";
 import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
 import { ProfileArt } from "../art/ProfileArt";
 import { stageBackdropUrl } from "../art/portrait-data";
-import { ELEMENT_NAME, gearText, PROFESSION_NAME, skillText, SLOT_NAME, TIER_CLASS } from "../battle/labels";
+import { ELEMENT_NAME, gearText, PROFESSION_NAME, skillLevelTable, skillStepTexts, SLOT_NAME, TIER_CLASS } from "../battle/labels";
 import { SkillIcon } from "../art/skills";
 import SkillDetails from "../battle/SkillDetails";
 import { BackGlyph, InfoGlyph, PlusGlyph, TeamGlyph } from "./glyphs";
@@ -388,7 +390,10 @@ function Skills({
   return (
     <div className="flex flex-col gap-3 text-sm">
       <p className="flex flex-wrap items-center justify-between gap-2">
-        <span className="text-[var(--on-wood-soft)]">Kỹ năng nâng theo ô; lên cấp nhận 1 điểm.</span>
+        <span className="text-[var(--on-wood-soft)]">
+          Mỗi cấp kỹ năng tăng {Math.round(SKILL_LEVEL_BONUS * 100)}% sát thương, hồi máu và hiệu ứng của chiêu; cấp {SKILL_MAX_LEVEL} giảm thêm{" "}
+          {Math.round(SKILL_MAX_LEVEL_DISCOUNT * 100)}% năng lượng. Nâng theo ô (đổi nghề, hệ vẫn giữ); lên cấp tướng nhận 1 điểm.
+        </span>
         <span className="barracks-pill">Điểm kỹ năng: {p.skillPoints}</span>
       </p>
       <ul className="flex flex-col gap-2" aria-label={`Kỹ năng của ${nameOf(id)}`}>
@@ -409,6 +414,7 @@ function Skills({
         })}
       </ul>
       <SkillDetails
+        open
         fighter={fighter}
         passive={fighter.comboPassive ?? PROFESSION_COMBO[fighter.profession]}
         skills={defs.map((d) => scaleSkill(d, p.skillLevels[mainSlotKey(d.slot!)] ?? 1))}
@@ -435,6 +441,13 @@ function SkillLine({
 }) {
   const cost = upgradeCost(level);
   const scaled = scaleSkill(def, level);
+  // Cấp kế tăng gì: so từng hàng của bảng cấp (năng lượng, sát thương, hồi máu, hệ số hiệu ứng) giữa cấp này và cấp sau.
+  const gains =
+    level < SKILL_MAX_LEVEL
+      ? skillLevelTable(def)
+          .filter((r) => r.values[level - 1] !== r.values[level])
+          .map((r) => `${r.label.replace(/ \(.*\)$/, "")} ${r.values[level - 1]} → ${r.values[level]}`)
+      : [];
   return (
     <li className={`barracks-inset flex items-center gap-3 rounded-md px-2.5 py-2 ${unlock ? "opacity-55" : ""}`}>
       <SkillIcon def={def} className="size-10 shrink-0" />
@@ -442,9 +455,12 @@ function SkillLine({
         <p className="text-[15px] leading-snug font-semibold text-title-on-wood">
           {def.name} <span className="text-sm font-normal text-[var(--on-wood-soft)]">· ô {def.slot} · {scaled.cost} NL</span>
         </p>
-        <p className="line-clamp-2 text-sm text-[var(--on-wood-soft)]" title={skillText(scaled)}>
-          {skillText(scaled)}
-        </p>
+        <p className="text-sm text-[var(--on-wood-soft)]">{skillStepTexts(scaled).join(" · ")}</p>
+        {!unlock && (
+          <p className="text-sm text-frame-gold">
+            {level >= SKILL_MAX_LEVEL ? `Đã tối đa: mọi hệ số +${Math.round(SKILL_LEVEL_BONUS * (SKILL_MAX_LEVEL - 1) * 100)}%, năng lượng −${Math.round(SKILL_MAX_LEVEL_DISCOUNT * 100)}%.` : gains.length > 0 ? `Lên cấp ${level + 1}: ${gains.join(" · ")}` : `Lên cấp ${level + 1}: chiêu không có hệ số tăng theo cấp.`}
+          </p>
+        )}
       </div>
       {unlock ? (
         <span className="shrink-0 text-sm text-[var(--on-wood-soft)]">Mở ở cấp {unlock}</span>

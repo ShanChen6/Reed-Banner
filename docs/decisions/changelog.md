@@ -4,6 +4,12 @@
 
 ## 19/11/2026
 
+**Bộ kỹ năng, điểm kỹ năng, Minh Nguyệt, trang Phối Hợp (Shan yêu cầu)**
+- Khung **Bộ 6 chủ động · 4 bị động** làm lại (`SkillDetails.tsx`): chủ động và bị động cùng một khuôn thẻ (biểu tượng, tên, nhãn ngắn, tác dụng). Thẻ chủ động ghi tín hiệu phối hợp chiêu phát (phá giáp, khống chế, xua tan, hồi máu, gây mất máu, khiên đỡ đòn) thay cho chuỗi "Có thể mở" liệt kê cả danh mục; thẻ bị động ghi vị trí (Nghề 1 · Cơ hội, Nghề 2 · Truy kích, Hệ 1, Hệ 2), tín hiệu kích hoạt và nhận từ ai (đồng đội, bản thân, phe mình). Màn chi tiết tướng mở sẵn khung này.
+- **Nâng điểm kỹ năng** ở Doanh Trại ghi rõ tác dụng: mỗi chiêu hiện cấp kế tăng gì ("Lên cấp 3: Sát thương 231% → 252%…"), đầu thẻ Kỹ năng ghi luật (mỗi cấp +10% sát thương, hồi máu, hiệu ứng; cấp 5 giảm 10% năng lượng). Luật trong core không đổi.
+- **Minh Nguyệt đổi tên thành Minh Nguyệt** trên toàn game và tài liệu (id `minhNguyet`, đường dẫn ảnh và tên tệp tài liệu giữ nguyên để không hỏng dữ liệu đã lưu).
+- Trang **Phối Hợp** (`/game/combos`, phân cảnh `COMBOS`): ghép Đinh Bộ Lĩnh với hai đồng đội (tướng đã có hoặc mọi tướng), bảng số liên kết theo người phát → người nhận, liên kết gom theo cặp (chiêu nào mở bị động nào, tín hiệu gì), tự phối tách riêng. Lưới chọn tướng xếp theo số liên kết chéo tướng đó thêm vào đội (gợi ý đồng đội). Mở từ thẻ Quân vụ ở màn chính và nút cạnh Cửa Hàng ở Doanh Trại. Logic ở `src/app/game/combos/links.ts` (ước lượng tĩnh từ danh mục, không mô phỏng trận).
+
 **Toàn màn hình, ảnh đại diện, Sử Lộ, sảnh Thao Luyện (Shan yêu cầu)**
 - Nút toàn màn hình nổi ở góc dưới phải có ở **mọi màn**, kể cả Chiến Trường, Cửa Hàng, Doanh Trại, Công Trạng và tài khoản (`FULLSCREEN_SCENES` gồm mọi phân cảnh).
 - **Đổi ảnh đại diện** ở trang Tài khoản: hộp thoại chân dung các tướng quân đã về trại, hoặc dùng chữ cái đầu. POST `/api/auth/avatar` `{ hero }`, server kiểm tra đã có tướng (`src/server/avatar.ts`). Ảnh chọn trong game (`/art/...`) không bị ảnh Google/GitHub ghi đè khi trình danh lại.

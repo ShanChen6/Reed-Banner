@@ -186,6 +186,18 @@ test.describe("tài khoản đã đăng nhập", () => {
     expectClean(problems);
   });
 
+  test("Phối Hợp: ghép đồng đội, xem liên kết chiêu mở bị động theo từng cặp", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game/combos");
+    const grid = page.getByRole("group", { name: "Chọn tướng phối hợp" });
+    await grid.getByRole("button").filter({ hasText: "Hà Vân" }).first().click();
+    await expect(page.getByRole("button", { name: "Ô đồng đội 1: Hà Vân" })).toBeVisible();
+    await expect(page.getByRole("table", { name: /Số liên kết theo người phát tín hiệu/ })).toBeVisible();
+    await page.getByText(/Đinh Bộ Lĩnh→Hà Vân|Đinh Bộ Lĩnh → Hà Vân/).first().click().catch(() => {});
+    await expect(page.locator("summary").filter({ hasText: "liên kết" }).first()).toBeVisible();
+    expectClean(problems);
+  });
+
   test("Quần Hùng: bảng xếp hạng ở hàng thẻ, đối thủ có nhãn so lực chiến, 1vs1 chọn nghề hệ bằng chip", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/arena");
