@@ -92,10 +92,11 @@ const UTILITIES: readonly { scene: Scene; title: string; icon: UtilityIcon }[] =
   { scene: "QUESTS", title: "Nhiệm vụ", icon: "scroll" },
   { scene: "LEADERBOARD", title: "Công Trạng", icon: "rank" },
   { scene: "TIERS", title: "Ban Thưởng", icon: "tier" },
+  { scene: "COMBOS", title: "Phối Hợp", icon: "link" },
   { scene: "PRACTICE", title: "Thao Luyện", icon: "swords" },
 ];
 
-type UtilityIcon = "scroll" | "rank" | "swords" | "shop" | "tier";
+type UtilityIcon = "scroll" | "rank" | "swords" | "shop" | "tier" | "link";
 
 const TABS: readonly { value: ModeTab; label: string; text: string }[] = [
   { value: "battle", label: "Chiến đấu", text: "Ghép ô ra đòn, dẫn đội tướng dẹp loạn, leo tháp, giữ ải, so tài cùng quần hùng." },
@@ -219,7 +220,7 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
 
         <section aria-labelledby="home-more">
           <SectionHeading id="home-more" kicker="Tiện ích" title="Quân vụ" />
-          <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {UTILITIES.map((u) => (
               <li key={u.scene}>
                 <SceneLink scene={u.scene} className="home-utility atlas-frame flex min-h-14 items-center gap-3 px-4 font-serif font-semibold">
@@ -384,6 +385,7 @@ function UtilityGlyph({ kind }: { kind: UtilityIcon }) {
       {kind === "rank" && <path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4ZM7 6H4.5a2.5 2.5 0 0 0 3 3.2M17 6h2.5a2.5 2.5 0 0 1-3 3.2" />}
       {kind === "shop" && <path d="M4 9l1.5-5h13L20 9M4 9h16M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0A2.7 2.7 0 0 0 20 9M5.5 12v8h13v-8M10 20v-4h4v4" />}
       {kind === "tier" && <path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8-4.3-4.1 5.9-.9L12 3Z" />}
+      {kind === "link" && <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" />}
       {kind === "swords" && <path d="M4 4l10.5 10.5M12.5 16.5l4-4M16 16l4 4M20 4L9.5 14.5M11.5 16.5l-4-4M8 16l-4 4" />}
     </svg>
   );

@@ -102,6 +102,18 @@ function cascadeFrames(pre: Board, steps: readonly CascadeStep[]): Frame[] {
 }
 
 /**
+ * Khung của một nước đổi ô ngoài trận (Sử Lộ giao tranh): cùng tốc độ đổi, xóa, rơi với trận thường. Đổi không hợp lệ
+ * (`steps` null) thì hai ô bật lại.
+ */
+export function swapFrames(board: Board, from: Pos, to: Pos, steps: readonly CascadeStep[] | null): Frame[] {
+  if (!steps) return bounceFrames(board, from, to);
+  return eventFrames(board, [{ type: "swap", from, to, steps } as Extract<BattleEvent, { type: "swap" }>]);
+}
+
+/** Khung của các bước cascade khi phá ô không qua đổi ô (Kế sách phá một hàng ở Sử Lộ). */
+export const destroyFrames = (board: Board, steps: readonly CascadeStep[]): Frame[] => cascadeFrames(board, steps);
+
+/**
  * Dựng toàn bộ khung cho chuỗi sự kiện của một lần act hoặc một lượt AI.
  * start là bàn trước khi hành động; các sự kiện không đổi bàn cờ được bỏ qua.
  */

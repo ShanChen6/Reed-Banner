@@ -34,6 +34,7 @@ import GameHeader from "./header/GameHeader";
 import GameFooter, { FOOTER_SCENES } from "./GameFooter";
 import LoginGate from "./LoginGate";
 import TiersScreen from "./tiers/TiersScreen";
+import CombosScreen from "./combos/CombosScreen";
 
 export interface ShellAccount {
   readonly name: string;
@@ -162,6 +163,8 @@ function SceneView({
       return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} tamTuongKyPack2={towerFeatures.tamTuongKyPack2 === true} tamTuongKyPack3={towerFeatures.tamTuongKyPack3 === true} />;
     case "TIERS":
       return account ? <TiersScreen /> : <LoginGate scene="TIERS" name={SCENE_TITLE.TIERS} />;
+    case "COMBOS":
+      return <CombosScreen />;
     case "SHOP":
       return <ShopScreen />;
     case "LEADERBOARD":

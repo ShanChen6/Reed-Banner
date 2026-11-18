@@ -160,6 +160,12 @@ export default function Barracks({
               {/* Số vàng ẩn ở màn nhỏ vì header chung đã hiện; từ sm trở lên Cửa hàng và số vàng đi liền nhau. */}
               <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
                 <SceneLink
+                  scene="COMBOS"
+                  className="barracks-btn flex min-h-11 items-center gap-1 rounded-md px-2 font-serif text-[15px] font-semibold sm:gap-2 sm:px-3"
+                >
+                  Phối Hợp
+                </SceneLink>
+                <SceneLink
                   scene="SHOP"
                   className="barracks-btn flex min-h-11 items-center gap-1 rounded-md px-2 font-serif text-[15px] font-semibold sm:gap-2 sm:px-3"
                 >

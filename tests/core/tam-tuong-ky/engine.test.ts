@@ -134,7 +134,7 @@ describe("chế độ Thường", () => {
 
   it("từ starter khám phá được cả ba tướng và mọi node", () => {
     const all = discoverAll();
-    assert.deepEqual([...discoveredCharacters(catalog, all)].sort(), ["hero.minhNguyet", "hero.leHoan", "hero.nguyenBac"]);
+    assert.deepEqual([...discoveredCharacters(catalog, all)].sort(), ["hero.leHoan", "hero.minhNguyet", "hero.nguyenBac"]);
     assert.equal(all.discoveredNodeIds.length, catalog.pack.nodes.length);
     assert.equal(all.discoveredRecipeIds.length, catalog.pack.recipes.length);
   });

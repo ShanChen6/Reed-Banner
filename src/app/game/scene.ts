@@ -20,6 +20,7 @@ export const SCENES = [
   "SU_LO",
   "QUESTS",
   "TIERS",
+  "COMBOS",
   "SHOP",
   "LEADERBOARD",
   "PROFILE",
@@ -51,6 +52,7 @@ export const SCENE_SLUG: Record<Scene, string> = {
   SU_LO: "maze",
   QUESTS: "quests",
   TIERS: "tier-rewards",
+  COMBOS: "combos",
   SHOP: "shop",
   LEADERBOARD: "leaderboard",
   PROFILE: "profile",
@@ -79,6 +81,7 @@ export const SCENE_TITLE: Record<Scene, string> = {
   SU_LO: "Sử Lộ",
   QUESTS: "Nhiệm vụ",
   TIERS: "Ban Thưởng",
+  COMBOS: "Phối Hợp",
   SHOP: "Cửa Hàng",
   LEADERBOARD: "Công Trạng",
   PROFILE: "Doanh Trại",
@@ -127,22 +130,7 @@ export function resolveScene(scene: Scene, signedIn: boolean): Scene {
 }
 
 /**
- * Phân cảnh chế độ chơi: hiện nút toàn màn hình nổi ở góc dưới phải (FullscreenToggle.tsx). Màn chính, cửa hàng,
- * hồ sơ, bảng xếp hạng, nhiệm vụ và tài khoản không cần nên không hiện, trừ khi đang ở toàn màn hình (để thoát được).
+ * Phân cảnh có nút toàn màn hình nổi ở góc dưới phải (FullscreenToggle.tsx). Shan 18/11/2026: mọi màn đều có, kể cả
+ * Chiến Trường, Cửa Hàng, Doanh Trại và tài khoản; bật một lần thì đổi màn vẫn giữ toàn màn hình.
  */
-export const FULLSCREEN_SCENES: ReadonlySet<Scene> = new Set<Scene>([
-  "PLAYING",
-  "PRACTICE",
-  "CAMPAIGN",
-  "TRIAL",
-  "DESTINY",
-  "SURVIVAL",
-  "DAILY",
-  "ARENA",
-  "FORMATION",
-  "TAM_TUONG_KY",
-  "EXPEDITION",
-  "KHAI_LO",
-  "DO_THAM",
-  "SU_LO",
-]);
+export const FULLSCREEN_SCENES: ReadonlySet<Scene> = new Set<Scene>(SCENES);
