@@ -209,18 +209,22 @@ export interface TierReward {
   readonly claimed: boolean;
   /** Thưởng kèm ngoài vàng (ví dụ món trang bị), hiện dưới số vàng. */
   readonly extra?: ReactNode;
+  /** Đã nhận vàng nhưng còn thiếu phần thưởng kèm: nhãn nút nhận bù. */
+  readonly owed?: string;
 }
 
 /**
  * Dải bậc hạng cuộn ngang: bậc đang đứng sáng viền, kèm tiến độ tới bậc kế. Có `rewards` thì mỗi ô hiện vàng thưởng:
  * đủ điểm mà chưa nhận có nút Nhận, đã nhận có dấu tích, chưa tới thì mờ.
  */
-export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false }: {
+export function TierLadder({ tiers, score, label, rewards, onClaim, onClaimOwed, busy = false }: {
   tiers: readonly Tier[];
   score: number;
   label: string;
   rewards?: readonly TierReward[];
   onClaim?: (index: number) => void;
+  /** Nhận bù phần thưởng kèm còn thiếu của bậc đã nhận (`TierReward.owed`). */
+  onClaimOwed?: (index: number) => void;
   busy?: boolean;
 }) {
   const at = tierIndex(tiers, score);
@@ -254,6 +258,12 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false
               i < at && <span className="text-caption font-bold text-jade" aria-label="Đã đạt">✓</span>
             )}
             {rewards?.[i]?.extra && <span className="text-caption font-semibold">{rewards[i]!.extra}</span>}
+            {rewards?.[i]?.claimed && rewards[i]!.owed && (
+              <button type="button" disabled={busy} onClick={() => onClaimOwed?.(i)}
+                className={buttonVariants({ size: "sm", className: "min-h-9 px-2 text-caption pointer-coarse:min-h-11" })}>
+                {rewards[i]!.owed}
+              </button>
+            )}
           </li>
         ))}
       </ol>

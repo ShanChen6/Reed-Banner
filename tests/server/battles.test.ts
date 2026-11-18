@@ -39,7 +39,7 @@ import { MemoryMatchStore } from "../../src/server/store";
 import { dailyBoard, MemoryDailyStore } from "../../src/server/daily";
 import { MemoryLeaderboardStore } from "../../src/server/leaderboard";
 import { MemorySeasonStore } from "../../src/server/seasons";
-import { arenaView, claimArenaTierReward, MemoryArenaStore } from "../../src/server/arena";
+import { arenaView, claimArenaTierGearReward, claimArenaTierReward, MemoryArenaStore } from "../../src/server/arena";
 import {
   ARENA_ATTACKS_PER_DAY,
   ARENA_OFFERS,
@@ -1710,5 +1710,12 @@ describe("thưởng bậc hạng Quần Hùng", () => {
     assert.ok(bac.ok && bac.gold === 150 && bac.item?.tier === 3);
     assert.equal((await loadProfile(profiles, "g_t")).profile.bag.filter((it) => it.id === bac.item?.id).length, 1);
     assert.deepEqual((await arenaView("g_t", "view", deps)).tierClaims, ["dong", "bac"]);
+    assert.deepEqual((await arenaView("g_t", "view", deps)).tierGearClaims, ["dong", "bac"]);
+    assert.deepEqual(await claimArenaTierGearReward("g_t", "bac", deps), { ok: false, error: "gearClaimed" });
+    // Hồ sơ nhận vàng trước khi có thưởng trang bị: nhận bù đúng món của bậc đó, một lần.
+    await updateProfile(profiles, "g_old", (p) => ({ ok: true, profile: { ...p, arenaTiers: ["dong"] } }), T0);
+    const owed = await claimArenaTierGearReward("g_old", "dong", deps);
+    assert.ok(owed.ok && owed.item?.tier === 2);
+    assert.deepEqual(await claimArenaTierGearReward("g_old", "dong", deps), { ok: false, error: "gearClaimed" });
   });
 });

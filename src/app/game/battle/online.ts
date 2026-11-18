@@ -183,6 +183,8 @@ export interface ArenaResponse {
   }[];
   /** Id các bậc hạng đã nhận thưởng. */
   readonly tierClaims?: readonly string[];
+  /** Id các bậc đã nhận món trang bị thưởng. */
+  readonly tierGearClaims?: readonly string[];
   /** Kết quả lệnh nhận thưởng bậc. */
   readonly claimed?: { readonly tier: string; readonly gold: number; readonly item: GearItem | null; readonly soldFor: number };
   readonly claimError?: string;
@@ -191,7 +193,7 @@ export interface ArenaResponse {
 
 /** Xem đấu trường; `action` đặt lại đội phòng thủ, đổi đối thủ, hoặc nhận thưởng bậc `tier`. */
 export async function fetchArena(
-  action?: "defend" | "refresh" | "claimTier",
+  action?: "defend" | "refresh" | "claimTier" | "claimTierGear",
   tier?: string,
 ): Promise<ArenaResponse> {
   try {
