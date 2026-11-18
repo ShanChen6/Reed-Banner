@@ -108,6 +108,10 @@ export interface Profile {
   readonly pvpTiers?: readonly string[];
   /** Trấn Ải: id các bậc kỷ lục số đợt đã nhận thưởng. Chưa nhận bậc nào thì không có. */
   readonly survivalTiers?: readonly string[];
+  /** Trận Đồ: số ván xếp hạng đã thắng (server cộng khi ván chuyển sang thắng). Chưa thắng ván nào thì không có. */
+  readonly formationWins?: number;
+  /** Trận Đồ: id các bậc đã nhận thưởng. */
+  readonly formationTiers?: readonly string[];
   /** Trận Đồ: bộ sưu tập địa danh đã khai thông. Chưa có địa danh nào thì không có. */
   readonly formation?: FormationCollectionState;
 }
@@ -349,6 +353,12 @@ export function parseProfile(raw: unknown): Profile {
   const pvpTiers = ids(p.pvpTiers);
   if (pvpTiers.length) (next as { pvpTiers?: readonly string[] }).pvpTiers = pvpTiers;
   else delete (next as { pvpTiers?: readonly string[] }).pvpTiers;
+  const formationTiers = ids(p.formationTiers);
+  if (formationTiers.length) (next as { formationTiers?: readonly string[] }).formationTiers = formationTiers;
+  else delete (next as { formationTiers?: readonly string[] }).formationTiers;
+  const wins = p.formationWins;
+  if (Number.isInteger(wins) && (wins as number) > 0) (next as { formationWins?: number }).formationWins = Math.min(wins as number, 1_000_000);
+  else delete (next as { formationWins?: number }).formationWins;
   const survivalTiers = ids(p.survivalTiers);
   if (survivalTiers.length) (next as { survivalTiers?: readonly string[] }).survivalTiers = survivalTiers;
   else delete (next as { survivalTiers?: readonly string[] }).survivalTiers;

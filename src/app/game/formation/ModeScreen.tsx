@@ -18,6 +18,7 @@ import RewardLadder from "./RewardLadder";
 import { ModeGuidePanel } from "../ModeGuide";
 import { formatRemaining } from "./time";
 import { RankBoard } from "../leaderboard/RankBoard";
+import FormationTierPanel from "./FormationTierPanel";
 
 type Tab = "practice" | "ranked" | "record" | "guide";
 const TIER_LABEL = Object.fromEntries(REWARD_TIERS.map((t) => [t.tier, t.label])) as Record<string, string>;
@@ -285,6 +286,7 @@ export default function ModeScreen({
               </ul>
             </section>
           )}
+          {rankedOn && overview?.canPlay && <FormationTierPanel />}
           {rankedOn && overview?.canPlay && overview.levels.length > 0 && (
             <>
               <Tabs

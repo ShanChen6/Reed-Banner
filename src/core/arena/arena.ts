@@ -249,7 +249,7 @@ export type TierClaimResult =
 function claimTier(
   profile: Profile,
   tiers: readonly ArenaTier[],
-  field: "arenaTiers" | "pvpTiers" | "survivalTiers",
+  field: "arenaTiers" | "pvpTiers" | "survivalTiers" | "formationTiers",
   tierId: string,
   key: string,
   rating: number,
@@ -301,6 +301,25 @@ export const SURVIVAL_TIERS: readonly ArenaTier[] = [
   { id: "kimCuong", name: "Kim Cương", min: 20, gold: 800, gear: 4 },
   { id: "huyenThoai", name: "Huyền Thoại", min: 25, gold: 1200, gear: 5 },
 ];
+
+/**
+ * Bậc Trận Đồ theo số ván xếp hạng đã thắng (`profile.formationWins`, server cộng khi ván chuyển sang thắng), Shan
+ * 18/11/2026. Cùng tên bậc, vàng và phẩm món với Quần Hùng; mốc là đề xuất của Claude: mỗi ngày hai ván (Thường, Khó),
+ * mỗi tuần thêm một ván Đại trận, tối đa khoảng 15 ván thắng một tuần, nên Huyền Thoại 100 ván là mốc dài hơi.
+ */
+export const FORMATION_TIERS: readonly ArenaTier[] = [
+  { id: "dong", name: "Đồng", min: 1, gold: 50, gear: 2 },
+  { id: "bac", name: "Bạc", min: 5, gold: 150, gear: 3 },
+  { id: "vang", name: "Vàng", min: 15, gold: 300, gear: 3 },
+  { id: "bachKim", name: "Bạch Kim", min: 30, gold: 500, gear: 4 },
+  { id: "kimCuong", name: "Kim Cương", min: 60, gold: 800, gear: 4 },
+  { id: "huyenThoai", name: "Huyền Thoại", min: 100, gold: 1200, gear: 5 },
+];
+
+/** Nhận thưởng một bậc Trận Đồ: số ván xếp hạng đã thắng phải đủ mốc; mỗi bậc một lần. */
+export function claimFormationTier(profile: Profile, tierId: string, rng: Rng): TierClaimResult {
+  return claimTier(profile, FORMATION_TIERS, "formationTiers", tierId, tierId, profile.formationWins ?? 0, rng);
+}
 
 /** Nhận thưởng một bậc Trấn Ải: kỷ lục số đợt trong hồ sơ phải đủ mốc; mỗi bậc một lần. */
 export function claimSurvivalTier(profile: Profile, tierId: string, rng: Rng): TierClaimResult {

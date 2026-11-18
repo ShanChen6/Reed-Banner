@@ -3,7 +3,7 @@
 // Bậc hạng dùng chung cho Quần Hùng (bóng ma) và Đấu người: màu khiên từng bậc, thưởng hiện trên dải bậc và câu báo
 // sau khi nhận. Mốc, vàng và phẩm món ở `ARENA_TIERS` (@/core).
 
-import { ARENA_TIERS, SURVIVAL_TIERS, type ArenaTier, type GearItem } from "@/core";
+import { ARENA_TIERS, FORMATION_TIERS, SURVIVAL_TIERS, type ArenaTier, type GearItem } from "@/core";
 import { TIER_CLASS, TIER_COLOR_NAME, gearText } from "../battle/labels";
 import type { Tier, TierReward } from "../leaderboard/RankBoard";
 
@@ -23,6 +23,8 @@ const ladder = (list: readonly ArenaTier[]): readonly Tier[] =>
 export const TIERS = ladder(ARENA_TIERS);
 /** Dải bậc Trấn Ải (kỷ lục số đợt). */
 export const SURVIVAL_LADDER = ladder(SURVIVAL_TIERS);
+/** Dải bậc Trận Đồ (số ván xếp hạng đã thắng). */
+export const FORMATION_LADDER = ladder(FORMATION_TIERS);
 
 /** Thưởng từng bậc trên dải: vàng, món theo màu phẩm, đã nhận chưa (`claimed(id)`). */
 export function tierRewards(claimed: (tierId: string) => boolean, list: readonly ArenaTier[] = ARENA_TIERS): TierReward[] {

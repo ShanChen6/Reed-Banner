@@ -206,6 +206,15 @@ Hạng tính theo hạng cuối kỳ của người thắng; nửa trên làm tr
 
 **Nhận thưởng** (`POST /api/formation/claim`): chỉ khi kỳ đã khép lại; cờ nhận được đặt bằng một lệnh cập nhật có điều kiện (đúng một bên thắng khi gọi song song) rồi mới cộng vàng vào hồ sơ; cộng vàng hỏng thì hoàn lại cờ để thử lại. Hạng và số người thắng chốt theo trạng thái lúc nhận, vì kỳ đã khép nên không đổi nữa.
 
+**Bậc và thưởng bậc (Shan 18/11/2026, mốc Claude đề xuất, chờ duyệt):** bậc theo **số ván xếp hạng đã thắng** cộng cả ba bậc (`profile.formationWins`; server cộng một khi ván chuyển sang thắng trong `moveFormation`, nhờ `seq` nên không cộng hai lần; ván thắng trước 18/11/2026 chưa được đếm). Không dùng bộ sưu tập địa danh vì do máy người chơi gửi lên. Cùng tên bậc, vàng và phẩm món với Quần Hùng (`FORMATION_TIERS`, `src/core/arena/arena.ts`); mỗi bậc nhận một lần (`profile.formationTiers`), nhận rồi nút khóa; ở thẻ Chiến tích (`FormationTierPanel.tsx`), API POST `/api/formation/tier` `{ tier }`.
+
+| Bậc | Đồng | Bạc | Vàng | Bạch Kim | Kim Cương | Huyền Thoại |
+|---|---|---|---|---|---|---|
+| Ván xếp hạng đã thắng | 1 | 5 | 15 | 30 | 60 | 100 |
+| Thưởng | 50 vàng + Lục | 150 + Lam | 300 + Lam | 500 + Tím | 800 + Tím | 1 200 + Cam |
+
+Mỗi ngày tối đa hai ván (Thường, Khó), mỗi tuần thêm một Đại trận, nên tối đa khoảng 15 ván thắng một tuần; Huyền Thoại là mốc dài hơi (khoảng 7 tuần thắng hết).
+
 **Hạn chế đã biết** (chưa xử lý, ghi để quyết định sau):
 
 - Vì không đòi số người tối thiểu, một tài khoản phụ chơi một mình một bảng vẫn nhận hạng nhất (Đại trận: 1 000 vàng mỗi tuần mỗi tài khoản). Yêu cầu đăng nhập chặn được việc xóa cookie để tạo "khách" mới, nhưng chưa chặn được người đăng ký nhiều tài khoản. Cách giảm còn lại: chỉ tính hạng khi điểm đạt chuẩn (số đo: điểm mỗi ô chơi được của người thắng dao động hẹp, khoảng 65–75 ở Thường, 54–64 ở Khó, 40–47 ở Đại trận, nên ngưỡng điểm chặn được ít).

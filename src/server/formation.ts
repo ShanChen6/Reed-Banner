@@ -24,6 +24,7 @@ import {
   type PuzzleState,
   type RewardTier,
 } from "@/core/binh-phap";
+import { claimFormationTier, createRng, type GearItem } from "@/core";
 import { updateProfile, type ProfileStore } from "./profiles";
 import { TTK_RANK_BUNDLES } from "@/core/tam-tuong-ky";
 import { withTtkBundles } from "./rankRewards";
@@ -314,6 +315,11 @@ export async function moveFormation(deps: FormationDeps, ownerId: string, levelI
     const cur = await deps.store.get(g.level, g.period, ownerId);
     return { ok: false, error: "conflict", view: cur ? await viewOf(deps, cur) : undefined };
   }
+  // Ván vừa chuyển sang thắng (lưu thành công đúng một lần nhờ seq): cộng số ván thắng cho thưởng bậc Trận Đồ.
+  if (next.status === "won") {
+    const counted = await updateProfile(deps.profiles, ownerId, (p) => ({ ok: true as const, profile: { ...p, formationWins: (p.formationWins ?? 0) + 1 } }), deps.now);
+    if (!counted.ok) console.error("Không cộng được ván thắng Trận Đồ", ownerId, counted.error);
+  }
   return { ok: true, view: await viewOf(deps, next), events: t.events };
 }
 
@@ -443,4 +449,38 @@ export function formationHttpStatus(error: FormationError): number {
     default:
       return 409;
   }
+}
+
+/** Băm FNV-1a một chuỗi thành hạt giống cho món thưởng bậc (ghi lại sau xung đột vẫn ra cùng món). */
+function tierSeed(text: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+
+/**
+ * Nhận thưởng một bậc Trận Đồ: số ván xếp hạng đã thắng đọc trong hồ sơ trên server; vàng và món cộng cùng lần ghi id
+ * bậc vào `profile.formationTiers`, nên mỗi bậc nhận một lần.
+ */
+export async function claimFormationTierReward(
+  deps: Pick<FormationDeps, "profiles" | "now">,
+  ownerId: string,
+  tierId: string,
+): Promise<
+  | { readonly ok: true; readonly gold: number; readonly item: GearItem | null; readonly soldFor: number }
+  | { readonly ok: false; readonly error: string }
+> {
+  let result = { gold: 0, item: null as GearItem | null, soldFor: 0 };
+  const r = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => {
+      const c = claimFormationTier(p, tierId, createRng(tierSeed(`${ownerId}:formation-tier:${tierId}`)));
+      if (!c.ok) return c;
+      result = { gold: c.gold, item: c.item, soldFor: c.soldFor };
+      return { ok: true, profile: c.profile };
+    },
+    deps.now,
+  );
+  return r.ok ? { ok: true, ...result } : { ok: false, error: String(r.error) };
 }

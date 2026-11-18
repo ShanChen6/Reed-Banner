@@ -224,6 +224,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     rewards: [
       "Chơi thường không thưởng, không xếp hạng, chơi bao nhiêu ván tùy ý.",
       "Xếp hạng có thưởng ở các bậc Thường, Khó và Đại trận khi chế độ này đang mở. Bậc Hướng dẫn không xếp hạng.",
+      "Bậc Trận Đồ theo số ván xếp hạng đã thắng: Đồng 1, Bạc 5, Vàng 15, Bạch Kim 30, Kim Cương 60, Huyền Thoại 100. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Chiến tích, mỗi bậc một lần.",
       "Điểm: đặt quân 10, mỗi quân kề khớp cả nghề lẫn hệ thêm 5, mỗi hàng hoặc cột dọn 50, thắng thêm 500 và thưởng theo bậc lửa còn trống.",
     ],
     tips: ["Bắt đầu ở bậc Hướng dẫn để quen luật khớp nghề và hệ."],

@@ -11,6 +11,7 @@ import {
 import {
   MemoryFormationStore,
   claimFormation,
+  claimFormationTierReward,
   formationOverview,
   formationSalt,
   formationSeed,
@@ -386,5 +387,34 @@ describe("Trận Đồ xếp hạng: ván lưu không đọc lại được (đ�
     const l = (await formationOverview(d, "a")).levels.find((x) => x.level === "thuong")!;
     assert.equal(l.mine?.status, won.status);
     assert.equal(l.mine?.score, won.score);
+  });
+});
+
+describe("Trận Đồ: bậc theo số ván xếp hạng đã thắng", () => {
+  it("thắng ván xếp hạng cộng đúng một ván; đủ mốc nhận vàng và món một lần", async () => {
+    const d = deps();
+    const owners = Array.from({ length: 8 }, (_, i) => `bac-${i}`);
+    let winner: string | null = null;
+    let loser: string | null = null;
+    for (const o of owners) {
+      const v = await playOut(d, o, "thuong");
+      if (v.status === "won" && !winner) winner = o;
+      if (v.status === "lost" && !loser) loser = o;
+    }
+    assert.ok(winner, "bot nên thắng ít nhất một ván");
+    assert.equal((await loadProfile(d.profiles, winner)).profile.formationWins, 1);
+    if (loser) assert.equal((await loadProfile(d.profiles, loser)).profile.formationWins, undefined);
+    // Đi thêm sau khi thắng bị từ chối nên không cộng lần hai.
+    await moveFormation(d, winner, "thuong", 999, { kind: "discard" });
+    assert.equal((await loadProfile(d.profiles, winner)).profile.formationWins, 1);
+
+    const gold0 = (await loadProfile(d.profiles, winner)).profile.gold;
+    const dong = await claimFormationTierReward(d, winner, "dong");
+    assert.ok(dong.ok && dong.gold === 50 && dong.item?.tier === 2);
+    assert.deepEqual(await claimFormationTierReward(d, winner, "dong"), { ok: false, error: "claimed" });
+    assert.deepEqual(await claimFormationTierReward(d, winner, "bac"), { ok: false, error: "notReached" });
+    const p = (await loadProfile(d.profiles, winner)).profile;
+    assert.equal(p.gold, gold0 + 50);
+    assert.deepEqual(p.formationTiers, ["dong"]);
   });
 });
