@@ -110,9 +110,14 @@ export default function QuestsScreen({
                 : `Đã nhận ${dailyClaimed}/${DAILY_QUESTS.length} nhiệm vụ hôm nay.`}
             </li>
           </ul>
-          <SceneLink scene="DAILY" className={buttonVariants({ className: "min-h-11 self-start" })}>
-            Sang Nhật Lệnh
-          </SceneLink>
+          <div className="flex flex-wrap gap-2">
+            <SceneLink scene="DAILY" className={buttonVariants({ className: "min-h-11" })}>
+              Sang Nhật Lệnh
+            </SceneLink>
+            <SceneLink scene="TIERS" className={buttonVariants({ variant: "outline", className: "min-h-11" })}>
+              Thưởng Bậc
+            </SceneLink>
+          </div>
         </OrnateFrame>
         {sections.map((sec) => (
           <OrnateFrame key={sec.title} className="flex flex-col">

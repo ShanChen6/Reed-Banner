@@ -131,6 +131,21 @@ test.describe("tài khoản đã đăng nhập", () => {
     expectClean(problems);
   });
 
+  test("Thưởng Bậc: một trang gom dải bậc của mọi chế độ xếp hạng, nhận một lần rồi khóa", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game");
+    await page.getByRole("link", { name: "Thưởng Bậc" }).first().click();
+    await expect(page).toHaveURL(/\/game\/tier-rewards$/);
+    for (const mode of ["Quần Hùng", "Đấu người", "Trấn Ải", "Trận Đồ", "Nhật Lệnh", "Tháp Thiên Mệnh", "Tầm Tướng Ký"])
+      await expect(page.getByRole("region", { name: `Bậc ${mode}`, exact: true })).toBeVisible();
+    const arena = page.getByRole("region", { name: "Bậc Quần Hùng", exact: true });
+    await arena.getByRole("button", { name: "Nhận thưởng bậc Đồng" }).click();
+    await expect(page.getByText(/Đã nhận 50 vàng thưởng bậc Đồng/)).toBeVisible();
+    await expect(arena.getByRole("button", { name: "Bậc Đồng: đã nhận thưởng" })).toBeDisabled();
+    await expect(page.getByRole("region", { name: "Bậc Trấn Ải", exact: true }).getByRole("button", { name: "Bậc Đồng: chưa đạt mốc" })).toHaveText("Còn 1 đợt");
+    expectClean(problems);
+  });
+
   test("Quần Hùng: bảng xếp hạng ở hàng thẻ, đối thủ có nhãn so lực chiến, 1vs1 chọn nghề hệ bằng chip", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/arena");

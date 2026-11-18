@@ -376,8 +376,6 @@ export const MODE_TIERS: Readonly<Record<ModeTierId, ModeTierLadder>> = {
   },
 };
 
-export const isModeTierId = (x: unknown): x is ModeTierId => typeof x === "string" && Object.hasOwn(MODE_TIERS, x);
-
 /** Id các bậc đã nhận của một chế độ (`profile.modeTiers`). */
 export const modeTierClaims = (profile: Profile, mode: ModeTierId): readonly string[] => profile.modeTiers?.[mode] ?? [];
 
