@@ -12,6 +12,7 @@ import {
   isAdjacent,
   isWhirlCenter,
   needsCell,
+  ARENA_TIERS,
   ELEMENTS,
   PASSIVE,
   MAIN_ID,
@@ -25,6 +26,7 @@ import {
   type Profession,
   type BattleState,
   type Fighter,
+  type GearItem,
   type Pos,
   type SkillDef,
   type Whirl,
@@ -38,6 +40,9 @@ import { TileArt } from "../art/tiles";
 import { EffectBadge } from "../art/effects";
 import PvpDraftScreen from "./PvpDraft";
 import LeaderBuildPicker from "./LeaderBuildPicker";
+import { TierLadder } from "../leaderboard/RankBoard";
+import { TIERS, tierClaimNote, tierErrorNote, tierRewards } from "./tiers";
+import { fetchProfile } from "../battle/online";
 import { describe } from "../battle/battleLog";
 import { ELEMENT_NAME, ERROR_TEXT, PROFESSION_NAME, skillText } from "../battle/labels";
 
@@ -278,6 +283,69 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
         </OrnateFrame>
       )}
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Bậc hạng Đấu người ở thẻ Bảng xếp hạng: hai dải, 1vs1 và 3vs3 xếp hạng, theo điểm hạng riêng của từng thể thức.
+ * Cùng mốc và thưởng với Quần Hùng; mỗi bậc mỗi thể thức nhận một lần, nhận rồi nút khóa.
+ */
+export function PvpTierPanel() {
+  const [overview, setOverview] = useState<PvpOverview | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [note, setNote] = useState<string | null>(null);
+
+  useEffect(() => {
+    let live = true;
+    void call("/api/pvp").then((r) => live && r.status === 200 && setOverview(r.data as unknown as PvpOverview));
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  if (!overview) return null;
+  const claims = overview.tierClaims ?? [];
+
+  const claim = async (format: "duel" | "team", tier: string) => {
+    setBusy(true);
+    setNote(null);
+    const r = await call("/api/pvp", { action: "claimTier", format, tier });
+    setBusy(false);
+    if (r.status !== 200) return setNote(errorText(r.data));
+    const next = r.data as unknown as PvpOverview & {
+      claimed?: { tier: string; gold: number; item: GearItem | null; soldFor: number };
+      claimError?: string;
+    };
+    setOverview(next);
+    if (next.claimed) {
+      setNote(`${format === "duel" ? "1vs1" : "3vs3"}: ${tierClaimNote(next.claimed)}`);
+      void fetchProfile();
+    } else setNote(tierErrorNote(next.claimError));
+  };
+
+  return (
+    <OrnateFrame className="flex flex-col gap-4">
+      {(["duel", "team"] as const).map((format) => (
+        <div key={format} className="flex flex-col gap-2">
+          <h3 className="font-bold text-frame-gold">{format === "duel" ? "Bậc hạng 1vs1" : "Bậc hạng 3vs3 xếp hạng"}</h3>
+          <TierLadder
+            tiers={TIERS}
+            score={overview.ratings[format].rating}
+            label={format === "duel" ? "Bậc hạng Đấu người 1vs1" : "Bậc hạng Đấu người 3vs3"}
+            rewards={tierRewards((id) => claims.includes(`${format}:${id}`))}
+            onClaim={(i) => void claim(format, ARENA_TIERS[i]!.id)}
+            busy={busy}
+          />
+        </div>
+      ))}
+      {note && <p role="status" className="text-sm text-jade">{note}</p>}
+      <p className="text-caption text-on-wood-soft">
+        Mỗi thể thức có bậc riêng theo điểm hạng của thể thức đó. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị hệ của
+        Đinh Bộ Lĩnh, mỗi bậc một lần; tụt bậc không mất thưởng đã nhận.
+      </p>
+    </OrnateFrame>
   );
 }
 

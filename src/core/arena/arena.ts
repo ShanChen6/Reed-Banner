@@ -237,17 +237,48 @@ export function claimArenaTier(
   tierId: string,
   rating: number,
   rng: Rng,
-):
+): TierClaimResult {
+  return claimTier(profile, "arenaTiers", tierId, tierId, rating, rng);
+}
+
+export type TierClaimResult =
   | { readonly ok: true; readonly profile: Profile; readonly gold: number; readonly item: GearItem | null; readonly soldFor: number }
-  | { readonly ok: false; readonly error: ArenaTierClaimError } {
+  | { readonly ok: false; readonly error: ArenaTierClaimError };
+
+/** Nhận một bậc, ghi `key` vào danh sách `field` của hồ sơ (mỗi khóa một lần). */
+function claimTier(
+  profile: Profile,
+  field: "arenaTiers" | "pvpTiers",
+  tierId: string,
+  key: string,
+  rating: number,
+  rng: Rng,
+): TierClaimResult {
   const tier = ARENA_TIERS.find((t) => t.id === tierId);
   if (!tier) return { ok: false, error: "badTier" };
   if (rating < tier.min) return { ok: false, error: "notReached" };
-  const claimed = profile.arenaTiers ?? [];
-  if (claimed.includes(tier.id)) return { ok: false, error: "claimed" };
-  const paid: Profile = { ...profile, gold: profile.gold + tier.gold, arenaTiers: [...claimed, tier.id] };
+  const claimed = profile[field] ?? [];
+  if (claimed.includes(key)) return { ok: false, error: "claimed" };
+  const paid: Profile = { ...profile, gold: profile.gold + tier.gold, [field]: [...claimed, key] };
   const got = receiveDrop(paid, arenaTierGear(rng, tier, profile));
   return { ok: true, gold: tier.gold, profile: got.profile, item: got.item, soldFor: got.soldFor };
+}
+
+/** Khóa ghi trong `profile.pvpTiers`: thể thức và bậc, ví dụ "duel:bac". */
+export const pvpTierKey = (format: "duel" | "team", tierId: string) => `${format}:${tierId}`;
+
+/**
+ * Đấu người: cùng bảng bậc, mốc và thưởng với Quần Hùng (Shan 18/11/2026), tính theo điểm hạng riêng của từng thể thức
+ * (1vs1, 3vs3 xếp hạng; cùng bắt đầu 1000). Mỗi bậc của mỗi thể thức nhận một lần.
+ */
+export function claimPvpTier(
+  profile: Profile,
+  format: "duel" | "team",
+  tierId: string,
+  rating: number,
+  rng: Rng,
+): TierClaimResult {
+  return claimTier(profile, "pvpTiers", tierId, pvpTierKey(format, tierId), rating, rng);
 }
 
 /** Điểm thay đổi sau một trận: người đánh theo ARENA_K, người phòng thủ ngược dấu theo ARENA_DEFENDER_K. */

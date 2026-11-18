@@ -20,6 +20,7 @@ import {
   pvpMatchWindow,
   pvpOverview,
   pvpPlay,
+  claimPvpTierReward,
   type PvpDeps,
   type PvpStore,
 } from "../../src/server/pvp";
@@ -385,3 +386,27 @@ for (const [name, factory] of stores) {
     });
   });
 }
+
+describe("thưởng bậc hạng Đấu người", () => {
+  it("mỗi thể thức một dải bậc theo điểm hạng riêng, mỗi bậc nhận một lần, kèm món trang bị", async () => {
+    const pvp = new MemoryPvpStore();
+    const profiles = new MemoryProfileStore();
+    const deps = { pvp, profiles, now: T0 };
+    const gold0 = (await loadProfile(profiles, "acc")).profile.gold;
+    const dong = await claimPvpTierReward("acc", "duel", "dong", deps);
+    assert.ok(dong.ok && dong.gold === 50 && dong.item?.tier === 2);
+    assert.deepEqual(await claimPvpTierReward("acc", "duel", "dong", deps), { ok: false, error: "claimed" });
+    // 3vs3 là dải riêng: bậc Đồng 3vs3 vẫn nhận được.
+    assert.ok((await claimPvpTierReward("acc", "team", "dong", deps)).ok);
+    assert.deepEqual(await claimPvpTierReward("acc", "duel", "bac", deps), { ok: false, error: "notReached" });
+    await pvp.applyResult("acc", "duel", { delta: 60, won: true, counted: true, forgiven: 0, day: vnDay(T0), now: T0 });
+    assert.ok((await claimPvpTierReward("acc", "duel", "bac", deps)).ok);
+    // Điểm 3vs3 vẫn 1000 nên Bạc 3vs3 chưa nhận được.
+    assert.deepEqual(await claimPvpTierReward("acc", "team", "bac", deps), { ok: false, error: "notReached" });
+    const p = (await loadProfile(profiles, "acc")).profile;
+    assert.deepEqual(p.pvpTiers, ["duel:dong", "team:dong", "duel:bac"]);
+    assert.equal(p.gold, gold0 + 50 + 50 + 150);
+    const ov = await pvpOverview("acc", { ...deps, seed: 1, newId: () => "x" });
+    assert.deepEqual(ov.tierClaims, ["duel:dong", "team:dong", "duel:bac"]);
+  });
+});
