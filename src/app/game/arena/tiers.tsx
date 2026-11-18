@@ -16,15 +16,15 @@ const TIER_COLOR: Record<string, string> = {
   huyenThoai: "#c070ff",
 };
 
-const ladder = (list: readonly ArenaTier[]): readonly Tier[] =>
+export const ladderOf = (list: readonly ArenaTier[]): readonly Tier[] =>
   list.map((t) => ({ name: t.name, min: t.min, color: TIER_COLOR[t.id] ?? "#b87333" }));
 
 /** Dải bậc Quần Hùng và Đấu người (điểm hạng). */
-export const TIERS = ladder(ARENA_TIERS);
+export const TIERS = ladderOf(ARENA_TIERS);
 /** Dải bậc Trấn Ải (kỷ lục số đợt). */
-export const SURVIVAL_LADDER = ladder(SURVIVAL_TIERS);
+export const SURVIVAL_LADDER = ladderOf(SURVIVAL_TIERS);
 /** Dải bậc Trận Đồ (số ván xếp hạng đã thắng). */
-export const FORMATION_LADDER = ladder(FORMATION_TIERS);
+export const FORMATION_LADDER = ladderOf(FORMATION_TIERS);
 
 /** Thưởng từng bậc trên dải: vàng, món theo màu phẩm, đã nhận chưa (`claimed(id)`). */
 export function tierRewards(claimed: (tierId: string) => boolean, list: readonly ArenaTier[] = ARENA_TIERS): TierReward[] {

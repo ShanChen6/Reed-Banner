@@ -112,6 +112,8 @@ export interface Profile {
   readonly formationWins?: number;
   /** Trận Đồ: id các bậc đã nhận thưởng. */
   readonly formationTiers?: readonly string[];
+  /** Các chế độ xếp hạng khác (Nhật Lệnh, Tháp Thiên Mệnh, Tầm Tướng Ký): id bậc đã nhận theo chế độ. */
+  readonly modeTiers?: Readonly<Record<string, readonly string[]>>;
   /** Trận Đồ: bộ sưu tập địa danh đã khai thông. Chưa có địa danh nào thì không có. */
   readonly formation?: FormationCollectionState;
 }
@@ -353,6 +355,18 @@ export function parseProfile(raw: unknown): Profile {
   const pvpTiers = ids(p.pvpTiers);
   if (pvpTiers.length) (next as { pvpTiers?: readonly string[] }).pvpTiers = pvpTiers;
   else delete (next as { pvpTiers?: readonly string[] }).pvpTiers;
+  const modeTiers =
+    p.modeTiers && typeof p.modeTiers === "object" && !Array.isArray(p.modeTiers)
+      ? Object.fromEntries(
+          Object.entries(p.modeTiers as Record<string, unknown>)
+            .filter(([k]) => k.length > 0 && k.length <= 20)
+            .slice(0, 20)
+            .map(([k, v]) => [k, ids(v)] as const)
+            .filter(([, v]) => v.length > 0),
+        )
+      : {};
+  if (Object.keys(modeTiers).length) (next as { modeTiers?: Record<string, readonly string[]> }).modeTiers = modeTiers;
+  else delete (next as { modeTiers?: Record<string, readonly string[]> }).modeTiers;
   const formationTiers = ids(p.formationTiers);
   if (formationTiers.length) (next as { formationTiers?: readonly string[] }).formationTiers = formationTiers;
   else delete (next as { formationTiers?: readonly string[] }).formationTiers;

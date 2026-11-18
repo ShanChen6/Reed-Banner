@@ -10,6 +10,8 @@ import {
   botName,
   claimArenaTier,
   claimSurvivalTier,
+  claimModeTier,
+  type ModeTierId,
   createRng,
   arenaTeam,
   defenseOf,
@@ -384,6 +386,34 @@ export async function claimSurvivalTierReward(
     ownerId,
     (p) => {
       const c = claimSurvivalTier(p, tierId, createRng(seedOf(`${ownerId}:survival-tier:${tierId}`)));
+      if (!c.ok) return c;
+      result = { gold: c.gold, item: c.item, soldFor: c.soldFor };
+      return { ok: true, profile: c.profile };
+    },
+    deps.now,
+  );
+  return r.ok ? { ok: true, ...result } : { ok: false, error: String(r.error) };
+}
+
+/**
+ * Nhận thưởng một bậc của chế độ xếp hạng `mode` (Nhật Lệnh, Tháp Thiên Mệnh, Tầm Tướng Ký): thước đo đọc trong hồ sơ trên
+ * server; vàng và món cộng cùng lần ghi id bậc vào `profile.modeTiers[mode]`, nên mỗi bậc nhận một lần.
+ */
+export async function claimModeTierReward(
+  ownerId: string,
+  mode: ModeTierId,
+  tierId: string,
+  deps: Pick<ArenaDeps, "profiles" | "now">,
+): Promise<
+  | { readonly ok: true; readonly gold: number; readonly item: GearItem | null; readonly soldFor: number }
+  | { readonly ok: false; readonly error: string }
+> {
+  let result = { gold: 0, item: null as GearItem | null, soldFor: 0 };
+  const r = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => {
+      const c = claimModeTier(p, mode, tierId, createRng(seedOf(`${ownerId}:${mode}-tier:${tierId}`)));
       if (!c.ok) return c;
       result = { gold: c.gold, item: c.item, soldFor: c.soldFor };
       return { ok: true, profile: c.profile };

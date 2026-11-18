@@ -39,7 +39,7 @@ import { MemoryMatchStore } from "../../src/server/store";
 import { dailyBoard, MemoryDailyStore } from "../../src/server/daily";
 import { MemoryLeaderboardStore } from "../../src/server/leaderboard";
 import { MemorySeasonStore } from "../../src/server/seasons";
-import { arenaView, claimArenaTierReward, claimSurvivalTierReward, MemoryArenaStore } from "../../src/server/arena";
+import { arenaView, claimArenaTierReward, claimModeTierReward, claimSurvivalTierReward, MemoryArenaStore } from "../../src/server/arena";
 import {
   ARENA_ATTACKS_PER_DAY,
   ARENA_OFFERS,
@@ -1727,5 +1727,18 @@ describe("thưởng bậc Trấn Ải", () => {
     const p = (await loadProfile(profiles, "g_s")).profile;
     assert.equal(p.gold, gold0 + 150);
     assert.deepEqual(p.survivalTiers, ["bac"]);
+  });
+});
+
+describe("thưởng bậc chế độ xếp hạng (Nhật Lệnh, Thiên Mệnh, Tầm Tướng Ký)", () => {
+  it("đọc thước đo trong hồ sơ trên server, mỗi bậc một lần", async () => {
+    const profiles = new MemoryProfileStore();
+    const deps = { profiles, now: T0 };
+    assert.deepEqual(await claimModeTierReward("g_m", "daily", "dong", deps), { ok: false, error: "notReached" });
+    await updateProfile(profiles, "g_m", (p) => ({ ok: true, profile: { ...p, quests: { ...p.quests, totals: { ...p.quests.totals, daily: 1 } } } }), T0);
+    const r = await claimModeTierReward("g_m", "daily", "dong", deps);
+    assert.ok(r.ok && r.gold === 50 && r.item?.tier === 2);
+    assert.deepEqual(await claimModeTierReward("g_m", "daily", "dong", deps), { ok: false, error: "claimed" });
+    assert.deepEqual((await loadProfile(profiles, "g_m")).profile.modeTiers, { daily: ["dong"] });
   });
 });

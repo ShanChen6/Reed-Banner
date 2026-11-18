@@ -122,6 +122,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Chu kỳ bắt đầu thứ Hai lúc 0 giờ giờ Việt Nam và kéo dài 7 ngày. Luật không đổi trong chu kỳ.",
     ],
     rewards: [
+      "Bậc Tháp Thiên Mệnh theo tầng cao nhất từng vượt: Đồng 1, Bạc 4, Vàng 8, Bạch Kim 12, Kim Cương 16, Huyền Thoại 20. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ BXH tuần, mỗi bậc một lần.",
       "Đá Cường Hóa khi lần đầu qua các mốc tầng và theo kỷ lục cuối chu kỳ. Chọn Phúc hoặc hồi phục giữa tầng không cho đá.",
       "Bảng xếp hạng riêng theo chu kỳ tuần (thẻ BXH tuần), có thưởng vàng theo hạng cuối kỳ cho tài khoản đã ghi danh.",
     ],
@@ -171,6 +172,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Ai đi cùng một nước thì gặp cùng ô rơi.",
     ],
     rewards: [
+      "Bậc Nhật Lệnh theo số ngày đã đánh: Đồng 1, Bạc 7, Vàng 20, Bạch Kim 50, Kim Cương 100, Huyền Thoại 200. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Bảng xếp hạng, mỗi bậc một lần.",
       `Thắng ${DAILY_GOLD.win} vàng, thua vẫn được ${DAILY_GOLD.loss} vàng. Không có kinh nghiệm hay đồ rơi.`,
       "Xếp hạng: thắng đứng trên thua; cùng thắng thì ít lượt hơn đứng trên, rồi tới còn nhiều máu hơn. Thua thì xếp theo sát thương đã gây.",
       "Bảng hiện 20 người đầu, có thưởng vàng theo hạng cuối ngày.",
@@ -316,6 +318,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Cần trình danh, khách không chơi được.",
     ],
     rewards: [
+      "Bậc Tầm Tướng Ký theo số tướng đã khám phá: Đồng 10, Bạc 20, Vàng 35, Bạch Kim 50, Kim Cương 65, Huyền Thoại 76. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Bậc thưởng, mỗi bậc một lần.",
       "Mở đủ một bộ tướng thì nhận vàng và huy hiệu. Mở một tướng lẻ không có thành tựu.",
       "Hạng tuần có bảng và thưởng theo hạng. Nguyên liệu thêm kiếm từ thưởng hạng các chế độ và mua ở Cửa Hàng, có giới hạn mỗi tuần.",
     ],
