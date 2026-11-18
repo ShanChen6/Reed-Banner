@@ -20,6 +20,7 @@ import {
   libraryNodes,
   noticeFor,
   pickInto,
+  putInto,
   recipeBook,
   swapSlots,
 } from "../../src/app/game/tam-tuong-ky/altar";
@@ -55,6 +56,11 @@ describe("Đài Hợp Nguyên: chọn ô", () => {
     s = pickInto(s, "elt.thuy");
     assert.deepEqual(s, ["elt.moc", "elt.thuy"]);
     assert.deepEqual(pickInto(s, "elt.kim"), ["elt.moc", "elt.kim"]);
+  });
+
+  it("chọn từ hộp thoại của một ô: đặt đúng ô đó, ô kia giữ nguyên", () => {
+    assert.deepEqual(putInto(EMPTY_SLOTS, 1, "elt.thuy"), [null, "elt.thuy"]);
+    assert.deepEqual(putInto(["elt.moc", "elt.thuy"], 0, "elt.kim"), ["elt.kim", "elt.thuy"]);
   });
 
   it("chọn cùng yếu tố hai lần (A+A)", () => {

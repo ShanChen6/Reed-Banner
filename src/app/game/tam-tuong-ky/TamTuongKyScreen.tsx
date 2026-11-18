@@ -21,6 +21,7 @@ import {
   TIER_NAME,
   altarResult,
   clearSlot,
+  putInto,
   defaultLedgerGroup,
   discoveredNodes,
   filterNodes,
@@ -289,6 +290,14 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
             onCombine={combine}
             onHint={askHint}
             onOpenSession={openSession}
+            picker={{
+              nodes: discoveredNodes(catalog, state),
+              badges: openIngredients(catalog, state),
+              onPick: (i, id) => {
+                setSlots((s) => putInto(s, i, id));
+                setCard({ kind: "info", id });
+              },
+            }}
           />
 
           <div role="group" aria-label="Chọn sổ" className="flex gap-2 lg:hidden">
@@ -433,7 +442,14 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
 
         <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
           <Panel id="ttk-ranked-altar" title="Đài Hợp Nguyên">
-            <SlotsRow slots={slots} busy={pending} result={card?.kind === "result" ? card.result : null} onClear={(i) => setSlots((s) => clearSlot(s, i))} onSwap={() => setSlots(swapSlots)} />
+            <SlotsRow
+              slots={slots}
+              busy={pending}
+              result={card?.kind === "result" ? card.result : null}
+              onClear={(i) => setSlots((s) => clearSlot(s, i))}
+              onSwap={() => setSlots(swapSlots)}
+              picker={{ nodes: rankedNodes(catalog, view.stock), counts: view.stock, units: view.units, onPick: (i, id) => setSlots((s) => putInto(s, i, id)) }}
+            />
             <AltarCard card={card} onUse={(id) => setSlots([id, null])} />
             <p className="text-caption text-[var(--ash)]">Nguyên tố lấy từ túi, dùng cho hệ nào cũng được.</p>
             <button type="button" disabled={!ready} aria-busy={pending} onClick={combine} className={buttonVariants({ className: "min-h-12 text-lg tracking-[0.12em] uppercase" })}>
@@ -679,6 +695,37 @@ function Library({
   /** Yêu cầu đổi bộ lọc từ thẻ gợi ý; `seq` mới thì áp dụng một lần (xóa ô tìm, đặt nhóm). */
   filter?: { readonly group: string | null; readonly seq: number } | null;
 }) {
+  return (
+    <Panel id="ttk-library" title="Vạn Vật Lục" hidden={hidden} className="lg:order-first">
+      <LibraryBody nodes={all} onPick={onPick} badges={badges} counts={counts} units={units} flash={flash} showHelp={showHelp} hintId={hintId} filter={filter} />
+    </Panel>
+  );
+}
+
+/** Ô tìm, lọc nhóm và lưới yếu tố có phân trang: dùng cho Vạn Vật Lục và hộp thoại chọn nguyên liệu của một ô. */
+function LibraryBody({
+  nodes: all,
+  onPick,
+  badges,
+  counts,
+  units,
+  flash = null,
+  showHelp = false,
+  hintId = null,
+  filter = null,
+  autoFocus = false,
+}: {
+  nodes: readonly CatalogNode[];
+  onPick: (id: NodeId) => void;
+  badges?: ReadonlySet<NodeId>;
+  counts?: Readonly<Record<NodeId, number>>;
+  units?: number;
+  flash?: Focus | null;
+  showHelp?: boolean;
+  hintId?: NodeId | null;
+  filter?: { readonly group: string | null; readonly seq: number } | null;
+  autoFocus?: boolean;
+}) {
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<string | null>(null);
   // Chỉnh state theo prop ngay khi dựng (mẫu “adjusting state when a prop changes” của React), không cần effect.
@@ -699,7 +746,7 @@ function Library({
   const flashIndex = flash ? nodes.findIndex((n) => n.id === flash.id) : -1;
   const listKey = `${query}|${group ?? ""}${flashIndex >= 0 ? `|${flash!.seq}` : ""}`;
   return (
-    <Panel id="ttk-library" title="Vạn Vật Lục" hidden={hidden} className="lg:order-first">
+    <>
       <label className="flex flex-col gap-1 text-sm">
         <span className="sr-only">Tìm yếu tố</span>
         <input
@@ -707,6 +754,7 @@ function Library({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Tìm yếu tố, ví dụ: thap dao"
+          autoFocus={autoFocus}
           className="min-h-11 rounded-lg border border-[var(--frame-line-mid)] bg-[var(--wood-lo)] px-3 text-[var(--on-wood)] placeholder:text-[var(--ash)]"
         />
       </label>
@@ -758,7 +806,59 @@ function Library({
         hintId={hintId ?? undefined}
       />
       {nodes.length === 0 && <p className="text-sm text-[var(--ash)]">Không có yếu tố nào khớp.</p>}
-    </Panel>
+    </>
+  );
+}
+
+/** Nguồn của hộp thoại chọn nguyên liệu: cùng danh sách với Vạn Vật Lục của chế độ đang chơi. */
+interface SlotPicker {
+  readonly nodes: readonly CatalogNode[];
+  readonly badges?: ReadonlySet<NodeId>;
+  readonly counts?: Readonly<Record<NodeId, number>>;
+  readonly units?: number;
+  readonly onPick: (index: 0 | 1, id: NodeId) => void;
+}
+
+/** Hộp thoại chọn nguyên liệu cho một ô (hộp thoại gốc của trình duyệt: Esc hoặc bấm nền để đóng). */
+function PickerDialog({ index, picker, onClose }: { index: 0 | 1 | null; picker: SlotPicker; onClose: () => void }) {
+  const ref = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const d = ref.current;
+    if (!d) return;
+    if (index !== null && !d.open) d.showModal();
+    if (index === null && d.open) d.close();
+  }, [index]);
+  const label = index === 1 ? "ô sau" : "ô trước";
+  return (
+    <dialog
+      ref={ref}
+      onClose={onClose}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+      aria-label={`Chọn nguyên liệu cho ${label}`}
+      className="campaign-atlas m-auto max-h-[min(42rem,calc(100dvh-2rem))] w-[min(36rem,calc(100vw-2rem))] rounded-xl border border-[var(--frame-gold)] bg-[var(--wood)] p-0 text-[var(--on-wood)] backdrop:bg-black/60"
+    >
+      {index !== null && (
+        <div className="flex flex-col gap-3 p-4">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="ui-title-on-wood font-serif text-lg font-bold">Chọn nguyên liệu cho {label}</h2>
+            <button type="button" onClick={onClose} aria-label="Đóng" className="grid size-11 shrink-0 place-items-center rounded-full border border-[var(--frame-line-mid)] text-lg hover:border-[var(--frame-gold)]">
+              ✕
+            </button>
+          </div>
+          <LibraryBody
+            nodes={picker.nodes}
+            badges={picker.badges}
+            counts={picker.counts}
+            units={picker.units}
+            autoFocus
+            onPick={(id) => {
+              picker.onPick(index, id);
+              onClose();
+            }}
+          />
+        </div>
+      )}
+    </dialog>
   );
 }
 
@@ -821,6 +921,7 @@ function Altar(props: {
   onCombine: () => void;
   onHint: (level: HintLevel) => void;
   onOpenSession: () => void;
+  picker?: SlotPicker;
 }) {
   const { view, slots, ready, pending, notice, recent } = props;
   const session = view.session;
@@ -832,7 +933,7 @@ function Altar(props: {
         : "border-[var(--frame-line-mid)] text-[var(--on-wood)]/90";
   return (
     <Panel id="ttk-altar" title="Đài Hợp Nguyên">
-      <SlotsRow slots={slots} busy={pending} result={props.card?.kind === "result" ? props.card.result : null} onClear={props.onClear} onSwap={props.onSwap} />
+      <SlotsRow slots={slots} busy={pending} result={props.card?.kind === "result" ? props.card.result : null} onClear={props.onClear} onSwap={props.onSwap} picker={props.picker} />
       <AltarCard card={props.card} state={props.state} onUse={props.onUseResult} onFilterGroup={props.onFilterGroup} />
       <p className="text-caption text-[var(--ash)]">Thứ tự ô có nghĩa: “Mộc + Thủy” khác “Thủy + Mộc”.</p>
       {session ? (
@@ -888,12 +989,13 @@ function Altar(props: {
  * Ô trước ⇄ ô sau. Có kết quả mới thì icon hai yếu tố vừa ghép trượt vào giữa rồi tan (mục 7.5; ghép hụt thì không
  * trượt, thẻ kết quả tự vẽ hai icon tách ra). Lớp hiệu ứng nằm đè lên hàng ô, không đổi bố cục.
  */
-function SlotsRow({ slots, busy, result, onClear, onSwap }: { slots: Slots; busy: boolean; result: AltarResult | null; onClear: (i: 0 | 1) => void; onSwap: () => void }) {
+function SlotsRow({ slots, busy, result, onClear, onSwap, picker }: { slots: Slots; busy: boolean; result: AltarResult | null; onClear: (i: 0 | 1) => void; onSwap: () => void; picker?: SlotPicker }) {
   const catalog = useCatalog();
+  const [open, setOpen] = useState<0 | 1 | null>(null);
   const merging = result && result.kind !== "miss" ? result.from.map((id) => catalog.nodes.get(id)) : null;
   return (
     <div className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-      <Slot label="Ô trước" id={slots[0]} busy={busy} onClear={() => onClear(0)} />
+      <Slot label="Ô trước" id={slots[0]} busy={busy} onClear={() => onClear(0)} onOpen={picker ? () => setOpen(0) : undefined} />
       <button
         type="button"
         onClick={onSwap}
@@ -902,7 +1004,7 @@ function SlotsRow({ slots, busy, result, onClear, onSwap }: { slots: Slots; busy
       >
         ⇄
       </button>
-      <Slot label="Ô sau" id={slots[1]} busy={busy} onClear={() => onClear(1)} />
+      <Slot label="Ô sau" id={slots[1]} busy={busy} onClear={() => onClear(1)} onOpen={picker ? () => setOpen(1) : undefined} />
       {merging && merging[0] && merging[1] && (
         <div key={result!.seq} aria-hidden className="pointer-events-none absolute inset-0 hidden motion-safe:block [--ttk-merge-dx:min(9rem,24vw)]">
           <span className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2">
@@ -917,15 +1019,17 @@ function SlotsRow({ slots, busy, result, onClear, onSwap }: { slots: Slots; busy
           </span>
         </div>
       )}
+      {picker && <PickerDialog index={open} picker={picker} onClose={() => setOpen(null)} />}
     </div>
   );
 }
 
 /**
  * Ô trước/ô sau cao cố định, ba hàng cố định: nhãn, icon, tên tối đa 2 dòng (mục 7.4). Ô có yếu tố là nút: bấm để bỏ,
- * hover/focus hiện ✕ và viền đỏ nhạt. Ô trống giữ chỗ icon bằng vòng nét đứt và không bấm được.
+ * hover/focus hiện ✕ và viền đỏ nhạt. Ô trống giữ chỗ icon bằng vòng nét đứt; có `onOpen` thì bấm để mở hộp thoại
+ * chọn nguyên liệu cho đúng ô đó (Shan 18/11/2026).
  */
-function Slot({ label, id, busy, onClear }: { label: string; id: NodeId | null; busy: boolean; onClear: () => void }) {
+function Slot({ label, id, busy, onClear, onOpen }: { label: string; id: NodeId | null; busy: boolean; onClear: () => void; onOpen?: () => void }) {
   const catalog = useCatalog();
   const node = id ? catalog.nodes.get(id) : undefined;
   const frame = `atlas-frame atlas-frame-paper relative flex h-28 w-full flex-col items-center gap-1 p-2 text-center lg:h-36 lg:gap-1.5 lg:pt-3 ${busy && node ? "ring-2 ring-[var(--frame-gold-hi)] motion-safe:animate-[ttk-shake_0.3s_ease-in-out_infinite]" : ""}`;
@@ -939,9 +1043,22 @@ function Slot({ label, id, busy, onClear }: { label: string; id: NodeId | null; 
           <span aria-hidden className="size-9 rounded-full border-2 border-dashed border-[var(--ink-soft)]/45 lg:size-11" />
         )}
       </span>
-      <span className={`line-clamp-2 font-serif text-sm leading-tight ${node ? "font-bold text-[var(--ink)]" : "text-[var(--ink-soft)]"}`}>{node?.nameVi ?? "Trống"}</span>
+      <span className={`line-clamp-2 font-serif text-sm leading-tight ${node ? "font-bold text-[var(--ink)]" : "text-[var(--ink-soft)]"}`}>{node?.nameVi ?? (onOpen ? "Bấm để chọn" : "Trống")}</span>
     </>
   );
+  if (!node && onOpen)
+    return (
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-haspopup="dialog"
+        aria-label={`Chọn nguyên liệu cho ${label.toLowerCase()}`}
+        className={`${frame} cursor-pointer transition-shadow hover:ring-2 hover:ring-[var(--frame-gold-hi)]/70 focus-visible:ring-2 focus-visible:ring-[var(--frame-gold-hi)]/70 focus-visible:outline-none`}
+      >
+        {content}
+        <span aria-hidden className="absolute top-1 right-2 text-lg leading-none font-bold text-[var(--ink-soft)]">+</span>
+      </button>
+    );
   if (!node) return <div className={frame}>{content}</div>;
   return (
     <button

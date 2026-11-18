@@ -116,6 +116,14 @@ function readBest(): Best {
 
 const CELL = 64;
 
+/** Tranh nền sa bàn theo thời kỳ: dùng lại bản đồ địa danh của Trận Đồ (public/art/formation/maps). */
+const ERA_MAP: Readonly<Record<SlEra, { readonly src: string; readonly place: string }>> = {
+  ngo: { src: "/art/formation/maps/bachDang.webp", place: "sông Bạch Đằng" },
+  loanSuQuan: { src: "/art/formation/maps/thanhDatCoHao.webp", place: "thành đất của sứ quân" },
+  dinh: { src: "/art/formation/maps/hoaLu.webp", place: "kinh thành Hoa Lư" },
+  tienLe: { src: "/art/formation/maps/aiChau.webp", place: "đất Ái Châu" },
+};
+
 function cellLook(s: SlState, i: number, seen: boolean): { label: string; fill: string; name: string } {
   const c: SlCell = s.maze.cells[i]!;
   if (!seen) return { label: "?", fill: "var(--tone-233042)", name: "chưa thấy (sương)" };
@@ -148,15 +156,41 @@ function MazeBoard({ s, onMove }: { s: SlState; onMove: (to: number) => void }) 
   const path = hover !== null ? targets.get(hover) ?? [] : [];
   const center = (i: number) => [(i % cols) * CELL + CELL / 2, Math.floor(i / cols) * CELL + CELL / 2] as const;
   const pathKeys = new Set(path.map((v, k) => edgeKey(k === 0 ? s.pos : path[k - 1]!, v)));
+  const map = ERA_MAP[s.era];
+  const W = cols * CELL;
+  const H = rows * CELL;
+  const clip = `sl-map-${s.era}`;
 
   return (
     <svg
-      viewBox={`0 0 ${cols * CELL} ${rows * CELL}`}
-      className="h-auto w-full max-w-[720px] select-none"
+      viewBox={`0 0 ${W} ${H}`}
+      className="h-auto w-full max-w-[760px] select-none rounded-xl shadow-2xl ring-2 ring-frame-line"
       role="group"
-      aria-label={`Sa bàn mê cung ${rows} hàng ${cols} cột`}
+      aria-label={`Sa bàn mê cung ${rows} hàng ${cols} cột, bản đồ ${map.place}`}
     >
-      <rect width={cols * CELL} height={rows * CELL} rx={10} fill="var(--wood-inset)" />
+      <defs>
+        <clipPath id={clip}>
+          <rect width={W} height={H} rx={10} />
+        </clipPath>
+        <radialGradient id={`${clip}-v`} cx="50%" cy="50%" r="75%">
+          <stop offset="0.55" stopColor="#120a05" stopOpacity="0.2" />
+          <stop offset="1" stopColor="#120a05" stopOpacity="0.75" />
+        </radialGradient>
+      </defs>
+      <g clipPath={`url(#${clip})`} aria-hidden>
+        <rect width={W} height={H} fill="var(--wood-inset)" />
+        <image href={map.src} width={W} height={H} preserveAspectRatio="xMidYMid slice" />
+        {/* Phủ tối và viền tối để ô, đường trên bản đồ vẫn rõ. */}
+        <rect width={W} height={H} fill="#1a0f08" opacity={0.3} />
+        <rect width={W} height={H} fill={`url(#${clip}-v)`} />
+      </g>
+      {/* Lối mòn: một vệt đất sẫm dưới mỗi đường đi đã thấy. */}
+      {edges.map((e) => {
+        if (!seen[e.a] && !seen[e.b]) return null;
+        const [x1, y1] = center(e.a);
+        const [x2, y2] = center(e.b);
+        return <line key={`road-${edgeKey(e.a, e.b)}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#2a1a0e" strokeOpacity={0.65} strokeWidth={10} strokeLinecap="round" />;
+      })}
       {edges.map((e) => {
         const key = edgeKey(e.a, e.b);
         const [x1, y1] = center(e.a);
@@ -172,7 +206,7 @@ function MazeBoard({ s, onMove }: { s: SlState; onMove: (to: number) => void }) 
             x2={x2}
             y2={y2}
             stroke={pathKeys.has(key) ? "var(--frame-gold-hi)" : blocked ? "var(--danger)" : hidden ? "var(--tone-5b3a22)" : "var(--tone-a77c38)"}
-            strokeWidth={pathKeys.has(key) ? 9 : 7}
+            strokeWidth={pathKeys.has(key) ? 8 : 5}
             strokeDasharray={locked ? "6 7" : blocked ? "3 5" : undefined}
             strokeLinecap="round"
             opacity={locked ? 0.75 : 1}
@@ -201,27 +235,27 @@ function MazeBoard({ s, onMove }: { s: SlState; onMove: (to: number) => void }) 
             className={target ? "cursor-pointer outline-none" : ""}
           >
             <rect
-              x={cx - 22}
-              y={cy - 22}
-              width={44}
-              height={44}
-              rx={9}
+              x={cx - 18}
+              y={cy - 18}
+              width={36}
+              height={36}
+              rx={8}
               fill={look.fill}
-              opacity={seen[i] ? (cleared ? 0.55 : 1) : 0.8}
+              opacity={seen[i] ? (cleared ? 0.7 : 1) : 0.88}
               stroke={target ? "var(--frame-gold-hi)" : "var(--tone-2a1b12)"}
               strokeWidth={target ? (hover === i ? 5 : 3.5) : 1.5}
             />
             {look.label && !here && (
-              <text x={cx} y={cy + 5} textAnchor="middle" fontSize={14} fontWeight={700} fill="var(--paper-hi)" style={{ pointerEvents: "none" }}>
+              <text x={cx} y={cy + 4.5} textAnchor="middle" fontSize={12.5} fontWeight={700} fill="var(--paper-hi)" style={{ pointerEvents: "none" }}>
                 {look.label}
               </text>
             )}
             {cleared && !here && (
-              <path d={`M${cx + 8} ${cy - 18}v16M${cx + 8} ${cy - 18}l10 4-10 4`} stroke="var(--paper-hi)" strokeWidth={2} fill="var(--lacquer)" style={{ pointerEvents: "none" }} />
+              <path d={`M${cx + 6} ${cy - 15}v13M${cx + 6} ${cy - 15}l9 3.5-9 3.5`} stroke="var(--paper-hi)" strokeWidth={2} fill="var(--lacquer)" style={{ pointerEvents: "none" }} />
             )}
             {here && (
               <g style={{ pointerEvents: "none" }}>
-                <circle cx={cx} cy={cy} r={16} fill="var(--lacquer)" stroke="var(--frame-gold-hi)" strokeWidth={3} />
+                <circle cx={cx} cy={cy} r={15} fill="var(--lacquer)" stroke="var(--frame-gold-hi)" strokeWidth={3} />
                 <path d={`M${cx - 4} ${cy + 9}V${cy - 10}M${cx - 4} ${cy - 10}l12 4-12 5`} stroke="var(--frame-gold-hi)" strokeWidth={2.4} strokeLinejoin="round" fill="var(--frame-gold-hi)" />
               </g>
             )}
