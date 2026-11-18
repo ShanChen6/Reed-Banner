@@ -146,11 +146,10 @@ test.describe("tài khoản đã đăng nhập", () => {
     // Nhận một lần rồi nút khóa; bậc chưa đạt cũng khóa.
     await expect(page.getByRole("region", { name: "Bậc hạng Quần Hùng" }).getByRole("button", { name: "Bậc Đồng: đã nhận thưởng" })).toBeDisabled();
     await expect(page.getByRole("region", { name: "Bậc hạng Quần Hùng" }).getByRole("button", { name: "Bậc Bạc: chưa đạt mốc" })).toBeDisabled();
-    // Đấu người: dải 1vs1 riêng, nhận Đồng 1vs1 rồi khóa.
-    const duel = page.getByRole("region", { name: "Bậc hạng Đấu người 1vs1" });
-    await duel.getByRole("button", { name: "Nhận thưởng bậc Đồng" }).click();
-    await expect(duel.getByRole("button", { name: "Bậc Đồng: đã nhận thưởng" })).toBeDisabled();
-    await expect(page.getByRole("region", { name: "Bậc hạng Đấu người 3vs3" }).getByRole("button", { name: "Nhận thưởng bậc Đồng" })).toBeEnabled();
+    // Đấu người: một dải chung 1vs1 và 3vs3, nhận Đồng rồi khóa.
+    const pvpTiers = page.getByRole("region", { name: "Bậc hạng Đấu người" });
+    await pvpTiers.getByRole("button", { name: "Nhận thưởng bậc Đồng" }).click();
+    await expect(pvpTiers.getByRole("button", { name: "Bậc Đồng: đã nhận thưởng" })).toBeDisabled();
     await page.getByRole("tab", { name: "Chơi" }).click();
     await page.getByRole("button", { name: "Đấu người" }).click();
     await page.getByRole("group", { name: "Hệ của Đinh Bộ Lĩnh" }).getByRole("button", { name: "Lôi" }).click();

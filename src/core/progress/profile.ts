@@ -104,7 +104,7 @@ export interface Profile {
   readonly specialQuests?: SpecialQuestState;
   /** Quần Hùng: id các bậc hạng đã nhận thưởng (mỗi bậc một lần). Chưa nhận bậc nào thì không có. */
   readonly arenaTiers?: readonly string[];
-  /** Đấu người: khóa các bậc đã nhận thưởng theo thể thức ("duel:bac", "team:vang"). Chưa nhận bậc nào thì không có. */
+  /** Đấu người: id các bậc đã nhận thưởng (một dải chung 1vs1 và 3vs3; khóa cũ "duel:bac" vẫn đọc được). */
   readonly pvpTiers?: readonly string[];
   /** Trận Đồ: bộ sưu tập địa danh đã khai thông. Chưa có địa danh nào thì không có. */
   readonly formation?: FormationCollectionState;

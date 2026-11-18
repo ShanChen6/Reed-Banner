@@ -199,7 +199,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     tips: [
       "Khi Đấu người được mở, bạn chọn Đấu người để đánh trực tiếp 1vs1 với người khác: ai cũng dùng Đinh Bộ Lĩnh, hệ thống ghép người có điểm gần bạn, mỗi lượt 30 giây.",
-      "Đấu người có bậc hạng riêng cho 1vs1 và 3vs3, cùng mốc và thưởng với bóng ma; lần đầu đạt mỗi bậc của mỗi thể thức nhận vàng và một món trang bị ở thẻ Bảng xếp hạng.",
+      "Đấu người có một dải bậc hạng chung cho 1vs1 và 3vs3, tính theo điểm hạng cao hơn của hai thể thức, cùng mốc và thưởng với bóng ma; lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Bảng xếp hạng.",
       "Ở Đấu người, bỏ lượt liên tục là phá trận và không được tính điểm. Mất mạng được tha 3 lần mỗi ngày; mất mạng quá 90 giây thì máy điều khiển tướng của bạn.",
       "Thắng đối thủ mạnh hơn bạn được nhiều điểm hơn, thua đối thủ yếu hơn mất nhiều điểm hơn.",
       "Cần trình danh để chơi và lên bảng.",
