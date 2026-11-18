@@ -5,7 +5,8 @@
 // Luật ở src/core/su-lo, thiết kế ở docs/02-game-modes/su-lo/gdd.md.
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { Pos } from "@/core/board";
+import { destroyCells, STANDARD_WEIGHTS, swap as boardSwap, type Pos } from "@/core/board";
+import { createRng } from "@/core/rng";
 import {
   SL_ADVISORS,
   SL_AIDS,
@@ -43,6 +44,7 @@ import {
 import { Button, ChoiceChip } from "@/components/ui";
 import { ModeBanner, ModeScreen, OrnateFrame } from "@/components/game-ui";
 import { TileArt } from "../art/tiles";
+import { destroyFrames, swapFrames, type Frame } from "../battle/animation";
 import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
 
@@ -376,18 +378,42 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
   const [sel, setSel] = useState<Pos | null>(null);
   const [stratagem, setStratagem] = useState(false);
   const phase = skPhaseIndex(sk);
-  const locked = s.phase !== "skirmish";
+  // Hoạt ảnh nước vừa đi, cùng tốc độ với trận thường (battle/animation.ts): bàn hiện theo khung, đi hết khung mới
+  // nhận nước kế. Luật đã áp ngay ở `act`; khung chỉ dựng lại từ cùng hạt giống nên khớp đúng bàn sau nước đi.
+  const [anim, setAnim] = useState<{ readonly frames: readonly Frame[]; readonly i: number; readonly id: number } | null>(null);
+  const frame = anim?.frames[anim.i];
+  useEffect(() => {
+    if (!anim || !frame) return;
+    const id = window.setTimeout(() => setAnim((a) => (a && a.id === anim.id ? (a.i + 1 < a.frames.length ? { ...a, i: a.i + 1 } : null) : a)), frame.ms);
+    return () => window.clearTimeout(id);
+  }, [anim, frame]);
+  const play = (frames: readonly Frame[]) => {
+    if (frames.length === 0 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setAnim((a) => ({ frames, i: 0, id: (a?.id ?? 0) + 1 }));
+  };
+  const board = frame?.board ?? sk.board;
+  const locked = s.phase !== "skirmish" || anim !== null;
 
   const press = (p: Pos) => {
     if (locked) return;
     if (stratagem) {
-      if (act({ type: "skirmish", action: { type: "stratagem", row: p.row } })) setStratagem(false);
+      const before = sk.board;
+      const cells = Array.from({ length: before.cols }, (_, col) => ({ row: p.row, col }));
+      const r = destroyCells(before, cells, createRng(sk.rng), STANDARD_WEIGHTS);
+      if (act({ type: "skirmish", action: { type: "stratagem", row: p.row } })) {
+        setStratagem(false);
+        play(destroyFrames(before, r.steps));
+      }
       return;
     }
     if (!sel) return setSel(p);
     if (sel.row === p.row && sel.col === p.col) return setSel(null);
     if (Math.abs(sel.row - p.row) + Math.abs(sel.col - p.col) !== 1) return setSel(p);
-    act({ type: "skirmish", action: { type: "swap", from: sel, to: p } });
+    const before = sk.board;
+    const r = boardSwap(before, sel, p, createRng(sk.rng), STANDARD_WEIGHTS);
+    const from = sel;
+    act({ type: "skirmish", action: { type: "swap", from, to: p } });
+    play(swapFrames(before, from, p, r.valid ? r.steps : null));
     setSel(null);
   };
 
@@ -427,22 +453,30 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
           role="grid"
           aria-label="Bàn giao tranh"
           className="grid"
-          style={{ gridTemplateColumns: `repeat(${sk.board.cols}, max(28px, min(52px, calc((100vw - 3.5rem) / ${sk.board.cols}))))` }}
+          style={{ gridTemplateColumns: `repeat(${board.cols}, max(28px, min(52px, calc((100vw - 3.5rem) / ${board.cols}))))` }}
         >
-          {sk.board.cells.map((t, i) => {
-            const p = { row: Math.floor(i / sk.board.cols), col: i % sk.board.cols };
+          {board.cells.map((t, i) => {
+            const p = { row: Math.floor(i / board.cols), col: i % board.cols };
+            const cellAnim = frame?.anims[i];
             const picked = sel?.row === p.row && sel.col === p.col;
             return (
-              <div role="gridcell" key={i} className="contents">
+              <div role="gridcell" key={cellAnim ? `${anim!.id}-${anim!.i}-${i}` : i} className="contents">
                 <button
                   type="button"
                   aria-label={`Hàng ${p.row + 1}, cột ${p.col + 1}${t ? `: ${t.kind}` : ""}`}
                   aria-pressed={picked}
                   disabled={locked}
                   onClick={() => press(p)}
-                  className={`aspect-square p-0.5 ${picked ? "rounded ring-2 ring-frame-gold-hi" : ""} ${stratagem && sel === null ? "hover:bg-lacquer/40" : ""}`}
+                  className={`relative aspect-square p-0.5 disabled:cursor-default ${picked ? "rounded ring-2 ring-frame-gold-hi" : ""} ${stratagem && sel === null ? "hover:bg-lacquer/40" : ""}`}
                 >
-                  {t && <TileArt kind={t.kind} special={t.special} className="size-full" />}
+                  {t && (
+                    <span
+                      className={`absolute inset-0.5 flex ${cellAnim ? `tile-anim tile-anim-${cellAnim.kind}` : ""}`}
+                      style={cellAnim ? ({ "--dx": cellAnim.dx, "--dy": cellAnim.dy, animationDuration: `${frame!.ms}ms` } as React.CSSProperties) : undefined}
+                    >
+                      <TileArt kind={t.kind} special={t.special} className="size-full" />
+                    </span>
+                  )}
                 </button>
               </div>
             );

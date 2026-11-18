@@ -32,7 +32,11 @@ export class DrizzleAccountStore implements AccountStore {
     await this.db
       .insert(accounts)
       .values({ id: accountId, name: p.name, avatarUrl: p.avatarUrl, createdAt: now, lastLoginAt: now })
-      .onConflictDoUpdate({ target: accounts.id, set: { name: p.name, avatarUrl: p.avatarUrl, lastLoginAt: now } });
+      // Ảnh đại diện chọn trong game (`/art/...`) giữ nguyên, không bị ảnh của nhà cung cấp ghi đè.
+      .onConflictDoUpdate({
+        target: accounts.id,
+        set: { name: p.name, avatarUrl: sql`case when ${accounts.avatarUrl} like '/art/%' then ${accounts.avatarUrl} else excluded.avatar_url end`, lastLoginAt: now },
+      });
     await this.db
       .insert(identities)
       .values({ provider: p.provider, subject: p.subject, accountId, createdAt: now })
@@ -94,6 +98,11 @@ export class DrizzleAccountStore implements AccountStore {
   async accountByEmail(email: string): Promise<string | null> {
     const [row] = await this.db.select({ id: accounts.id }).from(accounts).where(eq(accounts.email, email)).limit(1);
     return row?.id ?? null;
+  }
+
+  async setAvatar(accountId: string, avatarUrl: string | null): Promise<boolean> {
+    const rows = await this.db.update(accounts).set({ avatarUrl }).where(eq(accounts.id, accountId)).returning({ id: accounts.id });
+    return rows.length > 0;
   }
 
   async setEmail(accountId: string, email: string): Promise<boolean> {

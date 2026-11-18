@@ -2,6 +2,14 @@
 
 > Trạng thái: **REFERENCE** — nhật ký quyết định theo ngày.
 
+## 19/11/2026
+
+**Toàn màn hình, ảnh đại diện, Sử Lộ, sảnh Thao Luyện (Shan yêu cầu)**
+- Nút toàn màn hình nổi ở góc dưới phải có ở **mọi màn**, kể cả Chiến Trường, Cửa Hàng, Doanh Trại, Công Trạng và tài khoản (`FULLSCREEN_SCENES` gồm mọi phân cảnh).
+- **Đổi ảnh đại diện** ở trang Tài khoản: hộp thoại chân dung các tướng quân đã về trại, hoặc dùng chữ cái đầu. POST `/api/auth/avatar` `{ hero }`, server kiểm tra đã có tướng (`src/server/avatar.ts`). Ảnh chọn trong game (`/art/...`) không bị ảnh Google/GitHub ghi đè khi trình danh lại.
+- **Sử Lộ giao tranh** chạy hoạt ảnh đổi ô, xóa, rơi cùng tốc độ với trận thường (`swapFrames`, `destroyFrames` trong `battle/animation.ts`); trước đây bàn nhảy thẳng sang kết quả nên trông như bị khựng.
+- **Sảnh chuẩn bị xuất trận** (Thao Luyện, Giao Tranh) làm lại: banner tranh sân khấu theo hệ đang chọn kèm chọn chế độ; thẻ Thế trận hai phe; cột trái Chủ tướng (nguyên tố, nghề, kỹ năng), Trang bị mẫu, luật chi tiết; thẻ **Ra trận** (thủ lĩnh, độ khó, nút Vào trận) dính bên phải, lên đầu trên điện thoại. Thanh trận không còn ô độ khó trùng khi chưa vào trận.
+
 ## 18/11/2026
 
 **Ban Thưởng, Công Trạng, Tài khoản, Doanh Trại, Cửa Hàng (Shan yêu cầu)**

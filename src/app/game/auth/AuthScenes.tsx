@@ -11,6 +11,7 @@ import { RESET_TTL_MS } from "@/server/recovery";
 import { scenePath } from "../scene";
 import { SceneLink } from "../SceneContext";
 import { AccountStats } from "./AccountStats";
+import { AvatarPicker } from "./AvatarPicker";
 import { AuthCard, Divider } from "./AuthCard";
 import { AuthSceneLink, OnArrival, ProviderButtons, ReturnLink } from "./AuthLinks";
 import type { readAuthParams } from "./params";
@@ -125,15 +126,18 @@ export function AccountScene({
       )}
       <OrnateFrame level="hero" className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center gap-4">
+          <div className="flex shrink-0 flex-col items-center gap-2">
           {account.avatarUrl ? (
             // Ảnh đại diện từ Google/GitHub; nhỏ nên không cần tối ưu qua next/image.
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={account.avatarUrl} alt="" className="size-20 shrink-0 rounded-full border-2 border-frame-gold" referrerPolicy="no-referrer" />
+            <img src={account.avatarUrl} alt="Ảnh đại diện" className="size-20 shrink-0 rounded-full border-2 border-frame-gold object-cover" referrerPolicy="no-referrer" />
           ) : (
             <div aria-hidden className="flex size-20 shrink-0 items-center justify-center rounded-full border-2 border-frame-gold bg-lacquer font-serif text-3xl font-bold text-paper-hi">
               {account.name.slice(0, 1).toUpperCase()}
             </div>
           )}
+          <AvatarPicker current={account.avatarUrl} />
+          </div>
           <div className="min-w-0 flex-1">
             <p className="text-caption font-semibold tracking-[0.15em] text-frame-gold uppercase">Tài khoản đã ghi danh</p>
             <h1 className="ui-title-on-wood truncate font-serif text-2xl font-bold">{account.name}</h1>

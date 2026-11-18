@@ -1,6 +1,6 @@
 "use client";
 
-// Nút nổi bật/tắt toàn màn hình ở góc dưới bên phải, chỉ hiện ở các chế độ chơi (FULLSCREEN_SCENES), không tự bật.
+// Nút nổi bật/tắt toàn màn hình ở góc dưới bên phải, hiện ở mọi màn (FULLSCREEN_SCENES), không tự bật.
 // Trên điện thoại, màn nào có thanh dính đáy (lớp .mobile-dock) thì nút nhích lên trên thanh đó (globals.css). Toàn màn
 // hình áp cho cả trang nên đổi phân cảnh vẫn giữ; đang toàn màn hình mà sang màn khác thì nút vẫn hiện để thoát.
 // Trình duyệt không cho (iPhone Safari chỉ cho video toàn màn hình) thì ẩn nút; ở đó "Thêm vào màn hình chính" là

@@ -92,3 +92,21 @@ describe("hoạt ảnh trang /demo", () => {
     assert.deepEqual(frame!.anims[1], { kind: "bounce", dx: -1, dy: 0 });
   });
 });
+
+describe("hoạt ảnh giao tranh Sử Lộ", () => {
+  it("nước hợp lệ: khung đổi ô rồi xóa, rơi, bàn cuối khớp bàn sau nước đi; tốc độ như trận thường", async () => {
+    const { newSkirmish, findBestSwap } = await import("../../src/core/su-lo/skirmish");
+    const { swap, STANDARD_WEIGHTS } = await import("../../src/core/board");
+    const { createRng } = await import("../../src/core/rng");
+    const { swapFrames } = await import("../../src/app/game/battle/animation");
+    const sk = newSkirmish(7, 900, 900, 10);
+    const mv = findBestSwap(sk)!;
+    const r = swap(sk.board, mv.from, mv.to, createRng(sk.rng), STANDARD_WEIGHTS);
+    assert.ok(r.valid);
+    const frames = swapFrames(sk.board, mv.from, mv.to, r.steps);
+    assert.equal(frames[0]!.ms, 170);
+    assert.equal(frames[0]!.sound?.kind, "swap");
+    assert.deepEqual(frames.at(-1)!.board, r.board);
+    assert.equal(swapFrames(sk.board, mv.from, mv.to, null)[0]!.anims[mv.from.row * sk.board.cols + mv.from.col]!.kind, "bounce");
+  });
+});

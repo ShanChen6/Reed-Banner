@@ -58,6 +58,8 @@ export function BattleHeader({
   state,
   survival,
 }: BattleHeaderProps) {
+  // Sảnh chờ trước trận đã có banner, độ khó và nút riêng: thanh này chỉ còn tiêu đề cho trình đọc màn hình.
+  if (!started) return <h1 className="sr-only">{online ? "Cờ Lau · Giao Tranh" : "Cờ Lau · Thao Luyện"}</h1>;
   return (
     <header className="flex flex-wrap items-center justify-between gap-2 border-b border-frame-line-soft pb-2">
       {/* Tên chế độ đã ở header chung; giữ h1 cho trình đọc màn hình. */}

@@ -1207,7 +1207,7 @@ export default function DemoGame({
               : `${expeditionObjective.type === "hold" ? "Giữ vị trí" : "Hộ tống đoàn dân"}: đã giữ ${Math.min(completedPlayerTurns(live), expeditionObjective.turns)}/${expeditionObjective.turns} lượt của bạn, hoặc hạ hết đối thủ.`}
           </p>
         )}
-        <DongSonBand className="-mt-1 w-full opacity-70" />
+        {started && <DongSonBand className="-mt-1 w-full opacity-70" />}
         {survival && started && (
           <WaveBanner survival={survival} resting={atBreak} />
         )}

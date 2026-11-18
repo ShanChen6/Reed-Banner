@@ -57,7 +57,15 @@ export interface AccountStore {
   /** Số mã đã tạo cho tài khoản từ `since` (giới hạn số thư gửi đi). */
   countTokens(accountId: string, purpose: TokenPurpose, since: number): Promise<number>;
   deleteTokens(accountId: string, purpose: TokenPurpose): Promise<void>;
+  /**
+   * Đặt ảnh đại diện chọn trong game (đường dẫn `/art/...`), hoặc null để về chữ cái đầu. Ảnh trong game không bị
+   * ảnh Google/GitHub ghi đè khi trình danh lại (`link`). False nếu tài khoản không có.
+   */
+  setAvatar(accountId: string, avatarUrl: string | null): Promise<boolean>;
 }
+
+/** Ảnh đại diện người chơi tự chọn trong game (chân dung tướng quân), khác ảnh từ Google/GitHub. */
+export const isGameAvatar = (url: string | null | undefined): url is string => typeof url === "string" && url.startsWith("/art/");
 
 export type TokenPurpose = "verify" | "reset";
 
@@ -114,7 +122,7 @@ export class MemoryAccountStore implements AccountStore {
     this.accounts.set(accountId, {
       id: accountId,
       name: p.name,
-      avatarUrl: p.avatarUrl,
+      avatarUrl: isGameAvatar(old?.avatarUrl) ? old.avatarUrl : p.avatarUrl,
       createdAt: old?.createdAt ?? now,
       lastLoginAt: now,
     });
@@ -151,6 +159,13 @@ export class MemoryAccountStore implements AccountStore {
 
   async accountByEmail(email: string): Promise<string | null> {
     return [...this.emails.entries()].find(([, e]) => e === email)?.[0] ?? null;
+  }
+
+  async setAvatar(accountId: string, avatarUrl: string | null): Promise<boolean> {
+    const old = this.accounts.get(accountId);
+    if (!old) return false;
+    this.accounts.set(accountId, { ...old, avatarUrl });
+    return true;
   }
 
   async setEmail(accountId: string, email: string): Promise<boolean> {
