@@ -193,7 +193,7 @@ export default function ArenaScreen() {
         title="Quần Hùng"
         kicker="Đấu người"
         art="/art/home/arena.webp"
-        description={`Đánh với đội phòng thủ của người chơi khác, do máy điều khiển ở mức ${DIFFICULTY_NAME[ARENA_DIFFICULTY]}. Thắng cộng điểm, thua trừ điểm.`}
+        description={`Đánh với đội phòng thủ của hào kiệt khác, do máy điều khiển ở mức ${DIFFICULTY_NAME[ARENA_DIFFICULTY]}. Thắng cộng điểm, thua trừ điểm.`}
         stats={[
           { label: "Điểm", value: data.rating },
           { label: "Hạng", value: data.rank != null ? `#${data.rank}` : "–" },
@@ -206,7 +206,7 @@ export default function ArenaScreen() {
         extraTabs={[
           {
             value: "board",
-            label: "Bảng xếp hạng",
+            label: "Công trạng",
             content: (
               <>
                 <section aria-labelledby="arena-board-ghost" className="flex flex-col gap-4">

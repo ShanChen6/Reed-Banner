@@ -2,7 +2,7 @@
 
 import { Select as UISelect, Button, buttonVariants, choiceVariants } from "@/components/ui";
 
-// Túi đồ và 9 ô trang bị của Chơi thử (Tiến trình) và Chơi online, kèm cửa hàng trang bị. Luật nằm trong
+// Kho đồ và 9 ô trang bị của Chơi thử (Tiến trình) và Chơi online, kèm cửa hàng trang bị. Luật nằm trong
 // @/core (applyProfileAction); ở đây chỉ hiển thị và gửi thao tác, giống ProgressPanel.
 
 import { useState } from "react";
@@ -196,7 +196,7 @@ export default function GearPanel({
     >
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-semibold">
-          Trang bị · Túi đồ {profile.bag.length}/{BAG_LIMIT}
+          Trang bị · Kho đồ {profile.bag.length}/{BAG_LIMIT}
         </h2>
         <span className="tabular-nums">Vàng: {profile.gold}</span>
         {message && <span className="text-danger">{message}</span>}
@@ -278,7 +278,7 @@ export default function GearPanel({
         </ul>
       )}
 
-      <h3 className="mt-3 mb-1 font-semibold">Túi đồ</h3>
+      <h3 className="mt-3 mb-1 font-semibold">Kho đồ</h3>
       {profile.bag.length === 0 ? (
         <p className="opacity-60">
           Chưa có món nào. Thắng trận chắc chắn rơi 1 món; cũng có thể mua ở{" "}

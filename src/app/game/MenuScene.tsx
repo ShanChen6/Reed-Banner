@@ -57,7 +57,7 @@ const MODES: readonly Mode[] = [
   },
   { scene: "TRIAL", group: "battle", title: "Tháp Thí Luyện", text: MODE_TEXT.TRIAL, art: "trial", kicker: "Leo tháp", status: "100 tầng · thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
   { scene: "DESTINY", group: "battle", title: "Tháp Thiên Mệnh", text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp", status: "Mỗi chu kỳ một vận · tranh hạng thiên hạ", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
-  { scene: "SURVIVAL", group: "battle", title: "Trấn Ải", text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Sinh tồn", status: "Ghi danh bảng xếp hạng mỗi tuần", cta: "Giữ ải" },
+  { scene: "SURVIVAL", group: "battle", title: "Trấn Ải", text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Sinh tồn", status: "Ghi danh bảng công trạng mỗi tuần", cta: "Giữ ải" },
   { scene: "DAILY", group: "battle", title: "Nhật Lệnh", text: MODE_TEXT.DAILY, art: "daily", kicker: "Mỗi ngày", status: "Lệnh mới ban mỗi ngày", cta: "Nhận lệnh" },
   { scene: "ARENA", group: "battle", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Đấu người", status: "Tranh ngôi đầu bảng mỗi tuần", cta: "Thách đấu" },
   { scene: "FORMATION", group: "puzzle", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Vào trận ngay · không cần tài khoản", cta: "Bày trận" },
@@ -91,7 +91,7 @@ const UTILITIES: readonly { scene: Scene; title: string; icon: UtilityIcon }[] =
   { scene: "SHOP", title: "Cửa Hàng", icon: "shop" },
   { scene: "QUESTS", title: "Nhiệm vụ", icon: "scroll" },
   { scene: "LEADERBOARD", title: "Công Trạng", icon: "rank" },
-  { scene: "TIERS", title: "Thưởng Bậc", icon: "tier" },
+  { scene: "TIERS", title: "Ban Thưởng", icon: "tier" },
   { scene: "PRACTICE", title: "Thao Luyện", icon: "swords" },
 ];
 
@@ -294,7 +294,7 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
             <>
               <span className="flex min-w-0 flex-1 items-center gap-1.5 text-[var(--ash)]">
                 {needsLogin && <LockGlyph />}
-                <span className="leading-tight">{needsLogin ? "Trình danh để có tên trên bảng xếp hạng" : mode.status}</span>
+                <span className="leading-tight">{needsLogin ? "Trình danh để có tên trên bảng công trạng" : mode.status}</span>
               </span>
               <span className="home-enter flex shrink-0 items-center gap-1 rounded-full border border-frame-gold/50 bg-black/30 px-3 py-1 font-serif font-semibold transition group-hover:border-frame-gold group-hover:bg-frame-gold/20">
                 {needsLogin ? "Trình danh" : mode.cta} <span aria-hidden>›</span>

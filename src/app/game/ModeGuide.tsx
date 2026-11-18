@@ -8,7 +8,7 @@ import { MODE_GUIDES, type GuideScene, type ModeGuide as ModeGuideData } from ".
 const SECTIONS: readonly { readonly key: Exclude<keyof ModeGuideData, "goal">; readonly title: string }[] = [
   { key: "steps", title: "Cách chơi" },
   { key: "rules", title: "Luật cần nhớ" },
-  { key: "rewards", title: "Phần thưởng" },
+  { key: "rewards", title: "Ban thưởng" },
   { key: "tips", title: "Mẹo nhỏ" },
 ];
 

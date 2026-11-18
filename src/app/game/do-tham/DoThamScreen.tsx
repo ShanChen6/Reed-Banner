@@ -477,7 +477,7 @@ export default function DoThamScreen() {
             </section>
 
             <p className="text-sm text-on-wood-soft">
-              Bản chơi thử, không cần mạng: chưa có thưởng và bảng xếp hạng. Ván dở và thời gian tốt nhất mỗi bậc lưu trên trình duyệt này.
+              Bản chơi thử, không cần mạng: chưa có thưởng và bảng công trạng. Ván dở và thời gian tốt nhất mỗi bậc lưu trên trình duyệt này.
             </p>
           </aside>
         </div>

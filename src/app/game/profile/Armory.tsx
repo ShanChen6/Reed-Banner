@@ -19,6 +19,7 @@ import {
   type Profile,
   type ProfileAction,
 } from "@/core";
+import { Pagination } from "@/components/ui/Pagination";
 import { GearIcon, GearActionIcon } from "../art/gear";
 import { gearText, PROFESSION_NAME, SLOT_NAME, TIER_CLASS } from "../battle/labels";
 import { SceneLink } from "../SceneContext";
@@ -33,6 +34,9 @@ const SHELVES: readonly { id: Shelf; name: string; slots: readonly GearSlot[] }[
   { id: "armor", name: "Phục sức", slots: ["dinhMao", "yPhuc", "hoThu", "baoNgoa"] },
   { id: "jewelry", name: "Trang sức", slots: ["gioiChi", "hangLien", "hoPhu", "ngocBoi"] },
 ];
+
+/** Số ô kho một trang: chia hết cho 8 và 12 cột nên hàng nào cũng đầy (Shan 18/11/2026: hiện cả ô trống). */
+const BAG_PAGE = 96;
 
 const SLOT_ORDER = Object.fromEntries(GEAR_SLOTS.map((s, i) => [s, i])) as Record<GearSlot, number>;
 
@@ -58,6 +62,7 @@ export default function Armory({
   const [merging, setMerging] = useState(false);
   const [tray, setTray] = useState<string[]>([]);
   const [target, setTarget] = useState<string>(focusCharacter);
+  const [page, setPage] = useState(0);
 
   const slots = SHELVES.find((s) => s.id === shelf)!.slots;
   const items = profile.bag
@@ -66,6 +71,14 @@ export default function Armory({
   const item = profile.bag.find((it) => it.id === selected) ?? null;
   const trayItems = tray.flatMap((id) => profile.bag.filter((it) => it.id === id));
   const first = trayItems[0];
+  // Không lọc thì lưới đủ sức chứa của kho (ô trống vẫn hiện); có lọc thì đủ trang cuối của kết quả.
+  const filtered = shelf !== "all" || slotFilter !== "all";
+  const cells = filtered ? Math.max(BAG_PAGE, Math.ceil(items.length / BAG_PAGE) * BAG_PAGE) : Math.max(BAG_LIMIT, items.length);
+  const pages = Math.max(1, Math.ceil(cells / BAG_PAGE));
+  const current = Math.min(page, pages - 1);
+  const from = current * BAG_PAGE;
+  const pageItems = items.slice(from, from + BAG_PAGE);
+  const empties = Math.max(0, Math.min(BAG_PAGE, cells - from) - pageItems.length);
 
   const run = (a: ProfileAction, after?: () => void) =>
     void onAction(a).then((error) => {
@@ -79,7 +92,7 @@ export default function Armory({
 
   return (
     <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(19rem,24rem)]">
-      <section aria-label="Kho đồ" className="barracks-panel flex flex-col rounded-lg p-3">
+      <section aria-label="Kho đồ" className="barracks-panel flex flex-col rounded-lg p-3 lg:min-h-[calc(100dvh-14rem)]">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="barracks-title font-serif text-xl font-bold">
             Kho đồ <span className="text-lg text-[var(--frame-gold-hi)] tabular-nums">{profile.bag.length}/{BAG_LIMIT}</span>
@@ -108,6 +121,7 @@ export default function Armory({
                 onClick={() => {
                   setShelf(s.id);
                   setSlotFilter("all");
+                  setPage(0);
                 }}
                 className={`barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-3 text-[15px] ${shelf === s.id ? "is-on" : ""}`}
               >
@@ -120,7 +134,10 @@ export default function Armory({
               <span className="sr-only">Lọc theo ô</span>
               <select
                 value={slotFilter}
-                onChange={(e) => setSlotFilter(e.target.value as GearSlot | "all")}
+                onChange={(e) => {
+                  setSlotFilter(e.target.value as GearSlot | "all");
+                  setPage(0);
+                }}
                 className="min-h-9 pointer-coarse:min-h-11 cursor-pointer bg-transparent px-2 text-[15px] text-on-wood outline-none"
               >
                 <option value="all" className="bg-wood-inset">Mọi ô</option>
@@ -137,17 +154,17 @@ export default function Armory({
           <p className="mt-2 text-sm text-[var(--on-wood-soft)]">Chọn 3 món cùng ô, cùng hệ, cùng phẩm (vũ khí cùng nghề). Món không ghép chung được sẽ mờ đi.</p>
         )}
 
-        <div className="barracks-scroll mt-2 max-h-[65dvh] overflow-y-auto overscroll-contain pr-1 lg:max-h-[max(20rem,calc(100dvh-17rem))]">
-          {items.length === 0 ? (
-            <div className="flex flex-col items-center gap-2 py-10 text-center text-[15px] text-[var(--on-wood-soft)]">
+        <div className="mt-2 flex flex-1 flex-col gap-2">
+          {items.length === 0 && (
+            <div className="flex flex-wrap items-center justify-center gap-3 py-2 text-center text-[15px] text-[var(--on-wood-soft)]">
               <p>{profile.bag.length === 0 ? "Kho đồ trống. Thắng trận chắc chắn rơi 1 món." : "Không có món nào thuộc loại này."}</p>
               <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-4">
                 <ShopGlyph className="size-4" /> Mua ở Cửa Hàng
               </SceneLink>
             </div>
-          ) : (
-            <ul className="grid grid-cols-[repeat(auto-fill,minmax(4.25rem,1fr))] gap-2" aria-label="Trang bị trong kho">
-              {items.map((it) => {
+          )}
+          <ul className="grid grid-cols-8 gap-1 sm:gap-2 xl:grid-cols-12" aria-label="Trang bị trong kho">
+              {pageItems.map((it) => {
                 const by = wearerOf(profile, it.id);
                 const inTray = tray.includes(it.id);
                 const dim = merging && !inTray && ((first && !mergeable(first, it)) || tray.length >= 3);
@@ -172,7 +189,21 @@ export default function Armory({
                   </li>
                 );
               })}
+              {Array.from({ length: empties }, (_, i) => (
+                <li key={`empty-${i}`} aria-hidden className="aspect-square rounded-lg border border-dashed border-[var(--frame-line-soft)] bg-black/20" />
+              ))}
             </ul>
+          {pages > 1 && (
+            <Pagination
+              label="Trang kho đồ"
+              className="mt-auto pt-2"
+              hasPrevious={current > 0}
+              hasNext={current < pages - 1}
+              onPrevious={() => setPage(current - 1)}
+              onNext={() => setPage(current + 1)}
+            >
+              <span className="text-caption text-on-wood-soft tabular-nums">Trang {current + 1}/{pages}</span>
+            </Pagination>
           )}
         </div>
       </section>

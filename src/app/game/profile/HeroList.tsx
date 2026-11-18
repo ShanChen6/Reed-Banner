@@ -5,6 +5,7 @@
 
 import { useId, useRef, useState, type KeyboardEvent, type Ref } from "react";
 import { ELEMENTS, PROFESSIONS, type Element, type Profession } from "@/core";
+import { Pagination } from "@/components/ui/Pagination";
 import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { bustUrl, portraitUrl } from "../art/portrait-data";
@@ -26,7 +27,8 @@ const TEAM_FILTER_NAME: Readonly<Record<Exclude<TeamFilter, "all">, string>> = {
 };
 
 /** Số tướng hiện mỗi đợt ở danh sách Tướng quân. */
-const HERO_BATCH = 24;
+/** Số tướng một trang của lưới (Shan 18/11/2026: phân trang thay cho nút "Hiện thêm"). */
+const HERO_PAGE = 15;
 
 const toggle = <T,>(list: readonly T[], v: T): T[] => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v]);
 
@@ -54,17 +56,26 @@ export default function HeroList({
   scrollRef?: Ref<HTMLDivElement>;
 }) {
   const [panel, setPanel] = useState(false);
-  // Có thể có hàng chục tướng: hiện dần từng đợt để trang không dài hàng nghìn px trên điện thoại.
-  const [limit, setLimit] = useState(HERO_BATCH);
   const panelId = useId();
   const listRef = useRef<HTMLUListElement>(null);
   const active = filter.elements.length + filter.professions.length + (filter.team === "all" ? 0 : 1);
   const selected = entries.find((e) => e.key === selectedKey) ?? null;
   const hiddenSelected = selected !== null && !shown.some((e) => e.key === selected.key);
   const focusKey = shown.some((e) => e.key === selectedKey) ? selectedKey : (shown[0]?.key ?? null);
-  // Tướng đang chọn luôn nằm trong phần đã hiện.
+  // Có thể có hàng chục tướng: chia trang để lưới không dài trên điện thoại. Đổi tướng đang chọn (kể cả chọn từ nơi
+  // khác) thì mở trang có tướng đó; đổi lọc hoặc sắp xếp thì về trang có tướng đang chọn, không có thì trang đầu.
   const selectedAt = shown.findIndex((e) => e.key === selectedKey);
-  const visible = shown.slice(0, Math.max(limit, selectedAt + 1));
+  const pageOfSelected = selectedAt >= 0 ? Math.floor(selectedAt / HERO_PAGE) : 0;
+  const pages = Math.max(1, Math.ceil(shown.length / HERO_PAGE));
+  const [page, setPage] = useState(pageOfSelected);
+  const signature = `${selectedKey ?? ""}|${shown.map((e) => e.key).join(",")}`;
+  const [seen, setSeen] = useState(signature);
+  if (seen !== signature) {
+    setSeen(signature);
+    setPage(pageOfSelected);
+  }
+  const current = Math.min(page, pages - 1);
+  const visible = shown.slice(current * HERO_PAGE, (current + 1) * HERO_PAGE);
 
   // Lưới dùng roving tabindex: Tab vào một thẻ, mũi tên đi trong lưới, Home/End về đầu/cuối.
   const onGridKey = (ev: KeyboardEvent<HTMLUListElement>) => {
@@ -264,12 +275,17 @@ export default function HeroList({
             ))}
           </ul>
         )}
-        {shown.length > visible.length && (
-          <div className="flex justify-center py-3">
-            <button type="button" onClick={() => setLimit(visible.length + HERO_BATCH)} className="barracks-btn min-h-11 rounded-md px-5">
-              Hiện thêm tướng ({shown.length - visible.length} còn lại)
-            </button>
-          </div>
+        {pages > 1 && (
+          <Pagination
+            label="Trang tướng quân"
+            className="py-3"
+            hasPrevious={current > 0}
+            hasNext={current < pages - 1}
+            onPrevious={() => setPage(current - 1)}
+            onNext={() => setPage(current + 1)}
+          >
+            <span className="text-caption text-on-wood-soft tabular-nums">Trang {current + 1}/{pages}</span>
+          </Pagination>
         )}
       </div>
     </div>

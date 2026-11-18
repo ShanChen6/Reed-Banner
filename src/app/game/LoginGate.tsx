@@ -11,7 +11,7 @@ import { MODE_INFO } from "./modeInfo";
 import type { Scene } from "./scene";
 import { SceneLink } from "./SceneContext";
 
-const DEFAULT_REASON = "Chế độ này tính bảng xếp hạng và có thưởng nên cần tài khoản đã ghi danh.";
+const DEFAULT_REASON = "Chế độ này tính bảng công trạng và có thưởng nên cần tài khoản đã ghi danh.";
 
 export default function LoginGate({ scene, name, reason }: { scene: Scene; name: string; reason?: string }) {
   const info = MODE_INFO[scene];

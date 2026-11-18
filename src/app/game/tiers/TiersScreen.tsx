@@ -1,6 +1,6 @@
 "use client";
 
-// Thưởng Bậc: gom dải bậc của mọi chế độ xếp hạng vào một trang (Quần Hùng, Đấu người, Trấn Ải, Trận Đồ, Nhật Lệnh,
+// Ban Thưởng: gom dải bậc của mọi chế độ xếp hạng vào một trang (Quần Hùng, Đấu người, Trấn Ải, Trận Đồ, Nhật Lệnh,
 // Tháp Thiên Mệnh, Tầm Tướng Ký). Đạt mốc thì nhận vàng và một món, mỗi bậc một lần, như trong từng chế độ. Dữ liệu
 // từ GET /api/tiers, nhận qua POST /api/tiers. Luật ở docs/02-game-modes/README.md mục 5.9.
 
@@ -62,24 +62,24 @@ export default function TiersScreen() {
       // Cập nhật số vàng trên thanh đầu trang.
       if (body.claimed) void fetchProfile();
     } catch {
-      setNote({ id: l.id, ok: false, text: "Mất kết nối tới máy chủ, xin thử lại." });
+      setNote({ id: l.id, ok: false, text: "Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin thử lại sau giây lát." });
     }
     setBusy(null);
   };
 
   if (!ladders)
     return (
-      <ModeScreen label="Thưởng Bậc">
-        <p className="py-24 text-center text-on-wood-soft">{failed ? "Chưa mở được thưởng bậc. Xin tải lại trang." : "Đang tải…"}</p>
+      <ModeScreen label="Ban Thưởng">
+        <p className="py-24 text-center text-on-wood-soft">{failed ? "Chưa mở được Ban Thưởng. Xin tải lại trang." : "Đang tải…"}</p>
       </ModeScreen>
     );
 
   const ready = ladders.reduce((n, l) => n + readyCount(l), 0);
   return (
-    <ModeScreen label="Thưởng Bậc">
+    <ModeScreen label="Ban Thưởng">
       <OrnateFrame>
         <SectionTitle description="Mỗi chế độ xếp hạng có sáu bậc. Lần đầu đạt mốc nhận vàng và một món trang bị hệ của Đinh Bộ Lĩnh; mỗi bậc nhận một lần, nhận rồi nút khóa.">
-          Thưởng Bậc
+          Ban Thưởng
         </SectionTitle>
         <p role="status" className="text-sm text-on-wood">
           {ready > 0 ? (

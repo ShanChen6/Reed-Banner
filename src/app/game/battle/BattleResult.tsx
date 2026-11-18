@@ -141,7 +141,7 @@ export function BattleResult({
               </span>
             </>
           ) : outcome && outcome.soldFor > 0 ? (
-            `Túi đồ đầy: món rơi được bán ngay, +${outcome.soldFor} vàng.`
+            `Kho đồ đầy: món rơi được bán ngay, +${outcome.soldFor} vàng.`
           ) : (
             "Không rơi trang bị."
           )}
@@ -165,7 +165,7 @@ export function BattleResult({
               {outcome.destiny.completed
                 ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}, tầng cuối của tháp. Lượt leo hoàn thành.`
                 : outcome.destiny.won
-                ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}. Hãy chọn một phần thưởng.`
+                ? `Thiên Mệnh: đã vượt tầng ${outcome.destiny.floor}. Hãy chọn một ban thưởng.`
                 : `Thiên Mệnh: đội hình gục ở tầng ${outcome.destiny.floor}. Lượt leo kết thúc tại đây.`}
             </p>
           )}
@@ -281,7 +281,7 @@ export function BattleResult({
             scene="DAILY"
             className={buttonVariants({ size: "sm" })}
           >
-            Xem bảng xếp hạng
+            Xem công trạng
           </SceneLink>
         )}
         {arenaFoe && (

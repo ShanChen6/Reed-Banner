@@ -40,7 +40,7 @@ export function tierClaimNote(c: { readonly tier: string; readonly gold: number;
   const name = ARENA_TIERS.find((t) => t.id === c.tier)?.name ?? "";
   return (
     `Đã nhận ${c.gold} vàng thưởng bậc ${name}` +
-    (c.item ? ` và ${gearText(c.item)} (đã vào túi đồ).` : c.soldFor > 0 ? `; túi đồ đầy nên món thưởng được bán ngay, thêm ${c.soldFor} vàng.` : ".")
+    (c.item ? ` và ${gearText(c.item)} (đã vào kho đồ).` : c.soldFor > 0 ? `; kho đồ đầy nên món thưởng được bán ngay, thêm ${c.soldFor} vàng.` : ".")
   );
 }
 

@@ -294,7 +294,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
         refs: ["S07", "W10", "U06"],
       },
       {
-        text: "Người đến nói chuyện bạn chọn chỉ đổi cảnh kể, không đổi kết cục hay phần thưởng.",
+        text: "Người đến nói chuyện bạn chọn chỉ đổi cảnh kể, không đổi kết cục hay ban thưởng.",
         basis: "reconstructed",
       },
     ],
@@ -390,7 +390,7 @@ export const CHAPTER_FIVE_COPY: readonly MissionCopy[] = [
         refs: ["S06", "W11"],
       },
       {
-        text: "Ba trận công thành và lựa chọn trước trận là cách game kể; lựa chọn chỉ đổi lời kể, không cho thêm lương hay phần thưởng.",
+        text: "Ba trận công thành và lựa chọn trước trận là cách game kể; lựa chọn chỉ đổi lời kể, không cho thêm lương hay ban thưởng.",
         basis: "reconstructed",
         refs: ["U07"],
       },

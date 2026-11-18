@@ -41,7 +41,7 @@ export const MODE_INFO: Partial<Record<Scene, ModeInfo>> = {
   },
   DESTINY: {
     text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp",
-    perks: ["Đội hình khóa cho cả lượt leo", "Máu, năng lượng và lương mang sang tầng sau", "Thắng mỗi tầng chọn Phúc hoặc hồi phục", "Bảng xếp hạng riêng cho từng chu kỳ tuần"],
+    perks: ["Đội hình khóa cho cả lượt leo", "Máu, năng lượng và lương mang sang tầng sau", "Thắng mỗi tầng chọn Phúc hoặc hồi phục", "Bảng công trạng riêng cho từng chu kỳ tuần"],
   },
   SURVIVAL: {
     text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Giữ ải",
@@ -49,7 +49,7 @@ export const MODE_INFO: Partial<Record<Scene, ModeInfo>> = {
   },
   DAILY: {
     text: MODE_TEXT.DAILY, art: "daily", kicker: "Mỗi ngày",
-    perks: ["Đội cho sẵn, ai cũng đánh cùng một đề", `Thắng ${DAILY_GOLD.win} vàng, thua vẫn được ${DAILY_GOLD.loss} vàng`, "Bảng xếp hạng làm mới mỗi ngày"],
+    perks: ["Đội cho sẵn, ai cũng đánh cùng một đề", `Thắng ${DAILY_GOLD.win} vàng, thua vẫn được ${DAILY_GOLD.loss} vàng`, "Bảng công trạng làm mới mỗi ngày"],
   },
   ARENA: {
     text: MODE_TEXT.ARENA, art: "arena", kicker: "Đấu đội",

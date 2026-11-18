@@ -65,7 +65,7 @@ import { ModeGuideTabs } from "../ModeGuide";
 import ModeTierPanel from "../leaderboard/ModeTierPanel";
 
 /** Thẻ Bậc thưởng của Tầm Tướng Ký: bậc theo số tướng đã khám phá (cả chế độ Thường và Hạng). */
-const TTK_TIER_TAB = [{ value: "tier", label: "Bậc thưởng", content: <ModeTierPanel mode="tamTuongKy" /> }];
+const TTK_TIER_TAB = [{ value: "tier", label: "Ban thưởng", content: <ModeTierPanel mode="tamTuongKy" /> }];
 
 /** Sổ đang chạy, theo `packId` server trả về (Gói 1, hoặc Gói 1 + Gói 2). */
 const CatalogContext = createContext<Catalog>(catalogForPack(undefined));

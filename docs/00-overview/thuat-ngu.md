@@ -1,6 +1,6 @@
 # Thuật ngữ
 
-> Cập nhật: 13/11/2026 (Xưng hô: vài chỗ gọi "Chúa công"; thêm mục Văn phong giao diện, Shan duyệt; 11/11: thêm từ của Tháp Thiên Mệnh; 27/10: tách từ `docs/README.md` ở DOC-02, nội dung giữ nguyên)
+> Cập nhật: 18/11/2026 (công trạng, ban thưởng, kho đồ; 13/11: Xưng hô: vài chỗ gọi "Chúa công"; thêm mục Văn phong giao diện, Shan duyệt; 11/11: thêm từ của Tháp Thiên Mệnh; 27/10: tách từ `docs/README.md` ở DOC-02, nội dung giữ nguyên)
 > Trạng thái: **REFERENCE** — thuật ngữ dùng chung.
 
 | Thuật ngữ | Nghĩa |
@@ -30,11 +30,11 @@
 
 ## Từ không dùng trên giao diện
 
-Chữ hiện cho người chơi viết bằng tiếng Việt: run → lượt leo; roster → đội hình; active → tướng ra trận; build → nghề và hệ; HP → máu; ATK → Công; DEF → Thủ; NL → năng lượng (riêng nhãn thanh hẹp trên thẻ trận giữ "NL"); stack → cộng dồn; clear → vượt (tầng); boss → trùm; buff → hiệu ứng có lợi; debuff → hiệu ứng bất lợi; server → máy chủ; online → trực tuyến (hoặc "trận có đồng hồ"); offline → không cần mạng; preview → xem trước; tab → thẻ hoặc "nơi khác"; match-3 → ghép ba. Tên mã tiếng Anh chỉ ở trong code và tài liệu kỹ thuật. Tên chế độ cũ (Chiến dịch, Sinh tồn, Đấu trường, Thử thách ngày, Tháp Vận Mệnh, Đánh trùm) không dùng trên giao diện; tên hiện hành ở [Chế độ chơi](../02-game-modes/README.md).
+Chữ hiện cho người chơi viết bằng tiếng Việt: run → lượt leo; roster → đội hình; active → tướng ra trận; build → nghề và hệ; HP → máu; ATK → Công; DEF → Thủ; NL → năng lượng (riêng nhãn thanh hẹp trên thẻ trận giữ "NL"); stack → cộng dồn; clear → vượt (tầng); boss → trùm; buff → hiệu ứng có lợi; debuff → hiệu ứng bất lợi; server → máy chủ; online → trực tuyến (hoặc "trận có đồng hồ"); offline → không cần mạng; preview → xem trước; tab → thẻ hoặc "nơi khác"; match-3 → ghép ba. Theo Shan 18/11/2026: bảng xếp hạng, BXH → **công trạng** (thẻ "Công trạng", "bảng công trạng"); phần thưởng → **ban thưởng** (trang Ban Thưởng, thẻ "Ban thưởng"); túi đồ → **kho đồ**; "người chơi khác" → **hào kiệt khác**. Tên mã tiếng Anh chỉ ở trong code và tài liệu kỹ thuật. Tên chế độ cũ (Chiến dịch, Sinh tồn, Đấu trường, Thử thách ngày, Tháp Vận Mệnh, Đánh trùm) không dùng trên giao diện; tên hiện hành ở [Chế độ chơi](../02-game-modes/README.md).
 
 ## Văn phong giao diện
 
-Quy ước Shan duyệt 13/11/2026. Áp cho mọi chữ người chơi thấy; test `tests/ui-wording.test.ts` chặn từ cấm và tên chế độ cũ.
+Quy ước Shan duyệt 13/11/2026. Áp cho mọi chữ người chơi thấy; test `tests/game/ui-wording.test.ts` chặn từ cấm và tên chế độ cũ.
 
 | Mảng | Quy ước |
 |---|---|
