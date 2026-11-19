@@ -335,25 +335,22 @@
     },
     "sulo.roll": {
       "files": [
-        "sfx/battle/swap_a",
-        "sfx/battle/swap_b",
-        "sfx/battle/swap_c"
+        "sfx/su-lo/roll_a",
+        "sfx/su-lo/roll_b"
       ],
       "volume": 0.8
     },
     "sulo.move": {
       "files": [
-        "sfx/formation/place_a",
-        "sfx/formation/place_b",
-        "sfx/formation/place_c"
+        "sfx/su-lo/move_a",
+        "sfx/su-lo/move_b",
+        "sfx/su-lo/move_c"
       ],
       "volume": 0.85
     },
     "sulo.nomove": {
       "files": [
-        "sfx/battle/invalid_a",
-        "sfx/battle/invalid_b",
-        "sfx/battle/invalid_c"
+        "sfx/su-lo/nomove_a"
       ],
       "volume": 0.7
     },
