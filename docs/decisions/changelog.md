@@ -6,7 +6,7 @@
 
 **Hướng dẫn trước khi chơi, kệ Vật phẩm, chuỗi Hợp Kích (Shan yêu cầu)**
 - Vào chế độ nào cũng mở thẻ Hướng dẫn trước, nút Vào chơi ở cuối ([đặc tả](../05-ui-ux/design-system/game-mode-ui-spec.md)).
-- Bộ tranh thẻ mới cho cả 14 chế độ (`public/art/home/`, dùng chung Chiến Trường, biển đầu màn và trang giới thiệu): thay 12 tranh cũ, thêm Thao Luyện và Giao Tranh.
+- Tranh thẻ mới (`public/art/home/`, dùng chung Chiến Trường, biển đầu màn và trang giới thiệu) cho Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Viễn Chinh, Khai Lộ, Do Thám, thêm Thao Luyện và Giao Tranh. Bình Loạn, Nhật Lệnh, Quần Hùng, Trận Đồ, Sử Lộ, Tầm Tướng Ký giữ tranh cũ (Shan thấy đẹp hơn).
 - Icon chế độ: đủ 14 ảnh vẽ (`public/art/modes/`) thay bản SVG; thêm prompt tranh thẻ Thao Luyện, Giao Tranh ([thumbnail](../06-art/prompts/thumbnail-chien-truong.md#6-thao-luyện--sân-tập-võ-19112026-đã-có-tranh)).
 - Trang giới thiệu: mục Chế độ chơi đủ 14 chế độ, chia hai nhóm, thẻ có tranh, biểu tượng SVG mới cho Trận Đồ, Khai Lộ, Do Thám, Sử Lộ, Tầm Tướng Ký, Viễn Chinh ([art bible](../06-art/art-bible.md)); điều kiện kích hoạt bị động ở mục 7 nguyên tố thu gọn, nhãn bị động theo loại như trong game; "8 nghề đồng đội".
 - Kho đồ › Vật phẩm cùng khuôn lưới với trang bị: ô vuông, ô trống đủ trang, phân trang.
