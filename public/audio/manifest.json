@@ -412,8 +412,8 @@
     },
     "sulo.boss": {
       "files": [
-        "sfx/formation/flame3_a",
-        "sfx/formation/flame3_b"
+        "sfx/su-lo/boss_a",
+        "sfx/su-lo/boss_b"
       ],
       "volume": 0.85
     },

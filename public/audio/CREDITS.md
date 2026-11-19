@@ -20,6 +20,7 @@
 | `sfx/su-lo/luck_a` | Cắt tay từ đoạn Gemini tạo (19/11/2026, prompt `sulo_luck`): tiếng chuông mở đầu ở giây 0,0–0,97 (phần sau là nhạc liền) | Như trên |
 | `sfx/su-lo/gate_a..b` | Cắt tay từ đoạn Gemini tạo (19/11/2026, prompt `sulo_gate`): tiếng đánh mạnh rồi ngân, lặp ở giây 0,0 và 7,99, cắt 1,8 giây (nghe như chiêng hơn tiếng cửa gỗ) | Như trên |
 | `sfx/su-lo/aid_a..b`, `stele_a` | Dựng từ đoạn Gemini tạo (19/11/2026, prompt `sulo_aid`): aid là tiếng sột soạt ở giây 0,03 và 0,98 trộn với tiếng chuông ở giây 7,43 (vào sau 0,15 giây, nhỏ hơn 6 dB); stele là tiếng sột soạt dài ở giây 5,13–6,58 của cùng đoạn. Đoạn prompt `sulo_stele` chỉ có tiếng tách ngắn trên nền ồn nên không dùng | Như trên |
+| `sfx/su-lo/boss_a..b` | Cắt tay từ đoạn nhạc trống trận Gemini tạo (19/11/2026, prompt `sulo_boss`): boss_a là phần mở đầu giây 0,03–1,83 (tắt dần 0,6 giây), boss_b là phần kết giây 53,75–55,75 | Như trên |
 
 Cue `sulo.*` và nhạc `sulo_maze`, `sulo_boss` của Sử Lộ chưa có tệp riêng: manifest trỏ về các tệp ở bảng trên (xem bảng 5.6 trong `docs/05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md`).
 

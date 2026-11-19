@@ -154,7 +154,7 @@ Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến)
 | `sulo.gate` | Mở cửa ải | Đã có tệp riêng `su-lo/gate` | P2 |
 | `sulo.stele` | Đọc bia đá | Đã có tệp riêng `su-lo/stele` | P2 |
 | `sulo.aid` | Dùng trợ giúp | Đã có tệp riêng `su-lo/aid` | P2 |
-| `sulo.boss` | Vào trận trùm trấn cổng | `formation/flame3` | P1 |
+| `sulo.boss` | Vào trận trùm trấn cổng | Đã có tệp riêng `su-lo/boss` | P1 |
 | `sulo.counsel` | Quân sư hiến kế giữa trận | `formation/fusion` | P2 |
 | `sulo.bosswon` / `sulo.bosslost` | Hạ trùm / thua hoặc rút | `battle/win` / `battle/lose` | P1 |
 | `sulo.won` | Thoát mê cung | `formation/win` | P1 |
