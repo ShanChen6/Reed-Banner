@@ -95,7 +95,7 @@ const MODE_GROUPS: readonly { readonly title: string; readonly sub: string; read
     title: "Chiến trận",
     sub: "Ghép ô để đánh: luyện tay, theo cốt truyện, leo tháp, giữ ải, đấu người.",
     modes: [
-      { slug: "practice", name: "Thao Luyện", kicker: "Luyện tay", art: "/art/stage/he-moc.webp", guest: true, body: "Vào trận ngay, không cần mạng, 3vs3 đấu Tianwu với đội cấp tối đa." },
+      { slug: "practice", name: "Thao Luyện", kicker: "Luyện tay", art: "/art/home/thao-luyen.webp", guest: true, body: "Vào trận ngay, không cần mạng, 3vs3 đấu Tianwu với đội cấp tối đa." },
       { slug: "campaign", name: "Bình Loạn", kicker: "Cốt truyện", art: "/art/home/campaign.webp", body: "Sáu chương dẹp loạn 12 sứ quân, tướng lịch sử gia nhập, rồi Tái đấu sứ quân ở 3 bậc." },
       { slug: "play", name: "Giao Tranh", kicker: "Trực tuyến", art: "/art/home/giao-tranh.webp", body: "Trận trực tuyến có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm." },
       { slug: "trial", name: "Tháp Thí Luyện", kicker: "Leo tháp", art: "/art/home/trial.webp", flag: "trial", body: "100 tầng cố định chia 10 chặng, tự chọn đội theo luật riêng từng tầng." },

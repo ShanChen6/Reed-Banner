@@ -1,6 +1,6 @@
 # Prompt thumbnail thẻ chế độ ở Chiến trường
 
-> Cập nhật: 19/11/2026 (thêm mục 6 Thao Luyện (chưa có tranh), mục 7 Giao Tranh (đã có tranh); Shan gửi tranh mới thay cho Bình Loạn, Tháp Thí Luyện, Nhật Lệnh, Sử Lộ; 15/11/2026 thêm mục 5: Sử Lộ; Do Thám và Sử Lộ đã có tranh `public/art/home/do-tham.webp`, `su-lo.webp`, 960×540, khoảng 140 KB mỗi tranh, đã gắn vào thẻ và biển đầu màn)
+> Cập nhật: 19/11/2026 (thêm mục 6 Thao Luyện, mục 7 Giao Tranh, đều đã có tranh; Shan gửi bộ tranh mới thay cho cả 12 thẻ chế độ cũ ở `public/art/home/`; 15/11/2026 thêm mục 5: Sử Lộ; Do Thám và Sử Lộ đã có tranh `public/art/home/do-tham.webp`, `su-lo.webp`, 960×540, khoảng 140 KB mỗi tranh, đã gắn vào thẻ và biển đầu màn)
 > Trạng thái: **IMPLEMENTED** — Claude soạn theo yêu cầu của Shan (07/11/2026: thumbnail Khai Lộ và Viễn Chinh đang dùng chung một tranh mực tạm); Shan tạo tranh từ hai prompt dưới đây, đã gắn vào thẻ (`public/art/home/khai-lo.webp`, `public/art/home/vien-chinh.webp`, 960×540, khoảng 145 KB mỗi tranh).
 
 Thẻ chế độ ở màn Chiến trường (`src/app/game/MenuScene.tsx`, danh sách `MODES`) dùng tranh `public/art/home/<tên>.webp`. Hiện
@@ -75,9 +75,9 @@ Stylised digital painting of a historical Vietnamese maze for a strategy-puzzle 
 
 Nếu công cụ có ô negative: dùng khối ở mục 1.
 
-## 6. Thao Luyện — sân tập võ (19/11/2026, chưa có tranh)
+## 6. Thao Luyện — sân tập võ (19/11/2026, đã có tranh)
 
-Thẻ Thao Luyện ở trang giới thiệu (mục Chế độ chơi, `MODE_GROUPS` trong `src/app/page.tsx`) đang tạm dùng nền trận hệ Mộc (`public/art/stage/he-moc.webp`). Tạo tranh theo thông số mục 1 vào tệp `thao-luyen.png`. Khi gửi lại, Claude xuất WebP 960×540 vào `public/art/home/thao-luyen.webp` và đổi `art` của thẻ Thao Luyện.
+Đã gắn `public/art/home/thao-luyen.webp` (960×540, dưới 150 KB) cho thẻ Thao Luyện ở trang giới thiệu (mục Chế độ chơi, `MODE_GROUPS` trong `src/app/page.tsx`), 19/11/2026; trước đó thẻ tạm dùng nền trận hệ Mộc. Tạo tranh theo thông số mục 1 vào tệp `thao-luyen.png`. Khi gửi lại, Claude xuất WebP 960×540 vào `public/art/home/thao-luyen.webp` và đổi `art` của thẻ Thao Luyện.
 
 Ý chính: chế độ luyện tay, vào trận ngay không cần mạng, đấu AI. Một **sân tập võ** của doanh trại Hoa Lư lúc sáng sớm: bia tập bắn đan rơm vòng đỏ có mũi tên cắm, giá vũ khí tre (giáo, đao), cọc gỗ tập đánh quấn rơm, bàn cờ ghép ô bằng gỗ đặt trên chiếu ở hiên; xa là lũy tre, mái nhà sàn và núi đá vôi. Không khí êm, thư thả, gợi "luyện tập" chứ không phải chiến trận. Bóng người nếu có thì rất nhỏ, không rõ mặt.
 

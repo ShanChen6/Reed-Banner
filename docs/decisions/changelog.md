@@ -6,8 +6,8 @@
 
 **Hướng dẫn trước khi chơi, kệ Vật phẩm, chuỗi Hợp Kích (Shan yêu cầu)**
 - Vào chế độ nào cũng mở thẻ Hướng dẫn trước, nút Vào chơi ở cuối ([đặc tả](../05-ui-ux/design-system/game-mode-ui-spec.md)).
-- Tranh thẻ mới cho Bình Loạn, Tháp Thí Luyện, Nhật Lệnh, Sử Lộ (thay tranh cũ ở `public/art/home/`, dùng chung Chiến Trường, biển đầu màn và trang giới thiệu) và tranh Giao Tranh; còn Thao Luyện tạm dùng nền trận.
-- Icon chế độ: đủ 14 ảnh vẽ (`public/art/modes/`) thay bản SVG; thêm prompt tranh thẻ Thao Luyện, Giao Tranh ([thumbnail](../06-art/prompts/thumbnail-chien-truong.md#6-thao-luyện--sân-tập-võ-19112026-chưa-có-tranh)).
+- Bộ tranh thẻ mới cho cả 14 chế độ (`public/art/home/`, dùng chung Chiến Trường, biển đầu màn và trang giới thiệu): thay 12 tranh cũ, thêm Thao Luyện và Giao Tranh.
+- Icon chế độ: đủ 14 ảnh vẽ (`public/art/modes/`) thay bản SVG; thêm prompt tranh thẻ Thao Luyện, Giao Tranh ([thumbnail](../06-art/prompts/thumbnail-chien-truong.md#6-thao-luyện--sân-tập-võ-19112026-đã-có-tranh)).
 - Trang giới thiệu: mục Chế độ chơi đủ 14 chế độ, chia hai nhóm, thẻ có tranh, biểu tượng SVG mới cho Trận Đồ, Khai Lộ, Do Thám, Sử Lộ, Tầm Tướng Ký, Viễn Chinh ([art bible](../06-art/art-bible.md)); điều kiện kích hoạt bị động ở mục 7 nguyên tố thu gọn, nhãn bị động theo loại như trong game; "8 nghề đồng đội".
 - Kho đồ › Vật phẩm cùng khuôn lưới với trang bị: ô vuông, ô trống đủ trang, phân trang.
 - Chuỗi phản ứng ở Hợp Kích bỏ truy kích giảm Thủ không mạnh hơn mức mục tiêu đang chịu, như bộ máy (`existingArmor`): hai Kim phá trong đội chỉ cái đầu tiên theo vị trí có tác dụng; chiêu tự giảm Thủ mạnh hơn (Phá trận 30%) thì Kim phá không theo sau.
