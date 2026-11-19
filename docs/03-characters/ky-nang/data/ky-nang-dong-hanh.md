@@ -136,18 +136,18 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 ### Sáu chủ động
 
 - **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 120% Công; -40 năng lượng mục tiêu
-- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
+- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Kiếm
 - **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 120% Công; Câm lặng  mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Kim Ngân Ly Tán · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · địch đơn: 180% Công, bỏ 50% DEF, xuyên Khiên; -50 năng lượng mục tiêu; Câm lặng  mục tiêu 1 lượt
 - **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: 70% Công; -15 lương địch; -10 năng lượng mục tiêu
-- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
+- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 160% Công, bỏ 50% DEF
 
 ### Bốn bị động
 
 - **Nghề 1 · Đoạn tiếp tế:** Đồng đội khống chế hoặc xua tan thành công: kỹ năng trừ năng lượng tiếp theo vào mục tiêu đó trừ thêm 10, tối đa năng lượng đang có.
 - **Nghề 2 · Thừa hư:** Đồng đội xua tan: trừ thêm 8 năng lượng mục tiêu.
-- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 10% trong 1 lượt.
-- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 35% ATK.
+- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 12% trong 1 lượt.
+- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 40% ATK.
 
 <a id="phungPhong"></a>
 
@@ -176,18 +176,18 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 ### Sáu chủ động
 
 - **Ô1** — Trảm kích · Nghề Tướng sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 210% Công
-- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
+- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Kiếm
 - **Ô3** — Phá trận · Nghề Tướng sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 250% Công, bỏ 30% DEF; Thủ− 30% mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Kim Qua Thiết Mã · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · địch đơn: 280% Công, bỏ 40% DEF; Thủ− 30% mục tiêu 2 lượt
 - **Ô5** — Đoạt mệnh · Nghề Tướng sĩ · ô 5 · mở cấp 15 · 60 NL · địch đơn: 260% Công, ×1.5 khi địch ≤35% máu
-- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
+- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 160% Công, bỏ 50% DEF
 
 ### Bốn bị động
 
 - **Nghề 1 · Thừa thắng:** Đồng đội phá giáp hoặc xua tan thành công: đòn kiếm/kỹ năng sát thương tiếp theo vào mục tiêu đó tăng 20% sát thương.
 - **Nghề 2 · Liên trảm:** Đồng đội phá giáp: truy kích mục tiêu bằng 55% ATK.
-- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 10% trong 1 lượt.
-- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 35% ATK.
+- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 12% trong 1 lượt.
+- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 40% ATK.
 
 <a id="lyLiet"></a>
 
@@ -276,18 +276,18 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 ### Sáu chủ động
 
 - **Ô1** — Thủ thành · Nghề Binh lính · ô 1 · mở cấp 1 · 35 NL · bản thân: Khiêu khích  bản thân 2 lượt; Khiên 20% máu tối đa bản thân đến khi hết
-- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
+- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Kiếm
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Thiết Bích Đồng Thành · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · bản thân: Thủ+ 35% bản thân 3 lượt; Phản đòn 35% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
 - **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 30% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
-- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
+- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 160% Công, bỏ 50% DEF
 
 ### Bốn bị động
 
 - **Nghề 1 · Hộ vệ phản kích:** Khiên do đồng đội chủ động cấp cho mình thực sự đỡ đòn kiếm/kỹ năng: đòn kiếm/kỹ năng sát thương tiếp theo tăng 20% sát thương.
 - **Nghề 2 · Tiếp phòng:** Đồng đội hồi HP thực: cấp Khiên bằng 6% HP tối đa người vừa được hồi.
-- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 10% trong 1 lượt.
-- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 35% ATK.
+- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 12% trong 1 lượt.
+- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 40% ATK.
 
 <a id="lucDiep"></a>
 
@@ -516,18 +516,18 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 ### Sáu chủ động
 
 - **Ô1** — Phép lan · Nghề Pháp sư · ô 1 · mở cấp 1 · 30 NL · mọi địch: 90% Công
-- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
+- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Kiếm
 - **Ô3** — Ngũ hành ấn · Nghề Pháp sư · ô 3 · mở cấp 5 · 45 NL · địch đơn: 140% Công; Dấu ấn nguyên tố cường hóa chắc chắn
 - **Ô4 · Tuyệt chiêu** — Ngân Châm Tán Xạ · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: 120% Công, bỏ 30% DEF; Thủ− 20% mục tiêu 2 lượt
 - **Ô5** — Thiên địa cộng hưởng · Nghề Pháp sư · ô 5 · mở cấp 15 · 60 NL · mọi địch: 110% Công; Phá vùng 3×3
-- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
+- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 160% Công, bỏ 50% DEF
 
 ### Bốn bị động
 
 - **Nghề 1 · Hội tụ:** Đồng đội áp Đóng băng/Câm lặng thành công: đòn kiếm/kỹ năng sát thương tiếp theo vào mục tiêu đó tăng 20% sát thương.
 - **Nghề 2 · Chú kích:** Đồng đội khống chế: truy kích mục tiêu bằng 50% ATK.
-- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 10% trong 1 lượt.
-- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 35% ATK.
+- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 12% trong 1 lượt.
+- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 40% ATK.
 
 <a id="damThao"></a>
 
@@ -676,18 +676,18 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 ### Sáu chủ động
 
 - **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 26% máu mục tiêu; Thanh tẩy mục tiêu
-- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
+- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Kiếm
 - **Ô3** — Dưỡng sinh · Nghề Y sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Hồi phục 7% máu tối đa mục tiêu 3 lượt
 - **Ô4 · Tuyệt chiêu** — Kim Châm Độ Mệnh · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Hồi 22% máu mục tiêu; Thanh tẩy mục tiêu; Thủ+ 20% mục tiêu 2 lượt
 - **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 18% máu mục tiêu; Thanh tẩy mục tiêu
-- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
+- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 160% Công, bỏ 50% DEF
 
 ### Bốn bị động
 
 - **Nghề 1 · Tiếp sức:** Đồng đội dùng kỹ năng gây mất HP thực: kỹ năng hồi/cấp Khiên hữu hiệu tiếp theo tăng 25% lượng gốc của các bước hồi/Khiên trực tiếp, trước hệ số Tinh thần của người nhận.
 - **Nghề 2 · Cứu viện:** Đồng đội gây mất HP bằng kỹ năng: hồi người bị thương nặng nhất 5% HP tối đa.
-- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 10% trong 1 lượt.
-- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 35% ATK.
+- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 12% trong 1 lượt.
+- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 40% ATK.
 
 <a id="hongDan"></a>
 
@@ -836,18 +836,18 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 ### Sáu chủ động
 
 - **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: 160% Công; Công− 30% mục tiêu 2 lượt
-- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
+- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Kiếm
 - **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt; +15 năng lượng mục tiêu
 - **Ô4 · Tuyệt chiêu** — Thiết Trận Phá Giáp · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: Thủ− 30% mục tiêu 2 lượt; Công+ 15% cả đội 2 lượt
 - **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu; 100% Công
-- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
+- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 160% Công, bỏ 50% DEF
 
 ### Bốn bị động
 
 - **Nghề 1 · Hiệp lực:** Đồng đội dùng kỹ năng hồi HP thực hoặc Khiên do đồng đội cấp cho người khác đỡ đòn chủ động: kỹ năng tiếp theo giảm 10 năng lượng, không thấp hơn 0.
 - **Nghề 2 · Tiếp lệnh:** Đồng đội hồi HP thực: cấp người vừa được hồi 8 năng lượng.
-- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 10% trong 1 lượt.
-- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 35% ATK.
+- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 12% trong 1 lượt.
+- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 40% ATK.
 
 <a id="samTue"></a>
 
@@ -956,18 +956,18 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 ### Sáu chủ động
 
 - **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 120% Công; -40 năng lượng mục tiêu
-- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
+- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Kiếm
 - **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 120% Công; Câm lặng  mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Đô Hộ Phủ Lệnh · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: -30 năng lượng mục tiêu; Câm lặng  mục tiêu 1 lượt, xác suất 50%; Thủ− 15% mục tiêu 2 lượt
 - **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: 70% Công; -15 lương địch; -10 năng lượng mục tiêu
-- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
+- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 160% Công, bỏ 50% DEF
 
 ### Bốn bị động
 
 - **Nghề 1 · Đoạn tiếp tế:** Đồng đội khống chế hoặc xua tan thành công: kỹ năng trừ năng lượng tiếp theo vào mục tiêu đó trừ thêm 10, tối đa năng lượng đang có.
 - **Nghề 2 · Thừa hư:** Đồng đội xua tan: trừ thêm 8 năng lượng mục tiêu.
-- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 10% trong 1 lượt.
-- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 35% ATK.
+- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 12% trong 1 lượt.
+- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 40% ATK.
 
 <a id="trinhTu"></a>
 
@@ -1076,18 +1076,18 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 ### Sáu chủ động
 
 - **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 120% Công; -40 năng lượng mục tiêu
-- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
+- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Kiếm
 - **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 120% Công; Câm lặng  mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Ngô Gia Di Mưu · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 60 NL · địch đơn: 240% Công, bỏ 40% DEF; -50 năng lượng mục tiêu; Câm lặng  mục tiêu 1 lượt; Phá 6 ô ngẫu nhiên
 - **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: 70% Công; -15 lương địch; -10 năng lượng mục tiêu
-- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
+- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 160% Công, bỏ 50% DEF
 
 ### Bốn bị động
 
 - **Nghề 1 · Đoạn tiếp tế:** Đồng đội khống chế hoặc xua tan thành công: kỹ năng trừ năng lượng tiếp theo vào mục tiêu đó trừ thêm 10, tối đa năng lượng đang có.
 - **Nghề 2 · Thừa hư:** Đồng đội xua tan: trừ thêm 8 năng lượng mục tiêu.
-- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 10% trong 1 lượt.
-- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 35% ATK.
+- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 12% trong 1 lượt.
+- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 40% ATK.
 
 <a id="ngoNhatKhanh"></a>
 
@@ -1176,18 +1176,18 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 ### Sáu chủ động
 
 - **Ô1** — Trảm kích · Nghề Tướng sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 210% Công
-- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
+- **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Kiếm
 - **Ô3** — Phá trận · Nghề Tướng sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 250% Công, bỏ 30% DEF; Thủ− 30% mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Siêu Loại Phá Giáp · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 60 NL · địch đơn: 340% Công, bỏ 50% DEF; Thủ− 30% mục tiêu 2 lượt; Phá 6 ô ngẫu nhiên
 - **Ô5** — Đoạt mệnh · Nghề Tướng sĩ · ô 5 · mở cấp 15 · 60 NL · địch đơn: 260% Công, ×1.5 khi địch ≤35% máu
-- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
+- **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 160% Công, bỏ 50% DEF
 
 ### Bốn bị động
 
 - **Nghề 1 · Thừa thắng:** Đồng đội phá giáp hoặc xua tan thành công: đòn kiếm/kỹ năng sát thương tiếp theo vào mục tiêu đó tăng 20% sát thương.
 - **Nghề 2 · Liên trảm:** Đồng đội phá giáp: truy kích mục tiêu bằng 55% ATK.
-- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 10% trong 1 lượt.
-- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 35% ATK.
+- **Hệ 1 · Kim phá:** Kỹ năng gây mất HP: giảm DEF mục tiêu 12% trong 1 lượt.
+- **Hệ 2 · Kim truy:** Phá giáp thành công: truy kích bằng 40% ATK.
 
 <a id="nguyenThuTiep"></a>
 

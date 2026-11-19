@@ -178,13 +178,13 @@ describe("kỹ năng bị động theo nguyên tố", () => {
     assert.equal(foe(r.state, 1).energy, 100 - PASSIVE.loiDrain);
   });
 
-  it("Kim đang bị động: kỹ năng bỏ qua thêm 40% DEF và xuyên Khiên", () => {
+  it("Kim đang bị động: sát thương +20%, kỹ năng bỏ qua thêm 40% DEF và xuyên Khiên", () => {
     const s = setup([solo(hero("kim")), solo(fighter("b", { element: "loi", def: 100 }))]);
     s.sides[0].passiveTurns = 3;
     foe(s).effects.push({ kind: "shield", value: 500, turns: null });
     const { hit } = skillHit(s, "thietKyTungHoanh");
     const pierce = 1 - (1 - PASSIVE.kimPierce);
-    const expected = Math.round(atkOf("thietKyTungHoanh") * 100 * 1.5 * elementMultiplier("kim", "loi") * defenseMultiplier(100, pierce));
+    const expected = Math.round(atkOf("thietKyTungHoanh") * 100 * 1.5 * (1 + PASSIVE.kimDamage) * elementMultiplier("kim", "loi") * defenseMultiplier(100, pierce));
     assert.equal(hit.amount, expected);
     assert.equal(hit.absorbed, 0);
   });

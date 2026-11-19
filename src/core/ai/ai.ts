@@ -121,7 +121,7 @@ function swordDamage({ view, me, target }: Context): number {
   const morale = MORALE_DAMAGE[moraleOf(view.sides[view.turn.side].food)];
   const own = view.sides[view.turn.side];
   const foe = view.sides[otherSide(view.turn.side)];
-  return comboMultiplier(view,{side:view.turn.side,fighter:view.turn.actor},"damage",{side:otherSide(view.turn.side),fighter:foe.fighters.indexOf(target)}) * effectiveAtk(me, view.experimentalSpirit) * morale * (passiveOn(own, me, "hoa") ? 1 + PASSIVE.hoaDamage : 1) * elementMultiplier(me.element, target.element) * defenseMultiplier(effectiveDef(foe, target, view.experimentalSpirit), passiveOn(own, me, "kim") ? PASSIVE.kimPierce : 0);
+  return comboMultiplier(view,{side:view.turn.side,fighter:view.turn.actor},"damage",{side:otherSide(view.turn.side),fighter:foe.fighters.indexOf(target)}) * effectiveAtk(me, view.experimentalSpirit) * morale * (passiveOn(own, me, "hoa") ? 1 + PASSIVE.hoaDamage : 1) * (passiveOn(own, me, "kim") ? 1 + PASSIVE.kimDamage : 1) * elementMultiplier(me.element, target.element) * defenseMultiplier(effectiveDef(foe, target, view.experimentalSpirit), passiveOn(own, me, "kim") ? PASSIVE.kimPierce : 0);
 }
 
 /** fromSkill: bàn cờ đổi do kỹ năng hoặc xoay miễn phí, thu hoạch giảm như trong battle.ts. */
@@ -284,7 +284,7 @@ function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { sco
           const ownSide = view.sides[view.turn.side];
           const pierce = 1 - (1 - (step.pierce ?? 0)) * (1 - (passiveOn(ownSide, ctx.me, "kim") ? PASSIVE.kimPierce : 0));
           const defense = defenseMultiplier(effectiveDef(foe, t, view.experimentalSpirit), pierce);
-          const baseRaw = Math.round(step.atk * (step.execute && t.hp / t.maxHp <= step.execute.threshold ? step.execute.multiplier : 1) * (def.target === "allEnemies" && view.sides.every(s => s.fighters.length === 1) ? 1.5 : 1) * effectiveAtk(ctx.me, view.experimentalSpirit) * MORALE_DAMAGE[moraleOf(ownSide.food)] * (passiveOn(ownSide, ctx.me, "hoa") ? 1 + PASSIVE.hoaDamage : 1) * elementMultiplier(def.damageElement ?? ctx.me.element, t.element) * defense);
+          const baseRaw = Math.round(step.atk * (step.execute && t.hp / t.maxHp <= step.execute.threshold ? step.execute.multiplier : 1) * (def.target === "allEnemies" && view.sides.every(s => s.fighters.length === 1) ? 1.5 : 1) * effectiveAtk(ctx.me, view.experimentalSpirit) * MORALE_DAMAGE[moraleOf(ownSide.food)] * (passiveOn(ownSide, ctx.me, "hoa") ? 1 + PASSIVE.hoaDamage : 1) * (passiveOn(ownSide, ctx.me, "kim") ? 1 + PASSIVE.kimDamage : 1) * elementMultiplier(def.damageElement ?? ctx.me.element, t.element) * defense);
           const raw = Math.round(baseRaw * comboMultiplier(view,{side:view.turn.side,fighter:view.turn.actor},"damage",{side:otherSide(view.turn.side),fighter:foe.fighters.indexOf(t)}));
           const shield = step.pierceShield || passiveOn(ownSide, ctx.me, "kim") ? 0 : findEffect(t.effects, "shield")?.value ?? 0;
           const dealt = Math.min(t.hp + shield, raw);

@@ -29,7 +29,7 @@ Mỗi nhân vật mang đúng một nguyên tố. Nhân vật chính được đ
 
 | Nguyên tố | Tính cách | Hiệu ứng hay dùng |
 |---|---|---|
-| ⚙️ Kim | Đánh chắc, xuyên giáp | Thủ−, bỏ qua một phần DEF, xuyên Khiên |
+| ⚙️ Kim | Đánh chắc, xuyên giáp | Thủ−, bỏ qua một phần DEF, xuyên Khiên; nội tại thêm 20% sát thương |
 | 🌳 Mộc | Đánh dai, hồi máu | Hồi phục, hồi máu, phá ô trên bàn cờ |
 | 💧 Thủy | Khống chế | Đóng băng |
 | 🔥 Hỏa | Sát thương lớn nhưng thủ yếu | Thiêu đốt, Công+ |

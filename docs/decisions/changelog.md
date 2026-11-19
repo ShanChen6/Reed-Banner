@@ -4,6 +4,15 @@
 
 ## 19/11/2026
 
+**Trả lại hệ số tương sinh, tương khắc ban đầu (Shan yêu cầu)**
+- Bỏ lần chỉnh 70/30 cùng ngày: khắc ×1,25, tương sinh ×1,1, bị khắc ×0,75 như cũ ([nguyên tố](../01-gameplay/nguyen-to.md#4-trong-trận)). 18 tầng Tháp Thí Luyện về sức mạnh đối thủ cũ, `contentVersion` tăng thêm một bậc để không đối chiếu sai trận đã chơi ở bản 70/30.
+
+**Vai trò nghề, hệ; cân Binh lính và Kim (Shan yêu cầu)**
+- Nguyên tắc cân bằng mới: mỗi nghề, hệ một chức năng, không ép tỉ lệ thắng bằng nhau; tiêu chí và bảng vai trò ở [danh sách nhân vật](../03-characters/danh-sach-nhan-vat.md#13-vai-trò-nghề-hệ-và-vòng-cân-binh-lính-kim-19112026). `profession-balance.ts` in thêm bảng đối đầu hệ × hệ, nghề × nghề.
+- Binh lính máu gốc 600 → 575, Thủ 15 → 14. Kim: nội tại thêm 20% sát thương, Kim phá 12%, Kim truy 40%, Luyện Kim Thành Kiếm 5 ô, chiêu Kim ô 6 160% Công, phần Kim tuyệt chiêu Đinh Bộ Lĩnh mạnh hơn. Kim vẫn thua Thổ ở 1v1 (tương sinh), chờ quyết.
+- Sửa thẻ nhân vật lúc diễn lượt: Khiên vừa đặt rồi bị đánh ngay trong cùng lượt bị trừ hai lần và biến mất (`heldSides.ts`).
+- Tháp Thí Luyện cân lại 7 tầng (21, 32, 38, 63, 65, 76, 97).
+
 **Cân chiêu nghề theo nghề (Shan yêu cầu)**
 - Đo nhân vật kèm ở cấp 10, 20, 30: lệch theo nghề (Binh lính khoảng 55%, Quân sư khoảng 41%). Chiêu nghề `role_*` của Y sư hồi nhiều hơn, Mưu sĩ và Quân sư thêm sát thương, Xạ thủ tăng sát thương nhẹ, Phản kích của Binh lính giảm phản đòn; chiêu AI chiến dịch không đổi. Chênh nghề ở cấp 20 từ 13,9 xuống 8,6 điểm ([số liệu](../03-characters/danh-sach-nhan-vat.md#12-cân-chiêu-nghề-theo-nghề-19112026)).
 - Tháp Thí Luyện cân lại 13 tầng tụt dưới ngưỡng đội mẫu, tăng `contentVersion`.

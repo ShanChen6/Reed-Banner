@@ -39,8 +39,8 @@ Mỗi người lấy một phản ứng nghề + hai phản ứng hệ trong b�
 | Cứu viện | Đồng đội khống chế thành công: hồi người bị thương nặng nhất 5% máu tối đa. |
 | Thừa hư | Đồng đội phá giáp: trừ thêm 8 năng lượng mục tiêu. |
 | Tiếp lệnh | Đồng đội khống chế thành công: cấp người vừa khống chế 8 năng lượng. |
-| Kim phá | Kỹ năng gây mất máu: giảm Thủ mục tiêu 10% trong 1 lượt. |
-| Kim truy | Phá giáp thành công: truy kích bằng 35% Công. |
+| Kim phá | Kỹ năng gây mất máu: giảm Thủ mục tiêu 12% trong 1 lượt. |
+| Kim truy | Phá giáp thành công: truy kích bằng 40% Công. |
 | Mộc sinh | Kỹ năng gây mất máu: hồi người bị thương nặng nhất 4% máu tối đa. |
 | Mộc hộ | Hồi máu thực: cấp Khiên bằng 4% máu tối đa người được hồi. |
 | Thủy tiếp | Khống chế thành công: hồi người bị thương nặng nhất 5% máu tối đa. |
