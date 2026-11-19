@@ -28,24 +28,24 @@ export const TILE_GIVES: Record<TileKind, string> = {
 export const PROFESSION_PERK: Record<Profession, string> = {
   xaThu: "Chuẩn bị công kích khi đồng đội phá giáp hoặc xua tan",
   satThu: "Chuẩn bị công kích khi đồng đội khống chế",
-  tuongSi: "Ghép từ 4 kiếm: +30% sát thương",
-  phapSu: "Năng lượng từ âm dương ×1.5",
+  tuongSi: "Ghép từ bốn kiếm: +30% sát thương",
+  phapSu: "Năng lượng từ âm dương ×1,5",
   binhLinh: "Lương tụt chậm, sĩ khí cao thì thêm Thủ",
-  ySu: "Hồi máu ×1.5, hồi tràn thành Khiên",
+  ySu: "Hồi máu ×1,5, hồi tràn thành Khiên",
   muuSi: "Ghép vàng rút năng lượng đối thủ",
   quanSu: "Ghép sách giảm Công đối thủ",
 };
 
 /** Vai trò từng nghề trên trang giới thiệu, theo bảng vai trò ở docs/03-characters/danh-sach-nhan-vat.md mục 13. */
 export const PROFESSION_ROLE: Record<Profession, string> = {
-  tuongSi: "dồn sát thương một mục tiêu, kết liễu",
-  phapSu: "sát thương lan cả đội địch",
-  binhLinh: "chịu đòn, khiêu khích, che đội",
-  ySu: "hồi máu, giải hiệu ứng xấu",
-  muuSi: "rút năng lượng, Câm lặng, cắt lương",
-  quanSu: "tăng đội mình, giảm đối thủ",
-  xaThu: "phá giáp, sát thương đều",
-  satThu: "kết liễu mục tiêu yếu máu",
+  tuongSi: "Dồn sát thương một mục tiêu, kết liễu",
+  phapSu: "Sát thương lan cả đội địch",
+  binhLinh: "Chịu đòn, khiêu khích, che đội",
+  ySu: "Hồi máu, giải hiệu ứng xấu",
+  muuSi: "Rút năng lượng, Câm lặng, cắt lương",
+  quanSu: "Tăng đội mình, giảm đối thủ",
+  xaThu: "Phá giáp, sát thương đều",
+  satThu: "Kết liễu mục tiêu yếu máu",
 };
 
 /**
@@ -70,7 +70,7 @@ export const FAQ: readonly { readonly q: string; readonly a: string }[] = [
   },
   {
     q: "Đánh sai nước có bị phạt không?",
-    a: "Không. Nước đổi không tạo bộ ghép chỉ bị trả lại. Trong trận chính thức mỗi lượt có 30 giây, hết giờ thì mất lượt.",
+    a: "Không. Nước đổi không tạo bộ ghép chỉ bị trả lại. Trong trận chính thức mỗi lượt có ba mươi giây, hết giờ thì mất lượt.",
   },
   {
     q: "Đối thủ là ai?",
@@ -78,10 +78,10 @@ export const FAQ: readonly { readonly q: string; readonly a: string }[] = [
   },
   {
     q: "Nhân vật trong game có thật không?",
-    a: "Bối cảnh Loạn 12 sứ quân và tên các nhân vật lịch sử là lịch sử chung. Tính cách, kỹ năng và lời thoại gán cho họ là hư cấu; các đồng đội đi cùng Đinh Bộ Lĩnh là nhân vật hư cấu.",
+    a: "Bối cảnh Loạn mười hai sứ quân và tên các nhân vật lịch sử là lịch sử chung. Tính cách, kỹ năng và lời thoại gán cho họ là hư cấu; các đồng đội đi cùng Đinh Bộ Lĩnh là nhân vật hư cấu.",
   },
   {
     q: "Có những chế độ nào?",
-    a: "Chiến trận: Thao Luyện không cần mạng, Bình Loạn dẹp 12 sứ quân kèm Tái đấu sứ quân, Giao Tranh trực tuyến, Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh, Quần Hùng và Viễn Chinh. Binh pháp và giải đố: Trận Đồ, Khai Lộ, Do Thám, Sử Lộ, Tầm Tướng Ký. Thêm nhiệm vụ, điểm danh và bảng công trạng. Vào chế độ nào cũng có màn Hướng dẫn trước.",
+    a: "Chiến trận: Thao Luyện không cần mạng, Bình Loạn dẹp mười hai sứ quân kèm Tái đấu sứ quân, Giao Tranh trực tuyến, Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh, Quần Hùng và Viễn Chinh. Binh pháp và giải đố: Trận Đồ, Khai Lộ, Do Thám, Sử Lộ, Tầm Tướng Ký. Thêm nhiệm vụ, điểm danh và bảng công trạng. Vào chế độ nào cũng có màn Hướng dẫn trước.",
   },
 ];
