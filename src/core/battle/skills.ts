@@ -896,10 +896,17 @@ const RAW_ROLE_SKILLS: readonly SkillDef[] = [
   { ...role("nguHanhAn", "phapSu", 3), steps: [{ type: "damage", atk: 1.4 }, { type: "mark", enhanced: true, guaranteed: true }] },
   { id: "role_thienDiaCong", name: "Thiên địa cộng hưởng", profession: "phapSu", slot: 4, cost: 60, target: "allEnemies", steps: [{ type: "damage", atk: 1.1 }, { type: "destroy", area: { square: 3 } }] },
   role("thuThanh", "binhLinh", 1, 35), role("tuongKhien", "binhLinh", 3),
-  { ...role("phanKich", "binhLinh", 4, 55), steps: [...role("phanKich", "binhLinh", 4).steps, { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 }] },
-  role("linhDuoc", "ySu", 1), role("duongSinh", "ySu", 3), role("teDo", "ySu", 4, 55),
-  role("muaChuoc", "muuSi", 1), role("lyGian", "muuSi", 3), role("catQuanLuong", "muuSi", 4, 55),
-  role("nghiBinh", "quanSu", 1), role("hieuLenh", "quanSu", 3), role("phaKe", "quanSu", 4, 55),
+  { ...role("phanKich", "binhLinh", 4, 55), steps: [{ type: "effect", to: "self", effect: "reflect", value: 0.3, turns: 2 }, { type: "effect", to: "self", effect: "defUp", value: 0.3, turns: 2 }, { type: "effect", to: "self", effect: "taunt", value: 0, turns: 2 }] },
+  // Cân bằng 19/11/2026: Y sư hồi nhiều hơn; Mưu sĩ, Quân sư thêm sát thương nhỏ vì chiêu nghề gần như không gây mất máu.
+  { ...role("linhDuoc", "ySu", 1), steps: [{ type: "heal", to: "targets", ratio: 0.26 }, { type: "cleanse", to: "targets" }] },
+  role("duongSinh", "ySu", 3),
+  { ...role("teDo", "ySu", 4, 55), steps: [{ type: "heal", to: "targets", ratio: 0.18 }, { type: "cleanse", to: "targets" }] },
+  { ...role("muaChuoc", "muuSi", 1), steps: [{ type: "damage", atk: 1.2 }, { type: "energy", to: "targets", amount: -40 }] },
+  { ...role("lyGian", "muuSi", 3), steps: [{ type: "damage", atk: 1.2 }, { type: "effect", to: "targets", effect: "silence", value: 0, turns: 2 }] },
+  { ...role("catQuanLuong", "muuSi", 4, 55), steps: [{ type: "damage", atk: 0.7 }, { type: "enemyFood", amount: -15 }, { type: "energy", to: "targets", amount: -10 }] },
+  { ...role("nghiBinh", "quanSu", 1), steps: [{ type: "damage", atk: 1.6 }, { type: "effect", to: "targets", effect: "atkDown", value: 0.3, turns: 2 }] },
+  { ...role("hieuLenh", "quanSu", 3), steps: [{ type: "effect", to: "targets", effect: "atkUp", value: 0.25, turns: 2 }, { type: "energy", to: "targets", amount: 15 }] },
+  { ...role("phaKe", "quanSu", 4, 55), steps: [{ type: "dispel", to: "targets" }, { type: "damage", atk: 1.0 }] },
 ];
 export const ROLE_SKILLS = [...RAW_ROLE_SKILLS.map(d => d.slot === 4 ? { ...d, slot: 5 } : d), ...EXPANSION_ROLE_SKILLS];
 function elemental(id: string, slot: number): SkillDef {

@@ -4,8 +4,8 @@ const damage = (atk:number, pierce?:number):SkillStep => ({type:'damage',atk,...
 const effect = (effect:'defDown'|'atkDown'|'defUp'|'shield'|'burn'|'poison'|'freeze'|'silence',value:number,turns:number|null=2,to:'targets'|'self'|'team'='targets',chance?:number):SkillStep => ({type:'effect',effect,value,turns,to,...(effect==='shield'?{ofMaxHp:true}:{}),...(['burn','poison'].includes(effect)?{ofAtk:true}:{}),...(chance===undefined?{}:{chance})});
 const energy = (amount:number,to:'targets'|'self'='targets'):SkillStep => ({type:'energy',amount,to});
 export const EXPANSION_ROLE_SKILLS:readonly SkillDef[] = [
- {id:'role_xaThu_dinhDiem',name:'Định Điểm',profession:'xaThu',slot:1,cost:30,target:'enemy',steps:[damage(1.6,0.1)]},
- {id:'role_xaThu_phaGiap',name:'Phá Giáp',profession:'xaThu',slot:3,cost:45,target:'enemy',steps:[damage(1.9,0.25),effect('defDown',0.15)]},
+ {id:'role_xaThu_dinhDiem',name:'Định Điểm',profession:'xaThu',slot:1,cost:30,target:'enemy',steps:[damage(1.75,0.1)]},
+ {id:'role_xaThu_phaGiap',name:'Phá Giáp',profession:'xaThu',slot:3,cost:45,target:'enemy',steps:[damage(2,0.25),effect('defDown',0.15)]},
  {id:'role_xaThu_tapKich',name:'Tập Kích',profession:'xaThu',slot:5,cost:60,target:'allEnemies',steps:[damage(0.75),{type:'destroy',area:{random:3}}]},
  {id:'role_satThu_thuaHu',name:'Thừa Hư',profession:'satThu',slot:1,cost:30,target:'enemy',steps:[damage(1.65),{type:'energy',to:'self',amount:5,requiresHpDamage:true}]},
  {id:'role_satThu_doatKhi',name:'Đoạt Khí',profession:'satThu',slot:3,cost:45,target:'enemy',steps:[damage(1.9,0.2),energy(-10)]},

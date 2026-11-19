@@ -99,7 +99,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 - **Ô2** — Hậu Thổ Tích Lương · Hệ Thổ · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Bánh chưng
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Trấn Sơn Hộ Quân · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Khiên 25% máu tối đa mục tiêu đến khi hết; Khiêu khích  bản thân 2 lượt; Phản đòn 35% bản thân 2 lượt
-- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 40% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
+- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 30% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
 - **Ô6** — Thạch Giáp · Hệ Thổ · ô 6 · mở cấp 20 · 30 NL · bản thân: Khiên 20% máu tối đa bản thân đến khi hết
 
 ### Bốn bị động
@@ -115,11 +115,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 22% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 26% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô2** — Thủy Nguyệt Tụ Linh · Hệ Thủy · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Âm dương
 - **Ô3** — Dưỡng sinh · Nghề Y sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Hồi phục 7% máu tối đa mục tiêu 3 lượt
 - **Ô4 · Tuyệt chiêu** — Cam Lộ Hồi Xuân · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Hồi 30% máu mục tiêu; Thanh tẩy mục tiêu; Đóng băng  mọi địch 1 lượt, xác suất 30%
-- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 15% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 18% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô6** — Thanh Lưu Tẩy Trần · Hệ Thủy · ô 6 · mở cấp 20 · 30 NL · bản thân: Thanh tẩy bản thân; Hồi 10% máu bản thân
 
 ### Bốn bị động
@@ -135,11 +135,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: -40 năng lượng mục tiêu
+- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 120% Công; -40 năng lượng mục tiêu
 - **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
-- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: Câm lặng  mục tiêu 2 lượt
+- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 120% Công; Câm lặng  mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Kim Ngân Ly Tán · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · địch đơn: 180% Công, bỏ 50% DEF, xuyên Khiên; -50 năng lượng mục tiêu; Câm lặng  mục tiêu 1 lượt
-- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: -15 lương địch; -10 năng lượng mục tiêu
+- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: 70% Công; -15 lương địch; -10 năng lượng mục tiêu
 - **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
 
 ### Bốn bị động
@@ -155,11 +155,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: Công− 30% mục tiêu 2 lượt
+- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: 160% Công; Công− 30% mục tiêu 2 lượt
 - **Ô2** — Phong Quyển Tàn Vân · Hệ Phong · ô 2 · mở cấp 1 · 40 NL · bản thân: Chọn tâm xoay lốc xoáy ±1..2 nấc
-- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt
+- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt; +15 năng lượng mục tiêu
 - **Ô4 · Tuyệt chiêu** — Phong Vân Biến Trận · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu; Công− 30% mục tiêu 2 lượt; +20 năng lượng cả đội; Tự xoay lốc xoáy ±1..2 nấc
-- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu
+- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu; 100% Công
 - **Ô6** — Thanh Phong Tụ Khí · Hệ Phong · ô 6 · mở cấp 20 · 30 NL · cả đội: +10 năng lượng mục tiêu; Thủ+ 10% mục tiêu 2 lượt
 
 ### Bốn bị động
@@ -259,7 +259,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 - **Ô2** — Lục Diệp Phong · Hệ Mộc · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá 5 ô ngẫu nhiên
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Rễ Già Giữ Thành · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Hồi phục 6% máu tối đa mục tiêu 3 lượt; Khiên 25% máu tối đa bản thân đến khi hết; Khiêu khích  bản thân 2 lượt
-- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 40% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
+- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 30% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
 - **Ô6** — Linh Mộc Hồi Sinh · Hệ Mộc · ô 6 · mở cấp 20 · 30 NL · bản thân: Hồi 11% máu bản thân; Biến 3 ô thường ngẫu nhiên thành Tim
 
 ### Bốn bị động
@@ -279,7 +279,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 - **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Thiết Bích Đồng Thành · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · bản thân: Thủ+ 35% bản thân 3 lượt; Phản đòn 35% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
-- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 40% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
+- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 30% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
 - **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
 
 ### Bốn bị động
@@ -295,11 +295,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 22% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 26% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô2** — Lục Diệp Phong · Hệ Mộc · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá 5 ô ngẫu nhiên
 - **Ô3** — Dưỡng sinh · Nghề Y sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Hồi phục 7% máu tối đa mục tiêu 3 lượt
 - **Ô4 · Tuyệt chiêu** — Xuân Mộc Vạn Sinh · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Hồi 20% máu mục tiêu; Hồi phục 6% máu tối đa mục tiêu 2 lượt
-- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 15% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 18% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô6** — Linh Mộc Hồi Sinh · Hệ Mộc · ô 6 · mở cấp 20 · 30 NL · bản thân: Hồi 11% máu bản thân; Biến 3 ô thường ngẫu nhiên thành Tim
 
 ### Bốn bị động
@@ -315,11 +315,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 22% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 26% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô2** — Phong Quyển Tàn Vân · Hệ Phong · ô 2 · mở cấp 1 · 40 NL · bản thân: Chọn tâm xoay lốc xoáy ±1..2 nấc
 - **Ô3** — Dưỡng sinh · Nghề Y sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Hồi phục 7% máu tối đa mục tiêu 3 lượt
 - **Ô4 · Tuyệt chiêu** — Gió Lành Tẩy Uế · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Thanh tẩy mục tiêu; Hồi 18% máu mục tiêu; +15 năng lượng mục tiêu
-- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 15% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 18% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô6** — Thanh Phong Tụ Khí · Hệ Phong · ô 6 · mở cấp 20 · 30 NL · cả đội: +10 năng lượng mục tiêu; Thủ+ 10% mục tiêu 2 lượt
 
 ### Bốn bị động
@@ -335,11 +335,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: -40 năng lượng mục tiêu
+- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 120% Công; -40 năng lượng mục tiêu
 - **Ô2** — Phóng Hỏa Thiêu Doanh · Hệ Hỏa · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá vùng 3×3
-- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: Câm lặng  mục tiêu 2 lượt
+- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 120% Công; Câm lặng  mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Hỏa Thiêu Kho Lương · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: -25 lương địch; -25 năng lượng mục tiêu; Thiêu đốt 10% Công người thi triển, áp lên mục tiêu 2 lượt
-- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: -15 lương địch; -10 năng lượng mục tiêu
+- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: 70% Công; -15 lương địch; -10 năng lượng mục tiêu
 - **Ô6** — Nộ Hỏa Thiêu Thân · Hệ Hỏa · ô 6 · mở cấp 20 · 30 NL · bản thân: Công+ 35% bản thân 2 lượt; Thủ− 15% bản thân 2 lượt
 
 ### Bốn bị động
@@ -355,11 +355,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: -40 năng lượng mục tiêu
+- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 120% Công; -40 năng lượng mục tiêu
 - **Ô2** — Thủy Nguyệt Tụ Linh · Hệ Thủy · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Âm dương
-- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: Câm lặng  mục tiêu 2 lượt
+- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 120% Công; Câm lặng  mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Thủy Độn Ly Gián · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: Câm lặng  mục tiêu 1 lượt, xác suất 50%; -20 năng lượng mục tiêu
-- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: -15 lương địch; -10 năng lượng mục tiêu
+- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: 70% Công; -15 lương địch; -10 năng lượng mục tiêu
 - **Ô6** — Thanh Lưu Tẩy Trần · Hệ Thủy · ô 6 · mở cấp 20 · 30 NL · bản thân: Thanh tẩy bản thân; Hồi 10% máu bản thân
 
 ### Bốn bị động
@@ -375,11 +375,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: Công− 30% mục tiêu 2 lượt
+- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: 160% Công; Công− 30% mục tiêu 2 lượt
 - **Ô2** — Hậu Thổ Tích Lương · Hệ Thổ · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Bánh chưng
-- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt
+- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt; +15 năng lượng mục tiêu
 - **Ô4 · Tuyệt chiêu** — Bát Trận Thạch Lũy · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Thủ+ 30% mục tiêu 2 lượt; Khiên 12% máu tối đa mục tiêu đến khi hết
-- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu
+- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu; 100% Công
 - **Ô6** — Thạch Giáp · Hệ Thổ · ô 6 · mở cấp 20 · 30 NL · bản thân: Khiên 20% máu tối đa bản thân đến khi hết
 
 ### Bốn bị động
@@ -395,11 +395,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: Công− 30% mục tiêu 2 lượt
+- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: 160% Công; Công− 30% mục tiêu 2 lượt
 - **Ô2** — Lôi Trụ Giáng Thế · Hệ Lôi · ô 2 · mở cấp 1 · 40 NL · bản thân: Phá 1 cột
-- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt
+- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt; +15 năng lượng mục tiêu
 - **Ô4 · Tuyệt chiêu** — Lôi Trận Kinh Hồn · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: Công− 25% mục tiêu 2 lượt; -20 năng lượng mục tiêu; Phá 6 ô ngẫu nhiên
-- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu
+- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu; 100% Công
 - **Ô6** — Tĩnh Điện Hộ Thân · Hệ Lôi · ô 6 · mở cấp 20 · 30 NL · địch đơn: -20 năng lượng mục tiêu; +10 năng lượng bản thân
 
 ### Bốn bị động
@@ -599,7 +599,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 - **Ô2** — Thủy Nguyệt Tụ Linh · Hệ Thủy · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Âm dương
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Thủy Trại Liên Hoàn · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Khiên 18% máu tối đa mục tiêu đến khi hết; Khiêu khích  bản thân 2 lượt; Đóng băng  mọi địch 1 lượt, xác suất 25%
-- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 40% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
+- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 30% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
 - **Ô6** — Thanh Lưu Tẩy Trần · Hệ Thủy · ô 6 · mở cấp 20 · 30 NL · bản thân: Thanh tẩy bản thân; Hồi 10% máu bản thân
 
 ### Bốn bị động
@@ -619,7 +619,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 - **Ô2** — Phóng Hỏa Thiêu Doanh · Hệ Hỏa · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá vùng 3×3
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Viêm Giáp Hộ Doanh · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · bản thân: Khiên 25% máu tối đa bản thân đến khi hết; Khiêu khích  bản thân 2 lượt; Phản đòn 30% bản thân 2 lượt; Thiêu đốt 10% Công người thi triển, áp lên mọi địch 2 lượt
-- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 40% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
+- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 30% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
 - **Ô6** — Nộ Hỏa Thiêu Thân · Hệ Hỏa · ô 6 · mở cấp 20 · 30 NL · bản thân: Công+ 35% bản thân 2 lượt; Thủ− 15% bản thân 2 lượt
 
 ### Bốn bị động
@@ -639,7 +639,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 - **Ô2** — Lôi Trụ Giáng Thế · Hệ Lôi · ô 2 · mở cấp 1 · 40 NL · bản thân: Phá 1 cột
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Chấn Lôi Thiết Vệ · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · bản thân: Thủ+ 40% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt; -20 năng lượng mọi địch
-- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 40% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
+- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 30% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
 - **Ô6** — Tĩnh Điện Hộ Thân · Hệ Lôi · ô 6 · mở cấp 20 · 30 NL · địch đơn: -20 năng lượng mục tiêu; +10 năng lượng bản thân
 
 ### Bốn bị động
@@ -659,7 +659,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 - **Ô2** — Phong Quyển Tàn Vân · Hệ Phong · ô 2 · mở cấp 1 · 40 NL · bản thân: Chọn tâm xoay lốc xoáy ±1..2 nấc
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Phong Lũy Hộ Kỳ · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết; +15 năng lượng mục tiêu; Khiêu khích  bản thân 2 lượt
-- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 40% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
+- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 30% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
 - **Ô6** — Thanh Phong Tụ Khí · Hệ Phong · ô 6 · mở cấp 20 · 30 NL · cả đội: +10 năng lượng mục tiêu; Thủ+ 10% mục tiêu 2 lượt
 
 ### Bốn bị động
@@ -675,11 +675,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 22% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 26% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
 - **Ô3** — Dưỡng sinh · Nghề Y sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Hồi phục 7% máu tối đa mục tiêu 3 lượt
 - **Ô4 · Tuyệt chiêu** — Kim Châm Độ Mệnh · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Hồi 22% máu mục tiêu; Thanh tẩy mục tiêu; Thủ+ 20% mục tiêu 2 lượt
-- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 15% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 18% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
 
 ### Bốn bị động
@@ -695,11 +695,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 22% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 26% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô2** — Phóng Hỏa Thiêu Doanh · Hệ Hỏa · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá vùng 3×3
 - **Ô3** — Dưỡng sinh · Nghề Y sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Hồi phục 7% máu tối đa mục tiêu 3 lượt
 - **Ô4 · Tuyệt chiêu** — Đan Hỏa Hồi Nguyên · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Hồi 22% máu mục tiêu; Công+ 15% mục tiêu 2 lượt
-- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 15% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 18% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô6** — Nộ Hỏa Thiêu Thân · Hệ Hỏa · ô 6 · mở cấp 20 · 30 NL · bản thân: Công+ 35% bản thân 2 lượt; Thủ− 15% bản thân 2 lượt
 
 ### Bốn bị động
@@ -715,11 +715,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 22% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 26% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô2** — Hậu Thổ Tích Lương · Hệ Thổ · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Bánh chưng
 - **Ô3** — Dưỡng sinh · Nghề Y sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Hồi phục 7% máu tối đa mục tiêu 3 lượt
 - **Ô4 · Tuyệt chiêu** — Hậu Thổ Dưỡng Nguyên · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Hồi 20% máu mục tiêu; Khiên 10% máu tối đa mục tiêu đến khi hết
-- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 15% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 18% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô6** — Thạch Giáp · Hệ Thổ · ô 6 · mở cấp 20 · 30 NL · bản thân: Khiên 20% máu tối đa bản thân đến khi hết
 
 ### Bốn bị động
@@ -735,11 +735,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 22% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 26% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô2** — Lôi Trụ Giáng Thế · Hệ Lôi · ô 2 · mở cấp 1 · 40 NL · bản thân: Phá 1 cột
 - **Ô3** — Dưỡng sinh · Nghề Y sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Hồi phục 7% máu tối đa mục tiêu 3 lượt
 - **Ô4 · Tuyệt chiêu** — Lôi Châm Khởi Tử · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Hồi 22% máu mục tiêu; +20 năng lượng mục tiêu
-- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 15% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 18% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô6** — Tĩnh Điện Hộ Thân · Hệ Lôi · ô 6 · mở cấp 20 · 30 NL · địch đơn: -20 năng lượng mục tiêu; +10 năng lượng bản thân
 
 ### Bốn bị động
@@ -755,11 +755,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: -40 năng lượng mục tiêu
+- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 120% Công; -40 năng lượng mục tiêu
 - **Ô2** — Lục Diệp Phong · Hệ Mộc · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá 5 ô ngẫu nhiên
-- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: Câm lặng  mục tiêu 2 lượt
+- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 120% Công; Câm lặng  mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Trúc Độc Mê Hồn · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: -25 năng lượng mục tiêu; Câm lặng  mục tiêu 1 lượt, xác suất 40%; Hồi phục 4% máu tối đa cả đội 2 lượt
-- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: -15 lương địch; -10 năng lượng mục tiêu
+- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: 70% Công; -15 lương địch; -10 năng lượng mục tiêu
 - **Ô6** — Linh Mộc Hồi Sinh · Hệ Mộc · ô 6 · mở cấp 20 · 30 NL · bản thân: Hồi 11% máu bản thân; Biến 3 ô thường ngẫu nhiên thành Tim
 
 ### Bốn bị động
@@ -775,11 +775,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: -40 năng lượng mục tiêu
+- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 120% Công; -40 năng lượng mục tiêu
 - **Ô2** — Hậu Thổ Tích Lương · Hệ Thổ · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Bánh chưng
-- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: Câm lặng  mục tiêu 2 lượt
+- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 120% Công; Câm lặng  mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Đoạn Đạo Tuyệt Lương · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: -30 lương địch; -20 năng lượng mục tiêu; Phá 6 ô ngẫu nhiên
-- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: -15 lương địch; -10 năng lượng mục tiêu
+- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: 70% Công; -15 lương địch; -10 năng lượng mục tiêu
 - **Ô6** — Thạch Giáp · Hệ Thổ · ô 6 · mở cấp 20 · 30 NL · bản thân: Khiên 20% máu tối đa bản thân đến khi hết
 
 ### Bốn bị động
@@ -795,11 +795,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: -40 năng lượng mục tiêu
+- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 120% Công; -40 năng lượng mục tiêu
 - **Ô2** — Lôi Trụ Giáng Thế · Hệ Lôi · ô 2 · mở cấp 1 · 40 NL · bản thân: Phá 1 cột
-- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: Câm lặng  mục tiêu 2 lượt
+- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 120% Công; Câm lặng  mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Kinh Lôi Đoạt Khí · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · địch đơn: 150% Công; -50 năng lượng mục tiêu; Câm lặng  mục tiêu 1 lượt
-- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: -15 lương địch; -10 năng lượng mục tiêu
+- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: 70% Công; -15 lương địch; -10 năng lượng mục tiêu
 - **Ô6** — Tĩnh Điện Hộ Thân · Hệ Lôi · ô 6 · mở cấp 20 · 30 NL · địch đơn: -20 năng lượng mục tiêu; +10 năng lượng bản thân
 
 ### Bốn bị động
@@ -815,11 +815,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: -40 năng lượng mục tiêu
+- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 120% Công; -40 năng lượng mục tiêu
 - **Ô2** — Phong Quyển Tàn Vân · Hệ Phong · ô 2 · mở cấp 1 · 40 NL · bản thân: Chọn tâm xoay lốc xoáy ±1..2 nấc
-- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: Câm lặng  mục tiêu 2 lượt
+- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 120% Công; Câm lặng  mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Phiêu Phong Ly Gián · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: -25 năng lượng mục tiêu; Xua tan hiệu ứng có lợi mục tiêu; Tự xoay lốc xoáy ±1..2 nấc
-- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: -15 lương địch; -10 năng lượng mục tiêu
+- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: 70% Công; -15 lương địch; -10 năng lượng mục tiêu
 - **Ô6** — Thanh Phong Tụ Khí · Hệ Phong · ô 6 · mở cấp 20 · 30 NL · cả đội: +10 năng lượng mục tiêu; Thủ+ 10% mục tiêu 2 lượt
 
 ### Bốn bị động
@@ -835,11 +835,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: Công− 30% mục tiêu 2 lượt
+- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: 160% Công; Công− 30% mục tiêu 2 lượt
 - **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
-- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt
+- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt; +15 năng lượng mục tiêu
 - **Ô4 · Tuyệt chiêu** — Thiết Trận Phá Giáp · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: Thủ− 30% mục tiêu 2 lượt; Công+ 15% cả đội 2 lượt
-- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu
+- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu; 100% Công
 - **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
 
 ### Bốn bị động
@@ -855,11 +855,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: Công− 30% mục tiêu 2 lượt
+- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: 160% Công; Công− 30% mục tiêu 2 lượt
 - **Ô2** — Lục Diệp Phong · Hệ Mộc · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá 5 ô ngẫu nhiên
-- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt
+- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt; +15 năng lượng mục tiêu
 - **Ô4 · Tuyệt chiêu** — Thanh Lâm Bày Trận · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Hồi phục 5% máu tối đa mục tiêu 2 lượt; Thủ+ 20% mục tiêu 2 lượt
-- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu
+- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu; 100% Công
 - **Ô6** — Linh Mộc Hồi Sinh · Hệ Mộc · ô 6 · mở cấp 20 · 30 NL · bản thân: Hồi 11% máu bản thân; Biến 3 ô thường ngẫu nhiên thành Tim
 
 ### Bốn bị động
@@ -875,11 +875,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: Công− 30% mục tiêu 2 lượt
+- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: 160% Công; Công− 30% mục tiêu 2 lượt
 - **Ô2** — Thủy Nguyệt Tụ Linh · Hệ Thủy · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Âm dương
-- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt
+- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt; +15 năng lượng mục tiêu
 - **Ô4 · Tuyệt chiêu** — Triều Dâng Vây Thành · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: Công− 25% mục tiêu 2 lượt; Đóng băng  mục tiêu 1 lượt, xác suất 30%
-- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu
+- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu; 100% Công
 - **Ô6** — Thanh Lưu Tẩy Trần · Hệ Thủy · ô 6 · mở cấp 20 · 30 NL · bản thân: Thanh tẩy bản thân; Hồi 10% máu bản thân
 
 ### Bốn bị động
@@ -895,11 +895,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: Công− 30% mục tiêu 2 lượt
+- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: 160% Công; Công− 30% mục tiêu 2 lượt
 - **Ô2** — Phóng Hỏa Thiêu Doanh · Hệ Hỏa · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá vùng 3×3
-- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt
+- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt; +15 năng lượng mục tiêu
 - **Ô4 · Tuyệt chiêu** — Hỏa Công Liên Kế · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: Công− 20% mục tiêu 2 lượt; Thiêu đốt 12% Công người thi triển, áp lên mục tiêu 2 lượt; +10 năng lượng cả đội
-- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu
+- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu; 100% Công
 - **Ô6** — Nộ Hỏa Thiêu Thân · Hệ Hỏa · ô 6 · mở cấp 20 · 30 NL · bản thân: Công+ 35% bản thân 2 lượt; Thủ− 15% bản thân 2 lượt
 
 ### Bốn bị động
@@ -939,7 +939,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 - **Ô2** — Hậu Thổ Tích Lương · Hệ Thổ · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Bánh chưng
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Ngoại Giáp Hộ Quân · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Khiên 20% máu tối đa mục tiêu đến khi hết; Khiêu khích  bản thân 2 lượt; Phản đòn 35% bản thân 2 lượt
-- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 40% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
+- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 30% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
 - **Ô6** — Thạch Giáp · Hệ Thổ · ô 6 · mở cấp 20 · 30 NL · bản thân: Khiên 20% máu tối đa bản thân đến khi hết
 
 ### Bốn bị động
@@ -955,11 +955,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: -40 năng lượng mục tiêu
+- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 120% Công; -40 năng lượng mục tiêu
 - **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
-- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: Câm lặng  mục tiêu 2 lượt
+- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 120% Công; Câm lặng  mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Đô Hộ Phủ Lệnh · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: -30 năng lượng mục tiêu; Câm lặng  mục tiêu 1 lượt, xác suất 50%; Thủ− 15% mục tiêu 2 lượt
-- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: -15 lương địch; -10 năng lượng mục tiêu
+- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: 70% Công; -15 lương địch; -10 năng lượng mục tiêu
 - **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
 
 ### Bốn bị động
@@ -975,11 +975,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 22% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 26% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô2** — Lục Diệp Phong · Hệ Mộc · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá 5 ô ngẫu nhiên
 - **Ô3** — Dưỡng sinh · Nghề Y sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Hồi phục 7% máu tối đa mục tiêu 3 lượt
 - **Ô4 · Tuyệt chiêu** — Hoa Lư Thảo Dược · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · cả đội: Hồi 28% máu mục tiêu; Thanh tẩy mục tiêu; Hồi phục 5% máu tối đa mục tiêu 2 lượt
-- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 15% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 18% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô6** — Linh Mộc Hồi Sinh · Hệ Mộc · ô 6 · mở cấp 20 · 30 NL · bản thân: Hồi 11% máu bản thân; Biến 3 ô thường ngẫu nhiên thành Tim
 
 ### Bốn bị động
@@ -995,11 +995,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: Công− 30% mục tiêu 2 lượt
+- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: 160% Công; Công− 30% mục tiêu 2 lượt
 - **Ô2** — Lôi Trụ Giáng Thế · Hệ Lôi · ô 2 · mở cấp 1 · 40 NL · bản thân: Phá 1 cột
-- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt
+- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt; +15 năng lượng mục tiêu
 - **Ô4 · Tuyệt chiêu** — Thập Đạo Lôi Binh · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 100 NL · mọi địch: 100% Công; Công− 25% mục tiêu 2 lượt; +20 năng lượng cả đội
-- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu
+- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu; 100% Công
 - **Ô6** — Tĩnh Điện Hộ Thân · Hệ Lôi · ô 6 · mở cấp 20 · 30 NL · địch đơn: -20 năng lượng mục tiêu; +10 năng lượng bản thân
 
 ### Bốn bị động
@@ -1035,11 +1035,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: Công− 30% mục tiêu 2 lượt
+- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: 160% Công; Công− 30% mục tiêu 2 lượt
 - **Ô2** — Thủy Nguyệt Tụ Linh · Hệ Thủy · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Âm dương
-- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt
+- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt; +15 năng lượng mục tiêu
 - **Ô4 · Tuyệt chiêu** — Bố Hải Trấn Giang · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 60 NL · mọi địch: 80% Công; Công− 30% mục tiêu 2 lượt; Đóng băng  mục tiêu 1 lượt, xác suất 35%; Phá 4 ô ngẫu nhiên
-- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu
+- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu; 100% Công
 - **Ô6** — Thanh Lưu Tẩy Trần · Hệ Thủy · ô 6 · mở cấp 20 · 30 NL · bản thân: Thanh tẩy bản thân; Hồi 10% máu bản thân
 
 ### Bốn bị động
@@ -1075,11 +1075,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: -40 năng lượng mục tiêu
+- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 120% Công; -40 năng lượng mục tiêu
 - **Ô2** — Luyện Kim Thành Kiếm · Hệ Kim · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 4 ô thường ngẫu nhiên thành Kiếm
-- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: Câm lặng  mục tiêu 2 lượt
+- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 120% Công; Câm lặng  mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Ngô Gia Di Mưu · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 60 NL · địch đơn: 240% Công, bỏ 40% DEF; -50 năng lượng mục tiêu; Câm lặng  mục tiêu 1 lượt; Phá 6 ô ngẫu nhiên
-- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: -15 lương địch; -10 năng lượng mục tiêu
+- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: 70% Công; -15 lương địch; -10 năng lượng mục tiêu
 - **Ô6** — Kim Ý Ngưng Thần · Hệ Kim · ô 6 · mở cấp 20 · 35 NL · địch đơn: 130% Công, bỏ 50% DEF
 
 ### Bốn bị động
@@ -1095,11 +1095,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: Công− 30% mục tiêu 2 lượt
+- **Ô1** — Nghi binh · Nghề Quân sư · ô 1 · mở cấp 1 · 30 NL · địch đơn: 160% Công; Công− 30% mục tiêu 2 lượt
 - **Ô2** — Phong Quyển Tàn Vân · Hệ Phong · ô 2 · mở cấp 1 · 40 NL · bản thân: Chọn tâm xoay lốc xoáy ±1..2 nấc
-- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt
+- **Ô3** — Hiệu lệnh · Nghề Quân sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Công+ 25% mục tiêu 2 lượt; +15 năng lượng mục tiêu
 - **Ô4 · Tuyệt chiêu** — Đường Lâm Phong Khởi · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 60 NL · mọi địch: 60% Công; Xua tan hiệu ứng có lợi mục tiêu; Công− 25% mục tiêu 2 lượt; Tự xoay lốc xoáy ±1..2 nấc
-- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu
+- **Ô5** — Phá kế · Nghề Quân sư · ô 5 · mở cấp 15 · 55 NL · mọi địch: Xua tan hiệu ứng có lợi mục tiêu; 100% Công
 - **Ô6** — Thanh Phong Tụ Khí · Hệ Phong · ô 6 · mở cấp 20 · 30 NL · cả đội: +10 năng lượng mục tiêu; Thủ+ 10% mục tiêu 2 lượt
 
 ### Bốn bị động
@@ -1119,7 +1119,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 - **Ô2** — Hậu Thổ Tích Lương · Hệ Thổ · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Bánh chưng
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Tam Đái Kiên Thành · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 60 NL · cả đội: Khiên 25% máu tối đa mục tiêu đến khi hết; Khiêu khích  bản thân 2 lượt; Phản đòn 35% bản thân 2 lượt
-- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 40% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
+- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 30% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
 - **Ô6** — Thạch Giáp · Hệ Thổ · ô 6 · mở cấp 20 · 30 NL · bản thân: Khiên 20% máu tối đa bản thân đến khi hết
 
 ### Bốn bị động
@@ -1155,11 +1155,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 22% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô1** — Linh dược · Nghề Y sư · ô 1 · mở cấp 1 · 30 NL · đồng minh đơn: Hồi 26% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô2** — Lục Diệp Phong · Hệ Mộc · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá 5 ô ngẫu nhiên
 - **Ô3** — Dưỡng sinh · Nghề Y sư · ô 3 · mở cấp 5 · 45 NL · cả đội: Hồi phục 7% máu tối đa mục tiêu 3 lượt
 - **Ô4 · Tuyệt chiêu** — Hồi Hồ Sinh Khí · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 60 NL · cả đội: Hồi 25% máu mục tiêu; Hồi phục 6% máu tối đa mục tiêu 2 lượt
-- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 15% máu mục tiêu; Thanh tẩy mục tiêu
+- **Ô5** — Tế độ · Nghề Y sư · ô 5 · mở cấp 15 · 55 NL · cả đội: Hồi 18% máu mục tiêu; Thanh tẩy mục tiêu
 - **Ô6** — Linh Mộc Hồi Sinh · Hệ Mộc · ô 6 · mở cấp 20 · 30 NL · bản thân: Hồi 11% máu bản thân; Biến 3 ô thường ngẫu nhiên thành Tim
 
 ### Bốn bị động
@@ -1195,11 +1195,11 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 
 ### Sáu chủ động
 
-- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: -40 năng lượng mục tiêu
+- **Ô1** — Mua chuộc · Nghề Mưu sĩ · ô 1 · mở cấp 1 · 30 NL · địch đơn: 120% Công; -40 năng lượng mục tiêu
 - **Ô2** — Thủy Nguyệt Tụ Linh · Hệ Thủy · ô 2 · mở cấp 1 · 20 NL · bản thân: Biến 5 ô thường ngẫu nhiên thành Âm dương
-- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: Câm lặng  mục tiêu 2 lượt
+- **Ô3** — Ly gián · Nghề Mưu sĩ · ô 3 · mở cấp 5 · 45 NL · địch đơn: 120% Công; Câm lặng  mục tiêu 2 lượt
 - **Ô4 · Tuyệt chiêu** — Tiên Du Đoạt Lương · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 60 NL · mọi địch: 60% Công; -25 lương địch; -30 năng lượng mục tiêu; Đóng băng  mục tiêu 1 lượt, xác suất 25%
-- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: -15 lương địch; -10 năng lượng mục tiêu
+- **Ô5** — Cắt quân lương · Nghề Mưu sĩ · ô 5 · mở cấp 15 · 55 NL · mọi địch: 70% Công; -15 lương địch; -10 năng lượng mục tiêu
 - **Ô6** — Thanh Lưu Tẩy Trần · Hệ Thủy · ô 6 · mở cấp 20 · 30 NL · bản thân: Thanh tẩy bản thân; Hồi 10% máu bản thân
 
 ### Bốn bị động
@@ -1239,7 +1239,7 @@ Lấy từ dữ liệu hiện tại sau khi chốt F và mở rộng chase. Thô
 - **Ô2** — Phóng Hỏa Thiêu Doanh · Hệ Hỏa · ô 2 · mở cấp 1 · 35 NL · bản thân: Phá vùng 3×3
 - **Ô3** — Tường khiên · Nghề Binh lính · ô 3 · mở cấp 5 · 45 NL · cả đội: Khiên 15% máu tối đa mục tiêu đến khi hết
 - **Ô4 · Tuyệt chiêu** — Phù Liệt Hỏa Lũy · Tuyệt chiêu nhân vật · ô 4 · mở cấp 10 · 60 NL · bản thân: Khiên 30% máu tối đa bản thân đến khi hết; Khiêu khích  bản thân 2 lượt; Thiêu đốt 15% Công người thi triển, áp lên mọi địch 2 lượt
-- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 40% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
+- **Ô5** — Phản kích · Nghề Binh lính · ô 5 · mở cấp 15 · 55 NL · bản thân: Phản đòn 30% bản thân 2 lượt; Thủ+ 30% bản thân 2 lượt; Khiêu khích  bản thân 2 lượt
 - **Ô6** — Nộ Hỏa Thiêu Thân · Hệ Hỏa · ô 6 · mở cấp 20 · 30 NL · bản thân: Công+ 35% bản thân 2 lượt; Thủ− 15% bản thân 2 lượt
 
 ### Bốn bị động

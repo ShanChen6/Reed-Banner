@@ -4,6 +4,10 @@
 
 ## 19/11/2026
 
+**Cân chiêu nghề theo nghề (Shan yêu cầu)**
+- Đo nhân vật kèm ở cấp 10, 20, 30: lệch theo nghề (Binh lính khoảng 55%, Quân sư khoảng 41%). Chiêu nghề `role_*` của Y sư hồi nhiều hơn, Mưu sĩ và Quân sư thêm sát thương, Xạ thủ tăng sát thương nhẹ, Phản kích của Binh lính giảm phản đòn; chiêu AI chiến dịch không đổi. Chênh nghề ở cấp 20 từ 13,9 xuống 8,6 điểm ([số liệu](../03-characters/danh-sach-nhan-vat.md#12-cân-chiêu-nghề-theo-nghề-19112026)).
+- Tháp Thí Luyện cân lại 13 tầng tụt dưới ngưỡng đội mẫu, tăng `contentVersion`.
+
 **Truy kích nghề không trùng tín hiệu với Cơ hội (Shan yêu cầu)**
 - Sáu nghề có bị động truy kích kích cùng tín hiệu với bị động Cơ hội của chính nghề đó (Lý Khuê: Liên trảm và Thừa thắng cùng phá giáp). Đổi tín hiệu truy kích: **Liên trảm** (Tướng sĩ) → khống chế; **Chú kích** (Pháp sư) → phá giáp; **Cứu viện** (Y sư) → khống chế; **Thừa hư** (Mưu sĩ) → phá giáp; **Tiếp lệnh** (Quân sư) → khống chế, cấp năng lượng cho người khống chế. Xạ thủ và Sát thủ đổi chéo: Xạ thủ nhận **Chờ thời khống chế**, Sát thủ nhận **Chờ thời phá giáp**. Binh lính (Tiếp phòng, hồi máu) không trùng nên giữ.
 - Mô phỏng 3v3 (`scripts/profession-balance.ts`, cấp 20, 2 seed, 6 160 trận): nghề cao nhất 58,3% → 57,3%, thấp nhất 44,8% → 45,1% ([số liệu](../03-characters/danh-sach-nhan-vat.md#11-đổi-tín-hiệu-truy-kích-nghề-19112026)). 1v1 không đổi vì truy kích nghề chỉ nhận tín hiệu từ đồng đội.

@@ -107,10 +107,9 @@ describe("nội dung 100 tầng Trial", () => {
 
   it("tầng cân bằng lại tăng contentVersion để không đối chiếu sai trận cũ", () => {
     // Tầng 16, 19 cân bằng lại ở V1; tầng 20 thêm lần hai và tầng 24, 38, 40, 50 một lần khi Nộ riêng từng tướng áp dụng cho Trial (14/11/2026).
-    // Đổi tín hiệu truy kích nghề (19/11/2026): tầng 26, 62, 65, 73, 81, 91, 96 lên 2; tầng 38, 40 lên 3.
-    for (const floor of [16, 19, 24, 26, 50, 62, 65, 73, 81, 91, 96])
-      assert.equal(TRIAL_FLOOR_DATA[floor - 1]!.contentVersion, 2);
-    for (const floor of [20, 38, 40])
-      assert.equal(TRIAL_FLOOR_DATA[floor - 1]!.contentVersion, 3);
+    // Đổi tín hiệu truy kích nghề và cân chiêu nghề (19/11/2026) cân lại thêm nhiều tầng; mỗi lần cân tăng một bậc.
+    const versions: Record<number, readonly number[]> = { 2: [16, 19, 22, 24, 26, 29, 50, 51, 61, 73, 75, 81, 95, 97, 98], 3: [20, 40, 62, 65, 91, 96], 4: [38] };
+    for (const [version, floors] of Object.entries(versions))
+      for (const floor of floors) assert.equal(TRIAL_FLOOR_DATA[floor - 1]!.contentVersion, Number(version), `tầng ${floor}`);
   });
 });
