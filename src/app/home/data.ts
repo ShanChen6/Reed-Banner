@@ -59,6 +59,6 @@ export const FAQ: readonly { readonly q: string; readonly a: string }[] = [
   },
   {
     q: "Có những chế độ nào?",
-    a: "Thao Luyện không cần mạng, Giao Tranh trực tuyến, Bình Loạn dẹp 12 sứ quân kèm Tái đấu sứ quân, Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh và Quần Hùng. Thêm nhiệm vụ, điểm danh và bảng công trạng.",
+    a: "Chiến trận: Thao Luyện không cần mạng, Bình Loạn dẹp 12 sứ quân kèm Tái đấu sứ quân, Giao Tranh trực tuyến, Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh, Quần Hùng và Viễn Chinh. Binh pháp và giải đố: Trận Đồ, Khai Lộ, Do Thám, Sử Lộ, Tầm Tướng Ký. Thêm nhiệm vụ, điểm danh và bảng công trạng. Vào chế độ nào cũng có màn Hướng dẫn trước.",
   },
 ];

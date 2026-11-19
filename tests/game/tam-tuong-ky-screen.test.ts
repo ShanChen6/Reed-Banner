@@ -25,6 +25,10 @@ import {
   swapSlots,
 } from "../../src/app/game/tam-tuong-ky/altar";
 import TamTuongKyScreen from "../../src/app/game/tam-tuong-ky/TamTuongKyScreen";
+import { markGuideSeen } from "../../src/app/game/ModeGuide";
+
+// Test dựng thẻ Chơi: coi như đã qua màn Hướng dẫn mở đầu (vào chế độ gặp Hướng dẫn trước từ 19/11/2026).
+markGuideSeen("TAM_TUONG_KY");
 import { SCENE_SLUG, SCENE_TITLE, sceneOfSlug } from "../../src/app/game/scene";
 import { tamTuongKyEnabled, tamTuongKyFlagStatus, tamTuongKyRankedEnabled } from "../../src/server/featureFlags";
 import { MemoryProfileStore } from "../../src/server/profiles";

@@ -44,7 +44,7 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 | Tháp Thí Luyện | — | Nhạc `tower_trial` (màn Tháp im lặng; trận trong Tháp dùng `battle_normal`) |
 | Tháp Thiên Mệnh | — | Nhạc `tower_destiny` (cả màn Tháp lẫn trận trong Tháp đều im nhạc) |
 | Trấn Ải (Sinh tồn) | `survival` | Cue `survival.wave`, `survival.warn` |
-| Sử Lộ | Đã nối 19/11/2026: 16 cue `sulo.*`, tiếng ghép ô trận trùm, nhạc `sulo_maze`/`sulo_boss` ([bảng 5.6](02-architecture-and-assets.md#56-sử-lộ-sulo-đã-nối-19112026)) | `sulo.roll`, `sulo.move`, `sulo.nomove` đã có tệp riêng (19/11/2026); 13 cue còn lại và cả hai bản nhạc đang mượn tệp của Trận Đồ, trận đánh và Bình Loạn |
+| Sử Lộ | Đã nối 19/11/2026: 16 cue `sulo.*`, tiếng ghép ô trận trùm, nhạc `sulo_maze`/`sulo_boss` ([bảng 5.6](02-architecture-and-assets.md#56-sử-lộ-sulo-đã-nối-19112026)) | `sulo.roll`, `sulo.move`, `sulo.nomove`, `sulo.correct`, `sulo.wrong`, `sulo.trap`, `sulo.disarm` đã có tệp riêng (19/11/2026); 9 cue còn lại và cả hai bản nhạc đang mượn tệp của Trận Đồ, trận đánh và Bình Loạn |
 | Do Thám | Đã nối 19/11/2026: 8 cue `dotham.*`, tiếng đạo cụ theo hệ, nhạc `dotham` ([bảng 5.7](02-architecture-and-assets.md#57-do-thám-dotham-đã-nối-19112026)) | Mọi cue và bản nhạc đang mượn tệp của Trận Đồ và trận đánh; chưa có tệp riêng |
 | Quần Hùng | `arena` | Cue `arena.rank`; nhạc `pvp` đã có tệp nhưng chưa nối vào trận PvP |
 

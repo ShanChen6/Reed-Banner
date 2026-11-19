@@ -18,7 +18,7 @@ import Image from "next/image";
 import { Portrait } from "./game/art/portraits";
 import { ModeIcon, type ModeIconKind } from "./game/art/mode-icons";
 import { BoardCrest, TileArt } from "./game/art/tiles";
-import { towerFeatureFlags, type TowerFeatureFlags } from "@/server/featureFlags";
+import { expeditionFlag, tamTuongKyEnabled, towerFeatureFlags, type TowerFeatureFlags } from "@/server/featureFlags";
 import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
 import ContactBlock from "./game/ContactBlock";
 import { socialLinks } from "./game/footerLinks";
@@ -69,22 +69,56 @@ const FEATURES: { tile: Tile; title: string; body: string }[] = [
   { tile: { kind: "kiem", special: "strong" }, title: "Ô đặc biệt", body: "Ghép chữ L, chữ T hay thẳng 5 để tạo ô bản yếu và bản mạnh, nổ tung cả vùng." },
   { tile: { kind: "trong" }, title: "Nộ và bị động", body: "Trống trận và đòn nhận vào tích Nộ. Đầy 100, bị động theo hệ bùng phát trong 3 lượt." },
   { tile: { kind: "banhChung" }, title: "Lương thực, sĩ khí", body: "Lương tụt mỗi lượt. No thì đánh mạnh hơn, đói thì yếu đi, cạn thì mất máu." },
-  { tile: { kind: "amDuong" }, title: "6 nghề đồng đội", body: "Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư, mỗi nghề một nội tại riêng." },
+  { tile: { kind: "amDuong" }, title: "8 nghề đồng đội", body: "Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư, Xạ thủ, Sát thủ, mỗi nghề một nội tại và vai trò riêng." },
   { tile: { kind: "vang", special: "weak" }, title: "Trang bị 5 phẩm", body: "9 ô trang bị, phẩm Trắng tới Cam. Đủ bộ được thưởng; ghép 3 món cùng bậc để nâng bậc." },
   { tile: { kind: "sach" }, title: "AI Tianwu", body: "Từ Dễ tới Ác mộng. AI chỉ thấy những gì bạn thấy và chịu cùng luật, không ăn gian." },
 ];
 
-/** Các chế độ đang có trong màn chơi /game (cùng danh sách với MenuScene). `flag`: chế độ bật bằng biến môi trường lúc build. */
-const MODES: readonly { slug: ModeIconKind; name: string; body: string; flag?: keyof TowerFeatureFlags }[] = [
-  { slug: "practice", name: "Thao Luyện", body: "Vào trận ngay, không cần mạng, 3vs3 đấu Tianwu với đội cấp tối đa. Không cần tài khoản." },
-  { slug: "play", name: "Giao Tranh", body: "Trận trực tuyến có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm." },
-  { slug: "campaign", name: "Bình Loạn", body: "Sáu chương dẹp loạn 12 sứ quân, tướng lịch sử gia nhập, rồi Tái đấu sứ quân bị đánh dẹp ở 3 bậc." },
-  { slug: "trial", name: "Tháp Thí Luyện", body: "100 tầng cố định chia 10 chặng, tự chọn đội theo luật riêng từng tầng.", flag: "trial" },
-  { slug: "destiny", name: "Tháp Thiên Mệnh", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng.", flag: "destiny" },
-  { slug: "survival", name: "Trấn Ải", body: "Một bàn cờ, đối thủ kéo đến theo đợt, nghỉ giữa đợt để tính tiếp." },
-  { slug: "daily", name: "Nhật Lệnh", body: "Một đề chung cho mọi người, mỗi ngày một lần, có bảng công trạng." },
-  { slug: "arena", name: "Quần Hùng", body: "Đánh đội phòng thủ của hào kiệt khác, leo điểm mỗi ngày." },
+type ModeFlag = keyof TowerFeatureFlags | "expedition" | "tamTuongKy";
+
+interface LandingMode {
+  readonly slug: ModeIconKind;
+  readonly name: string;
+  readonly kicker: string;
+  readonly body: string;
+  /** Tranh thẻ (public/art/...). */
+  readonly art: string;
+  /** Chế độ bật bằng biến môi trường lúc build; tắt thì thẻ ghi "Sắp có". */
+  readonly flag?: ModeFlag;
+  /** Chơi được ngay không cần tài khoản. */
+  readonly guest?: boolean;
+}
+
+/** Các chế độ đang có trong màn chơi /game (cùng danh sách với MenuScene), chia hai nhóm như Chiến Trường. */
+const MODE_GROUPS: readonly { readonly title: string; readonly sub: string; readonly modes: readonly LandingMode[] }[] = [
+  {
+    title: "Chiến trận",
+    sub: "Ghép ô để đánh: luyện tay, theo cốt truyện, leo tháp, giữ ải, đấu người.",
+    modes: [
+      { slug: "practice", name: "Thao Luyện", kicker: "Luyện tay", art: "/art/home/thao-luyen.webp", guest: true, body: "Vào trận ngay, không cần mạng, 3vs3 đấu Tianwu với đội cấp tối đa." },
+      { slug: "campaign", name: "Bình Loạn", kicker: "Cốt truyện", art: "/art/home/campaign.webp", body: "Sáu chương dẹp loạn 12 sứ quân, tướng lịch sử gia nhập, rồi Tái đấu sứ quân ở 3 bậc." },
+      { slug: "play", name: "Giao Tranh", kicker: "Trực tuyến", art: "/art/home/giao-tranh.webp", body: "Trận trực tuyến có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm." },
+      { slug: "trial", name: "Tháp Thí Luyện", kicker: "Leo tháp", art: "/art/home/trial.webp", flag: "trial", body: "100 tầng cố định chia 10 chặng, tự chọn đội theo luật riêng từng tầng." },
+      { slug: "destiny", name: "Tháp Thiên Mệnh", kicker: "Leo tháp", art: "/art/home/destiny.webp", flag: "destiny", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng." },
+      { slug: "survival", name: "Trấn Ải", kicker: "Sinh tồn", art: "/art/home/survival.webp", body: "Một bàn cờ, đối thủ kéo đến theo đợt, nghỉ giữa đợt để tính tiếp." },
+      { slug: "daily", name: "Nhật Lệnh", kicker: "Mỗi ngày", art: "/art/home/daily.webp", body: "Một đề chung cho mọi người, mỗi ngày một lần, có bảng công trạng." },
+      { slug: "arena", name: "Quần Hùng", kicker: "Đấu người", art: "/art/home/arena.webp", body: "Đánh đội phòng thủ của hào kiệt khác, leo điểm mỗi ngày." },
+      { slug: "expedition", name: "Viễn Chinh", kicker: "Hành quân", art: "/art/home/vien-chinh.webp", flag: "expedition", body: "Chia quân hai đạo trên sa bàn, hành quân qua từng chặng rồi giáp công phá thành." },
+    ],
+  },
+  {
+    title: "Binh pháp và giải đố",
+    sub: "Không cần phản xạ: bày trận, dò bẫy, học sử, ghép tướng. Phần lớn chơi được ngay không cần tài khoản.",
+    modes: [
+      { slug: "formation", name: "Trận Đồ", kicker: "Binh pháp", art: "/art/home/tran-do.webp", guest: true, body: "Xếp quân theo nghề, theo hệ cho khớp luật từng ô, mở dần bản đồ trận." },
+      { slug: "clear-path", name: "Khai Lộ", kicker: "Giải đố", art: "/art/home/khai-lo.webp", guest: true, body: "Chạm để phá cả khối quân cùng hệ, gom khối to lấy điểm và mở đường xuyên bàn." },
+      { slug: "scout", name: "Do Thám", kicker: "Giải đố", art: "/art/home/do-tham.webp", guest: true, body: "Dò từng ô trên sa bàn, đọc số để tránh bẫy chông, cắm cờ lau đánh dấu." },
+      { slug: "maze", name: "Sử Lộ", kicker: "Học sử", art: "/art/home/su-lo.webp", guest: true, body: "Đổ xúc xắc đi qua mê cung các thời kỳ, đáp đúng câu sử để mở cổng." },
+      { slug: "tam-tuong-ky", name: "Tầm Tướng Ký", kicker: "Ghép tướng", art: "/art/home/tam-tuong-ky.webp", flag: "tamTuongKy", body: "Ghép bảy hệ thành nguyên liệu, lần ra chân dung các danh tướng." },
+    ],
+  },
 ];
+
 
 
 function SectionTitle({ kicker, title, sub }: { kicker: string; title: string; sub?: string }) {
@@ -118,7 +152,7 @@ const DBL_ERAS = [
 
 export default function Home() {
   const board = heroBoard();
-  const flags = towerFeatureFlags();
+  const flags: Record<ModeFlag, boolean> = { ...towerFeatureFlags(), expedition: expeditionFlag(), tamTuongKy: tamTuongKyEnabled() };
   return (
     <div className="demo-bg min-h-dvh bg-[var(--background)] text-on-wood">
       <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-wood-lo focus:p-2">
@@ -367,43 +401,68 @@ export default function Home() {
         <section id="modes" className="scroll-mt-16 px-4 py-16">
           <SectionTitle
             kicker="Chế độ chơi"
-            title="Từ Thao Luyện tới Bình Loạn"
+            title="Mười bốn cách ra trận"
             sub="Chơi ngay với thân phận lữ khách, tiến trình gắn với trình duyệt. Trình danh để giữ tiến trình trên mọi máy."
           />
-          <ul className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {MODES.map((m) => {
-              const open = !m.flag || flags[m.flag];
-              const body = (
-                <>
-                  <span className="flex items-center gap-3">
-                    <ModeIcon kind={m.slug} className="size-10 shrink-0" />
-                    <span className="font-serif text-xl font-bold">{m.name}</span>
-                    {!open && (
-                      <Badge className="ml-auto uppercase tracking-wider">Sắp có</Badge>
-                    )}
-                  </span>
-                  <span className="mt-2 flex-1 text-sm text-on-wood-soft">{m.body}</span>
-                  {open && <span className="mt-3 text-sm font-semibold text-[var(--primary)] group-hover:brightness-125">Vào chơi ›</span>}
-                </>
-              );
-              return (
-                <li key={m.slug}>
-                  {open ? (
-                    <Link
-                      href={`/game/${m.slug}`}
-                      className={`group flex h-full flex-col rounded-2xl p-5 transition hover:brightness-110 ${m.slug === "practice" ? "fx-panel-hi" : "fx-panel"}`}
-                    >
-                      {body}
-                    </Link>
-                  ) : (
-                    <div aria-disabled="true" className="flex h-full flex-col rounded-2xl fx-panel p-5 opacity-70">
-                      {body}
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
+          <div className="mx-auto flex max-w-6xl flex-col gap-12">
+            {MODE_GROUPS.map((group) => (
+              <section key={group.title} aria-labelledby={`modes-${group.modes[0]!.slug}`}>
+                <div className="mb-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-1 border-b border-frame-gold/25 pb-3">
+                  <h3 id={`modes-${group.modes[0]!.slug}`} className="fx-gilt-text font-serif text-2xl font-black">{group.title}</h3>
+                  <p className="max-w-xl text-sm text-on-wood-soft">{group.sub}</p>
+                </div>
+                <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {group.modes.map((m) => {
+                    const open = !m.flag || flags[m.flag];
+                    const body = (
+                      <>
+                        <span className="relative block aspect-[16/7] overflow-hidden rounded-t-2xl">
+                          <Image
+                            src={m.art}
+                            alt=""
+                            fill
+                            sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw"
+                            className={`object-cover transition duration-500 ${open ? "group-hover:scale-105" : "grayscale"}`}
+                          />
+                          <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+                          <span className="absolute top-3 right-3 flex gap-1.5">
+                            {m.guest && open && <Badge className="bg-black/55 backdrop-blur-sm">Không cần tài khoản</Badge>}
+                            {!open && <Badge className="bg-black/55 uppercase tracking-wider backdrop-blur-sm">Sắp có</Badge>}
+                          </span>
+                        </span>
+                        <span className="relative -mt-9 flex items-end gap-3 px-5">
+                          <ModeIcon kind={m.slug} className="size-16 shrink-0 drop-shadow-[0_6px_12px_rgba(0,0,0,0.55)]" />
+                          <span className="flex min-w-0 flex-col pb-1">
+                            <span className="text-kicker text-frame-gold">{m.kicker}</span>
+                            <span className="font-serif text-xl leading-tight font-bold">{m.name}</span>
+                          </span>
+                        </span>
+                        <span className="mt-3 flex-1 px-5 text-sm text-on-wood-soft">{m.body}</span>
+                        {open && <span className="mt-3 px-5 pb-5 text-sm font-semibold text-[var(--primary)] group-hover:brightness-125">Vào chơi ›</span>}
+                        {!open && <span className="pb-5" />}
+                      </>
+                    );
+                    return (
+                      <li key={m.slug}>
+                        {open ? (
+                          <Link
+                            href={`/game/${m.slug}`}
+                            className={`group flex h-full flex-col overflow-hidden rounded-2xl transition hover:-translate-y-0.5 hover:brightness-110 ${m.slug === "practice" ? "fx-panel-hi" : "fx-panel"}`}
+                          >
+                            {body}
+                          </Link>
+                        ) : (
+                          <div aria-disabled="true" className="flex h-full flex-col overflow-hidden rounded-2xl fx-panel opacity-75">
+                            {body}
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            ))}
+          </div>
           <p className="mt-6 text-center text-sm text-on-wood-soft">
             Kèm theo:{" "}
             {[

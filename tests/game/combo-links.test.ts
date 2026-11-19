@@ -53,4 +53,15 @@ describe("trang Hợp Kích: chuỗi phản ứng", () => {
     assert.equal(new Set(best.map((c) => `${c.from}:${c.skill.id}`)).size, best.length);
     assert.ok(best.every((c, i) => i === 0 || c.steps.length <= best[i - 1]!.steps.length));
   });
+
+  it("giảm Thủ không mạnh hơn mức đang có bị bỏ qua như trong trận: hai Kim phá trong đội chỉ một cái vào chuỗi", async () => {
+    const { comboChains } = await import("../../src/app/game/combos/links");
+    const kimDbl = comboMember("dinhBoLinh", withComboPassive(mainCharacter("kim", "tuongSi")));
+    const team = [kimDbl, member("tranCuong"), member("maiThanh")];
+    const chains = comboChains(team);
+    assert.ok(chains.length > 0);
+    for (const c of chains) assert.ok(c.steps.filter((st) => st.passive.id === "kim1").length <= 1);
+    // Phá trận tự giảm Thủ 30% nên Kim phá (12%) không theo sau chiêu này.
+    for (const c of chains.filter((x) => x.skill.id === "role_phaTran")) assert.ok(c.steps.every((st) => st.passive.id !== "kim1"));
+  });
 });

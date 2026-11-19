@@ -39,3 +39,8 @@ export async function registerAccount(page: Page): Promise<string> {
   ]);
   return username;
 }
+
+/** Vào chế độ nào cũng gặp Hướng dẫn trước (19/11/2026): bấm "Vào chơi" để sang thẻ Chơi. */
+export async function playMode(page: Page): Promise<void> {
+  await page.getByRole("button", { name: "Vào chơi" }).click();
+}

@@ -14,6 +14,9 @@
 | `music/atlas`, `dialogue`, `survival`, `battle_boss`, `battle_normal` | Năm bản nhạc Gemini tạo (03/11/2026), chuẩn hóa -18 LUFS và làm vòng lặp bằng `scripts/make-music-loop.py` (cắt phần tắt dần ở cuối, trộn 3 giây) | Như trên |
 | `music/arena`, `music/pvp` | Hai bản nhạc Gemini tạo (03/11/2026), làm vòng lặp bằng `scripts/make-music-loop.py`. `pvp` dành cho Quần Hùng online (chưa phát triển) | Như trên |
 | `sfx/su-lo/roll_a..b`, `move_a..c`, `nomove_a` | Cắt tay từ ba đoạn Gemini tạo (19/11/2026, prompt `sulo_roll`, `sulo_move`, `sulo_nomove` trong bộ prompt Gemini). Gemini trả về nhạc nhịp gõ; chỉ lấy các tiếng rời ở đoạn mở đầu hoặc sau khoảng lặng (roll: giây 20,15 và 37,05; move: 3,66, 4,12 và 33,22; nomove: 0,0) | Như trên |
+| `sfx/su-lo/correct_a..c` | Cắt tay từ đoạn Gemini tạo (19/11/2026, prompt `sulo_correct`): ba tiếng chuông rời ở giây 30,70, 32,91 và 35,13 (phần còn lại của đoạn là nhạc) | Như trên |
+| `sfx/su-lo/wrong_a..c`, `trap_a..b` | Cắt tay từ hai đoạn Gemini tạo (19/11/2026, prompt `sulo_wrong`, `sulo_trap`): wrong là ba tiếng trầm rời ở giây 1,43, 3,73 và 7,44; trap là hai cú va ở giây 7,42 và 2,14 (phần sau của cả hai đoạn là nhạc) | Như trên |
+| `sfx/su-lo/disarm_a..b` | Cắt tay từ đoạn Gemini tạo (19/11/2026, prompt `sulo_disarm`): đoạn là nhạc nhịp gõ liền, chỉ lấy hai cú gõ tắt đủ sâu ở giây 1,88 và 0,04; nên tạo lại nếu có bản tốt hơn | Như trên |
 
 Cue `sulo.*` và nhạc `sulo_maze`, `sulo_boss` của Sử Lộ chưa có tệp riêng: manifest trỏ về các tệp ở bảng trên (xem bảng 5.6 trong `docs/05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md`).
 

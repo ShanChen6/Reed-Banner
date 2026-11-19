@@ -4,6 +4,14 @@
 
 ## 19/11/2026
 
+**Hướng dẫn trước khi chơi, kệ Vật phẩm, chuỗi Hợp Kích (Shan yêu cầu)**
+- Vào chế độ nào cũng mở thẻ Hướng dẫn trước, nút Vào chơi ở cuối ([đặc tả](../05-ui-ux/design-system/game-mode-ui-spec.md)).
+- Tranh thẻ mới (`public/art/home/`, dùng chung Chiến Trường, biển đầu màn và trang giới thiệu) cho Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Viễn Chinh, Khai Lộ, Do Thám, thêm Thao Luyện và Giao Tranh. Bình Loạn, Nhật Lệnh, Quần Hùng, Trận Đồ, Sử Lộ, Tầm Tướng Ký giữ tranh cũ (Shan thấy đẹp hơn).
+- Icon chế độ: đủ 14 ảnh vẽ (`public/art/modes/`) thay bản SVG; thêm prompt tranh thẻ Thao Luyện, Giao Tranh ([thumbnail](../06-art/prompts/thumbnail-chien-truong.md#6-thao-luyện--sân-tập-võ-19112026-đã-có-tranh)).
+- Trang giới thiệu: mục Chế độ chơi đủ 14 chế độ, chia hai nhóm, thẻ có tranh, biểu tượng SVG mới cho Trận Đồ, Khai Lộ, Do Thám, Sử Lộ, Tầm Tướng Ký, Viễn Chinh ([art bible](../06-art/art-bible.md)); điều kiện kích hoạt bị động ở mục 7 nguyên tố thu gọn, nhãn bị động theo loại như trong game; "8 nghề đồng đội".
+- Kho đồ › Vật phẩm cùng khuôn lưới với trang bị: ô vuông, ô trống đủ trang, phân trang.
+- Chuỗi phản ứng ở Hợp Kích bỏ truy kích giảm Thủ không mạnh hơn mức mục tiêu đang chịu, như bộ máy (`existingArmor`): hai Kim phá trong đội chỉ cái đầu tiên theo vị trí có tác dụng; chiêu tự giảm Thủ mạnh hơn (Phá trận 30%) thì Kim phá không theo sau.
+
 **Trả lại hệ số tương sinh, tương khắc ban đầu (Shan yêu cầu)**
 - Bỏ lần chỉnh 70/30 cùng ngày: khắc ×1,25, tương sinh ×1,1, bị khắc ×0,75 như cũ ([nguyên tố](../01-gameplay/nguyen-to.md#4-trong-trận)). 18 tầng Tháp Thí Luyện về sức mạnh đối thủ cũ, `contentVersion` tăng thêm một bậc để không đối chiếu sai trận đã chơi ở bản 70/30.
 
