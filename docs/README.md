@@ -106,7 +106,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | [prompts/thumbnail-chien-truong.md](06-art/prompts/thumbnail-chien-truong.md) | Prompt thumbnail thẻ Khai Lộ và Viễn Chinh ở Chiến trường (16:9, không chữ); IMPLEMENTED (`public/art/home/khai-lo.webp`, `vien-chinh.webp`) |
 | [prompts/vien-chinh-sa-ban.md](06-art/prompts/vien-chinh-sa-ban.md) | Prompt tranh nền 6 sa bàn Viễn Chinh (5:3, không chữ); DRAFT; đã có tranh vẽ tay đủ 6 sa bàn (`public/art/expedition/`) |
 | [prompts/icon-ky-nang.md](06-art/prompts/icon-ky-nang.md) | Prompt biểu tượng kỹ năng còn vẽ SVG: 24 chiêu nghề, tuyệt chiêu/chiêu riêng 74 nhân vật, tuyệt chiêu ô 4 Đinh Bộ Lĩnh, cách dùng lại 42 ảnh kỹ năng hệ; DRAFT, chưa có ảnh |
-| [prompts/icon-che-do.md](06-art/prompts/icon-che-do.md) | Prompt icon 14 chế độ chơi (tấm bảng ngọc viền vàng, theo hình SVG `ModeIcon` hiện có); DRAFT, chưa có ảnh |
+| [prompts/icon-che-do.md](06-art/prompts/icon-che-do.md) | Prompt icon 14 chế độ chơi (tấm bảng ngọc viền vàng, theo hình SVG `ModeIcon` hiện có); DRAFT, đã có ảnh 5/14 (`public/art/modes/`) |
 | [prompts/icon-bi-dong.md](06-art/prompts/icon-bi-dong.md) | Prompt icon 29 bị động dùng chung: 7 bị động nghề 1, 8 truy kích theo nghề, 14 truy kích theo hệ; IMPLEMENTED (`public/art/passives/`) |
 | [prompts/icon-bi-dong-rieng.md](06-art/prompts/icon-bi-dong-rieng.md) | Prompt icon 21 bị động riêng: 14 Xạ thủ/Sát thủ mở rộng, Minh Nguyệt, Trần Vũ Phong; nền tròn đều; IMPLEMENTED (đã gắn ảnh) |
 | [prompts/icon-bi-dong-no.md](06-art/prompts/icon-bi-dong-no.md) | Prompt icon 7 bị động Nộ của Đinh Bộ Lĩnh (mỗi hệ một), viền mặt trống đồng, nền tròn đều; IMPLEMENTED (đã gắn ảnh) |

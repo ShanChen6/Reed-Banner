@@ -1,4 +1,4 @@
-// Biểu tượng riêng cho từng chế độ chơi (trang chủ), vẽ bằng SVG, không dùng lại hình ô cờ.
+// Biểu tượng riêng cho từng chế độ chơi (trang chủ): ảnh vẽ ở public/art/modes/, chế độ chưa có ảnh vẽ bằng SVG.
 // Cùng khung 64×64, nền ngọc viền vàng, nét mực INK như bộ ô để đứng cạnh nhau không lệch tay.
 
 import { INK } from "./tiles";
@@ -192,8 +192,17 @@ const GLYPH: Record<ModeIconKind, React.ReactNode> = {
   ),
 };
 
-/** Biểu tượng chế độ: khung vuông bo góc, nền ngọc viền vàng, hình vẽ ở giữa. */
+/**
+ * Chế độ đã có ảnh vẽ (public/art/modes/<slug>.webp, 256 px, tấm bảng ngọc viền vàng theo
+ * docs/06-art/prompts/icon-che-do.md); chế độ chưa có ảnh dùng bản SVG bên dưới.
+ */
+const MODE_ART: ReadonlySet<ModeIconKind> = new Set(["practice", "play", "campaign", "trial", "arena"]);
+
+/** Biểu tượng chế độ: ảnh vẽ nếu đã có, nếu chưa thì SVG khung vuông bo góc nền ngọc viền vàng. */
 export function ModeIcon({ kind, className }: { kind: ModeIconKind; className?: string }) {
+  if (MODE_ART.has(kind))
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={`/art/modes/${kind}.webp`} alt="" aria-hidden className={className} loading="lazy" decoding="async" />;
   return (
     <svg viewBox="0 0 80 80" className={className} aria-hidden focusable="false">
       <rect x={1.5} y={1.5} width={77} height={77} rx={12} fill="#4a7a67" stroke={GOLD} strokeWidth={2.4} />

@@ -1,7 +1,7 @@
 # Prompt icon chế độ chơi (14 hình)
 
 > Cập nhật: 19/11/2026
-> Trạng thái: **DRAFT** — chưa có ảnh; trang giới thiệu và thẻ Chiến Trường đang dùng biểu tượng SVG `ModeIcon` (`src/app/game/art/mode-icons.tsx`).
+> Trạng thái: **DRAFT** — đã có ảnh 5/14 (19/11/2026): Thao Luyện, Giao Tranh, Bình Loạn, Tháp Thí Luyện, Quần Hùng ở `public/art/modes/<slug>.webp` (256 px, cắt sát tấm bảng), vẽ qua `ModeIcon` (`MODE_ART` trong `src/app/game/art/mode-icons.tsx`) ở trang giới thiệu; 9 chế độ còn lại vẫn dùng SVG.
 
 Mỗi chế độ một biểu tượng vuông bo góc, dùng ở trang giới thiệu (mục Chế độ chơi), thẻ Chiến Trường và banner đầu màn. Hình mỗi chế độ bám theo bản SVG hiện có để người chơi quen mắt; tranh thẻ lớn của chế độ là việc riêng ở `public/art/home/`.
 
