@@ -46,6 +46,7 @@ export default function HeroGrid({
   badge,
   cardStyle,
   extraFilter,
+  gridClassName = "sm:grid-cols-2 lg:grid-cols-3",
 }: {
   items: readonly HeroGridItem[];
   selected: string | null;
@@ -61,6 +62,8 @@ export default function HeroGrid({
   cardStyle?: (id: string) => CSSProperties | undefined;
   /** Bộ lọc riêng của màn, nằm trên hàng lọc hệ; `matches` lọc thêm danh sách. */
   extraFilter?: { readonly node: ReactNode; readonly matches: (id: string) => boolean };
+  /** Số cột theo khổ màn (mặc định 1/2/3); màn rộng như sảnh Giao Tranh truyền thêm cột. */
+  gridClassName?: string;
 }) {
   const [query, setQuery] = useState("");
   const [element, setElement] = useState<Element | "all">("all");
@@ -111,7 +114,7 @@ export default function HeroGrid({
       {shown.length === 0 ? (
         <p className="py-4 text-center text-sm text-on-wood-soft">Không có tướng khớp bộ lọc.</p>
       ) : (
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <div className={cn("grid grid-cols-1 gap-2", gridClassName)}>
           {paged.pageItems.map((h) => (
             <ChoiceChip
               key={h.id}

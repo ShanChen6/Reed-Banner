@@ -352,7 +352,7 @@ function StatCard({ label, value, bonus }: { label: string; value: number | stri
  * Dùng sách kinh nghiệm (mua ở Cửa Hàng) cho tướng đang xem: một cuốn, đủ để lên cấp kế, hoặc mười cuốn. Server không
  * tiêu quá số cuốn cần để tới cấp tối đa.
  */
-function XpBooks({ profile, id, busy, onAction }: { profile: Profile; id: string; busy: boolean; onAction: (a: ProfileAction) => Promise<string | null> }) {
+export function XpBooks({ profile, id, busy, onAction }: { profile: Profile; id: string; busy: boolean; onAction: (a: ProfileAction) => Promise<string | null> }) {
   const have = profile.xpBooks ?? 0;
   const p = progressOf(profile, id);
   if (p.level >= MAX_LEVEL) return null;

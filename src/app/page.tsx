@@ -160,7 +160,7 @@ export default function Home() {
       </a>
 
       <header className="sticky top-0 z-40 border-b border-frame-gold/40 bg-wood-lo/90 shadow-[0_8px_24px_-12px_var(--black)] backdrop-blur">
-        <nav className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-2.5">
+        <nav className="mx-auto flex max-w-6xl 2xl:max-w-[96rem] items-center gap-4 px-4 py-2.5">
           <Link href="/" className="flex items-center gap-2 font-serif text-lg font-black">
             <LogoMark className="size-8" /> <span className="fx-gilt-text">Cờ Lau</span>
           </Link>
@@ -197,7 +197,7 @@ export default function Home() {
           {/* Lớp tối phía chữ để đọc rõ; trên điện thoại chữ phủ cả bề ngang nên tối đều. */}
           <div aria-hidden className="hero-shade pointer-events-none absolute inset-0" />
           <Embers />
-          <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 md:grid-cols-[1fr_1.1fr] md:py-20">
+          <div className="relative mx-auto grid max-w-6xl 2xl:max-w-[96rem] items-center gap-10 px-4 py-14 md:grid-cols-[1fr_1.1fr] md:py-20">
             <div>
               <h1 className="-mx-4 -mt-6 max-w-[520px] md:-mx-8">
                 <Logo priority className="h-auto w-full" />
@@ -264,7 +264,7 @@ export default function Home() {
         {/* Ba thời của nhân vật chính, từ cậu bé cờ lau tới hoàng đế. */}
         <section id="hero-story" className="scroll-mt-16 px-4 py-16">
           <SectionTitle kicker="Chủ tướng" title="Đinh Bộ Lĩnh qua ba thời" sub="Từ cậu bé chăn trâu cầm cờ lau, thành vị tướng dẹp loạn sứ quân, rồi lên ngôi hoàng đế." />
-          <ul className="mx-auto grid max-w-5xl grid-cols-3 gap-3 md:gap-6">
+          <ul className="mx-auto grid max-w-5xl 2xl:max-w-[80rem] grid-cols-3 gap-3 md:gap-6">
             {DBL_ERAS.map((e) => (
               <li key={e.src} className="flex flex-col items-center justify-end rounded-2xl fx-panel-hi p-2 text-center md:p-4">
                 <Image src={e.src} alt={`Đinh Bộ Lĩnh ${e.title}`} width={e.w} height={900} sizes="(min-width: 768px) 300px, 30vw" className="h-auto w-full drop-shadow-[0_12px_20px_color-mix(in_srgb,var(--black)_67%,transparent)]" />
@@ -277,7 +277,7 @@ export default function Home() {
 
         <section id="how-to-play" className="scroll-mt-16 px-4 py-16">
           <SectionTitle kicker="Cách chơi" title="Ba bước một lượt" sub="Mỗi lượt có 30 giây. Đánh sai không bị phạt, chỉ là nước đổi bị trả lại." />
-          <ol className="mx-auto grid max-w-6xl gap-4 md:grid-cols-3">
+          <ol className="mx-auto grid max-w-6xl 2xl:max-w-[96rem] gap-4 md:grid-cols-3">
             {STEPS.map((s) => (
               <li key={s.n} className="relative rounded-2xl fx-panel p-6">
                 <span className="fx-gilt-text font-serif text-4xl font-black">{s.n}</span>
@@ -296,7 +296,7 @@ export default function Home() {
 
         <section className="px-4 py-16">
           <SectionTitle kicker="Điểm nhấn" title="Không chỉ là ghép ô" />
-          <ul className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mx-auto grid max-w-6xl 2xl:max-w-[96rem] gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {FEATURES.map((f) => (
               <li key={f.title} className="flex gap-4 rounded-2xl fx-panel p-5">
                 <TileArt kind={f.tile.kind} special={f.tile.special} className="size-12 shrink-0" />
@@ -357,10 +357,10 @@ export default function Home() {
             title="Đổi hệ, đổi lối đánh"
             sub={`${ELEMENTS.map((e) => ELEMENT_NAME[e]).join(", ")}. Chủ tướng đổi nguyên tố trước mỗi trận, kéo theo bị động và cả bộ 6 kỹ năng.`}
           />
-          <div className="mx-auto max-w-5xl">
+          <div className="mx-auto max-w-5xl 2xl:max-w-[80rem]">
             <ElementPicker />
           </div>
-          <ul className="mx-auto mt-8 grid max-w-5xl gap-4 md:grid-cols-3">
+          <ul className="mx-auto mt-8 grid max-w-5xl 2xl:max-w-[80rem] gap-4 md:grid-cols-3">
             {[
               { k: "Khắc", v: "×1.25", body: "Đánh vào hệ mình khắc, sát thương tăng một phần tư." },
               { k: "Tương sinh", v: "×1.1", body: "Đánh vào hệ mình sinh ra, sát thương nhỉnh hơn một chút." },
@@ -377,7 +377,7 @@ export default function Home() {
 
         <section id="roster" className="scroll-mt-16 px-4 py-16">
           <SectionTitle kicker="Đội hình" title="Thủ lĩnh và năm đồng đội" sub="Đánh 1vs1 một mình, hoặc 3vs3 cùng hai đồng đội. Chân dung hiện tại là hình tạm, sẽ thay bằng tranh vẽ." />
-          <ul className="mx-auto grid max-w-6xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          <ul className="mx-auto grid max-w-6xl 2xl:max-w-[96rem] grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             <li className="flex flex-col items-center rounded-2xl fx-panel-hi p-4 text-center">
               <Portrait id="dinhBoLinh" element="moc" profession="tuongSi" className="size-20" />
               <p className="mt-2 font-bold">Đinh Bộ Lĩnh</p>
@@ -404,14 +404,14 @@ export default function Home() {
             title="Mười bốn cách ra trận"
             sub="Chơi ngay với thân phận lữ khách, tiến trình gắn với trình duyệt. Trình danh để giữ tiến trình trên mọi máy."
           />
-          <div className="mx-auto flex max-w-6xl flex-col gap-12">
+          <div className="mx-auto flex max-w-6xl 2xl:max-w-[96rem] flex-col gap-12">
             {MODE_GROUPS.map((group) => (
               <section key={group.title} aria-labelledby={`modes-${group.modes[0]!.slug}`}>
                 <div className="mb-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-1 border-b border-frame-gold/25 pb-3">
                   <h3 id={`modes-${group.modes[0]!.slug}`} className="fx-gilt-text font-serif text-2xl font-black">{group.title}</h3>
                   <p className="max-w-xl text-sm text-on-wood-soft">{group.sub}</p>
                 </div>
-                <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
                   {group.modes.map((m) => {
                     const open = !m.flag || flags[m.flag];
                     const body = (
@@ -511,7 +511,7 @@ export default function Home() {
 
       <footer className="border-t border-frame-gold/25 px-4 py-8 text-sm text-on-wood-soft/90">
         {/* Hai cột: trái là nhận diện, điều hướng và lưu ý (căn theo đầu thư cuộn); phải là thư cuộn liên hệ, trên điện thoại thư cuộn lên trước. */}
-        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-start lg:gap-12">
+        <div className="mx-auto grid max-w-6xl 2xl:max-w-[96rem] gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-start lg:gap-12">
           <div className="order-2 flex flex-col gap-4 lg:order-1 lg:pt-6">
             <div className="flex items-center gap-4">
               <LogoMark className="size-14" />

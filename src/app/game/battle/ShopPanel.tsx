@@ -9,6 +9,7 @@ import { cn } from "@/lib/cn";
 
 import { useState } from "react";
 import {
+  progressOf,
   ALL_COMPANIONS,
   ELEMENTS,
   PROFESSIONS,
@@ -34,6 +35,7 @@ import { Portrait } from "../art/portraits";
 import { ELEMENT_NAME, PROFESSION_NAME } from "./labels";
 import { PROFILE_ERROR } from "./ProgressPanel";
 import { SceneLink } from "../SceneContext";
+import HeroGrid from "../arena/HeroGrid";
 
 function CompanionCard({
   c,
@@ -206,7 +208,20 @@ export default function ShopPanel({
         {message && <span role="alert" className="text-danger">{message}</span>}
       </div>
       {locked && <p className="mb-2 text-on-wood-soft">Đang trong trận: đổi đội và chiêu mộ tướng quân sau khi trận kết thúc.</p>}
-      <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">{owned.map(card)}</ul>
+      {/* Chọn đội: lưới chung có tìm tên, lọc hệ, nghề và phân trang; người đang ra trận đứng đầu. */}
+      <HeroGrid
+        label="Chọn tướng ra trận"
+        items={[...owned]
+          .sort((x, y) => Number(profile.team.includes(y.id)) - Number(profile.team.includes(x.id)))
+          .map((c) => ({ id: c.id, name: c.name, element: c.element, profession: c.profession, level: progressOf(profile, c.id).level }))}
+        selected={null}
+        isSelected={(id) => profile.team.includes(id)}
+        onSelect={(id) => pick(id)}
+        disabled={locked || busy}
+        pageSize={15}
+        gridClassName="sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
+        badge={(id) => (profile.team.includes(id) ? <span className="shrink-0 rounded-full bg-jade px-2 text-caption font-bold text-white">Ra trận</span> : null)}
+      />
       </>)}
       {compact ? (
         <div className="mt-3 flex flex-wrap items-center gap-2">

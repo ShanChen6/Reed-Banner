@@ -13,7 +13,9 @@ import {
   GEAR_SLOTS,
   itemStat,
   MAIN_ID,
+  MAX_LEVEL,
   mergeCost,
+  progressOf,
   SELL_GOLD,
   SLOT_STAT,
   wearerOf,
@@ -29,7 +31,7 @@ import { ITEMS } from "../items/catalog";
 import { GearIcon, GearActionIcon } from "../art/gear";
 import { gearText, PROFESSION_NAME, SLOT_NAME, TIER_CLASS } from "../battle/labels";
 import { SceneLink } from "../SceneContext";
-import { fighterOf, STAT_NAME } from "./HeroDetail";
+import { fighterOf, STAT_NAME, XpBooks } from "./HeroDetail";
 import { ShopGlyph, XGlyph } from "./glyphs";
 import { nameOf, ownedIds } from "./roster";
 
@@ -290,7 +292,23 @@ export default function Armory({
 
       <aside aria-label={itemShelf ? "Chi tiết vật phẩm" : merging ? "Ghép đồ" : "Chi tiết trang bị"} className="barracks-panel rounded-lg p-3 lg:sticky lg:top-3">
         {itemShelf ? (
-          <GoodPanel profile={profile} id={goodId} />
+          <GoodPanel
+            profile={profile}
+            id={goodId}
+            hero={target}
+            onHero={setTarget}
+            busy={busy}
+            onAction={onAction}
+            onEnhance={() => {
+              // Đá Cường Hóa: sang kệ trang bị, chọn sẵn món đầu tiên tướng đang chọn đang mặc (nếu có) để mở khung Cường hóa.
+              const worn = profile.bag.find((it) => wearerOf(profile, it.id) === target) ?? profile.bag[0];
+              setItemShelf(false);
+              setShelf("all");
+              setSlotFilter("all");
+              setMerging(false);
+              setSelected(worn?.id ?? null);
+            }}
+          />
         ) : merging ? (
           <MergePanel profile={profile} items={trayItems} busy={busy} onRemove={(id) => setTray((t) => t.filter((x) => x !== id))} onMerge={() => run({ type: "merge", items: tray, main: 0 }, () => setTray([]))} />
         ) : item ? (
@@ -389,9 +407,29 @@ function ItemPanel({
 }
 
 /** Chi tiết một vật phẩm trong kho: số đang có, công dụng, nơi dùng, lối sang Cửa Hàng. */
-function GoodPanel({ profile, id }: { profile: Profile; id: ItemArtId | null }) {
+/** Chi tiết vật phẩm đang chọn và chỗ dùng ngay: sách cho tướng chọn ở đây, đá sang khung Cường hóa, lương sang Bình Loạn. */
+function GoodPanel({
+  profile,
+  id,
+  hero,
+  onHero,
+  busy,
+  onAction,
+  onEnhance,
+}: {
+  profile: Profile;
+  id: ItemArtId | null;
+  hero: string;
+  onHero: (id: string) => void;
+  busy: boolean;
+  onAction: (a: ProfileAction) => Promise<string | null>;
+  onEnhance: () => void;
+}) {
   const g = ITEMS.find((x) => x.id === id);
   if (!g) return <p className="py-6 text-center text-[15px] text-[var(--on-wood-soft)]">Chọn một vật phẩm để xem số đang có và cách dùng.</p>;
+  const have = g.have(profile);
+  const heroes = ownedIds(profile);
+  const reader = heroes.includes(hero) ? hero : (heroes[0] ?? MAIN_ID);
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center gap-3">
@@ -399,12 +437,46 @@ function GoodPanel({ profile, id }: { profile: Profile; id: ItemArtId | null }) 
         <div className="min-w-0">
           <h3 className="barracks-title font-serif text-lg font-bold">{g.name}</h3>
           <p className="text-[15px] tabular-nums">
-            Đang có <b className="text-title-on-wood">{g.have(profile)}</b> {g.unit}
+            Đang có <b className="text-title-on-wood">{have}</b> {g.unit}
             {g.id === "food" && ` / ${g.max}`}
           </p>
         </div>
       </div>
       <p className="text-sm text-[var(--on-wood-soft)]">{g.text}</p>
+
+      {g.id === "xpBook" && have > 0 && (
+        <div className="flex flex-col gap-2">
+          <label className="flex flex-col gap-1 text-sm text-[var(--on-wood-soft)]">
+            Dùng cho
+            <select
+              value={reader}
+              onChange={(e) => onHero(e.target.value)}
+              className="barracks-field min-h-10 pointer-coarse:min-h-11 rounded-md bg-transparent px-2 text-[15px] text-on-wood"
+            >
+              {heroes.map((h) => (
+                <option key={h} value={h} className="bg-wood-inset">
+                  {nameOf(h)} · cấp {progressOf(profile, h).level}
+                </option>
+              ))}
+            </select>
+          </label>
+          {progressOf(profile, reader).level >= MAX_LEVEL ? (
+            <p className="text-sm text-[var(--on-wood-soft)]">{nameOf(reader)} đã đạt cấp tối đa.</p>
+          ) : (
+            <XpBooks profile={profile} id={reader} busy={busy} onAction={onAction} />
+          )}
+        </div>
+      )}
+      {g.id === "stone" && have > 0 && (
+        <button type="button" onClick={onEnhance} className="barracks-btn is-action flex min-h-11 items-center justify-center gap-1.5 rounded-md px-4">
+          Chọn trang bị để cường hóa
+        </button>
+      )}
+      {g.id === "food" && (
+        <SceneLink scene="CAMPAIGN" className="barracks-btn is-action flex min-h-11 items-center justify-center gap-1.5 rounded-md px-4">
+          Sang Bình Loạn
+        </SceneLink>
+      )}
       <p className="text-sm"><b>Dùng ở:</b> {g.use}</p>
       <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 self-start rounded-md px-4">
         <ShopGlyph className="size-4" /> Mua thêm ở Cửa Hàng · {g.price} vàng/{g.unit}

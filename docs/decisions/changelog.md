@@ -4,6 +4,11 @@
 
 ## 19/11/2026
 
+**Dùng vật phẩm, sảnh Giao Tranh, màn rộng (Shan yêu cầu)**
+- Kho đồ › Vật phẩm: chọn vật phẩm là dùng được ngay. Sách kinh nghiệm chọn tướng rồi đọc (một cuốn, đủ lên cấp kế, mười cuốn); Đá Cường Hóa có nút sang kệ trang bị, chọn sẵn món tướng đang mặc để mở khung Cường hóa; Lương thực có nút sang Bình Loạn.
+- Sảnh Giao Tranh: khối chọn đội dùng lưới chung `HeroGrid` (tìm tên, lọc hệ, lọc nghề, phân trang 15 tướng, người ra trận đứng đầu, nhãn Ra trận), trải hết bề ngang thay vì bó 896 px; màn rộng 4–5 cột.
+- Trang giới thiệu nới khổ ở màn từ 1536 px (nội dung tới 96rem, lưới chế độ 4 cột).
+
 **Hướng dẫn trước khi chơi, kệ Vật phẩm, chuỗi Hợp Kích (Shan yêu cầu)**
 - Vào chế độ nào cũng mở thẻ Hướng dẫn trước, nút Vào chơi ở cuối ([đặc tả](../05-ui-ux/design-system/game-mode-ui-spec.md)).
 - Tranh thẻ mới (`public/art/home/`, dùng chung Chiến Trường, biển đầu màn và trang giới thiệu) cho Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Viễn Chinh, Khai Lộ, Do Thám, thêm Thao Luyện và Giao Tranh. Bình Loạn, Nhật Lệnh, Quần Hùng, Trận Đồ, Sử Lộ, Tầm Tướng Ký giữ tranh cũ (Shan thấy đẹp hơn).
