@@ -364,9 +364,9 @@
     },
     "sulo.wrong": {
       "files": [
-        "sfx/formation/reject_a",
-        "sfx/formation/reject_b",
-        "sfx/formation/reject_c"
+        "sfx/su-lo/wrong_a",
+        "sfx/su-lo/wrong_b",
+        "sfx/su-lo/wrong_c"
       ],
       "volume": 0.85
     },
@@ -379,9 +379,8 @@
     },
     "sulo.trap": {
       "files": [
-        "sfx/battle/damage_a",
-        "sfx/battle/damage_b",
-        "sfx/battle/damage_c"
+        "sfx/su-lo/trap_a",
+        "sfx/su-lo/trap_b"
       ],
       "volume": 0.85
     },
