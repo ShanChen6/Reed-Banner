@@ -97,7 +97,7 @@ const MODE_GROUPS: readonly { readonly title: string; readonly sub: string; read
     modes: [
       { slug: "practice", name: "Thao Luyện", kicker: "Luyện tay", art: "/art/stage/he-moc.webp", guest: true, body: "Vào trận ngay, không cần mạng, 3vs3 đấu Tianwu với đội cấp tối đa." },
       { slug: "campaign", name: "Bình Loạn", kicker: "Cốt truyện", art: "/art/home/campaign.webp", body: "Sáu chương dẹp loạn 12 sứ quân, tướng lịch sử gia nhập, rồi Tái đấu sứ quân ở 3 bậc." },
-      { slug: "play", name: "Giao Tranh", kicker: "Trực tuyến", art: "/art/stage/he-hoa.webp", body: "Trận trực tuyến có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm." },
+      { slug: "play", name: "Giao Tranh", kicker: "Trực tuyến", art: "/art/home/giao-tranh.webp", body: "Trận trực tuyến có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm." },
       { slug: "trial", name: "Tháp Thí Luyện", kicker: "Leo tháp", art: "/art/home/trial.webp", flag: "trial", body: "100 tầng cố định chia 10 chặng, tự chọn đội theo luật riêng từng tầng." },
       { slug: "destiny", name: "Tháp Thiên Mệnh", kicker: "Leo tháp", art: "/art/home/destiny.webp", flag: "destiny", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng." },
       { slug: "survival", name: "Trấn Ải", kicker: "Sinh tồn", art: "/art/home/survival.webp", body: "Một bàn cờ, đối thủ kéo đến theo đợt, nghỉ giữa đợt để tính tiếp." },

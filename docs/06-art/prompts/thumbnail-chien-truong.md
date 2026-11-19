@@ -1,6 +1,6 @@
 # Prompt thumbnail thẻ chế độ ở Chiến trường
 
-> Cập nhật: 19/11/2026 (thêm mục 6 Thao Luyện, mục 7 Giao Tranh cho thẻ ở trang giới thiệu, chưa có tranh; 15/11/2026 thêm mục 5: Sử Lộ; Do Thám và Sử Lộ đã có tranh `public/art/home/do-tham.webp`, `su-lo.webp`, 960×540, khoảng 140 KB mỗi tranh, đã gắn vào thẻ và biển đầu màn)
+> Cập nhật: 19/11/2026 (thêm mục 6 Thao Luyện (chưa có tranh), mục 7 Giao Tranh (đã có tranh); Shan gửi tranh mới thay cho Bình Loạn, Tháp Thí Luyện, Nhật Lệnh, Sử Lộ; 15/11/2026 thêm mục 5: Sử Lộ; Do Thám và Sử Lộ đã có tranh `public/art/home/do-tham.webp`, `su-lo.webp`, 960×540, khoảng 140 KB mỗi tranh, đã gắn vào thẻ và biển đầu màn)
 > Trạng thái: **IMPLEMENTED** — Claude soạn theo yêu cầu của Shan (07/11/2026: thumbnail Khai Lộ và Viễn Chinh đang dùng chung một tranh mực tạm); Shan tạo tranh từ hai prompt dưới đây, đã gắn vào thẻ (`public/art/home/khai-lo.webp`, `public/art/home/vien-chinh.webp`, 960×540, khoảng 145 KB mỗi tranh).
 
 Thẻ chế độ ở màn Chiến trường (`src/app/game/MenuScene.tsx`, danh sách `MODES`) dùng tranh `public/art/home/<tên>.webp`. Hiện
@@ -87,9 +87,9 @@ High quality hand-painted 2D environment illustration for a Vietnamese historica
 
 Nếu công cụ có ô negative: dùng khối ở mục 1.
 
-## 7. Giao Tranh — trận trực tuyến có đồng hồ (19/11/2026, chưa có tranh)
+## 7. Giao Tranh — trận trực tuyến có đồng hồ (19/11/2026, đã có tranh)
 
-Thẻ Giao Tranh ở trang giới thiệu đang tạm dùng nền trận hệ Hỏa (`public/art/stage/he-hoa.webp`). Tạo tranh theo thông số mục 1 vào tệp `giao-tranh.png`. Khi gửi lại, Claude xuất WebP 960×540 vào `public/art/home/giao-tranh.webp` và đổi `art` của thẻ Giao Tranh.
+Đã gắn `public/art/home/giao-tranh.webp` (960×540, dưới 150 KB) cho thẻ Giao Tranh ở trang giới thiệu (19/11/2026). Trước đó thẻ tạm dùng nền trận hệ Hỏa. Tạo tranh theo thông số mục 1 vào tệp `giao-tranh.png`. Khi gửi lại, Claude xuất WebP 960×540 vào `public/art/home/giao-tranh.webp` và đổi `art` của thẻ Giao Tranh.
 
 Ý chính: trận trực tuyến hai phe, mỗi lượt có đồng hồ 30 giây, thắng nhận vàng và chiến lợi phẩm. Hai **doanh trại đối diện** hai bên một bãi đất trống bên sông lúc hoàng hôn, mỗi bên một màu cờ (son đỏ và xanh ngọc), ở giữa là **đài trống đồng** cùng một **đồng hồ cát** lớn bằng đồng gợi giới hạn thời gian; khói bếp, đuốc vừa thắp. Căng thẳng trước giờ giao chiến, chưa đánh nhau. Bóng quân nếu có thì rất nhỏ, không rõ mặt.
 
