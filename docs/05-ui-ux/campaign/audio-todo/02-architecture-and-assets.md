@@ -161,6 +161,22 @@ Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến)
 
 Nhạc: `sulo_maze` (mê cung và màn chuẩn bị, tạm dùng tệp `music/atlas`) và `sulo_boss` (trong trận trùm, kể cả lúc trả lời câu Quân sư; tạm dùng `music/battle_boss`). Phân cảnh `SU_LO` là `SELF` trong `sceneMusic.ts`.
 
+### 5.7 Do Thám (`dotham.*`, đã nối 19/11/2026)
+
+Engine Do Thám không phát sự kiện nên `do-tham/sounds.ts` so trạng thái trước và sau nước đi để chọn cue. Đạo cụ nguyên tố dùng luôn tiếng kỹ năng theo hệ của trận đánh (`battle.skill.<hệ>`). Chưa có tệp riêng: manifest trỏ cue về tệp sẵn có (cột "Tệp tạm").
+
+| Cue | Khi nào | Tệp tạm | Ưu tiên |
+|---|---|---|---|
+| `dotham.open` | Mở một vài ô (dưới 4 ô) | `formation/place` | P1 |
+| `dotham.cascade` | Mở lan từ 4 ô trở lên (gặp ô số 0) | `formation/fogclear` | P1 |
+| `dotham.flag` | Cắm cờ lau; gỡ cờ cùng tiếng, trầm hơn | `battle/swap` | P1 |
+| `dotham.shield` | Khiên đất đỡ một lần sa bẫy | `formation/match` | P2 |
+| `dotham.reject` | Lệnh bị từ chối (mở nhanh sai số cờ, đạo cụ chưa dùng được...) | `formation/reject` | P1 |
+| `dotham.trap` | Sập bẫy, ngay trước tiếng thua | `battle/damage` | P1 |
+| `dotham.win` / `dotham.lose` | Thắng / thua ván | `formation/win` / `formation/lose` | P1 |
+
+Nhạc: `dotham` (một bài cho cả màn, tạm dùng tệp `music/formation_menu`). Phân cảnh `DO_THAM` là `SELF` trong `sceneMusic.ts`.
+
 ## 6. Kiểm tra
 
 - Test tự động: mọi `CueId` có dòng manifest và tệp; mọi tệp trong manifest tồn tại; kích thước tệp trong ngưỡng; không có cue trùng tên.

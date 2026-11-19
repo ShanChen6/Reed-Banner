@@ -31,6 +31,8 @@ import { ElementIcon } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
+import { useAudio } from "../audio/AudioProvider";
+import { cuesForAction, DOTHAM_MUSIC, DOTHAM_PRELOAD, REJECT } from "./sounds";
 
 const SAVE_KEY = "reed-banner:do-tham:save:v1";
 const BEST_KEY = "reed-banner:do-tham:best:v1";
@@ -157,6 +159,13 @@ export default function DoThamScreen() {
   const [focus, setFocus] = useState(0);
   const boardRef = useRef<HTMLDivElement>(null);
   const pressRef = useRef<{ timer: number; fired: boolean } | null>(null);
+  const { play: playSound, preload, playMusic, stopMusic } = useAudio();
+
+  useEffect(() => preload(DOTHAM_PRELOAD), [preload]);
+  useEffect(() => {
+    playMusic(DOTHAM_MUSIC);
+    return () => stopMusic(600);
+  }, [playMusic, stopMusic]);
 
   // Nạp ván dở sau khi trang đã dựng (tránh lệch giữa server và trình duyệt vì seed ngẫu nhiên).
   /* eslint-disable react-hooks/set-state-in-effect -- đọc kho trình duyệt chỉ có ở client */
@@ -226,9 +235,16 @@ export default function DoThamScreen() {
       const r = dtAct(game, action);
       if (!r.ok) {
         setMessage(REASON_TEXT[r.reason]);
+        playSound(REJECT.id);
         return false;
       }
       setGame(r.state);
+      // Tiếng của nước đi trước, tiếng kết quả theo sau một nhịp ngắn để không chồng lên nhau.
+      cuesForAction(game, r.state, action).forEach((c, i) => {
+        const go = () => playSound(c.id, { rate: c.rate });
+        if (i === 0) go();
+        else window.setTimeout(go, 220 * i);
+      });
       setMessage("");
       if (r.state.phase === "won" && game.phase !== "won") {
         const prev = best[level];
@@ -240,7 +256,7 @@ export default function DoThamScreen() {
       }
       return true;
     },
-    [game, best, level, secs],
+    [game, best, level, secs, playSound],
   );
 
   const onItem = (e: Element) => {

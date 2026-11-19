@@ -15,3 +15,5 @@
 | `music/arena`, `music/pvp` | Hai bản nhạc Gemini tạo (03/11/2026), làm vòng lặp bằng `scripts/make-music-loop.py`. `pvp` dành cho Quần Hùng online (chưa phát triển) | Như trên |
 
 Cue `sulo.*` và nhạc `sulo_maze`, `sulo_boss` của Sử Lộ chưa có tệp riêng: manifest trỏ về các tệp ở bảng trên (xem bảng 5.6 trong `docs/05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md`).
+
+Cue `dotham.*` và nhạc `dotham` của Do Thám cũng chưa có tệp riêng: manifest trỏ về các tệp ở bảng trên (xem bảng 5.7 cùng tài liệu).

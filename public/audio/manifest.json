@@ -452,6 +452,68 @@
         "sfx/formation/win_b"
       ],
       "volume": 0.9
+    },
+    "dotham.open": {
+      "files": [
+        "sfx/formation/place_a",
+        "sfx/formation/place_b",
+        "sfx/formation/place_c"
+      ],
+      "volume": 0.8
+    },
+    "dotham.cascade": {
+      "files": [
+        "sfx/formation/fogclear_a",
+        "sfx/formation/fogclear_b",
+        "sfx/formation/fogclear_c"
+      ],
+      "volume": 0.75
+    },
+    "dotham.flag": {
+      "files": [
+        "sfx/battle/swap_a",
+        "sfx/battle/swap_b",
+        "sfx/battle/swap_c"
+      ],
+      "volume": 0.8
+    },
+    "dotham.shield": {
+      "files": [
+        "sfx/formation/match_a",
+        "sfx/formation/match_b",
+        "sfx/formation/match_c"
+      ],
+      "volume": 0.85
+    },
+    "dotham.reject": {
+      "files": [
+        "sfx/formation/reject_a",
+        "sfx/formation/reject_b",
+        "sfx/formation/reject_c"
+      ],
+      "volume": 0.8
+    },
+    "dotham.trap": {
+      "files": [
+        "sfx/battle/damage_a",
+        "sfx/battle/damage_b",
+        "sfx/battle/damage_c"
+      ],
+      "volume": 0.9
+    },
+    "dotham.win": {
+      "files": [
+        "sfx/formation/win_a",
+        "sfx/formation/win_b"
+      ],
+      "volume": 0.9
+    },
+    "dotham.lose": {
+      "files": [
+        "sfx/formation/lose_a",
+        "sfx/formation/lose_c"
+      ],
+      "volume": 0.9
     }
   },
   "music": {
@@ -494,6 +556,10 @@
     "sulo_boss": {
       "file": "music/battle_boss",
       "volume": 0.5
+    },
+    "dotham": {
+      "file": "music/formation_menu",
+      "volume": 0.4
     }
   },
   "ambience": {}
