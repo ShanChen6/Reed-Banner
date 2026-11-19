@@ -356,32 +356,31 @@
     },
     "sulo.correct": {
       "files": [
-        "sfx/formation/match_a",
-        "sfx/formation/match_b",
-        "sfx/formation/match_c"
+        "sfx/su-lo/correct_a",
+        "sfx/su-lo/correct_b",
+        "sfx/su-lo/correct_c"
       ],
       "volume": 0.8
     },
     "sulo.wrong": {
       "files": [
-        "sfx/formation/reject_a",
-        "sfx/formation/reject_b",
-        "sfx/formation/reject_c"
+        "sfx/su-lo/wrong_a",
+        "sfx/su-lo/wrong_b",
+        "sfx/su-lo/wrong_c"
       ],
       "volume": 0.85
     },
     "sulo.disarm": {
       "files": [
-        "sfx/formation/eraser_a",
-        "sfx/formation/eraser_b"
+        "sfx/su-lo/disarm_a",
+        "sfx/su-lo/disarm_b"
       ],
       "volume": 0.8
     },
     "sulo.trap": {
       "files": [
-        "sfx/battle/damage_a",
-        "sfx/battle/damage_b",
-        "sfx/battle/damage_c"
+        "sfx/su-lo/trap_a",
+        "sfx/su-lo/trap_b"
       ],
       "volume": 0.85
     },
