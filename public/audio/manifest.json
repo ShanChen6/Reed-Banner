@@ -372,8 +372,8 @@
     },
     "sulo.disarm": {
       "files": [
-        "sfx/formation/eraser_a",
-        "sfx/formation/eraser_b"
+        "sfx/su-lo/disarm_a",
+        "sfx/su-lo/disarm_b"
       ],
       "volume": 0.8
     },
