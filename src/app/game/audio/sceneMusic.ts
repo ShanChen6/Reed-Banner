@@ -1,6 +1,6 @@
 // Nhạc và âm thanh nền theo phân cảnh /game (docs/05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md mục 5.4, 5.5).
 //
-// `SELF`: phân cảnh tự lo nhạc của mình (Trận Đồ theo màn, trận đánh theo loại trận) nên khung chung không đụng tới.
+// `SELF`: phân cảnh tự lo nhạc của mình (Trận Đồ theo màn, trận đánh theo loại trận, Sử Lộ theo mê cung hay trận trùm) nên khung chung không đụng tới.
 // Phân cảnh không có nhạc thì nhạc cũ tắt dần.
 
 import type { Scene } from "../scene";
@@ -31,6 +31,7 @@ export function soundOfScene(scene: Scene): SceneSound {
     case "FORMATION":
     case "PLAYING":
     case "PRACTICE":
+    case "SU_LO":
       return { music: SELF, ambience: null };
     default:
       return SILENT;

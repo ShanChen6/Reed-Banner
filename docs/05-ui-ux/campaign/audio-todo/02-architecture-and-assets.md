@@ -1,6 +1,6 @@
 # Âm thanh: kiến trúc, quy ước tệp và bảng cue theo chế độ
 
-> Cập nhật: 02/11/2026
+> Cập nhật: 19/11/2026
 > Trạng thái: **DRAFT** — engine (AUD-02), nối Trận Đồ và nối trận đánh (AUD-03) và nhạc theo phân cảnh (AUD-04) đã có code (02/11/2026), chưa có tệp âm thanh. Backlog và điều kiện bắt đầu ở [README](README.md). Prompt giao việc và prompt tạo âm thanh ở [04-prompts-trien-khai-theo-che-do.md](04-prompts-trien-khai-theo-che-do.md).
 
 Phạm vi: **toàn bộ chế độ chơi** (Trận Đồ, Chiến dịch và trận đánh, Tháp Thí Luyện, Tháp Vận Mệnh, Sinh tồn, Thử thách hằng ngày, Đấu trường bóng ma, Quần Hùng online sau này). Âm thanh chỉ là lớp cảm giác: không chế độ nào được cần nghe mới hiểu luật hay cốt truyện.
@@ -138,6 +138,28 @@ Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến)
 | Thử thách hằng ngày | dùng nhạc trận | `daily.complete` | P2 |
 | Đấu trường bóng ma | `music/arena` | `arena.rank`, `arena.ghost` (gặp bóng ma) | P2 |
 | Quần Hùng online (sau này) | `music/pvp` | `pvp.found`, `pvp.turn`, `pvp.win`, `pvp.lose` | P3 |
+
+### 5.6 Sử Lộ (`sulo.*`, đã nối 19/11/2026)
+
+`su-lo/sounds.ts` ánh xạ nước đi và sự kiện `SlEvent` sang cue; trận trùm match-3 dùng tiếng ghép ô của trận đánh (`frameCue`) theo từng khung hoạt ảnh. Chưa có tệp riêng: manifest trỏ cue về tệp sẵn có (cột "Tệp tạm"); có tệp riêng thì chỉ sửa manifest.
+
+| Cue | Khi nào | Tệp tạm | Ưu tiên |
+|---|---|---|---|
+| `sulo.roll` | Đổ xúc xắc | `battle/swap` | P1 |
+| `sulo.move` | Đi quân tới ô | `formation/place` | P1 |
+| `sulo.nomove` | Đổ ra số không đi được | `battle/invalid` | P2 |
+| `sulo.correct` / `sulo.wrong` | Trả lời đúng / sai | `formation/match` / `formation/reject` | P1 |
+| `sulo.disarm` / `sulo.trap` | Gỡ bẫy / sập bẫy | `formation/eraser` / `battle/damage` | P1 |
+| `sulo.luck` | Ô may mắn | `formation/wild` | P2 |
+| `sulo.gate` | Mở cửa ải | `formation/line` | P2 |
+| `sulo.stele` | Đọc bia đá | `formation/fogclear` | P2 |
+| `sulo.aid` | Dùng trợ giúp | `formation/tick` | P2 |
+| `sulo.boss` | Vào trận trùm trấn cổng | `formation/flame3` | P1 |
+| `sulo.counsel` | Quân sư hiến kế giữa trận | `formation/fusion` | P2 |
+| `sulo.bosswon` / `sulo.bosslost` | Hạ trùm / thua hoặc rút | `battle/win` / `battle/lose` | P1 |
+| `sulo.won` | Thoát mê cung | `formation/win` | P1 |
+
+Nhạc: `sulo_maze` (mê cung và màn chuẩn bị, tạm dùng tệp `music/atlas`) và `sulo_boss` (trong trận trùm, kể cả lúc trả lời câu Quân sư; tạm dùng `music/battle_boss`). Phân cảnh `SU_LO` là `SELF` trong `sceneMusic.ts`.
 
 ## 6. Kiểm tra
 

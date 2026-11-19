@@ -13,8 +13,8 @@ describe("âm thanh theo phân cảnh", () => {
     }
   });
 
-  it("phân cảnh tự lo nhạc: Trận Đồ và trận đánh; bản đồ chiến dịch có nhạc và âm nền", () => {
-    for (const s of ["FORMATION", "PLAYING", "PRACTICE"] as const) assert.equal(soundOfScene(s).music, SELF);
+  it("phân cảnh tự lo nhạc: Trận Đồ, trận đánh và Sử Lộ; bản đồ chiến dịch có nhạc và âm nền", () => {
+    for (const s of ["FORMATION", "PLAYING", "PRACTICE", "SU_LO"] as const) assert.equal(soundOfScene(s).music, SELF);
     assert.deepEqual(soundOfScene("CAMPAIGN"), { music: "atlas", ambience: "atlas" });
   });
 
