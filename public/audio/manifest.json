@@ -386,9 +386,7 @@
     },
     "sulo.luck": {
       "files": [
-        "sfx/formation/wild_a",
-        "sfx/formation/wild_b",
-        "sfx/formation/wild_c"
+        "sfx/su-lo/luck_a"
       ],
       "volume": 0.85
     },

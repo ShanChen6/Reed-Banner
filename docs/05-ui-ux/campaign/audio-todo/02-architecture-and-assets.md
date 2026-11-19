@@ -150,7 +150,7 @@ Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến)
 | `sulo.nomove` | Đổ ra số không đi được | Đã có tệp riêng `su-lo/nomove` | P2 |
 | `sulo.correct` / `sulo.wrong` | Trả lời đúng / sai | Đã có tệp riêng `su-lo/correct`, `su-lo/wrong` | P1 |
 | `sulo.disarm` / `sulo.trap` | Gỡ bẫy / sập bẫy | Đã có tệp riêng `su-lo/disarm`, `su-lo/trap` | P1 |
-| `sulo.luck` | Ô may mắn | `formation/wild` | P2 |
+| `sulo.luck` | Ô may mắn | Đã có tệp riêng `su-lo/luck` | P2 |
 | `sulo.gate` | Mở cửa ải | `formation/line` | P2 |
 | `sulo.stele` | Đọc bia đá | `formation/fogclear` | P2 |
 | `sulo.aid` | Dùng trợ giúp | `formation/tick` | P2 |
