@@ -36,6 +36,29 @@ export const PROFESSION_PERK: Record<Profession, string> = {
   quanSu: "Ghép sách giảm Công đối thủ",
 };
 
+/** Vai trò từng nghề trên trang giới thiệu, theo bảng vai trò ở docs/03-characters/danh-sach-nhan-vat.md mục 13. */
+export const PROFESSION_ROLE: Record<Profession, string> = {
+  tuongSi: "dồn sát thương một mục tiêu, kết liễu",
+  phapSu: "sát thương lan cả đội địch",
+  binhLinh: "chịu đòn, khiêu khích, che đội",
+  ySu: "hồi máu, giải hiệu ứng xấu",
+  muuSi: "rút năng lượng, Câm lặng, cắt lương",
+  quanSu: "tăng đội mình, giảm đối thủ",
+  xaThu: "phá giáp, sát thương đều",
+  satThu: "kết liễu mục tiêu yếu máu",
+};
+
+/**
+ * Chuỗi Hợp Kích thật của đội mặc định (Đinh Bộ Lĩnh Mộc · Tướng sĩ, Hà Vân, Mai Thanh) cho bước 3 ở Cẩm nang, lấy từ
+ * `bestChains` của trang Hợp Kích; tests/game/landing.test.ts giữ cho chuỗi này còn đúng luật khi bộ máy đổi.
+ */
+export const LANDING_CHAIN = [
+  { who: "dinhBoLinh", name: "Đinh Bộ Lĩnh", what: "dùng Trảm kích", note: "kỹ năng gây mất máu", passive: null, skill: "role_tramKich" },
+  { who: "haVan", name: "Hà Vân", what: "Hỏa phá", note: "giảm Thủ mục tiêu", passive: "hoa2", skill: null },
+  { who: "haVan", name: "Hà Vân", what: "Hỏa truy", note: "phá giáp, đánh thêm", passive: "hoa1", skill: null },
+  { who: "dinhBoLinh", name: "Đinh Bộ Lĩnh", what: "Mộc sinh", note: "hồi máu người yếu nhất", passive: "moc1", skill: null },
+] as const;
+
 export const FAQ: readonly { readonly q: string; readonly a: string }[] = [
   {
     q: "Cờ Lau chơi trên thiết bị nào?",

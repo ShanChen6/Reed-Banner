@@ -2,6 +2,13 @@
 
 > Trạng thái: **REFERENCE** — nhật ký quyết định theo ngày.
 
+## 20/11/2026
+
+**Lốc xoáy kiểu xoay vòng, trang giới thiệu và Cẩm nang (Shan yêu cầu)**
+- Kỹ năng xoay hệ Phong: rê chuột hiện vòng tròn quanh 8 ô và xem trước, bấm là xoay; chỉ theo chiều kim đồng hồ; cảm ứng chạm hai lần ([màn trận](../05-ui-ux/screens/battle.md)).
+- Trang giới thiệu thiết kế lại: chung cho 14 chế độ (mở đầu có bàn cờ tự chơi và số liệu thật, Đinh Bộ Lĩnh qua ba thời, chế độ chơi, thế giới với lưới thẻ 8 nghề và 7 hệ, hỏi đáp, lời mời), mọi mục cùng khổ, nút Chơi ngay nổi ở điện thoại. Trang mới `/cam-nang` (Cẩm nang chiến trận): ba bước một lượt, chuỗi Hợp Kích, điểm nhấn luật chơi, bảng ô, nội tại nghề, kỹ năng từng hệ, hệ số khắc chế.
+- Ô bản mạnh: lửa nền mờ đi để vật phẩm nổi rõ (bàn cờ trong trận cũng đổi).
+
 ## 19/11/2026
 
 **Dùng vật phẩm, sảnh Giao Tranh, màn rộng (Shan yêu cầu)**

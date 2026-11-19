@@ -125,8 +125,8 @@ export function WaveBanner({
 export function whirlHint(a: NonNullable<WhirlAim>): string {
   const name = a.skill ? a.skill.name : "Xoay miễn phí";
   return a.center
-    ? `${name}: chọn chiều xoay${a.max > 1 ? " và số nấc" : ""} (phím Q ↺, E ↻${a.max > 1 ? ", Shift để xoay 2 nấc" : ""}).`
-    : `${name}: chạm một ô không sát mép làm tâm, 8 ô quanh nó sẽ xoay vòng.`;
+    ? `${name}: chạm lại tâm hoặc bấm ↻ để xoay theo chiều kim đồng hồ${a.max > 1 ? ", ↻ ×2 để xoay 2 nấc" : ""} (phím E${a.max > 1 ? ", Shift+E 2 nấc" : ""}).`
+    : `${name}: rê chuột lên bàn để thấy vòng xoay, bấm để xoay 8 ô quanh ô đó theo chiều kim đồng hồ (trên điện thoại chạm để xem trước).`;
 }
 
 /** Ô nằm trong vòng 8 ô quanh tâm lốc xoáy. */
