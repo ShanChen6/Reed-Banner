@@ -1,13 +1,13 @@
 # Prompt icon chế độ chơi (14 hình)
 
 > Cập nhật: 19/11/2026
-> Trạng thái: **DRAFT** — đã có ảnh 5/14 (19/11/2026): Thao Luyện, Giao Tranh, Bình Loạn, Tháp Thí Luyện, Quần Hùng ở `public/art/modes/<slug>.webp` (256 px, cắt sát tấm bảng), vẽ qua `ModeIcon` (`MODE_ART` trong `src/app/game/art/mode-icons.tsx`) ở trang giới thiệu; 9 chế độ còn lại vẫn dùng SVG.
+> Trạng thái: **IMPLEMENTED** (19/11/2026) — đủ 14 ảnh Shan gửi ở `public/art/modes/<slug>.webp` (256 px, cắt sát tấm bảng), vẽ qua `ModeIcon` (`src/app/game/art/mode-icons.tsx`) ở mục Chế độ chơi của trang giới thiệu; bản SVG cũ đã bỏ.
 
 Mỗi chế độ một biểu tượng vuông bo góc, dùng ở trang giới thiệu (mục Chế độ chơi), thẻ Chiến Trường và banner đầu màn. Hình mỗi chế độ bám theo bản SVG hiện có để người chơi quen mắt; tranh thẻ lớn của chế độ là việc riêng ở `public/art/home/`.
 
 ## Cách dùng
 
-- Mỗi khối là một hình. Tạo ở 1024×1024 rồi gửi Claude PNG đặt đúng tên trong khối (ví dụ `mode_practice.png`). Claude tách nền, cắt theo tấm bảng, lưu `public/art/modes/<slug>.webp` (256 px) và thay `ModeIcon` SVG bằng ảnh, giữ SVG làm dự phòng.
+- Mỗi khối là một hình. Tạo ở 1024×1024 rồi gửi Claude PNG đặt đúng tên trong khối (ví dụ `mode_practice.png`). Claude tách nền, cắt theo tấm bảng và lưu `public/art/modes/<slug>.webp` (256 px).
 - Tên tệp theo slug đường dẫn của chế độ (`SCENE_SLUG` trong `src/app/game/scene.ts`).
 - Nền tách: cả bộ dùng **hồng `#ff00ff`**, vì tấm bảng màu ngọc lục sẽ bị ăn mất nếu tách trên nền xanh lá.
 - Nên đính kèm 1–2 icon bị động đã có (`public/art/passives/`) làm tham chiếu nét vẽ. Mọi hình cùng một **tấm bảng ngọc viền vàng** để đứng cạnh nhau không lệch tay.

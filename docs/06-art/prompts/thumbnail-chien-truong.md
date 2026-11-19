@@ -1,6 +1,6 @@
 # Prompt thumbnail thẻ chế độ ở Chiến trường
 
-> Cập nhật: 15/11/2026 (thêm mục 5: Sử Lộ; Do Thám và Sử Lộ đã có tranh `public/art/home/do-tham.webp`, `su-lo.webp`, 960×540, khoảng 140 KB mỗi tranh, đã gắn vào thẻ và biển đầu màn)
+> Cập nhật: 19/11/2026 (thêm mục 6 Thao Luyện, mục 7 Giao Tranh cho thẻ ở trang giới thiệu, chưa có tranh; 15/11/2026 thêm mục 5: Sử Lộ; Do Thám và Sử Lộ đã có tranh `public/art/home/do-tham.webp`, `su-lo.webp`, 960×540, khoảng 140 KB mỗi tranh, đã gắn vào thẻ và biển đầu màn)
 > Trạng thái: **IMPLEMENTED** — Claude soạn theo yêu cầu của Shan (07/11/2026: thumbnail Khai Lộ và Viễn Chinh đang dùng chung một tranh mực tạm); Shan tạo tranh từ hai prompt dưới đây, đã gắn vào thẻ (`public/art/home/khai-lo.webp`, `public/art/home/vien-chinh.webp`, 960×540, khoảng 145 KB mỗi tranh).
 
 Thẻ chế độ ở màn Chiến trường (`src/app/game/MenuScene.tsx`, danh sách `MODES`) dùng tranh `public/art/home/<tên>.webp`. Hiện
@@ -74,3 +74,28 @@ Stylised digital painting of a historical Vietnamese maze for a strategy-puzzle 
 ```
 
 Nếu công cụ có ô negative: dùng khối ở mục 1.
+
+## 6. Thao Luyện — sân tập võ (19/11/2026, chưa có tranh)
+
+Thẻ Thao Luyện ở trang giới thiệu (mục Chế độ chơi, `MODE_GROUPS` trong `src/app/page.tsx`) đang tạm dùng nền trận hệ Mộc (`public/art/stage/he-moc.webp`). Tạo tranh theo thông số mục 1 vào tệp `thao-luyen.png`. Khi gửi lại, Claude xuất WebP 960×540 vào `public/art/home/thao-luyen.webp` và đổi `art` của thẻ Thao Luyện.
+
+Ý chính: chế độ luyện tay, vào trận ngay không cần mạng, đấu AI. Một **sân tập võ** của doanh trại Hoa Lư lúc sáng sớm: bia tập bắn đan rơm vòng đỏ có mũi tên cắm, giá vũ khí tre (giáo, đao), cọc gỗ tập đánh quấn rơm, bàn cờ ghép ô bằng gỗ đặt trên chiếu ở hiên; xa là lũy tre, mái nhà sàn và núi đá vôi. Không khí êm, thư thả, gợi "luyện tập" chứ không phải chiến trận. Bóng người nếu có thì rất nhỏ, không rõ mặt.
+
+```text
+High quality hand-painted 2D environment illustration for a Vietnamese historical fantasy web game set in the 10th century, inspired by Hoa Lu and Northern Vietnam; Vietnamese bamboo, thatched timber architecture, limestone karst formations, bronze Dong Son ornamental motifs used sparingly, rice-paper and woodcut texture, antique bronze and warm parchment with subtle vermilion accents, painterly brushwork, cinematic depth and atmospheric lighting, physically coherent architecture, respectful historical atmosphere, no modern objects, no European castles, no Chinese imperial palace stereotypes. No lettering, no numbers, no logos, no UI. Scene: a quiet military training yard of a 10th-century Vietnamese camp at early morning; a woven straw archery target with red rings and one bamboo arrow struck in the center, a bamboo weapon rack with spears and sabers, wooden training posts wrapped in straw rope, and on a raised veranda a low wooden game board with colorful carved tiles resting on a woven mat beside a small bronze drum; behind, a bamboo palisade, stilt-house roofs and soft limestone karst peaks in morning mist, golden low sunlight, a few reed plumes (lau) swaying. Calm, focused practice mood, inviting rather than violent. Composed as a mode-card thumbnail: wide 16:9 landscape, the target and the game board in the upper and central two thirds, the bottom third calmer and darker (a title will be overlaid there), mid-tone values without pure black or blown-out white, no vignette, no border, no frame, no close-up faces.
+```
+
+Nếu công cụ có ô negative: dùng khối ở mục 1.
+
+## 7. Giao Tranh — trận trực tuyến có đồng hồ (19/11/2026, chưa có tranh)
+
+Thẻ Giao Tranh ở trang giới thiệu đang tạm dùng nền trận hệ Hỏa (`public/art/stage/he-hoa.webp`). Tạo tranh theo thông số mục 1 vào tệp `giao-tranh.png`. Khi gửi lại, Claude xuất WebP 960×540 vào `public/art/home/giao-tranh.webp` và đổi `art` của thẻ Giao Tranh.
+
+Ý chính: trận trực tuyến hai phe, mỗi lượt có đồng hồ 30 giây, thắng nhận vàng và chiến lợi phẩm. Hai **doanh trại đối diện** hai bên một bãi đất trống bên sông lúc hoàng hôn, mỗi bên một màu cờ (son đỏ và xanh ngọc), ở giữa là **đài trống đồng** cùng một **đồng hồ cát** lớn bằng đồng gợi giới hạn thời gian; khói bếp, đuốc vừa thắp. Căng thẳng trước giờ giao chiến, chưa đánh nhau. Bóng quân nếu có thì rất nhỏ, không rõ mặt.
+
+```text
+High quality hand-painted 2D environment illustration for a Vietnamese historical fantasy web game set in the 10th century, inspired by Hoa Lu and Northern Vietnam; Vietnamese bamboo, thatched timber architecture, limestone karst formations, bronze Dong Son ornamental motifs used sparingly, rice-paper and woodcut texture, antique bronze and warm parchment with subtle vermilion accents, painterly brushwork, cinematic depth and atmospheric lighting, physically coherent architecture, respectful historical atmosphere, no modern objects, no European castles, no Chinese imperial palace stereotypes. No lettering, no numbers, no logos, no UI. Scene: two opposing army camps facing each other across an open riverside field at dusk; the left camp with vermilion red banners, the right camp with jade-teal banners, bamboo palisades, tents and watchtowers with freshly lit torches; in the middle of the field a raised earthen platform holding a large bronze Dong Son drum and a tall bronze-and-lacquer sandglass with golden sand running, hinting at a turn timer; tiny distant faceless soldier silhouettes lined up at each camp; limestone karst peaks and a winding river behind, warm orange sunset sky with drifting smoke. Tense moment just before battle, competitive and fair duel mood, no fighting yet. Composed as a mode-card thumbnail: wide 16:9 landscape, the two camps and the central drum platform in the upper and central two thirds, the bottom third calmer and darker (a title will be overlaid there), mid-tone values without pure black or blown-out white, no vignette, no border, no frame, no close-up faces.
+```
+
+Nếu công cụ có ô negative: dùng khối ở mục 1.
+
