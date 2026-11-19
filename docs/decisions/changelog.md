@@ -4,6 +4,12 @@
 
 ## 19/11/2026
 
+**Truy kích nghề không trùng tín hiệu với Cơ hội (Shan yêu cầu)**
+- Sáu nghề có bị động truy kích kích cùng tín hiệu với bị động Cơ hội của chính nghề đó (Lý Khuê: Liên trảm và Thừa thắng cùng phá giáp). Đổi tín hiệu truy kích: **Liên trảm** (Tướng sĩ) → khống chế; **Chú kích** (Pháp sư) → phá giáp; **Cứu viện** (Y sư) → khống chế; **Thừa hư** (Mưu sĩ) → phá giáp; **Tiếp lệnh** (Quân sư) → khống chế, cấp năng lượng cho người khống chế. Xạ thủ và Sát thủ đổi chéo: Xạ thủ nhận **Chờ thời khống chế**, Sát thủ nhận **Chờ thời phá giáp**. Binh lính (Tiếp phòng, hồi máu) không trùng nên giữ.
+- Mô phỏng 3v3 (`scripts/profession-balance.ts`, cấp 20, 2 seed, 6 160 trận): nghề cao nhất 58,3% → 57,3%, thấp nhất 44,8% → 45,1% ([số liệu](../03-characters/danh-sach-nhan-vat.md#11-đổi-tín-hiệu-truy-kích-nghề-19112026)). 1v1 không đổi vì truy kích nghề chỉ nhận tín hiệu từ đồng đội.
+- Tháp Thí Luyện: 9 tầng tụt dưới ngưỡng thắng của đội mẫu (26, 38, 40, 62, 65, 73, 81, 91, 96) được giảm sức mạnh đối thủ 0,01–0,09 và tăng `contentVersion`.
+- `scripts/export-skill-chase.ts` ghi lại dòng trạng thái khi sinh `skill-chase-v3.md`.
+
 **Hợp Kích, chuỗi phản ứng, bảng công trạng 10 hạng, vật phẩm, lề khung (Shan yêu cầu)**
 - Trang **Phối Hợp đổi tên Hợp Kích**; bỏ lọc "Tướng đã có/Mọi tướng" (luôn mọi tướng); Đinh Bộ Lĩnh không còn hàng chip hệ nghề trong ô mà khớp mọi bộ lọc của lưới, bấm ông khi đang lọc hệ/nghề nào thì ông mang hệ/nghề đó. Thêm khung **Chuỗi phản ứng**: dò theo luật bộ máy (bị động phát tiếp tín hiệu: truy kích gây mất máu, giảm Thủ là phá giáp, Câm lặng là khống chế; `activeOnly` chỉ nhận ở bước đầu; tối đa 4 bước), mỗi kỹ năng hiện chuỗi dài nhất (`comboChains`, `bestChains` trong `combos/links.ts`).
 - Doanh Trại: Đinh Bộ Lĩnh khớp mọi bộ lọc hệ, nghề.

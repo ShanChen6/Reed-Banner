@@ -44,7 +44,8 @@ it("F: truy kích hồi/Khiên theo người nhận ở đủ mốc, không tiê
   for (const turn of [24, 25, 30, 35, 40, 44, 60]) {
     const s = state([
       unit("caster", { skills: ["role_tramKich"] }),
-      unit("medic", { comboPassive: "renewal", chasePassives: ["medic", "moc1", "moc2"] }),
+      // Cứu viện đổi sang tín hiệu khống chế (19/11/2026): hồi do kỹ năng gây mất máu giờ chỉ còn Mộc sinh.
+      unit("medic", { comboPassive: "renewal", chasePassives: ["kim1", "moc1", "moc2"] }),
       unit("receiver"),
     ]);
     const receiver = s.sides[0].fighters[2]!;
@@ -55,7 +56,7 @@ it("F: truy kích hồi/Khiên theo người nhận ở đủ mốc, không tiê
     };
     const r = cast(s, "role_tramKich");
     const mult = spiritHealMultiplier(receiver.spirit);
-    assert.equal(r.state.sides[0].fighters[2]!.hp, 100 + Math.round(50 * mult) + Math.round(40 * mult));
+    assert.equal(r.state.sides[0].fighters[2]!.hp, 100 + Math.round(40 * mult));
     assert.equal(r.state.sides[0].fighters[2]!.effects.find(e => e.kind === "shield")?.value, Math.round(40 * mult));
     assert.ok(r.state.sides[0].fighters[1]!.comboReady);
   }
@@ -82,12 +83,12 @@ it("Khiên từ truy kích không giả nguồn chủ động để mở Hộ v�
 it("truy kích không tự mở cơ hội chuẩn bị từ tín hiệu phản ứng", () => {
   const s = state([
     unit("caster", { skills: ["role_tramKich"] }),
-    unit("healer", { chasePassives: ["medic", "moc1", "moc2"] }),
+    unit("healer", { chasePassives: ["kim1", "moc1", "moc2"] }),
     unit("commander", { comboPassive: "coordination" }),
   ]);
   s.sides[0].fighters[0]!.hp = 500;
   const r = cast(s, "role_tramKich");
-  assert.ok(r.events.some(e => e.type === "chase" && e.passive === "medic"));
+  assert.ok(r.events.some(e => e.type === "chase" && e.passive === "moc1"));
   assert.equal(r.state.sides[0].fighters[2]!.comboReady, undefined);
 });
 

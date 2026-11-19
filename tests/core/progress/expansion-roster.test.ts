@@ -12,7 +12,8 @@ test('14 new registry entries have exact base stats, slots, P1+P2+P3+P4 and no s
   const marksman=f.profession==='xaThu';
   assert.deepEqual([f.maxHp,f.atk,f.def],marksman?[475,55,9]:[450,58,8]);
   assert.equal(f.comboPassive,marksman?'pursuit':'resonance');assert.equal(COMBO_PASSIVES[f.comboPassive!].value,.2);
-  const chase=chasePassives(f);assert.equal(chase.length,3);assert.equal(chase[0],marksman?'marksmanPrepared':'assassinPrepared');
+  const chase=chasePassives(f);assert.equal(chase.length,3);// Xạ thủ nhận Chờ thời khống chế, Sát thủ nhận Chờ thời phá giáp để không trùng tín hiệu với Cơ hội của nghề (19/11/2026).
+  assert.equal(chase[0],marksman?'assassinPrepared':'marksmanPrepared');
   assert.equal(chase[1],`${f.element}1`);assert.ok(UNIQUE_PASSIVES.has(chase[2]!),chase[2]);chase.forEach(id=>assert.ok(CHASE_PASSIVES[id]));
   const skills=characterSkills(f.profession,f.element,f.id);assert.deepEqual(skills.map(s=>s.slot),[1,2,3,4,5,6]);
   assert.equal(skills[3]!.character,f.id);assert.equal(skills[3]!.ultimate,true);

@@ -114,20 +114,20 @@ const LEGACY_SHOP_COMPANIONS: readonly ShopCompanion[] = [
 
 /** Registry thử nghiệm: giữ ID/tiến trình kể cả khi release gate tắt. Chưa cấp miễn phí. */
 export const EXPANSION_COMPANIONS: readonly FighterConfig[] = [
-  {...companion("bachNoLang","Đoàn Cự","xaThu","kim"),chasePassives:["marksmanPrepared","kim1","noThanhBenBi"]},
-  {...companion("thanhLamXa","Quản Hiên","xaThu","moc"),chasePassives:["marksmanPrepared","moc1","reHoNguoi"]},
-  {...companion("lamGiangPhiDiep","Thái Diệp","xaThu","thuy"),chasePassives:["marksmanPrepared","thuy1","canhGioiBenSong"]},
-  {...companion("xichDiemLuan","Lý Diệm","xaThu","hoa"),chasePassives:["marksmanPrepared","hoa1","hoaCotTruyKich"]},
-  {...companion("tranSonThach","Kha Thạch","xaThu","tho"),chasePassives:["marksmanPrepared","tho1","sonTranKienThu"]},
-  {...companion("loiMinhXa","Lương Triệt","xaThu","loi"),chasePassives:["marksmanPrepared","loi1","chopThoiCo"]},
-  {...companion("tatPhongLang","Giáp Yến","xaThu","phong"),chasePassives:["marksmanPrepared","phong1","thuanGioHoiNhip"]},
-  {...companion("bachPhongDao","Phan Quyên","satThu","kim"),chasePassives:["assassinPrepared","kim1","anKhuyetQuyetTam"]},
-  {...companion("docAnh","Nông Sâm","satThu","moc"),chasePassives:["assassinPrepared","moc1","lamAnhTiepNhip"]},
-  {...companion("hanGiangKhach","Âu Thu","satThu","thuy"),chasePassives:["assassinPrepared","thuy1","tinhThuyHoiTuc"]},
-  {...companion("xichDa","Tiết Dạ","satThu","hoa"),chasePassives:["assassinPrepared","hoa1","daTapThuaHu"]},
-  {...companion("diaAn","Cát Tàng","satThu","tho"),chasePassives:["assassinPrepared","tho1","phucDiaPhanKich"]},
-  {...companion("loiAnh","Mẫn Tuyên","satThu","loi"),chasePassives:["assassinPrepared","loi1","tanVuHoiNhip"]},
-  {...companion("voAnh","Liễu Thiều","satThu","phong"),chasePassives:["assassinPrepared","phong1","duAmTiepVan"]},
+  {...companion("bachNoLang","Đoàn Cự","xaThu","kim"),chasePassives:["assassinPrepared","kim1","noThanhBenBi"]},
+  {...companion("thanhLamXa","Quản Hiên","xaThu","moc"),chasePassives:["assassinPrepared","moc1","reHoNguoi"]},
+  {...companion("lamGiangPhiDiep","Thái Diệp","xaThu","thuy"),chasePassives:["assassinPrepared","thuy1","canhGioiBenSong"]},
+  {...companion("xichDiemLuan","Lý Diệm","xaThu","hoa"),chasePassives:["assassinPrepared","hoa1","hoaCotTruyKich"]},
+  {...companion("tranSonThach","Kha Thạch","xaThu","tho"),chasePassives:["assassinPrepared","tho1","sonTranKienThu"]},
+  {...companion("loiMinhXa","Lương Triệt","xaThu","loi"),chasePassives:["assassinPrepared","loi1","chopThoiCo"]},
+  {...companion("tatPhongLang","Giáp Yến","xaThu","phong"),chasePassives:["assassinPrepared","phong1","thuanGioHoiNhip"]},
+  {...companion("bachPhongDao","Phan Quyên","satThu","kim"),chasePassives:["marksmanPrepared","kim1","anKhuyetQuyetTam"]},
+  {...companion("docAnh","Nông Sâm","satThu","moc"),chasePassives:["marksmanPrepared","moc1","lamAnhTiepNhip"]},
+  {...companion("hanGiangKhach","Âu Thu","satThu","thuy"),chasePassives:["marksmanPrepared","thuy1","tinhThuyHoiTuc"]},
+  {...companion("xichDa","Tiết Dạ","satThu","hoa"),chasePassives:["marksmanPrepared","hoa1","daTapThuaHu"]},
+  {...companion("diaAn","Cát Tàng","satThu","tho"),chasePassives:["marksmanPrepared","tho1","phucDiaPhanKich"]},
+  {...companion("loiAnh","Mẫn Tuyên","satThu","loi"),chasePassives:["marksmanPrepared","loi1","tanVuHoiNhip"]},
+  {...companion("voAnh","Liễu Thiều","satThu","phong"),chasePassives:["marksmanPrepared","phong1","duAmTiepVan"]},
 ];
 /** Giá basic 1.500 vàng/tướng được Shan chốt trong task PROF ngày 30/10/2026. */
 export const EXPANSION_SHOP_COMPANIONS: readonly ShopCompanion[] = EXPANSION_COMPANIONS.map(fighter=>({fighter,price:SHOP_PRICES.basic}));

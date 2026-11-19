@@ -74,7 +74,7 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 
 **Liên trảm** (Tướng sĩ) · `passive_martial.png`
 
-Đồng đội phá giáp → truy kích 55% ATK.
+Đồng đội khống chế → truy kích 55% ATK.
 
 ```text
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: Two saber slash arcs following one after another through a cracked armor plate. Energy and color: vermilion red and steel with gold. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but SIMPLER and CALMER: one compact central object, a soft round glow behind it, a thin gold filigree ring around it like a medallion, subject fits inside a circle covering about 70% of the canvas, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no border panel, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
@@ -82,7 +82,7 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 
 **Chú kích** (Pháp sư) · `passive_arcane.png`
 
-Đồng đội khống chế → truy kích 50% ATK.
+Đồng đội phá giáp → truy kích 50% ATK.
 
 ```text
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A spell bolt of violet light striking down onto a ring of chains. Energy and color: violet and gold. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but SIMPLER and CALMER: one compact central object, a soft round glow behind it, a thin gold filigree ring around it like a medallion, subject fits inside a circle covering about 70% of the canvas, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no border panel, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
@@ -98,7 +98,7 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 
 **Cứu viện** (Y sư) · `passive_medic.png`
 
-Đồng đội gây mất HP → hồi người yếu nhất 5% HP.
+Đồng đội khống chế → hồi người yếu nhất 5% HP.
 
 ```text
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A healing gourd tipping a single bright drop onto a lotus leaf. Energy and color: jade green and gold. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but SIMPLER and CALMER: one compact central object, a soft round glow behind it, a thin gold filigree ring around it like a medallion, subject fits inside a circle covering about 70% of the canvas, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no border panel, no ground shadow. Background: flat solid chroma magenta (#ff00ff), completely uniform, nothing else on it.
@@ -106,7 +106,7 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 
 **Thừa hư** (Mưu sĩ) · `passive_strategist.png`
 
-Đồng đội xua tan → trừ thêm 8 năng lượng.
+Đồng đội phá giáp → trừ thêm 8 năng lượng.
 
 ```text
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A broken magic seal with a folded paper fan sweeping its fragments away. Energy and color: earth ochre and gold. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but SIMPLER and CALMER: one compact central object, a soft round glow behind it, a thin gold filigree ring around it like a medallion, subject fits inside a circle covering about 70% of the canvas, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no border panel, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
@@ -114,13 +114,13 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 
 **Tiếp lệnh** (Quân sư) · `passive_commander.png`
 
-Đồng đội hồi HP → cấp 8 năng lượng.
+Đồng đội khống chế → cấp người khống chế 8 năng lượng.
 
 ```text
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A small war drum with a green healing glow turning into golden energy sparks rising from the drumhead. Energy and color: indigo, jade and gold. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but SIMPLER and CALMER: one compact central object, a soft round glow behind it, a thin gold filigree ring around it like a medallion, subject fits inside a circle covering about 70% of the canvas, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no border panel, no ground shadow. Background: flat solid chroma green (#00b140), completely uniform, nothing else on it.
 ```
 
-**Chờ thời phá giáp** (Xạ thủ) · `passive_marksmanPrepared.png`
+**Chờ thời phá giáp** (Sát thủ) · `passive_marksmanPrepared.png`
 
 Đồng đội phá giáp → truy kích 40% ATK.
 
@@ -128,7 +128,7 @@ Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RP
 Square 1024x1024 fantasy game PASSIVE ability emblem for a turn-based match-3 RPG. Subject: A drawn bamboo bow with an arrow aimed at a crack in an armor plate. Energy and color: leaf green and steel with gold. Style: same hand-painted family as the existing skill icons (rich semi-realistic digital painting, glossy highlights, saturated colors, strong contrast, Dong Son bronze-drum motifs) but SIMPLER and CALMER: one compact central object, a soft round glow behind it, a thin gold filigree ring around it like a medallion, subject fits inside a circle covering about 70% of the canvas, readable at 32 px. Culture: 10th-century Vietnam; no Chinese dragons, no phoenixes, no Japanese or European elements. No people, no faces, no hands. No text, no letters, no numbers, no square frame, no border panel, no ground shadow. Background: flat solid chroma magenta (#ff00ff), completely uniform, nothing else on it.
 ```
 
-**Chờ thời khống chế** (Sát thủ) · `passive_assassinPrepared.png`
+**Chờ thời khống chế** (Xạ thủ) · `passive_assassinPrepared.png`
 
 Đồng đội khống chế → truy kích 45% ATK.
 
