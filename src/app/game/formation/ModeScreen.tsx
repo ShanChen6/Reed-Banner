@@ -14,7 +14,7 @@ import CustomForm from "./CustomForm";
 import LevelCard from "./LevelCard";
 import { MAP_POOL } from "./maps";
 import type { LevelOverview, Overview } from "./rankedClient";
-import { ModeGuidePanel } from "../ModeGuide";
+import { guideFirst, markGuideSeen, ModeGuidePanel } from "../ModeGuide";
 import { formatRemaining } from "./time";
 import { RankBoard } from "../leaderboard/RankBoard";
 import FormationTierPanel from "./FormationTierPanel";
@@ -167,7 +167,11 @@ export default function ModeScreen({
   onExpire: () => void;
 }) {
   const rankedOn = overview?.enabled === true;
-  const [tab, setTab] = useState<Tab>("practice");
+  const [tab, setTabState] = useState<Tab>(() => (guideFirst("FORMATION") ? "guide" : "practice"));
+  const setTab = (next: Tab) => {
+    if (next !== "guide") markGuideSeen("FORMATION");
+    setTabState(next);
+  };
   const [boardLevel, setBoardLevel] = useState<string | null>(null);
   // Vào Trận Đồ mặc định ở Chơi thường; xếp hạng tắt thì chỉ còn Chơi thường, Chiến tích (bộ sưu tập) và Hướng dẫn.
   const active: Tab = !rankedOn && tab === "ranked" ? "practice" : tab;
@@ -235,7 +239,7 @@ export default function ModeScreen({
         ]}
       />
 
-      {active === "guide" && <ModeGuidePanel scene="FORMATION" />}
+      {active === "guide" && <ModeGuidePanel scene="FORMATION" onPlay={() => setTab("practice")} />}
 
       {active === "ranked" && rankedOn && (
         <section aria-label="Xếp hạng" className="flex flex-col gap-4">

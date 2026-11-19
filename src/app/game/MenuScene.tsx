@@ -16,6 +16,7 @@ import { MODE_TEXT } from "./modeInfo";
 import type { Scene } from "./scene";
 import type { Profile } from "@/core";
 import { SceneLink } from "./SceneContext";
+import { resetModeGuides } from "./ModeGuide";
 
 const HERO_ART = "/art/campaign/bg/hoalu.webp";
 
@@ -120,6 +121,8 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
   );
   // Hồ sơ người chơi (kể cả khách) để đổi nút chính theo ngữ cảnh: undefined = đang tải, null = không tải được.
   const [profile, setProfile] = useState<Profile | null | undefined>(undefined);
+  // Về Chiến Trường: lần vào chế độ tiếp theo lại mở Hướng dẫn trước.
+  useEffect(() => resetModeGuides(), []);
   useEffect(() => {
     let live = true;
     void fetchProfile().then((r) => live && setProfile(r.profile ?? null));

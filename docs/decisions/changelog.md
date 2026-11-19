@@ -4,6 +4,11 @@
 
 ## 19/11/2026
 
+**Hướng dẫn trước khi chơi, kệ Vật phẩm, chuỗi Hợp Kích (Shan yêu cầu)**
+- Vào chế độ nào cũng mở thẻ Hướng dẫn trước, nút Vào chơi ở cuối ([đặc tả](../05-ui-ux/design-system/game-mode-ui-spec.md)).
+- Kho đồ › Vật phẩm cùng khuôn lưới với trang bị: ô vuông, ô trống đủ trang, phân trang.
+- Chuỗi phản ứng ở Hợp Kích bỏ truy kích giảm Thủ không mạnh hơn mức mục tiêu đang chịu, như bộ máy (`existingArmor`): hai Kim phá trong đội chỉ cái đầu tiên theo vị trí có tác dụng; chiêu tự giảm Thủ mạnh hơn (Phá trận 30%) thì Kim phá không theo sau.
+
 **Trả lại hệ số tương sinh, tương khắc ban đầu (Shan yêu cầu)**
 - Bỏ lần chỉnh 70/30 cùng ngày: khắc ×1,25, tương sinh ×1,1, bị khắc ×0,75 như cũ ([nguyên tố](../01-gameplay/nguyen-to.md#4-trong-trận)). 18 tầng Tháp Thí Luyện về sức mạnh đối thủ cũ, `contentVersion` tăng thêm một bậc để không đối chiếu sai trận đã chơi ở bản 70/30.
 

@@ -67,7 +67,7 @@ import {
   TONE_TEXT,
 } from "./StoryBeats";
 import { useScene } from "../SceneContext";
-import { ModeGuidePanel } from "../ModeGuide";
+import { guideFirst, markGuideSeen, ModeGuidePanel } from "../ModeGuide";
 
 /** Bước đang xem của nhiệm vụ: chỉ là tiện ích hiển thị, không phải tiến độ. */
 const STEP_KEY = "coLau.campaign.v2.step";
@@ -267,7 +267,8 @@ export default function ChapterOne({
   const [atlas, setAtlas] = useState<AtlasState>(() => {
     const saved = readJson<AtlasState>(ATLAS_KEY);
     return {
-      view:
+      // Vào Bình Loạn từ Chiến Trường thì gặp Hướng dẫn trước; quay lại sau trận thì mở lại đúng màn đang xem.
+      view: guideFirst("CAMPAIGN") ? "guide" :
         saved?.view === "mission" || saved?.view === "codex" || saved?.view === "raid" || saved?.view === "guide"
           ? saved.view
           : "atlas",
@@ -278,6 +279,7 @@ export default function ChapterOne({
     };
   });
   const updateAtlas = (next: AtlasState) => {
+    if (next.view !== "guide") markGuideSeen("CAMPAIGN");
     setAtlas(next);
     writeJson(ATLAS_KEY, next);
   };
@@ -571,7 +573,7 @@ export default function ChapterOne({
           )}
       {atlas.view === "guide" ? (
         <div className="px-1 sm:px-2">
-          <ModeGuidePanel scene="CAMPAIGN" headingId="mode-guide-title" />
+          <ModeGuidePanel scene="CAMPAIGN" headingId="mode-guide-title" onPlay={() => updateAtlas({ ...atlas, view: "atlas" })} />
         </div>
       ) : atlas.view === "codex" ? (
         <>

@@ -103,7 +103,9 @@ const CHAIN_EMITS: Readonly<Record<string, readonly ComboSignalKind[]>> = {
  */
 export function comboChains(team: readonly ComboMember[]): ComboChain[] {
   const out: ComboChain[] = [];
-  const walk = (from: number, skill: SkillDef, source: number, kinds: readonly ComboSignalKind[], depth: number, path: readonly ChainStep[], used: ReadonlySet<string>) => {
+  // `armor`: mức giảm Thủ mạnh nhất mục tiêu đang chịu trong chuỗi. Bộ máy bỏ qua truy kích giảm Thủ không mạnh hơn
+  // mức đang có (existingArmor), nên hai Kim phá trong cùng đội chỉ cái đầu tiên (theo vị trí trong đội) có tác dụng.
+  const walk = (from: number, skill: SkillDef, source: number, kinds: readonly ComboSignalKind[], depth: number, path: readonly ChainStep[], used: ReadonlySet<string>, armor: number) => {
     team.forEach((m, j) => {
       for (const { passive } of m.passives) {
         const key = `${j}:${passive.kind}:${passive.id}`;
@@ -121,20 +123,22 @@ export function comboChains(team: readonly ComboMember[]): ComboChain[] {
           if (d.activeOnly && depth > 0) continue;
           if (d.alliesOnly && j === source) continue;
           if (d.selfSource && j !== source) continue;
+          if (d.effect === "armor" && d.value <= armor) continue;
           signal = d.triggers.find((k) => kinds.includes(k));
           emits = CHAIN_EMITS[d.effect] ?? [];
         }
         if (!signal) continue;
         const next = [...path, { fighter: j, passive, signal }];
         if (next.length >= 2) out.push({ from, skill, steps: next });
-        if (emits.length > 0 && depth + 1 < MAX_DEPTH) walk(from, skill, j, emits, depth + 1, next, new Set([...used, key]));
+        const nextArmor = passive.kind === "chase" && CHASE_PASSIVES[passive.id].effect === "armor" ? Math.max(armor, CHASE_PASSIVES[passive.id].value) : armor;
+        if (emits.length > 0 && depth + 1 < MAX_DEPTH) walk(from, skill, j, emits, depth + 1, next, new Set([...used, key]), nextArmor);
       }
     });
   };
   team.forEach((m, from) => {
     for (const skill of m.skills) {
       const kinds = skillComboOpeners(skill);
-      if (kinds.length) walk(from, skill, from, kinds, 0, [], new Set());
+      if (kinds.length) walk(from, skill, from, kinds, 0, [], new Set(), skillArmor(skill));
     }
   });
   // Chuỗi dài trước; cùng độ dài thì chuỗi qua nhiều tướng khác nhau hơn đứng trước.
@@ -154,4 +158,9 @@ export function bestChains(team: readonly ComboMember[], limit = 8): ComboChain[
     if (out.length >= limit) break;
   }
   return out;
+}
+
+/** Mức giảm Thủ chiêu tự đặt lên địch; truy kích giảm Thủ yếu hơn mức này bị bỏ qua. */
+function skillArmor(skill: SkillDef): number {
+  return Math.max(0, ...skill.steps.map((st) => (st.type === "effect" && st.effect === "defDown" && st.to !== "self" && st.to !== "team" ? st.value : 0)));
 }

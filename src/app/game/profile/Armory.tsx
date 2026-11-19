@@ -72,6 +72,7 @@ export default function Armory({
   const [tray, setTray] = useState<string[]>([]);
   const [target, setTarget] = useState<string>(focusCharacter);
   const [page, setPage] = useState(0);
+  const [goodPage, setGoodPage] = useState(0);
 
   const slots = SHELVES.find((s) => s.id === shelf)!.slots;
   const items = profile.bag
@@ -88,6 +89,11 @@ export default function Armory({
   const from = current * BAG_PAGE;
   const pageItems = items.slice(from, from + BAG_PAGE);
   const empties = Math.max(0, Math.min(BAG_PAGE, cells - from) - pageItems.length);
+  // Kệ Vật phẩm cùng khuôn với trang bị: lưới ô vuông đủ một trang, ô trống, phân trang khi nhiều hơn một trang.
+  const goods = ITEMS.map((g) => ({ g, n: g.have(profile) })).filter((x) => x.n > 0);
+  const goodPages = Math.max(1, Math.ceil(goods.length / BAG_PAGE));
+  const goodCurrent = Math.min(goodPage, goodPages - 1);
+  const goodSlice = goods.slice(goodCurrent * BAG_PAGE, (goodCurrent + 1) * BAG_PAGE);
 
   const run = (a: ProfileAction, after?: () => void) =>
     void onAction(a).then((error) => {
@@ -177,28 +183,50 @@ export default function Armory({
         )}
 
         {itemShelf ? (
-          <ul className="mt-2 grid grid-cols-4 gap-2 sm:grid-cols-6 xl:grid-cols-8" aria-label="Vật phẩm trong kho">
-            {ITEMS.map((g) => {
-              const n = g.have(profile);
-              return (
-                <li key={g.id}>
+          <div className="mt-2 flex flex-1 flex-col gap-2">
+            {goods.length === 0 && (
+              <div className="flex flex-wrap items-center justify-center gap-3 py-2 text-center text-[15px] text-[var(--on-wood-soft)]">
+                <p>Chưa có vật phẩm nào.</p>
+                <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-4">
+                  <ShopGlyph className="size-4" /> Mua ở Cửa Hàng
+                </SceneLink>
+              </div>
+            )}
+            <ul className="grid grid-cols-8 gap-1 sm:gap-2 xl:grid-cols-12" aria-label="Vật phẩm trong kho">
+              {goodSlice.map(({ g, n }) => (
+                <li key={g.id} className="relative">
                   <button
                     type="button"
                     aria-pressed={goodId === g.id}
-                    onClick={() => setGoodId(g.id)}
+                    onClick={() => setGoodId(goodId === g.id ? null : g.id)}
                     aria-label={`${g.name}, có ${n} ${g.unit}`}
-                    title={g.name}
-                    className={`gear-slot relative flex aspect-square w-full items-center justify-center rounded-lg p-1 ${goodId === g.id ? "is-selected" : ""} ${n === 0 ? "opacity-45" : ""}`}
+                    title={`${g.name} · ${n} ${g.unit}`}
+                    className={`gear-slot relative flex aspect-square w-full items-center justify-center rounded-lg p-0.5 ${goodId === g.id ? "is-selected" : ""}`}
                   >
                     <ItemIcon id={g.id} className="size-full" />
-                    <span className="pointer-events-none absolute right-1 bottom-1 rounded bg-black/70 px-1 text-[11px] leading-tight font-bold text-frame-gold-hi tabular-nums" aria-hidden>
-                      {n}
-                    </span>
                   </button>
+                  <span className="pointer-events-none absolute right-1 bottom-1 rounded bg-black/70 px-1 text-[11px] leading-tight font-bold text-frame-gold-hi tabular-nums" aria-hidden>
+                    ×{n}
+                  </span>
                 </li>
-              );
-            })}
-          </ul>
+              ))}
+              {Array.from({ length: BAG_PAGE - goodSlice.length }, (_, i) => (
+                <li key={`empty-${i}`} aria-hidden className="aspect-square rounded-lg border border-dashed border-[var(--frame-line-soft)] bg-black/20" />
+              ))}
+            </ul>
+            {goodPages > 1 && (
+              <Pagination
+                label="Trang vật phẩm"
+                className="mt-auto pt-2"
+                hasPrevious={goodCurrent > 0}
+                hasNext={goodCurrent < goodPages - 1}
+                onPrevious={() => setGoodPage(goodCurrent - 1)}
+                onNext={() => setGoodPage(goodCurrent + 1)}
+              >
+                <span className="text-caption text-on-wood-soft tabular-nums">Trang {goodCurrent + 1}/{goodPages}</span>
+              </Pagination>
+            )}
+          </div>
         ) : (
         <div className="mt-2 flex flex-1 flex-col gap-2">
           {items.length === 0 && (
