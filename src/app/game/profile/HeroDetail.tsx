@@ -315,6 +315,11 @@ export function GearSlotButton({
         <EmptySlotIcon slot={slot} className={size} />
       )}
       {!item && <PlusGlyph className="absolute right-1 bottom-1 size-3.5 text-[var(--on-wood-soft)]" />}
+      {!!item?.enhance && (
+        <span className="pointer-events-none absolute top-0.5 left-0.5 rounded bg-black/70 px-1 text-[11px] leading-tight font-bold text-frame-gold-hi tabular-nums" aria-hidden>
+          +{item.enhance}
+        </span>
+      )}
     </button>
   );
 }
