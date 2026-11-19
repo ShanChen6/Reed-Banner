@@ -34,10 +34,10 @@ export function elementRelation(attacker: Element, target: Element): ElementRela
 }
 
 export const ELEMENT_DAMAGE: Record<ElementRelation, number> = {
-  counter: 1.18,
-  generate: 1,
+  counter: 1.25,
+  generate: 1.1,
   neutral: 1,
-  countered: 0.85,
+  countered: 0.75,
 };
 
 export function elementMultiplier(attacker: Element, target: Element): number {

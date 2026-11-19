@@ -178,8 +178,8 @@ describe("áp kết quả bàn cờ", () => {
       seed: 1,
     });
     const r = ok(act(withBoard(state, BOARD), { type: "swap", from: { row: 2, col: 3 }, to: { row: 2, col: 2 } }));
-    // lương 55: bình thường; Hỏa khắc Kim ×1.18; DEF 100 ×0.5
-    assert.deepEqual(swordDamage(r.events), { type: "damage", side: 1, fighter: 0, amount: 35, absorbed: 0, source: "sword" });
+    // lương 55: bình thường; Hỏa khắc Kim ×1.25; DEF 100 ×0.5
+    assert.deepEqual(swordDamage(r.events), { type: "damage", side: 1, fighter: 0, amount: 38, absorbed: 0, source: "sword" });
   });
 
   it("đói thì giảm sát thương", () => {

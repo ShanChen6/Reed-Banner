@@ -133,25 +133,25 @@ describe("Minh Nguyệt: sáu chủ động", () => {
     assert.equal(r.state.sides[0].fighters[0]!.energy, 70);
   });
 
-  it("ô2 dùng hệ Thủy dù phòng thủ Kim: khắc Hỏa ×1.18, và giảm ATK địch 10% trong 1 lượt", () => {
+  it("ô2 dùng hệ Thủy dù phòng thủ Kim: khắc Hỏa ×1.25, và giảm ATK địch 10% trong 1 lượt", () => {
     const s = setup(ngoc(), unit("ally"), [unit("hoa", { element: "hoa" }), unit("e2")]);
     const r = cast(s, "mn_thuyAnhXuyenLuu");
-    assert.equal(damageOn(r.events, 1, 0)[0]!.amount, Math.round(155 * 1.18 * 100 / 120));
+    assert.equal(damageOn(r.events, 1, 0)[0]!.amount, Math.round(155 * 1.25 * 100 / 120));
     const atkDown = r.state.sides[1].fighters[0]!.effects.find((e) => e.kind === "atkDown");
     assert.deepEqual([atkDown?.value, atkDown?.turns], [0.1, 1]);
-    // Cùng chiêu lên Thổ (Thủy bị Thổ khắc): ×0.85.
+    // Cùng chiêu lên Thổ (Thủy bị Thổ khắc): ×0.75.
     const t = cast(setup(ngoc(), unit("ally"), [unit("tho", { element: "tho" }), unit("e2")]), "mn_thuyAnhXuyenLuu");
-    assert.equal(damageOn(t.events, 1, 0)[0]!.amount, Math.round(155 * 0.85 * 100 / 120));
+    assert.equal(damageOn(t.events, 1, 0)[0]!.amount, Math.round(155 * 0.75 * 100 / 120));
   });
 
   it("ô3 Hỏa Bộ Đoạt Mệnh nhân 1.25 khi mục tiêu ≤35% HP ngay trước hit", () => {
     const s = setup(ngoc(), unit("ally"));
     const base = damageOn(cast(s, "mn_hoaBoDoatMenh").events, 1, 0)[0]!.amount;
-    // Chiêu hệ Hỏa đánh địch Kim: khắc ×1.18 từ 19/11/2026 (hệ phòng thủ Kim của Minh Nguyệt không liên quan).
-    assert.equal(base, Math.round(210 * 1.18 * 100 / 120));
+    // Chiêu hệ Hỏa đánh địch Kim: khắc ×1.25 (hệ phòng thủ Kim của Minh Nguyệt không liên quan).
+    assert.equal(base, Math.round(210 * 1.25 * 100 / 120));
     const low = setup(ngoc(), unit("ally"));
     low.sides[1].fighters[0]!.hp = 700;
-    assert.equal(damageOn(cast(low, "mn_hoaBoDoatMenh").events, 1, 0)[0]!.amount, Math.round(210 * 1.18 * 1.25 * 100 / 120));
+    assert.equal(damageOn(cast(low, "mn_hoaBoDoatMenh").events, 1, 0)[0]!.amount, Math.round(210 * 1.25 * 1.25 * 100 / 120));
   });
 
   it("ô4 Vạn Tượng Quy Nhất: đánh địch, thanh tẩy bản thân rồi dựng Khiên 8% HP tối đa", () => {
@@ -311,7 +311,7 @@ describe("Vũ Phong: sáu chủ động", () => {
     }
     assert.ok(frozen > 5 && frozen < 35, `đóng băng ${frozen}/${n}`);
     const fire = cast(setup(phong(), unit("ally"), [unit("hoa", { element: "hoa" }), unit("e2")]), "vp_muaGiangYLoan");
-    assert.equal(damageOn(fire.events, 1, 0)[0]!.amount, Math.round(135 * 1.18 * 100 / 120));
+    assert.equal(damageOn(fire.events, 1, 0)[0]!.amount, Math.round(135 * 1.25 * 100 / 120));
   });
 
   it("ô3 Lục Diệp Dẫn Lộ: thanh tẩy rồi hồi 8% HP tối đa người nhận, nhân Tinh thần của người nhận", () => {

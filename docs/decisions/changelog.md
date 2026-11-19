@@ -4,8 +4,8 @@
 
 ## 19/11/2026
 
-**Hệ số tương khắc 70/30 (Shan yêu cầu)**
-- Khắc ×1,25 → ×1,18, bị khắc ×0,75 → ×0,85, tương sinh trong trận ×1,1 → ×1 (vẫn dùng cho trang bị). Cặp khắc 1v1 từ khoảng 80/20 về 63–73% ([số liệu](../03-characters/danh-sach-nhan-vat.md#14-hệ-số-tương-khắc-19112026)). Tháp Thí Luyện cân lại 18 tầng.
+**Trả lại hệ số tương sinh, tương khắc ban đầu (Shan yêu cầu)**
+- Bỏ lần chỉnh 70/30 cùng ngày: khắc ×1,25, tương sinh ×1,1, bị khắc ×0,75 như cũ ([nguyên tố](../01-gameplay/nguyen-to.md#4-trong-trận)). 18 tầng Tháp Thí Luyện về sức mạnh đối thủ cũ, `contentVersion` tăng thêm một bậc để không đối chiếu sai trận đã chơi ở bản 70/30.
 
 **Vai trò nghề, hệ; cân Binh lính và Kim (Shan yêu cầu)**
 - Nguyên tắc cân bằng mới: mỗi nghề, hệ một chức năng, không ép tỉ lệ thắng bằng nhau; tiêu chí và bảng vai trò ở [danh sách nhân vật](../03-characters/danh-sach-nhan-vat.md#13-vai-trò-nghề-hệ-và-vòng-cân-binh-lính-kim-19112026). `profession-balance.ts` in thêm bảng đối đầu hệ × hệ, nghề × nghề.

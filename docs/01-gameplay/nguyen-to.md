@@ -56,12 +56,10 @@ Mỗi nhân vật mang đúng một nguyên tố. Nhân vật chính được đ
 
 | Quan hệ (người tung đòn → mục tiêu) | Hệ số sát thương |
 |---|---|
-| Khắc (ví dụ Kim đánh Mộc) | **×1.18** |
-| Tương sinh (nguyên tố người đánh sinh ra nguyên tố mục tiêu, ví dụ Kim đánh Thủy) | ×1 (tương sinh chỉ còn tác dụng ở trang bị) |
+| Khắc (ví dụ Kim đánh Mộc) | **×1.25** |
+| Tương sinh (nguyên tố người đánh sinh ra nguyên tố mục tiêu, ví dụ Kim đánh Thủy) | **×1.1** |
 | Bình thường | ×1 |
-| Bị khắc (ví dụ Mộc đánh Kim) | **×0.85** |
-
-- Cân 19/11/2026 (Shan chốt mục tiêu 70/30): hệ số cũ ×1.25/×1.1/×0.75 làm cặp tương khắc đấu một chọi một lệch khoảng 80/20; mức mới đưa phần lớn cặp khắc về 63–73% ([số liệu](../03-characters/danh-sach-nhan-vat.md#14-hệ-số-tương-khắc-19112026)).
+| Bị khắc (ví dụ Mộc đánh Kim) | **×0.75** |
 
 - Nguyên tố dùng để tính khắc chế là **nguyên tố của người tung đòn**.
 - **Không** gắn nguyên tố vào ô trên bàn cờ, để bàn cờ dễ đọc.
