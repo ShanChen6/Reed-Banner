@@ -192,6 +192,10 @@ export default function DemoGame({
   const [pendingWhirl, setPendingWhirl] = useState<Whirl | null>(null);
   /** Nấc xoay đang rê chuột hoặc focus để xem trước kết quả (chưa bấm). */
   const [spinPreview, setSpinPreview] = useState<number | null>(null);
+  /** Lốc xoáy kiểu xoay vòng (Shan 20/11/2026): ô dưới con trỏ chuột làm tâm tạm, hiện vòng tròn và xem trước nấc xoay. */
+  const [hoverCenter, setHoverCenter] = useState<Pos | null>(null);
+  /** Lần chạm cuối là chuột hay bút (rê được) hay cảm ứng (phải chạm hai lần: xem trước rồi xoay). */
+  const pointerKind = useRef<string>("mouse");
   const [toast, setToast] = useState<string | null>(null);
   const [anim, setAnim] = useState<{
     readonly frames: readonly Frame[];
@@ -828,11 +832,18 @@ export default function DemoGame({
     (pos: Pos) => {
       if (!myTurn) return;
       if (whirlAim) {
-        const c = whirlAim.center;
-        if (c && c.row === pos.row && c.col === pos.col)
-          return setWhirlAim({ ...whirlAim, center: null });
+        // Chỉ xoay theo chiều kim đồng hồ. Chuột: bấm là xoay ngay quanh ô đang rê. Cảm ứng: chạm lần đầu chọn tâm và
+        // xem trước, chạm lại đúng tâm đó để xoay.
         if (!isWhirlCenter(state.board, pos)) return flash(whirlHint({ ...whirlAim, center: null }));
-        return setWhirlAim({ ...whirlAim, center: pos });
+        const c = whirlAim.center;
+        const again = !!c && c.row === pos.row && c.col === pos.col;
+        if (pointerKind.current === "touch" && !again) return setWhirlAim({ ...whirlAim, center: pos });
+        const whirl = { center: pos, turns: 1 };
+        setWhirlAim(null);
+        setHoverCenter(null);
+        if (!whirlAim.skill) apply({ type: "whirl", whirl });
+        else aimOrCast(whirlAim.skill, whirl);
+        return;
       }
       if (aim) {
         if (aim.choose && aim.target === undefined)
@@ -848,11 +859,12 @@ export default function DemoGame({
       if (isAdjacent(selected, pos)) return trySwap(selected, pos);
       setSelected(pos);
     },
-    [myTurn, whirlAim, aim, selected, state.board, flash, fireAim, trySwap],
+    [myTurn, whirlAim, aim, selected, state.board, flash, fireAim, trySwap, apply, aimOrCast],
   );
 
   const onPointerDown = (pos: Pos, e: React.PointerEvent) => {
     setShowCursor(false);
+    pointerKind.current = e.pointerType;
     drag.current = { pos, x: e.clientX, y: e.clientY };
   };
 
@@ -1089,17 +1101,18 @@ export default function DemoGame({
   const frame = anim ? anim.frames[anim.i] : undefined;
   const board = frame?.board ?? heldBoard ?? state.board;
   /** Tâm lốc xoáy hiển thị: đang chọn chiều xoay, hoặc đã chọn xong và còn chờ chọn mục tiêu. */
-  const whirlCenter = whirlAim?.center ?? (aim && pendingWhirl ? pendingWhirl.center : null);
+  const hoverRing = whirlAim && !whirlAim.center && hoverCenter && isWhirlCenter(state.board, hoverCenter) ? hoverCenter : null;
+  const whirlCenter = whirlAim?.center ?? hoverRing ?? (aim && pendingWhirl ? pendingWhirl.center : null);
   /** Với từng nấc xoay có thể chọn: bàn cờ sau khi xoay và các ô sẽ ghép được ngay (chỉ để xem trước, không đổi trạng thái). */
   const spinOptions = useMemo(() => {
-    const center = whirlAim?.center;
+    const center = whirlAim?.center ?? hoverRing;
     if (!whirlAim || !center) return [];
-    const turnsList = [-whirlAim.max, ...(whirlAim.max > 1 ? [-1, 1] : []), whirlAim.max]
-      .filter((t, i, list) => list.indexOf(t) === i)
-      .sort((x, y) => x - y);
+    // Chỉ theo chiều kim đồng hồ: 1 nấc, và 2 nấc nếu kỹ năng cho phép.
+    const turnsList = [1, whirlAim.max].filter((t, i, list) => list.indexOf(t) === i);
     return turnsList.map((turns) => ({ turns, ...previewWhirl(state.board, { center, turns }) }));
-  }, [whirlAim, state.board]);
-  const spinView = whirlAim?.center && spinPreview !== null ? spinOptions.find((o) => o.turns === spinPreview) : undefined;
+  }, [whirlAim, state.board, hoverRing]);
+  // Xem trước: nấc đang rê ở nút, nếu không thì 1 nấc (đúng nấc mà bấm lên bàn sẽ xoay).
+  const spinView = whirlCenter && whirlAim ? (spinOptions.find((o) => o.turns === (spinPreview ?? 1)) ?? spinOptions[0]) : undefined;
 
   // Thẻ bấm được để chọn (hoặc đổi) mục tiêu; mục tiêu đã chọn được đánh dấu trong lúc chọn tâm.
   const aimingFoe = aim?.choose && aim.skill.target === "enemy";
@@ -1288,7 +1301,10 @@ export default function DemoGame({
                   gridTemplateColumns: `repeat(${board.cols}, minmax(0, 1fr))`,
                 }}
                 onPointerUp={onPointerUp}
-                onPointerLeave={() => (drag.current = null)}
+                onPointerLeave={() => {
+                  drag.current = null;
+                  setHoverCenter(null);
+                }}
                 role="grid"
                 aria-label="Bàn cờ"
               >
@@ -1304,6 +1320,10 @@ export default function DemoGame({
                   spinView={spinView}
                   whirlAim={whirlAim}
                   whirlCenter={whirlCenter}
+                  onHoverCell={(pos, kind) => {
+                    if (!whirlAim || kind === "touch") return;
+                    setHoverCenter(pos);
+                  }}
                 />
                 {/* Nút hoa đồng ở giao điểm các ô, như đinh tán trên bàn ngọc. */}
                 <div
@@ -1393,10 +1413,9 @@ export default function DemoGame({
                       onFocus={() => setSpinPreview(t)}
                       onBlur={() => setSpinPreview(null)}
                       className="rounded bg-info px-2 py-1 font-bold text-white"
-                      aria-label={`Xoay ${Math.abs(t)} nấc ${t > 0 ? "theo" : "ngược"} chiều kim đồng hồ, ${matched.size > 0 ? `ghép được ${matched.size} ô` : "không ghép được ô nào"}`}
+                      aria-label={`Xoay ${t} nấc theo chiều kim đồng hồ, ${matched.size > 0 ? `ghép được ${matched.size} ô` : "không ghép được ô nào"}`}
                     >
-                      {t > 0 ? "↻" : "↺"}
-                      {Math.abs(t) > 1 ? ` ×${Math.abs(t)}` : ""}
+                      ↻{t > 1 ? ` ×${t}` : ""}
                       <span className="ml-1 font-normal opacity-90">{matched.size > 0 ? `ghép ${matched.size}` : "không ghép"}</span>
                     </button>
                   ))}

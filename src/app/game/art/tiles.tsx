@@ -255,10 +255,10 @@ function Sparks() {
 function StrongFire() {
   return (
     <g>
-      <polygon points={starPoints(32, 30, 29, 19, 14)} fill="#ffcf5a" opacity={0.35} />
-      <path d={FLAME} fill={url("flame")} />
-      <path d={FLAME} fill="#ff9f1c" transform="translate(32 60) scale(0.74) translate(-32 -60)" />
-      <path d={FLAME} fill="#ffe47a" transform="translate(32 60) scale(0.46) translate(-32 -60)" />
+      {/* Lửa làm nền, mờ để vật phẩm vẫn nổi rõ (Shan 20/11/2026: nền ô đặc biệt quá chói, che vật phẩm). */}
+      <polygon points={starPoints(32, 30, 29, 19, 14)} fill="#ffcf5a" opacity={0.18} />
+      <path d={FLAME} fill={url("flame")} opacity={0.42} />
+      <path d={FLAME} fill="#ff9f1c" opacity={0.3} transform="translate(32 60) scale(0.74) translate(-32 -60)" />
     </g>
   );
 }

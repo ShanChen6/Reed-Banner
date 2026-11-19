@@ -226,9 +226,20 @@
   animation: tile-strong 1.8s ease-in-out infinite;
 }
 
+/* Vòng lốc xoáy khi chọn tâm xoay (BoardCells): quay chậm theo chiều kim đồng hồ, đúng chiều sẽ xoay. */
+@keyframes whirl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.whirl-spin {
+  animation: whirl-spin 4s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tile-anim,
   .tile-strong,
+  .whirl-spin,
   .chain-pop,
   .turn-banner,
   .float-up {

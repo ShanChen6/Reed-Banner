@@ -161,7 +161,7 @@ Bảy bộ dùng cùng một khung để cân bằng với nhau. Thứ tự theo
 - Vì sao bỏ trượt (Shan, 20/10/2026): người chơi phải tự hình dung cả hàng 12 ô dịch đi, có ô tràn quay vòng, rất khó thấy combo; AI thì tính hết nên Phong mạnh với máy mà khó với người. Lốc xoáy chỉ đụng 8 ô trong vùng 3×3 nên dễ nhìn hơn.
 - Mô phỏng 20/10/2026 (AI Thường, cấp 10, seed 1, 600 trận mỗi chế độ, `pnpm sim -- --mode 3v3 --battles 600 --element phong --level 10`): nhân vật chính hệ Phong 3vs3 thắng 52.8% → 55.7%, 1vs1 56.7% → 57.5% (120 trận, nhiễu lớn); trung vị lượt gần như không đổi (12 → 11.5). Mức tăng nằm trong khoảng nhiễu nên giữ nguyên số liệu kỹ năng. Phong Quyển Tàn Vân được AI dùng nhiều hơn (0.38 → 0.51 lần/trận ở 3vs3).
 - Mô phỏng 19/10/2026 (3vs3, 180 trận): một lần trượt chọn khéo gần như là một nước đi miễn phí kèm combo. Cho trượt miễn phí ở mọi lần ra tay trong 3 lượt thì phe Phong thắng khoảng 80%; chỉ 1 lần mỗi lần kích hoạt thì khoảng 73%; bỏ hẳn thì 68%. Phong Quyển Tàn Vân tăng giá 20 → 40 vì cùng lý do.
-- Thao tác: chạm ô tâm (8 ô quanh được tô viền), rồi bấm nút ↺/↻ (và ×2 cho kỹ năng 2 nấc); bàn phím: Enter chọn tâm, Q ↺, E ↻, giữ Shift để xoay 2 nấc. Chạm lại ô tâm hoặc Esc để bỏ.
+- Thao tác (người chơi, từ 20/11/2026): chỉ xoay theo chiều kim đồng hồ; rê chuột thấy vòng xoay quanh ô dưới con trỏ, bấm để xoay; cảm ứng chạm hai lần. Chi tiết ở [màn trận](../../05-ui-ux/screens/battle.md).
 
 ## 9. So sánh nhanh
 

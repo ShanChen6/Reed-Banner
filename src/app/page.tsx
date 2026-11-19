@@ -1,40 +1,38 @@
-import { Badge, buttonVariants } from "@/components/ui";
+// Trang giới thiệu (/), thiết kế lại 19/11/2026 theo đề xuất Shan duyệt: gọn khoảng sáu màn hình, mỗi mục một ý.
+// Mở đầu (tranh trống đồng, bàn cờ tự chơi, số liệu thật) → Đinh Bộ Lĩnh qua ba thời (giữ nguyên khung cũ, Shan chốt) → Chế độ chơi →
+// Thế giới → Hỏi đáp → lời mời cuối. Trang chủ nói chung cho cả 14 chế độ (Shan 20/11/2026); luật đánh trận ghép ô (ba bước một
+// lượt, chuỗi Hợp Kích, bảng ô, nghề, hệ) ở /cam-nang.
+
 import Link from "next/link";
+import Image from "next/image";
+import { Badge } from "@/components/ui";
 import {
+  ALL_COMPANIONS,
   BOARD_COLS,
-  BOARD_ROWS,
   createRng,
+  elementRelation,
   ELEMENTS,
   generateBoard,
+  PROFESSIONS,
   STANDARD_WEIGHTS,
   STARTER_COMPANIONS,
+  WARLORD_COMPANIONS,
   type Tile,
-  TILE_KINDS,
 } from "@/core";
-import { ELEMENT_NAME, PROFESSION_NAME, SPECIAL_NAME, TILE_NAME } from "./game/battle/labels";
-import { ElementIcon, LeaderFlag } from "./game/art/icons";
-import { Logo, LogoMark } from "./game/art/logo";
-import Image from "next/image";
+import { ELEMENT_NAME, PROFESSION_NAME } from "./game/battle/labels";
+import { ELEMENT_COLOR, ElementIcon, ProfessionIcon } from "./game/art/icons";
+import { Logo } from "./game/art/logo";
 import { Portrait } from "./game/art/portraits";
 import { ModeIcon, type ModeIconKind } from "./game/art/mode-icons";
-import { BoardCrest, TileArt } from "./game/art/tiles";
+import { BoardCrest } from "./game/art/tiles";
 import { expeditionFlag, tamTuongKyEnabled, towerFeatureFlags, type TowerFeatureFlags } from "@/server/featureFlags";
-import { FAQ, PROFESSION_PERK, TILE_GIVES } from "./home/data";
-import ContactBlock from "./game/ContactBlock";
-import { socialLinks } from "./game/footerLinks";
+import { ELEMENT_TRAIT, FAQ, PROFESSION_ROLE } from "./home/data";
 import DrumFace from "./home/DrumFace";
-import ElementPicker from "./home/ElementPicker";
-import { Embers, GiltCorners, OrnateDivider } from "./home/Ornaments";
+import HeroBoard from "./home/HeroBoard";
+import { Embers, GiltCorners } from "./home/Ornaments";
+import { MobilePlayBar, PlayButton, SectionTitle, SITE_WIDTH, SiteFooter, SiteHeader } from "./home/SiteChrome";
 
-const NAV = [
-  { href: "#how-to-play", label: "Cách chơi" },
-  { href: "#elements", label: "7 hệ" },
-  { href: "#roster", label: "Đội hình" },
-  { href: "#modes", label: "Chế độ" },
-  { href: "#faq", label: "Hỏi đáp" },
-];
-
-/** Bàn cờ trang trí ở hero: sinh cố định theo seed nên server và client luôn giống nhau. */
+/** Bàn cờ mở đầu: sinh cố định theo seed nên server và client luôn giống nhau. */
 function heroBoard(): (Tile | null)[] {
   const cells = [...generateBoard(createRng(1012), STANDARD_WEIGHTS).cells];
   const put = (row: number, col: number, special: Tile["special"]) => {
@@ -46,33 +44,6 @@ function heroBoard(): (Tile | null)[] {
   put(6, 2, "weak");
   return cells;
 }
-
-const STEPS = [
-  {
-    n: "I",
-    title: "Đổi ô, ghép từ 3",
-    body: `Đổi chỗ hai ô kề nhau trên bàn ${BOARD_COLS}×${BOARD_ROWS} để ghép 3 ô cùng loại trở lên. Ô ghép được biến thành sát thương, máu, năng lượng hay lương thực.`,
-  },
-  {
-    n: "II",
-    title: "Tung một kỹ năng",
-    body: "Trước khi đổi ô, mỗi lượt được dùng tối đa một kỹ năng bằng năng lượng tích từ ô âm dương. Đầy Nộ thì bị động của thủ lĩnh tự kích hoạt.",
-  },
-  {
-    n: "III",
-    title: "Dồn đối thủ vào thế",
-    body: "Chuỗi rơi tạo ô đặc biệt và cho thêm một lượt. Giữ lương để sĩ khí hăng hái, khắc hệ để đòn đau hơn, hạ hết phe Tianwu để thắng.",
-  },
-];
-
-const FEATURES: { tile: Tile; title: string; body: string }[] = [
-  { tile: { kind: "kiem", special: "strong" }, title: "Ô đặc biệt", body: "Ghép chữ L, chữ T hay thẳng 5 để tạo ô bản yếu và bản mạnh, nổ tung cả vùng." },
-  { tile: { kind: "trong" }, title: "Nộ và bị động", body: "Trống trận và đòn nhận vào tích Nộ. Đầy 100, bị động theo hệ bùng phát trong 3 lượt." },
-  { tile: { kind: "banhChung" }, title: "Lương thực, sĩ khí", body: "Lương tụt mỗi lượt. No thì đánh mạnh hơn, đói thì yếu đi, cạn thì mất máu." },
-  { tile: { kind: "amDuong" }, title: "8 nghề đồng đội", body: "Tướng sĩ, Pháp sư, Binh lính, Y sư, Mưu sĩ, Quân sư, Xạ thủ, Sát thủ, mỗi nghề một nội tại và vai trò riêng." },
-  { tile: { kind: "vang", special: "weak" }, title: "Trang bị 5 phẩm", body: "9 ô trang bị, phẩm Trắng tới Cam. Đủ bộ được thưởng; ghép 3 món cùng bậc để nâng bậc." },
-  { tile: { kind: "sach" }, title: "AI Tianwu", body: "Từ Dễ tới Ác mộng. AI chỉ thấy những gì bạn thấy và chịu cùng luật, không ăn gian." },
-];
 
 type ModeFlag = keyof TowerFeatureFlags | "expedition" | "tamTuongKy";
 
@@ -119,31 +90,6 @@ const MODE_GROUPS: readonly { readonly title: string; readonly sub: string; read
   },
 ];
 
-
-
-function SectionTitle({ kicker, title, sub }: { kicker: string; title: string; sub?: string }) {
-  return (
-    <div className="mx-auto mb-10 max-w-2xl text-center">
-      <p className="text-kicker text-frame-gold">{kicker}</p>
-      <h2 className="fx-gilt-text mt-2 text-heading">{title}</h2>
-      <OrnateDivider className="mx-auto mt-4 w-56" />
-      {sub && <p className="mt-4 text-on-wood-soft">{sub}</p>}
-    </div>
-  );
-}
-
-function PlayButton({ className = "", children = "Chơi ngay" }: { className?: string; children?: React.ReactNode }) {
-  return (
-    <Link
-      href="/game"
-      className={buttonVariants({ variant: "ornate", className: `fx-btn uppercase tracking-wider ${className}` })}
-    >
-      {children}
-    </Link>
-  );
-}
-
-/** Ba tranh Đinh Bộ Lĩnh (public/art/splash/), kích thước gốc để next/image giữ đúng tỉ lệ. */
 const DBL_ERAS = [
   { src: "/art/splash/dinh-bo-linh-nien-thieu.webp", w: 570, title: "Thiếu niên", note: "Cờ lau tập trận bên sông Hoàng Long." },
   { src: "/art/splash/dinh-bo-linh-tuong-quan.webp", w: 569, title: "Tướng quân", note: "Hình trong trận: áo choàng bay, chém kiếm." },
@@ -153,39 +99,22 @@ const DBL_ERAS = [
 export default function Home() {
   const board = heroBoard();
   const flags: Record<ModeFlag, boolean> = { ...towerFeatureFlags(), expedition: expeditionFlag(), tamTuongKy: tamTuongKyEnabled() };
+  const modeCount = MODE_GROUPS.reduce((n, g) => n + g.modes.length, 0);
+  // Số liệu đếm thẳng từ dữ liệu game, không viết tay.
+  const facts = [
+    { n: modeCount, label: "chế độ chơi" },
+    { n: ALL_COMPANIONS.length + 1, label: "tướng quân" },
+    { n: PROFESSIONS.length, label: "nghề" },
+    { n: ELEMENTS.length, label: "hệ" },
+  ];
   return (
     <div className="demo-bg min-h-dvh bg-[var(--background)] text-on-wood">
-      <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-wood-lo focus:p-2">
-        Bỏ qua tới nội dung
-      </a>
-
-      <header className="sticky top-0 z-40 border-b border-frame-gold/40 bg-wood-lo/90 shadow-[0_8px_24px_-12px_var(--black)] backdrop-blur">
-        <nav className="mx-auto flex max-w-6xl 2xl:max-w-[96rem] items-center gap-4 px-4 py-2.5">
-          <Link href="/" className="flex items-center gap-2 font-serif text-lg font-black">
-            <LogoMark className="size-8" /> <span className="fx-gilt-text">Cờ Lau</span>
-          </Link>
-          <ul className="ml-auto hidden items-center gap-5 text-sm text-on-wood-soft md:flex">
-            {NAV.map((n) => (
-              <li key={n.href}>
-                <a href={n.href} className="hover:text-[var(--primary)]">
-                  {n.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <Link href="/game/login" className="ml-auto text-sm text-on-wood-soft hover:text-[var(--primary)] md:ml-2">
-            Trình danh
-          </Link>
-          <PlayButton className="px-3 py-1.5 text-sm" />
-        </nav>
-      </header>
+      <SiteHeader />
 
       <main id="content">
-        {/* Hero: tranh trời trống đồng và chim lạc làm nền, mặt trống khắc vạch xoay chậm đè đúng lên trống trong tranh,
-            tâm sao sáng nhịp, bàn cờ thật dựng bằng SVG làm hình chính. */}
+        {/* Mở đầu: tranh trời trống đồng làm nền, mặt trống xoay chậm đè đúng trống trong tranh, bàn cờ tự chơi. */}
         <section className="relative overflow-hidden border-b border-frame-gold/20">
           <div aria-hidden className="pointer-events-none absolute inset-0 [container-type:size]">
-            {/* Khung giữ đúng tỉ lệ tranh và phủ kín phần mở đầu (như object-cover), để lớp trống xoay luôn trùng trống trong tranh. */}
             <div className="hero-art absolute left-1/2 top-1/2 aspect-[1916/821] -translate-x-1/2 -translate-y-1/2">
               <Image src="/art/hero/troi-trong-dong.webp" alt="" fill priority sizes="(min-width: 768px) 100vw, 250vw" className="object-cover" />
               <div className="absolute left-[50.9%] top-[48%] w-[47%] -translate-x-1/2 -translate-y-1/2 opacity-40 mix-blend-screen">
@@ -194,57 +123,49 @@ export default function Home() {
               <div className="hero-star absolute left-[50.9%] top-[48%] aspect-square w-[22%] -translate-x-1/2 -translate-y-1/2 rounded-full" />
             </div>
           </div>
-          {/* Lớp tối phía chữ để đọc rõ; trên điện thoại chữ phủ cả bề ngang nên tối đều. */}
           <div aria-hidden className="hero-shade pointer-events-none absolute inset-0" />
           <Embers />
-          <div className="relative mx-auto grid max-w-6xl 2xl:max-w-[96rem] items-center gap-10 px-4 py-14 md:grid-cols-[1fr_1.1fr] md:py-20">
+          <div className={`relative mx-auto grid items-center gap-10 px-4 py-12 md:grid-cols-[1fr_1.1fr] md:py-20 ${SITE_WIDTH}`}>
             <div>
               <h1 className="-mx-4 -mt-6 max-w-[520px] md:-mx-8">
                 <Logo priority className="h-auto w-full" />
+                <span className="sr-only">Cờ Lau: Loạn 12 sứ quân</span>
               </h1>
-              <p className="mt-4 max-w-md text-lg text-on-wood-soft">
-                Game ghép ô chiến đấu theo lượt. Cầm cờ lau như Đinh Bộ Lĩnh thuở chăn trâu, dẫn đồng đội và dẹp loạn bằng những
-                nước ghép khôn ngoan.
+              <p className="mt-3 max-w-lg font-serif text-2xl leading-snug font-bold text-title-on-wood md:text-3xl">
+                Phất cờ lau, dẹp loạn mười hai sứ quân.
               </p>
-              <ul className="mt-5 flex flex-wrap gap-2 text-sm">
-                {NAV.slice(0, 4).map((n) => (
-                  <li key={n.href}>
-                    <a href={n.href} className="rounded-full border border-frame-gold/35 bg-wood-inset px-3 py-1 text-on-wood-soft hover:border-frame-gold hover:text-[var(--primary)]">
-                      {n.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <p className="mt-3 max-w-md text-lg text-on-wood-soft">
+                Mười bốn cách ra trận giữa thời loạn thế kỷ X: ghép ô đánh trận, bày binh bố trận, dò bẫy, học sử. Theo chân Đinh Bộ
+                Lĩnh dựng lại giang sơn.
+              </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <PlayButton className="text-base">Chơi thử miễn phí</PlayButton>
+                <PlayButton className="text-base">Chơi ngay · không cần tài khoản</PlayButton>
                 <a
-                  href="#how-to-play"
+                  href="#modes"
                   className="fx-btn-ghost inline-flex items-center rounded-lg px-5 py-2.5 font-semibold text-title-on-wood transition hover:brightness-125"
                 >
-                  Chơi thế nào?
+                  Xem các chế độ
                 </a>
               </div>
-              <p className="mt-5 text-sm text-on-wood-soft/80">Chạy ngay trên trình duyệt · Máy tính và điện thoại xoay ngang · Không cần tài khoản</p>
+              <dl className="mt-8 grid max-w-lg grid-cols-4 gap-2 border-t border-frame-gold/25 pt-5">
+                {facts.map((f) => (
+                  <div key={f.label}>
+                    <dt className="sr-only">{f.label}</dt>
+                    <dd className="flex flex-col">
+                      <span className="fx-gilt-text font-serif text-3xl font-black tabular-nums">{f.n}</span>
+                      <span className="text-sm text-on-wood-soft">{f.label}</span>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="mt-5 text-sm text-on-wood-soft/80">Chạy ngay trên trình duyệt · Máy tính và điện thoại xoay ngang · Miễn phí</p>
             </div>
 
-            {/* Chân dung thủ lĩnh đè lên góc dưới trái bàn cờ (tâm đúng góc khung), hai đồng đội đứng dưới mép khung, không che ô nào. */}
             <div className="relative mb-14 ml-8 md:mb-12 md:ml-6">
               <div className="fx-frame relative rounded-xl p-2">
                 <GiltCorners size="size-10 md:size-14" skip="bottomLeft" />
                 <BoardCrest className="pointer-events-none absolute left-1/2 top-0 z-10 h-9 w-44 -translate-x-1/2 -translate-y-[62%] md:h-12 md:w-60" />
-                {/* Lòng bàn cờ như trong trận: nền đá phiến sẫm dưới ô xanh đá phiến, nút hoa đồng ở giao điểm. */}
-                <div className="fx-board-well relative grid gap-0.5 overflow-hidden rounded-md p-0.5" style={{ gridTemplateColumns: `repeat(${BOARD_COLS}, minmax(0, 1fr))` }}>
-                  {board.map((t, i) => (
-                    <div key={i} className="aspect-square rounded-md">
-                      {t && <TileArt kind={t.kind} special={t.special} className={`size-full ${t.special === "strong" ? "tile-strong" : ""}`} />}
-                    </div>
-                  ))}
-                  <div
-                    aria-hidden
-                    className="board-knots pointer-events-none absolute inset-px"
-                    style={{ backgroundSize: `calc(100% / ${BOARD_COLS}) calc(100% / ${BOARD_ROWS})` }}
-                  />
-                </div>
+                <HeroBoard cells={board} />
               </div>
               <Portrait
                 id="dinhBoLinh"
@@ -264,10 +185,10 @@ export default function Home() {
         {/* Ba thời của nhân vật chính, từ cậu bé cờ lau tới hoàng đế. */}
         <section id="hero-story" className="scroll-mt-16 px-4 py-16">
           <SectionTitle kicker="Chủ tướng" title="Đinh Bộ Lĩnh qua ba thời" sub="Từ cậu bé chăn trâu cầm cờ lau, thành vị tướng dẹp loạn sứ quân, rồi lên ngôi hoàng đế." />
-          <ul className="mx-auto grid max-w-5xl 2xl:max-w-[80rem] grid-cols-3 gap-3 md:gap-6">
+          <ul className={`mx-auto grid grid-cols-3 gap-3 md:gap-6 lg:gap-8 ${SITE_WIDTH}`}>
             {DBL_ERAS.map((e) => (
               <li key={e.src} className="flex flex-col items-center justify-end rounded-2xl fx-panel-hi p-2 text-center md:p-4">
-                <Image src={e.src} alt={`Đinh Bộ Lĩnh ${e.title}`} width={e.w} height={900} sizes="(min-width: 768px) 300px, 30vw" className="h-auto w-full drop-shadow-[0_12px_20px_color-mix(in_srgb,var(--black)_67%,transparent)]" />
+                <Image src={e.src} alt={`Đinh Bộ Lĩnh ${e.title}`} width={e.w} height={900} sizes="(min-width: 1536px) 500px, (min-width: 768px) 380px, 30vw" className="h-auto w-full drop-shadow-[0_12px_20px_color-mix(in_srgb,var(--black)_67%,transparent)]" />
                 <p className="mt-2 font-serif text-base font-bold md:text-lg">{e.title}</p>
                 <p className="hidden text-xs text-on-wood-soft sm:block">{e.note}</p>
               </li>
@@ -275,131 +196,9 @@ export default function Home() {
           </ul>
         </section>
 
-        <section id="how-to-play" className="scroll-mt-16 px-4 py-16">
-          <SectionTitle kicker="Cách chơi" title="Ba bước một lượt" sub="Mỗi lượt có 30 giây. Đánh sai không bị phạt, chỉ là nước đổi bị trả lại." />
-          <ol className="mx-auto grid max-w-6xl 2xl:max-w-[96rem] gap-4 md:grid-cols-3">
-            {STEPS.map((s) => (
-              <li key={s.n} className="relative rounded-2xl fx-panel p-6">
-                <span className="fx-gilt-text font-serif text-4xl font-black">{s.n}</span>
-                <h3 className="mt-2 text-lg font-bold">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-on-wood-soft">{s.body}</p>
-              </li>
-            ))}
-          </ol>
-          <div className="mx-auto mt-8 flex max-w-3xl flex-col items-center gap-3 rounded-2xl fx-panel-hi p-6 text-center">
-            <LeaderFlag className="size-10" />
-            <p className="font-serif text-xl font-bold">Chọn hệ cho Đinh Bộ Lĩnh rồi vào trận</p>
-            <p className="text-sm text-on-wood-soft">Bản chơi thử chưa bật đồng hồ 30 giây, cứ thong thả tính nước.</p>
-            <PlayButton />
-          </div>
-        </section>
-
-        <section className="px-4 py-16">
-          <SectionTitle kicker="Điểm nhấn" title="Không chỉ là ghép ô" />
-          <ul className="mx-auto grid max-w-6xl 2xl:max-w-[96rem] gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-            {FEATURES.map((f) => (
-              <li key={f.title} className="flex gap-4 rounded-2xl fx-panel p-5">
-                <TileArt kind={f.tile.kind} special={f.tile.special} className="size-12 shrink-0" />
-                <div>
-                  <h3 className="font-bold">{f.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-on-wood-soft">{f.body}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="px-4 py-16">
-          <SectionTitle kicker="Bàn cờ" title="Bảy loại ô" sub="Ô thường, bản yếu (chữ L, chữ T) và bản mạnh (thẳng 5)." />
-          <div className="mx-auto max-w-4xl overflow-x-auto rounded-2xl fx-panel">
-            <table className="w-full min-w-[520px] text-left text-sm">
-              <thead className="text-kicker text-on-wood-soft">
-                <tr>
-                  <th className="px-4 py-3">Ô</th>
-                  <th className="px-4 py-3">Ghép được</th>
-                  <th className="px-4 py-3">Bản yếu</th>
-                  <th className="px-4 py-3">Bản mạnh</th>
-                </tr>
-              </thead>
-              <tbody>
-                {TILE_KINDS.map((k) => (
-                  <tr key={k} className="border-t border-frame-line-soft">
-                    <td className="px-4 py-2">
-                      <span className="flex items-center gap-2 font-semibold">
-                        <TileArt kind={k} className="size-10" />
-                        {TILE_NAME[k]}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2 text-on-wood-soft">{TILE_GIVES[k]}</td>
-                    <td className="px-4 py-2">
-                      <span className="flex items-center gap-2 text-on-wood-soft">
-                        <TileArt kind={k} special="weak" className="size-10" />
-                        {SPECIAL_NAME.weak[k]}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2">
-                      <span className="flex items-center gap-2 text-on-wood-soft">
-                        <TileArt kind={k} special="strong" className="tile-strong size-10" />
-                        {SPECIAL_NAME.strong[k]}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-2 text-center text-xs text-on-wood-soft/80 md:hidden">Vuốt ngang để xem hết bảng.</p>
-        </section>
-
-        <section id="elements" className="scroll-mt-16 px-4 py-16">
+        <section id="modes" aria-labelledby="modes-title" className="scroll-mt-16 px-4 py-16">
           <SectionTitle
-            kicker="7 nguyên tố"
-            title="Đổi hệ, đổi lối đánh"
-            sub={`${ELEMENTS.map((e) => ELEMENT_NAME[e]).join(", ")}. Chủ tướng đổi nguyên tố trước mỗi trận, kéo theo bị động và cả bộ 6 kỹ năng.`}
-          />
-          <div className="mx-auto max-w-5xl 2xl:max-w-[80rem]">
-            <ElementPicker />
-          </div>
-          <ul className="mx-auto mt-8 grid max-w-5xl 2xl:max-w-[80rem] gap-4 md:grid-cols-3">
-            {[
-              { k: "Khắc", v: "×1.25", body: "Đánh vào hệ mình khắc, sát thương tăng một phần tư." },
-              { k: "Tương sinh", v: "×1.1", body: "Đánh vào hệ mình sinh ra, sát thương nhỉnh hơn một chút." },
-              { k: "Trang bị cùng hệ", v: "×1.5", body: "Mặc đồ đúng hệ tướng quân, chỉ số trang bị tăng một nửa." },
-            ].map((c) => (
-              <li key={c.k} className="rounded-2xl fx-panel p-5">
-                <p className="text-kicker text-on-wood-soft">{c.k}</p>
-                <p className="fx-gilt-text font-serif text-3xl font-black">{c.v}</p>
-                <p className="mt-1 text-sm text-on-wood-soft">{c.body}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section id="roster" className="scroll-mt-16 px-4 py-16">
-          <SectionTitle kicker="Đội hình" title="Thủ lĩnh và năm đồng đội" sub="Đánh 1vs1 một mình, hoặc 3vs3 cùng hai đồng đội. Chân dung hiện tại là hình tạm, sẽ thay bằng tranh vẽ." />
-          <ul className="mx-auto grid max-w-6xl 2xl:max-w-[96rem] grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-            <li className="flex flex-col items-center rounded-2xl fx-panel-hi p-4 text-center">
-              <Portrait id="dinhBoLinh" element="moc" profession="tuongSi" className="size-20" />
-              <p className="mt-2 font-bold">Đinh Bộ Lĩnh</p>
-              <p className="text-xs text-[var(--primary)]">Thủ lĩnh · đổi được hệ</p>
-              <p className="mt-2 text-xs text-on-wood-soft">Chọn nghề và hệ trước trận: 3 chiêu nghề, 2 chiêu hệ, 1 tuyệt chiêu và bị động thủ lĩnh.</p>
-            </li>
-            {STARTER_COMPANIONS.map((c) => (
-              <li key={c.id} className="flex flex-col items-center rounded-2xl fx-panel p-4 text-center">
-                <Portrait id={c.id} element={c.element} profession={c.profession} className="size-20" />
-                <p className="mt-2 font-bold">{c.name}</p>
-                <p className="flex items-center gap-1 text-xs text-on-wood-soft">
-                  <ElementIcon element={c.element} className="size-3.5" />
-                  {PROFESSION_NAME[c.profession]} · {ELEMENT_NAME[c.element]}
-                </p>
-                <p className="mt-2 text-xs text-on-wood-soft">{PROFESSION_PERK[c.profession]}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section id="modes" className="scroll-mt-16 px-4 py-16">
-          <SectionTitle
+            id="modes-title"
             kicker="Chế độ chơi"
             title="Mười bốn cách ra trận"
             sub="Chơi ngay với thân phận lữ khách, tiến trình gắn với trình duyệt. Trình danh để giữ tiến trình trên mọi máy."
@@ -411,7 +210,7 @@ export default function Home() {
                   <h3 id={`modes-${group.modes[0]!.slug}`} className="fx-gilt-text font-serif text-2xl font-black">{group.title}</h3>
                   <p className="max-w-xl text-sm text-on-wood-soft">{group.sub}</p>
                 </div>
-                <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+                <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {group.modes.map((m) => {
                     const open = !m.flag || flags[m.flag];
                     const body = (
@@ -463,26 +262,80 @@ export default function Home() {
               </section>
             ))}
           </div>
-          <p className="mt-6 text-center text-sm text-on-wood-soft">
-            Kèm theo:{" "}
-            {[
-              ["quests", "Nhiệm vụ và thành tựu"],
-              ["leaderboard", "Công trạng"],
-              ["profile", "Doanh Trại, trang bị, Cửa Hàng"],
-            ].map(([slug, label], i) => (
-              <span key={slug}>
-                {i > 0 && " · "}
-                <Link href={`/game/${slug}`} className="text-on-wood-soft underline-offset-4 hover:text-[var(--primary)] hover:underline">
-                  {label}
-                </Link>
-              </span>
-            ))}
-          </p>
         </section>
 
-        <section id="faq" className="scroll-mt-16 px-4 py-16">
-          <SectionTitle kicker="Hỏi đáp" title="Câu hỏi thường gặp" />
-          <div className="mx-auto max-w-3xl space-y-3">
+        {/* Thế giới: 12 sứ quân, 8 nghề và 7 hệ trong một khối gọn (chủ tướng ba thời có mục riêng ở trên). */}
+        <section id="world" aria-labelledby="world-title" className="scroll-mt-16 px-4 py-16">
+          <SectionTitle
+            id="world-title"
+            kicker="Thế giới"
+            title="Thời loạn mười hai sứ quân"
+            sub="Thế kỷ X, đất nước chia cắt. Cậu bé chăn trâu cờ lau ở Hoa Lư lớn lên thành vị tướng dẹp loạn, rồi lên ngôi Đinh Tiên Hoàng."
+          />
+          <div className={`mx-auto ${SITE_WIDTH}`}>
+            <div className="flex flex-col gap-5">
+              <div className="rounded-2xl fx-panel p-5">
+                <h3 className="font-serif text-lg font-bold">Mười hai sứ quân</h3>
+                <p className="mt-1 text-sm text-on-wood-soft">Đánh dẹp hoặc thu phục ở Bình Loạn; sứ quân đã thắng có thể chiêu mộ về đội.</p>
+                <ul className="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-6 xl:grid-cols-12">
+                  {WARLORD_COMPANIONS.map(({ fighter: f }) => (
+                    <li key={f.id} className="flex flex-col items-center gap-1 text-center">
+                      <Portrait id={f.id} element={f.element} profession={f.profession} className="size-14 xl:size-16" />
+                      <span className="text-xs leading-tight text-on-wood-soft">{f.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            {/* Nghề: lưới thẻ, mỗi thẻ icon lớn, tên và vai trò. */}
+            <h3 className="mt-10 mb-4 font-serif text-xl font-bold">{PROFESSIONS.length} nghề, mỗi nghề một vai</h3>
+            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {PROFESSIONS.map((p) => (
+                <li key={p} className="flex items-center gap-3 rounded-2xl fx-panel p-4">
+                  <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-black/30 ring-1 ring-frame-gold/40">
+                    <ProfessionIcon profession={p} className="size-9" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-serif text-lg font-bold">{PROFESSION_NAME[p]}</span>
+                    <span className="block text-sm leading-snug text-on-wood-soft">{PROFESSION_ROLE[p]}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+            {/* Hệ: bảy thẻ, mỗi thẻ viền màu của hệ, tính cách và hệ nó khắc. */}
+            <div className="mt-10 mb-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+              <h3 className="font-serif text-xl font-bold">{ELEMENTS.length} hệ, tương khắc tương sinh</h3>
+              <Link href="/cam-nang#elements" className="text-sm text-frame-gold underline underline-offset-2 hover:brightness-125">
+                Xem kỹ năng từng hệ ở Cẩm nang ›
+              </Link>
+            </div>
+            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
+              {ELEMENTS.map((e) => {
+                const counters = ELEMENTS.filter((o) => elementRelation(e, o) === "counter");
+                return (
+                  <li key={e} className="flex flex-col items-center gap-2 rounded-2xl fx-panel border-t-4 p-4 text-center" style={{ borderTopColor: ELEMENT_COLOR[e] }}>
+                    <ElementIcon element={e} className="size-12" />
+                    <span className="font-serif text-lg font-bold">{ELEMENT_NAME[e]}</span>
+                    <span className="text-sm leading-snug text-on-wood-soft">{ELEMENT_TRAIT[e].role}</span>
+                    <span className="mt-auto flex flex-wrap items-center justify-center gap-1 text-xs text-on-wood-soft">
+                      Khắc
+                      {counters.map((o) => (
+                        <span key={o} className="inline-flex items-center gap-0.5 font-semibold text-on-wood">
+                          <ElementIcon element={o} className="size-3.5" />
+                          {ELEMENT_NAME[o]}
+                        </span>
+                      ))}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </section>
+
+        <section id="faq" aria-labelledby="faq-title" className="scroll-mt-16 px-4 py-16">
+          <SectionTitle id="faq-title" kicker="Hỏi đáp" title="Câu hỏi thường gặp" />
+          <div className={`mx-auto grid items-start gap-3 lg:grid-cols-2 ${SITE_WIDTH}`}>
             {FAQ.map((f) => (
               <details key={f.q} className="group rounded-xl fx-panel px-5 py-4">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
@@ -498,58 +351,20 @@ export default function Home() {
         </section>
 
         <section className="px-4 pb-20 pt-6">
-          <div className="fx-panel-hi relative mx-auto max-w-4xl overflow-hidden rounded-3xl px-6 py-12 text-center">
-            <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 w-[640px] -translate-x-1/2 -translate-y-1/2 opacity-[0.12]">
+          <div className={`fx-panel-hi relative mx-auto overflow-hidden rounded-3xl px-6 py-14 text-center md:py-20 ${SITE_WIDTH}`}>
+            <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 w-[640px] -translate-x-1/2 -translate-y-1/2 opacity-[0.12] md:w-[900px]">
               <DrumFace className="h-auto w-full" />
             </div>
             <h2 className="fx-gilt-text relative text-heading">Phất cờ lau, ra trận</h2>
-            <p className="relative mx-auto mt-3 max-w-md text-on-wood-soft">Một trận chơi thử chỉ mất vài phút, ngay trên trình duyệt.</p>
-            <PlayButton className="relative mt-6 text-base">Chơi thử miễn phí</PlayButton>
+            <p className="relative mx-auto mt-3 max-w-xl text-lg text-on-wood-soft">Chọn một chế độ và vào ngay trên trình duyệt, không cần tài khoản. Mỗi chế độ có màn Hướng dẫn riêng trước khi chơi.</p>
+            <PlayButton className="relative mt-6 text-base">Chơi ngay</PlayButton>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-frame-gold/25 px-4 py-8 text-sm text-on-wood-soft/90">
-        {/* Hai cột: trái là nhận diện, điều hướng và lưu ý (căn theo đầu thư cuộn); phải là thư cuộn liên hệ, trên điện thoại thư cuộn lên trước. */}
-        <div className="mx-auto grid max-w-6xl 2xl:max-w-[96rem] gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-start lg:gap-12">
-          <div className="order-2 flex flex-col gap-4 lg:order-1 lg:pt-6">
-            <div className="flex items-center gap-4">
-              <LogoMark className="size-14" />
-              <div>
-                <p className="font-serif text-2xl font-bold text-on-wood">Cờ Lau</p>
-                <p className="mt-0.5 text-base">Trò chơi nhỏ thuộc ShanVerse</p>
-              </div>
-            </div>
-            <ul className="grid grid-cols-2 gap-x-6 border-y border-frame-gold/20 py-3 text-base sm:grid-cols-3">
-              {NAV.map((n) => (
-                <li key={n.href}>
-                  <a href={n.href} className="inline-flex min-h-11 items-center hover:text-[var(--primary)]">
-                    {n.label}
-                  </a>
-                </li>
-              ))}
-              {[
-                { href: "/game", label: "Vào game" },
-                { href: "/game/practice", label: "Thao Luyện" },
-                { href: "/game/login", label: "Trình danh" },
-                { href: "/game/register", label: "Ghi danh" },
-              ].map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className="inline-flex min-h-11 items-center hover:text-[var(--primary)]">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <p className="max-w-md leading-relaxed">
-              Bối cảnh và tên nhân vật lịch sử là lịch sử chung; tính cách, kỹ năng và lời thoại trong game là hư cấu.
-            </p>
-          </div>
-          <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
-            <ContactBlock links={socialLinks()} />
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
+      <MobilePlayBar />
     </div>
   );
 }
+

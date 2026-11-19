@@ -71,10 +71,11 @@ export function useBattleKeyboard({
         D: [0, 1],
       };
       const dir = dirs[e.key];
-      if (whirlAim?.center && /^[qe]$/i.test(e.key)) {
+      // Lốc xoáy chỉ xoay theo chiều kim đồng hồ (Shan 20/11/2026): E một nấc, Shift+E hai nấc nếu kỹ năng cho phép.
+      if (whirlAim?.center && /^e$/i.test(e.key)) {
         e.preventDefault();
-        const turns = (e.key.toLowerCase() === "e" ? 1 : -1) * (e.shiftKey ? 2 : 1);
-        if (Math.abs(turns) <= whirlAim.max) spinWhirl(turns);
+        const turns = e.shiftKey ? 2 : 1;
+        if (turns <= whirlAim.max) spinWhirl(turns);
         return;
       }
       if (aim?.choose && aim.target === undefined) {
