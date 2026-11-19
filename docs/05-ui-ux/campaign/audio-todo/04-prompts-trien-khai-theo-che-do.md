@@ -1,7 +1,7 @@
 # Prompt triển khai âm thanh theo chế độ chơi
 
 > Cập nhật: 19/11/2026
-> Trạng thái: **DRAFT** — bộ prompt để giao việc và tạo âm thanh ([README](README.md)); A1–A4 đã thực hiện (02/11/2026), Sử Lộ và Do Thám đã nối (19/11/2026); A5–A9 và phần lớn tệp âm thanh (B) chưa. Phần còn thiếu theo từng màn ở [README](README.md#hiện-trạng-rà-lại-19112026); prompt cho phần đó ở A6–A9 và B6–B9. Kiến trúc, quy ước tệp và bảng cue ở [02-architecture-and-assets.md](02-architecture-and-assets.md) (nguồn chính, không lặp ở đây).
+> Trạng thái: **DRAFT** — bộ prompt để giao việc và tạo âm thanh ([README](README.md)); A1–A4 đã thực hiện (02/11/2026), Sử Lộ và Do Thám đã nối (19/11/2026); A5, mục D và phần lớn tệp âm thanh (B) chưa. Phần còn thiếu theo từng màn ở [README](README.md#hiện-trạng-rà-lại-19112026); prompt chi tiết và thứ tự làm phần đó ở [mục D](#d-lộ-trình-phần-còn-thiếu-19112026), prompt tạo tệp ở B6–B9. Kiến trúc, quy ước tệp và bảng cue ở [02-architecture-and-assets.md](02-architecture-and-assets.md) (nguồn chính, không lặp ở đây).
 
 Hai nhóm prompt: **A** giao cho Claude Code/Codex để viết code (theo thứ tự AUD-02 → AUD-03 → AUD-04), **B** dán vào công cụ tạo âm thanh để có tệp. Làm A1 trước, có tệp tạm hoặc im lặng đều chạy được; B làm song song.
 
@@ -37,29 +37,9 @@ Nối âm thanh vào trận đánh theo mục 5.3 của 02-architecture-and-asse
 Nối nhạc nền và ambience theo mục 5.4 và 5.5: bản đồ toàn cảnh (atlas), thoại chữ (nhạc nhỏ, không át chữ), chuẩn bị trận, kết cục; nhạc riêng cho Tháp Thí Luyện, Tháp Vận Mệnh, Sinh tồn, Đấu trường; cue riêng (atlas.select, dialogue.next, tower.floor, destiny.choose, survival.wave, survival.warn, daily.complete, arena.rank). Đổi scene thì crossfade 800 ms, không cắt đột ngột; tab ẩn thì tạm dừng. Mỗi scene khai báo bộ nhạc của nó ở một chỗ (cues.ts hoặc scene.ts) thay vì rải rác trong từng màn.
 ```
 
-### A6. Khai Lộ (`khailo.*`)
+### A6–A9. Phần còn thiếu
 
-```
-Nối âm thanh vào Khai Lộ (src/app/game/khai-lo/KhaiLoScreen.tsx) theo cách đã làm ở Sử Lộ và Do Thám (su-lo/sounds.ts, do-tham/sounds.ts): viết src/app/game/khai-lo/sounds.ts ánh xạ thuần KlEvent (removed, whirled, thundered, undone, levelDone, over, newLevel) và KlReason sang cue khailo.*; removed cao dần theo số ô xóa (rate theo cells.length, khối lớn thêm một tiếng ngân); Cấp tốc còn 5 giây thì mõ nhịp (khailo.tick). Nhạc khai_lo: một bài cho cả màn, đặt SELF cho KHAI_LO trong audio/sceneMusic.ts. Thêm hằng vào audio/cues.ts, dòng manifest trỏ tạm về tệp sẵn có, bảng 5.8 trong 02-architecture-and-assets.md, test tests/game/khai-lo-sounds.test.ts.
-```
-
-### A7. Tầm Tướng Ký (`ttk.*`)
-
-```
-Nối âm thanh vào Tầm Tướng Ký (src/app/game/tam-tuong-ky/TamTuongKyScreen.tsx). Luật chạy ở server; chỉ phát cue khi server đã trả kết quả (không phát lúc đang chờ). Cue: ttk.slot (đặt nguyên liệu vào Đài Hợp Nguyên), ttk.miss (kết quả miss hoặc noRecipe), ttk.new (khám phá nguyên liệu mới), ttk.hero (ra tướng, dài và trang trọng hơn), ttk.invalid, ttk.hint (dùng gợi ý). Nhạc tam_tuong_ky, SELF cho TAM_TUONG_KY trong sceneMusic.ts. Viết tam-tuong-ky/sounds.ts thuần (kết quả server -> cue) kèm test; bảng 5.9 trong 02-architecture-and-assets.md.
-```
-
-### A8. Viễn Chinh, màn sa bàn (`expedition.*`)
-
-```
-Nối âm thanh màn sa bàn Viễn Chinh (src/app/game/expedition/ExpeditionScreen.tsx); trận đánh mở từ đây đã có tiếng qua DemoGame, không đụng. Cue khi server trả kết quả điều quân: expedition.move (kind moved), expedition.blocked (kind blocked), expedition.battle (kind battle, trống thúc trước khi vào trận), expedition.capture (chiếm điểm), expedition.win / expedition.lose (kết thúc chiến dịch). Nhạc expedition cho màn sa bàn (EXPEDITION trong sceneMusic.ts; nếu cần đổi nhạc theo pha thì SELF). Hàm thuần + test; bảng 5.10.
-```
-
-### A9. Nhật Lệnh, cue chung UI và cue trận còn thiếu
-
-```
-(1) Nhật Lệnh: thêm nhạc daily cho phân cảnh DAILY trong sceneMusic.ts (sửa test scene-audio đang ghi DAILY im lặng); cue daily.checkin khi điểm danh, ui.reward khi nhận thưởng nhiệm vụ ngày. (2) Cue UI chung: nối ui.click/ui.back/ui.error vào component nút dùng chung (src/components/ui) bằng prop tắt được, không phát trên nút trong bàn cờ đã có tiếng riêng; ui.reward ở mọi chỗ nhận thưởng; ui.levelup khi lên cấp. (3) Trận đánh: thêm battle.crit (sự kiện damage có cờ chí mạng), battle.turn (đổi lượt), battle.timer (đồng hồ 30 giây còn 5 giây) vào battle/sounds.ts. (4) Ngoài trận: music prep (màn chuẩn bị trận), atlas.unlock, ending_* theo cấp độ lịch sử, tower.floor, tower.firstclear, destiny.choose, destiny.fail, arena.ghost. Mỗi nhóm một commit, có test.
-```
+Prompt chi tiết từng bước và thứ tự làm ở [mục D](#d-lộ-trình-phần-còn-thiếu-19112026).
 
 ### A5. Giọng đọc nhân vật (AUD-05/06, làm sau cùng)
 
@@ -190,7 +170,7 @@ Hiện cue `sulo.*` và `dotham.*` mượn tệp Trận Đồ và trận đánh 
 | `dotham.trap` | A hidden pit trap collapsing with a heavy thump and falling dirt, 0.8 s. |
 | `dotham.win` / `dotham.lose` | Win: a scout's horn and a bright flute phrase, 3 s. Lose: a low drum and fading flute, 2.5 s. |
 
-### B8. Hiệu ứng cho Khai Lộ, Tầm Tướng Ký, Viễn Chinh (dùng khi làm A6–A8)
+### B8. Hiệu ứng cho Khai Lộ, Tầm Tướng Ký, Viễn Chinh (dùng ở D4–D6)
 
 | Cue | Prompt (ghép sau B1) |
 |---|---|
@@ -200,16 +180,20 @@ Hiện cue `sulo.*` và `dotham.*` mượn tệp Trận Đồ và trận đánh 
 | `khailo.whirl` / `khailo.thunder` | Whirl: a spinning wind vortex, 0.8 s. Thunder: a sharp lightning crack shattering tiles, 0.8 s. |
 | `khailo.undo` | A quick reversed whoosh, 0.3 s. |
 | `khailo.tick` | One quiet wooden clapper tick, 0.2 s. |
-| `khailo.levelDone` / `khailo.over` | Level done: an ascending jade chime phrase, 2 s. Over: a soft falling đàn tranh phrase, 2 s. |
-| `ttk.slot` | A small ingredient placed into a bronze offering bowl, 0.3 s. |
+| `khailo.reject` | A dull muted jade knock, 0.2 s. |
+| `khailo.leveldone` / `khailo.over` | Level done: an ascending jade chime phrase, 2 s. Over: a soft falling đàn tranh phrase, 2 s. |
+| `ttk.slot` / `ttk.unslot` | Slot: a small ingredient placed into a bronze offering bowl, 0.3 s. Unslot: the ingredient lifted out with a soft rattle, 0.25 s. |
 | `ttk.miss` | Smoke puffing out of a bronze altar with a dull hum, 0.8 s. |
+| `ttk.known` | A short familiar bronze chime, already discovered, 0.5 s. |
+| `ttk.reject` | A dull wooden knock on the altar, 0.2 s. |
 | `ttk.new` | A bright mystical chime with a swirl of light, 1 s. |
 | `ttk.hero` | A deep gong, a rising flute phrase and a heroic drum hit, a hero appearing, 2.5 s. |
 | `ttk.hint` | A soft wind chime, 0.5 s. |
 | `expedition.move` | A marching column of footsteps and a banner flap, 0.8 s. |
-| `expedition.blocked` | A wooden barricade knock and a horse snort, 0.5 s. |
+| `expedition.blocked` / `expedition.tide` | Blocked: a wooden barricade knock and a horse snort, 0.5 s. Tide: waves rushing over a sandbar, 1 s. |
 | `expedition.battle` | Two war drums pounding and a horn call, 1.5 s. |
 | `expedition.capture` | A banner planted into the ground with a short drum flourish, 1 s. |
+| `expedition.win` / `expedition.lose` | Win: a long victory horn over drums, 3 s. Lose: a retreat gong and fading drums, 2.5 s. |
 
 ### B9. Nhạc còn thiếu
 
@@ -236,4 +220,199 @@ Nhạc ghép phong cách B3 (nhạc cụ Việt cổ, không lời, vòng lặp 
 3. B4 và A3 (trận đánh, chiếm nhiều cue nhất).
 4. B5 và A4 (nhạc theo chế độ).
 5. A5 chỉ sau khi duyệt Voice Bible.
-6. (19/11/2026) B7 và B9 cho Sử Lộ, Do Thám để thay tệp mượn; A6 (Khai Lộ) cùng B8; A7, A8; A9 cùng B6.
+6. Phần còn thiếu (19/11/2026): theo [mục D](#d-lộ-trình-phần-còn-thiếu-19112026).
+
+## D. Lộ trình phần còn thiếu (19/11/2026)
+
+Hiện trạng từng màn ở [README](README.md#hiện-trạng-rà-lại-19112026). Mỗi bước dưới đây gồm: việc của Shan (tạo tệp bằng prompt B), prompt giao Claude/Codex (dán nguyên khối, kèm khối "Quy tắc chung" ở đầu mục A), và điều kiện coi là xong. Làm theo thứ tự; bước có ghi "song song" làm cùng lúc được.
+
+### Thứ tự và lý do
+
+| Bước | Việc | Loại | Vì sao ở vị trí này |
+|---|---|---|---|
+| D0 | Quy trình đưa tệp vào repo | Quy ước | Mọi bước có tệp đều dùng |
+| D1 | Tệp riêng cho Sử Lộ, Do Thám | Chỉ tệp | Code đã nối, chỉ thay manifest; thấy kết quả ngay |
+| D2 | Tệp trận đánh còn thiếu | Chỉ tệp | Trận đánh dùng ở 7 chế độ; code đã nối |
+| D3 | Nhạc đã nối mà chưa có tệp (song song D2) | Chỉ tệp | Tháp, Trận Đồ, kết cục, âm nền bản đồ đang im |
+| D4 | Khai Lộ | Code + tệp | Chế độ chơi thử offline, im hoàn toàn, engine đã có `KlEvent` nên dễ nối |
+| D5 | Tầm Tướng Ký | Code + tệp | Im hoàn toàn; kết quả do server trả nên cần cẩn thận thời điểm phát |
+| D6 | Viễn Chinh, màn sa bàn | Code + tệp | Trận đã có tiếng, chỉ thiếu sa bàn |
+| D7 | Nhật Lệnh và điểm danh | Code + tệp | Màn phụ, ít cue |
+| D8 | Tiếng giao diện chung | Code + tệp | Đụng component dùng chung, làm sau khi các màn ổn để tránh chồng tiếng |
+| D9 | Cue trận còn thiếu: chí mạng, đổi lượt, đồng hồ | Code + tệp | Cần kiểm dữ liệu sự kiện core |
+| D10 | Cue ngoài trận còn thiếu: chuẩn bị, kết cục theo cấp, Tháp, Đấu trường | Code + tệp | Đánh bóng, ưu tiên P2 |
+| D11 | Chuẩn hóa và QA toàn bộ (AUD-07) | Kiểm tra | Làm cuối khi đã đủ tệp |
+
+### D0. Quy trình đưa tệp vào repo
+
+1. Dán prompt B (khối B1 + dòng của cue) vào công cụ tạo âm thanh. Gemini trả một đoạn khoảng 1 phút gồm nhiều tiếng; công cụ SFX khác trả từng tiếng.
+2. Cắt hiệu ứng: `python3 scripts/slice-sfx.py <tệp> public/audio/sfx/<chế-độ> <tên> <số biến thể> <độ dài giây>`. Ví dụ Sử Lộ: `python3 scripts/slice-sfx.py roll.mp3 public/audio/sfx/su-lo roll 3 0.8`.
+3. Làm vòng lặp nhạc: `python3 scripts/make-music-loop.py <tệp> public/audio/music/<tên> [cắt đuôi giây] [trộn giây] [LUFS]` (mặc định 6, 3, -18). Âm nền làm tương tự vào `public/audio/amb/`.
+4. Sửa dòng của cue trong `public/audio/manifest.json` trỏ sang tệp mới (bỏ tệp mượn), ghi nguồn vào `public/audio/CREDITS.md`, sửa cột "Tệp tạm" ở bảng 5.x của [02](02-architecture-and-assets.md).
+5. Chạy `pnpm test` (test manifest kiểm tệp có thật) rồi nghe thử trên máy.
+
+Có thể giao bước 2–5 cho Claude: gửi tệp gốc kèm prompt:
+
+```
+Đây là tệp âm thanh gốc cho các cue <danh sách cue>. Cắt và chuẩn hóa theo D0 trong docs/05-ui-ux/campaign/audio-todo/04-prompts-trien-khai-theo-che-do.md (slice-sfx.py cho hiệu ứng, make-music-loop.py cho nhạc), chọn tiếng sạch nhất, mỗi cue 2–3 biến thể. Sửa manifest trỏ sang tệp mới, xóa tệp mượn nếu không cue nào dùng nữa, ghi CREDITS.md, cập nhật cột "Tệp tạm" ở bảng tương ứng trong 02-architecture-and-assets.md và bảng Hiện trạng ở README. Báo lại thời điểm cắt và điểm số từng tiếng để tôi nghe lại.
+```
+
+### D1. Tệp riêng cho Sử Lộ và Do Thám
+
+- **Shan tạo tệp:** B7 (24 hiệu ứng), B9 dòng `sulo_maze`, `sulo_boss`, `dotham`.
+- **Giao Claude:** prompt D0 với danh sách `sulo.*`, `dotham.*`, `music/sulo_maze`, `music/sulo_boss`, `music/dotham`; tệp đặt ở `sfx/su-lo/`, `sfx/do-tham/`.
+- **Xong khi:** manifest không còn cue `sulo.*`/`dotham.*` trỏ về `sfx/formation` hay `sfx/battle`; bảng 5.6, 5.7 bỏ cột "Tệp tạm".
+
+### D2. Tệp trận đánh còn thiếu
+
+- **Shan tạo tệp:** B4 dòng `match3` (phần `match4`, `match5`, `combo1..4`), B6 dòng `battle.ultimate`, `heal`, `shield`, `buff`, `debuff`, `burn`, `freeze`, `poison`. Nếu muốn tách tiếng theo nghề/hệ: B4 dòng `battle.hit.<nghe>` và `battle.skill.<he>` (hiện 8 nghề và 7 hệ dùng chung một bộ).
+- **Giao Claude:** prompt D0 với các cue trên; tệp ở `sfx/battle/`. Riêng `match4`, `match5` khi có tệp riêng thì bỏ `rate` 1,08/1,16 trong `frameCue` (`src/app/game/battle/sounds.ts`) và sửa test `tests/game/battle-sounds.test.ts`.
+- **Xong khi:** mọi cue trong `BATTLE_CUES` có dòng manifest; chơi một trận Giao Tranh nghe đủ combo, tuyệt chiêu, hồi máu, khiên, hiệu ứng trạng thái.
+
+### D3. Nhạc đã nối mà chưa có tệp (song song D2)
+
+- **Shan tạo tệp:** B3 (`formation_play`, `formation_play_layer2`, `formation_result_win`, `formation_result_lose`), B5 (`tower_trial`, `tower_destiny`), B9 (`ending`, `amb/atlas`).
+- **Giao Claude:** prompt D0. Thêm: `formation_play_layer2` khai báo là trường `layer` của mục `formation_play` trong manifest (không phải mục riêng); `formation_result_*` và `ending` đặt `"loop": false` nếu bản nhạc có kết thúc; âm nền `atlas` thêm vào mục `ambience` của manifest.
+- **Xong khi:** Trận Đồ đổi nhạc giữa chọn bậc, đang chơi, kết quả; lớp căng thẳng to dần theo mức Bỏ Lệnh; Tháp có nhạc; bản đồ Bình Loạn có gió và chim.
+
+### D4. Khai Lộ (`khailo.*`)
+
+- **Shan tạo tệp (có thể sau khi code xong, cue im lặng vẫn chạy):** B8 dòng `khailo.*`, B9 dòng `khai_lo`.
+- **Prompt code:**
+
+```
+Nối âm thanh cho Khai Lộ (src/app/game/khai-lo/KhaiLoScreen.tsx; luật ở src/core/khai-lo/engine.ts, GDD docs/02-game-modes/khai-lo/gdd.md). Làm theo mẫu đã có ở src/app/game/su-lo/sounds.ts và src/app/game/do-tham/sounds.ts.
+
+1. Viết src/app/game/khai-lo/sounds.ts, hàm thuần không đụng AudioContext:
+   - cuesForEvents(events: readonly KlEvent[], before: KlState, after: KlState): CuePlay[] với CuePlay = { id: CueId; rate?: number }.
+   - removed: khailo.remove, rate tăng theo cells.length (2 ô = 1, mỗi ô thêm +0,02, trần 1,25); khối từ 8 ô trở lên thêm khailo.big. Ô rơi và cột dồn: khailo.fall phát sau tiếng xóa (độ trễ do màn quyết định, khớp thời lượng hoạt ảnh rơi hiện có).
+   - whirled: khailo.whirl. thundered: khailo.thunder. undone: khailo.undo.
+   - levelDone: khailo.leveldone. over: khailo.over. newLevel: không có tiếng riêng (nhạc vẫn chạy).
+   - Lệnh bị từ chối (KlReason single, empty, noTool, edge, noUndo): khailo.reject; notPlaying và outOfBounds im lặng.
+   - Mỗi id chỉ một lần trong một lô sự kiện.
+   - KHAILO_PRELOAD và musicFor(): một bài khai_lo cho cả màn.
+2. Cấp tốc (mode "timed"): còn 5 giây cuối thì mỗi giây một tiếng khailo.tick; chỉ khi tab đang hiện và ván đang chạy; không phát lại khi nạp ván dở.
+3. Trong KhaiLoScreen: dùng useAudio(); gọi preload một lần; playMusic("khai_lo") khi mount, stopMusic(600) khi rời; ở hàm commit (nơi đang nhận events) phát cue, các cue sau cách nhau khoảng 200 ms để không chồng.
+4. audio/cues.ts: thêm KHAILO_CUES (khailo.remove, khailo.big, khailo.fall, khailo.whirl, khailo.thunder, khailo.undo, khailo.reject, khailo.tick, khailo.leveldone, khailo.over) vào CUE_IDS và "khai_lo" vào MUSIC_IDS. audio/sceneMusic.ts: KHAI_LO là SELF.
+5. public/audio/manifest.json: nếu chưa có tệp riêng thì trỏ tạm về tệp sẵn có (remove -> sfx/battle/match3, big -> sfx/formation/line, fall -> sfx/battle/swap, whirl -> sfx/formation/fogclear, thunder -> sfx/battle/skill, undo -> sfx/formation/eraser, reject -> sfx/formation/reject, tick -> sfx/formation/tick, leveldone -> sfx/formation/win, over -> sfx/formation/lose; nhạc khai_lo -> music/formation_menu) và ghi chú ở CREDITS.md.
+6. Tài liệu: thêm bảng 5.8 Khai Lộ vào 02-architecture-and-assets.md (cue, khi nào, tệp tạm, ưu tiên), sửa bảng Hiện trạng ở README.md.
+7. Test tests/game/khai-lo-sounds.test.ts: chơi một ván bằng engine (chọn khối lớn nhất mỗi lượt) tới khi qua màn, gom cue và kiểm mọi id thuộc CUE_IDS, có khailo.remove và khailo.leveldone; khối lớn có rate cao hơn khối nhỏ; lệnh bị từ chối ra khailo.reject; manifest có dòng cho mọi KHAILO_CUES. Sửa tests/game/scene-audio.test.ts cho KHAI_LO.
+8. Chạy pnpm check và pnpm e2e.
+```
+
+- **Xong khi:** chơi Khai Lộ cả Thường lẫn Cấp tốc nghe đủ tiếng xóa, rơi, công cụ, qua màn, hết ván; tắt tiếng thì im.
+
+### D5. Tầm Tướng Ký (`ttk.*`)
+
+- **Shan tạo tệp:** B8 dòng `ttk.*`, B9 dòng `tam_tuong_ky`.
+- **Prompt code:**
+
+```
+Nối âm thanh cho Tầm Tướng Ký chế độ Thường và Hạng (src/app/game/tam-tuong-ky/TamTuongKyScreen.tsx, client.ts; luật FROZEN ở docs/02-game-modes/tam-tuong-ky/design-freeze.md, giao diện docs/05-ui-ux/screens/tam-tuong-ky.md). Luật chạy ở server (src/server/tamTuongKy.ts): KHÔNG đổi server, chỉ phát tiếng khi màn đã nhận phản hồi.
+
+1. src/app/game/tam-tuong-ky/sounds.ts, hàm thuần:
+   - cueForCombine(result): kết quả ghép do server trả. kind "miss" hoặc status "noRecipe" -> ttk.miss; kind "new" (khám phá nguyên liệu mới) -> ttk.new; kind "hero" (ra tướng) -> ttk.hero; status "invalid" -> ttk.reject; đã khám phá trước đó (không mới) -> ttk.known. Có points > 0 ở chế độ Hạng thì thêm ui.reward sau tiếng chính.
+   - Đặt nguyên liệu vào ô Đài Hợp Nguyên: ttk.slot; gỡ hoặc đổi chỗ: ttk.unslot.
+   - Dùng gợi ý: ttk.hint. Mở thẻ thông tin ở Vạn Vật Lục hay Tướng Lục: không tiếng (tránh ồn).
+   - musicFor(): một bài tam_tuong_ky.
+2. Trong màn: tiếng ttk.slot/unslot phát ngay khi người chơi thao tác (thao tác cục bộ). Tiếng kết quả phát khi promise trả về và chỉ khi component còn mount; lỗi mạng thì ttk.reject. Không phát gì khi tải lại view từ server lúc vào màn.
+3. Nếu màn có hoạt ảnh lóe sáng khi khám phá (setFlash) thì tiếng ttk.new/ttk.hero phát cùng lúc với lóe sáng, không trước.
+4. cues.ts: TTK_CUES (ttk.slot, ttk.unslot, ttk.miss, ttk.known, ttk.new, ttk.hero, ttk.reject, ttk.hint), MUSIC_IDS thêm tam_tuong_ky; sceneMusic.ts: TAM_TUONG_KY là SELF (hoặc trả thẳng tam_tuong_ky nếu một bài cho cả màn là đủ, khi đó không cần SELF).
+5. Manifest tạm khi chưa có tệp: slot -> sfx/formation/place, unslot -> sfx/battle/swap, miss -> sfx/formation/reject, known -> sfx/formation/match, new -> sfx/formation/fusion, hero -> sfx/formation/win, reject -> sfx/battle/invalid, hint -> sfx/formation/fogclear; nhạc -> music/dialogue.
+6. Tài liệu: bảng 5.9 trong 02-architecture-and-assets.md, Hiện trạng ở README.md; nếu docs/05-ui-ux/screens/tam-tuong-ky.md có mục âm thanh thì link sang bảng 5.9.
+7. Test tests/game/tam-tuong-ky-sounds.test.ts cho từng loại kết quả (miss, noRecipe, new, hero, invalid, đã biết), có điểm thì thêm ui.reward; manifest có dòng cho mọi TTK_CUES. Chạy pnpm check và pnpm e2e (có test e2e Tầm Tướng Ký).
+```
+
+- **Xong khi:** ghép trượt, ghép ra nguyên liệu mới, ra tướng mỗi loại một tiếng khác nhau; không có tiếng khi vừa vào màn.
+
+### D6. Viễn Chinh, màn sa bàn (`expedition.*`)
+
+- **Shan tạo tệp:** B8 dòng `expedition.*`, B9 dòng `expedition`.
+- **Prompt code:**
+
+```
+Nối âm thanh màn sa bàn Viễn Chinh (src/app/game/expedition/ExpeditionScreen.tsx; GDD docs/02-game-modes/expedition/01-vien-chinh-gdd.md, Cửa Biển 03-cua-bien-thiet-ke.md). Mọi luật ở server (/api/expedition); trận đánh mở từ sa bàn đi qua DemoGame và đã có tiếng, không đụng.
+
+1. src/app/game/expedition/sounds.ts, hàm thuần cueForResult(result: ApiResult, before, after):
+   - kind "moved": expedition.move; nếu sau nước đi có điểm đổi chủ (so before/after) thì thêm expedition.capture.
+   - kind "blocked": expedition.blocked (reason "tide" ở Cửa Biển dùng expedition.tide nếu có tệp, không thì blocked).
+   - kind "battle": expedition.battle phát ngay trước khi chuyển sang trận (chờ khoảng 600 ms để tiếng kịp vang rồi mới chuyển, hoặc phát song song nếu chuyển cảnh đã có độ trễ).
+   - Kết thúc chiến dịch thắng/thua (khi view báo run xong): expedition.win / expedition.lose.
+   - Lỗi server (ERROR_TEXT): ui.error.
+   - Chọn đạo quân, chọn ô: ui.click (nếu D8 chưa làm thì tạm im lặng).
+2. Nhạc expedition cho phân cảnh EXPEDITION; khi rời sang trận thì DemoGame tự đổi nhạc, khi quay về sa bàn thì nhạc expedition chạy lại. Kiểm kỹ không chồng hai bài.
+3. cues.ts: EXPEDITION_CUES (expedition.move, expedition.capture, expedition.blocked, expedition.tide, expedition.battle, expedition.win, expedition.lose), MUSIC_IDS thêm expedition; sceneMusic.ts: EXPEDITION -> { music: "expedition" }.
+4. Manifest tạm: move -> sfx/formation/place, capture -> sfx/formation/line, blocked và tide -> sfx/formation/reject, battle -> sfx/formation/flame3, win -> sfx/battle/win, lose -> sfx/battle/lose; nhạc -> music/battle_normal hạ âm lượng 0,35 (hoặc music/atlas).
+5. Tài liệu bảng 5.10, Hiện trạng ở README. Test tests/game/expedition-sounds.test.ts cho từng kind và kết thúc; sửa scene-audio test. pnpm check, pnpm e2e.
+```
+
+- **Xong khi:** đi quân, bị chặn, vào trận, chiếm điểm có tiếng; vào trận rồi quay lại sa bàn nhạc đổi đúng.
+
+### D7. Nhật Lệnh và điểm danh
+
+- **Shan tạo tệp:** B6 dòng `daily.complete`, `daily.checkin`, `ui.reward`; B9 dòng `daily`.
+- **Prompt code:**
+
+```
+Nối âm thanh màn Nhật Lệnh (src/app/game/daily/DailyScreen.tsx) và bảng điểm danh (src/app/game/quests/CheckInPanel.tsx, dùng ở Nhật Lệnh).
+
+1. Nhạc daily cho phân cảnh DAILY trong audio/sceneMusic.ts; sửa tests/game/scene-audio.test.ts (đang ghi DAILY im lặng). Trận Nhật Lệnh vẫn dùng nhạc trận của DemoGame.
+2. Cue: daily.checkin khi điểm danh thành công (sau phản hồi server); ui.reward khi nhận thưởng nhiệm vụ ngày; ui.error khi server từ chối. daily.complete đã nối trong DemoGame, chỉ cần tệp.
+3. cues.ts thêm daily.checkin; MUSIC_IDS thêm daily. Manifest tạm: checkin -> sfx/formation/rank, ui.reward -> sfx/formation/match, daily.complete -> sfx/formation/win; nhạc daily -> music/formation_menu.
+4. Tài liệu: thêm dòng vào bảng 5.5 và Hiện trạng ở README. Test hàm thuần (nếu có) và scene-audio. pnpm check, pnpm e2e (có test điểm danh ở Nhật Lệnh).
+```
+
+### D8. Tiếng giao diện chung (`ui.*`)
+
+- **Shan tạo tệp:** B6 dòng `ui.click`, `ui.back`, `ui.open`, `ui.close`, `ui.error`, `ui.reward`, `ui.levelup`.
+- **Prompt code:**
+
+```
+Nối tiếng giao diện chung theo bảng 5.1 của 02-architecture-and-assets.md.
+
+1. Component nút dùng chung (src/components/ui: Button, ChoiceChip và các tab): thêm prop sound?: "click" | "back" | false, mặc định "click"; nút có variant quay lại/đóng dùng "back". Phát qua useAudio() ở onPointerDown hoặc onClick (chọn một, không cả hai), không phát khi disabled.
+2. Tắt tiếng mặc định (sound={false}) cho mọi nút đã có tiếng riêng: ô bàn cờ trận đánh, Trận Đồ, Sử Lộ, Do Thám, Khai Lộ, Tầm Tướng Ký, sa bàn Viễn Chinh. Rà bằng grep các màn đã gọi useAudio.
+3. Hộp thoại dùng chung: ui.open khi mở, ui.close khi đóng.
+4. ui.reward ở mọi chỗ nhận thưởng (Ban Thưởng, nhiệm vụ, cửa hàng mua thành công); ui.levelup khi lên cấp tài khoản hoặc tướng; ui.error khi API trả lỗi ở các form (đăng nhập, mua hàng).
+5. Không phát tiếng ở trang ngoài /game (AudioProvider chỉ bọc /game, useAudio ngoài đó đã im).
+6. cues.ts thêm ui.open, ui.close, ui.levelup. Manifest tạm: click -> sfx/battle/swap (âm lượng 0,5), back -> sfx/battle/invalid (0,5), open và close -> sfx/formation/fogclear (0,4), error -> sfx/formation/reject, reward -> sfx/formation/rank, levelup -> sfx/formation/fusion.
+7. Test: render Button với AudioProvider giả, kiểm phát đúng cue, disabled thì không phát, sound={false} thì không phát. pnpm check, pnpm e2e.
+```
+
+- **Xong khi:** bấm nút menu có tiếng gỗ nhẹ; trong bàn cờ không có tiếng bấm chồng lên tiếng chơi.
+
+### D9. Cue trận còn thiếu: chí mạng, đổi lượt, đồng hồ
+
+- **Shan tạo tệp:** B4 dòng `battle.damage`/`battle.crit` (phần chí mạng), B6 dòng `battle.turn`, `battle.timer`.
+- **Prompt code:**
+
+```
+Thêm ba cue trận đánh còn thiếu vào src/app/game/battle/sounds.ts và DemoGame.tsx (bảng 5.3 của 02-architecture-and-assets.md).
+
+1. battle.crit: kiểm BattleEvent "damage" trong src/core có thông tin chí mạng chưa. Nếu có thì damage chí mạng phát battle.crit thay battle.damage. Nếu chưa có: KHÔNG tự thêm vào core; dừng phần này và báo lại để Shan quyết (thêm cờ crit vào sự kiện là đổi contract core).
+2. battle.turn: khi sự kiện turnStart đổi phe (side khác lượt trước), một tiếng mõ; không phát ở lượt đầu trận và không phát khi đang tua lại/nạp trận.
+3. battle.timer: đồng hồ lượt (turn.deadline) còn 5 giây thì mỗi giây một tiếng, chỉ ở lượt của người chơi, dừng ngay khi người chơi đi.
+4. cues.ts thêm battle.crit, battle.turn, battle.timer vào BATTLE_CUES. Manifest tạm: crit -> sfx/battle/damage (rate cao hơn), turn -> sfx/formation/tick, timer -> sfx/formation/tick.
+5. Test trong tests/game/battle-sounds.test.ts cho từng cue. pnpm check, pnpm e2e.
+```
+
+### D10. Cue ngoài trận còn thiếu
+
+- **Shan tạo tệp:** B6 dòng `atlas.unlock`, `tower.*`, `destiny.*`, `arena.ghost`; B9 dòng `prep`; nhạc kết cục theo cấp nếu muốn (mỗi cấp một bản theo prompt `ending`, đổi tâm trạng).
+- **Prompt code:**
+
+```
+Nối các cue ngoài trận còn thiếu theo bảng 5.4 và 5.5 của 02-architecture-and-assets.md.
+
+1. music prep: màn chuẩn bị trận trong DemoGame (trước khi started) phát prep thay vì im; vào trận thì đổi nhạc trận như hiện tại.
+2. atlas.unlock: khi bản đồ Bình Loạn mở khu vực mới (src/app/game/campaign/WorldMap.tsx), chỉ lần đầu thấy, không phát lại khi tải trang.
+3. ending_<cấp>: CampaignEnding.tsx chọn nhạc theo cấp độ lịch sử của kết cục; thiếu tệp cấp nào thì dùng ending.
+4. tower.floor (lên tầng mới) và tower.firstclear (thưởng lần đầu) ở Tháp Thí Luyện (src/app/game/trial); destiny.choose (chọn thẻ/đội) và destiny.fail (thua tầng) ở Tháp Thiên Mệnh (src/app/game/destiny); arena.ghost khi ghép được đối thủ bóng ma ở Đấu trường (src/app/game/arena).
+5. Thêm id vào cues.ts và MUSIC_IDS; manifest tạm trỏ về tệp sẵn có, ghi CREDITS.md; cập nhật bảng 5.4, 5.5 (bỏ dòng "Chưa nối"). Hàm thuần + test cho phần chọn nhạc kết cục và điều kiện phát. pnpm check, pnpm e2e.
+```
+
+### D11. Chuẩn hóa và QA toàn bộ (AUD-07)
+
+```
+Rà toàn bộ public/audio theo mục 3 và 6 của 02-architecture-and-assets.md: đo LUFS từng tệp (nhạc khoảng -18, hiệu ứng đỉnh -1 dBTP và ngang nhau trong cùng bộ), kích thước (hiệu ứng < 60 KB, nhạc < 1,5 MB), đủ cặp .ogg/.m4a, CREDITS.md ghi đủ nguồn. Viết script scripts/audit-audio.py in bảng lệch chuẩn và sửa bằng ffmpeg. Thêm test kích thước tệp nếu chưa có. Lập danh sách kiểm tay (iOS Safari, Android Chrome, desktop; tab ẩn; tắt tiếng; lặp nhạc không hở; hai cue sát nhau không méo) vào README.md mục Hiện trạng, đánh dấu từng dòng sau khi Shan kiểm. Cuối cùng chuyển AUD-07 sang DONE và xóa các dòng "Tệp tạm" đã thay.
+```
