@@ -419,21 +419,23 @@
     },
     "sulo.counsel": {
       "files": [
-        "sfx/formation/fusion_a",
-        "sfx/formation/fusion_b"
+        "sfx/su-lo/counsel_a",
+        "sfx/su-lo/counsel_b",
+        "sfx/su-lo/counsel_c"
       ],
       "volume": 0.85
     },
     "sulo.bosswon": {
       "files": [
-        "sfx/battle/win_a"
+        "sfx/su-lo/bosswon_a",
+        "sfx/su-lo/bosswon_b"
       ],
       "volume": 0.9
     },
     "sulo.bosslost": {
       "files": [
-        "sfx/battle/lose_a",
-        "sfx/battle/lose_b"
+        "sfx/su-lo/bosslost_a",
+        "sfx/su-lo/bosslost_b"
       ],
       "volume": 0.9
     },

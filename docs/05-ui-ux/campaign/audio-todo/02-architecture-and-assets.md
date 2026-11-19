@@ -155,8 +155,8 @@ Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến)
 | `sulo.stele` | Đọc bia đá | Đã có tệp riêng `su-lo/stele` | P2 |
 | `sulo.aid` | Dùng trợ giúp | Đã có tệp riêng `su-lo/aid` | P2 |
 | `sulo.boss` | Vào trận trùm trấn cổng | Đã có tệp riêng `su-lo/boss` | P1 |
-| `sulo.counsel` | Quân sư hiến kế giữa trận | `formation/fusion` | P2 |
-| `sulo.bosswon` / `sulo.bosslost` | Hạ trùm / thua hoặc rút | `battle/win` / `battle/lose` | P1 |
+| `sulo.counsel` | Quân sư hiến kế giữa trận | Đã có tệp riêng `su-lo/counsel` | P2 |
+| `sulo.bosswon` / `sulo.bosslost` | Hạ trùm / thua hoặc rút | Đã có tệp riêng `su-lo/bosswon`, `su-lo/bosslost` | P1 |
 | `sulo.won` | Thoát mê cung | `formation/win` | P1 |
 
 Nhạc: `sulo_maze` (mê cung và màn chuẩn bị, tạm dùng tệp `music/atlas`) và `sulo_boss` (trong trận trùm, kể cả lúc trả lời câu Quân sư; tạm dùng `music/battle_boss`). Phân cảnh `SU_LO` là `SELF` trong `sceneMusic.ts`.
