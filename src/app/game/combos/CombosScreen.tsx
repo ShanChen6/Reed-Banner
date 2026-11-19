@@ -155,17 +155,13 @@ export default function CombosScreen() {
 
       <div className="grid items-start gap-4 lg:grid-cols-2">
         <OrnateFrame className="flex flex-col gap-3">
-          <SectionTitle description="Số ở góc thẻ là số liên kết chéo tướng đó thêm vào đội. Đinh Bộ Lĩnh hiện ở mọi bộ lọc; bấm ông khi đang lọc hệ, nghề thì ông mang đúng hệ, nghề đó.">Chọn tướng {slot + 1}</SectionTitle>
+          <SectionTitle description="Tướng có nhiều liên kết với đội đang chọn xếp lên trước. Đinh Bộ Lĩnh hiện ở mọi bộ lọc; bấm ông khi đang lọc hệ, nghề thì ông mang đúng hệ, nghề đó.">Chọn tướng {slot + 1}</SectionTitle>
           <HeroGrid
             label="Chọn tướng phối hợp"
             items={candidates}
             selected={picks[slot] ?? null}
             onSelect={pick}
             pageSize={12}
-            badge={(id) => {
-              const c = candidates.find((x) => x.id === id);
-              return c && c.score > 0 ? <span className="rounded-full bg-jade px-1.5 text-caption font-bold text-white">+{c.score}</span> : null;
-            }}
           />
         </OrnateFrame>
 

@@ -12,6 +12,7 @@
 
 **Hợp Kích, chuỗi phản ứng, bảng công trạng 10 hạng, vật phẩm, lề khung (Shan yêu cầu)**
 - Trang **Phối Hợp đổi tên Hợp Kích**; bỏ lọc "Tướng đã có/Mọi tướng" (luôn mọi tướng); Đinh Bộ Lĩnh không còn hàng chip hệ nghề trong ô mà khớp mọi bộ lọc của lưới, bấm ông khi đang lọc hệ/nghề nào thì ông mang hệ/nghề đó. Thêm khung **Chuỗi phản ứng**: dò theo luật bộ máy (bị động phát tiếp tín hiệu: truy kích gây mất máu, giảm Thủ là phá giáp, Câm lặng là khống chế; `activeOnly` chỉ nhận ở bước đầu; tối đa 4 bước), mỗi kỹ năng hiện chuỗi dài nhất (`comboChains`, `bestChains` trong `combos/links.ts`).
+- Lưới chọn tướng ở Hợp Kích bỏ số "+N" ở góc thẻ; tướng có nhiều liên kết với đội vẫn xếp lên trước.
 - Doanh Trại: Đinh Bộ Lĩnh khớp mọi bộ lọc hệ, nghề.
 - Thẻ bị động bỏ nhãn "Nghề 1/2, Hệ 1/2"; nhãn loại đặt theo một quy tắc cho mọi bị động: Cơ hội, Truy kích, Giảm Thủ, Hồi máu, Cấp Khiên, Tiếp năng lượng, Rút năng lượng, Thiêu đốt, Câm lặng, Tăng Thủ.
 - `RankBoard` luôn đủ 10 hạng (ô "Còn trống"), hơn 10 người thì cuộn trong khung 7 dòng; bỏ nút "Xem thêm". Trận Đồ bỏ bảng thưởng theo hạng (thưởng đã ở từng dòng).
