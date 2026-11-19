@@ -43,7 +43,7 @@ export function ProgressSection({
 }: ProgressSectionProps) {
   return (
     <div
-      className={`flex flex-col gap-3 ${started ? "" : "mx-auto w-full max-w-4xl"}`}
+      className="flex w-full flex-col gap-3"
     >
       <div className="ui-frame-inset rounded-xl p-3">
         <ShopPanel
