@@ -45,6 +45,9 @@ import { Button, ChoiceChip } from "@/components/ui";
 import { ModeBanner, ModeScreen, OrnateFrame } from "@/components/game-ui";
 import { TileArt } from "../art/tiles";
 import { destroyFrames, swapFrames, type Frame } from "../battle/animation";
+import { frameCue } from "../battle/sounds";
+import { useAudio } from "../audio/AudioProvider";
+import { cuesForAction, musicFor, SULO_PRELOAD } from "./sounds";
 import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
 
@@ -382,13 +385,25 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
   // nhận nước kế. Luật đã áp ngay ở `act`; khung chỉ dựng lại từ cùng hạt giống nên khớp đúng bàn sau nước đi.
   const [anim, setAnim] = useState<{ readonly frames: readonly Frame[]; readonly i: number; readonly id: number } | null>(null);
   const frame = anim?.frames[anim.i];
+  const { play: playSound } = useAudio();
   useEffect(() => {
     if (!anim || !frame) return;
     const id = window.setTimeout(() => setAnim((a) => (a && a.id === anim.id ? (a.i + 1 < a.frames.length ? { ...a, i: a.i + 1 } : null) : a)), frame.ms);
     return () => window.clearTimeout(id);
   }, [anim, frame]);
+  // Tiếng ghép ô phát đúng lúc khung bắt đầu, như trận thường (battle/sounds.ts).
+  useEffect(() => {
+    const c = frameCue(frame?.sound);
+    if (c) playSound(c.id, { rate: c.rate });
+  }, [frame, playSound]);
   const play = (frames: readonly Frame[]) => {
-    if (frames.length === 0 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (frames.length === 0) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // Không chạy hoạt ảnh thì vẫn nghe một tiếng cho nước đi (đổi ô, đổi sai hoặc ghép).
+      const c = frames.map((f) => frameCue(f.sound)).find((x) => x !== null);
+      if (c) playSound(c.id, { rate: c.rate });
+      return;
+    }
     setAnim((a) => ({ frames, i: 0, id: (a?.id ?? 0) + 1 }));
   };
   const board = frame?.board ?? sk.board;
@@ -507,6 +522,12 @@ export default function SuLoScreen() {
   const [best, setBest] = useState<Best>({});
   const [message, setMessage] = useState("");
   const [fastPick, setFastPick] = useState(false);
+  const { play: playSound, preload, playMusic, stopMusic } = useAudio();
+  const music = musicFor(game);
+
+  useEffect(() => preload(SULO_PRELOAD), [preload]);
+  useEffect(() => playMusic(music), [music, playMusic]);
+  useEffect(() => () => stopMusic(600), [stopMusic]);
 
   /* eslint-disable react-hooks/set-state-in-effect -- đọc kho trình duyệt chỉ có ở client */
   useEffect(() => {
@@ -541,6 +562,8 @@ export default function SuLoScreen() {
       }
       setMessage("");
       setGame(r.state);
+      // Tiếng của nước đi trước, tiếng kết quả theo sau một nhịp ngắn để không chồng lên nhau.
+      cuesForAction(game, r.state, a).forEach((id, i) => (i === 0 ? playSound(id) : window.setTimeout(() => playSound(id), 220 * i)));
       if (r.state.phase === "won" && game.phase !== "won") {
         const key = `${r.state.era}:${r.state.level}`;
         const stars = starsOf(r.state);
@@ -553,7 +576,7 @@ export default function SuLoScreen() {
       }
       return true;
     },
-    [game, best],
+    [game, best, playSound],
   );
 
   const onAnswer = useCallback((answer: number | readonly number[] | null) => act({ type: "answer", answer }), [act]);

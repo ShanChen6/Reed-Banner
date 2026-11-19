@@ -1,6 +1,6 @@
 # AUDIO/VOICE — TODO / DEFERRED (CHƯA THỰC HIỆN)
 
-> Cập nhật: 26/10/2026  
+> Cập nhật: 19/11/2026  
 > Trạng thái: **DEFERRED** — một phần nhạc và âm thanh đã có code; phần còn lại để sau.
 > Trạng thái của **tất cả task** ở đây: `TODO`, không nằm trong phạm vi triển khai thoại chữ + bản đồ.
 
@@ -21,9 +21,37 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 | AUD-06 | Voice Player đồng bộ câu thoại, ducking BGM, skip/pause/replay | AUD-02, AUD-05 | TODO — DEFERRED |
 | AUD-07 | Audio export/normalization/compression và QA/license | AUD-03…06 | TODO — DEFERRED |
 
-## Hiện trạng (02/11/2026)
+## Hiện trạng (rà lại 19/11/2026)
 
-Đã có engine và nút âm thanh toàn game, và Trận Đồ đã nối cue/nhạc. `public/audio/manifest.json` mới có hai cue của Trận Đồ (`formation.place`, `formation.reject`, cắt từ đoạn Gemini tạo; xem `public/audio/CREDITS.md`) nên **các cue còn lại chưa có tiếng**: thả tệp `.ogg` và `.m4a` vào `public/audio/` rồi thêm dòng manifest theo [quy ước](02-architecture-and-assets.md#3-quy-ước-tệp) (test kiểm đủ tệp). Trận đánh (A3, qua `DemoGame`) và nhạc theo phân cảnh (A4: bản đồ chiến dịch kèm âm nền, thoại, kết cục, Tháp, Đấu trường, Sinh tồn) cũng đã nối.
+Đã có engine, nút âm thanh toàn game và manifest `public/audio/manifest.json` (nguồn tệp ở `public/audio/CREDITS.md`). Thêm tiếng = thả tệp `.ogg` và `.m4a` vào `public/audio/` rồi thêm dòng manifest theo [quy ước](02-architecture-and-assets.md#3-quy-ước-tệp). Bảng dưới đối chiếu phân cảnh trong `src/app/game/scene.ts` với code và tệp đang có.
+
+### Màn chơi chưa nối âm thanh (không có nhạc, không có cue)
+
+| Màn | Ghi chú |
+|---|---|
+| Tầm Tướng Ký (`TAM_TUONG_KY`) | Chưa gọi `useAudio`, `soundOfScene` trả im lặng |
+| Viễn Chinh (`EXPEDITION`) | Màn sa bàn im lặng; trận đánh mở ra qua `DemoGame` nên có tiếng trận |
+| Khai Lộ (`KHAI_LO`) | Chưa nối |
+| Nhật Lệnh (`DAILY`) | Màn chọn thử thách im lặng; trong trận dùng `battle_normal`, cue `daily.complete` đã nối nhưng chưa có tệp |
+
+### Màn đã nối code nhưng còn thiếu tệp
+
+| Màn | Có tiếng | Thiếu tệp |
+|---|---|---|
+| Trận Đồ | `formation_menu` và 17/17 cue `formation.*` | Nhạc `formation_play`, `formation_play_layer2`, `formation_result_win`, `formation_result_lose` |
+| Trận đánh (Giao Tranh, Thao Luyện, Bình Loạn, Viễn Chinh…) | `battle_normal`, `battle_boss`; `swap`, `invalid`, `match3`, `hit.*`, `skill.*`, `damage`, `ko`, `win`, `lose` | `combo1..4`, `ultimate`, `heal`, `shield`, `buff`, `debuff`, `burn`, `freeze`, `poison`. `match4`/`match5` dùng chung tệp `match3`; `hit.<nghề>` dùng chung một bộ, `skill.<hệ>` dùng chung một bộ |
+| Bình Loạn (ngoài trận) | `atlas`, `dialogue` | Nhạc `ending`; âm nền `amb/atlas`; cue `atlas.select`, `dialogue.next` |
+| Tháp Thí Luyện | — | Nhạc `tower_trial` (màn Tháp im lặng; trận trong Tháp dùng `battle_normal`) |
+| Tháp Thiên Mệnh | — | Nhạc `tower_destiny` (cả màn Tháp lẫn trận trong Tháp đều im nhạc) |
+| Trấn Ải (Sinh tồn) | `survival` | Cue `survival.wave`, `survival.warn` |
+| Sử Lộ | Đã nối 19/11/2026: 16 cue `sulo.*`, tiếng ghép ô trận trùm, nhạc `sulo_maze`/`sulo_boss` ([bảng 5.6](02-architecture-and-assets.md#56-sử-lộ-sulo-đã-nối-19112026)) | Mọi cue và cả hai bản nhạc đang mượn tệp của Trận Đồ, trận đánh và Bình Loạn; chưa có tệp riêng |
+| Do Thám | Đã nối 19/11/2026: 8 cue `dotham.*`, tiếng đạo cụ theo hệ, nhạc `dotham` ([bảng 5.7](02-architecture-and-assets.md#57-do-thám-dotham-đã-nối-19112026)) | Mọi cue và bản nhạc đang mượn tệp của Trận Đồ và trận đánh; chưa có tệp riêng |
+| Quần Hùng | `arena` | Cue `arena.rank`; nhạc `pvp` đã có tệp nhưng chưa nối vào trận PvP |
+
+### Cue đã khai báo nhưng chưa nối code
+
+- `ui.click`, `ui.back`, `ui.error`, `ui.reward`: có trong `cues.ts`, chưa nơi nào gọi, chưa có tệp.
+- `battle.crit`, `battle.turn`, `battle.timer`, `music/prep`, `atlas.unlock`, `music/ending_*`, `tower.*`, `destiny.*`, `arena.ghost`, `pvp.*`: chưa có trong `cues.ts`.
 
 ## Không nằm trong bản UI hiện tại
 
