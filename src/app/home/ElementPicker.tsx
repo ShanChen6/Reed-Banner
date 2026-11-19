@@ -10,19 +10,20 @@ import { Portrait } from "../game/art/portraits";
 import { PassiveIcon, ragePassiveId } from "../game/art/passives";
 import { SkillIcon } from "../game/art/skills";
 import SkillInfo from "../game/battle/SkillInfo";
+import { passiveKind } from "../game/battle/SkillDetails";
 import { ELEMENT_TRAIT } from "./data";
 
 function related(e: Element, test: (other: Element) => boolean) {
   return ELEMENTS.filter((o) => o !== e && test(o));
 }
 
-/** Điều kiện kích hoạt của một bị động. */
+/** Điều kiện kích hoạt của một bị động, thu gọn mặc định để khối giới thiệu không dài quá. */
 function Trigger({ lines }: { lines: readonly string[] }) {
   return (
-    <div className="mt-1 border-l-2 border-frame-gold/40 pl-2 text-xs text-on-wood-soft">
-      <span className="text-[0.65rem] uppercase tracking-wider text-[var(--primary)]/80">Điều kiện kích hoạt</span>
+    <details className="mt-1 border-l-2 border-frame-gold/40 pl-2 text-xs text-on-wood-soft">
+      <summary className="cursor-pointer text-caption tracking-wider text-[var(--primary)]/80 uppercase pointer-coarse:py-2">Điều kiện kích hoạt</summary>
       <ul className="list-disc space-y-0.5 pl-4">{lines.map((l, i) => <li key={i}>{l}</li>)}</ul>
-    </div>
+    </details>
   );
 }
 
@@ -160,15 +161,15 @@ export default function ElementPicker() {
               <li className="flex gap-2">
                 <PassiveIcon id={PROFESSION_COMBO[profession]} name={combo.name} className="size-9" />
                 <div>
-                  <span className="font-semibold text-on-wood">Nghề · {combo.name}:</span> {combo.description}
+                  <span className="font-semibold text-on-wood">{passiveKind({ kind: "combo", id: PROFESSION_COMBO[profession] })} · {combo.name}:</span> {combo.description}
                   <Trigger lines={comboTriggerText(combo)} />
                 </div>
               </li>
-              {chase.map((id, i) => (
+              {chase.map((id) => (
                 <li key={id} className="flex gap-2">
                   <PassiveIcon id={id} name={CHASE_PASSIVES[id].name} className="size-9" />
                   <div>
-                    <span className="font-semibold text-on-wood">{i === 0 ? "Nghề" : "Hệ"} · {CHASE_PASSIVES[id].name}:</span> {CHASE_PASSIVES[id].description}
+                    <span className="font-semibold text-on-wood">{passiveKind({ kind: "chase", id })} · {CHASE_PASSIVES[id].name}:</span> {CHASE_PASSIVES[id].description}
                     <Trigger lines={chaseTriggerText(CHASE_PASSIVES[id])} />
                   </div>
                 </li>

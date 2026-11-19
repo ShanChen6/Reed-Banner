@@ -3,13 +3,18 @@
 
 import { INK } from "./tiles";
 
-export type ModeIconKind = "practice" | "play" | "campaign" | "trial" | "destiny" | "survival" | "daily" | "arena";
+/** Trùng slug đường dẫn của chế độ (`SCENE_SLUG`), để trang chủ dựng link thẳng từ đây. */
+export type ModeIconKind =
+  | "practice" | "play" | "campaign" | "trial" | "destiny" | "survival" | "daily" | "arena"
+  | "formation" | "clear-path" | "scout" | "maze" | "tam-tuong-ky" | "expedition";
 
 const GOLD = "#e0b25a";
 const GOLD_DK = "#a5772f";
 const RED = "#b8392b";
 const CREAM = "#f2e3b8";
 const WOOD = "#8a5a2b";
+const JADE = "#5e9a6e";
+const SKY = "#4f7fb0";
 const s = { stroke: INK, strokeWidth: 2, strokeLinejoin: "round", strokeLinecap: "round" } as const;
 
 const GLYPH: Record<ModeIconKind, React.ReactNode> = {
@@ -101,6 +106,88 @@ const GLYPH: Record<ModeIconKind, React.ReactNode> = {
       <path d="M20 46 H44 V56 H20 Z" fill={WOOD} {...s} />
       <path d="M32 13 L34.3 19 L40.5 19.4 L35.7 23.4 L37.3 29.5 L32 26 L26.7 29.5 L28.3 23.4 L23.5 19.4 L29.7 19 Z" fill={RED} stroke={INK} strokeWidth={1.2} strokeLinejoin="round" />
       <path d="M26 51 H38" stroke={GOLD} strokeWidth={2.2} strokeLinecap="round" />
+    </>
+  ),
+  // Trận Đồ: bàn trận ô vuông, hai lá cờ hai phe và mũi tên tiến quân.
+  formation: (
+    <>
+      <rect x={6} y={8} width={52} height={48} rx={4} fill={CREAM} {...s} />
+      <path d="M6 24 H58 M6 40 H58 M23.3 8 V56 M40.6 8 V56" stroke={GOLD_DK} strokeWidth={1.6} />
+      <path d="M14 50 V36" stroke={WOOD} strokeWidth={2.6} strokeLinecap="round" />
+      <path d="M14 36 L24 39 L14 42 Z" fill={RED} {...s} strokeWidth={1.4} />
+      <path d="M50 28 V14" stroke={WOOD} strokeWidth={2.6} strokeLinecap="round" />
+      <path d="M50 14 L40 17 L50 20 Z" fill={SKY} {...s} strokeWidth={1.4} />
+      <path d="M22 46 Q32 44 36 32" fill="none" stroke={RED} strokeWidth={3} strokeLinecap="round" strokeDasharray="0.1 5.5" />
+      <path d="M36 32 L33 37 M36 32 L39.5 36" stroke={RED} strokeWidth={2.6} strokeLinecap="round" />
+    </>
+  ),
+  // Khai Lộ: khối quân cùng hệ vỡ ra, mở một lối sáng xuyên bàn.
+  "clear-path": (
+    <>
+      {[[6, 8, RED], [22, 8, JADE], [38, 8, GOLD], [6, 24, SKY], [38, 24, JADE], [6, 40, GOLD], [22, 40, RED], [38, 40, SKY]].map(([x, y, c]) => (
+        <rect key={`${x}-${y}`} x={x as number} y={y as number} width={14} height={14} rx={3} fill={c as string} {...s} strokeWidth={1.6} />
+      ))}
+      <rect x={22} y={24} width={14} height={14} rx={3} fill="#fff6d8" stroke={GOLD} strokeWidth={1.6} strokeDasharray="3 2" />
+      <path d="M4 31 H60" stroke="#fff6d8" strokeWidth={3.4} strokeLinecap="round" />
+      <path d="M53 26 L60 31 L53 36" fill="none" stroke={GOLD} strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M29 18 V21 M29 41 V44 M17 31 H20" stroke={GOLD} strokeWidth={2} strokeLinecap="round" />
+    </>
+  ),
+  // Do Thám: ô đất đã dò, ô cắm cờ đánh dấu bẫy, ô còn dấu hỏi.
+  scout: (
+    <>
+      <rect x={6} y={6} width={24} height={24} rx={3} fill="#b9a98a" {...s} />
+      <rect x={34} y={6} width={24} height={24} rx={3} fill="#7d6a4c" {...s} />
+      <rect x={6} y={34} width={24} height={24} rx={3} fill="#7d6a4c" {...s} />
+      <rect x={34} y={34} width={24} height={24} rx={3} fill="#b9a98a" {...s} />
+      <text x={18} y={25} textAnchor="middle" fontSize={17} fontWeight={800} fill={SKY} fontFamily="serif">2</text>
+      <path d="M44 27 V11" stroke={WOOD} strokeWidth={2.6} strokeLinecap="round" />
+      <path d="M44 11 L54 14.5 L44 18 Z" fill={RED} {...s} strokeWidth={1.4} />
+      <path d="M39 27 H50" stroke={INK} strokeWidth={2.2} strokeLinecap="round" />
+      <text x={18} y={53} textAnchor="middle" fontSize={17} fontWeight={800} fill={CREAM} fontFamily="serif">?</text>
+      <circle cx={46} cy={46} r={6} fill={INK} />
+      <path d="M46 36 V40 M46 52 V56 M36 46 H40 M52 46 H56" stroke={INK} strokeWidth={2} strokeLinecap="round" />
+      <circle cx={44} cy={44} r={1.6} fill={CREAM} />
+    </>
+  ),
+  // Sử Lộ: cuộn sử mở ra, đường đi chấm chấm tới lá cờ, xúc xắc ở góc.
+  maze: (
+    <>
+      <path d="M10 12 H50 V52 H10 Z" fill={CREAM} {...s} />
+      <path d="M6 12 A4 4 0 0 1 14 12 V52 A4 4 0 0 1 6 52 Z M46 12 A4 4 0 0 1 54 12 V52 A4 4 0 0 1 46 52 Z" fill={GOLD_DK} {...s} />
+      <path d="M18 44 Q22 30 30 34 T42 20" fill="none" stroke={RED} strokeWidth={2.6} strokeLinecap="round" strokeDasharray="0.1 5" />
+      <circle cx={18} cy={44} r={2.6} fill={RED} {...s} strokeWidth={1.2} />
+      <path d="M42 22 V12" stroke={WOOD} strokeWidth={2.2} strokeLinecap="round" />
+      <path d="M42 12 L49 14.5 L42 17 Z" fill={RED} {...s} strokeWidth={1.2} />
+      <rect x={40} y={40} width={18} height={18} rx={4} fill="#fbf4e2" {...s} transform="rotate(-12 49 49)" />
+      <circle cx={45} cy={46} r={1.8} fill={INK} />
+      <circle cx={49} cy={49} r={1.8} fill={RED} />
+      <circle cx={53} cy={52} r={1.8} fill={INK} />
+    </>
+  ),
+  // Tầm Tướng Ký: hai phiếu nguyên liệu hợp lại thành mũ trụ tướng.
+  "tam-tuong-ky": (
+    <>
+      <rect x={4} y={34} width={18} height={24} rx={3} fill={CREAM} {...s} transform="rotate(-14 13 46)" />
+      <rect x={42} y={34} width={18} height={24} rx={3} fill={CREAM} {...s} transform="rotate(14 51 46)" />
+      <path d="M10 44 H16 M48 44 H54" stroke={RED} strokeWidth={2.2} strokeLinecap="round" />
+      <path d="M18 34 Q18 12 32 10 Q46 12 46 34 Z" fill={GOLD} {...s} />
+      <path d="M14 34 H50 L46 40 H18 Z" fill={GOLD_DK} {...s} />
+      <path d="M32 10 V4" stroke={RED} strokeWidth={3} strokeLinecap="round" />
+      <path d="M26 22 H38 M32 16 V28" stroke={RED} strokeWidth={2.6} strokeLinecap="round" />
+      <path d="M22 50 L28 46 M42 50 L36 46" stroke={GOLD} strokeWidth={2.4} strokeLinecap="round" />
+    </>
+  ),
+  // Viễn Chinh: sa bàn núi sông, mũi tên hành quân hai đạo tới thành địch.
+  expedition: (
+    <>
+      <path d="M4 50 L16 18 L46 12 L60 44 L36 56 Z" fill="#d9c79c" {...s} />
+      <path d="M12 46 Q24 38 22 28 Q20 20 30 16" fill="none" stroke={SKY} strokeWidth={3.2} strokeLinecap="round" />
+      <path d="M34 36 L40 26 L46 36 Z M40 38 L45 30 L50 38 Z" fill={JADE} {...s} strokeWidth={1.4} />
+      <path d="M48 16 H56 V24 H48 Z" fill={RED} {...s} strokeWidth={1.4} />
+      <path d="M48 16 V13 H50 V16 M52 16 V13 H54 V16" stroke={INK} strokeWidth={1.4} />
+      <path d="M14 52 Q24 48 30 42 Q38 34 46 26" fill="none" stroke={RED} strokeWidth={2.4} strokeLinecap="round" strokeDasharray="4 3" />
+      <path d="M46 26 L40 27 M46 26 L45 32" stroke={RED} strokeWidth={2.4} strokeLinecap="round" />
     </>
   ),
 };
