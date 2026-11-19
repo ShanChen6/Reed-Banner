@@ -152,8 +152,8 @@ Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến)
 | `sulo.disarm` / `sulo.trap` | Gỡ bẫy / sập bẫy | Đã có tệp riêng `su-lo/disarm`, `su-lo/trap` | P1 |
 | `sulo.luck` | Ô may mắn | Đã có tệp riêng `su-lo/luck` | P2 |
 | `sulo.gate` | Mở cửa ải | Đã có tệp riêng `su-lo/gate` | P2 |
-| `sulo.stele` | Đọc bia đá | `formation/fogclear` | P2 |
-| `sulo.aid` | Dùng trợ giúp | `formation/tick` | P2 |
+| `sulo.stele` | Đọc bia đá | Đã có tệp riêng `su-lo/stele` | P2 |
+| `sulo.aid` | Dùng trợ giúp | Đã có tệp riêng `su-lo/aid` | P2 |
 | `sulo.boss` | Vào trận trùm trấn cổng | `formation/flame3` | P1 |
 | `sulo.counsel` | Quân sư hiến kế giữa trận | `formation/fusion` | P2 |
 | `sulo.bosswon` / `sulo.bosslost` | Hạ trùm / thua hoặc rút | `battle/win` / `battle/lose` | P1 |

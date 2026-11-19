@@ -399,17 +399,14 @@
     },
     "sulo.stele": {
       "files": [
-        "sfx/formation/fogclear_a",
-        "sfx/formation/fogclear_b",
-        "sfx/formation/fogclear_c"
+        "sfx/su-lo/stele_a"
       ],
       "volume": 0.75
     },
     "sulo.aid": {
       "files": [
-        "sfx/formation/tick_a",
-        "sfx/formation/tick_b",
-        "sfx/formation/tick_c"
+        "sfx/su-lo/aid_a",
+        "sfx/su-lo/aid_b"
       ],
       "volume": 0.7
     },
