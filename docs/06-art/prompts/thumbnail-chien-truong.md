@@ -1,6 +1,6 @@
 # Prompt thumbnail thẻ chế độ ở Chiến trường
 
-> Cập nhật: 19/11/2026 (thêm mục 6 Thao Luyện, mục 7 Giao Tranh, đều đã có tranh; Shan gửi bộ tranh mới thay cho cả 12 thẻ chế độ cũ ở `public/art/home/`; 15/11/2026 thêm mục 5: Sử Lộ; Do Thám và Sử Lộ đã có tranh `public/art/home/do-tham.webp`, `su-lo.webp`, 960×540, khoảng 140 KB mỗi tranh, đã gắn vào thẻ và biển đầu màn)
+> Cập nhật: 19/11/2026 (thêm mục 6 Thao Luyện, mục 7 Giao Tranh, đều đã có tranh; Shan gửi bộ tranh mới; giữ tranh mới cho Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Viễn Chinh, Khai Lộ, Do Thám, giữ tranh cũ cho Bình Loạn, Nhật Lệnh, Quần Hùng, Trận Đồ, Sử Lộ, Tầm Tướng Ký; 15/11/2026 thêm mục 5: Sử Lộ; Do Thám và Sử Lộ đã có tranh `public/art/home/do-tham.webp`, `su-lo.webp`, 960×540, khoảng 140 KB mỗi tranh, đã gắn vào thẻ và biển đầu màn)
 > Trạng thái: **IMPLEMENTED** — Claude soạn theo yêu cầu của Shan (07/11/2026: thumbnail Khai Lộ và Viễn Chinh đang dùng chung một tranh mực tạm); Shan tạo tranh từ hai prompt dưới đây, đã gắn vào thẻ (`public/art/home/khai-lo.webp`, `public/art/home/vien-chinh.webp`, 960×540, khoảng 145 KB mỗi tranh).
 
 Thẻ chế độ ở màn Chiến trường (`src/app/game/MenuScene.tsx`, danh sách `MODES`) dùng tranh `public/art/home/<tên>.webp`. Hiện
