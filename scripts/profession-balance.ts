@@ -22,6 +22,8 @@ const team = (b: Build) => ({ fighters: mode === "1v1" ? [b.unit] : [b.unit, ...
 
 const wins = new Map<Build, { w: number; n: number }>(builds.map((b) => [b, { w: 0, n: 0 }]));
 const pairWins = new Map<string, { w: number; n: number }>();
+/** Thế đối đầu hệ × hệ: kiểm tra mỗi hệ làm đúng vai trò (khắc ai, bị ai khắc), không chỉ tỉ lệ thắng chung. */
+const elementPairs = new Map<string, { w: number; n: number }>();
 let battles = 0;
 for (let i = 0; i < builds.length; i++) for (let j = i + 1; j < builds.length; j++) {
   const a = builds[i]!, b = builds[j]!;
@@ -32,6 +34,7 @@ for (let i = 0; i < builds.length; i++) for (let j = i + 1; j < builds.length; j
     for (const [x, y, v] of [[a, b, score], [b, a, 1 - score]] as const) {
       const t = wins.get(x)!; t.w += v; t.n++;
       const key = `${x.profession}>${y.profession}`; const p = pairWins.get(key) ?? { w: 0, n: 0 }; p.w += v; p.n++; pairWins.set(key, p);
+      const ek = `${x.element}>${y.element}`; const e = elementPairs.get(ek) ?? { w: 0, n: 0 }; e.w += v; e.n++; elementPairs.set(ek, e);
     }
   }
 }
@@ -46,6 +49,7 @@ const out = {
   byProfession: group((b) => b.profession),
   byElement: group((b) => b.element),
   builds: builds.map((b) => ({ profession: b.profession, element: b.element, rate: Number((rate(wins.get(b)!) * 100).toFixed(1)) })).sort((x, y) => y.rate - x.rate),
+  elementMatrix: Object.fromEntries(ELEMENTS.map((p) => [p, Object.fromEntries(ELEMENTS.filter((q) => q !== p).map((q) => [q, Number((rate(elementPairs.get(`${p}>${q}`)!) * 100).toFixed(0))]))])),
   matrix: Object.fromEntries(ALL_PROFESSIONS.map((p) => [p, Object.fromEntries(ALL_PROFESSIONS.filter((q) => q !== p).map((q) => [q, Number((rate(pairWins.get(`${p}>${q}`)!) * 100).toFixed(0))]))])),
 };
 if (values.json) console.log(JSON.stringify(out));
@@ -54,5 +58,7 @@ else {
   console.log("Theo nghề:", out.byProfession);
   console.log("Theo hệ:", out.byElement);
   console.log("Cao nhất:", out.builds.slice(0, 6).map((b) => `${b.profession}/${b.element} ${b.rate}`).join(", "));
+  console.log("Nghề × nghề (hàng thắng cột, %):", out.matrix);
+  console.log("Hệ × hệ (hàng thắng cột, %):", out.elementMatrix);
   console.log("Thấp nhất:", out.builds.slice(-6).map((b) => `${b.profession}/${b.element} ${b.rate}`).join(", "));
 }

@@ -32,7 +32,6 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 | Tầm Tướng Ký (`TAM_TUONG_KY`) | Chưa gọi `useAudio`, `soundOfScene` trả im lặng |
 | Viễn Chinh (`EXPEDITION`) | Màn sa bàn im lặng; trận đánh mở ra qua `DemoGame` nên có tiếng trận |
 | Khai Lộ (`KHAI_LO`) | Chưa nối |
-| Do Thám (`DO_THAM`) | Chưa nối |
 | Nhật Lệnh (`DAILY`) | Màn chọn thử thách im lặng; trong trận dùng `battle_normal`, cue `daily.complete` đã nối nhưng chưa có tệp |
 
 ### Màn đã nối code nhưng còn thiếu tệp
@@ -45,7 +44,8 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 | Tháp Thí Luyện | — | Nhạc `tower_trial` (màn Tháp im lặng; trận trong Tháp dùng `battle_normal`) |
 | Tháp Thiên Mệnh | — | Nhạc `tower_destiny` (cả màn Tháp lẫn trận trong Tháp đều im nhạc) |
 | Trấn Ải (Sinh tồn) | `survival` | Cue `survival.wave`, `survival.warn` |
-| Sử Lộ | Đã nối 19/11/2026: 16 cue `sulo.*`, tiếng ghép ô trận trùm, nhạc `sulo_maze`/`sulo_boss` ([bảng 5.6](02-architecture-and-assets.md#56-sử-lộ-sulo-đã-nối-19112026)) | Mọi cue và cả hai bản nhạc đang mượn tệp của Trận Đồ, trận đánh và Bình Loạn; chưa có tệp riêng |
+| Sử Lộ | Đã nối 19/11/2026: 16 cue `sulo.*`, tiếng ghép ô trận trùm, nhạc `sulo_maze`/`sulo_boss` ([bảng 5.6](02-architecture-and-assets.md#56-sử-lộ-sulo-đã-nối-19112026)) | `sulo.roll`, `sulo.move`, `sulo.nomove` đã có tệp riêng (19/11/2026); 13 cue còn lại và cả hai bản nhạc đang mượn tệp của Trận Đồ, trận đánh và Bình Loạn |
+| Do Thám | Đã nối 19/11/2026: 8 cue `dotham.*`, tiếng đạo cụ theo hệ, nhạc `dotham` ([bảng 5.7](02-architecture-and-assets.md#57-do-thám-dotham-đã-nối-19112026)) | Mọi cue và bản nhạc đang mượn tệp của Trận Đồ và trận đánh; chưa có tệp riêng |
 | Quần Hùng | `arena` | Cue `arena.rank`; nhạc `pvp` đã có tệp nhưng chưa nối vào trận PvP |
 
 ### Cue đã khai báo nhưng chưa nối code
