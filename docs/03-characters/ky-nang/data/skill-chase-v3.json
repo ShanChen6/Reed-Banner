@@ -460,8 +460,8 @@
         "skillDamage"
       ],
       "effect": "armor",
-      "value": 0.1,
-      "description": "Kỹ năng gây mất máu: giảm Thủ mục tiêu 10% trong 1 lượt.",
+      "value": 0.12,
+      "description": "Kỹ năng gây mất máu: giảm Thủ mục tiêu 12% trong 1 lượt.",
       "alliesOnly": false
     },
     "kim2": {
@@ -471,8 +471,8 @@
         "armorBroken"
       ],
       "effect": "damage",
-      "value": 0.35,
-      "description": "Phá giáp thành công: truy kích bằng 35% Công.",
+      "value": 0.4,
+      "description": "Phá giáp thành công: truy kích bằng 40% Công.",
       "alliesOnly": false
     },
     "moc1": {
@@ -638,6 +638,13 @@
           "type": "effect",
           "to": "team",
           "effect": "atkUp",
+          "value": 0.2,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
           "value": 0.15,
           "turns": 2
         }
@@ -875,6 +882,13 @@
           "type": "effect",
           "to": "team",
           "effect": "atkUp",
+          "value": 0.2,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
           "value": 0.15,
           "turns": 2
         }
@@ -1107,6 +1121,13 @@
           "type": "effect",
           "to": "team",
           "effect": "atkUp",
+          "value": 0.2,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
           "value": 0.15,
           "turns": 2
         }
@@ -1342,6 +1363,13 @@
           "type": "effect",
           "to": "team",
           "effect": "atkUp",
+          "value": 0.2,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
           "value": 0.15,
           "turns": 2
         }
@@ -1563,6 +1591,13 @@
           "type": "effect",
           "to": "team",
           "effect": "atkUp",
+          "value": 0.2,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
           "value": 0.15,
           "turns": 2
         }
@@ -1812,6 +1847,13 @@
           "type": "effect",
           "to": "team",
           "effect": "atkUp",
+          "value": 0.2,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
           "value": 0.15,
           "turns": 2
         }
@@ -2082,6 +2124,13 @@
           "type": "effect",
           "to": "team",
           "effect": "atkUp",
+          "value": 0.2,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
           "value": 0.15,
           "turns": 2
         }
@@ -2332,6 +2381,13 @@
           "type": "effect",
           "to": "team",
           "effect": "atkUp",
+          "value": 0.2,
+          "turns": 2
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
           "value": 0.15,
           "turns": 2
         }

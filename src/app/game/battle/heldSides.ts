@@ -27,7 +27,7 @@ export function sidesAfterEvents(
   const next = structuredClone(sides) as [Side, Side];
   const fighter = (e: { side: 0 | 1; fighter: number }) =>
     next[e.side].fighters[e.fighter];
-  for (const e of events) {
+  for (const [i, e] of events.entries()) {
     switch (e.type) {
       case "damage": {
         const f = fighter(e);
@@ -72,7 +72,10 @@ export function sidesAfterEvents(
           (x) => x.kind === e.effect,
         );
         if (!now) break;
-        f.effects = [...f.effects.filter((x) => x.kind !== e.effect), { ...now }];
+        // Khiên lấy giá trị cuối từ `after` nên phải cộng lại phần các đòn sau đó trong cùng nhóm sẽ trừ,
+        // nếu không Khiên vừa đặt rồi bị đánh ngay bị trừ hai lần và biến mất khỏi thẻ.
+        const value = e.effect === "shield" ? now.value + absorbedLater(events, i, e) : now.value;
+        f.effects = [...f.effects.filter((x) => x.kind !== e.effect), { ...now, value }];
         break;
       }
       case "effectEnd": {
@@ -121,4 +124,15 @@ export function sidesAfterEvents(
     }
   }
   return next;
+}
+
+/** Tổng lượng Khiên bị đòn hấp thụ sau sự kiện `from`, tới khi Khiên đó được đặt lại hoặc hết. */
+function absorbedLater(events: readonly BattleEvent[], from: number, at: { side: 0 | 1; fighter: number }): number {
+  let total = 0;
+  for (const e of events.slice(from + 1)) {
+    if (!("fighter" in e) || e.side !== at.side || e.fighter !== at.fighter) continue;
+    if ((e.type === "effect" || e.type === "effectEnd") && e.effect === "shield") break;
+    if (e.type === "damage") total += e.absorbed;
+  }
+  return total;
 }

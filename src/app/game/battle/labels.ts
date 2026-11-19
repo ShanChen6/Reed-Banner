@@ -218,7 +218,7 @@ export function passiveText(element: Element): string {
   const P = PASSIVE;
   const effect: Record<Element, string> = {
     moc: `Cả đội Hồi phục ${pct(P.mocTeamRegen)} máu tối đa mỗi lượt.`,
-    kim: `Đánh thường và kỹ năng của thủ lĩnh bỏ qua ${pct(P.kimPierce)} Thủ; kỹ năng xuyên Khiên.`,
+    kim: `Sát thương của thủ lĩnh tăng ${pct(P.kimDamage)}; đánh thường và kỹ năng bỏ qua ${pct(P.kimPierce)} Thủ; kỹ năng xuyên Khiên.`,
     thuy: `Đóng băng ngay 1 đối thủ; kỹ năng sát thương của thủ lĩnh có ${pct(P.thuyFreezeChance)} cơ hội Đóng băng thêm.`,
     hoa: `Mọi sát thương của thủ lĩnh +${pct(P.hoaDamage)}, đổi lại Thủ bản thân −${pct(P.hoaDefDown)}.`,
     tho: `Thủ lĩnh nhận Khiên ${pct(P.thoShield)} máu tối đa và Phản đòn ${pct(P.thoReflect)}.`,

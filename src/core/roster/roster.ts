@@ -21,7 +21,7 @@ export const BASE_STATS: Readonly<Record<Profession, BaseStats>> = {
   satThu: { maxHp:450, atk:58, def:8 },
   tuongSi: { maxHp: 500, atk: 55, def: 10 },
   phapSu: { maxHp: 450, atk: 55, def: 8 },
-  binhLinh: { maxHp: 600, atk: 45, def: 15 },
+  binhLinh: { maxHp: 575, atk: 45, def: 14 },
   ySu: { maxHp: 475, atk: 45, def: 10 },
   muuSi: { maxHp: 475, atk: 50, def: 10 },
   quanSu: { maxHp: 475, atk: 50, def: 10 },

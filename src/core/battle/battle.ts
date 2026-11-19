@@ -906,7 +906,7 @@ class Ctx {
     const morale = R.MORALE_DAMAGE[R.moraleOf(ownSide.food)];
     const spread = def.target === "allEnemies" && isDuel(s) ? 1.5 : 1;
     const kim = passiveOn(ownSide, caster, "kim");
-    const hoa = passiveOn(ownSide, caster, "hoa") ? 1 + PASSIVE.hoaDamage : 1;
+    const hoa = (passiveOn(ownSide, caster, "hoa") ? 1 + PASSIVE.hoaDamage : 1) * (kim ? 1 + PASSIVE.kimDamage : 1);
     const thuy = passiveOn(ownSide, caster, "thuy");
 
     let hpDamage = false;
@@ -1278,8 +1278,9 @@ class Ctx {
       );
       const prof =
         intrinsicProfession(actor) === "tuongSi" && bigSword ? R.TUONG_SI_BONUS : 1;
-      const hoa = passiveOn(own, actor, "hoa") ? 1 + PASSIVE.hoaDamage : 1;
-      const pierce = passiveOn(own, actor, "kim") ? PASSIVE.kimPierce : 0;
+      const kimOn = passiveOn(own, actor, "kim");
+      const hoa = (passiveOn(own, actor, "hoa") ? 1 + PASSIVE.hoaDamage : 1) * (kimOn ? 1 + PASSIVE.kimDamage : 1);
+      const pierce = kimOn ? PASSIVE.kimPierce : 0;
       const amount = Math.round(
         effectiveAtk(actor, s.experimentalSpirit) *
           units *

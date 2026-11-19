@@ -914,8 +914,8 @@ function elemental(id: string, slot: number): SkillDef {
   return { ...old, id: `element_${id}`, slot };
 }
 export const ELEMENT_SKILLS: readonly SkillDef[] = [
-  elemental("luyenKimThanhKiem", 2),
-  { ...elemental("kimYNgungThan", 6), cost: 35, target: "enemy", steps: [{ type: "damage", atk: 1.3, pierce: 0.5 }] },
+  { ...elemental("luyenKimThanhKiem", 2), steps: [{ type: "transform", kind: "kiem", count: 5 }] },
+  { ...elemental("kimYNgungThan", 6), cost: 35, target: "enemy", steps: [{ type: "damage", atk: 1.6, pierce: 0.5 }] },
   elemental("lucDiepPhong", 2), elemental("linhMocHoiSinh", 6),
   elemental("thuyNguyetTuLinh", 2), elemental("thanhLuuTayTran", 6),
   elemental("phongHoaThieuDoanh", 2), elemental("noHoaThieuThan", 6),
@@ -956,7 +956,7 @@ const DBL_ROLE_FINISHERS: Record<GameProfession, { name: string; target: SkillTa
  quanSu: {name:"Nhất thống",target:"team",steps:[{type:"effect",to:"targets",effect:"atkUp",value:0.25,turns:2},{type:"energy",to:"targets",amount:20}]},
 };
 const DBL_ELEMENT_FINISHERS:Record<Element,{name:string;steps:readonly SkillStep[]}>= {
- kim:{name:"Kim",steps:[{type:"effect",to:"team",effect:"atkUp",value:0.15,turns:2}]},
+ kim:{name:"Kim",steps:[{type:"effect",to:"team",effect:"atkUp",value:0.2,turns:2},{type:"effect",to:"enemies",effect:"defDown",value:0.15,turns:2}]},
  moc:{name:"Mộc",steps:[{type:"heal",to:"team",ratio:0.1}]},
  thuy:{name:"Thủy",steps:[{type:"cleanse",to:"team"},{type:"effect",to:"team",effect:"shield",value:0.08,ofMaxHp:true,turns:2}]},
  hoa:{name:"Hỏa",steps:[{type:"effect",to:"enemies",effect:"defDown",value:0.15,turns:2}]},
@@ -1117,6 +1117,8 @@ export const PASSIVE = {
   mocTeamRegen: 0.03,
   /** Kim: đánh thường và kỹ năng bỏ qua tỉ lệ DEF này; kỹ năng xuyên Khiên. */
   kimPierce: 0.4,
+  /** Kim: sát thương của bản thân tăng thêm (cân 19/11/2026: bỏ qua Thủ một mình quá yếu vì Thủ gốc thấp). */
+  kimDamage: 0.2,
   /** Thủy: Đóng băng ngay 1 đối thủ; kỹ năng gây sát thương thêm cơ hội Đóng băng. */
   thuyFreezeChance: 0.25,
   /** Hỏa: mọi sát thương của bản thân tăng, DEF bản thân giảm. */

@@ -34,7 +34,7 @@ Từ 22/10/2026 mọi nhân vật chơi được dùng **3 kỹ năng nghề + 2
 |---|---|---|---|
 | ⚔️ Tướng sĩ | 500 | 55 | 10 |
 | ☯️ Pháp sư | 450 | 55 | 8 |
-| 🍙 Binh lính | 600 | 45 | 15 |
+| 🍙 Binh lính | 575 | 45 | 14 |
 | ❤️ Y sư | 475 | 45 | 10 |
 | 💰 Mưu sĩ | 475 | 50 | 10 |
 | 📖 Quân sư | 475 | 50 | 10 |
@@ -306,3 +306,33 @@ Truy kích nghề không còn kích cùng tín hiệu với bị động Cơ h�
 - Đinh Bộ Lĩnh 1v1 (`scripts/profession-balance.ts --mode 1v1`, cấp 20): Quân sư 38,6% → 47%, Mưu sĩ 35,1% → 40,1%, Binh lính 64,6% → 62,2%, Pháp sư 64,2% → 60,3%; vẫn lệch vì nghề hỗ trợ đấu một mình. Hệ Kim thấp nhất (42,6%).
 - Tháp Thí Luyện cân lại 13 tầng tụt dưới ngưỡng đội mẫu (22, 29, 38, 51, 61, 62, 65, 75, 91, 95, 96, 97, 98).
 - Việc tiếp: Binh lính còn cao ở cả hai chế độ; hệ Kim thấp; Y sư, Xạ thủ, Sát thủ nhóm dưới.
+
+## 13. Vai trò nghề, hệ và vòng cân Binh lính, Kim (19/11/2026)
+
+**Nguyên tắc (Shan chốt):** mỗi nghề, mỗi hệ có chức năng riêng; không ép tỉ lệ thắng bằng nhau. Tiêu chí: tổng thắng 3v3 mỗi nghề và hệ trong 42–58%; ở 1v1 nghề hỗ trợ (Y sư, Mưu sĩ, Quân sư) được thấp tới khoảng 38%; vai trò phải thấy trong bảng đối đầu (`scripts/profession-balance.ts` in nghề × nghề và hệ × hệ).
+
+| Nghề | Chức năng | Điểm yếu chấp nhận |
+|---|---|---|
+| Tướng sĩ | Dồn sát thương một mục tiêu, kết liễu | Ít hỗ trợ đội |
+| Pháp sư | Sát thương lan cả đội | Máu, Thủ thấp nhất |
+| Binh lính | Chịu đòn, khiêu khích, che đội | Công thấp |
+| Y sư | Hồi máu, giải hiệu ứng xấu | Gần như không gây sát thương, yếu khi đấu một mình |
+| Mưu sĩ | Rút năng lượng, Câm lặng, cắt lương | Sát thương thấp |
+| Quân sư | Tăng đội mình, giảm đối thủ | Yếu khi đấu một mình |
+| Xạ thủ | Phá giáp, sát thương đều | Thủ thấp |
+| Sát thủ | Kết liễu mục tiêu yếu máu | Máu thấp, không hỗ trợ |
+
+Vai trò hệ theo [tính cách nguyên tố](../01-gameplay/nguyen-to.md#2-tính-cách-nguyên-tố).
+
+**Chỉnh:** Binh lính máu gốc 600 → 575, Thủ 15 → 14. Kim: nội tại thêm 20% sát thương (`PASSIVE.kimDamage`, vẫn bỏ qua 40% Thủ), Kim phá 10% → 12%, Kim truy 35% → 40%, Luyện Kim Thành Kiếm 4 → 5 ô, chiêu Kim ô 6 130% → 160% Công, phần Kim của tuyệt chiêu Đinh Bộ Lĩnh Công +15% → +20% cả đội và thêm Thủ −15% cả đội địch 2 lượt.
+
+| Đo | Trước | Sau |
+|---|---:|---:|
+| Binh lính, tướng kèm cấp 20 | 53,9% | 52,5% |
+| Binh lính, Đinh Bộ Lĩnh 1v1 | 62,2% | 57,2% |
+| Kim, tướng kèm cấp 20 | 48,3% | 49,0% |
+| Kim, Đinh Bộ Lĩnh 1v1 | 42,6% | 43,8% |
+
+- Tướng kèm cấp 20 sau chỉnh: nghề 46,1–52,5%, hệ 46,8–51,3%, cả hai trong dải.
+- Tách nguyên nhân Kim yếu ở 1v1 (Đinh Bộ Lĩnh Kim đấu 48 dựng khác hệ): đổi riêng chiêu ô 2, ô 6 hay tuyệt chiêu chỉ +1–1,5 điểm; bộ Kim gắn hệ Thổ thắng 49%, bộ Thổ gắn hệ Kim 41,5%. Nội tại Kim cũ (bỏ qua Thủ) gần như vô hiệu vì Thủ gốc 8–15; thêm Thủ cho nội tại hay cho kỹ năng Kim luôn xuyên Khiên không đổi kết quả nên không giữ.
+- **Vai trò chưa đạt:** bảng hệ × hệ 1v1 cho Kim thắng Mộc 78% nhưng thua Thổ 34% và Hỏa 18%. Thổ thắng Kim nhờ tương sinh (Thổ sinh Kim, đòn Thổ vào Kim ×1,1) và Thổ mạnh chung (1v1 54,9%), không nhờ Khiên. Muốn Kim khắc tướng trâu cần đổi quan hệ ngũ hành hoặc nội tại Kim, chờ Shan quyết.
