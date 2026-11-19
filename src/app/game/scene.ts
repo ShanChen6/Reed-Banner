@@ -81,7 +81,7 @@ export const SCENE_TITLE: Record<Scene, string> = {
   SU_LO: "Sử Lộ",
   QUESTS: "Nhiệm vụ",
   TIERS: "Ban Thưởng",
-  COMBOS: "Phối Hợp",
+  COMBOS: "Hợp Kích",
   SHOP: "Cửa Hàng",
   LEADERBOARD: "Công Trạng",
   PROFILE: "Doanh Trại",

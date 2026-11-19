@@ -332,6 +332,126 @@
         "sfx/battle/skill_c"
       ],
       "volume": 0.8
+    },
+    "sulo.roll": {
+      "files": [
+        "sfx/battle/swap_a",
+        "sfx/battle/swap_b",
+        "sfx/battle/swap_c"
+      ],
+      "volume": 0.8
+    },
+    "sulo.move": {
+      "files": [
+        "sfx/formation/place_a",
+        "sfx/formation/place_b",
+        "sfx/formation/place_c"
+      ],
+      "volume": 0.85
+    },
+    "sulo.nomove": {
+      "files": [
+        "sfx/battle/invalid_a",
+        "sfx/battle/invalid_b",
+        "sfx/battle/invalid_c"
+      ],
+      "volume": 0.7
+    },
+    "sulo.correct": {
+      "files": [
+        "sfx/formation/match_a",
+        "sfx/formation/match_b",
+        "sfx/formation/match_c"
+      ],
+      "volume": 0.8
+    },
+    "sulo.wrong": {
+      "files": [
+        "sfx/formation/reject_a",
+        "sfx/formation/reject_b",
+        "sfx/formation/reject_c"
+      ],
+      "volume": 0.85
+    },
+    "sulo.disarm": {
+      "files": [
+        "sfx/formation/eraser_a",
+        "sfx/formation/eraser_b"
+      ],
+      "volume": 0.8
+    },
+    "sulo.trap": {
+      "files": [
+        "sfx/battle/damage_a",
+        "sfx/battle/damage_b",
+        "sfx/battle/damage_c"
+      ],
+      "volume": 0.85
+    },
+    "sulo.luck": {
+      "files": [
+        "sfx/formation/wild_a",
+        "sfx/formation/wild_b",
+        "sfx/formation/wild_c"
+      ],
+      "volume": 0.85
+    },
+    "sulo.gate": {
+      "files": [
+        "sfx/formation/line_a",
+        "sfx/formation/line_b"
+      ],
+      "volume": 0.8
+    },
+    "sulo.stele": {
+      "files": [
+        "sfx/formation/fogclear_a",
+        "sfx/formation/fogclear_b",
+        "sfx/formation/fogclear_c"
+      ],
+      "volume": 0.75
+    },
+    "sulo.aid": {
+      "files": [
+        "sfx/formation/tick_a",
+        "sfx/formation/tick_b",
+        "sfx/formation/tick_c"
+      ],
+      "volume": 0.7
+    },
+    "sulo.boss": {
+      "files": [
+        "sfx/formation/flame3_a",
+        "sfx/formation/flame3_b"
+      ],
+      "volume": 0.85
+    },
+    "sulo.counsel": {
+      "files": [
+        "sfx/formation/fusion_a",
+        "sfx/formation/fusion_b"
+      ],
+      "volume": 0.85
+    },
+    "sulo.bosswon": {
+      "files": [
+        "sfx/battle/win_a"
+      ],
+      "volume": 0.9
+    },
+    "sulo.bosslost": {
+      "files": [
+        "sfx/battle/lose_a",
+        "sfx/battle/lose_b"
+      ],
+      "volume": 0.9
+    },
+    "sulo.won": {
+      "files": [
+        "sfx/formation/win_a",
+        "sfx/formation/win_b"
+      ],
+      "volume": 0.9
     }
   },
   "music": {
@@ -365,6 +485,14 @@
     },
     "pvp": {
       "file": "music/pvp",
+      "volume": 0.5
+    },
+    "sulo_maze": {
+      "file": "music/atlas",
+      "volume": 0.45
+    },
+    "sulo_boss": {
+      "file": "music/battle_boss",
       "volume": 0.5
     }
   },

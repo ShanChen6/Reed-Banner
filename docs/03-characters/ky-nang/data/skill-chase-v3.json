@@ -46,7 +46,18 @@
       "payoff": "sustain",
       "value": 0.25,
       "targeted": false,
-      "description": "Đồng đội dùng kỹ năng gây mất HP thực: kỹ năng hồi/cấp Khiên hữu hiệu tiếp theo tăng 25% lượng gốc của các bước hồi/Khiên trực tiếp, trước hệ số Tinh thần của người nhận."
+      "description": "Đồng đội dùng kỹ năng gây mất máu thực: kỹ năng hồi/cấp Khiên hữu hiệu tiếp theo tăng 25% lượng gốc của các bước hồi/Khiên trực tiếp, trước hệ số Tinh thần của người nhận."
+    },
+    "phongLenh": {
+      "id": "phongLenh",
+      "name": "Phong lệnh tiếp ứng",
+      "triggers": [
+        "controlled"
+      ],
+      "payoff": "damage",
+      "value": 0.15,
+      "targeted": true,
+      "description": "Đồng đội khác áp Đóng băng/Câm lặng thành công: đòn kiếm/kỹ năng sát thương tiếp theo vào đúng mục tiêu đó tăng 15% sát thương; một cơ hội giữ, hết hạn như cơ hội phối hợp thường."
     },
     "interdiction": {
       "id": "interdiction",
@@ -70,30 +81,332 @@
       "payoff": "discount",
       "value": 10,
       "targeted": false,
-      "description": "Đồng đội dùng kỹ năng hồi HP thực hoặc Khiên do đồng đội cấp cho người khác đỡ đòn chủ động: kỹ năng tiếp theo giảm 10 năng lượng, không thấp hơn 0."
+      "description": "Đồng đội dùng kỹ năng hồi máu thực hoặc Khiên do đồng đội cấp cho người khác đỡ đòn chủ động: kỹ năng tiếp theo giảm 10 năng lượng, không thấp hơn 0."
     }
   },
   "chasePassives": {
-    "martial": {
-      "id": "martial",
-      "name": "Liên trảm",
+    "marksmanPrepared": {
+      "id": "marksmanPrepared",
+      "name": "Chờ thời phá giáp",
       "triggers": [
         "armorBroken"
       ],
       "effect": "damage",
+      "value": 0.4,
+      "description": "Đồng đội phá giáp hữu hiệu: truy kích đúng mục tiêu bằng 40% Công; tối đa một lần mỗi hành động.",
+      "alliesOnly": true,
+      "activeOnly": true
+    },
+    "assassinPrepared": {
+      "id": "assassinPrepared",
+      "name": "Chờ thời khống chế",
+      "triggers": [
+        "controlled"
+      ],
+      "effect": "damage",
+      "value": 0.45,
+      "description": "Đồng đội khống chế thành công: truy kích đúng mục tiêu bằng 45% Công; tối đa một lần mỗi hành động.",
+      "alliesOnly": true,
+      "activeOnly": true
+    },
+    "noThanhBenBi": {
+      "id": "noThanhBenBi",
+      "name": "Nỏ thành bền bỉ",
+      "triggers": [
+        "armorBroken"
+      ],
+      "effect": "armor",
+      "value": 0.08,
+      "description": "Đồng đội phá giáp: giảm Thủ mục tiêu 8% trong 1 lượt; không cộng dồn với giảm Thủ mạnh hơn.",
+      "alliesOnly": true,
+      "activeOnly": true
+    },
+    "reHoNguoi": {
+      "id": "reHoNguoi",
+      "name": "Rễ hộ người",
+      "triggers": [
+        "healed"
+      ],
+      "effect": "shield",
+      "value": 0.04,
+      "description": "Đồng đội hồi máu thực: cấp Khiên bằng 4% máu tối đa người vừa được hồi, tới khi hết; theo Tinh thần người nhận.",
+      "alliesOnly": true,
+      "activeOnly": true,
+      "shieldTurns": null
+    },
+    "canhGioiBenSong": {
+      "id": "canhGioiBenSong",
+      "name": "Cảnh giới bến sông",
+      "triggers": [
+        "controlled"
+      ],
+      "effect": "energy",
+      "value": 7,
+      "description": "Đồng đội khống chế thành công: bản thân nhận 7 năng lượng; một lần mỗi hành động.",
+      "alliesOnly": true,
+      "activeOnly": true,
+      "selfRecipient": true
+    },
+    "hoaCotTruyKich": {
+      "id": "hoaCotTruyKich",
+      "name": "Hỏa cốt truy kích",
+      "triggers": [
+        "armorBroken"
+      ],
+      "effect": "damage",
+      "value": 0.35,
+      "description": "Đồng đội phá giáp: truy kích mục tiêu bằng 35% Công; một lần mỗi hành động.",
+      "alliesOnly": true,
+      "activeOnly": true
+    },
+    "sonTranKienThu": {
+      "id": "sonTranKienThu",
+      "name": "Sơn trấn kiên thủ",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "effect": "damage",
+      "value": 0.3,
+      "description": "Khiên đồng minh đỡ đòn chủ động: phản kích đúng người tấn công bằng 30% Công; bỏ qua khi không xác định được nguồn.",
+      "alliesOnly": false,
+      "activeOnly": true,
+      "attackerRecipient": true
+    },
+    "chopThoiCo": {
+      "id": "chopThoiCo",
+      "name": "Chớp thời cơ",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "drain",
+      "value": 5,
+      "description": "Kỹ năng chủ động bản thân gây mất máu thật: trừ mục tiêu 5 năng lượng; một lần mỗi hành động.",
+      "alliesOnly": false,
+      "activeOnly": true,
+      "selfSource": true
+    },
+    "thuanGioHoiNhip": {
+      "id": "thuanGioHoiNhip",
+      "name": "Thuận gió hồi nhịp",
+      "triggers": [
+        "dispelled"
+      ],
+      "effect": "energy",
+      "value": 6,
+      "description": "Đồng đội xua tan hiệu ứng có lợi của địch hữu hiệu: bản thân nhận 6 năng lượng; một lần mỗi hành động.",
+      "alliesOnly": true,
+      "activeOnly": true,
+      "selfRecipient": true
+    },
+    "anKhuyetQuyetTam": {
+      "id": "anKhuyetQuyetTam",
+      "name": "Ấn khuyết quyết tâm",
+      "triggers": [
+        "armorBroken"
+      ],
+      "effect": "damage",
+      "value": 0.25,
+      "description": "Đồng đội phá giáp: truy kích mục tiêu bằng 25% Công; một lần mỗi hành động.",
+      "alliesOnly": true,
+      "activeOnly": true
+    },
+    "lamAnhTiepNhip": {
+      "id": "lamAnhTiepNhip",
+      "name": "Lâm ảnh tiếp nhịp",
+      "triggers": [
+        "controlled"
+      ],
+      "effect": "energy",
+      "value": 6,
+      "description": "Đồng đội khống chế thành công: bản thân nhận 6 năng lượng; một lần mỗi hành động.",
+      "alliesOnly": true,
+      "activeOnly": true,
+      "selfRecipient": true
+    },
+    "tinhThuyHoiTuc": {
+      "id": "tinhThuyHoiTuc",
+      "name": "Tĩnh thủy hồi tức",
+      "triggers": [
+        "controlled"
+      ],
+      "effect": "energy",
+      "value": 5,
+      "description": "Đồng đội khống chế thành công: bản thân nhận 5 năng lượng; một lần mỗi hành động.",
+      "alliesOnly": true,
+      "activeOnly": true,
+      "selfRecipient": true
+    },
+    "daTapThuaHu": {
+      "id": "daTapThuaHu",
+      "name": "Dạ tập thừa hư",
+      "triggers": [
+        "controlled"
+      ],
+      "effect": "damage",
+      "value": 0.3,
+      "description": "Đồng đội khống chế thành công: truy kích mục tiêu bằng 30% Công; một lần mỗi hành động.",
+      "alliesOnly": true,
+      "activeOnly": true
+    },
+    "phucDiaPhanKich": {
+      "id": "phucDiaPhanKich",
+      "name": "Phục địa phản kích",
+      "triggers": [
+        "shieldAbsorbed"
+      ],
+      "effect": "damage",
+      "value": 0.3,
+      "description": "Khiên bản thân đỡ đòn chủ động: phản kích đúng người tấn công bằng 30% Công; bỏ qua khi không xác định được nguồn.",
+      "alliesOnly": false,
+      "activeOnly": true,
+      "attackerRecipient": true,
+      "receiverOnly": true
+    },
+    "tanVuHoiNhip": {
+      "id": "tanVuHoiNhip",
+      "name": "Tàn vũ hồi nhịp",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "energy",
+      "value": 4,
+      "description": "Kỹ năng chủ động bản thân gây mất máu thật: nhận 4 năng lượng; toàn chuỗi nhiều đòn chỉ nhận một lần.",
+      "alliesOnly": false,
+      "activeOnly": true,
+      "selfSource": true,
+      "selfRecipient": true
+    },
+    "duAmTiepVan": {
+      "id": "duAmTiepVan",
+      "name": "Dư âm tiếp vận",
+      "triggers": [
+        "dispelled"
+      ],
+      "effect": "energy",
+      "value": 6,
+      "description": "Đồng đội xua tan hiệu ứng có lợi của địch hữu hiệu: bản thân nhận 6 năng lượng; một lần mỗi hành động.",
+      "alliesOnly": true,
+      "activeOnly": true,
+      "selfRecipient": true
+    },
+    "mn_thoMachHoThan": {
+      "id": "mn_thoMachHoThan",
+      "name": "Thổ mạch hộ thân",
+      "triggers": [
+        "shieldBroken"
+      ],
+      "effect": "defUp",
+      "value": 0.15,
+      "description": "Khiên của bản thân vừa về 0 vì đòn chủ động hoặc bàn cờ của địch: Thủ +15% tới hết lượt thường kế tiếp của phe mình; không cộng dồn với Thủ+ mạnh hơn.",
+      "alliesOnly": false,
+      "activeOnly": true,
+      "provenance": true,
+      "selfRecipient": true,
+      "receiverOnly": true,
+      "turns": 1
+    },
+    "mn_mocTucDuongSinh": {
+      "id": "mn_mocTucDuongSinh",
+      "name": "Mộc tức dưỡng sinh",
+      "triggers": [],
+      "effect": "heal",
+      "value": 0.05,
+      "description": "Cuối lượt thường của phe mình, nếu còn sống và máu ≤40% máu tối đa: hồi 5% máu tối đa theo Tinh thần. Tối đa 3 lần mỗi trận; không hồi sinh, không mở chuỗi.",
+      "alliesOnly": false,
+      "turnEnd": {
+        "hpBelow": 0.4,
+        "quota": 3
+      }
+    },
+    "mn_loiYDoatCo": {
+      "id": "mn_loiYDoatCo",
+      "name": "Lôi ý đoạt cơ",
+      "triggers": [
+        "skillDamage"
+      ],
+      "effect": "drain",
+      "value": 6,
+      "description": "Kỹ năng chủ động bản thân gây mất máu thật: trừ mục tiêu bị trúng đầu tiên 6 năng lượng; một lần mỗi hành động.",
+      "alliesOnly": false,
+      "activeOnly": true,
+      "selfSource": true
+    },
+    "vp_truongThietHoiDap": {
+      "id": "vp_truongThietHoiDap",
+      "name": "Trượng thiết hồi đáp",
+      "triggers": [
+        "damageTaken"
+      ],
+      "effect": "damage",
+      "value": 0.3,
+      "description": "Bản thân mất máu thật vì kỹ năng chủ động của địch: trả đòn hệ Kim 30% Công vào đúng kẻ tấn công; không trả đòn khi bị hạ gục.",
+      "alliesOnly": false,
+      "activeOnly": true,
+      "provenance": true,
+      "attackerRecipient": true,
+      "receiverOnly": true,
+      "element": "kim"
+    },
+    "vp_phiDiepTheoGio": {
+      "id": "vp_phiDiepTheoGio",
+      "name": "Phi diệp theo gió",
+      "triggers": [
+        "weakened"
+      ],
+      "effect": "damage",
+      "value": 0.3,
+      "description": "Đồng đội khác dùng kỹ năng khiến địch còn sống xuống ≤50% máu: truy kích hệ Phong 30% Công vào đúng địch đó.",
+      "alliesOnly": true,
+      "activeOnly": true,
+      "element": "phong"
+    },
+    "vp_hoaAnVanSau": {
+      "id": "vp_hoaAnVanSau",
+      "name": "Hỏa ẩn vân sau",
+      "triggers": [
+        "finishing"
+      ],
+      "effect": "burn",
+      "value": 0.3,
+      "description": "Kỹ năng chủ động bản thân khiến địch còn sống xuống ≤30% máu: Thiêu đốt 2 lượt, mỗi lượt 30% Công.",
+      "alliesOnly": false,
+      "activeOnly": true,
+      "selfSource": true,
+      "turns": 2
+    },
+    "vp_loiVanTranPhap": {
+      "id": "vp_loiVanTranPhap",
+      "name": "Lôi vân trấn pháp",
+      "triggers": [
+        "dispelled"
+      ],
+      "effect": "silence",
+      "value": 0,
+      "description": "Xua tan hữu hiệu của phe ta (bản thân hoặc đồng đội) xóa hiệu ứng có lợi của địch: Câm lặng đúng địch đó 1 lượt.",
+      "alliesOnly": false,
+      "activeOnly": true,
+      "turns": 1
+    },
+    "martial": {
+      "id": "martial",
+      "name": "Liên trảm",
+      "triggers": [
+        "controlled"
+      ],
+      "effect": "damage",
       "value": 0.55,
-      "description": "Đồng đội phá giáp: truy kích mục tiêu bằng 55% ATK.",
+      "description": "Đồng đội khống chế: truy kích mục tiêu bằng 55% Công.",
       "alliesOnly": true
     },
     "arcane": {
       "id": "arcane",
       "name": "Chú kích",
       "triggers": [
-        "controlled"
+        "armorBroken"
       ],
       "effect": "damage",
       "value": 0.5,
-      "description": "Đồng đội khống chế: truy kích mục tiêu bằng 50% ATK.",
+      "description": "Đồng đội phá giáp: truy kích mục tiêu bằng 50% Công.",
       "alliesOnly": true
     },
     "guardian": {
@@ -104,40 +417,40 @@
       ],
       "effect": "shield",
       "value": 0.06,
-      "description": "Đồng đội hồi HP thực: cấp Khiên bằng 6% HP tối đa người vừa được hồi.",
+      "description": "Đồng đội hồi máu thực: cấp Khiên bằng 6% máu tối đa người vừa được hồi.",
       "alliesOnly": true
     },
     "medic": {
       "id": "medic",
       "name": "Cứu viện",
       "triggers": [
-        "skillDamage"
+        "controlled"
       ],
       "effect": "heal",
       "value": 0.05,
-      "description": "Đồng đội gây mất HP bằng kỹ năng: hồi người bị thương nặng nhất 5% HP tối đa.",
+      "description": "Đồng đội khống chế thành công: hồi người bị thương nặng nhất 5% máu tối đa.",
       "alliesOnly": true
     },
     "strategist": {
       "id": "strategist",
       "name": "Thừa hư",
       "triggers": [
-        "dispelled"
+        "armorBroken"
       ],
       "effect": "drain",
       "value": 8,
-      "description": "Đồng đội xua tan: trừ thêm 8 năng lượng mục tiêu.",
+      "description": "Đồng đội phá giáp: trừ thêm 8 năng lượng mục tiêu.",
       "alliesOnly": true
     },
     "commander": {
       "id": "commander",
       "name": "Tiếp lệnh",
       "triggers": [
-        "healed"
+        "controlled"
       ],
       "effect": "energy",
       "value": 8,
-      "description": "Đồng đội hồi HP thực: cấp người vừa được hồi 8 năng lượng.",
+      "description": "Đồng đội khống chế thành công: cấp người vừa khống chế 8 năng lượng.",
       "alliesOnly": true
     },
     "kim1": {
@@ -148,7 +461,7 @@
       ],
       "effect": "armor",
       "value": 0.1,
-      "description": "Kỹ năng gây mất HP: giảm DEF mục tiêu 10% trong 1 lượt.",
+      "description": "Kỹ năng gây mất máu: giảm Thủ mục tiêu 10% trong 1 lượt.",
       "alliesOnly": false
     },
     "kim2": {
@@ -159,7 +472,7 @@
       ],
       "effect": "damage",
       "value": 0.35,
-      "description": "Phá giáp thành công: truy kích bằng 35% ATK.",
+      "description": "Phá giáp thành công: truy kích bằng 35% Công.",
       "alliesOnly": false
     },
     "moc1": {
@@ -170,7 +483,7 @@
       ],
       "effect": "heal",
       "value": 0.04,
-      "description": "Kỹ năng gây mất HP: hồi người bị thương nặng nhất 4% HP tối đa.",
+      "description": "Kỹ năng gây mất máu: hồi người bị thương nặng nhất 4% máu tối đa.",
       "alliesOnly": false
     },
     "moc2": {
@@ -181,7 +494,7 @@
       ],
       "effect": "shield",
       "value": 0.04,
-      "description": "Hồi HP thực: cấp Khiên bằng 4% HP tối đa người được hồi.",
+      "description": "Hồi máu thực: cấp Khiên bằng 4% máu tối đa người được hồi.",
       "alliesOnly": false
     },
     "thuy1": {
@@ -192,7 +505,7 @@
       ],
       "effect": "heal",
       "value": 0.05,
-      "description": "Khống chế thành công: hồi người bị thương nặng nhất 5% HP tối đa.",
+      "description": "Khống chế thành công: hồi người bị thương nặng nhất 5% máu tối đa.",
       "alliesOnly": false
     },
     "thuy2": {
@@ -203,7 +516,7 @@
       ],
       "effect": "energy",
       "value": 6,
-      "description": "Hồi HP thực: cấp người được hồi 6 năng lượng.",
+      "description": "Hồi máu thực: cấp người được hồi 6 năng lượng.",
       "alliesOnly": false
     },
     "hoa1": {
@@ -214,7 +527,7 @@
       ],
       "effect": "damage",
       "value": 0.4,
-      "description": "Phá giáp thành công: truy kích bằng 40% ATK.",
+      "description": "Phá giáp thành công: truy kích bằng 40% Công.",
       "alliesOnly": false
     },
     "hoa2": {
@@ -225,7 +538,7 @@
       ],
       "effect": "armor",
       "value": 0.12,
-      "description": "Kỹ năng gây mất HP: giảm DEF mục tiêu 12% trong 1 lượt.",
+      "description": "Kỹ năng gây mất máu: giảm Thủ mục tiêu 12% trong 1 lượt.",
       "alliesOnly": false
     },
     "tho1": {
@@ -236,7 +549,7 @@
       ],
       "effect": "shield",
       "value": 0.05,
-      "description": "Hồi HP thực: cấp Khiên bằng 5% HP tối đa người được hồi.",
+      "description": "Hồi máu thực: cấp Khiên bằng 5% máu tối đa người được hồi.",
       "alliesOnly": false
     },
     "tho2": {
@@ -247,7 +560,7 @@
       ],
       "effect": "damage",
       "value": 0.35,
-      "description": "Khiên đồng đội thực sự đỡ đòn: truy kích một địch bằng 35% ATK.",
+      "description": "Khiên đồng đội thực sự đỡ đòn: truy kích một địch bằng 35% Công.",
       "alliesOnly": false
     },
     "loi1": {
@@ -258,7 +571,7 @@
       ],
       "effect": "damage",
       "value": 0.45,
-      "description": "Khống chế thành công: truy kích bằng 45% ATK.",
+      "description": "Khống chế thành công: truy kích bằng 45% Công.",
       "alliesOnly": false
     },
     "loi2": {
@@ -269,7 +582,7 @@
       ],
       "effect": "drain",
       "value": 6,
-      "description": "Kỹ năng gây mất HP: trừ mục tiêu 6 năng lượng.",
+      "description": "Kỹ năng gây mất máu: trừ mục tiêu 6 năng lượng.",
       "alliesOnly": false
     },
     "phong1": {
@@ -280,7 +593,7 @@
       ],
       "effect": "damage",
       "value": 0.4,
-      "description": "Xua tan thành công: truy kích bằng 40% ATK.",
+      "description": "Xua tan thành công: truy kích bằng 40% Công.",
       "alliesOnly": false
     },
     "phong2": {
@@ -291,7 +604,7 @@
       ],
       "effect": "energy",
       "value": 5,
-      "description": "Kỹ năng gây mất HP: cấp người tạo tín hiệu 5 năng lượng.",
+      "description": "Kỹ năng gây mất máu: cấp người tạo tín hiệu 5 năng lượng.",
       "alliesOnly": false
     }
   },
@@ -299,6 +612,7 @@
     {
       "id": "dbl_tuongSi_kim",
       "name": "Bạch Kim Phá Giáp Trảm",
+      "lineName": "Bình định",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -332,6 +646,7 @@
     {
       "id": "dbl_tuongSi_moc",
       "name": "Thanh Mộc Hoành Đao",
+      "lineName": "Bình định",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -363,6 +678,7 @@
     {
       "id": "dbl_tuongSi_thuy",
       "name": "Hắc Thủy Đoạn Giang",
+      "lineName": "Bình định",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -401,6 +717,7 @@
     {
       "id": "dbl_tuongSi_hoa",
       "name": "Xích Viêm Liệt Trảm",
+      "lineName": "Bình định",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -434,6 +751,7 @@
     {
       "id": "dbl_tuongSi_tho",
       "name": "Hoàng Thổ Khai Sơn Trảm",
+      "lineName": "Bình định",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -468,6 +786,7 @@
     {
       "id": "dbl_tuongSi_loi",
       "name": "Tử Lôi Phá Trận Kích",
+      "lineName": "Bình định",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -499,6 +818,7 @@
     {
       "id": "dbl_tuongSi_phong",
       "name": "Cuồng Phong Tảo Diệp",
+      "lineName": "Bình định",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "tuongSi",
@@ -530,6 +850,7 @@
     {
       "id": "dbl_phapSu_kim",
       "name": "Kim Cương Pháp Ấn",
+      "lineName": "Thiên uy",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -562,6 +883,7 @@
     {
       "id": "dbl_phapSu_moc",
       "name": "Vạn Mộc Tịch Diệt",
+      "lineName": "Thiên uy",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -592,6 +914,7 @@
     {
       "id": "dbl_phapSu_thuy",
       "name": "Băng Phách Trấn Hồn",
+      "lineName": "Thiên uy",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -629,6 +952,7 @@
     {
       "id": "dbl_phapSu_hoa",
       "name": "Cửu U Phần Thế Chú",
+      "lineName": "Thiên uy",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -661,6 +985,7 @@
     {
       "id": "dbl_phapSu_tho",
       "name": "Đại Địa Phong Ấn",
+      "lineName": "Thiên uy",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -694,6 +1019,7 @@
     {
       "id": "dbl_phapSu_loi",
       "name": "Cửu Tiêu Lôi Ngục",
+      "lineName": "Thiên uy",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -724,6 +1050,7 @@
     {
       "id": "dbl_phapSu_phong",
       "name": "Hư Không Cuồng Khiếu",
+      "lineName": "Thiên uy",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "phapSu",
@@ -754,6 +1081,7 @@
     {
       "id": "dbl_binhLinh_kim",
       "name": "Kim Giáp Hộ Vực",
+      "lineName": "Trấn quốc",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -787,6 +1115,7 @@
     {
       "id": "dbl_binhLinh_moc",
       "name": "Đằng Giáp Trấn Ải",
+      "lineName": "Trấn quốc",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -818,6 +1147,7 @@
     {
       "id": "dbl_binhLinh_thuy",
       "name": "Hải Triều Hộ Vệ",
+      "lineName": "Trấn quốc",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -856,6 +1186,7 @@
     {
       "id": "dbl_binhLinh_hoa",
       "name": "Liệt Hỏa Tường Vi",
+      "lineName": "Trấn quốc",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -889,6 +1220,7 @@
     {
       "id": "dbl_binhLinh_tho",
       "name": "Thạch Bích Trường Thành",
+      "lineName": "Trấn quốc",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -923,6 +1255,7 @@
     {
       "id": "dbl_binhLinh_loi",
       "name": "Lôi Trì Thiết Vệ",
+      "lineName": "Trấn quốc",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -954,6 +1287,7 @@
     {
       "id": "dbl_binhLinh_phong",
       "name": "Phong Nhãn Hộ Thuẫn",
+      "lineName": "Trấn quốc",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "binhLinh",
@@ -985,6 +1319,7 @@
     {
       "id": "dbl_ySu_kim",
       "name": "Kim Châm Tục Mệnh",
+      "lineName": "Hưng sinh",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1015,6 +1350,7 @@
     {
       "id": "dbl_ySu_moc",
       "name": "Xuân Phong Hóa Vũ",
+      "lineName": "Hưng sinh",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1043,6 +1379,7 @@
     {
       "id": "dbl_ySu_thuy",
       "name": "Cam Lộ Tẩy Trần",
+      "lineName": "Hưng sinh",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1078,6 +1415,7 @@
     {
       "id": "dbl_ySu_hoa",
       "name": "Hồi Dương Chi Diễm",
+      "lineName": "Hưng sinh",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1108,6 +1446,7 @@
     {
       "id": "dbl_ySu_tho",
       "name": "Đại Địa Chi Ân",
+      "lineName": "Hưng sinh",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1139,6 +1478,7 @@
     {
       "id": "dbl_ySu_loi",
       "name": "Lôi Âm Tỉnh Thần",
+      "lineName": "Hưng sinh",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1167,6 +1507,7 @@
     {
       "id": "dbl_ySu_phong",
       "name": "Thanh Phong Tán Độc",
+      "lineName": "Hưng sinh",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "ySu",
@@ -1195,6 +1536,7 @@
     {
       "id": "dbl_muuSi_kim",
       "name": "Kim Phách Đoạt Hồn",
+      "lineName": "Định kế",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1229,6 +1571,7 @@
     {
       "id": "dbl_muuSi_moc",
       "name": "Đằng Xà Phược Mưu",
+      "lineName": "Định kế",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1261,6 +1604,7 @@
     {
       "id": "dbl_muuSi_thuy",
       "name": "Hư Không Đảo Hải",
+      "lineName": "Định kế",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1300,6 +1644,7 @@
     {
       "id": "dbl_muuSi_hoa",
       "name": "Phần Tâm Đoạt Kế",
+      "lineName": "Định kế",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1334,6 +1679,7 @@
     {
       "id": "dbl_muuSi_tho",
       "name": "Quỷ Mưu Mai Phục",
+      "lineName": "Định kế",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1369,6 +1715,7 @@
     {
       "id": "dbl_muuSi_loi",
       "name": "Lôi Khiếu Đoạt Khí",
+      "lineName": "Định kế",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1401,6 +1748,7 @@
     {
       "id": "dbl_muuSi_phong",
       "name": "Loạn Phong Phá Trận",
+      "lineName": "Định kế",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "muuSi",
@@ -1431,8 +1779,534 @@
       ]
     },
     {
+      "id": "dbl_xaThu_kim",
+      "name": "Xuyên Tâm Vạn Tiễn",
+      "lineName": "Vạn tiễn",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "xaThu",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.1
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 3
+          }
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_xaThu_moc",
+      "name": "Đằng Mạn Tróc Ảnh",
+      "lineName": "Vạn tiễn",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "xaThu",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.1
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 3
+          }
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    {
+      "id": "dbl_xaThu_thuy",
+      "name": "Băng Tiễn Vũ Bão",
+      "lineName": "Vạn tiễn",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "xaThu",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.1
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 3
+          }
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_xaThu_hoa",
+      "name": "Liệt Hỏa Phần Trại",
+      "lineName": "Vạn tiễn",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "xaThu",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.1
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 3
+          }
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_xaThu_tho",
+      "name": "Toái Thạch Lưu Tinh",
+      "lineName": "Vạn tiễn",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "xaThu",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.1
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 3
+          }
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_xaThu_loi",
+      "name": "Thiểm Điện Xuyên Vân",
+      "lineName": "Vạn tiễn",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "xaThu",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.1
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 3
+          }
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    {
+      "id": "dbl_xaThu_phong",
+      "name": "Bão Táp Cuồng Long",
+      "lineName": "Vạn tiễn",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "xaThu",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "allEnemies",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 1.1
+        },
+        {
+          "type": "effect",
+          "to": "targets",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        },
+        {
+          "type": "destroy",
+          "area": {
+            "random": 3
+          }
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    },
+    {
+      "id": "dbl_satThu_kim",
+      "name": "Ảnh Nha Đoạt Hộ",
+      "lineName": "Tuyệt mệnh",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "satThu",
+      "element": "kim",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.7,
+          "execute": {
+            "threshold": 0.35,
+            "multiplier": 1.3
+          }
+        },
+        {
+          "type": "energy",
+          "to": "self",
+          "amount": 5,
+          "requiresHpDamage": true
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "atkUp",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_satThu_moc",
+      "name": "Quỷ Mộc Ẩn Sát",
+      "lineName": "Tuyệt mệnh",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "satThu",
+      "element": "moc",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.7,
+          "execute": {
+            "threshold": 0.35,
+            "multiplier": 1.3
+          }
+        },
+        {
+          "type": "energy",
+          "to": "self",
+          "amount": 5,
+          "requiresHpDamage": true
+        },
+        {
+          "type": "heal",
+          "to": "team",
+          "ratio": 0.1
+        }
+      ]
+    },
+    {
+      "id": "dbl_satThu_thuy",
+      "name": "U Thủy Vô Ngân",
+      "lineName": "Tuyệt mệnh",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "satThu",
+      "element": "thuy",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.7,
+          "execute": {
+            "threshold": 0.35,
+            "multiplier": 1.3
+          }
+        },
+        {
+          "type": "energy",
+          "to": "self",
+          "amount": 5,
+          "requiresHpDamage": true
+        },
+        {
+          "type": "cleanse",
+          "to": "team"
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.08,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_satThu_hoa",
+      "name": "U Minh Phách Viêm",
+      "lineName": "Tuyệt mệnh",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "satThu",
+      "element": "hoa",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.7,
+          "execute": {
+            "threshold": 0.35,
+            "multiplier": 1.3
+          }
+        },
+        {
+          "type": "energy",
+          "to": "self",
+          "amount": 5,
+          "requiresHpDamage": true
+        },
+        {
+          "type": "effect",
+          "to": "enemies",
+          "effect": "defDown",
+          "value": 0.15,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_satThu_tho",
+      "name": "Địa Hành Độn Sát",
+      "lineName": "Tuyệt mệnh",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "satThu",
+      "element": "tho",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.7,
+          "execute": {
+            "threshold": 0.35,
+            "multiplier": 1.3
+          }
+        },
+        {
+          "type": "energy",
+          "to": "self",
+          "amount": 5,
+          "requiresHpDamage": true
+        },
+        {
+          "type": "effect",
+          "to": "team",
+          "effect": "shield",
+          "value": 0.12,
+          "ofMaxHp": true,
+          "turns": 2
+        }
+      ]
+    },
+    {
+      "id": "dbl_satThu_loi",
+      "name": "Thuấn Sát Thần Kiếm",
+      "lineName": "Tuyệt mệnh",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "satThu",
+      "element": "loi",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.7,
+          "execute": {
+            "threshold": 0.35,
+            "multiplier": 1.3
+          }
+        },
+        {
+          "type": "energy",
+          "to": "self",
+          "amount": 5,
+          "requiresHpDamage": true
+        },
+        {
+          "type": "energy",
+          "to": "enemies",
+          "amount": -15
+        }
+      ]
+    },
+    {
+      "id": "dbl_satThu_phong",
+      "name": "Phong Nhận Vô Hình",
+      "lineName": "Tuyệt mệnh",
+      "character": "dinhBoLinh",
+      "characterKind": "ultimate",
+      "profession": "satThu",
+      "element": "phong",
+      "slot": 4,
+      "ultimate": true,
+      "cost": 80,
+      "target": "enemy",
+      "steps": [
+        {
+          "type": "damage",
+          "atk": 2.7,
+          "execute": {
+            "threshold": 0.35,
+            "multiplier": 1.3
+          }
+        },
+        {
+          "type": "energy",
+          "to": "self",
+          "amount": 5,
+          "requiresHpDamage": true
+        },
+        {
+          "type": "energy",
+          "to": "team",
+          "amount": 15
+        }
+      ]
+    },
+    {
       "id": "dbl_quanSu_kim",
       "name": "Kim Bài Hiệu Lệnh",
+      "lineName": "Nhất thống",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
@@ -1466,6 +2340,7 @@
     {
       "id": "dbl_quanSu_moc",
       "name": "Mộc Khí Hưng Bang",
+      "lineName": "Nhất thống",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
@@ -1497,6 +2372,7 @@
     {
       "id": "dbl_quanSu_thuy",
       "name": "Nhất Hô Bách Ứng",
+      "lineName": "Nhất thống",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
@@ -1535,6 +2411,7 @@
     {
       "id": "dbl_quanSu_hoa",
       "name": "Hừng Hực Tiến Công",
+      "lineName": "Nhất thống",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
@@ -1568,6 +2445,7 @@
     {
       "id": "dbl_quanSu_tho",
       "name": "Vững Tựa Thái Sơn",
+      "lineName": "Nhất thống",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
@@ -1602,6 +2480,7 @@
     {
       "id": "dbl_quanSu_loi",
       "name": "Lôi Đình Vạn Quân",
+      "lineName": "Nhất thống",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
@@ -1633,6 +2512,7 @@
     {
       "id": "dbl_quanSu_phong",
       "name": "Thần Tốc Hành Quân",
+      "lineName": "Nhất thống",
       "character": "dinhBoLinh",
       "characterKind": "ultimate",
       "profession": "quanSu",
@@ -2502,6 +3382,286 @@
         "phong1",
         "phong2"
       ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "xaThu",
+      "element": "kim",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_luyenKimThanhKiem",
+        "role_xaThu_phaGiap",
+        "dbl_xaThu_kim",
+        "role_xaThu_tapKich",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "xaThu",
+      "element": "moc",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_lucDiepPhong",
+        "role_xaThu_phaGiap",
+        "dbl_xaThu_moc",
+        "role_xaThu_tapKich",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "xaThu",
+      "element": "thuy",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_thuyNguyetTuLinh",
+        "role_xaThu_phaGiap",
+        "dbl_xaThu_thuy",
+        "role_xaThu_tapKich",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "xaThu",
+      "element": "hoa",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_phongHoaThieuDoanh",
+        "role_xaThu_phaGiap",
+        "dbl_xaThu_hoa",
+        "role_xaThu_tapKich",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "xaThu",
+      "element": "tho",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_hauThoTichLuong",
+        "role_xaThu_phaGiap",
+        "dbl_xaThu_tho",
+        "role_xaThu_tapKich",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "xaThu",
+      "element": "loi",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_loiTruGiangThe",
+        "role_xaThu_phaGiap",
+        "dbl_xaThu_loi",
+        "role_xaThu_tapKich",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "xaThu",
+      "element": "phong",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_phongQuyenTanVan",
+        "role_xaThu_phaGiap",
+        "dbl_xaThu_phong",
+        "role_xaThu_tapKich",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "phong1",
+        "phong2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "satThu",
+      "element": "kim",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_luyenKimThanhKiem",
+        "role_satThu_doatKhi",
+        "dbl_satThu_kim",
+        "role_satThu_truyMenh",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "kim1",
+        "kim2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "satThu",
+      "element": "moc",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_lucDiepPhong",
+        "role_satThu_doatKhi",
+        "dbl_satThu_moc",
+        "role_satThu_truyMenh",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "moc1",
+        "moc2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "satThu",
+      "element": "thuy",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_thuyNguyetTuLinh",
+        "role_satThu_doatKhi",
+        "dbl_satThu_thuy",
+        "role_satThu_truyMenh",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "thuy1",
+        "thuy2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "satThu",
+      "element": "hoa",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_phongHoaThieuDoanh",
+        "role_satThu_doatKhi",
+        "dbl_satThu_hoa",
+        "role_satThu_truyMenh",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "hoa1",
+        "hoa2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "satThu",
+      "element": "tho",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_hauThoTichLuong",
+        "role_satThu_doatKhi",
+        "dbl_satThu_tho",
+        "role_satThu_truyMenh",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "tho1",
+        "tho2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "satThu",
+      "element": "loi",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_loiTruGiangThe",
+        "role_satThu_doatKhi",
+        "dbl_satThu_loi",
+        "role_satThu_truyMenh",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "loi1",
+        "loi2"
+      ]
+    },
+    {
+      "id": "dinhBoLinh",
+      "name": "Đinh Bộ Lĩnh",
+      "profession": "satThu",
+      "element": "phong",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_phongQuyenTanVan",
+        "role_satThu_doatKhi",
+        "dbl_satThu_phong",
+        "role_satThu_truyMenh",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "phong1",
+        "phong2"
+      ]
     }
   ],
   "companions": [
@@ -2647,7 +3807,7 @@
     },
     {
       "id": "daoLam",
-      "name": "Đào Lam",
+      "name": "Vi Lam",
       "profession": "phapSu",
       "element": "thuy",
       "active": [
@@ -3107,7 +4267,7 @@
     },
     {
       "id": "chauNgoc",
-      "name": "Châu Ngọc",
+      "name": "Trần Ngọc",
       "profession": "ySu",
       "element": "kim",
       "active": [
@@ -3147,7 +4307,7 @@
     },
     {
       "id": "beLien",
-      "name": "Bế Liên",
+      "name": "Mã Liên",
       "profession": "ySu",
       "element": "tho",
       "active": [
@@ -3343,6 +4503,286 @@
         "commander",
         "hoa1",
         "hoa2"
+      ]
+    },
+    {
+      "id": "bachNoLang",
+      "name": "Đoàn Cự",
+      "profession": "xaThu",
+      "element": "kim",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_luyenKimThanhKiem",
+        "role_xaThu_phaGiap",
+        "thietNoPhaThanh",
+        "role_xaThu_tapKich",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "kim1",
+        "noThanhBenBi"
+      ]
+    },
+    {
+      "id": "thanhLamXa",
+      "name": "Quản Hiên",
+      "profession": "xaThu",
+      "element": "moc",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_lucDiepPhong",
+        "role_xaThu_phaGiap",
+        "lucTienTroiDuong",
+        "role_xaThu_tapKich",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "moc1",
+        "reHoNguoi"
+      ]
+    },
+    {
+      "id": "lamGiangPhiDiep",
+      "name": "Thái Diệp",
+      "profession": "xaThu",
+      "element": "thuy",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_thuyNguyetTuLinh",
+        "role_xaThu_phaGiap",
+        "lieuDiepToaGiang",
+        "role_xaThu_tapKich",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "thuy1",
+        "canhGioiBenSong"
+      ]
+    },
+    {
+      "id": "xichDiemLuan",
+      "name": "Lý Diệm",
+      "profession": "xaThu",
+      "element": "hoa",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_phongHoaThieuDoanh",
+        "role_xaThu_phaGiap",
+        "xichLuanLietTran",
+        "role_xaThu_tapKich",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "hoa1",
+        "hoaCotTruyKich"
+      ]
+    },
+    {
+      "id": "tranSonThach",
+      "name": "Kha Thạch",
+      "profession": "xaThu",
+      "element": "tho",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_hauThoTichLuong",
+        "role_xaThu_phaGiap",
+        "tranSonHoTran",
+        "role_xaThu_tapKich",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "tho1",
+        "sonTranKienThu"
+      ]
+    },
+    {
+      "id": "loiMinhXa",
+      "name": "Lương Triệt",
+      "profession": "xaThu",
+      "element": "loi",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_loiTruGiangThe",
+        "role_xaThu_phaGiap",
+        "loiChamTuocKhi",
+        "role_xaThu_tapKich",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "loi1",
+        "chopThoiCo"
+      ]
+    },
+    {
+      "id": "tatPhongLang",
+      "name": "Giáp Yến",
+      "profession": "xaThu",
+      "element": "phong",
+      "active": [
+        "role_xaThu_dinhDiem",
+        "element_phongQuyenTanVan",
+        "role_xaThu_phaGiap",
+        "phongLangNhieuTran",
+        "role_xaThu_tapKich",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "pursuit",
+        "assassinPrepared",
+        "phong1",
+        "thuanGioHoiNhip"
+      ]
+    },
+    {
+      "id": "bachPhongDao",
+      "name": "Phan Quyên",
+      "profession": "satThu",
+      "element": "kim",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_luyenKimThanhKiem",
+        "role_satThu_doatKhi",
+        "thietAnDoatMenh",
+        "role_satThu_truyMenh",
+        "element_kimYNgungThan"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "kim1",
+        "anKhuyetQuyetTam"
+      ]
+    },
+    {
+      "id": "docAnh",
+      "name": "Nông Sâm",
+      "profession": "satThu",
+      "element": "moc",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_lucDiepPhong",
+        "role_satThu_doatKhi",
+        "docAnhTiemCham",
+        "role_satThu_truyMenh",
+        "element_linhMocHoiSinh"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "moc1",
+        "lamAnhTiepNhip"
+      ]
+    },
+    {
+      "id": "hanGiangKhach",
+      "name": "Âu Thu",
+      "profession": "satThu",
+      "element": "thuy",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_thuyNguyetTuLinh",
+        "role_satThu_doatKhi",
+        "hanGiangTangNhan",
+        "role_satThu_truyMenh",
+        "element_thanhLuuTayTran"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "thuy1",
+        "tinhThuyHoiTuc"
+      ]
+    },
+    {
+      "id": "xichDa",
+      "name": "Tiết Dạ",
+      "profession": "satThu",
+      "element": "hoa",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_phongHoaThieuDoanh",
+        "role_satThu_doatKhi",
+        "xichDaSongSat",
+        "role_satThu_truyMenh",
+        "element_noHoaThieuThan"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "hoa1",
+        "daTapThuaHu"
+      ]
+    },
+    {
+      "id": "diaAn",
+      "name": "Cát Tàng",
+      "profession": "satThu",
+      "element": "tho",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_hauThoTichLuong",
+        "role_satThu_doatKhi",
+        "diaPhucLietTrao",
+        "role_satThu_truyMenh",
+        "element_thachGiap"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "tho1",
+        "phucDiaPhanKich"
+      ]
+    },
+    {
+      "id": "loiAnh",
+      "name": "Mẫn Tuyên",
+      "profession": "satThu",
+      "element": "loi",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_loiTruGiangThe",
+        "role_satThu_doatKhi",
+        "baoVuLeHoa",
+        "role_satThu_truyMenh",
+        "element_tinhDienHoThan"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "loi1",
+        "tanVuHoiNhip"
+      ]
+    },
+    {
+      "id": "voAnh",
+      "name": "Liễu Thiều",
+      "profession": "satThu",
+      "element": "phong",
+      "active": [
+        "role_satThu_thuaHu",
+        "element_phongQuyenTanVan",
+        "role_satThu_doatKhi",
+        "voThanhDoatPhach",
+        "role_satThu_truyMenh",
+        "element_thanhPhongTuKhi"
+      ],
+      "passives": [
+        "resonance",
+        "marksmanPrepared",
+        "phong1",
+        "duAmTiepVan"
       ]
     },
     {

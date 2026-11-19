@@ -92,7 +92,7 @@ const UTILITIES: readonly { scene: Scene; title: string; icon: UtilityIcon }[] =
   { scene: "QUESTS", title: "Nhiệm vụ", icon: "scroll" },
   { scene: "LEADERBOARD", title: "Công Trạng", icon: "rank" },
   { scene: "TIERS", title: "Ban Thưởng", icon: "tier" },
-  { scene: "COMBOS", title: "Phối Hợp", icon: "link" },
+  { scene: "COMBOS", title: "Hợp Kích", icon: "link" },
   { scene: "PRACTICE", title: "Thao Luyện", icon: "swords" },
 ];
 

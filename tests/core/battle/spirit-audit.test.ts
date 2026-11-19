@@ -45,7 +45,7 @@ it('lượt thêm không trừ TT, Đóng băng vẫn chịu mốc lượt thư�
 it('hồi trực tiếp/regen/hút máu theo người nhận, giữ sàn hồi 20% ở TT0',()=>{
  for(const spirit of [0,40,100]){
   const s=setup(['role_linhDuoc']);s.sides[0].fighters[0]!.energy=100;s.sides[0].fighters[1]!.hp=100;s.sides[0].fighters[1]!.spirit=spirit;
-  const r=act(s,{type:'skill',skill:'role_linhDuoc',target:1});assert.ok(r.ok);assert.equal(r.state.sides[0].fighters[1]!.hp,100+Math.round(220*spiritHealMultiplier(spirit)));
+  const r=act(s,{type:'skill',skill:'role_linhDuoc',target:1});assert.ok(r.ok);assert.equal(r.state.sides[0].fighters[1]!.hp,100+Math.round(260*spiritHealMultiplier(spirit)));
   const t=setup();t.turn.number=2;t.turn={...t.turn,side:1};t.sides[0].fighters[0]!.hp=100;t.sides[0].fighters[0]!.spirit=spirit;t.sides[0].fighters[0]!.effects=[{kind:'regen',value:71,turns:3}];
   assert.equal(timeout(t).state.sides[0].fighters[0]!.hp,100+Math.round(71*spiritHealMultiplier(spirit)));
   const l=setup(['trucLamPhaTran']);const me=l.sides[0].fighters[0]!;me.energy=100;me.hp=100;me.spirit=spirit;
@@ -121,7 +121,7 @@ it('F: receiver healing/regen/lifesteal one scaling; AI values floor, old shield
  for(const spirit of [0,50,100]){
   const mult=spiritHealMultiplier(spirit,'F');
   const s=setup(['role_linhDuoc'],false,null);s.sides[0].fighters[0]!.energy=100;s.sides[0].fighters[0]!.spirit=100;s.sides[0].fighters[1]!.hp=100;s.sides[0].fighters[1]!.spirit=spirit;
-  const r=act(s,{type:'skill',skill:'role_linhDuoc',target:1});assert.ok(r.ok);assert.equal(r.state.sides[0].fighters[1]!.hp,100+Math.round(220*mult));assert.ok(inspectSkillChoices(s)[0]!.score>0);
+  const r=act(s,{type:'skill',skill:'role_linhDuoc',target:1});assert.ok(r.ok);assert.equal(r.state.sides[0].fighters[1]!.hp,100+Math.round(260*mult));assert.ok(inspectSkillChoices(s)[0]!.score>0);
   const t=setup([],false,null);t.turn.number=2;t.turn={...t.turn,side:1};t.sides[0].fighters[0]!.hp=100;t.sides[0].fighters[0]!.spirit=spirit;t.sides[0].fighters[0]!.effects=[{kind:'regen',value:71,turns:3}];assert.equal(timeout(t).state.sides[0].fighters[0]!.hp,100+Math.round(71*mult));
   const l=setup(['trucLamPhaTran'],false,null);const me=l.sides[0].fighters[0]!;me.energy=100;me.hp=100;me.spirit=spirit;const steal=act(l,{type:'skill',skill:'trucLamPhaTran',target:0});assert.ok(steal.ok);const d=steal.events.find(e=>e.type==='damage'&&e.source==='skill');assert.ok(d?.type==='damage');assert.equal(steal.state.sides[0].fighters[0]!.hp,100+Math.round(Math.round(d.amount*.3)*mult));
   const sh=setup(['role_thuThanh'],false,null);sh.sides[0].fighters[0]!.energy=100;sh.sides[0].fighters[0]!.spirit=spirit;const added=act(sh,{type:'skill',skill:'role_thuThanh'});assert.ok(added.ok);assert.equal(added.state.sides[0].fighters[0]!.effects.find(e=>e.kind==='shield')!.value,Math.round(200*mult));

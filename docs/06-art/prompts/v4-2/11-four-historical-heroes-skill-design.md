@@ -55,7 +55,7 @@ energy to targets amount 10
 
 | Ô | Tên | ID | Trigger / tác động |
 |---|---|---|---|
-| P1 | **Tiếp lệnh** | `commander` | healed → cấp 8 năng lượng theo luật gốc |
+| P1 | **Tiếp lệnh** | `commander` | controlled → cấp 8 năng lượng theo luật gốc |
 | P2 | **Kim phá** | `kim1` | skillDamage → giảm DEF theo luật hành |
 | P3 | **Kim truy** | `kim2` | armorBroken → truy kích theo luật hành |
 | P4 | **Giới Hộ Quốc** | `rb_kv_gioiHoQuoc` | shieldAbsorbed → heal 0.03 max HP cho đồng minh HP thấp nhất; cần kiểm tra vòng chain |
@@ -100,7 +100,7 @@ energy to team amount 8
 
 | Ô | Tên | ID | Trigger / tác động |
 |---|---|---|---|
-| P1 | **Thừa hư** | `strategist` | dispelled → trừ năng lượng theo luật nghề |
+| P1 | **Thừa hư** | `strategist` | armorBroken → trừ năng lượng theo luật nghề |
 | P2 | **Thủy tiếp** | `thuy1` | controlled → hồi cho đồng minh theo luật hành |
 | P3 | **Thủy dẫn** | `thuy2` | healed → tiếp năng lượng theo luật hành |
 | P4 | **Một Chèo Lặng Sóng** | `rb_dpt_motCheo` | dispelled → energy +5 cho người tung; guard không tái kích hoạt theo cùng event |

@@ -4,6 +4,26 @@
 
 ## 19/11/2026
 
+**Cân chiêu nghề theo nghề (Shan yêu cầu)**
+- Đo nhân vật kèm ở cấp 10, 20, 30: lệch theo nghề (Binh lính khoảng 55%, Quân sư khoảng 41%). Chiêu nghề `role_*` của Y sư hồi nhiều hơn, Mưu sĩ và Quân sư thêm sát thương, Xạ thủ tăng sát thương nhẹ, Phản kích của Binh lính giảm phản đòn; chiêu AI chiến dịch không đổi. Chênh nghề ở cấp 20 từ 13,9 xuống 8,6 điểm ([số liệu](../03-characters/danh-sach-nhan-vat.md#12-cân-chiêu-nghề-theo-nghề-19112026)).
+- Tháp Thí Luyện cân lại 13 tầng tụt dưới ngưỡng đội mẫu, tăng `contentVersion`.
+
+**Truy kích nghề không trùng tín hiệu với Cơ hội (Shan yêu cầu)**
+- Sáu nghề có bị động truy kích kích cùng tín hiệu với bị động Cơ hội của chính nghề đó (Lý Khuê: Liên trảm và Thừa thắng cùng phá giáp). Đổi tín hiệu truy kích: **Liên trảm** (Tướng sĩ) → khống chế; **Chú kích** (Pháp sư) → phá giáp; **Cứu viện** (Y sư) → khống chế; **Thừa hư** (Mưu sĩ) → phá giáp; **Tiếp lệnh** (Quân sư) → khống chế, cấp năng lượng cho người khống chế. Xạ thủ và Sát thủ đổi chéo: Xạ thủ nhận **Chờ thời khống chế**, Sát thủ nhận **Chờ thời phá giáp**. Binh lính (Tiếp phòng, hồi máu) không trùng nên giữ.
+- Mô phỏng 3v3 (`scripts/profession-balance.ts`, cấp 20, 2 seed, 6 160 trận): nghề cao nhất 58,3% → 57,3%, thấp nhất 44,8% → 45,1% ([số liệu](../03-characters/danh-sach-nhan-vat.md#11-đổi-tín-hiệu-truy-kích-nghề-19112026)). 1v1 không đổi vì truy kích nghề chỉ nhận tín hiệu từ đồng đội.
+- Tháp Thí Luyện: 9 tầng tụt dưới ngưỡng thắng của đội mẫu (26, 38, 40, 62, 65, 73, 81, 91, 96) được giảm sức mạnh đối thủ 0,01–0,09 và tăng `contentVersion`.
+- `scripts/export-skill-chase.ts` ghi lại dòng trạng thái khi sinh `skill-chase-v3.md`.
+
+**Hợp Kích, chuỗi phản ứng, bảng công trạng 10 hạng, vật phẩm, lề khung (Shan yêu cầu)**
+- Trang **Phối Hợp đổi tên Hợp Kích**; bỏ lọc "Tướng đã có/Mọi tướng" (luôn mọi tướng); Đinh Bộ Lĩnh không còn hàng chip hệ nghề trong ô mà khớp mọi bộ lọc của lưới, bấm ông khi đang lọc hệ/nghề nào thì ông mang hệ/nghề đó. Thêm khung **Chuỗi phản ứng**: dò theo luật bộ máy (bị động phát tiếp tín hiệu: truy kích gây mất máu, giảm Thủ là phá giáp, Câm lặng là khống chế; `activeOnly` chỉ nhận ở bước đầu; tối đa 4 bước), mỗi kỹ năng hiện chuỗi dài nhất (`comboChains`, `bestChains` trong `combos/links.ts`).
+- Ô trang bị ở Tổng quan tướng (Doanh Trại) hiện cấp cường hóa "+N" ở góc như trong Kho đồ.
+- Lưới chọn tướng ở Hợp Kích bỏ số "+N" ở góc thẻ; tướng có nhiều liên kết với đội vẫn xếp lên trước.
+- Doanh Trại: Đinh Bộ Lĩnh khớp mọi bộ lọc hệ, nghề.
+- Thẻ bị động bỏ nhãn "Nghề 1/2, Hệ 1/2"; nhãn loại đặt theo một quy tắc cho mọi bị động: Cơ hội, Truy kích, Giảm Thủ, Hồi máu, Cấp Khiên, Tiếp năng lượng, Rút năng lượng, Thiêu đốt, Câm lặng, Tăng Thủ.
+- `RankBoard` luôn đủ 10 hạng (ô "Còn trống"), hơn 10 người thì cuộn trong khung 7 dòng; bỏ nút "Xem thêm". Trận Đồ bỏ bảng thưởng theo hạng (thưởng đã ở từng dòng).
+- Vật phẩm có biểu tượng riêng, kệ Vật phẩm trong Kho đồ, quầy Vật phẩm ở Cửa Hàng thành lưới thẻ nhỏ ([Cường hóa](../04-equipment/cuong-hoa-todo.md#giao-diện-vật-phẩm)).
+- Lề trong khung lớn nới ra để card không đè họa tiết góc ([đặc tả](../05-ui-ux/design-system/game-mode-ui-spec.md)).
+
 **Rà soát văn phong toàn dự án (Shan yêu cầu)**
 - Quét mọi chữ người chơi thấy trong `src/app`, `src/core`, `src/server` theo [Văn phong giao diện](../00-overview/thuat-ngu.md#văn-phong-giao-diện): kiểu dấu cũ đã nhất quán; sửa 18 trích dẫn Sử Lộ sang ngoặc kép cong, chỉ số "công/thủ" viết thường ở mô tả Phúc Thiên Mệnh và hướng dẫn Quần Hùng, "EXP" ở Bình Loạn, chữ "slot/active" trong luật tầng tháp.
 - "Khách" thành **lữ khách** ở menu, hướng dẫn, trang chủ và tên mặc định trên bảng, Đấu người ("Lữ khách 1a2b").

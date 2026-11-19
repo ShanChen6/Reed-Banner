@@ -254,3 +254,55 @@ Hồ sơ lưu trước 20/10/2026 có nhân vật kèm nâng chiêu nghề theo 
 - Lệch lớn nằm ở nghề cũ, có từ trước: 1v1 Binh lính 67% (Binh lính/Lôi 73%) và Pháp sư 63% rất cao, Mưu sĩ 34% (Mưu sĩ/Kim 20%) và Quân sư 39% rất thấp; AI Thường dùng nghề hỗ trợ kém trong đấu một người.
 - Theo hệ, Kim thấp ở cả hai chế độ (1v1 40,5%, 3v3 41,8%); với nghề mới, Xạ thủ/Kim 3v3 35,5% và Sát thủ/Kim 37,3% là hai dựng thấp nhất. Lôi cao ở 3v3 (59%). Đây là lệch hệ chung, không riêng nghề mới.
 - Đây là AI đấu AI ở cấp 20, không trang bị, một cặp đồng đội cố định; không thay cho cohort có trang bị, cấp 1/10/30 và breakdown độc/P1–P4 ở [báo cáo PROF](../reports/professions-2026-10-30/README.md).
+
+## 11. Đổi tín hiệu truy kích nghề (19/11/2026)
+
+Truy kích nghề không còn kích cùng tín hiệu với bị động Cơ hội của nghề đó ([nhật ký](../decisions/changelog.md#19112026)). Đo bằng `node --import tsx scripts/profession-balance.ts --mode 3v3 --seeds 2` (cấp 20, 56 dựng, 6 160 trận, hai tướng kèm Hà Vân và Mai Thanh):
+
+| Nghề | Truy kích mới | 3v3 trước | 3v3 sau |
+|---|---|---:|---:|
+| Tướng sĩ | Liên trảm: khống chế | 58,3% | 55,3% |
+| Pháp sư | Chú kích: phá giáp | 54,7% | 57,3% |
+| Binh lính | Tiếp phòng: hồi máu (giữ) | 51,8% | 51,5% |
+| Y sư | Cứu viện: khống chế | 45,4% | 46,1% |
+| Mưu sĩ | Thừa hư: phá giáp | 44,8% | 45,1% |
+| Quân sư | Tiếp lệnh: khống chế | 45,2% | 45,1% |
+| Xạ thủ | Chờ thời khống chế | 46,8% | 48,2% |
+| Sát thủ | Chờ thời phá giáp | 53,1% | 51,3% |
+
+- Khoảng cách cao nhất và thấp nhất hẹp lại từ 13,5 xuống 12,2 điểm; không nghề nào ra khỏi dải cũ. Dựng cao nhất Tướng sĩ/Mộc 65% → Tướng sĩ/Thủy 62,3%; thấp nhất Mưu sĩ/Kim 39,5% → 41,4%.
+- Theo hệ gần như giữ nguyên; Kim vẫn thấp nhất (45,2% → 46,5%).
+- 1v1 không đổi vì truy kích nghề chỉ nhận tín hiệu từ đồng đội.
+
+## 12. Cân chiêu nghề theo nghề (19/11/2026)
+
+**Đo trước khi chỉnh** (`pnpm sim -- --roster --level N --battles 200 --seed 1`, cách đo như mục 8, kho rút là 74 nhân vật kèm, 200 trận mỗi người): lệch nằm ở **nghề**, giống nhau ở cả ba cấp; nhóm tướng thường, lịch sử, sứ quân không lệch riêng.
+
+| Nghề | Cấp 10 | Cấp 20 | Cấp 30 | Cấp 20 sau chỉnh |
+|---|---:|---:|---:|---:|
+| Binh lính | 56,5% | 54,8% | 54,2% | 53,9% |
+| Pháp sư | 51,9% | 53,6% | 52,2% | 52,4% |
+| Tướng sĩ | 51,9% | 53,0% | 52,0% | 51,3% |
+| Xạ thủ | 48,7% | 47,5% | 47,4% | 45,3% |
+| Sát thủ | 48,4% | 46,8% | 46,7% | 46,4% |
+| Y sư | 45,3% | 46,2% | 49,6% | 45,4% |
+| Mưu sĩ | 44,8% | 44,5% | 44,7% | 50,4% |
+| Quân sư | 43,8% | 40,9% | 40,5% | 46,5% |
+
+**Chỉnh** (chỉ chiêu nghề của nhân vật kèm và Đinh Bộ Lĩnh, mã `role_*`; chiêu AI chiến dịch giữ nguyên). Mưu sĩ và Quân sư gần như không gây mất máu bằng chiêu nghề nên thêm sát thương:
+
+| Nghề | Chiêu | Trước | Sau |
+|---|---|---|---|
+| Y sư | Linh dược / Tế độ | hồi 22% / 15% | hồi 26% / 18% |
+| Mưu sĩ | Mua chuộc / Ly gián | chỉ hiệu ứng | thêm 120% Công |
+| Mưu sĩ | Cắt quân lương | chỉ hiệu ứng | thêm 70% Công cả đội địch |
+| Quân sư | Nghi binh | Công −30% | thêm 160% Công |
+| Quân sư | Hiệu lệnh | Công +25% cả đội | thêm +15 năng lượng cả đội |
+| Quân sư | Phá kế | xua tan cả đội địch | thêm 100% Công |
+| Xạ thủ | Định Điểm / Phá Giáp | 160% / 190% Công | 175% / 200% Công |
+| Binh lính | Phản kích | Phản đòn 40% | Phản đòn 30% |
+
+- Cấp 20, khoảng cách nghề cao nhất và thấp nhất từ 13,9 xuống 8,6 điểm. Mưu sĩ về mặt bằng; Quân sư lên 5,6 điểm nhưng vẫn ở nhóm dưới cùng Y sư, Xạ thủ, Sát thủ (45–46,5%); Binh lính còn cao nhất. Nhiễu mỗi nghề khoảng ±1,2 điểm (khoảng 2 000 trận).
+- Đinh Bộ Lĩnh 1v1 (`scripts/profession-balance.ts --mode 1v1`, cấp 20): Quân sư 38,6% → 47%, Mưu sĩ 35,1% → 40,1%, Binh lính 64,6% → 62,2%, Pháp sư 64,2% → 60,3%; vẫn lệch vì nghề hỗ trợ đấu một mình. Hệ Kim thấp nhất (42,6%).
+- Tháp Thí Luyện cân lại 13 tầng tụt dưới ngưỡng đội mẫu (22, 29, 38, 51, 61, 62, 65, 75, 91, 95, 96, 97, 98).
+- Việc tiếp: Binh lính còn cao ở cả hai chế độ; hệ Kim thấp; Y sư, Xạ thủ, Sát thủ nhóm dưới.

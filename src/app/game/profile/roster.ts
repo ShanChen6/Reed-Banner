@@ -79,12 +79,14 @@ export function isFiltered(f: RosterFilter): boolean {
   return fold(f.query) !== "" || f.elements.length > 0 || f.professions.length > 0 || f.team !== "all";
 }
 
+/** Đinh Bộ Lĩnh đổi được hệ, nghề (Doanh Trại, chọn hệ và nghề của thủ lĩnh) nên khớp mọi bộ lọc hệ, nghề (Shan 19/11/2026). */
 export function matches(e: RosterEntry, f: RosterFilter): boolean {
   const q = fold(f.query);
+  const anyBuild = e.id === MAIN_ID;
   return (
     (!q || fold(e.name).includes(q)) &&
-    (f.elements.length === 0 || f.elements.includes(e.element)) &&
-    (f.professions.length === 0 || f.professions.includes(e.profession)) &&
+    (anyBuild || f.elements.length === 0 || f.elements.includes(e.element)) &&
+    (anyBuild || f.professions.length === 0 || f.professions.includes(e.profession)) &&
     (f.team === "all" || (f.team === "in") === (e.team !== null))
   );
 }

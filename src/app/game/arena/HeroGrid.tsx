@@ -20,6 +20,8 @@ export interface HeroGridItem {
   readonly level?: number;
   /** Lý do không chọn được; có thì thẻ mờ và không bấm được. */
   readonly blocked?: string | null;
+  /** Tướng đổi được hệ và nghề (Đinh Bộ Lĩnh): khớp mọi bộ lọc hệ, nghề. */
+  readonly anyBuild?: boolean;
 }
 
 const fold = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/gi, "d").toLowerCase();
@@ -29,8 +31,8 @@ export function filterHeroes<T extends HeroGridItem>(items: readonly T[], query:
   const q = fold(query.trim());
   return items.filter((h) =>
     (!q || fold(h.name).includes(q)) &&
-    (element === "all" || h.element === element) &&
-    (profession === "all" || h.profession === profession));
+    (h.anyBuild || element === "all" || h.element === element) &&
+    (h.anyBuild || profession === "all" || h.profession === profession));
 }
 
 export default function HeroGrid({
@@ -47,7 +49,8 @@ export default function HeroGrid({
 }: {
   items: readonly HeroGridItem[];
   selected: string | null;
-  onSelect: (id: string) => void;
+  /** `filter` là hệ, nghề đang lọc lúc bấm, để tướng đổi được bộ (anyBuild) lấy theo. */
+  onSelect: (id: string, filter: { readonly element: Element | "all"; readonly profession: Profession | "all" }) => void;
   label: string;
   pageSize?: number;
   disabled?: boolean;
@@ -116,7 +119,7 @@ export default function HeroGrid({
               selected={isSelected ? isSelected(h.id) : selected === h.id}
               style={cardStyle?.(h.id)}
               disabled={disabled || !!h.blocked}
-              onClick={() => onSelect(h.id)}
+              onClick={() => onSelect(h.id, { element, profession })}
               className={cn("items-center justify-start gap-2.5 p-2 text-left", h.blocked && "opacity-60")}
             >
               <Portrait id={h.id} element={h.element ?? "moc"} profession={h.profession ?? "tuongSi"} className="size-11 shrink-0" />

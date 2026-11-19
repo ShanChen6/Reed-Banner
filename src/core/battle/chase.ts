@@ -56,12 +56,12 @@ export const CHASE_PASSIVES = {
     vp_phiDiepTheoGio: {...passive('vp_phiDiepTheoGio', 'Phi diệp theo gió', ['weakened'], 'damage', 0.3, 'Đồng đội khác dùng kỹ năng khiến địch còn sống xuống ≤50% máu: truy kích hệ Phong 30% Công vào đúng địch đó.', true), activeOnly: true, element: 'phong'},
     vp_hoaAnVanSau: {...passive('vp_hoaAnVanSau', 'Hỏa ẩn vân sau', ['finishing'], 'burn', 0.3, 'Kỹ năng chủ động bản thân khiến địch còn sống xuống ≤30% máu: Thiêu đốt 2 lượt, mỗi lượt 30% Công.'), activeOnly: true, selfSource: true, turns: 2},
     vp_loiVanTranPhap: {...passive('vp_loiVanTranPhap', 'Lôi vân trấn pháp', ['dispelled'], 'silence', 0, 'Xua tan hữu hiệu của phe ta (bản thân hoặc đồng đội) xóa hiệu ứng có lợi của địch: Câm lặng đúng địch đó 1 lượt.'), activeOnly: true, turns: 1},
-    martial: passive('martial', 'Liên trảm', ['armorBroken'], 'damage', 0.55, 'Đồng đội phá giáp: truy kích mục tiêu bằng 55% Công.', true),
-    arcane: passive('arcane', 'Chú kích', ['controlled'], 'damage', 0.5, 'Đồng đội khống chế: truy kích mục tiêu bằng 50% Công.', true),
+    martial: passive('martial', 'Liên trảm', ['controlled'], 'damage', 0.55, 'Đồng đội khống chế: truy kích mục tiêu bằng 55% Công.', true),
+    arcane: passive('arcane', 'Chú kích', ['armorBroken'], 'damage', 0.5, 'Đồng đội phá giáp: truy kích mục tiêu bằng 50% Công.', true),
     guardian: passive('guardian', 'Tiếp phòng', ['healed'], 'shield', 0.06, 'Đồng đội hồi máu thực: cấp Khiên bằng 6% máu tối đa người vừa được hồi.', true),
-    medic: passive('medic', 'Cứu viện', ['skillDamage'], 'heal', 0.05, 'Đồng đội gây mất máu bằng kỹ năng: hồi người bị thương nặng nhất 5% máu tối đa.', true),
-    strategist: passive('strategist', 'Thừa hư', ['dispelled'], 'drain', 8, 'Đồng đội xua tan: trừ thêm 8 năng lượng mục tiêu.', true),
-    commander: passive('commander', 'Tiếp lệnh', ['healed'], 'energy', 8, 'Đồng đội hồi máu thực: cấp người vừa được hồi 8 năng lượng.', true),
+    medic: passive('medic', 'Cứu viện', ['controlled'], 'heal', 0.05, 'Đồng đội khống chế thành công: hồi người bị thương nặng nhất 5% máu tối đa.', true),
+    strategist: passive('strategist', 'Thừa hư', ['armorBroken'], 'drain', 8, 'Đồng đội phá giáp: trừ thêm 8 năng lượng mục tiêu.', true),
+    commander: passive('commander', 'Tiếp lệnh', ['controlled'], 'energy', 8, 'Đồng đội khống chế thành công: cấp người vừa khống chế 8 năng lượng.', true),
     kim1: passive('kim1', 'Kim phá', ['skillDamage'], 'armor', 0.1, 'Kỹ năng gây mất máu: giảm Thủ mục tiêu 10% trong 1 lượt.'),
     kim2: passive('kim2', 'Kim truy', ['armorBroken'], 'damage', 0.35, 'Phá giáp thành công: truy kích bằng 35% Công.'),
     moc1: passive('moc1', 'Mộc sinh', ['skillDamage'], 'heal', 0.04, 'Kỹ năng gây mất máu: hồi người bị thương nặng nhất 4% máu tối đa.'),
@@ -78,7 +78,9 @@ export const CHASE_PASSIVES = {
     phong2: passive('phong2', 'Phong dẫn', ['skillDamage'], 'energy', 5, 'Kỹ năng gây mất máu: cấp người tạo tín hiệu 5 năng lượng.'),
 } satisfies Record<string, ChasePassiveDef>;
 export type ChasePassiveId = keyof typeof CHASE_PASSIVES;
-const ROLE_CHASE: Record<Profession, ChasePassiveId> = { xaThu:'marksmanPrepared', satThu:'assassinPrepared', tuongSi: 'martial', phapSu: 'arcane', binhLinh: 'guardian', ySu: 'medic', muuSi: 'strategist', quanSu: 'commander' };
+// Truy kích nghề không trùng tín hiệu với bị động Cơ hội của chính nghề đó (Shan 19/11/2026): Xạ thủ (Cơ hội phá giáp,
+// xua tan) nhận "Chờ thời khống chế", Sát thủ (Cơ hội khống chế) nhận "Chờ thời phá giáp".
+const ROLE_CHASE: Record<Profession, ChasePassiveId> = { xaThu:'assassinPrepared', satThu:'marksmanPrepared', tuongSi: 'martial', phapSu: 'arcane', binhLinh: 'guardian', ySu: 'medic', muuSi: 'strategist', quanSu: 'commander' };
 const ELEMENT_CHASE: Record<Element, readonly [
     ChasePassiveId,
     ChasePassiveId

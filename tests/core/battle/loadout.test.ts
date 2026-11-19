@@ -4,7 +4,7 @@ import {
   ALL_COMPANIONS, ELEMENTS, PROFESSIONS, ROLE_SKILLS, ELEMENT_SKILLS,
   characterSkills, skillSource, getSkill, personalSkillOf, buildMain, buildCompanion,
   autoProgress, NEW_PROGRESS, parseProfile, newProfile, upgradeSkill,
-  needsCell, whirlStep, act, createBattle, chooseSkill, toView, scaleSkill, buildCampaignLeader, legacyHeroSkills,
+  needsCell, whirlStep, act, createBattle, chooseSkill, inspectSkillChoices, toView, scaleSkill, buildCampaignLeader, legacyHeroSkills,
   type FighterConfig, type BattleState, type Profile,
 } from "../../../src/core";
 
@@ -142,7 +142,7 @@ describe("thực thi chiêu mới", () => {
     s.sides[0].fighters[1]!.effects=[{kind:"silence",value:0,turns:2},{kind:"atkUp",value:0.2,turns:2}];
     const heal=act(s,{type:"skill",skill:"role_linhDuoc",target:1});
     assert.ok(heal.ok);
-    assert.equal(heal.state.sides[0].fighters[1]!.hp,720);
+    assert.equal(heal.state.sides[0].fighters[1]!.hp,760); // Linh dược hồi 26% (19/11/2026).
     assert.deepEqual(heal.state.sides[0].fighters[1]!.effects.map(e=>e.kind),["atkUp"]);
     const d=arena(["role_phaKe"],true);
     d.sides[1].fighters[1]!.effects=[{kind:"atkUp",value:0.2,turns:2},{kind:"burn",value:5,turns:2}];
@@ -172,11 +172,14 @@ describe("AI với vai trò mới", () => {
       assert.ok(choice?.type==="skill");
       assert.equal(choice.target,target);
     }
+    // Phá kế có sát thương từ 19/11/2026: debuff trên địch không cộng thêm điểm xua tan, buff thì có.
+    const score=(st:BattleState)=>inspectSkillChoices(toView(st)).find(c=>c.id==="role_phaKe")!.score;
     const s=arena(["role_phaKe"],true);
+    const clean=score(s);
     s.sides[1].fighters[0]!.effects=[{kind:"burn",value:5,turns:2}];
-    assert.equal(chooseSkill(toView(s)),null);
+    assert.equal(score(s),clean);
     s.sides[1].fighters[2]!.effects=[{kind:"shield",value:300,turns:null},{kind:"atkUp",value:0.3,turns:2}];
-    assert.ok(chooseSkill(toView(s)));
+    assert.ok(score(s)>clean);
   });
   it("đánh giá buff/debuff theo hệ số, không triệt tiêu Công Hỏa với tự giảm Thủ", () => {
     for (const skill of ["role_nghiBinh","element_noHoaThieuThan"]) {

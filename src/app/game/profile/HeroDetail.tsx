@@ -49,6 +49,7 @@ import { BackGlyph, InfoGlyph, PlusGlyph, TeamGlyph } from "./glyphs";
 import { nameOf } from "./roster";
 import Biography from "./Biography";
 import { SceneLink } from "../SceneContext";
+import { ItemIcon } from "../art/items";
 
 /** Ô trang bị hai bên tranh; vũ khí đứng giữa phía dưới. Đúng 9 ô như luật trang bị. */
 export const LEFT_SLOTS: readonly NonWeaponSlot[] = ["dinhMao", "yPhuc", "hoThu", "baoNgoa"];
@@ -314,6 +315,11 @@ export function GearSlotButton({
         <EmptySlotIcon slot={slot} className={size} />
       )}
       {!item && <PlusGlyph className="absolute right-1 bottom-1 size-3.5 text-[var(--on-wood-soft)]" />}
+      {!!item?.enhance && (
+        <span className="pointer-events-none absolute top-0.5 left-0.5 rounded bg-black/70 px-1 text-[11px] leading-tight font-bold text-frame-gold-hi tabular-nums" aria-hidden>
+          +{item.enhance}
+        </span>
+      )}
     </button>
   );
 }
@@ -354,9 +360,7 @@ function XpBooks({ profile, id, busy, onAction }: { profile: Profile; id: string
   const packs = [...new Set([1, toNext, 10])].filter((n) => n <= Math.max(have, 1)).sort((a, b) => a - b);
   return (
     <div className="barracks-inset flex flex-wrap items-center gap-2 rounded-md px-2.5 py-2 text-sm">
-      <svg viewBox="0 0 48 48" aria-hidden focusable="false" className="size-8 shrink-0">
-        <image href="/art/tiles/sach.webp" width={48} height={48} />
-      </svg>
+      <ItemIcon id="xpBook" className="size-8 shrink-0" />
       <span className="min-w-0 flex-1">
         Sách kinh nghiệm: <b className="tabular-nums text-title-on-wood">{have}</b> cuốn · mỗi cuốn +{XP_BOOK_XP}
       </span>

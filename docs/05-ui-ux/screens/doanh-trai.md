@@ -29,7 +29,7 @@ Kỹ năng nâng theo từng nhân vật nên nằm trong chi tiết tướng s�
 
 ## 3. Kho đồ
 
-Kho đồ cao hết màn (máy tính) và hiện **cả ô trống** (Shan 18/11/2026): không lọc thì lưới đủ `BAG_LIMIT` ô, có lọc thì đủ trang cuối của kết quả. Mỗi trang 96 ô (8 cột điện thoại và máy tính bảng, 12 cột màn rộng), Trang trước/Trang sau ở đáy. Lọc Tất cả/Vũ khí/Phục sức/Trang sức và theo ô. Chọn món xem chỉ số, người đang dùng, Mặc cho (chọn nhân vật), Tháo, Bán. "Ghép đồ" mới mở khay 3 món; món không ghép chung được với món đầu bị làm mờ. Điều kiện, phí và kết quả ghép giữ nguyên (`mergeGear`).
+Kệ **Vật phẩm** (19/11/2026) cạnh Tất cả/Vũ khí/Phục sức/Trang sức: ô lương, Đá Cường Hóa, sách kinh nghiệm kèm số đang có (biểu tượng riêng `art/items.tsx`, danh mục `items/catalog.ts`); bấm một ô thì khung phải ghi công dụng, nơi dùng và lối sang Cửa Hàng. Kho đồ cao hết màn (máy tính) và hiện **cả ô trống** (Shan 18/11/2026): không lọc thì lưới đủ `BAG_LIMIT` ô, có lọc thì đủ trang cuối của kết quả. Mỗi trang 96 ô (8 cột điện thoại và máy tính bảng, 12 cột màn rộng), Trang trước/Trang sau ở đáy. Lọc Tất cả/Vũ khí/Phục sức/Trang sức và theo ô. Chọn món xem chỉ số, người đang dùng, Mặc cho (chọn nhân vật), Tháo, Bán. "Ghép đồ" mới mở khay 3 món; món không ghép chung được với món đầu bị làm mờ. Điều kiện, phí và kết quả ghép giữ nguyên (`mergeGear`).
 
 ## 4. Xem thử
 

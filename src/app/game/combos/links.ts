@@ -1,4 +1,4 @@
-// Liên kết phối hợp trong một đội (trang Phối Hợp, Shan 19/11/2026): kỹ năng chủ động của tướng A phát tín hiệu
+// Liên kết phối hợp trong một đội (trang Hợp Kích, Shan 19/11/2026): kỹ năng chủ động của tướng A phát tín hiệu
 // (skillComboOpeners của @/core), bị động của tướng B bắt tín hiệu đó (COMBO_PASSIVES, CHASE_PASSIVES). Bị động chỉ nhận
 // từ đồng đội thì A khác B; chỉ nhận từ bản thân thì A là B; còn lại ai trong phe cũng mở được. Đây là ước lượng tĩnh từ
 // danh mục (cần tác dụng thực trong trận mới phát tín hiệu), không mô phỏng trận.
@@ -21,7 +21,7 @@ export interface ComboMember {
   readonly name: string;
   readonly fighter: FighterConfig;
   readonly skills: readonly SkillDef[];
-  readonly passives: readonly { readonly passive: PassiveRef; readonly label: string }[];
+  readonly passives: readonly { readonly passive: PassiveRef }[];
 }
 
 export interface ComboLink {
@@ -69,4 +69,89 @@ export function comboLinks(team: readonly ComboMember[]): ComboLink[] {
 export function crossLinksWith(team: readonly ComboMember[], candidate: ComboMember): number {
   const n = team.length;
   return comboLinks([...team, candidate]).filter((l) => l.from !== l.to && (l.from === n || l.to === n)).length;
+}
+
+/** Một bước của chuỗi phản ứng: tướng `fighter` (chỉ số trong đội) dùng bị động `passive`, bắt tín hiệu `signal`. */
+export interface ChainStep {
+  readonly fighter: number;
+  readonly passive: PassiveRef;
+  readonly signal: ComboSignalKind;
+}
+
+/** Chuỗi: kỹ năng của tướng `from` mở bước đầu, mỗi bước sau bắt tín hiệu do bước trước phát ra. */
+export interface ComboChain {
+  readonly from: number;
+  readonly skill: SkillDef;
+  readonly steps: readonly ChainStep[];
+}
+
+/** Giới hạn của bộ máy (CHASE_LIMITS): sâu tối đa 4 bước phản ứng. */
+const MAX_DEPTH = 4;
+
+/** Tín hiệu một phản ứng phát tiếp trong cùng hành động (battle.ts): truy kích gây mất máu, giảm Thủ là phá giáp, Câm lặng là khống chế. */
+const CHAIN_EMITS: Readonly<Record<string, readonly ComboSignalKind[]>> = {
+  damage: ["skillDamage"],
+  armor: ["armorBroken"],
+  silence: ["controlled"],
+};
+
+/**
+ * Mọi chuỗi phản ứng trong đội theo luật bộ máy (combo-engine.ts): bị động `activeOnly` chỉ nhận tín hiệu của chính kỹ năng
+ * (độ sâu 0); bị động Cơ hội chỉ mở từ kỹ năng và không phát tiếp; chỉ-đồng-đội thì người phản ứng khác người phát tín hiệu;
+ * chỉ-bản-thân thì là chính người đó; mỗi bị động chạy một lần mỗi hành động. Bỏ bị động cần đòn của địch (phản kích, vỡ
+ * Khiên) và bị động cuối lượt vì không mở từ kỹ năng của phe mình. Trả mọi đường đi có từ hai bước phản ứng.
+ */
+export function comboChains(team: readonly ComboMember[]): ComboChain[] {
+  const out: ComboChain[] = [];
+  const walk = (from: number, skill: SkillDef, source: number, kinds: readonly ComboSignalKind[], depth: number, path: readonly ChainStep[], used: ReadonlySet<string>) => {
+    team.forEach((m, j) => {
+      for (const { passive } of m.passives) {
+        const key = `${j}:${passive.kind}:${passive.id}`;
+        if (used.has(key)) continue;
+        let emits: readonly ComboSignalKind[] = [];
+        let signal: ComboSignalKind | undefined;
+        if (passive.kind === "combo") {
+          if (depth > 0 || j === source) continue;
+          signal = COMBO_PASSIVES[passive.id].triggers.find((k) => kinds.includes(k));
+        } else {
+          const d = CHASE_PASSIVES[passive.id] as (typeof CHASE_PASSIVES)[keyof typeof CHASE_PASSIVES] & {
+            activeOnly?: boolean; alliesOnly?: boolean; selfSource?: boolean; receiverOnly?: boolean; provenance?: boolean; attackerRecipient?: boolean; turnEnd?: unknown;
+          };
+          if (d.provenance || d.attackerRecipient || d.receiverOnly || d.turnEnd) continue;
+          if (d.activeOnly && depth > 0) continue;
+          if (d.alliesOnly && j === source) continue;
+          if (d.selfSource && j !== source) continue;
+          signal = d.triggers.find((k) => kinds.includes(k));
+          emits = CHAIN_EMITS[d.effect] ?? [];
+        }
+        if (!signal) continue;
+        const next = [...path, { fighter: j, passive, signal }];
+        if (next.length >= 2) out.push({ from, skill, steps: next });
+        if (emits.length > 0 && depth + 1 < MAX_DEPTH) walk(from, skill, j, emits, depth + 1, next, new Set([...used, key]));
+      }
+    });
+  };
+  team.forEach((m, from) => {
+    for (const skill of m.skills) {
+      const kinds = skillComboOpeners(skill);
+      if (kinds.length) walk(from, skill, from, kinds, 0, [], new Set());
+    }
+  });
+  // Chuỗi dài trước; cùng độ dài thì chuỗi qua nhiều tướng khác nhau hơn đứng trước.
+  const people = (c: ComboChain) => new Set([c.from, ...c.steps.map((s) => s.fighter)]).size;
+  return out.sort((a, b) => b.steps.length - a.steps.length || people(b) - people(a));
+}
+
+/** Mỗi kỹ năng một chuỗi dài nhất (đã xếp sẵn), để trang hiện gọn: chuỗi dài trước, nhiều tướng tham gia trước. */
+export function bestChains(team: readonly ComboMember[], limit = 8): ComboChain[] {
+  const seen = new Set<string>();
+  const out: ComboChain[] = [];
+  for (const c of comboChains(team)) {
+    const key = `${c.from}:${c.skill.id}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(c);
+    if (out.length >= limit) break;
+  }
+  return out;
 }

@@ -332,6 +332,7 @@ Shan yêu cầu chia chế độ của màn Chiến trường (`MenuScene.tsx`) 
 
 Shan yêu cầu màn chính của mọi chế độ bọc trong một khung lớn như Sử ký Bình Loạn.
 
+- **Lề trong (19/11/2026):** khung lớn có họa tiết góc 24px nên lề trong là 16px trên điện thoại, 28px từ 640px (`p-4 sm:p-7`); khung Doanh Trại và màn trận (`OrnateFrame` raised, góc 20px) dùng `p-4 sm:p-6`, để card bên trong không đè lên họa tiết góc.
 - **Thành phần:** `ModeCard` trong `src/components/game-ui/ModeScreen.tsx`, lớp `.ui-mode-card` ở `src/styles/components.css` (cùng viền, vạch trong, nền gỗ và góc hoa văn với `.atlas-frame-wood` của Bình Loạn). Màn dùng `<ModeScreen card>` là banner, tab Chơi/Hướng dẫn và nội dung nằm trong một card.
 - **Đang dùng:** Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh, Quần Hùng, Viễn Chinh, Trận Đồ, Khai Lộ, Do Thám, Sử Lộ, Tầm Tướng Ký (bọc `ModeCard` trực tiếp vì màn tự dựng `main`). Bình Loạn giữ khung Sử ký riêng; màn chuẩn bị Thao Luyện/Giao Tranh đã là một khung lớn trong `DemoGame.tsx`.
 - Màn không phải chế độ chơi (Nhiệm vụ, Cửa Hàng, Công Trạng, màn khóa đăng nhập) không dùng card.

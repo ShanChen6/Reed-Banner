@@ -60,14 +60,33 @@ export const BATTLE_CUES = [
   "battle.lose",
 ] as const;
 
+export const SULO_CUES = [
+  "sulo.roll",
+  "sulo.move",
+  "sulo.nomove",
+  "sulo.correct",
+  "sulo.wrong",
+  "sulo.disarm",
+  "sulo.trap",
+  "sulo.luck",
+  "sulo.gate",
+  "sulo.stele",
+  "sulo.aid",
+  "sulo.boss",
+  "sulo.counsel",
+  "sulo.bosswon",
+  "sulo.bosslost",
+  "sulo.won",
+] as const;
+
 export const MODE_CUES = ["atlas.select", "dialogue.next", "survival.wave", "survival.warn", "daily.complete", "arena.rank"] as const;
 
 export const UI_CUES = ["ui.click", "ui.back", "ui.error", "ui.reward"] as const;
 
-export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...MODE_CUES] as const;
+export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...SULO_CUES, ...MODE_CUES] as const;
 export type CueId = (typeof CUE_IDS)[number];
 
-export const MUSIC_IDS = ["formation_menu", "formation_play", "formation_result_win", "formation_result_lose", "battle_normal", "battle_boss", "survival", "atlas", "dialogue", "ending", "tower_trial", "tower_destiny", "arena", "pvp"] as const;
+export const MUSIC_IDS = ["formation_menu", "formation_play", "formation_result_win", "formation_result_lose", "battle_normal", "battle_boss", "survival", "atlas", "dialogue", "ending", "tower_trial", "tower_destiny", "arena", "pvp", "sulo_maze", "sulo_boss"] as const;
 export const AMBIENCE_IDS = ["atlas"] as const;
 export type AmbienceId = (typeof AMBIENCE_IDS)[number];
 export type MusicId = (typeof MUSIC_IDS)[number];

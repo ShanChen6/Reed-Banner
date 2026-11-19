@@ -121,7 +121,7 @@ export default function Barracks({
         className={`mx-auto flex w-full flex-col gap-3 ${MODE_CONTENT_WIDTH}`}
       >
         {/* Một khung chung cho cả thanh tab và nội dung (như Cửa hàng, Nhiệm vụ); các khung con là ô lõm. */}
-        <OrnateFrame level="raised" className="flex flex-col gap-3 p-3 sm:p-5">
+        <OrnateFrame level="raised" className="flex flex-col gap-3 p-4 sm:p-6">
           <div className="flex flex-wrap items-center gap-2">
             <div
               className="grid min-w-0 flex-[1_1_22rem] grid-cols-3 gap-1.5 sm:max-w-[34rem]"
@@ -163,7 +163,7 @@ export default function Barracks({
                   scene="COMBOS"
                   className="barracks-btn flex min-h-11 items-center gap-1 rounded-md px-2 font-serif text-[15px] font-semibold sm:gap-2 sm:px-3"
                 >
-                  Phối Hợp
+                  Hợp Kích
                 </SceneLink>
                 <SceneLink
                   scene="SHOP"
