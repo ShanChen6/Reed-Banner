@@ -22,3 +22,13 @@ describe("trang giới thiệu", () => {
     assert.ok(found);
   });
 });
+
+describe("số viết bằng chữ", () => {
+  it("đọc đúng các số trang giới thiệu dùng", async () => {
+    const { numberWords, NumberWords } = await import("../../src/app/home/words");
+    assert.deepEqual([7, 8, 10, 12, 14, 15, 21, 24, 75, 100, 105].map(numberWords), [
+      "bảy", "tám", "mười", "mười hai", "mười bốn", "mười lăm", "hai mươi mốt", "hai mươi tư", "bảy mươi lăm", "một trăm", "một trăm lẻ năm",
+    ]);
+    assert.equal(NumberWords(8), "Tám");
+  });
+});

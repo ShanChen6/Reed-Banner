@@ -30,7 +30,9 @@ import { ELEMENT_TRAIT, FAQ, PROFESSION_ROLE } from "./home/data";
 import DrumFace from "./home/DrumFace";
 import HeroBoard from "./home/HeroBoard";
 import { Embers, GiltCorners } from "./home/Ornaments";
-import { MobilePlayBar, PlayButton, SectionTitle, SITE_WIDTH, SiteFooter, SiteHeader } from "./home/SiteChrome";
+import { FinalCta, MobilePlayBar, PlayButton, SectionTitle, SITE_BG, SITE_FRAME, SITE_WIDTH, SiteFooter, SiteHeader } from "./home/SiteChrome";
+import { OrnateFrame } from "@/components/game-ui";
+import { NumberWords } from "./home/words";
 
 /** Bàn cờ mở đầu: sinh cố định theo seed nên server và client luôn giống nhau. */
 function heroBoard(): (Tile | null)[] {
@@ -67,9 +69,9 @@ const MODE_GROUPS: readonly { readonly title: string; readonly sub: string; read
     sub: "Ghép ô để đánh: luyện tay, theo cốt truyện, leo tháp, giữ ải, đấu người.",
     modes: [
       { slug: "practice", name: "Thao Luyện", kicker: "Luyện tay", art: "/art/home/thao-luyen.webp", guest: true, body: "Vào trận ngay, không cần mạng, 3vs3 đấu Tianwu với đội cấp tối đa." },
-      { slug: "campaign", name: "Bình Loạn", kicker: "Cốt truyện", art: "/art/home/campaign.webp", body: "Sáu chương dẹp loạn 12 sứ quân, tướng lịch sử gia nhập, rồi Tái đấu sứ quân ở 3 bậc." },
-      { slug: "play", name: "Giao Tranh", kicker: "Trực tuyến", art: "/art/home/giao-tranh.webp", body: "Trận trực tuyến có đồng hồ 30 giây, nhận vàng, kinh nghiệm và chiến lợi phẩm." },
-      { slug: "trial", name: "Tháp Thí Luyện", kicker: "Leo tháp", art: "/art/home/trial.webp", flag: "trial", body: "100 tầng cố định chia 10 chặng, tự chọn đội theo luật riêng từng tầng." },
+      { slug: "campaign", name: "Bình Loạn", kicker: "Cốt truyện", art: "/art/home/campaign.webp", body: "Sáu chương dẹp loạn mười hai sứ quân, tướng lịch sử gia nhập, rồi Tái đấu sứ quân ở ba bậc." },
+      { slug: "play", name: "Giao Tranh", kicker: "Trực tuyến", art: "/art/home/giao-tranh.webp", body: "Trận trực tuyến có đồng hồ ba mươi giây, nhận vàng, kinh nghiệm và chiến lợi phẩm." },
+      { slug: "trial", name: "Tháp Thí Luyện", kicker: "Leo tháp", art: "/art/home/trial.webp", flag: "trial", body: "Một trăm tầng cố định chia mười chặng, tự chọn đội theo luật riêng từng tầng." },
       { slug: "destiny", name: "Tháp Thiên Mệnh", kicker: "Leo tháp", art: "/art/home/destiny.webp", flag: "destiny", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng." },
       { slug: "survival", name: "Trấn Ải", kicker: "Sinh tồn", art: "/art/home/survival.webp", body: "Một bàn cờ, đối thủ kéo đến theo đợt, nghỉ giữa đợt để tính tiếp." },
       { slug: "daily", name: "Nhật Lệnh", kicker: "Mỗi ngày", art: "/art/home/daily.webp", body: "Một đề chung cho mọi người, mỗi ngày một lần, có bảng công trạng." },
@@ -108,7 +110,7 @@ export default function Home() {
     { n: ELEMENTS.length, label: "hệ" },
   ];
   return (
-    <div className="demo-bg min-h-dvh bg-[var(--background)] text-on-wood">
+    <div className={SITE_BG}>
       <SiteHeader />
 
       <main id="content">
@@ -129,14 +131,14 @@ export default function Home() {
             <div>
               <h1 className="-mx-4 -mt-6 max-w-[520px] md:-mx-8">
                 <Logo priority className="h-auto w-full" />
-                <span className="sr-only">Cờ Lau: Loạn 12 sứ quân</span>
+                <span className="sr-only">Cờ Lau: Loạn mười hai sứ quân</span>
               </h1>
               <p className="mt-3 max-w-lg font-serif text-2xl leading-snug font-bold text-title-on-wood md:text-3xl">
                 Phất cờ lau, dẹp loạn mười hai sứ quân.
               </p>
               <p className="mt-3 max-w-md text-lg text-on-wood-soft">
-                Mười bốn cách ra trận giữa thời loạn thế kỷ X: ghép ô đánh trận, bày binh bố trận, dò bẫy, học sử. Theo chân Đinh Bộ
-                Lĩnh dựng lại giang sơn.
+                Game chiến thuật ghép ô theo lượt giữa thời loạn thế kỷ thứ mười. Dẫn Đinh Bộ Lĩnh cùng các tướng quân đánh trận,
+                bày binh, dò bẫy, đọc sử, từng bước thu non sông về một mối.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <PlayButton className="text-base">Chơi ngay · không cần tài khoản</PlayButton>
@@ -183,7 +185,8 @@ export default function Home() {
         </section>
 
         {/* Ba thời của nhân vật chính, từ cậu bé cờ lau tới hoàng đế. */}
-        <section id="hero-story" className="scroll-mt-16 px-4 py-16">
+        <section id="hero-story" className="scroll-mt-20 px-4 py-6 md:py-8">
+          <OrnateFrame level="raised" className={SITE_FRAME}>
           <SectionTitle kicker="Chủ tướng" title="Đinh Bộ Lĩnh qua ba thời" sub="Từ cậu bé chăn trâu cầm cờ lau, thành vị tướng dẹp loạn sứ quân, rồi lên ngôi hoàng đế." />
           <ul className={`mx-auto grid grid-cols-3 gap-3 md:gap-6 lg:gap-8 ${SITE_WIDTH}`}>
             {DBL_ERAS.map((e) => (
@@ -194,9 +197,11 @@ export default function Home() {
               </li>
             ))}
           </ul>
+          </OrnateFrame>
         </section>
 
-        <section id="modes" aria-labelledby="modes-title" className="scroll-mt-16 px-4 py-16">
+        <section id="modes" aria-labelledby="modes-title" className="scroll-mt-20 px-4 py-6 md:py-8">
+          <OrnateFrame level="raised" className={SITE_FRAME}>
           <SectionTitle
             id="modes-title"
             kicker="Chế độ chơi"
@@ -262,15 +267,17 @@ export default function Home() {
               </section>
             ))}
           </div>
+          </OrnateFrame>
         </section>
 
-        {/* Thế giới: 12 sứ quân, 8 nghề và 7 hệ trong một khối gọn (chủ tướng ba thời có mục riêng ở trên). */}
-        <section id="world" aria-labelledby="world-title" className="scroll-mt-16 px-4 py-16">
+        {/* Thế giới: mười hai sứ quân, các nghề và hệ trong một khối gọn (chủ tướng ba thời có mục riêng ở trên). */}
+        <section id="world" aria-labelledby="world-title" className="scroll-mt-20 px-4 py-6 md:py-8">
+          <OrnateFrame level="raised" className={SITE_FRAME}>
           <SectionTitle
             id="world-title"
             kicker="Thế giới"
             title="Thời loạn mười hai sứ quân"
-            sub="Thế kỷ X, đất nước chia cắt. Cậu bé chăn trâu cờ lau ở Hoa Lư lớn lên thành vị tướng dẹp loạn, rồi lên ngôi Đinh Tiên Hoàng."
+            sub="Thế kỷ thứ mười, đất nước chia cắt. Cậu bé chăn trâu cờ lau ở Hoa Lư lớn lên thành vị tướng dẹp loạn, rồi lên ngôi Đinh Tiên Hoàng."
           />
           <div className={`mx-auto ${SITE_WIDTH}`}>
             <div className="flex flex-col gap-5">
@@ -288,7 +295,7 @@ export default function Home() {
               </div>
             </div>
             {/* Nghề: lưới thẻ, mỗi thẻ icon lớn, tên và vai trò. */}
-            <h3 className="mt-10 mb-4 font-serif text-xl font-bold">{PROFESSIONS.length} nghề, mỗi nghề một vai</h3>
+            <h3 className="mt-10 mb-4 font-serif text-xl font-bold">{NumberWords(PROFESSIONS.length)} nghề, mỗi nghề một vai</h3>
             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {PROFESSIONS.map((p) => (
                 <li key={p} className="flex items-center gap-3 rounded-2xl fx-panel p-4">
@@ -304,7 +311,7 @@ export default function Home() {
             </ul>
             {/* Hệ: bảy thẻ, mỗi thẻ viền màu của hệ, tính cách và hệ nó khắc. */}
             <div className="mt-10 mb-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-              <h3 className="font-serif text-xl font-bold">{ELEMENTS.length} hệ, tương khắc tương sinh</h3>
+              <h3 className="font-serif text-xl font-bold">{NumberWords(ELEMENTS.length)} hệ, tương khắc tương sinh</h3>
               <Link href="/cam-nang#elements" className="text-sm text-frame-gold underline underline-offset-2 hover:brightness-125">
                 Xem kỹ năng từng hệ ở Cẩm nang ›
               </Link>
@@ -331,9 +338,11 @@ export default function Home() {
               })}
             </ul>
           </div>
+          </OrnateFrame>
         </section>
 
-        <section id="faq" aria-labelledby="faq-title" className="scroll-mt-16 px-4 py-16">
+        <section id="faq" aria-labelledby="faq-title" className="scroll-mt-20 px-4 py-6 md:py-8">
+          <OrnateFrame level="raised" className={SITE_FRAME}>
           <SectionTitle id="faq-title" kicker="Hỏi đáp" title="Câu hỏi thường gặp" />
           <div className={`mx-auto grid items-start gap-3 lg:grid-cols-2 ${SITE_WIDTH}`}>
             {FAQ.map((f) => (
@@ -348,18 +357,15 @@ export default function Home() {
               </details>
             ))}
           </div>
+          </OrnateFrame>
         </section>
 
-        <section className="px-4 pb-20 pt-6">
-          <div className={`fx-panel-hi relative mx-auto overflow-hidden rounded-3xl px-6 py-14 text-center md:py-20 ${SITE_WIDTH}`}>
-            <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 w-[640px] -translate-x-1/2 -translate-y-1/2 opacity-[0.12] md:w-[900px]">
-              <DrumFace className="h-auto w-full" />
-            </div>
-            <h2 className="fx-gilt-text relative text-heading">Phất cờ lau, ra trận</h2>
-            <p className="relative mx-auto mt-3 max-w-xl text-lg text-on-wood-soft">Chọn một chế độ và vào ngay trên trình duyệt, không cần tài khoản. Mỗi chế độ có màn Hướng dẫn riêng trước khi chơi.</p>
-            <PlayButton className="relative mt-6 text-base">Chơi ngay</PlayButton>
-          </div>
-        </section>
+        <FinalCta
+          title="Phất cờ lau, ra trận"
+          body="Chọn một chế độ và vào ngay trên trình duyệt, không cần tài khoản. Mỗi chế độ có màn Hướng dẫn riêng trước khi chơi."
+          cta="Chơi ngay"
+          secondary={{ href: "/cam-nang", label: "Đọc Cẩm nang" }}
+        />
       </main>
 
       <SiteFooter />

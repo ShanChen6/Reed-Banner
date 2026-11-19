@@ -8,6 +8,7 @@
 - Kỹ năng xoay hệ Phong: rê chuột hiện vòng tròn quanh 8 ô và xem trước, bấm là xoay; chỉ theo chiều kim đồng hồ; cảm ứng chạm hai lần ([màn trận](../05-ui-ux/screens/battle.md)).
 - Trang giới thiệu thiết kế lại: chung cho 14 chế độ (mở đầu có bàn cờ tự chơi và số liệu thật, Đinh Bộ Lĩnh qua ba thời, chế độ chơi, thế giới với lưới thẻ 8 nghề và 7 hệ, hỏi đáp, lời mời), mọi mục cùng khổ, nút Chơi ngay nổi ở điện thoại. Trang mới `/cam-nang` (Cẩm nang chiến trận): ba bước một lượt, chuỗi Hợp Kích, điểm nhấn luật chơi, bảng ô, nội tại nghề, kỹ năng từng hệ, hệ số khắc chế.
 - Ô bản mạnh: lửa nền mờ đi để vật phẩm nổi rõ (bàn cờ trong trận cũng đổi).
+- Trang giới thiệu, Cẩm nang: đếm số lượng trong câu chữ viết bằng chữ (`numberWords` trong `src/app/home/words.ts`; dải số liệu mở đầu giữ chữ số), vai trò nghề viết hoa đầu câu như hệ; câu mô tả mở đầu viết lại; nền đúng nền màn game thay hoa văn sóng nước; mỗi mục bao trong khung gỗ viền vàng góc hoa văn (`OrnateFrame` mức raised, `SITE_FRAME`) như khối chính của màn game; Cẩm nang có phần mở đầu tranh Hoa Lư kèm lối tắt từng mục, chọn nghề bằng chip có icon, khối lời mời cuối trang dùng chung `FinalCta` có tranh chủ tướng.
 
 ## 19/11/2026
 

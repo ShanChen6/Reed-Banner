@@ -1,11 +1,9 @@
 "use client";
 
-import { Select } from "@/components/ui";
-
 import { useState } from "react";
 import { type Element, ELEMENTS, elementRelation, characterSkills, PROFESSIONS, type Profession, PASSIVES, PROFESSION_COMBO, COMBO_PASSIVES, CHASE_PASSIVES, chasePassives } from "@/core";
 import { chaseTriggerText, comboTriggerText, ELEMENT_NAME, PROFESSION_NAME, passiveText, rageTriggerText } from "../game/battle/labels";
-import { ELEMENT_COLOR, ElementIcon } from "../game/art/icons";
+import { ELEMENT_COLOR, ElementIcon, ProfessionIcon } from "../game/art/icons";
 import { Portrait } from "../game/art/portraits";
 import { PassiveIcon, ragePassiveId } from "../game/art/passives";
 import { SkillIcon } from "../game/art/skills";
@@ -43,11 +41,26 @@ export default function ElementPicker() {
 
   return (
     <div className="space-y-5">
-      <label className="flex justify-center gap-2 text-sm">Nghề
-        <Select  value={profession} onChange={e => setProfession(e.target.value as Profession)}>
-          {PROFESSIONS.map(p => <option key={p} value={p}>{PROFESSION_NAME[p]}</option>)}
-        </Select>
-      </label>
+      {/* Nghề và hệ cùng một kiểu chip có icon (Shan 20/11/2026). */}
+      <div role="tablist" aria-label="Chọn nghề" className="flex flex-wrap justify-center gap-2">
+        {PROFESSIONS.map((p) => (
+          <button
+            key={p}
+            type="button"
+            role="tab"
+            aria-selected={p === profession}
+            onClick={() => setProfession(p)}
+            className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-semibold transition pointer-coarse:min-h-11 ${
+              p === profession
+                ? "border-frame-gold bg-[var(--primary)]/15 text-title-on-wood"
+                : "border-frame-line-soft text-on-wood-soft hover:border-frame-line"
+            }`}
+          >
+            <ProfessionIcon profession={p} className="size-5" />
+            {PROFESSION_NAME[p]}
+          </button>
+        ))}
+      </div>
       <div role="tablist" aria-label="Chọn nguyên tố" className="flex flex-wrap justify-center gap-2">
         {ELEMENTS.map((e) => (
           <button
@@ -128,7 +141,7 @@ export default function ElementPicker() {
           </div>
 
           <div>
-            <p className="mb-2 text-kicker text-on-wood-soft">6 kỹ năng chủ động · chạm để xem chi tiết</p>
+            <p className="mb-2 text-kicker text-on-wood-soft">Sáu kỹ năng chủ động · chạm để xem chi tiết</p>
             <ul role="tablist" aria-label="Chọn kỹ năng" className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {skills.map((s) => (
                 <li key={s.id}>
@@ -156,7 +169,7 @@ export default function ElementPicker() {
           </div>
 
           <div className="text-sm">
-            <p className="mb-2 text-kicker text-on-wood-soft">4 bị động phối hợp</p>
+            <p className="mb-2 text-kicker text-on-wood-soft">Bốn bị động phối hợp</p>
             <ul className="space-y-2 text-on-wood-soft">
               <li className="flex gap-2">
                 <PassiveIcon id={PROFESSION_COMBO[profession]} name={combo.name} className="size-9" />

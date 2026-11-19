@@ -6,6 +6,7 @@ import { buttonVariants } from "@/components/ui";
 import { LogoMark } from "../game/art/logo";
 import ContactBlock from "../game/ContactBlock";
 import { socialLinks } from "../game/footerLinks";
+import DrumFace from "./DrumFace";
 import { OrnateDivider } from "./Ornaments";
 
 export interface NavLink {
@@ -119,5 +120,38 @@ export function SiteFooter() {
         </div>
       </div>
     </footer>
+  );
+}
+
+/** Nền trang giới thiệu và Cẩm nang: đúng nền các màn trong game (Shan 20/11/2026). */
+export const SITE_BG = "min-h-dvh bg-[var(--background)] text-on-wood";
+
+/** Khung bao mỗi mục: khung gỗ viền vàng góc hoa văn như khối chính của màn game, để các mục liền một mạch. */
+export const SITE_FRAME = `mx-auto w-full px-4 py-10 sm:px-8 md:py-14 ${SITE_WIDTH}`;
+
+/** Khối lời mời cuối trang: mặt trống đồng mờ phía sau, tranh chủ tướng hai bên ở màn rộng, nút chơi. */
+export function FinalCta({ title, body, cta, secondary }: { title: string; body: string; cta: string; secondary?: NavLink }) {
+  return (
+    <section className="px-4 pb-20 pt-6">
+      <div className={`fx-panel-hi relative mx-auto overflow-hidden rounded-3xl px-6 py-14 text-center md:py-20 ${SITE_WIDTH}`}>
+        <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 w-[640px] -translate-x-1/2 -translate-y-1/2 opacity-[0.12] md:w-[900px]">
+          <DrumFace className="h-auto w-full" />
+        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/art/splash/dinh-bo-linh-nien-thieu.webp" alt="" aria-hidden className="pointer-events-none absolute top-1/2 left-6 hidden h-[88%] w-auto -translate-y-1/2 opacity-90 drop-shadow-[0_12px_20px_rgba(0,0,0,0.6)] lg:block" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/art/splash/dinh-bo-linh-tuong-quan.webp" alt="" aria-hidden className="pointer-events-none absolute top-1/2 right-6 hidden h-[88%] w-auto -translate-y-1/2 opacity-90 drop-shadow-[0_12px_20px_rgba(0,0,0,0.6)] lg:block" />
+        <h2 className="fx-gilt-text relative text-heading">{title}</h2>
+        <p className="relative mx-auto mt-3 max-w-xl text-lg text-on-wood-soft">{body}</p>
+        <div className="relative mt-7 flex flex-wrap items-center justify-center gap-3">
+          <PlayButton className="text-base">{cta}</PlayButton>
+          {secondary && (
+            <Link href={secondary.href} className="fx-btn-ghost inline-flex items-center rounded-lg px-5 py-2.5 font-semibold text-title-on-wood transition hover:brightness-125">
+              {secondary.label}
+            </Link>
+          )}
+        </div>
+      </div>
+    </section>
   );
 }
