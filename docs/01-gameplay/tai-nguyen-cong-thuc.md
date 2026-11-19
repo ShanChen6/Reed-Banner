@@ -71,7 +71,7 @@ DEF hiệu lực = DEF đối thủ × (1 − Xuyên giáp)
 | Hệ số | Giá trị |
 |---|---|
 | Sĩ khí | 1.15 / 1 / 0.75 / 0.5 |
-| Nguyên tố (trong trận) | 1.25 (khắc) / 1.1 (tương sinh) / 1 / 0.75 (bị khắc) |
+| Nguyên tố (trong trận) | 1.18 (khắc) / 1 / 0.85 (bị khắc); tương sinh không cộng trong trận |
 | Cascade | +10% mỗi bước, tối đa +50% |
 | DEF | Dạng phần trăm: DEF 50 giảm 33%, DEF 100 giảm 50%; không bao giờ vô hiệu hóa hoàn toàn |
 | Xuyên giáp | 0 nếu không ghi gì; một số kỹ năng hoặc hiệu ứng ghi rõ "bỏ qua X% DEF" |

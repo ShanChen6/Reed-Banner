@@ -4,6 +4,9 @@
 
 ## 19/11/2026
 
+**Hệ số tương khắc 70/30 (Shan yêu cầu)**
+- Khắc ×1,25 → ×1,18, bị khắc ×0,75 → ×0,85, tương sinh trong trận ×1,1 → ×1 (vẫn dùng cho trang bị). Cặp khắc 1v1 từ khoảng 80/20 về 63–73% ([số liệu](../03-characters/danh-sach-nhan-vat.md#14-hệ-số-tương-khắc-19112026)). Tháp Thí Luyện cân lại 18 tầng.
+
 **Vai trò nghề, hệ; cân Binh lính và Kim (Shan yêu cầu)**
 - Nguyên tắc cân bằng mới: mỗi nghề, hệ một chức năng, không ép tỉ lệ thắng bằng nhau; tiêu chí và bảng vai trò ở [danh sách nhân vật](../03-characters/danh-sach-nhan-vat.md#13-vai-trò-nghề-hệ-và-vòng-cân-binh-lính-kim-19112026). `profession-balance.ts` in thêm bảng đối đầu hệ × hệ, nghề × nghề.
 - Binh lính máu gốc 600 → 575, Thủ 15 → 14. Kim: nội tại thêm 20% sát thương, Kim phá 12%, Kim truy 40%, Luyện Kim Thành Kiếm 5 ô, chiêu Kim ô 6 160% Công, phần Kim tuyệt chiêu Đinh Bộ Lĩnh mạnh hơn. Kim vẫn thua Thổ ở 1v1 (tương sinh), chờ quyết.

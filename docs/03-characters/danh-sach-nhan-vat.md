@@ -336,3 +336,24 @@ Vai trò hệ theo [tính cách nguyên tố](../01-gameplay/nguyen-to.md#2-tín
 - Tướng kèm cấp 20 sau chỉnh: nghề 46,1–52,5%, hệ 46,8–51,3%, cả hai trong dải.
 - Tách nguyên nhân Kim yếu ở 1v1 (Đinh Bộ Lĩnh Kim đấu 48 dựng khác hệ): đổi riêng chiêu ô 2, ô 6 hay tuyệt chiêu chỉ +1–1,5 điểm; bộ Kim gắn hệ Thổ thắng 49%, bộ Thổ gắn hệ Kim 41,5%. Nội tại Kim cũ (bỏ qua Thủ) gần như vô hiệu vì Thủ gốc 8–15; thêm Thủ cho nội tại hay cho kỹ năng Kim luôn xuyên Khiên không đổi kết quả nên không giữ.
 - **Vai trò chưa đạt:** bảng hệ × hệ 1v1 cho Kim thắng Mộc 78% nhưng thua Thổ 34% và Hỏa 18%. Thổ thắng Kim nhờ tương sinh (Thổ sinh Kim, đòn Thổ vào Kim ×1,1) và Thổ mạnh chung (1v1 54,9%), không nhờ Khiên. Muốn Kim khắc tướng trâu cần đổi quan hệ ngũ hành hoặc nội tại Kim, chờ Shan quyết.
+
+## 14. Hệ số tương khắc (19/11/2026)
+
+Shan chốt mục tiêu: cặp tương khắc đấu một chọi một khoảng **70/30**. Hệ số cũ khắc ×1,25, tương sinh ×1,1, bị khắc ×0,75 làm nhiều cặp lệch khoảng 80/20. Thử bốn mức bằng Đinh Bộ Lĩnh 1v1 (`profession-balance.ts --mode 1v1`, cấp 20, 3 080 trận mỗi mức); hàng là hệ thắng, số là % thắng của bên khắc:
+
+| Cặp khắc | Cũ 1,25/1,1/0,75 | 1,10/1/0,90 | 1,12/1,05/0,88 | 1,15/1,05/0,85 | **Chọn 1,18/1/0,85** |
+|---|---:|---:|---:|---:|---:|
+| Kim → Mộc | 78 | 60 | 56 | 64 | 64 |
+| Mộc → Thổ | 70 | 50 | 52 | 59 | 66 |
+| Mộc → Phong | 75 | 56 | 65 | 66 | 63 |
+| Thủy → Hỏa | 72 | 56 | 59 | 63 | 65 |
+| Hỏa → Kim | 82 | 71 | 73 | 79 | 78 |
+| Thổ → Thủy | 79 | 60 | 67 | 69 | 70 |
+| Thổ → Lôi | 82 | 71 | 68 | 71 | 73 |
+| Lôi → Thủy | 71 | 63 | 63 | 68 | 63 |
+| Phong → Thổ | 68 | 60 | 64 | 66 | 70 |
+
+- Chọn khắc ×1,18, bị khắc ×0,85, tương sinh không cộng trong trận (×1; tương sinh vẫn dùng cho hệ số trang bị). Cặp khắc nằm 63–73%, trung bình khoảng 68/32.
+- Hỏa → Kim còn 78% vì Kim thua cả cặp trung tính (37–43% với Thủy, Thổ, Lôi, Phong); đó là điểm yếu riêng của Kim ở 1v1 (mục 13), không do hệ số.
+- Tướng kèm 3v3 cấp 20 sau đổi hệ số (200 trận mỗi người): theo hệ 47,3% (Thủy) – 52,3% (Hỏa), Kim 49,9%; theo nghề 45,2% (Y sư) – 53,5% (Pháp sư), Binh lính 50,1%. Tất cả trong dải 42–58%.
+- Tháp Thí Luyện cân lại 18 tầng (17, 25, 26, 33, 35, 37, 38, 41, 51, 53, 56, 66, 68, 72, 73, 76, 95, 98): tầng nào ép chọn hệ khắc đối thủ thì đội mẫu mất bớt lợi thế.

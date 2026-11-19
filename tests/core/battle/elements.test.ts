@@ -16,9 +16,9 @@ describe("nguyên tố", () => {
   });
 
   it("hệ số sát thương", () => {
-    assert.equal(elementMultiplier("hoa", "kim"), 1.25);
-    assert.equal(elementMultiplier("hoa", "tho"), 1.1);
-    assert.equal(elementMultiplier("hoa", "thuy"), 0.75);
+    assert.equal(elementMultiplier("hoa", "kim"), 1.18);
+    assert.equal(elementMultiplier("hoa", "tho"), 1);
+    assert.equal(elementMultiplier("hoa", "thuy"), 0.85);
     assert.equal(elementMultiplier("hoa", "hoa"), 1);
   });
 

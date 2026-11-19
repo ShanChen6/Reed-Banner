@@ -10,7 +10,7 @@ export interface CounterFoe {
   readonly element?: Element | null;
 }
 
-/** Đối thủ mà hệ `element` khắc (sát thương ×1,25). */
+/** Đối thủ mà hệ `element` khắc (sát thương ×1,18). */
 export function counteredFoes(element: Element, foes: readonly CounterFoe[]): readonly CounterFoe[] {
   return foes.filter((foe) => foe.element && elementRelation(element, foe.element) === "counter");
 }
