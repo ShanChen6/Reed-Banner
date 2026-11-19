@@ -13,6 +13,7 @@
 | `sfx/battle/win_a`, `lose_a..b`, `ko_a..c`, `damage_a..c`, `skill_a..c` | Cắt từ năm đoạn Gemini tạo (03/11/2026) bằng `scripts/slice-sfx.py`. Tiếng kỹ năng dùng chung cho cả 7 hệ; tệp `damage` Gemini tạo kèm cả chí mạng nhưng chưa có cue chí mạng | Như trên |
 | `music/atlas`, `dialogue`, `survival`, `battle_boss`, `battle_normal` | Năm bản nhạc Gemini tạo (03/11/2026), chuẩn hóa -18 LUFS và làm vòng lặp bằng `scripts/make-music-loop.py` (cắt phần tắt dần ở cuối, trộn 3 giây) | Như trên |
 | `music/arena`, `music/pvp` | Hai bản nhạc Gemini tạo (03/11/2026), làm vòng lặp bằng `scripts/make-music-loop.py`. `pvp` dành cho Quần Hùng online (chưa phát triển) | Như trên |
+| `sfx/su-lo/roll_a..b`, `move_a..c`, `nomove_a` | Cắt tay từ ba đoạn Gemini tạo (19/11/2026, prompt `sulo_roll`, `sulo_move`, `sulo_nomove` trong bộ prompt Gemini). Gemini trả về nhạc nhịp gõ; chỉ lấy các tiếng rời ở đoạn mở đầu hoặc sau khoảng lặng (roll: giây 20,15 và 37,05; move: 3,66, 4,12 và 33,22; nomove: 0,0) | Như trên |
 
 Cue `sulo.*` và nhạc `sulo_maze`, `sulo_boss` của Sử Lộ chưa có tệp riêng: manifest trỏ về các tệp ở bảng trên (xem bảng 5.6 trong `docs/05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md`).
 
