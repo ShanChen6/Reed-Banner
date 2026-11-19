@@ -148,7 +148,7 @@ Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến)
 | `sulo.roll` | Đổ xúc xắc | Đã có tệp riêng `su-lo/roll` | P1 |
 | `sulo.move` | Đi quân tới ô | Đã có tệp riêng `su-lo/move` | P1 |
 | `sulo.nomove` | Đổ ra số không đi được | Đã có tệp riêng `su-lo/nomove` | P2 |
-| `sulo.correct` / `sulo.wrong` | Trả lời đúng / sai | `formation/match` / `formation/reject` | P1 |
+| `sulo.correct` / `sulo.wrong` | Trả lời đúng / sai | Đúng: đã có tệp riêng `su-lo/correct`; sai: `formation/reject` | P1 |
 | `sulo.disarm` / `sulo.trap` | Gỡ bẫy / sập bẫy | `formation/eraser` / `battle/damage` | P1 |
 | `sulo.luck` | Ô may mắn | `formation/wild` | P2 |
 | `sulo.gate` | Mở cửa ải | `formation/line` | P2 |

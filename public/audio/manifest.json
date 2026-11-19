@@ -356,9 +356,9 @@
     },
     "sulo.correct": {
       "files": [
-        "sfx/formation/match_a",
-        "sfx/formation/match_b",
-        "sfx/formation/match_c"
+        "sfx/su-lo/correct_a",
+        "sfx/su-lo/correct_b",
+        "sfx/su-lo/correct_c"
       ],
       "volume": 0.8
     },
