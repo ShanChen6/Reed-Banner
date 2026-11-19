@@ -392,8 +392,8 @@
     },
     "sulo.gate": {
       "files": [
-        "sfx/formation/line_a",
-        "sfx/formation/line_b"
+        "sfx/su-lo/gate_a",
+        "sfx/su-lo/gate_b"
       ],
       "volume": 0.8
     },

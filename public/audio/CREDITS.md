@@ -18,6 +18,7 @@
 | `sfx/su-lo/wrong_a..c`, `trap_a..b` | Cắt tay từ hai đoạn Gemini tạo (19/11/2026, prompt `sulo_wrong`, `sulo_trap`): wrong là ba tiếng trầm rời ở giây 1,43, 3,73 và 7,44; trap là hai cú va ở giây 7,42 và 2,14 (phần sau của cả hai đoạn là nhạc) | Như trên |
 | `sfx/su-lo/disarm_a..b` | Cắt tay từ đoạn Gemini tạo (19/11/2026, prompt `sulo_disarm`): đoạn là nhạc nhịp gõ liền, chỉ lấy hai cú gõ tắt đủ sâu ở giây 1,88 và 0,04; nên tạo lại nếu có bản tốt hơn | Như trên |
 | `sfx/su-lo/luck_a` | Cắt tay từ đoạn Gemini tạo (19/11/2026, prompt `sulo_luck`): tiếng chuông mở đầu ở giây 0,0–0,97 (phần sau là nhạc liền) | Như trên |
+| `sfx/su-lo/gate_a..b` | Cắt tay từ đoạn Gemini tạo (19/11/2026, prompt `sulo_gate`): tiếng đánh mạnh rồi ngân, lặp ở giây 0,0 và 7,99, cắt 1,8 giây (nghe như chiêng hơn tiếng cửa gỗ) | Như trên |
 
 Cue `sulo.*` và nhạc `sulo_maze`, `sulo_boss` của Sử Lộ chưa có tệp riêng: manifest trỏ về các tệp ở bảng trên (xem bảng 5.6 trong `docs/05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md`).
 
