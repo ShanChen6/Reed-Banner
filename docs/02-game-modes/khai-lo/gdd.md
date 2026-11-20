@@ -18,7 +18,7 @@ Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người ch�
 
 - Bàn 10 cột × 12 hàng (từ 20/11/2026, trước đó 10 × 8), đầy ô khi bắt đầu màn.
 - Màn 1–3 có 3 hệ, màn 4–7 có 4, màn 8–13 có 5, từ màn 14 có 6. Hệ của mỗi màn được xáo theo seed.
-- Từ màn 3 có **quân hào quang** (viền vàng dày, ánh sáng lướt qua): 1 quân ở màn 3–5, thêm 1 mỗi 3 màn, tối đa 4.
+- Từ màn 2 có **ô số ×2, ×3** (Shan 20/11/2026, theo ô số 2, 3 của Block'D; thay ô hào quang cũ): quân thường có viền vàng và nhãn ×2 hoặc ×3. 1 ô ở màn 2–4, thêm 1 mỗi 3 màn, tối đa 5. Ô ×3 có từ màn 6 (`KL_MULT3_FROM`). Bản lưu cũ có ô hào quang đọc thành ô ×2.
 - Bàn sinh ra luôn có ít nhất một khối xóa được.
 
 ### 2.2. Xóa khối
@@ -26,7 +26,7 @@ Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người ch�
 - **Khối** là các quân cùng hệ nối nhau theo cạnh (trên, dưới, trái, phải; không tính chéo).
 - Chạm vào bất kỳ ô nào của một khối từ **2 ô** trở lên: cả khối biến mất. Ô lẻ không xóa được.
 - Ô phía trên rơi thẳng xuống lấp chỗ trống. Cột trống hẳn thì các cột bên phải dồn sang trái.
-- Điểm: khối n ô được **n²** điểm, nhân thêm (1 + số ô hào quang trong khối). Ví dụ khối 6 ô có 1 ô hào quang được 72 điểm. Ô hào quang có nhãn **×2** ở góc để người chơi biết ô đó nhân điểm (tương tự ô số trong các game xóa khối cùng dòng).
+- Điểm: khối n quân được **n²** điểm, nhân với các ô số trong khối, nhiều ô thì nhân dồn (`groupScore`). Ví dụ khối 6 quân có một ô ×2 được 72 điểm; có cả ×2 và ×3 được 216 điểm.
 
 ### 2.3. Kết thúc màn (chế độ Thường)
 
@@ -128,7 +128,7 @@ Luật thua làm đạo cụ thành "mạng" của người chơi, nên mỗi h�
 - Lõi: `src/core/khai-lo/` (thuần TypeScript, seed qua `src/core/rng.ts`), test ở `tests/core/khai-lo/`.
 - Màn chơi: `/game/clear-path` (phân cảnh `KHAI_LO`), `src/app/game/khai-lo/KhaiLoScreen.tsx`. Thẻ ở hàng "Sắp ra mắt / đã mở" trên Home cạnh Trận Đồ.
 - Offline: ván dở và điểm cao nhất lưu `localStorage` (`reed-banner:khai-lo:*`); không cần đăng nhập, không thưởng.
-- Bố cục (20/11/2026): khi đang chơi bỏ banner lớn, thay bằng một hàng gọn (chế độ · màn và nút *Ván mới*) để bàn 10 × 12 đủ to; điện thoại xếp dọc số liệu → bàn → đạo cụ theo hệ (lưới 4 cột) cùng Hoàn tác và Chịu thua ngay dưới bàn; từ 1024px hai cột, từ 1280px ba cột (chế độ và số liệu bên trái, bàn giữa, đạo cụ bên phải). Cỡ ô đo theo chỗ trống thật (tối đa 88px), trên máy tính còn giới hạn theo chiều cao cửa sổ để cả bàn lọt màn hình. Bảng kết màn và hết ván hiện đè lên bàn.
+- Bố cục (20/11/2026): khi đang chơi bỏ banner lớn, thay bằng một hàng gọn (chế độ · màn và nút *Ván mới*) để bàn 10 × 12 đủ to; điện thoại xếp dọc số liệu → bàn → đạo cụ theo hệ (lưới 4 cột) cùng Hoàn tác và Chịu thua ngay dưới bàn; từ 1024px hai cột, từ 1280px ba cột (chế độ và số liệu bên trái, bàn giữa, đạo cụ bên phải). Cỡ ô đo theo chỗ trống thật (tối đa 88px), trên máy tính còn giới hạn theo chiều cao cửa sổ để cả bàn lọt màn hình. Bảng kết màn và hết ván hiện đè lên bàn. Không có dòng thông báo dưới bàn (Shan 20/11/2026, tránh nhảy bố cục); thông báo chỉ đọc cho trình đọc màn hình, bế tắc báo ở khung đạo cụ.
 - Ô rơi và dồn cột có hoạt ảnh (đổi `transform`), khối vừa xóa bung mờ; tôn trọng `prefers-reduced-motion`.
 - Chưa có: âm thanh, tranh thẻ Home (`public/art/home/khai-lo.webp`), hướng dẫn từng bước.
 

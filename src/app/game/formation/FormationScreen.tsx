@@ -37,6 +37,7 @@ import { obstacleKind, obstacleLabel } from "./pieces";
 import { fetchProfile, sendProfileAction } from "../battle/online";
 import { claimRanked, fetchOverview, moveRanked, startRanked, toPuzzleState, type FormationView, type Overview } from "./rankedClient";
 import Rules from "./Rules";
+import { PlayCard } from "../PlayCard";
 import {
   BEST_KEY,
   SAVE_KEY,
@@ -446,6 +447,7 @@ function PlayView({
         </div>
       </div>
 
+      <PlayCard label="Sa bàn Trận Đồ">
       <div className={`grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px] ${finished ? "" : "pb-28 lg:pb-0"}`}>
         <div className="flex flex-col items-center gap-3">
           <BoardView state={state} map={map} legal={legal} showHints={hintsOn} playing={playing} last={last} focus={focus} setFocus={setFocus} setPeek={setPeek} boardRef={boardRef} sweeps={sweeps} onPlace={(row, col) => onCommand({ kind: "place", row, col })} />
@@ -498,6 +500,7 @@ function PlayView({
       {!finished && (
         <MobileBar state={state} rules={rules} noMove={noMove} disabled={busy} covered={state.coveredCount} total={total} onDiscard={() => onCommand({ kind: "discard" })} />
       )}
+      </PlayCard>
     </>
   );
 }

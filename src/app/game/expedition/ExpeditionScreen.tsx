@@ -39,6 +39,7 @@ import { ONLINE_BATTLE_KEY } from "../battle/online";
 import { DIFFICULTY_NAME, ELEMENT_NAME, SLOT_NAME, TIER_COLOR_NAME } from "../battle/labels";
 import { useScene } from "../SceneContext";
 import { ModeGuideTabs } from "../ModeGuide";
+import { PlayCard } from "../PlayCard";
 import HeroGrid from "../arena/HeroGrid";
 
 interface TierView {
@@ -295,6 +296,7 @@ export default function ExpeditionScreen() {
         {notice && <Alert tone="success">{notice}</Alert>}
 
         {active && run ? (
+          <PlayCard label="Sa bàn Viễn Chinh">
           <RunView
             run={run}
             map={mapOf(run.map)}
@@ -313,6 +315,7 @@ export default function ExpeditionScreen() {
             onAbandon={() => void act("/api/expedition/abandon")}
             onResume={() => void act("/api/expedition/march", { army: run.battle?.army ?? 0, to: run.battle?.node ?? "" })}
           />
+          </PlayCard>
         ) : run?.result && !setup ? (
           <ResultView run={run} map={mapOf(run.map)} result={run.result} onNew={() => setSetup(true)} />
         ) : (

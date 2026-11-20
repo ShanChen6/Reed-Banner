@@ -1256,7 +1256,7 @@ export default function DemoGame({
         )}
 
         {/* Thẻ vùng chơi: sân đấu, thẻ tướng, bàn cờ; nút trên thẻ đưa riêng thẻ ra toàn màn hình. */}
-        <PlayCard label="Trận đấu" className={started ? "" : "hidden"}>
+        <PlayCard label="Trận đấu" active={started} className={started ? "" : "hidden"}>
         {started && stageVisible && (
           /* md+: sân đấu dính dưới thanh đầu trang để cuộn xuống bàn cờ vẫn thấy hoạt ảnh khi đối thủ ra đòn. */
           <div className="play-card-sticky z-20 md:sticky md:top-16 md:-mx-1 md:bg-[color-mix(in_srgb,var(--wood-lo,#1c120b)_94%,transparent)] md:px-1 md:pb-1 md:backdrop-blur xl:top-[68px]">
