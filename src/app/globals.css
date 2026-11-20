@@ -1341,6 +1341,12 @@
     grid-template-areas: "head board tools";
   }
 }
+/* Tranh hệ sau bàn Khai Lộ: tối và mờ dần về mép để quân trên bàn vẫn nổi. */
+.kl-backdrop {
+  opacity: 0.5;
+  filter: saturate(0.85);
+  mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, black 35%, transparent 100%);
+}
 .kl-overlay {
   background: color-mix(in srgb, var(--black) 55%, transparent);
   backdrop-filter: blur(1.5px);
