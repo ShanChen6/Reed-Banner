@@ -7,7 +7,7 @@
 // Khi phóng to, thanh đầu trang ẩn đi nên tên chế độ hiện trên bảng tên đồng đè lên mép trên khung (Shan 20/11/2026,
 // cùng kiểu bảng tên ở thanh đầu trang).
 
-import { useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { FrameCorners } from "@/components/game-ui/FrameCorners";
 import { cn } from "@/lib/cn";
 import { SCENE_TITLE } from "./scene";
@@ -17,6 +17,10 @@ function subscribeFullscreen(onChange: () => void) {
   document.addEventListener("fullscreenchange", onChange);
   return () => document.removeEventListener("fullscreenchange", onChange);
 }
+
+/** Vùng chơi đang phóng to (toàn màn hình hoặc phủ kín cửa sổ): màn bên trong dùng để giãn lưới theo chỗ trống. */
+const ExpandedContext = createContext(false);
+export const usePlayCardExpanded = () => useContext(ExpandedContext);
 
 export function PlayCard({
   label = "Vùng chơi",
@@ -85,7 +89,7 @@ export function PlayCard({
             {title}
           </p>
         )}
-        {children}
+        <ExpandedContext.Provider value={expanded}>{children}</ExpandedContext.Provider>
       </div>
       {active && (
         <button

@@ -1716,6 +1716,27 @@ html {
     max-width: none;
   }
 }
+/* Tầm Tướng Ký phóng to (máy tính): ba cột lấp hết chiều cao khung; màn từ 1600px thì Đài Hợp Nguyên rộng tối đa 40rem,
+   hai sổ hai bên nhận phần còn lại. Lưới Vạn Vật Lục, Tướng Lục đo hộp `.ttk-fit` để tính số cột × hàng mỗi trang (Shan 20/11/2026).
+   `contain: size` để nội dung lưới không đẩy hộp cao thêm (hộp chỉ lấy chỗ trống còn lại của cột). */
+@media (width >= 64rem) {
+  .play-card:fullscreen .ttk-board,
+  .play-card--overlay .ttk-board {
+    flex: 1 1 0;
+  }
+  .ttk-fit {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+    contain: size;
+  }
+}
+@media (width >= 100rem) {
+  .play-card:fullscreen .ttk-board,
+  .play-card--overlay .ttk-board {
+    grid-template-columns: minmax(16rem, 1fr) minmax(26rem, 40rem) minmax(16rem, 1fr);
+  }
+}
 /* Sân đấu dính dưới thanh đầu trang; khi thẻ toàn màn hình thì không còn thanh đầu trang nên dính sát mép trên. */
 .play-card:fullscreen .play-card-sticky,
 .play-card--overlay .play-card-sticky {
