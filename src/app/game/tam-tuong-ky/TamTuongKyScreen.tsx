@@ -36,6 +36,7 @@ import {
   sectionOf,
   noticeFor,
   pickInto,
+  pickerGrid,
   recipeBook,
   swapSlots,
   tutorialTip,
@@ -44,6 +45,7 @@ import {
   type LedgerEntry,
   type LedgerGroupId,
   type Notice,
+  type PickerGrid,
   type Slots,
 } from "./altar";
 import {
@@ -319,13 +321,15 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
             ))}
           </div>
 
+          {/* Bấm yếu tố ở Vạn Vật Lục chỉ mở sổ công thức của nó, không đặt vào ô: đặt nguyên liệu bằng hộp thoại của
+              từng ô ở Đài Hợp Nguyên (Shan 20/11/2026). */}
           <Library
             nodes={discoveredNodes(catalog, state)}
             badges={openIngredients(catalog, state)}
-            onPick={(id) => {
-              setSlots((s) => pickInto(s, id));
-              setCard({ kind: "info", id });
-            }}
+            onPick={(id) => setCard({ kind: "info", id })}
+            viewing={card?.kind === "info" ? card.id : null}
+            detail={card?.kind === "info" ? <InfoCard key={card.id} id={card.id} state={state} /> : null}
+            help="Bấm một yếu tố để xem công thức của nó. Đặt nguyên liệu bằng cách bấm Ô trước hoặc Ô sau ở Đài Hợp Nguyên."
             hidden={tab !== "library"}
             flash={flash}
             hintId={hintId}
@@ -517,7 +521,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
   );
 }
 
-/** Điện thoại: thanh ghép cố định ở đáy để chọn ở Vạn Vật Lục xong bấm ngay, không phải cuộn lên. */
+/** Điện thoại: thanh ghép cố định ở đáy để đặt đủ hai ô xong bấm ngay, không phải cuộn lên. */
 function MobileBar({ slots, ready, tried, onCombine }: { slots: Slots; ready: boolean; tried: boolean; onCombine: () => void }) {
   const catalog = useCatalog();
   const label = (id: NodeId | null) => (id ? nameOf(catalog, id) : "…");
@@ -558,14 +562,15 @@ function Panel({ id, title, children, className = "", hidden = false }: { id: st
  * Ô yếu tố dạng thẻ vuông, icon là chính (mục 7.6, chỉnh 06/11/2026): icon trên, tên tối đa 2 dòng chữ nhỏ dưới,
  * cao cố định; chấm vàng “còn công thức” hoặc ×n ở góc trên phải. `title` và nhãn đọc màn hình có đủ tên.
  */
-function NodeChip({ node, onPick, badge, count, flash, hint }: { node: CatalogNode; onPick: (id: NodeId) => void; badge?: boolean; count?: number; flash?: boolean; hint?: boolean }) {
+function NodeChip({ node, onPick, badge, count, flash, hint, selected }: { node: CatalogNode; onPick: (id: NodeId) => void; badge?: boolean; count?: number; flash?: boolean; hint?: boolean; selected?: boolean }) {
   return (
     <button
       type="button"
       onClick={() => onPick(node.id)}
+      aria-current={selected || undefined}
       title={node.nameVi}
       aria-label={`${node.nameVi}${count !== undefined ? `, còn ${count}` : ""}${badge ? ", còn công thức chưa tìm" : ""}${hint ? ", được gợi ý" : ""}`}
-      className={`relative flex h-[5.25rem] w-full flex-col items-center justify-center gap-1 rounded-lg border bg-[var(--wood-lo)] px-1 pt-1.5 pb-1 text-center transition-colors hover:border-[var(--frame-gold)] focus-visible:outline-2 focus-visible:outline-[var(--frame-gold-hi)] ${flash ? "border-[var(--frame-gold-hi)] motion-safe:animate-[ttk-flash_0.9s_ease-out]" : "border-[var(--frame-line-mid)]"} ${hint ? "ring-2 ring-[var(--frame-gold-hi)]" : ""}`}
+      className={`relative flex h-[5.25rem] w-full flex-col items-center justify-center gap-1 rounded-lg border bg-[var(--wood-lo)] px-1 pt-1.5 pb-1 text-center transition-colors hover:border-[var(--frame-gold)] focus-visible:outline-2 focus-visible:outline-[var(--frame-gold-hi)] ${flash ? "border-[var(--frame-gold-hi)] motion-safe:animate-[ttk-flash_0.9s_ease-out]" : selected ? "border-[var(--frame-gold)] bg-[var(--wood-hi)]" : "border-[var(--frame-line-mid)]"} ${hint ? "ring-2 ring-[var(--frame-gold-hi)]" : ""}`}
     >
       {hint && <HintIcon className="absolute top-0.5 left-0.5 size-4" />}
       <NodeGlyph node={node} className="size-9" />
@@ -684,8 +689,11 @@ function Library({
   units,
   flash = null,
   showHelp = false,
+  help,
   hintId = null,
   filter = null,
+  viewing = null,
+  detail = null,
 }: {
   nodes: readonly CatalogNode[];
   onPick: (id: NodeId) => void;
@@ -697,16 +705,25 @@ function Library({
   units?: number;
   /** Yếu tố vừa khám phá: mở trang có nó và nhấp nháy một lần (mục 7.5). */
   flash?: Focus | null;
-  /** Câu hướng dẫn cách đặt ô: chỉ hiện cho người mới (chưa ghép ra gì). */
+  /** Câu hướng dẫn `help`: chỉ hiện cho người mới (chưa ghép ra gì). */
   showHelp?: boolean;
+  help?: string;
   /** Nguyên liệu của gợi ý mức 2: viền vàng và đèn gợi ý (HintIcon). */
   hintId?: NodeId | null;
   /** Yêu cầu đổi bộ lọc từ thẻ gợi ý; `seq` mới thì áp dụng một lần (xóa ô tìm, đặt nhóm). */
   filter?: { readonly group: string | null; readonly seq: number } | null;
+  /** Yếu tố đang xem sổ công thức: ô đó sáng viền. */
+  viewing?: NodeId | null;
+  /**
+   * Sổ công thức của yếu tố đang xem, chỉ hiện ở điện thoại: ở đó Đài Hợp Nguyên nằm trên Vạn Vật Lục, thẻ dưới hai ô
+   * khuất khỏi màn hình khi đang bấm trong sổ. Máy tính đã thấy thẻ ở cột giữa.
+   */
+  detail?: React.ReactNode;
 }) {
   return (
     <Panel id="ttk-library" title="Vạn Vật Lục" hidden={hidden} className="lg:order-first">
-      <LibraryBody nodes={all} onPick={onPick} badges={badges} counts={counts} units={units} flash={flash} showHelp={showHelp} hintId={hintId} filter={filter} />
+      <LibraryBody nodes={all} onPick={onPick} badges={badges} counts={counts} units={units} flash={flash} help={showHelp ? help : undefined} hintId={hintId} filter={filter} viewing={viewing} />
+      {detail && <div className="lg:hidden">{detail}</div>}
     </Panel>
   );
 }
@@ -719,10 +736,12 @@ function LibraryBody({
   counts,
   units,
   flash = null,
-  showHelp = false,
+  help,
   hintId = null,
   filter = null,
   autoFocus = false,
+  viewing = null,
+  layout,
 }: {
   nodes: readonly CatalogNode[];
   onPick: (id: NodeId) => void;
@@ -730,10 +749,13 @@ function LibraryBody({
   counts?: Readonly<Record<NodeId, number>>;
   units?: number;
   flash?: Focus | null;
-  showHelp?: boolean;
+  help?: string;
   hintId?: NodeId | null;
   filter?: { readonly group: string | null; readonly seq: number } | null;
   autoFocus?: boolean;
+  viewing?: NodeId | null;
+  /** Hộp thoại chọn nguyên liệu: số ô mỗi trang và số cột theo chỗ trống của màn hình. Mặc định theo Vạn Vật Lục. */
+  layout?: { readonly pageSize: number; readonly grid: string };
 }) {
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<string | null>(null);
@@ -748,7 +770,8 @@ function LibraryBody({
   const groups = groupsOf(all);
   // 2 cột × 8 hàng trên máy tính, 12 ô trên điện thoại (mục 7.6). Đổi từ khóa/nhóm thì về trang 1 (key mới);
   // có yếu tố mới trong danh sách đang lọc thì mở trang có nó.
-  const pageSize = useIsDesktop() ? 24 : 16;
+  const desktop = useIsDesktop();
+  const pageSize = layout?.pageSize ?? (desktop ? 24 : 16);
   // Một hàng lọc: “Tất cả” + nhóm đầu (Nguyên tố) là chip, nhóm còn lại gom vào ô chọn lấp phần còn lại của hàng.
   const shown = groups.slice(0, 1);
   const more = groups.slice(1);
@@ -797,9 +820,9 @@ function LibraryBody({
           </label>
         )}
       </div>
-      {(showHelp || units !== undefined) && (
+      {(help || units !== undefined) && (
         <p className="text-caption text-[var(--ash)]">
-          {showHelp && "Bấm một yếu tố để đặt vào ô trước, bấm tiếp để đặt vào ô sau."}
+          {help}
           {units !== undefined && `Bảy nguyên tố dùng chung túi (còn ${units} đơn vị).`}
         </p>
       )}
@@ -813,6 +836,8 @@ function LibraryBody({
         counts={counts}
         flashId={flash?.id}
         hintId={hintId ?? undefined}
+        viewing={viewing ?? undefined}
+        grid={layout?.grid}
       />
       {nodes.length === 0 && <p className="text-sm text-[var(--ash)]">Không có yếu tố nào khớp.</p>}
     </>
@@ -828,9 +853,26 @@ interface SlotPicker {
   readonly onPick: (index: 0 | 1, id: NodeId) => void;
 }
 
+/** `pickerGrid` theo khung nhìn, mã hóa thành một số để `useSyncExternalStore` so sánh được (cột × 10 + hàng). */
+function usePickerGrid(): PickerGrid {
+  const code = useSyncExternalStore(
+    (onChange) => {
+      window.addEventListener("resize", onChange);
+      return () => window.removeEventListener("resize", onChange);
+    },
+    () => {
+      const g = pickerGrid(window.innerWidth, window.innerHeight);
+      return g.cols * 10 + g.rows;
+    },
+    () => 64,
+  );
+  return { cols: Math.floor(code / 10) as 4 | 6, rows: code % 10 };
+}
+
 /** Hộp thoại chọn nguyên liệu cho một ô (hộp thoại gốc của trình duyệt: Esc hoặc bấm nền để đóng). */
 function PickerDialog({ index, picker, onClose }: { index: 0 | 1 | null; picker: SlotPicker; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const grid = usePickerGrid();
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
@@ -844,7 +886,7 @@ function PickerDialog({ index, picker, onClose }: { index: 0 | 1 | null; picker:
       onClose={onClose}
       onClick={(e) => e.target === e.currentTarget && onClose()}
       aria-label={`Chọn nguyên liệu cho ${label}`}
-      className="campaign-atlas m-auto max-h-[min(42rem,calc(100dvh-2rem))] w-[min(36rem,calc(100vw-2rem))] rounded-xl border border-[var(--frame-gold)] bg-[var(--wood)] p-0 text-[var(--on-wood)] backdrop:bg-black/60"
+      className="campaign-atlas m-auto max-h-[calc(100dvh-2rem)] w-[min(40rem,calc(100vw-2rem))] rounded-xl border border-[var(--frame-gold)] bg-[var(--wood)] p-0 text-[var(--on-wood)] backdrop:bg-black/60"
     >
       {index !== null && (
         <div className="flex flex-col gap-3 p-4">
@@ -860,6 +902,7 @@ function PickerDialog({ index, picker, onClose }: { index: 0 | 1 | null; picker:
             counts={picker.counts}
             units={picker.units}
             autoFocus
+            layout={{ pageSize: grid.cols * grid.rows, grid: grid.cols === 6 ? "grid-cols-6" : "grid-cols-4" }}
             onPick={(id) => {
               picker.onPick(index, id);
               onClose();
@@ -880,6 +923,8 @@ function LibraryPage({
   counts,
   flashId,
   hintId,
+  viewing,
+  grid = "grid-cols-4 sm:grid-cols-8 lg:grid-cols-4",
 }: {
   nodes: readonly CatalogNode[];
   pageSize: number;
@@ -889,11 +934,13 @@ function LibraryPage({
   counts?: Readonly<Record<NodeId, number>>;
   flashId?: NodeId;
   hintId?: NodeId;
+  viewing?: NodeId;
+  grid?: string;
 }) {
   const paged = usePagedItems(nodes, pageSize, initialPage);
   return (
     <>
-      <ul className="grid grid-cols-4 gap-1.5 sm:grid-cols-8 lg:grid-cols-4">
+      <ul className={`grid gap-1.5 ${grid}`}>
         {paged.pageItems.map((n) => (
           <li key={n.id}>
             <NodeChip
@@ -903,6 +950,7 @@ function LibraryPage({
               count={counts && n.kind !== "element" ? counts[n.id] : undefined}
               flash={n.id === flashId}
               hint={n.id === hintId}
+              selected={n.id === viewing}
             />
           </li>
         ))}
@@ -1093,7 +1141,7 @@ const CARD_BOX = "relative flex h-28 items-center gap-3 rounded-lg border px-3 t
  * công thức đã tự ghép ra), hoặc gợi ý vừa xin. Chữ cho người đọc màn hình của kết quả, gợi ý vẫn ở ô `aria-live`.
  */
 function AltarCard({ card, state, onUse, onFilterGroup }: { card: AltarCardState; state?: DiscoveryState; onUse: (id: NodeId) => void; onFilterGroup?: (group: string) => void }) {
-  if (!card) return <div className={`${CARD_BOX} border-dashed border-[var(--frame-line-mid)] text-sm text-[var(--ash)]`}>Bấm một yếu tố để xem công thức đã biết; thứ ghép ra cũng hiện ở đây.</div>;
+  if (!card) return <div className={`${CARD_BOX} border-dashed border-[var(--frame-line-mid)] text-sm text-[var(--ash)]`}>Bấm một yếu tố ở Vạn Vật Lục để xem công thức đã biết; thứ ghép ra cũng hiện ở đây.</div>;
   if (card.kind === "result") return <ResultCard result={card.result} onUse={onUse} />;
   if (card.kind === "info") return state ? <InfoCard key={card.id} id={card.id} state={state} /> : null;
   return <HintCard key={card.seq} hint={card.hint} onUse={onUse} onFilterGroup={onFilterGroup} />;
