@@ -1701,6 +1701,15 @@ html {
     max-width: none;
   }
 }
+/* Do Thám: trang thường ô 26–38px theo bề ngang màn. Phóng to màn chơi thì ô giãn lấp cả bề ngang lẫn bề cao màn (trừ lề,
+   hàng nút đạo cụ, dòng thông báo), tối đa 96px (Shan 20/11/2026: phóng to còn rất nhiều chỗ trống). */
+.dt-board {
+  --dt-cell: max(26px, min(38px, calc((100vw - 3.5rem) / var(--dt-cols))));
+}
+.play-card:fullscreen .dt-board,
+.play-card--overlay .dt-board {
+  --dt-cell: max(26px, min(calc((100vw - 6rem) / var(--dt-cols)), calc((100dvh - 14rem) / var(--dt-rows)), 96px));
+}
 /* Sân đấu dính dưới thanh đầu trang; khi thẻ toàn màn hình thì không còn thanh đầu trang nên dính sát mép trên. */
 .play-card:fullscreen .play-card-sticky,
 .play-card--overlay .play-card-sticky {
