@@ -1721,3 +1721,66 @@ html {
 .play-card--overlay .play-card-sticky {
   top: 0;
 }
+
+/* Sử Lộ (src/app/game/su-lo/SuLoScreen.tsx). Trang thường: sa bàn và câu hỏi ở cột trái, bảng điều khiển cột phải.
+   Phóng to (Shan 20/11/2026: còn quá nhiều chỗ trống): sa bàn chiếm cả cột trái và lớn theo chiều cao màn, câu hỏi chuyển
+   lên đầu cột phải, ô giao tranh cũng giãn theo màn. */
+.sl-map {
+  max-width: 760px;
+}
+.sl-sk-grid {
+  --sk-cell: max(28px, min(52px, calc((100vw - 3.5rem) / var(--sk-cols))));
+  grid-template-columns: repeat(var(--sk-cols), var(--sk-cell));
+}
+@media (width >= 64rem) {
+  .sl-play {
+    grid-template-columns: minmax(0, 1fr) 340px;
+    grid-template-areas: "board side" "question side";
+  }
+  .sl-board {
+    grid-area: board;
+  }
+  .sl-question {
+    grid-area: question;
+  }
+  .sl-side {
+    grid-area: side;
+  }
+}
+.play-card:fullscreen .sl-map,
+.play-card--overlay .sl-map {
+  max-width: none;
+}
+.play-card:fullscreen .sl-picker,
+.play-card--overlay .sl-picker {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+@media (width >= 64rem) {
+  .play-card:fullscreen .sl-play,
+  .play-card--overlay .sl-play {
+    flex: 1 1 auto;
+    grid-template-columns: minmax(0, 1fr) clamp(360px, 28vw, 520px);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "board question" "board side";
+    align-items: stretch;
+  }
+  .play-card:fullscreen .sl-board,
+  .play-card--overlay .sl-board {
+    container-type: inline-size;
+  }
+  /* Bàn lớn nhất vừa bề ngang cột và chiều cao màn (trừ lề khung, bảng tên). */
+  .play-card:fullscreen .sl-map,
+  .play-card--overlay .sl-map {
+    width: min(100%, calc((100dvh - 8rem) * var(--sl-ratio)));
+  }
+  .play-card:fullscreen .sl-skirmish,
+  .play-card--overlay .sl-skirmish {
+    max-width: none;
+  }
+  /* Giao tranh: trừ phần đầu (tên, Thành lực, ba thanh) và hàng nút dưới bàn. */
+  .play-card:fullscreen .sl-sk-grid,
+  .play-card--overlay .sl-sk-grid {
+    --sk-cell: max(28px, min(calc((100dvh - 22rem) / var(--sk-rows)), calc((100cqw - 2rem) / var(--sk-cols)), 104px));
+  }
+}
