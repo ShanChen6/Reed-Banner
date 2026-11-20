@@ -373,6 +373,31 @@
     border: 1px dashed color-mix(in srgb, var(--ink) 32%, transparent);
     background: color-mix(in srgb, var(--paper-deep) 28%, transparent);
   }
+
+  /* Card lớn trong khung màn chế độ (Shan chốt phương án B, 20/11/2026): mọi khung .ui-frame đứng ngang hàng trong
+     ModeScreen card có vạch vàng trong và bốn góc hoa văn (vẽ bằng mask ở ::before, không cần thêm phần tử). Khung lồng
+     trong khung khác, banner hero và khung đánh dấu .ui-frame--plain (ghi chú, thông báo nhỏ) giữ phẳng. */
+  .ui-mode-card .ui-frame:not(.ui-frame--hero, .ui-frame--plain, .ui-frame .ui-frame)::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border: 1px solid var(--frame-inner);
+    border-radius: 0.5rem;
+    pointer-events: none;
+  }
+  .ui-mode-card .ui-frame:not(.ui-frame--hero, .ui-frame--plain, .ui-frame .ui-frame)::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    z-index: 1;
+    pointer-events: none;
+    background: var(--frame-gold);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-linecap='round'%3E%3Cg transform='rotate%280 12 12%29'%3E%3Cpath d='M1.5 21 V6 A4.5 4.5 0 0 1 6 1.5 H21' stroke-width='1.4'/%3E%3Cpath d='M5 13 V8.5 A3.5 3.5 0 0 1 8.5 5 H13' stroke-width='0.9'/%3E%3Cpath d='M8.2 11 A2.6 2.6 0 1 1 11 8.2' stroke-width='1.1'/%3E%3Ccircle cx='8.6' cy='8.6' r='1.1' fill='black' stroke='none'/%3E%3Crect x='19.6' y='0.1' width='2.8' height='2.8' transform='rotate%2845 21 1.5%29' fill='black' stroke='none'/%3E%3Crect x='0.1' y='19.6' width='2.8' height='2.8' transform='rotate%2845 1.5 21%29' fill='black' stroke='none'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-linecap='round'%3E%3Cg transform='rotate%2890 12 12%29'%3E%3Cpath d='M1.5 21 V6 A4.5 4.5 0 0 1 6 1.5 H21' stroke-width='1.4'/%3E%3Cpath d='M5 13 V8.5 A3.5 3.5 0 0 1 8.5 5 H13' stroke-width='0.9'/%3E%3Cpath d='M8.2 11 A2.6 2.6 0 1 1 11 8.2' stroke-width='1.1'/%3E%3Ccircle cx='8.6' cy='8.6' r='1.1' fill='black' stroke='none'/%3E%3Crect x='19.6' y='0.1' width='2.8' height='2.8' transform='rotate%2845 21 1.5%29' fill='black' stroke='none'/%3E%3Crect x='0.1' y='19.6' width='2.8' height='2.8' transform='rotate%2845 1.5 21%29' fill='black' stroke='none'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-linecap='round'%3E%3Cg transform='rotate%28180 12 12%29'%3E%3Cpath d='M1.5 21 V6 A4.5 4.5 0 0 1 6 1.5 H21' stroke-width='1.4'/%3E%3Cpath d='M5 13 V8.5 A3.5 3.5 0 0 1 8.5 5 H13' stroke-width='0.9'/%3E%3Cpath d='M8.2 11 A2.6 2.6 0 1 1 11 8.2' stroke-width='1.1'/%3E%3Ccircle cx='8.6' cy='8.6' r='1.1' fill='black' stroke='none'/%3E%3Crect x='19.6' y='0.1' width='2.8' height='2.8' transform='rotate%2845 21 1.5%29' fill='black' stroke='none'/%3E%3Crect x='0.1' y='19.6' width='2.8' height='2.8' transform='rotate%2845 1.5 21%29' fill='black' stroke='none'/%3E%3C/g%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-linecap='round'%3E%3Cg transform='rotate%28270 12 12%29'%3E%3Cpath d='M1.5 21 V6 A4.5 4.5 0 0 1 6 1.5 H21' stroke-width='1.4'/%3E%3Cpath d='M5 13 V8.5 A3.5 3.5 0 0 1 8.5 5 H13' stroke-width='0.9'/%3E%3Cpath d='M8.2 11 A2.6 2.6 0 1 1 11 8.2' stroke-width='1.1'/%3E%3Ccircle cx='8.6' cy='8.6' r='1.1' fill='black' stroke='none'/%3E%3Crect x='19.6' y='0.1' width='2.8' height='2.8' transform='rotate%2845 21 1.5%29' fill='black' stroke='none'/%3E%3Crect x='0.1' y='19.6' width='2.8' height='2.8' transform='rotate%2845 1.5 21%29' fill='black' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+    mask-position: left top, right top, right bottom, left bottom;
+    mask-size: 1.25rem 1.25rem;
+    mask-repeat: no-repeat;
+  }
+  .ui-mode-card .ui-frame:not(.ui-frame--hero, .ui-frame .ui-frame) > .ui-frame-corner { display: none; }
   .ui-frame-corner { color: var(--frame-bronze); }
   .ui-frame--hero .ui-frame-corner { color: var(--frame-gold-hi); }
 
