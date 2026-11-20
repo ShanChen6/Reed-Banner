@@ -21,18 +21,18 @@ export interface BattleSounds {
   readonly end: readonly CuePlay[];
 }
 
-/** Tiếng cho một khung hoạt ảnh bàn cờ: đổi ô, đổi sai, xóa 3/4/5 ô và chuỗi combo (cao dần, thêm chiêng ở tầng 4). */
+/** Tiếng cho một khung hoạt ảnh bàn cờ: đổi ô, đổi sai, xóa 3/4/5 ô (mỗi loại một tệp) và chuỗi combo tầng 1–4. */
 export function frameCue(sound: FrameSound | undefined): CuePlay | null {
   if (!sound) return null;
   if (sound.kind === "swap") return { id: "battle.swap" };
   if (sound.kind === "bounce") return { id: "battle.invalid" };
   if (sound.chain >= 2) {
     const tier = Math.min(4, sound.chain - 1) as 1 | 2 | 3 | 4;
-    return { id: `battle.combo${tier}` };
+    // Tầng 4 trở lên chưa có tiếng riêng: manifest trỏ về tệp tầng 3, phát cao hơn một chút để vẫn nghe tăng dần.
+    return tier === 4 ? { id: "battle.combo4", rate: 1.12 } : { id: `battle.combo${tier}` };
   }
-  // Chưa có tiếng riêng cho 4 và 5 ô: dùng chung tiếng 3 ô, cao dần theo số ô (manifest trỏ cùng tệp).
-  if (sound.size >= 5) return { id: "battle.match5", rate: 1.16 };
-  if (sound.size === 4) return { id: "battle.match4", rate: 1.08 };
+  if (sound.size >= 5) return { id: "battle.match5" };
+  if (sound.size === 4) return { id: "battle.match4" };
   return { id: "battle.match3" };
 }
 

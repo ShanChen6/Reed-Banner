@@ -9,7 +9,7 @@
 | `sfx/formation/eraser_a..b`, `wild_a..c`, `match_a..c`, `flamedown_a..b`, `fusion_a..b` | Cắt từ năm đoạn Gemini tạo (02/11/2026) bằng `scripts/slice-sfx.py` | Như trên |
 | `sfx/battle/swap_a..c`, `sfx/formation/tick_a..c`, `rank_a..b` | Cắt từ ba đoạn Gemini tạo (02/11/2026) bằng `scripts/slice-sfx.py` | Như trên |
 | `music/formation_menu` | Bản nhạc Gemini tạo (02/11/2026), chuẩn hóa -18 LUFS và làm vòng lặp bằng `scripts/make-music-loop.py` | Như trên |
-| `sfx/battle/hit1..3_*`, `invalid_a..c`, `match3_a..c` | Cắt từ năm đoạn Gemini tạo (02/11/2026) bằng `scripts/slice-sfx.py`. Tiếng đòn đánh dùng chung cho cả 8 nghề; `match4`/`match5` dùng lại tiếng `match3` với tốc độ cao hơn | Như trên |
+| `sfx/battle/hit1..3_*`, `invalid_a..c`, `match3_a..c` | Cắt từ năm đoạn Gemini tạo (02/11/2026) bằng `scripts/slice-sfx.py`. Tiếng đòn đánh dùng chung cho cả 8 nghề | Như trên |
 | `sfx/battle/win_a`, `lose_a..b`, `ko_a..c`, `damage_a..c`, `skill_a..c` | Cắt từ năm đoạn Gemini tạo (03/11/2026) bằng `scripts/slice-sfx.py`. Tiếng kỹ năng dùng chung cho cả 7 hệ; tệp `damage` Gemini tạo kèm cả chí mạng nhưng chưa có cue chí mạng | Như trên |
 | `music/atlas`, `dialogue`, `survival`, `battle_boss`, `battle_normal` | Năm bản nhạc Gemini tạo (03/11/2026), chuẩn hóa -18 LUFS và làm vòng lặp bằng `scripts/make-music-loop.py` (cắt phần tắt dần ở cuối, trộn 3 giây) | Như trên |
 | `music/arena`, `music/pvp` | Hai bản nhạc Gemini tạo (03/11/2026), làm vòng lặp bằng `scripts/make-music-loop.py`. `pvp` dành cho Quần Hùng online (chưa phát triển) | Như trên |
@@ -27,7 +27,10 @@
 | `sfx/do-tham/open_a..d` | Cắt tay bốn tiếng sột soạt rời ở giây 2,18, 2,72, 3,26 và 3,80 của đoạn Gemini tạo (20/11/2026, prompt `dotham_open`; phần sau là nhạc) | Như trên |
 | `sfx/do-tham/reject_a..c`, `flag_a..c`, `cascade_a..b`, `shield_a` | Cắt tay từ bốn đoạn Gemini tạo (20/11/2026, prompt `dotham_reject`, `dotham_flag`, `dotham_cascade`, `dotham_shield`): reject ở giây 0,07, 0,97, 2,82; flag ở 0,06, 1,73, 2,16; cascade ở 5,45 và 0,85; shield ghép tiếng ầm ở giây 2,6 (nhỏ hơn 10 dB) với tiếng chiêng ở giây 7,45 vào sau 0,4 giây | Như trên |
 | `music/dotham`, `sfx/do-tham/trap_a`, `win_a..b`, `lose_a..b` | Bốn tệp Shan gửi (20/11/2026: `music_dotham`, `dotham_trap`, `dotham_win`, `dotham_lose`, Gemini tạo). Nhạc: lấy giây 0–98,2 (đoạn lặp lại khớp nhất ở giây 95,2), làm vòng lặp bằng `scripts/make-music-loop.py` (trộn 3 giây), 95,2 giây. Trap: tiếng sập ở giây 5,45–7,4 (đoạn sau là nhạc trống). Win: phần mở đầu giây 0,82–4,8 và phần kết giây 57,92–60,1. Lose: phần mở đầu giây 0,07–3,3 và câu kết giây 48,98–53,6. Hiệu ứng đơn âm, đỉnh -3 dBFS, làm mờ đuôi | Như trên |
+| `sfx/battle/match4_a..b`, `match5_a..b`, `combo1_a..b`, `combo2_a..b`, `combo3_a..b` | Năm tệp Shan gửi (20/11/2026: `battle_match4`, `battle_match5`, `battle_combo1..3`, Gemini tạo), cắt tay tiếng đơn sạch: match4 ở giây 34,21 và 18,53 (0,45 s; đoạn là nhạc liền nên tiếng còn nền nhẹ); match5 ở 11,45 và 13,59 (0,55 s); combo1 ở 37,40 và 66,97; combo2 ở 0,07 và 0,97 (0,5 s); combo3 là tiếng mở đầu ở 0,04 (0,9 s) và 1,91 (0,6 s). `combo4` dùng lại tệp `combo3`, phát nhanh hơn 12%. Đơn âm, đỉnh -3 dBFS, làm mờ đuôi | Như trên |
 
 Sử Lộ đã có tệp riêng cho mọi cue `sulo.*` và hai bản nhạc (20/11/2026).
 
 Do Thám đã có tệp riêng cho mọi cue `dotham.*` và nhạc `dotham` (20/11/2026).
+
+Trận đánh đã có tệp riêng cho `match4`, `match5`, `combo1..3` (20/11/2026); `combo4` dùng chung tệp `combo3`.
