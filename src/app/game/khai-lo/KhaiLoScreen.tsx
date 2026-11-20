@@ -249,7 +249,8 @@ export default function KhaiLoScreen() {
           parts.push(e.removed.length ? `${TOOL_NAME[e.tool]} phá ${e.removed.length} quân.` : e.tool === "moc" ? "Mộc Linh đổi hệ một quân." : "Lốc Phong xoay một vòng.");
         if (e.type === "undone") parts.push("Đã hoàn tác.");
         if (e.type === "newLevel") parts.push(`Màn ${e.level}.`);
-        if (e.type === "levelDone") parts.push(e.summary.cleared ? "Dọn sạch bàn!" : `Không dọn sạch được, còn ${e.summary.left} quân.`);
+        if (e.type === "levelDone")
+          parts.push(e.summary.cleared ? `Dọn sạch bàn! +${-e.summary.hearts} tim.` : `Còn ${e.summary.left} quân, mất ${e.summary.hearts} tim.`);
         if (e.type === "toolCharged") parts.push(`Nạp đầy: +1 ${TOOL_NAME[e.tool]}.`);
         if (e.type === "redeal")
           parts.push(e.cleared ? `Dọn sạch bàn, +${e.bonus} điểm. Bàn mới.` : `Bàn mới${e.bonus ? ` (gần sạch +${e.bonus} điểm)` : ""}.`);
@@ -420,7 +421,7 @@ export default function KhaiLoScreen() {
   const onBoard = new Set(state.cells.map((c) => c?.kind));
   const shownTools = ELEMENTS.filter((e) => onBoard.has(e) || state.tools[e] > 0);
   const endLevel = () => {
-    // Thường: chịu thua là hết ván, nên hỏi lại một lần (lúc bế tắc cũng vậy, vì vẫn còn đạo cụ để thử).
+    // Thường: kết thúc màn khi còn khối thì quân sót trừ tim, nên hỏi lại một lần; bế tắc thì vẫn còn đạo cụ để thử nên cũng hỏi.
     if (state.mode === "classic" && !confirmEnd) {
       setConfirmEnd(true);
       return;
@@ -533,8 +534,8 @@ export default function KhaiLoScreen() {
                     </h2>
                     <p className="text-[15px] text-on-wood">
                       {summary.cleared
-                        ? `Dọn sạch bàn: +${summary.bonus} điểm.`
-                        : `Còn ${summary.left} quân chưa dọn.`}
+                        ? `Dọn sạch bàn: +${summary.bonus} điểm, +${-summary.hearts} tim.`
+                        : `Còn ${summary.left} quân chưa dọn: mất ${summary.hearts} tim, còn ${state.hearts} tim.`}
                     </p>
                     <button type="button" autoFocus onClick={() => act({ type: "nextLevel" })} className={buttonVariants({ size: "lg" })}>
                       Sang màn {state.level + 1}
@@ -547,7 +548,7 @@ export default function KhaiLoScreen() {
                   <section role="status" className="ui-frame flex w-full max-w-sm flex-col items-center gap-2 p-4 text-center sm:gap-3 sm:p-5">
                     <h2 className="ui-title-on-wood text-xl font-bold sm:text-2xl">{timed ? "Hết giờ" : "Thất thủ"}</h2>
                     <p className="text-[15px] text-on-wood">
-                      {!timed && state.summary ? `Còn ${state.summary.left} quân chưa dọn. ` : ""}
+                      {!timed && state.summary ? `Còn ${state.summary.left} quân mà chỉ còn ${state.hearts} tim. ` : ""}
                       {MODE_NAME[state.mode]}: tướng quân đi tới {timed ? "bậc" : "màn"} {state.level}, đạt <b>{state.score} điểm</b>
                       {state.score >= best && state.score > 0 ? " (cao nhất từ trước tới nay)" : ""}.
                     </p>
@@ -601,7 +602,7 @@ export default function KhaiLoScreen() {
                   onBlur={() => setConfirmEnd(false)}
                   className={buttonVariants({ variant: state.phase === "stuck" || confirmEnd ? "primary" : "secondary", size: "sm", className: "px-1" })}
                 >
-                  {confirmEnd ? "Bấm lần nữa" : timed ? "Đổi bàn" : "Chịu thua"}
+                  {confirmEnd ? "Bấm lần nữa" : timed ? "Đổi bàn" : "Kết thúc màn"}
                 </button>
               </div>
               {tool ? (
@@ -610,9 +611,13 @@ export default function KhaiLoScreen() {
                 <p className="hidden text-caption text-on-wood-soft lg:block">Xóa {KL_TOOL_CHARGE} quân của một hệ (bằng cách chạm khối) để được 1 đạo cụ hệ đó, tích không giới hạn. Phím 1–7 chọn nhanh.</p>
               )}
               {state.phase === "stuck" && !confirmEnd && (
-                <p className="text-sm text-warning">Hết khối để xóa: dùng đạo cụ hoặc {timed ? "đổi bàn" : "chịu thua"}.</p>
+                <p className="text-sm text-warning">Hết khối để xóa: dùng đạo cụ hoặc {timed ? "đổi bàn" : "kết thúc màn"}.</p>
               )}
-              {confirmEnd && <p className="text-sm text-warning">Chịu thua là hết ván. Bấm lần nữa nếu chắc chắn.</p>}
+              {confirmEnd && (
+                <p className="text-sm text-warning">
+                  Còn {left} quân: mỗi quân trừ 1 tim{left > state.hearts ? ", không đủ tim nên sẽ hết ván" : ""}. Bấm lần nữa nếu chắc chắn.
+                </p>
+              )}
             </div>
           )}
           <p className="text-caption text-on-wood-soft">Bản chơi thử, không cần mạng: chưa có thưởng và bảng công trạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.</p>
@@ -662,7 +667,8 @@ function Stats({ state, best, left, msLeft }: { state: KlState; best: number; le
     ["Điểm", String(state.score)],
     msLeft === null ? ["Màn", String(state.level)] : ["Mốc", String(timedGoal(state.level))],
     msLeft === null ? ["Quân còn", String(left)] : ["Thời gian", formatClock(msLeft), msLeft <= 10_000],
-    ["Cao nhất", String(Math.max(best, state.score))],
+    // Thường: tim đỡ quân sót cuối màn; Cấp tốc không dùng tim.
+    msLeft === null ? ["Tim", `♥ ${state.hearts}`] : ["Cao nhất", String(Math.max(best, state.score))],
   ];
   return (
     <dl className="grid w-full grid-cols-4 gap-1.5 text-center sm:gap-2 lg:grid-cols-2">
