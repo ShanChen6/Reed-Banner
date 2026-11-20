@@ -153,10 +153,15 @@ test.describe("tài khoản đã đăng nhập", () => {
     expectClean(problems);
   });
 
-  test("Tầm Tướng Ký: bấm ô trống mở hộp thoại chọn nguyên liệu cho đúng ô đó", async ({ page }) => {
+  test("Tầm Tướng Ký: Vạn Vật Lục chỉ xem công thức; bấm ô trống mở hộp thoại chọn nguyên liệu cho đúng ô đó", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/tam-tuong-ky");
     await playMode(page);
+    // Bấm yếu tố ở Vạn Vật Lục chỉ mở sổ công thức, không đặt vào ô (Shan 20/11/2026).
+    await page.locator("#ttk-library").getByRole("button", { name: /^Mộc/ }).click();
+    await expect(page.locator("#ttk-library").getByRole("button", { name: /^Mộc/ })).toHaveAttribute("aria-current", "true");
+    await expect(page.getByRole("button", { name: "Chọn nguyên liệu cho ô trước" })).toBeVisible();
+    await expect(page.getByRole("button", { name: /^Bỏ Mộc khỏi/ })).toHaveCount(0);
     await page.getByRole("button", { name: "Chọn nguyên liệu cho ô sau" }).click();
     const dialog = page.getByRole("dialog", { name: "Chọn nguyên liệu cho ô sau" });
     await expect(dialog).toBeVisible();
