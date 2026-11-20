@@ -168,10 +168,10 @@ Engine Do Thám không phát sự kiện nên `do-tham/sounds.ts` so trạng th�
 | Cue | Khi nào | Tệp tạm | Ưu tiên |
 |---|---|---|---|
 | `dotham.open` | Mở một vài ô (dưới 4 ô) | Đã có tệp riêng `do-tham/open` | P1 |
-| `dotham.cascade` | Mở lan từ 4 ô trở lên (gặp ô số 0) | `formation/fogclear` | P1 |
-| `dotham.flag` | Cắm cờ lau; gỡ cờ cùng tiếng, trầm hơn | `battle/swap` | P1 |
-| `dotham.shield` | Khiên đất đỡ một lần sa bẫy | `formation/match` | P2 |
-| `dotham.reject` | Lệnh bị từ chối (mở nhanh sai số cờ, đạo cụ chưa dùng được...) | `formation/reject` | P1 |
+| `dotham.cascade` | Mở lan từ 4 ô trở lên (gặp ô số 0) | Đã có tệp riêng `do-tham/cascade` | P1 |
+| `dotham.flag` | Cắm cờ lau; gỡ cờ cùng tiếng, trầm hơn | Đã có tệp riêng `do-tham/flag` | P1 |
+| `dotham.shield` | Khiên đất đỡ một lần sa bẫy | Đã có tệp riêng `do-tham/shield` | P2 |
+| `dotham.reject` | Lệnh bị từ chối (mở nhanh sai số cờ, đạo cụ chưa dùng được...) | Đã có tệp riêng `do-tham/reject` | P1 |
 | `dotham.trap` | Sập bẫy, ngay trước tiếng thua | `battle/damage` | P1 |
 | `dotham.win` / `dotham.lose` | Thắng / thua ván | `formation/win` / `formation/lose` | P1 |
 

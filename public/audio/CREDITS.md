@@ -25,7 +25,8 @@
 | `sfx/su-lo/won_a` | Cắt tay phần kết bài (giây 99,3–103,9) của đoạn Gemini tạo (20/11/2026, prompt `sulo_won`) | Như trên |
 | `music/sulo_maze`, `music/sulo_boss` | Hai bản nhạc Gemini tạo (20/11/2026, prompt `music_sulo_maze`, `music_sulo_boss`), làm vòng lặp bằng `scripts/make-music-loop.py`: maze lấy giây 31,0–119,6 (bỏ đoạn vào nhỏ hơn hẳn), boss lấy giây 0–95,3 cho tệp dưới 1,5 MB | Như trên |
 | `sfx/do-tham/open_a..d` | Cắt tay bốn tiếng sột soạt rời ở giây 2,18, 2,72, 3,26 và 3,80 của đoạn Gemini tạo (20/11/2026, prompt `dotham_open`; phần sau là nhạc) | Như trên |
+| `sfx/do-tham/reject_a..c`, `flag_a..c`, `cascade_a..b`, `shield_a` | Cắt tay từ bốn đoạn Gemini tạo (20/11/2026, prompt `dotham_reject`, `dotham_flag`, `dotham_cascade`, `dotham_shield`): reject ở giây 0,07, 0,97, 2,82; flag ở 0,06, 1,73, 2,16; cascade ở 5,45 và 0,85; shield ghép tiếng ầm ở giây 2,6 (nhỏ hơn 10 dB) với tiếng chiêng ở giây 7,45 vào sau 0,4 giây | Như trên |
 
 Sử Lộ đã có tệp riêng cho mọi cue `sulo.*` và hai bản nhạc (20/11/2026).
 
-Do Thám: `dotham.open` đã có tệp riêng; các cue `dotham.*` khác và nhạc `dotham` còn trỏ về tệp ở bảng trên (xem bảng 5.7 trong `docs/05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md`).
+Do Thám: `dotham.open`, `reject`, `flag`, `cascade`, `shield` đã có tệp riêng; `dotham.trap`, `win`, `lose` và nhạc `dotham` còn trỏ về tệp ở bảng trên (xem bảng 5.7 trong `docs/05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md`).

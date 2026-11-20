@@ -45,7 +45,7 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 | Tháp Thiên Mệnh | — | Nhạc `tower_destiny` (cả màn Tháp lẫn trận trong Tháp đều im nhạc) |
 | Trấn Ải (Sinh tồn) | `survival` | Cue `survival.wave`, `survival.warn` |
 | Sử Lộ | Đã nối 19/11/2026: 16 cue `sulo.*`, tiếng ghép ô trận trùm, nhạc `sulo_maze`/`sulo_boss` ([bảng 5.6](02-architecture-and-assets.md#56-sử-lộ-sulo-đã-nối-19112026)) | Đủ tệp riêng cho 16 cue và hai bản nhạc (20/11/2026) |
-| Do Thám | Đã nối 19/11/2026: 8 cue `dotham.*`, tiếng đạo cụ theo hệ, nhạc `dotham` ([bảng 5.7](02-architecture-and-assets.md#57-do-thám-dotham-đã-nối-19112026)) | `dotham.open` đã có tệp riêng (20/11/2026); 7 cue còn lại và bản nhạc đang mượn tệp của Trận Đồ và trận đánh |
+| Do Thám | Đã nối 19/11/2026: 8 cue `dotham.*`, tiếng đạo cụ theo hệ, nhạc `dotham` ([bảng 5.7](02-architecture-and-assets.md#57-do-thám-dotham-đã-nối-19112026)) | `dotham.open`, `cascade`, `flag`, `shield`, `reject` đã có tệp riêng (20/11/2026); `trap`, `win`, `lose` và bản nhạc đang mượn tệp của Trận Đồ và trận đánh |
 | Quần Hùng | `arena` | Cue `arena.rank`; nhạc `pvp` đã có tệp nhưng chưa nối vào trận PvP |
 
 ### Cue đã khai báo nhưng chưa nối code
