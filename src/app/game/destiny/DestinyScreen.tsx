@@ -1,7 +1,7 @@
 "use client";
 import { requestJson, postJson } from "../api";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
-import { FrameInset, ModeBanner, ModeScreen, ModeSkeleton, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { FilterBar, FrameInset, ModeBanner, ModeScreen, ModeSkeleton, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { Alert, Button, ChoiceChip, choiceVariants } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
@@ -546,7 +546,7 @@ export default function DestinyScreen() {
         milestones={overview.milestones ?? []} claimed={overview.progress?.claimedMilestones ?? []} />
 
       {noActiveRun && (
-        <OrnateFrame level="raised">
+        <OrnateFrame>
           {run?.completed && (
             <Alert className="mb-4 p-3 text-sm">
               <strong>Đã chinh phục trọn {run.floor} tầng.</strong> Thành tích đã ghi vào bảng công trạng chu kỳ.
@@ -596,7 +596,7 @@ export default function DestinyScreen() {
             </ul>
           )}
 
-          <div role="group" aria-label="Lọc tướng" className="mt-3 flex flex-col gap-2">
+          <FilterBar label="Lọc tướng" className="mt-3">
             <div className="flex flex-wrap items-center gap-1.5">
               <input type="search" value={rosterFilter.query} onChange={(e) => changeFilter({ query: e.target.value })}
                 placeholder="Tìm tên…" aria-label="Tìm tướng theo tên"
@@ -635,7 +635,7 @@ export default function DestinyScreen() {
                 {shownRosterIds.length === 0 ? "Không có tướng nào khớp bộ lọc." : `${shownRosterIds.length} tướng khớp bộ lọc.`}
               </p>
             )}
-          </div>
+          </FilterBar>
 
           <div {...pagedRoster.listProps} className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-3">
             {pagedRoster.pageItems.map((id) => {
@@ -726,7 +726,7 @@ export default function DestinyScreen() {
             <ColumnFill mode="destiny" />
           </div>
 
-          <OrnateFrame level="raised" className="order-1 min-w-0 lg:order-2">
+          <OrnateFrame className="order-1 min-w-0 lg:order-2">
             {run.phase === "battle" && (
               <>
                 <SectionTitle>Trận tầng {run.floor} đang dở</SectionTitle>

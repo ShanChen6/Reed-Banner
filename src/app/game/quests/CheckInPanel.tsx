@@ -65,7 +65,7 @@ export default function CheckInPanel({ profile, now, busy, act }: {
     );
   }
   return (
-      <OrnateFrame level="raised" className="flex flex-col gap-3">
+      <OrnateFrame className="flex flex-col gap-3">
         <SectionTitle
           description="Điểm danh liền ngày để nhận nhiều hơn; bỏ một ngày thì chuỗi về ngày 1. Đủ 7 ngày thì bắt đầu chuỗi mới."
           action={

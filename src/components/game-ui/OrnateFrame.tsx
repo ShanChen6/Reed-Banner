@@ -2,8 +2,9 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/cn";
 import { FrameCorners } from "./FrameCorners";
 
-// Khung 3 mức (đồng bộ UI 05/11/2026). 1 "panel": gỗ viền mảnh, cho khối nội dung thường. 2 "raised": thêm vạch vàng
-// trong và góc hoa văn, cho khối chính của màn. 3 "hero": banner có tranh. Không lồng mức 2/3 trong mức 2/3.
+// Khung 3 mức (đồng bộ UI 05/11/2026). 1 "panel": gỗ viền mảnh, cho mọi card nội dung. 2 "raised": thêm vạch vàng
+// trong và góc hoa văn, chỉ cho khung đứng riêng (cổng đăng nhập, Doanh Trại, sảnh trận); trong khung màn chế độ
+// (ModeScreen card, đã có góc) không dùng (Shan chốt 20/11/2026). 3 "hero": banner có tranh. Không lồng mức 2/3 trong mức 2/3.
 
 export type FrameLevel = "panel" | "raised" | "hero";
 
@@ -30,6 +31,14 @@ export function OrnateFrame({ as: Tag = "section", level = "panel", paper, flush
       {children}
     </Tag>
   );
+}
+
+/**
+ * Khối bộ lọc (tìm tên, lọc hệ, nghề…) bọc trong ô lõm, tách khỏi danh sách bên dưới. Mọi bộ lọc trong game dùng
+ * khối này để cùng một kiểu (20/11/2026).
+ */
+export function FilterBar({ label, className, ...props }: ComponentProps<"div"> & { label: string }) {
+  return <div role="group" aria-label={label} data-slot="filter-bar" className={cn("ui-frame-inset flex flex-col gap-2 p-3", className)} {...props} />;
 }
 
 /** Ô lõm bên trong khung (danh sách, ô số liệu). */

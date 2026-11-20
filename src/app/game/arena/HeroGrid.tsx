@@ -5,6 +5,7 @@
 
 import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { ELEMENTS, PROFESSIONS, type Element, type Profession } from "@/core";
+import { FilterBar } from "@/components/game-ui";
 import { ChoiceChip, Input } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { cn } from "@/lib/cn";
@@ -77,7 +78,7 @@ export default function HeroGrid({
   const resetPage = () => paged.setPage(0);
   return (
     <div className="flex flex-col gap-2" role="group" aria-label={label}>
-      <div className="flex flex-col gap-2">
+      <FilterBar label="Bộ lọc tướng">
         <Input
           type="search"
           aria-label="Tìm tướng theo tên"
@@ -107,7 +108,7 @@ export default function HeroGrid({
           ))}
         </div>
         </div>
-      </div>
+      </FilterBar>
       <p className="text-caption text-on-wood-soft" role="status">
         {shown.length === items.length ? `${items.length} tướng` : `${shown.length}/${items.length} tướng khớp bộ lọc`}
       </p>

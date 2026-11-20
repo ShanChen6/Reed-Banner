@@ -456,7 +456,7 @@ export default function SurvivalScreen() {
       </OrnateFrame>
 
       <div className="flex min-w-0 flex-col gap-4">
-        <OrnateFrame level="raised" className="flex min-w-0 flex-col gap-3">
+        <OrnateFrame className="flex min-w-0 flex-col gap-3">
           <SectionTitle>Lượt chơi mới</SectionTitle>
           <ul className="list-disc space-y-1 pl-5 text-sm text-on-wood">
             <li>
@@ -573,7 +573,7 @@ function OpenRunPanel({ run, busy, onResume }: { run: OpenRun; busy: boolean; on
   const survival = run.view.survival!;
   const fighters = run.view.battle.sides[0].fighters;
   return (
-    <OrnateFrame level="raised" className="flex flex-col gap-4">
+    <OrnateFrame className="flex flex-col gap-4">
       <SectionTitle
         description={`Đồng hồ lượt vẫn chạy khi bạn rời trận; bỏ quá 24 giờ thì lượt chơi dừng ở đợt ${survival.cleared}.`}
       >
