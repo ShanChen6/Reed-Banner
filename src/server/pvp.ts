@@ -44,7 +44,7 @@ import {
 } from "@/core";
 import { loadProfile, updateProfile, type ProfileStore } from "./profiles";
 import { recordSeason, type SeasonStore } from "./seasons";
-import { heroesOf, type PvpRoomRecord } from "./pvpRooms";
+import { heroesOf, refreshRoom, type PvpRoomRecord } from "./pvpRooms";
 import { buildDraft, pickTeamGroup } from "./pvpTeam";
 
 /** Bản đầu chỉ mở 1vs1. */
@@ -564,11 +564,15 @@ export async function pvpOverview(ownerId: string, deps: PvpDeps): Promise<PvpOv
   const day = vnDay(deps.now);
   const gold = await deps.pvp.goldToday(ownerId, day);
   const { profile } = await loadProfile(deps.profiles, ownerId);
-  // Rời phòng khi trận của phòng đã xong hoặc phòng đã đóng, để vào phòng khác được.
+  // Rời phòng khi trận của phòng đã xong, phòng đã đóng hoặc đã mất chỗ vì vắng quá lâu, để vào phòng khác được.
   let room = await deps.pvp.roomCodeOf(ownerId);
   if (room) {
-    const rr = await deps.pvp.getRoom(room);
-    const over = !rr || rr.status === "closed" || (rr.status === "started" && (!rr.matchId || (await deps.pvp.getMatch(rr.matchId))?.status !== "active"));
+    const rr = await refreshRoom(room, ownerId, deps);
+    const over =
+      !rr ||
+      rr.status === "closed" ||
+      (rr.status === "open" && !rr.slots.some((s) => s.owner === ownerId)) ||
+      (rr.status === "started" && (!rr.matchId || (await deps.pvp.getMatch(rr.matchId))?.status !== "active"));
     if (over) {
       await deps.pvp.clearMember(ownerId, room);
       room = null;
