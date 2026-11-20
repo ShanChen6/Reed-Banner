@@ -163,19 +163,19 @@ Nhạc: `sulo_maze` (mê cung và màn chuẩn bị) và `sulo_boss` (trong tr�
 
 ### 5.7 Do Thám (`dotham.*`, đã nối 19/11/2026)
 
-Engine Do Thám không phát sự kiện nên `do-tham/sounds.ts` so trạng thái trước và sau nước đi để chọn cue. Đạo cụ nguyên tố dùng luôn tiếng kỹ năng theo hệ của trận đánh (`battle.skill.<hệ>`). Chưa có tệp riêng: manifest trỏ cue về tệp sẵn có (cột "Tệp tạm").
+Engine Do Thám không phát sự kiện nên `do-tham/sounds.ts` so trạng thái trước và sau nước đi để chọn cue. Đạo cụ nguyên tố dùng luôn tiếng kỹ năng theo hệ của trận đánh (`battle.skill.<hệ>`). Mọi cue đã có tệp riêng trong `sfx/do-tham/` (20/11/2026).
 
-| Cue | Khi nào | Tệp tạm | Ưu tiên |
+| Cue | Khi nào | Tệp | Ưu tiên |
 |---|---|---|---|
 | `dotham.open` | Mở một vài ô (dưới 4 ô) | Đã có tệp riêng `do-tham/open` | P1 |
 | `dotham.cascade` | Mở lan từ 4 ô trở lên (gặp ô số 0) | Đã có tệp riêng `do-tham/cascade` | P1 |
 | `dotham.flag` | Cắm cờ lau; gỡ cờ cùng tiếng, trầm hơn | Đã có tệp riêng `do-tham/flag` | P1 |
 | `dotham.shield` | Khiên đất đỡ một lần sa bẫy | Đã có tệp riêng `do-tham/shield` | P2 |
 | `dotham.reject` | Lệnh bị từ chối (mở nhanh sai số cờ, đạo cụ chưa dùng được...) | Đã có tệp riêng `do-tham/reject` | P1 |
-| `dotham.trap` | Sập bẫy, ngay trước tiếng thua | `battle/damage` | P1 |
-| `dotham.win` / `dotham.lose` | Thắng / thua ván | `formation/win` / `formation/lose` | P1 |
+| `dotham.trap` | Sập bẫy; tiếng thua vào sau 0,9 giây (`LOSE_AFTER_TRAP_MS`) | Đã có tệp riêng `do-tham/trap` | P1 |
+| `dotham.win` / `dotham.lose` | Thắng / thua ván | Đã có tệp riêng `do-tham/win` / `do-tham/lose` | P1 |
 
-Nhạc: `dotham` (một bài cho cả màn, tạm dùng tệp `music/formation_menu`). Phân cảnh `DO_THAM` là `SELF` trong `sceneMusic.ts`.
+Nhạc: `dotham` (một bài cho cả màn, tệp riêng `music/dotham`). Phân cảnh `DO_THAM` là `SELF` trong `sceneMusic.ts`.
 
 ## 6. Kiểm tra
 
