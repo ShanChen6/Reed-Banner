@@ -7,7 +7,7 @@
 // - Điện thoại: chụm/mở hai ngón trên bàn; hai ngón kéo để dời khi bàn to hơn khung. Một ngón vẫn là vuốt đổi ô.
 // Bàn đọc hệ số qua biến CSS --board-zoom do <BoardZoomViewport> đặt; mức chọn nhớ theo từng loại bàn (localStorage).
 
-import { useCallback, useEffect, useRef, useSyncExternalStore, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { clampZoom, parseZoom, stepZoom, ZOOM_DEFAULT, ZOOM_MAX, ZOOM_MIN, zoomLabel, zoomStorageKey, type BoardZoomId } from "./zoom";
 
 const EVENT = "colau:board-zoom";
@@ -57,13 +57,22 @@ export function useBoardZoom(id: BoardZoomId) {
   return { zoom, setZoom };
 }
 
-/** Hàng nút − 100 % + đặt trên bàn. */
-export function BoardZoomControls({ id, className = "" }: { id: BoardZoomId; className?: string }) {
+/** Hàng nút trên bàn: phóng toàn màn hình (nếu truyền `focus`) và − 100 % +. */
+export function BoardZoomControls({
+  id,
+  focus,
+  className = "",
+}: {
+  id: BoardZoomId;
+  focus?: { expanded: boolean; toggle: () => void };
+  className?: string;
+}) {
   const { zoom, setZoom } = useBoardZoom(id);
   const btn =
     "game-header-btn game-header-chip flex size-9 items-center justify-center rounded-lg text-lg font-bold leading-none disabled:pointer-events-none disabled:opacity-40";
   return (
     <div role="group" aria-label="Thu phóng bàn cờ" className={`flex items-center gap-1 ${className}`}>
+      {focus && <BoardFocusButton expanded={focus.expanded} onToggle={focus.toggle} className="mr-1" />}
       <button type="button" className={btn} aria-label="Thu nhỏ bàn cờ" title="Thu nhỏ bàn cờ" disabled={zoom <= ZOOM_MIN} onClick={() => setZoom((z) => stepZoom(z, -1))}>
         −
       </button>
@@ -169,5 +178,76 @@ export function BoardZoomViewport({ id, className = "", children }: { id: BoardZ
     >
       {children}
     </div>
+  );
+}
+
+/**
+ * Phóng vùng chơi ra toàn màn hình: vùng chơi phủ kín cửa sổ (che thanh đầu trang, chân trang), và nếu trình duyệt cho
+ * thì bật luôn toàn màn hình thật để ẩn thanh địa chỉ. iPhone Safari không cho thì vẫn phủ kín cửa sổ. Thoát toàn màn
+ * hình bằng Esc của trình duyệt cũng thu vùng chơi về.
+ */
+export function useBoardFocus() {
+  const [expanded, setExpanded] = useState(false);
+  /** Mình bật toàn màn hình thật thì mình tắt; người chơi đã bật sẵn bằng nút chung thì giữ. */
+  const ownFullscreen = useRef(false);
+
+  useEffect(() => {
+    if (!expanded) return;
+    const onChange = () => {
+      if (document.fullscreenElement) return;
+      if (ownFullscreen.current) {
+        ownFullscreen.current = false;
+        setExpanded(false);
+      }
+    };
+    document.addEventListener("fullscreenchange", onChange);
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("fullscreenchange", onChange);
+      document.body.style.overflow = overflow;
+    };
+  }, [expanded]);
+
+  const toggle = useCallback(() => {
+    if (expanded) {
+      setExpanded(false);
+      if (ownFullscreen.current && document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+      ownFullscreen.current = false;
+      return;
+    }
+    setExpanded(true);
+    const root = document.documentElement;
+    if (!document.fullscreenElement && document.fullscreenEnabled && typeof root.requestFullscreen === "function") {
+      ownFullscreen.current = true;
+      void root.requestFullscreen({ navigationUI: "hide" }).catch(() => {
+        ownFullscreen.current = false;
+      });
+    }
+  }, [expanded]);
+
+  return { expanded, toggle };
+}
+
+/** Lớp cho khung vùng chơi khi đang phóng toàn màn hình. */
+export const BOARD_FOCUS_CLASS = "board-focus fixed inset-0 z-[60] m-0 max-w-none overflow-auto overscroll-contain rounded-none";
+
+/** Nút phóng vùng chơi ra toàn màn hình / thu về. */
+export function BoardFocusButton({ expanded, onToggle, className = "" }: { expanded: boolean; onToggle: () => void; className?: string }) {
+  const label = expanded ? "Thu bàn cờ về" : "Phóng bàn cờ toàn màn hình";
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-pressed={expanded}
+      aria-label={label}
+      title={label}
+      className={`game-header-btn game-header-chip flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-sm font-bold ${className}`}
+    >
+      <svg aria-hidden viewBox="0 0 24 24" className="size-5 text-[var(--frame-gold)]" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+        {expanded ? <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" /> : <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />}
+      </svg>
+      <span className="hidden sm:inline">{expanded ? "Thu về" : "Toàn màn hình"}</span>
+    </button>
   );
 }

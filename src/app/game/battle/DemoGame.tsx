@@ -113,7 +113,7 @@ import { SkillBar } from "./SkillBar";
 import { useBattleKeyboard } from "./useBattleKeyboard";
 import { TeamColumn } from "./TeamColumn";
 import { BoardCells } from "./BoardCells";
-import { BoardZoomControls, BoardZoomViewport } from "../board-zoom/BoardZoom";
+import { BOARD_FOCUS_CLASS, BoardZoomControls, BoardZoomViewport, useBoardFocus } from "../board-zoom/BoardZoom";
 import { BattleHeader } from "./BattleHeader";
 import { ProgressSection } from "./ProgressSection";
 
@@ -246,6 +246,8 @@ export default function DemoGame({
   const clockOffset = useRef(0);
   const [clock, setClock] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
+  /** Nút "Toàn màn hình" trên bàn: cả khung trận phủ kín cửa sổ. */
+  const focus = useBoardFocus();
 
   /** Campaign V2: trạng thái mục tiêu, tính từ trạng thái server bằng chính hàm chốt của server. */
   const scenarioStatus = useMemo(() => {
@@ -1167,7 +1169,7 @@ export default function DemoGame({
   return (
     <div
       ref={rootRef}
-      className={`${palette} ui-mode-screen`}
+      className={`${palette} ui-mode-screen ${focus.expanded && started ? BOARD_FOCUS_CLASS : ""}`}
     >
       <OrnateFrame level="raised" flush className={`mx-auto flex w-full flex-col gap-3 p-4 sm:p-6 ${MODE_CONTENT_WIDTH}`}>
         <BattleHeader
@@ -1257,7 +1259,7 @@ export default function DemoGame({
 
         {started && stageVisible && (
           /* md+: sân đấu dính dưới thanh đầu trang để cuộn xuống bàn cờ vẫn thấy hoạt ảnh khi đối thủ ra đòn. */
-          <div className="z-20 md:sticky md:top-16 md:-mx-1 md:bg-[color-mix(in_srgb,var(--wood-lo,#1c120b)_94%,transparent)] md:px-1 md:pb-1 md:backdrop-blur xl:top-[68px]">
+          <div className={`z-20 md:sticky md:-mx-1 md:bg-[color-mix(in_srgb,var(--wood-lo,#1c120b)_94%,transparent)] md:px-1 md:pb-1 md:backdrop-blur ${focus.expanded ? "md:-top-2" : "md:top-16 xl:top-[68px]"}`}>
             <BattleStage
               sides={[(heldSides ?? state.sides)[PLAYER].fighters, (heldSides ?? state.sides)[AI].fighters]}
               actor={
@@ -1284,7 +1286,7 @@ export default function DemoGame({
                 waiting={pending}
               />
             )}
-            {started && <BoardZoomControls id="battle" className="self-end" />}
+            {started && <BoardZoomControls id="battle" focus={focus} className="self-end" />}
             {/* lg+: bàn cờ cố gắng vừa phần màn hình còn lại dưới sân đấu nhưng không nhỏ hơn 34rem; màn thấp thì cuộn, sân đấu dính trên đầu nên vẫn thấy hoạt ảnh.
                 Thu phóng bàn (--board-zoom) nhân cả bề rộng lẫn mức trần; to hơn cột thì khung cuộn ngang. Lề trên chừa chỗ cho huy hiệu. */}
             <BoardZoomViewport id="battle" className="px-1 pb-2 pt-4 md:pt-5">

@@ -1454,3 +1454,10 @@
     transition: none;
   }
 }
+
+/* Vùng chơi phóng toàn màn hình (nút "Toàn màn hình" trên bàn cờ, src/app/game/board-zoom/). */
+.board-focus {
+  background: var(--wood-lo, #1c120b);
+  padding: max(0.5rem, env(safe-area-inset-top)) max(0.5rem, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom))
+    max(0.5rem, env(safe-area-inset-left));
+}

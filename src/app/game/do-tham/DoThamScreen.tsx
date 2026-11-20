@@ -31,7 +31,7 @@ import { ElementIcon } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
-import { BoardZoomControls, BoardZoomViewport } from "../board-zoom/BoardZoom";
+import { BOARD_FOCUS_CLASS, BoardZoomControls, BoardZoomViewport, useBoardFocus } from "../board-zoom/BoardZoom";
 import { useAudio } from "../audio/AudioProvider";
 import { cuesForAction, DOTHAM_MUSIC, DOTHAM_PRELOAD, REJECT } from "./sounds";
 
@@ -147,6 +147,7 @@ function TrapGlyph() {
 }
 
 export default function DoThamScreen() {
+  const boardFocus = useBoardFocus();
   const [level, setLevel] = useState<DtLevel>("nhapMon");
   const [picks, setPicks] = useState<Element[]>([]);
   const [game, setGame] = useState<DtState>(() => newGame("nhapMon", 1));
@@ -341,7 +342,7 @@ export default function DoThamScreen() {
         ]}
       />
       <ModeGuideTabs scene="DO_THAM">
-        <div className={`grid grid-cols-[minmax(0,1fr)] items-start gap-6 ${game.width > 16 ? "" : "lg:grid-cols-[minmax(0,1fr)_320px]"}`}>
+        <div className={`grid grid-cols-[minmax(0,1fr)] content-start items-start gap-6 ${game.width > 16 ? "" : "lg:grid-cols-[minmax(0,1fr)_320px]"} ${boardFocus.expanded ? BOARD_FOCUS_CLASS : ""}`}>
           <OrnateFrame aria-label="Vùng chơi" flush className="flex min-w-0 flex-col items-center gap-3 p-2 sm:p-5">
             <div className="flex w-full flex-wrap items-center justify-center gap-2" role="group" aria-label="Bậc độ khó">
               {DT_LEVEL_ORDER.map((lv) => (
@@ -350,7 +351,7 @@ export default function DoThamScreen() {
                 </ChoiceChip>
               ))}
             </div>
-            <BoardZoomControls id="do-tham" className="self-end" />
+            <BoardZoomControls id="do-tham" focus={boardFocus} className="self-end" />
             <BoardZoomViewport id="do-tham" className="w-full pb-1">
               <div className="ui-frame-inset mx-auto w-fit p-1 sm:p-2">
                 <div

@@ -37,7 +37,7 @@ import { readStorage, writeStorage } from "../formation/storage";
 import { Button, buttonVariants, choiceVariants } from "@/components/ui";
 import { ModeBanner, ModeScreen, OrnateFrame } from "@/components/game-ui";
 import { ModeGuideTabs } from "../ModeGuide";
-import { BoardZoomControls, BoardZoomViewport } from "../board-zoom/BoardZoom";
+import { BOARD_FOCUS_CLASS, BoardZoomControls, BoardZoomViewport, useBoardFocus } from "../board-zoom/BoardZoom";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -113,6 +113,7 @@ function ElementGem({ element, banner }: { element: Element; banner?: boolean })
 }
 
 export default function KhaiLoScreen() {
+  const boardFocus = useBoardFocus();
   const [mode, setMode] = useState<KlMode>("classic");
   const [state, setState] = useState<KlState | null>(null);
   const [best, setBest] = useState(0);
@@ -374,7 +375,7 @@ export default function KhaiLoScreen() {
       />
       <ModeGuideTabs scene="KHAI_LO">
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className={`grid content-start items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px] ${boardFocus.expanded ? BOARD_FOCUS_CLASS : ""}`}>
         <OrnateFrame aria-label="Vùng chơi" flush className="flex flex-col items-center gap-3 p-2 [--kl-gutter:3.5rem] sm:p-5 sm:[--kl-gutter:6.25rem]">
           <div role="tablist" aria-label="Chế độ chơi" className="grid w-full max-w-[560px] grid-cols-2 gap-2">
             {(["classic", "timed"] as const).map((m) => (
@@ -393,7 +394,7 @@ export default function KhaiLoScreen() {
           </div>
           <Stats state={state} best={best} left={left} msLeft={timed ? msLeft : null} />
           {timed && <TimeBar msLeft={msLeft} limitMs={limitMs} paused={active && hidden} />}
-          <BoardZoomControls id="khai-lo" className="self-end" />
+          <BoardZoomControls id="khai-lo" focus={boardFocus} className="self-end" />
           <BoardZoomViewport id="khai-lo" className="w-full">
           <div className="ui-frame-inset mx-auto w-fit p-1 sm:p-2">
             <div

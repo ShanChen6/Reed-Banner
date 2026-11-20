@@ -50,7 +50,7 @@ import { useAudio } from "../audio/AudioProvider";
 import { cuesForAction, musicFor, SULO_PRELOAD } from "./sounds";
 import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
-import { BoardZoomControls, BoardZoomViewport } from "../board-zoom/BoardZoom";
+import { BOARD_FOCUS_CLASS, BoardFocusButton, BoardZoomControls, BoardZoomViewport, useBoardFocus } from "../board-zoom/BoardZoom";
 
 const SAVE_KEY = "reed-banner:su-lo:save:v1";
 const SETUP_KEY = "reed-banner:su-lo:setup:v1";
@@ -376,7 +376,7 @@ function QuestionCard({
 
 // ── Giao tranh ──
 
-function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
+function Skirmish({ s, act, focus }: { s: SlState; act: (a: SlAction) => boolean; focus: ReturnType<typeof useBoardFocus> }) {
   const sk = s.skirmish!;
   const boss = SL_BOSSES[s.era];
   const [sel, setSel] = useState<Pos | null>(null);
@@ -464,7 +464,7 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
           {meter("Kế sách", sk.energy, SK_ENERGY_MAX, "var(--stat-energy)")}
         </div>
       </div>
-      <BoardZoomControls id="su-lo" className="self-end" />
+      <BoardZoomControls id="su-lo" focus={focus} className="self-end" />
       <BoardZoomViewport id="su-lo" className="w-full">
       <div className="ui-frame-inset mx-auto w-fit p-1 sm:p-2">
         <div
@@ -521,6 +521,7 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
 // ── Màn chính ──
 
 export default function SuLoScreen() {
+  const focus = useBoardFocus();
   const [setup, setSetup] = useState<Setup>(DEFAULT_SETUP);
   const [game, setGame] = useState<SlState | null>(null);
   const [best, setBest] = useState<Best>({});
@@ -663,10 +664,11 @@ export default function SuLoScreen() {
         ]}
       />
       <ModeGuideTabs scene="SU_LO">
-        <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div className={`grid grid-cols-[minmax(0,1fr)] content-start items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px] ${focus.expanded ? BOARD_FOCUS_CLASS : ""}`}>
           <OrnateFrame aria-label="Vùng chơi" flush className="flex min-w-0 flex-col items-center gap-4 p-2 sm:p-5">
             {!game && setupPanel}
-            {game && game.phase !== "won" && (game.skirmish ? <Skirmish s={game} act={act} /> : <MazeBoard s={game} onMove={(to) => act({ type: "move", to })} />)}
+            {game && game.phase !== "won" && !game.skirmish && <BoardFocusButton expanded={focus.expanded} onToggle={focus.toggle} className="self-end" />}
+            {game && game.phase !== "won" && (game.skirmish ? <Skirmish s={game} act={act} focus={focus} /> : <MazeBoard s={game} onMove={(to) => act({ type: "move", to })} />)}
             {game && q && game.question && (
               <QuestionCard
                 key={`${game.question.id}:${game.question.chainLeft}:${game.asked.length}`}
