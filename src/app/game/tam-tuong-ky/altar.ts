@@ -65,11 +65,13 @@ export function filterNodes(nodes: readonly CatalogNode[], query: string, group:
   return nodes.filter((n) => (group === null || n.hintGroup === group) && (q === "" || foldVi(n.nameVi).includes(q)));
 }
 
-/** Nhóm có trong danh sách, theo thứ tự xuất hiện. */
+/** Nhóm có trong danh sách, theo thứ tự khai báo ở `HINT_GROUP_NAMES` (nhóm lạ xếp cuối, theo thứ tự xuất hiện). */
 export function groupsOf(nodes: readonly CatalogNode[]): readonly { id: string; name: string }[] {
   const seen: string[] = [];
   for (const n of nodes) if (n.hintGroup && !seen.includes(n.hintGroup)) seen.push(n.hintGroup);
-  return seen.map((id) => ({ id, name: HINT_GROUP_NAMES[id] ?? id }));
+  const order = Object.keys(HINT_GROUP_NAMES);
+  const rank = (id: string) => (order.includes(id) ? order.indexOf(id) : order.length);
+  return [...seen].sort((a, b) => rank(a) - rank(b)).map((id) => ({ id, name: HINT_GROUP_NAMES[id] ?? id }));
 }
 
 /** Yếu tố đã khám phá, không phải tướng, theo thứ tự sổ (starter đứng đầu). */

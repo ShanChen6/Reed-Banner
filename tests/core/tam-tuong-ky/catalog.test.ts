@@ -7,7 +7,10 @@ import { describe, it } from "node:test";
 import { ELEMENTS } from "../../../src/core/battle";
 import {
   CORE_CATALOG_DEPS,
+  HINT_GROUP_NAMES,
   PACK_1,
+  PACK_2,
+  PACK_3,
   SLICE_PACK,
   TIER_COMBINES,
   computeMetrics,
@@ -247,5 +250,29 @@ describe("validator: cảnh báo", () => {
     const deps: CatalogDeps = { ...DEPS, hasPortrait: (id) => id !== "minhNguyet" };
     const issues = validatePack(SLICE_PACK, deps);
     assert.deepEqual(issues.map((i) => [i.severity, i.code]), [["warning", "missingPortrait"]]);
+  });
+});
+
+// Nhóm gợi ý xếp theo món đó là gì, không theo món đó dùng để làm gì (Shan, 20/11/2026).
+describe("nhóm gợi ý", () => {
+  const nodes = [...PACK_1.nodes, ...PACK_2.nodes, ...PACK_3.nodes].filter((n) => n.kind !== "character");
+  const groupOf = (id: string) => nodes.find((n) => n.id === id)?.hintGroup;
+
+  it("mọi yếu tố có nhóm đã khai tên", () => {
+    for (const n of nodes) assert.ok(n.hintGroup && n.hintGroup in HINT_GROUP_NAMES, `${n.id}: ${n.hintGroup}`);
+  });
+
+  it("vật liệu không xếp theo món nó làm ra", () => {
+    for (const id of ["mat.charcoal", "mat.forgedIron", "mat.blackBronze", "mat.cloth"]) assert.equal(groupOf(id), "vat-lieu", id);
+    assert.equal(groupOf("mat.dew"), "thien-nhien");
+    for (const id of ["mat.rampart", "mat.fortress", "mat.village", "mat.road", "mat.bridge", "mat.granary", "mat.hoaLu"]) assert.equal(groupOf(id), "cong-trinh", id);
+  });
+
+  it("tri thức nghề và sơ học cùng nhóm; dấu danh tính chung nhóm Danh tích", () => {
+    for (const n of nodes) {
+      if (n.professionHint) assert.equal(n.hintGroup, "tri-thuc", n.id);
+      if (n.role) assert.equal(n.hintGroup, "vai-tro", n.id);
+    }
+    for (const id of ["know.reedBanner", "know.outerArmor", "know.doHoPhu", "know.steadfast", "know.daiCoViet"]) assert.equal(groupOf(id), "danh-tich", id);
   });
 });
