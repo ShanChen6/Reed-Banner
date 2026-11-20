@@ -45,6 +45,7 @@ import {
   type TrialOverview,
 } from "./trial-ui";
 import { ModeGuideTabs } from "../ModeGuide";
+import { ColumnFill } from "../ColumnFill";
 
 /** Số cột của lưới tầng ở mọi bề rộng (khớp class grid-cols-5 bên dưới). Dùng cho phím lên/xuống. */
 export const FLOOR_GRID_COLUMNS = 5;
@@ -610,7 +611,10 @@ export default function TrialView(props: TrialViewProps) {
               </OrnateFrame>
             )}
           </div>
-          <SweepPanel overview={overview} sweepBusy={props.sweepBusy} onSweep={props.onSweep} className="self-start lg:col-start-1 lg:row-start-2" />
+          <div className="flex min-w-0 flex-col gap-4 lg:col-start-1 lg:row-start-2">
+            <SweepPanel overview={overview} sweepBusy={props.sweepBusy} onSweep={props.onSweep} />
+            <ColumnFill mode="trial" />
+          </div>
         </div>
       )}
       </ModeGuideTabs>

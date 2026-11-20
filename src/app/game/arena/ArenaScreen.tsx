@@ -29,6 +29,7 @@ import { TierBadge, TierLadder, tierIndex } from "../leaderboard/RankBoard";
 import { TIERS, tierClaimNote, tierErrorNote, tierRewards } from "./tiers";
 import { PvpTierPanel } from "./PvpPanel";
 import { useProfile } from "../profile/useProfile";
+import { ColumnFill } from "../ColumnFill";
 
 const ATTACK_KEY = "coLau.arena.attack";
 
@@ -375,6 +376,7 @@ export default function ArenaScreen() {
               </SceneLink>
             </div>
           </OrnateFrame>
+          <ColumnFill mode="arena" />
         </div>
 
         <OrnateFrame level="raised" className="order-1 flex min-w-0 flex-col gap-3 self-start lg:order-2">

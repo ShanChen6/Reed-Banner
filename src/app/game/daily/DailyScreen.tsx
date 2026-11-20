@@ -33,6 +33,7 @@ import DailyQuestsPanel from "../quests/DailyQuestsPanel";
 import { RankBoard } from "../leaderboard/RankBoard";
 import ModeTierPanel from "../leaderboard/ModeTierPanel";
 import { useProfile } from "../profile/useProfile";
+import { ColumnFill } from "../ColumnFill";
 
 function scoreText(s: DailyScore): string {
   return s.won
@@ -248,8 +249,9 @@ export default function DailyScreen() {
           </div>
         </OrnateFrame>
 
-        <div className="flex min-w-0 flex-col gap-4 self-start">
-        {quests.profile && <DailyQuestsPanel profile={quests.profile} now={now} busy={quests.busy} act={quests.act} />}
+        <div className="flex min-w-0 flex-col gap-4">
+          {quests.profile && <DailyQuestsPanel profile={quests.profile} now={now} busy={quests.busy} act={quests.act} />}
+          <ColumnFill mode="daily" />
         </div>
       </div>
       </ModeGuideTabs>
