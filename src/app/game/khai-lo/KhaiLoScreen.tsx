@@ -10,21 +10,19 @@
 // giờ còn lại lưu cùng ván dở. Đạo cụ nạp theo điểm gom khối (thanh nạp dưới mỗi nút).
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Element } from "@/core/battle/elements";
+import { ELEMENTS, type Element } from "@/core/battle/elements";
 import {
   KL_MIN_GROUP,
   createGame,
   groupAt,
   groupScore,
-  isWhirlCenter,
   KL_MAX_TOOLS,
   KL_TIMED_LEVEL_SECONDS,
   KL_TIMED_START_SECONDS,
   KL_TOOL_CHARGE,
   parseGame,
-  ringOf,
   serializeGame,
-  thunderArea,
+  toolTargets,
   tilesLeft,
   transition,
   type KlAction,
@@ -67,17 +65,34 @@ const REASON_TEXT: Record<KlReason, string> = {
   empty: "Ô trống.",
   single: "Quân lẻ: cần ít nhất 2 quân cùng hệ liền cạnh.",
   noTool: "Hết đạo cụ này.",
-  edge: "Lốc cần tâm không nằm sát mép bàn.",
+  edge: "Lốc Phong cần tâm không nằm sát mép bàn.",
   noUndo: "Không còn lượt hoàn tác.",
   notStuck: "Chỉ đổi bàn được khi bàn đã hết khối để xóa.",
+  noTarget: "Mộc Linh cần một quân khác hệ nằm kề bên.",
 };
 
 /** Ô to nhất (px) trên màn rộng: bàn 10×8 khi đó khoảng 880×704. */
 const KL_MAX_CELL = 88;
 
-const TOOL_NAME: Record<KlTool, string> = { whirl: "Lốc Phong", thunder: "Sấm Sét" };
-/** Tên ngắn cho thanh đạo cụ 4 nút trên điện thoại. */
-const TOOL_SHORT: Record<KlTool, string> = { whirl: "Lốc", thunder: "Sấm" };
+/** 7 đạo cụ theo 7 hệ (Shan duyệt 20/11/2026), xếp theo thứ tự ELEMENTS (phím 1–7). */
+const TOOL_NAME: Record<KlTool, string> = {
+  kim: "Kim Đao",
+  moc: "Mộc Linh",
+  thuy: "Thủy Triều",
+  hoa: "Hỏa Cầu",
+  tho: "Địa Chấn",
+  loi: "Lôi Phạt",
+  phong: "Lốc Phong",
+};
+const TOOL_HINT: Record<KlTool, string> = {
+  kim: "Chọn ô: chém sạch cả hàng ngang.",
+  moc: "Chọn quân: đổi sang hệ của khối lớn nhất kề nó.",
+  thuy: "Chọn ô: cuốn sạch cả cột dọc.",
+  hoa: "Chọn ô: nổ vùng 3×3 quanh ô đó.",
+  tho: "Chọn ô bất kỳ: phá hàng dưới cùng, cả bàn sụt xuống.",
+  loi: "Chọn quân: xóa mọi quân cùng hệ trên bàn.",
+  phong: "Chọn tâm: 8 ô quanh xoay theo chiều kim đồng hồ.",
+};
 
 interface Ghost {
   readonly key: string;
@@ -222,15 +237,15 @@ export default function KhaiLoScreen() {
       const gone: Ghost[] = [];
       const parts: string[] = [];
       for (const e of events) {
-        if (e.type === "removed" || e.type === "thundered") {
-          for (const i of e.cells) {
+        if (e.type === "removed" || e.type === "toolUsed") {
+          for (const i of e.type === "removed" ? e.cells : e.removed) {
             const cell = before.cells[i];
             if (cell) gone.push({ key: `${cell.id}-${next.moves}`, cell, index: i });
           }
         }
         if (e.type === "removed") parts.push(`Xóa ${e.cells.length} quân, +${e.gained} điểm.`);
-        if (e.type === "thundered") parts.push(`Sấm Sét phá ${e.cells.length} quân.`);
-        if (e.type === "whirled") parts.push("Lốc Phong xoay một vòng.");
+        if (e.type === "toolUsed")
+          parts.push(e.removed.length ? `${TOOL_NAME[e.tool]} phá ${e.removed.length} quân.` : e.tool === "moc" ? "Mộc Linh đổi hệ một quân." : "Lốc Phong xoay một vòng.");
         if (e.type === "undone") parts.push("Đã hoàn tác.");
         if (e.type === "newLevel") parts.push(`Màn ${e.level}.`);
         if (e.type === "levelDone") parts.push(e.summary.cleared ? "Dọn sạch bàn!" : `Hết đường, còn ${e.summary.left} quân.`);
@@ -240,7 +255,7 @@ export default function KhaiLoScreen() {
         if (e.type === "goalReached") parts.push(`Đạt mốc! Lên bậc ${e.level}, +${KL_TIMED_LEVEL_SECONDS} giây.`);
         if (e.type === "timeUp") parts.push("Hết giờ!");
       }
-      if (next.phase === "stuck") parts.push("Hết khối để xóa: dùng đạo cụ hoặc kết thúc màn.");
+      if (next.phase === "stuck") parts.push(`Hết khối để xóa: dùng đạo cụ hoặc ${next.mode === "timed" ? "đổi bàn" : "kết thúc màn"}.`);
       if (next.mode === "timed") {
         // Lên bậc: giờ còn lại cộng dồn thêm giờ của bậc mới.
         const ups = events.filter((e) => e.type === "goalReached").length;
@@ -263,7 +278,7 @@ export default function KhaiLoScreen() {
         setMessage(REASON_TEXT[r.reason]);
         return;
       }
-      if (action.type === "whirl" || action.type === "thunder") setTool(null);
+      if (action.type === "tool") setTool(null);
       commit(r.state, r.events, state);
     },
     [state, commit, setConfirmEnd],
@@ -313,17 +328,15 @@ export default function KhaiLoScreen() {
     [mode, enter],
   );
 
-  // Ô sẽ bị tác động nếu chọn ô đang rê/chạm: khối, vòng lốc, hoặc vùng sấm.
+  // Ô sẽ bị tác động nếu chọn ô đang rê/chạm: khối, hoặc vùng của đạo cụ đang cầm.
   const preview = useMemo(() => {
     if (!state || peek === null) return { cells: new Set<number>(), text: "" };
     const { width, height, cells } = state;
-    if (tool === "whirl") {
-      if (!isWhirlCenter(peek, width, height)) return { cells: new Set<number>(), text: REASON_TEXT.edge };
-      return { cells: new Set([...ringOf(peek, width), peek]), text: "Xoay 8 ô quanh tâm theo chiều kim đồng hồ." };
-    }
-    if (tool === "thunder") {
-      const area = thunderArea(peek, width, height).filter((i) => cells[i]);
-      return { cells: new Set(area), text: area.length ? `Phá ${area.length} quân (không cộng điểm).` : REASON_TEXT.empty };
+    if (tool) {
+      const t = toolTargets(cells, width, height, tool, peek);
+      if (typeof t === "string") return { cells: new Set<number>(), text: REASON_TEXT[t] };
+      const hit = t.remove.length ? t.remove : tool === "phong" ? [...t.change, peek] : t.change;
+      return { cells: new Set(hit), text: t.remove.length ? `${TOOL_NAME[tool]}: phá ${t.remove.length} quân (không cộng điểm).` : TOOL_HINT[tool] };
     }
     const cell = cells[peek];
     if (!cell) return { cells: new Set<number>(), text: "" };
@@ -348,7 +361,7 @@ export default function KhaiLoScreen() {
           return;
         }
       }
-      act(tool ? { type: tool, index: i } : { type: "pick", index: i });
+      act(tool ? { type: "tool", tool, index: i } : { type: "pick", index: i });
     },
     [state, armed, tool, act],
   );
@@ -359,9 +372,10 @@ export default function KhaiLoScreen() {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.metaKey || e.ctrlKey || e.altKey) return;
       const k = e.key.toLowerCase();
       if (k === "z") act({ type: "undo" });
-      else if (k === "1") setTool((t) => (t === "whirl" ? null : "whirl"));
-      else if (k === "2") setTool((t) => (t === "thunder" ? null : "thunder"));
-      else if (k === "escape") setTool(null);
+      else if (/^[1-7]$/.test(k)) {
+        const el = ELEMENTS[Number(k) - 1] as KlTool;
+        setTool((t) => (t === el ? null : el));
+      } else if (k === "escape") setTool(null);
       else return;
       e.preventDefault();
     };
@@ -403,11 +417,14 @@ export default function KhaiLoScreen() {
     } else if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       touchRef.current = false;
-      act(tool ? { type: tool, index: i } : { type: "pick", index: i });
+      act(tool ? { type: "tool", tool, index: i } : { type: "pick", index: i });
     }
   };
 
   const summary = state.phase === "levelDone" ? state.summary : null;
+  // Đạo cụ hiện theo hệ có trên bàn (và hệ đã có sẵn đạo cụ/thanh nạp dở dù bàn này không còn).
+  const onBoard = new Set(state.cells.map((c) => c?.kind));
+  const shownTools = ELEMENTS.filter((e) => onBoard.has(e) || state.tools[e] > 0);
   const endLevel = () => {
     // Còn khối để xóa mà bấm Kết thúc màn: hỏi lại một lần, tránh bấm nhầm mất quân lực.
     if (state.mode === "classic" && state.phase === "playing" && !confirmEnd) {
@@ -469,7 +486,7 @@ export default function KhaiLoScreen() {
                       aria-hidden
                       className="kl-tile"
                       data-hl={preview.cells.has(i) || undefined}
-                      data-tool={preview.cells.has(i) ? (tool ?? undefined) : undefined}
+                      data-tool={preview.cells.has(i) && tool ? (tool === "phong" || tool === "moc" ? "change" : "remove") : undefined}
                       style={{ transform: `translate(calc(var(--kl-cell) * ${i % width}), calc(var(--kl-cell) * ${Math.floor(i / width)}))` }}
                     >
                       <ElementGem element={c.kind} banner={c.banner} />
@@ -556,51 +573,48 @@ export default function KhaiLoScreen() {
           {active && (
             <div className="ui-frame flex flex-col gap-2 p-2 sm:gap-3 sm:p-4">
               <p className="ui-title-on-wood hidden font-bold lg:block">Đạo cụ</p>
-              <div className="grid grid-cols-4 gap-1.5 sm:gap-2 lg:grid-cols-2">
-                {(["whirl", "thunder"] as const).map((t, k) => (
+              <div className="grid grid-cols-4 gap-1.5 sm:gap-2 lg:grid-cols-3">
+                {shownTools.map((t) => (
                   <button
                     key={t}
                     type="button"
                     aria-pressed={tool === t}
-                    aria-label={`${TOOL_NAME[t]}, còn ${state.tools[t]}`}
+                    aria-label={`${TOOL_NAME[t]} (hệ ${ELEMENT_NAME[t]}), còn ${state.tools[t]}, nạp ${state.charge[t]}/${KL_TOOL_CHARGE} quân`}
                     disabled={state.tools[t] <= 0}
-                    title={`${TOOL_NAME[t]}: nạp ${state.charge[t]}/${KL_TOOL_CHARGE[t]} điểm gom khối để được thêm 1`}
+                    title={`${TOOL_NAME[t]}: ${TOOL_HINT[t]} Xóa ${KL_TOOL_CHARGE} quân hệ ${ELEMENT_NAME[t]} để được thêm 1 (đang ${state.charge[t]}). Phím ${ELEMENTS.indexOf(t) + 1}.`}
                     onClick={() => setTool((cur) => (cur === t ? null : t))}
-                    className={choiceVariants({ size: "sm", className: "flex-col gap-0 px-1 leading-tight lg:min-h-12" })}
+                    className={choiceVariants({ size: "sm", className: "kl-tool flex-col gap-0.5 px-1 py-1 leading-tight disabled:opacity-60" })}
+                    style={{ ["--el" as string]: ELEMENT_COLOR[t] }}
                   >
-                    <span className="whitespace-nowrap">
-                      <span className="sm:hidden">{TOOL_SHORT[t]}</span>
-                      <span className="hidden sm:inline">{TOOL_NAME[t]}</span> <span className="tabular-nums">×{state.tools[t]}</span>
+                    <span className="flex items-center gap-1 whitespace-nowrap">
+                      {/* eslint-disable-next-line @next/next/no-img-element -- biểu tượng hệ tĩnh dùng lại */}
+                      <img src={`/art/elements/${t}.webp`} alt="" className="size-5 sm:size-6" draggable={false} />
+                      <span className="tabular-nums">×{state.tools[t]}</span>
                     </span>
-                    <ChargeBar value={state.charge[t]} max={KL_TOOL_CHARGE[t]} full={state.tools[t] >= KL_MAX_TOOLS} />
-                    <span className="hidden text-caption font-normal opacity-80 lg:block">phím {k + 1}</span>
+                    <span className="hidden text-caption sm:block">{TOOL_NAME[t]}</span>
+                    <ChargeBar value={state.charge[t]} max={KL_TOOL_CHARGE} full={state.tools[t] >= KL_MAX_TOOLS} />
                   </button>
                 ))}
-                <button type="button" disabled={!state.prev || state.undo <= 0} onClick={() => act({ type: "undo" })} className={buttonVariants({ variant: "secondary", size: "sm", className: "flex-col gap-0 px-1 leading-tight" })}>
-                  <span>Hoàn tác</span>
-                  <span className="tabular-nums">({state.undo})</span>
+              </div>
+              <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+                <button type="button" disabled={!state.prev || state.undo <= 0} onClick={() => act({ type: "undo" })} className={buttonVariants({ variant: "secondary", size: "sm", className: "px-1" })}>
+                  Hoàn tác ({state.undo})
                 </button>
                 <button
                   type="button"
                   onClick={endLevel}
                   disabled={timed && state.phase !== "stuck"}
                   onBlur={() => setConfirmEnd(false)}
-                  className={buttonVariants({ variant: state.phase === "stuck" || confirmEnd ? "primary" : "secondary", size: "sm", className: "flex-col gap-0 px-1 leading-tight" })}
+                  className={buttonVariants({ variant: state.phase === "stuck" || confirmEnd ? "primary" : "secondary", size: "sm", className: "px-1" })}
                 >
-                  {confirmEnd ? (
-                    <>
-                      <span>Chắc chưa?</span>
-                      <span className="text-caption font-normal">bấm lần nữa</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>{timed ? "Đổi" : "Kết thúc"}</span>
-                      <span>{timed ? "bàn" : "màn"}</span>
-                    </>
-                  )}
+                  {confirmEnd ? "Bấm lần nữa" : timed ? "Đổi bàn" : "Kết thúc màn"}
                 </button>
               </div>
-              {tool && <p className="text-sm text-on-wood-soft">{tool === "whirl" ? "Chọn tâm: 8 ô quanh xoay theo chiều kim đồng hồ." : "Chọn ô: phá vùng 3×3 quanh ô đó."} <span className="pointer-coarse:hidden">Esc để bỏ chọn.</span></p>}
+              {tool ? (
+                <p className="text-sm text-on-wood-soft"><b className="text-title-on-wood">{TOOL_NAME[tool]}</b>: {TOOL_HINT[tool]} <span className="pointer-coarse:hidden">Esc để bỏ chọn.</span></p>
+              ) : (
+                <p className="hidden text-caption text-on-wood-soft lg:block">Xóa {KL_TOOL_CHARGE} quân của một hệ (bằng cách chạm khối) để được 1 đạo cụ hệ đó; tối đa {KL_MAX_TOOLS} mỗi loại. Phím 1–7 chọn nhanh.</p>
+              )}
               {confirmEnd && <p className="text-sm text-warning">Còn khối để xóa. Kết thúc bây giờ thì mỗi quân còn lại trừ 1 quân lực.</p>}
             </div>
           )}

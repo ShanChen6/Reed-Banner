@@ -42,6 +42,9 @@ function stateOf(rows: string[], over: Partial<KlState> = {}): KlState {
   return { ...createGame(1, "classic", b.width, b.height), ...b, nextId: 1000, ...over };
 }
 
+/** Kho đạo cụ: mặc định 0 mọi hệ, ghi đè hệ cần dùng. */
+const kit = (over: Partial<Record<Element, number>> = {}): Record<Element, number> => ({ kim: 0, moc: 0, thuy: 0, hoa: 0, tho: 0, loi: 0, phong: 0, ...over });
+
 const draw = (s: Pick<KlState, "cells" | "width">) => {
   const inv = Object.fromEntries(Object.entries(K).map(([k, v]) => [v, k]));
   const out: string[] = [];
@@ -82,7 +85,7 @@ describe("Khai Lộ: luật nước đi", () => {
   });
 
   it("ô hào quang nhân điểm nhóm", () => {
-    const r = transition(stateOf(["aA", "bc"]), { type: "pick", index: 0 });
+    const r = transition(stateOf(["aA", "bc"], { tools: kit({ hoa: 1 }) }), { type: "pick", index: 0 });
     assert.ok(r.ok);
     assert.equal(r.state.score, groupScore(2, 1));
   });
@@ -95,24 +98,25 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.equal(clearBonus(1), 350);
     assert.equal(r.state.score, 16 + clearBonus(1));
     assert.equal(r.state.troops, KL_START_TROOPS + KL_CLEAR_TROOPS);
-    assert.deepEqual(r.state.tools, { whirl: 1, thunder: 1 });
+    assert.deepEqual(r.state.tools, kit());
     const n = transition(r.state, { type: "nextLevel" });
     assert.ok(n.ok);
     assert.equal(n.state.level, 2);
     assert.equal(n.state.phase, "playing");
   });
 
-  it("điểm gom khối nạp thanh đạo cụ, đầy thanh thì +1; kho đầy thì thanh dừng ở mức đầy", () => {
-    const s = stateOf(["aab", "bcd"], { charge: { whirl: KL_TOOL_CHARGE.whirl - 1, thunder: KL_TOOL_CHARGE.thunder - 4 } });
+  it("chạm khối nạp thanh của hệ đó, đủ quân thì +1 đạo cụ hệ ấy; kho đầy thì thanh dừng ở mức đầy", () => {
+    const s = stateOf(["aab", "bcd"], { charge: kit({ kim: KL_TOOL_CHARGE - 1 }) });
     const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
-    assert.deepEqual(r.state.tools, { whirl: 2, thunder: 2 });
-    assert.deepEqual(r.state.charge, { whirl: 3, thunder: 0 });
-    assert.deepEqual(r.events.filter((e) => e.type === "toolCharged").map((e) => (e.type === "toolCharged" ? e.tool : "")), ["whirl", "thunder"]);
-    const full = transition(stateOf(["aab", "bcd"], { tools: { whirl: 1, thunder: KL_MAX_TOOLS }, charge: { whirl: 0, thunder: KL_TOOL_CHARGE.thunder - 1 } }), { type: "pick", index: 0 });
+    assert.deepEqual(r.state.tools, kit({ kim: 1 }));
+    assert.deepEqual(r.state.charge, kit({ kim: 1 }));
+    assert.ok(r.events.some((e) => e.type === "toolCharged" && e.tool === "kim"));
+    assert.equal(r.state.phase, "stuck");
+    const full = transition(stateOf(["aab", "bcd"], { tools: kit({ kim: KL_MAX_TOOLS }), charge: kit({ kim: KL_TOOL_CHARGE - 1 }) }), { type: "pick", index: 0 });
     assert.ok(full.ok);
-    assert.equal(full.state.tools.thunder, KL_MAX_TOOLS);
-    assert.equal(full.state.charge.thunder, KL_TOOL_CHARGE.thunder);
+    assert.equal(full.state.tools.kim, KL_MAX_TOOLS);
+    assert.equal(full.state.charge.kim, KL_TOOL_CHARGE);
     // hoàn tác trả lại cả đạo cụ và thanh nạp
     const u = transition(r.state, { type: "undo" });
     assert.ok(u.ok);
@@ -120,12 +124,18 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.deepEqual(u.state.charge, s.charge);
   });
 
+  it("quân bị đạo cụ phá không nạp thanh", () => {
+    const r = transition(stateOf(["abcd", "bcda", "cdab"], { tools: kit({ hoa: 1 }) }), { type: "tool", tool: "hoa", index: 0 });
+    assert.ok(r.ok);
+    assert.deepEqual(r.state.charge, kit());
+  });
+
   it("gần sạch (còn tối đa 3 quân) được thưởng nhỏ, vẫn trừ quân lực", () => {
-    const r = transition(stateOf(["aab", "bcd"], { tools: { whirl: 0, thunder: 0 } }), { type: "pick", index: 0 });
+    const r = transition(stateOf(["aab", "bcd"], {}), { type: "pick", index: 0 });
     assert.ok(r.ok);
     // còn 4 quân: không thưởng
     assert.equal(r.state.summary?.bonus, 0);
-    const near = transition(stateOf(["aab", "aac"], { tools: { whirl: 0, thunder: 0 } }), { type: "pick", index: 0 });
+    const near = transition(stateOf(["aab", "aac"], {}), { type: "pick", index: 0 });
     assert.ok(near.ok);
     assert.equal(near.state.summary?.left, 2);
     assert.equal(near.state.summary?.bonus, KL_NEAR_CLEAR_BONUS);
@@ -133,7 +143,7 @@ describe("Khai Lộ: luật nước đi", () => {
   });
 
   it("hết nhóm còn đạo cụ thì bế tắc; kết thúc màn trừ quân lực theo ô còn lại", () => {
-    const s = stateOf(["aab", "bcd"]);
+    const s = stateOf(["aab", "bcd"], { tools: kit({ loi: 1 }) });
     const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
     assert.equal(r.state.phase, "stuck");
@@ -144,28 +154,70 @@ describe("Khai Lộ: luật nước đi", () => {
   });
 
   it("hết nhóm và hết đạo cụ thì tự kết thúc màn; quân lực về 0 là hết ván", () => {
-    const s = stateOf(["aab", "bcd"], { tools: { whirl: 0, thunder: 0 }, troops: 3 });
+    const s = stateOf(["aab", "bcd"], { troops: 3 });
     const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
     assert.equal(r.state.phase, "over");
     assert.equal(r.state.troops, 0);
   });
 
-  it("Lốc xoay 8 ô quanh tâm theo chiều kim đồng hồ, không dùng ở mép", () => {
-    const s = stateOf(["abc", "dad", "cba"]);
-    assert.deepEqual(transition(s, { type: "whirl", index: 1 }), { ok: false, reason: "edge" });
-    const r = transition(s, { type: "whirl", index: 4 });
+  it("Lốc Phong xoay 8 ô quanh tâm theo chiều kim đồng hồ, không dùng ở mép", () => {
+    const s = stateOf(["abc", "dad", "cba"], { tools: kit({ phong: 1 }) });
+    assert.deepEqual(transition(s, { type: "tool", tool: "phong", index: 1 }), { ok: false, reason: "edge" });
+    const r = transition(s, { type: "tool", tool: "phong", index: 4 });
     assert.ok(r.ok);
     assert.deepEqual(draw(r.state), ["dab", "cac", "bad"]);
-    assert.equal(r.state.tools.whirl, 0);
+    assert.equal(r.state.tools.phong, 0);
   });
 
-  it("Sấm phá vùng 3×3 không cộng điểm", () => {
-    const s = stateOf(["abcd", "bcda", "cdab"]);
-    const r = transition(s, { type: "thunder", index: 0 });
+  it("chưa có đạo cụ thì không dùng được", () => {
+    assert.deepEqual(transition(stateOf(["ab", "cd"]), { type: "tool", tool: "hoa", index: 0 }), { ok: false, reason: "noTool" });
+  });
+
+  it("Hỏa Cầu phá vùng 3×3, không cộng điểm", () => {
+    const r = transition(stateOf(["abcd", "bcda", "cdab"], { tools: kit({ hoa: 1 }) }), { type: "tool", tool: "hoa", index: 0 });
     assert.ok(r.ok);
     assert.equal(r.state.score, 0);
     assert.equal(tilesLeft(r.state.cells), 8);
+  });
+
+  it("Kim Đao chém một hàng, Thủy Triều cuốn một cột, Địa Chấn phá hàng đáy", () => {
+    const base = ["abcd", "bcda", "cdab"];
+    const kim = transition(stateOf(base, { tools: kit({ kim: 1 }) }), { type: "tool", tool: "kim", index: 5 });
+    assert.ok(kim.ok);
+    assert.deepEqual(draw(kim.state), ["....", "abcd", "cdab"]);
+    const thuy = transition(stateOf(base, { tools: kit({ thuy: 1 }) }), { type: "tool", tool: "thuy", index: 0 });
+    assert.ok(thuy.ok);
+    assert.deepEqual(draw(thuy.state), ["bcd.", "cda.", "dab."]);
+    const tho = transition(stateOf(base, { tools: kit({ tho: 1 }) }), { type: "tool", tool: "tho", index: 0 });
+    assert.ok(tho.ok);
+    assert.deepEqual(draw(tho.state), ["....", "abcd", "bcda"]);
+  });
+
+  it("Lôi Phạt xóa mọi quân cùng hệ với ô chọn", () => {
+    const r = transition(stateOf(["abcd", "bcda", "cdab"], { tools: kit({ loi: 1 }) }), { type: "tool", tool: "loi", index: 0 });
+    assert.ok(r.ok);
+    assert.equal(tilesLeft(r.state.cells), 9);
+    assert.ok(r.state.cells.every((c) => c?.kind !== "kim"));
+  });
+
+  it("Mộc Linh đổi quân sang hệ của khối lớn nhất kề nó", () => {
+    const s = stateOf(["bba", "cad", "ccd"], { tools: kit({ moc: 2 }) });
+    const r = transition(s, { type: "tool", tool: "moc", index: 4 });
+    assert.ok(r.ok);
+    // kề ô giữa: b (khối 2), c (khối 3), d (khối 2) → đổi sang c
+    assert.equal(r.state.cells[4]?.kind, "thuy");
+    const lone = stateOf(["aa", "aa"], { tools: kit({ moc: 1 }) });
+    assert.deepEqual(transition(lone, { type: "tool", tool: "moc", index: 0 }), { ok: false, reason: "noTarget" });
+  });
+
+  it("đọc bản lưu cũ có Lốc/Sấm: Lốc thành Lốc Phong, Sấm thành Hỏa Cầu", () => {
+    const old = JSON.parse(serializeGame(createGame(5))) as Record<string, unknown>;
+    old.tools = { whirl: 2, thunder: 1 };
+    old.charge = { whirl: 100, thunder: 5 };
+    const p = parseGame(JSON.stringify(old));
+    assert.deepEqual(p?.tools, kit({ phong: 2, hoa: 1 }));
+    assert.deepEqual(p?.charge, kit());
   });
 
   it("hoàn tác một bước, mỗi màn một lần", () => {
@@ -265,7 +317,7 @@ describe("Khai Lộ: Cấp tốc", () => {
   });
 
   it("bế tắc chỉ đổi bàn khi đã hết khối; Thường không có timeUp", () => {
-    const playing = stateOf(["aab", "bcd"], { mode: "timed" });
+    const playing = stateOf(["aab", "bcd"], { mode: "timed", tools: kit({ hoa: 1 }) });
     assert.deepEqual(transition(playing, { type: "endLevel" }), { ok: false, reason: "notStuck" });
     const stuck = transition(playing, { type: "pick", index: 0 });
     assert.ok(stuck.ok);

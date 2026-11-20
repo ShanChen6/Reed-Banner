@@ -1353,10 +1353,10 @@
 .kl-tile[data-hl] {
   filter: brightness(1.2) drop-shadow(0 0 6px var(--tone-e8c477));
 }
-.kl-tile[data-hl][data-tool="thunder"] {
+.kl-tile[data-hl][data-tool="remove"] {
   filter: brightness(1.15) drop-shadow(0 0 6px var(--tone-ff8a5c));
 }
-.kl-tile[data-hl][data-tool="whirl"] {
+.kl-tile[data-hl][data-tool="change"] {
   filter: brightness(1.15) drop-shadow(0 0 6px var(--tone-8fe3d4));
 }
 .kl-gem {
@@ -1412,8 +1412,9 @@
 .kl-charge {
   background: var(--wood-inset);
 }
+/* Thanh nạp mang màu hệ của đạo cụ (--el đặt trên nút). */
 .kl-charge > span {
-  background: linear-gradient(90deg, var(--frame-gold), var(--title-on-wood));
+  background: linear-gradient(90deg, color-mix(in srgb, var(--el, var(--frame-gold)) 70%, var(--black)), var(--el, var(--title-on-wood)));
   transition: width 0.25s ease-out;
 }
 .kl-charge[data-full] > span {

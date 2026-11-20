@@ -18,17 +18,19 @@ export const KL_CLEAR_BONUS_PER_LEVEL = 50;
 /** Gần sạch: còn tối đa 3 quân vẫn được thưởng nhỏ (quân lực vẫn trừ theo quân còn lại). */
 export const KL_NEAR_CLEAR_LEFT = 3;
 export const KL_NEAR_CLEAR_BONUS = 100;
-/** Mỗi loại đạo cụ giữ tối đa 5 (trước là 9): tránh dồn kho kéo ván quá dài. */
-export const KL_MAX_TOOLS = 5;
-/** Thanh nạp đạo cụ (Shan 20/11/2026): điểm gom khối nạp đồng thời hai thanh, đầy thanh thì được 1 đạo cụ loại đó.
- *  Thưởng dọn sạch và thưởng gần sạch không nạp, để đạo cụ đến từ việc gom khối to. */
-export const KL_TOOL_CHARGE: Readonly<Record<KlTool, number>> = { whirl: 800, thunder: 1200 };
-export const KL_START_TOOLS: Readonly<Record<KlTool, number>> = { whirl: 1, thunder: 1 };
+/** Mỗi loại đạo cụ giữ tối đa 3: tránh dồn kho kéo ván quá dài. */
+export const KL_MAX_TOOLS = 3;
+/** 7 đạo cụ theo 7 hệ (Shan 20/11/2026): xóa quân hệ nào bằng cách chạm khối thì thanh nạp của hệ đó đầy dần; đủ số quân
+ *  thì được 1 đạo cụ của hệ ấy. Quân bị đạo cụ phá không nạp, để đạo cụ đến từ việc gom khối. */
+export const KL_TOOL_CHARGE = 80;
+const noTools = (): Record<KlTool, number> => ({ kim: 0, moc: 0, thuy: 0, hoa: 0, tho: 0, loi: 0, phong: 0 });
 /** Lượt hoàn tác mỗi màn (không cộng dồn sang màn sau). */
 export const KL_UNDO_PER_LEVEL = 1;
 export const KL_MIN_GROUP = 2;
 
-export type KlTool = "whirl" | "thunder";
+/** Đạo cụ mang tên hệ của nó: kim Kim Đao (hàng), thuy Thủy Triều (cột), hoa Hỏa Cầu (3×3), loi Lôi Phạt (cùng hệ),
+ *  moc Mộc Linh (đổi hệ một quân), tho Địa Chấn (hàng đáy), phong Lốc Phong (xoay 8 ô). */
+export type KlTool = Element;
 
 /** Thưởng điểm khi dọn sạch bàn ở màn này. */
 export function clearBonus(level: number): number {
@@ -98,8 +100,7 @@ export interface KlState {
 
 export type KlAction =
   | { readonly type: "pick"; readonly index: number }
-  | { readonly type: "whirl"; readonly index: number }
-  | { readonly type: "thunder"; readonly index: number }
+  | { readonly type: "tool"; readonly tool: KlTool; readonly index: number }
   | { readonly type: "undo" }
   /** Thường: kết thúc màn. Cấp tốc: bỏ bàn đang bế tắc, chia bàn mới cùng bậc. */
   | { readonly type: "endLevel" }
@@ -109,8 +110,8 @@ export type KlAction =
 
 export type KlEvent =
   | { readonly type: "removed"; readonly cells: readonly number[]; readonly gained: number }
-  | { readonly type: "whirled"; readonly center: number }
-  | { readonly type: "thundered"; readonly cells: readonly number[] }
+  /** Dùng đạo cụ: removed là ô bị phá (Mộc Linh, Lốc Phong không phá ô nào). */
+  | { readonly type: "toolUsed"; readonly tool: KlTool; readonly index: number; readonly removed: readonly number[] }
   | { readonly type: "undone" }
   | { readonly type: "levelDone"; readonly summary: KlLevelSummary }
   | { readonly type: "over" }
@@ -123,7 +124,7 @@ export type KlEvent =
   | { readonly type: "redeal"; readonly cleared: boolean; readonly left: number; readonly bonus: number }
   | { readonly type: "timeUp" };
 
-export type KlReason = "notPlaying" | "outOfBounds" | "empty" | "single" | "noTool" | "edge" | "noUndo" | "notStuck";
+export type KlReason = "notPlaying" | "outOfBounds" | "empty" | "single" | "noTool" | "edge" | "noUndo" | "notStuck" | "noTarget";
 
 export type KlResult =
   | { readonly ok: true; readonly state: KlState; readonly events: readonly KlEvent[] }
@@ -191,8 +192,8 @@ export function createGame(seed: number, mode: KlMode = "classic", width = KL_WI
     cells,
     score: 0,
     troops: KL_START_TROOPS,
-    tools: { ...KL_START_TOOLS },
-    charge: { whirl: 0, thunder: 0 },
+    tools: noTools(),
+    charge: noTools(),
     deal: 0,
     undo: KL_UNDO_PER_LEVEL,
     moves: 0,
@@ -303,21 +304,83 @@ export function tilesLeft(cells: readonly (KlCell | null)[]): number {
   return cells.reduce((n, c) => n + (c ? 1 : 0), 0);
 }
 
-/** Điểm gom khối nạp vào hai thanh đạo cụ; đầy thanh thì +1 đạo cụ (kho đầy thì thanh dừng ở mức đầy). */
-function addCharge(s: KlState, gained: number, events: KlEvent[]): KlState {
+/** Quân xóa bằng chạm khối nạp thanh của hệ đó; đầy thanh thì +1 đạo cụ (kho đầy thì thanh dừng ở mức đầy). */
+function addCharge(s: KlState, kind: Element, count: number, events: KlEvent[]): KlState {
   const tools = { ...s.tools };
   const charge = { ...s.charge };
-  for (const t of ["whirl", "thunder"] as const) {
-    const need = KL_TOOL_CHARGE[t];
-    let c = charge[t] + gained;
-    while (c >= need && tools[t] < KL_MAX_TOOLS) {
-      c -= need;
-      tools[t] += 1;
-      events.push({ type: "toolCharged", tool: t });
-    }
-    charge[t] = Math.min(c, need);
+  let c = charge[kind] + count;
+  while (c >= KL_TOOL_CHARGE && tools[kind] < KL_MAX_TOOLS) {
+    c -= KL_TOOL_CHARGE;
+    tools[kind] += 1;
+    events.push({ type: "toolCharged", tool: kind });
   }
+  charge[kind] = Math.min(c, KL_TOOL_CHARGE);
   return { ...s, tools, charge };
+}
+
+const hasTools = (s: KlState) => ELEMENTS.some((e) => s.tools[e] > 0);
+
+/** Ô bị đạo cụ tác động khi dùng ở ô index: remove là ô bị phá, change là ô đổi chỗ/đổi hệ. Dùng cho cả lõi và xem trước. */
+export function toolTargets(
+  cells: readonly (KlCell | null)[],
+  width: number,
+  height: number,
+  tool: KlTool,
+  index: number,
+): { readonly remove: readonly number[]; readonly change: readonly number[] } | KlReason {
+  const r = Math.floor(index / width);
+  const c = index % width;
+  const filled = (xs: number[]) => xs.filter((i) => cells[i]);
+  const all = (pred: (i: number) => boolean) => filled(cells.map((_, i) => i).filter(pred));
+  switch (tool) {
+    case "kim": {
+      const remove = all((i) => Math.floor(i / width) === r);
+      return remove.length ? { remove, change: [] } : "empty";
+    }
+    case "thuy": {
+      const remove = all((i) => i % width === c);
+      return remove.length ? { remove, change: [] } : "empty";
+    }
+    case "hoa": {
+      const remove = filled(thunderArea(index, width, height));
+      return remove.length ? { remove, change: [] } : "empty";
+    }
+    case "tho": {
+      const remove = all((i) => Math.floor(i / width) === height - 1);
+      return remove.length ? { remove, change: [] } : "empty";
+    }
+    case "loi": {
+      const kind = cells[index]?.kind;
+      if (!kind) return "empty";
+      return { remove: all((i) => cells[i]?.kind === kind), change: [] };
+    }
+    case "moc": {
+      if (!cells[index]) return "empty";
+      return mocTarget(cells, width, height, index) ? { remove: [], change: [index] } : "noTarget";
+    }
+    case "phong": {
+      if (!isWhirlCenter(index, width, height)) return "edge";
+      return { remove: [], change: ringOf(index, width) };
+    }
+  }
+}
+
+/** Mộc Linh: hệ mới của quân index là hệ của khối lớn nhất kề nó (khác hệ hiện tại). */
+function mocTarget(cells: readonly (KlCell | null)[], width: number, height: number, index: number): Element | null {
+  const cell = cells[index];
+  if (!cell) return null;
+  let best: Element | null = null;
+  let size = 0;
+  for (const n of neighbors(index, width, height)) {
+    const k = cells[n]?.kind;
+    if (!k || k === cell.kind) continue;
+    const g = groupAt(cells, width, height, n).length;
+    if (g > size) {
+      size = g;
+      best = k;
+    }
+  }
+  return best;
 }
 
 const levelBonus = (level: number, left: number) => (left === 0 ? clearBonus(level) : left <= KL_NEAR_CLEAR_LEFT ? KL_NEAR_CLEAR_BONUS : 0);
@@ -348,7 +411,7 @@ function afterMove(s: KlState, events: KlEvent[]): KlState {
   }
   const left = tilesLeft(s.cells);
   if (left > 0 && hasGroup(s.cells, s.width, s.height)) return { ...s, phase: "playing" };
-  if (left > 0 && s.tools.whirl + s.tools.thunder > 0) return { ...s, phase: "stuck" };
+  if (left > 0 && hasTools(s)) return { ...s, phase: "stuck" };
   return s.mode === "timed" ? redeal(s, events) : finishLevel(s, events);
 }
 
@@ -395,42 +458,33 @@ export function transition(state: KlState, action: KlAction): KlResult {
       events.push({ type: "removed", cells: group, gained });
       const next = addCharge(
         { ...state, cells: settle(cells, state.width, state.height), score: state.score + gained, moves: state.moves + 1, prev: withPrev(state) },
-        gained,
+        state.cells[action.index]!.kind,
+        group.length,
         events,
       );
       return { ok: true, state: afterMove(next, events), events };
     }
-    case "whirl": {
+    case "tool": {
       if (!active) return { ok: false, reason: "notPlaying" };
       if (!inBounds(state, action.index)) return { ok: false, reason: "outOfBounds" };
-      if (state.tools.whirl <= 0) return { ok: false, reason: "noTool" };
-      if (!isWhirlCenter(action.index, state.width, state.height)) return { ok: false, reason: "edge" };
-      const ring = ringOf(action.index, state.width);
+      if (!(ELEMENTS as readonly string[]).includes(action.tool) || state.tools[action.tool] <= 0) return { ok: false, reason: "noTool" };
+      const t = toolTargets(state.cells, state.width, state.height, action.tool, action.index);
+      if (typeof t === "string") return { ok: false, reason: t };
       const cells = state.cells.slice();
-      ring.forEach((to, k) => (cells[to] = state.cells[ring[(k + ring.length - 1) % ring.length] as number] ?? null));
-      events.push({ type: "whirled", center: action.index });
+      if (action.tool === "phong") {
+        const ring = ringOf(action.index, state.width);
+        ring.forEach((to, k) => (cells[to] = state.cells[ring[(k + ring.length - 1) % ring.length] as number] ?? null));
+      } else if (action.tool === "moc") {
+        const kind = mocTarget(state.cells, state.width, state.height, action.index) as Element;
+        cells[action.index] = { ...(state.cells[action.index] as KlCell), kind };
+      } else {
+        for (const i of t.remove) cells[i] = null;
+      }
+      events.push({ type: "toolUsed", tool: action.tool, index: action.index, removed: t.remove });
       const next: KlState = {
         ...state,
         cells: settle(cells, state.width, state.height),
-        tools: { ...state.tools, whirl: state.tools.whirl - 1 },
-        moves: state.moves + 1,
-        prev: withPrev(state),
-      };
-      return { ok: true, state: afterMove(next, events), events };
-    }
-    case "thunder": {
-      if (!active) return { ok: false, reason: "notPlaying" };
-      if (!inBounds(state, action.index)) return { ok: false, reason: "outOfBounds" };
-      if (state.tools.thunder <= 0) return { ok: false, reason: "noTool" };
-      const area = thunderArea(action.index, state.width, state.height).filter((i) => state.cells[i]);
-      if (!area.length) return { ok: false, reason: "empty" };
-      const cells = state.cells.slice();
-      for (const i of area) cells[i] = null;
-      events.push({ type: "thundered", cells: area });
-      const next: KlState = {
-        ...state,
-        cells: settle(cells, state.width, state.height),
-        tools: { ...state.tools, thunder: state.tools.thunder - 1 },
+        tools: { ...state.tools, [action.tool]: state.tools[action.tool] - 1 },
         moves: state.moves + 1,
         prev: withPrev(state),
       };
@@ -493,12 +547,22 @@ export function parseGame(text: string | null): KlState | null {
     if (v.version !== 1 || !num(v.seed) || !num(v.level) || !num(v.score) || !num(v.troops) || !num(v.moves) || !num(v.undo) || !num(v.nextId)) return null;
     if (!Number.isInteger(v.width) || !Number.isInteger(v.height) || (v.width as number) < 3 || (v.height as number) < 3) return null;
     if (!Array.isArray(v.cells) || v.cells.length !== (v.width as number) * (v.height as number) || !v.cells.every(isCell)) return null;
-    if (!v.tools || !num(v.tools.whirl) || !num(v.tools.thunder)) return null;
+    // Bản lưu trước 20/11/2026 có Lốc/Sấm: Lốc thành Lốc Phong, Sấm thành Hỏa Cầu (cùng vùng 3×3).
+    const rawTools = (v.tools ?? {}) as Record<string, unknown>;
+    const legacy = "whirl" in rawTools || "thunder" in rawTools;
+    const tools = noTools();
+    for (const e of ELEMENTS) if (num(rawTools[e])) tools[e] = Math.min(KL_MAX_TOOLS, rawTools[e] as number);
+    if (legacy) {
+      tools.phong = Math.min(KL_MAX_TOOLS, num(rawTools.whirl) ? (rawTools.whirl as number) : 0);
+      tools.hoa = Math.min(KL_MAX_TOOLS, num(rawTools.thunder) ? (rawTools.thunder as number) : 0);
+    }
     if (!phases.includes(v.phase as KlPhase)) return null;
     const mode: KlMode = v.mode === "timed" ? "timed" : "classic";
-    const charge = v.charge && num(v.charge.whirl) && num(v.charge.thunder) ? v.charge : { whirl: 0, thunder: 0 };
+    const rawCharge = (v.charge ?? {}) as Record<string, unknown>;
+    const charge = noTools();
+    for (const e of ELEMENTS) if (num(rawCharge[e])) charge[e] = Math.min(KL_TOOL_CHARGE, rawCharge[e] as number);
     const deal = num(v.deal) ? (v.deal as number) : 0;
-    return { ...(v as KlState), mode, charge, deal, summary: v.summary ?? null, prev: null };
+    return { ...(v as KlState), mode, tools, charge, deal, summary: v.summary ?? null, prev: null };
   } catch {
     return null;
   }
