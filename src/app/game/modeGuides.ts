@@ -8,7 +8,7 @@ import { SURVIVAL_BOSS_EVERY, SURVIVAL_WAVE_GOLD } from "@/core/survival/surviva
 import { TRIAL_FLOORS } from "@/core/progress/dualTowerState";
 import { DT_ITEM_PICKS, DT_LEVELS } from "@/core/do-tham";
 import { SL_AID_USE_MAX, SL_LEVELS } from "@/core/su-lo";
-import { KL_CLEAR_BONUS_BASE, KL_CLEAR_BONUS_PER_LEVEL, KL_HEIGHT, KL_NEAR_CLEAR_BONUS, KL_NEAR_CLEAR_LEFT, KL_START_TOOLS, KL_TIMED_LEVEL_SECONDS, KL_TIMED_START_SECONDS, KL_TOOL_CHARGE, KL_WIDTH, timedGoal } from "@/core/khai-lo/engine";
+import { KL_CLEAR_BONUS_BASE, KL_CLEAR_BONUS_PER_LEVEL, KL_CLEAR_HEARTS, KL_HEIGHT, KL_NEAR_CLEAR_BONUS, KL_NEAR_CLEAR_LEFT, KL_START_HEARTS, KL_START_TOOLS, KL_TIMED_LEVEL_SECONDS, KL_TIMED_START_SECONDS, KL_TOOL_CHARGE, KL_WIDTH, timedGoal } from "@/core/khai-lo/engine";
 import type { Scene } from "./scene";
 
 /** Các chế độ có thẻ Hướng dẫn (đúng mười hai chế độ ở thẻ Chiến Trường). */
@@ -236,12 +236,12 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     steps: [
       "Chọn Thường (không giới hạn thời gian) hoặc Cấp tốc (chạy đua với đồng hồ để vượt mốc điểm từng bậc).",
       "Chạm vào một quân có ít nhất 1 quân cùng hệ liền cạnh. Cả khối biến mất, quân phía trên rơi xuống.",
-      "Thường: dọn sạch bàn để qua màn; hết khối mà còn quân (và không dùng đạo cụ được nữa) là thua.",
+      `Thường: hết khối thì hết màn. Quân còn sót trừ tim (ván bắt đầu với ${KL_START_HEARTS} tim); không đủ tim đỡ thì hết ván.`,
     ],
     rules: [
       `Bàn có ${KL_WIDTH} cột và ${KL_HEIGHT} hàng. Quân lẻ không xóa được; liền cạnh không tính đường chéo. Không có quân mới rơi vào, cột trống thì các cột bên phải dồn sang trái.`,
       "Màn càng sau càng nhiều hệ: 3 hệ ở màn 1–3, 4 hệ ở màn 4–7, 5 hệ ở màn 8–13, 6 hệ từ màn 14.",
-      "Thường: phải dọn sạch bàn mới qua màn. Còn quân mà hết khối và hết đạo cụ là thua, hết ván.",
+      `Thường: hết khối và hết đạo cụ thì hết màn, mỗi quân còn sót trừ 1 tim. Số quân sót nhiều hơn số tim còn lại là hết ván. Dọn sạch bàn được thêm ${KL_CLEAR_HEARTS} tim. Có thể bấm Kết thúc màn sớm (quân sót vẫn trừ tim).`,
       `7 đạo cụ theo 7 hệ: Kim Đao chém một hàng, Thủy Triều cuốn một cột, Hỏa Cầu nổ vùng 3×3, Lôi Phạt xóa mọi quân cùng hệ, Mộc Linh đổi một quân sang hệ của khối lớn nhất kề nó, Địa Chấn phá hàng dưới cùng, Lốc Phong xoay 8 ô quanh tâm. Đạo cụ không cộng điểm.`,
       `Ván bắt đầu với ${KL_START_TOOLS} đạo cụ mỗi hệ. Chạm khối hệ nào thì thanh nạp hệ đó đầy dần: đủ ${KL_TOOL_CHARGE} quân thì được thêm 1 đạo cụ của hệ ấy, tích không giới hạn. Chỉ hiện đạo cụ của các hệ có trên bàn.`,
       "Mỗi màn được hoàn tác một lần, chỉ lùi được nước vừa đi.",

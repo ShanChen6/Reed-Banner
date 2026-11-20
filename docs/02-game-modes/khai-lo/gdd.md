@@ -1,7 +1,7 @@
 # 24 — Khai Lộ: giải đố xóa khối ô ngọc
 
 > Cập nhật: 20/11/2026 (cân bằng lại độ khó, đạo cụ, thưởng; tối ưu bố cục máy tính/điện thoại)
-> Trạng thái: **DRAFT** — Shan duyệt ý tưởng và chốt tên **Khai Lộ** ngày 05/11/2026; có bản chơi thử offline (không thưởng, không xếp hạng) với hai chế độ Thường và Cấp tốc, quân là 7 nguyên tố. Ngày 20/11/2026 Shan duyệt bộ số cân bằng lại ở [mục 4](#4-số-liệu-bản-đầu); cùng ngày chốt bàn 10 × 12 và không dọn sạch là thua.
+> Trạng thái: **DRAFT** — Shan duyệt ý tưởng và chốt tên **Khai Lộ** ngày 05/11/2026; có bản chơi thử offline (không thưởng, không xếp hạng) với hai chế độ Thường và Cấp tốc, quân là 7 nguyên tố. Ngày 20/11/2026 Shan duyệt bộ số cân bằng lại ở [mục 4](#4-số-liệu-bản-đầu); cùng ngày chốt bàn 10 × 12 và 30 tim đỡ quân sót (chế độ Thường).
 
 ## 1. Định vị
 
@@ -28,14 +28,16 @@ Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người ch�
 - Ô phía trên rơi thẳng xuống lấp chỗ trống. Cột trống hẳn thì các cột bên phải dồn sang trái.
 - Điểm: khối n quân được **n²** điểm, nhân với các ô số trong khối, nhiều ô thì nhân dồn (`groupScore`). Ví dụ khối 6 quân có một ô ×2 được 72 điểm; có cả ×2 và ×3 được 216 điểm.
 
-### 2.3. Kết thúc màn (chế độ Thường)
+### 2.3. Kết thúc màn và tim (chế độ Thường)
 
-Shan chốt 20/11/2026: **không dọn sạch bàn là thua** (bỏ quân lực).
+Shan chốt 20/11/2026: ban đầu không dọn sạch là thua; cùng ngày thêm **tim** như 30 tim của Block'D vì những màn đầu chưa tích đủ đạo cụ nên rất dễ thua.
 
-- Hết khối để xóa và hết đạo cụ dùng được: còn quân trên bàn thì **hết ván**; bàn trống thì qua màn.
-- **Dọn sạch bàn**: cộng 300 + 50 × số màn điểm (`clearBonus`) và sang màn mới.
-- Hết khối nhưng còn đạo cụ thì màn ở trạng thái **bế tắc**: người chơi dùng đạo cụ hoặc bấm *Chịu thua* (hết ván). Bấm *Chịu thua* khi còn khối phải bấm hai lần.
-- Điểm cuối là tổng điểm các màn.
+- Ván bắt đầu với **30 tim** (`KL_START_HEARTS`).
+- Hết khối để xóa và hết đạo cụ dùng được thì hết màn: mỗi quân còn sót trừ 1 tim rồi sang màn sau.
+- Số quân sót **nhiều hơn** số tim còn lại thì hết ván (số tim giữ nguyên để báo cho người chơi). Sót đúng bằng số tim thì vẫn qua, còn 0 tim.
+- **Dọn sạch bàn**: cộng 300 + 50 × số màn điểm (`clearBonus`) và **+3 tim** (`KL_CLEAR_HEARTS`).
+- Hết khối nhưng còn đạo cụ thì màn ở trạng thái **bế tắc**: người chơi dùng đạo cụ hoặc bấm *Kết thúc màn*. Bấm *Kết thúc màn* lúc nào cũng phải bấm hai lần; lần đầu báo số tim sẽ mất và nói rõ nếu không đủ tim.
+- Ô *Tim* thay ô *Cao nhất* trong số liệu chế độ Thường. Bản lưu cũ chưa có tim được đủ 30 tim.
 
 ### 2.4. Đạo cụ và hoàn tác
 
@@ -111,7 +113,7 @@ Bot 120 ván, khi bế tắc thử mọi đạo cụ ở mọi ô và chọn nư
 
 Với 80, mỗi bàn trung bình được khoảng 1 đạo cụ; bot dùng cả 7 loại gần đều nhau. Bảng trên đo ở bàn 10 × 8 với luật quân lực cũ.
 
-### 4.3. Bàn 10 × 12, không dọn sạch là thua (20/11/2026)
+### 4.3. Bàn 10 × 12 (20/11/2026)
 
 Shan yêu cầu: không dọn sạch là thua, đạo cụ tích không giới hạn, bàn to hơn. Bot như mục 4.2, 120 ván:
 
@@ -121,6 +123,18 @@ Shan yêu cầu: không dọn sạch là thua, đạo cụ tích không giới h
 | 10 × 12, nạp 75, bắt đầu 1 mỗi hệ | 15 | 12 |
 | **10 × 12, nạp 90, bắt đầu 1 mỗi hệ (đang dùng)** | 13 | 12 |
 
+Thêm tim (80 ván, bàn 10 × 12, nạp 90, bắt đầu 1 đạo cụ mỗi hệ), màn đạt được ở chế độ Thường (p10 / trung vị / p90):
+
+| Tim ban đầu, thêm khi dọn sạch | Thường |
+|---|---|
+| Không có tim (luật trước) | 9 / 11 / 14 |
+| 20, +2 | 15 / 17 / 21 |
+| 30, +0 | 14 / 16 / 19 |
+| **30, +3 (đang dùng)** | 16 / 19 / 23 |
+| 40, +3 | 17 / 21 / 24 |
+
+Với tim, 10% ván kém nhất vẫn tới màn 14–16 nên không còn thua sớm ở những màn đầu. Cấp tốc không dùng tim.
+
 Luật thua làm đạo cụ thành "mạng" của người chơi, nên mỗi hệ được 1 đạo cụ lúc đầu để màn đầu không chết oan.
 
 ## 5. Bản chơi thử hiện có (05/11/2026)
@@ -128,7 +142,7 @@ Luật thua làm đạo cụ thành "mạng" của người chơi, nên mỗi h�
 - Lõi: `src/core/khai-lo/` (thuần TypeScript, seed qua `src/core/rng.ts`), test ở `tests/core/khai-lo/`.
 - Màn chơi: `/game/clear-path` (phân cảnh `KHAI_LO`), `src/app/game/khai-lo/KhaiLoScreen.tsx`. Thẻ ở hàng "Sắp ra mắt / đã mở" trên Home cạnh Trận Đồ.
 - Offline: ván dở và điểm cao nhất lưu `localStorage` (`reed-banner:khai-lo:*`); không cần đăng nhập, không thưởng.
-- Bố cục (20/11/2026): khi đang chơi bỏ banner lớn, thay bằng một hàng gọn (chế độ · màn và nút *Ván mới*) để bàn 10 × 12 đủ to; điện thoại xếp dọc số liệu → bàn → đạo cụ theo hệ (lưới 4 cột) cùng Hoàn tác và Chịu thua ngay dưới bàn; từ 1024px hai cột, từ 1280px ba cột (chế độ và số liệu bên trái, bàn giữa, đạo cụ bên phải). Cỡ ô đo theo chỗ trống thật (tối đa 88px), trên máy tính còn giới hạn theo chiều cao cửa sổ để cả bàn lọt màn hình. Bảng kết màn và hết ván hiện đè lên bàn. Không có dòng thông báo dưới bàn (Shan 20/11/2026, tránh nhảy bố cục); thông báo chỉ đọc cho trình đọc màn hình, bế tắc báo ở khung đạo cụ.
+- Bố cục (20/11/2026): khi đang chơi bỏ banner lớn, thay bằng một hàng gọn (chế độ · màn và nút *Ván mới*) để bàn 10 × 12 đủ to; điện thoại xếp dọc số liệu → bàn → đạo cụ theo hệ (lưới 4 cột) cùng Hoàn tác và Kết thúc màn ngay dưới bàn; từ 1024px hai cột, từ 1280px ba cột (chế độ và số liệu bên trái, bàn giữa, đạo cụ bên phải). Cỡ ô đo theo chỗ trống thật (tối đa 88px), trên máy tính còn giới hạn theo chiều cao cửa sổ để cả bàn lọt màn hình. Bảng kết màn và hết ván hiện đè lên bàn. Không có dòng thông báo dưới bàn (Shan 20/11/2026, tránh nhảy bố cục); thông báo chỉ đọc cho trình đọc màn hình, bế tắc báo ở khung đạo cụ.
 - Ô rơi và dồn cột có hoạt ảnh (đổi `transform`), khối vừa xóa bung mờ; tôn trọng `prefers-reduced-motion`.
 - Chưa có: âm thanh, tranh thẻ Home (`public/art/home/khai-lo.webp`), hướng dẫn từng bước.
 
