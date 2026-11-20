@@ -31,6 +31,7 @@ import { ElementIcon } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
+import { BoardZoomControls, BoardZoomViewport } from "../board-zoom/BoardZoom";
 import { useAudio } from "../audio/AudioProvider";
 import { cuesForAction, DOTHAM_MUSIC, DOTHAM_PRELOAD, REJECT } from "./sounds";
 
@@ -303,7 +304,8 @@ export default function DoThamScreen() {
   const over = isOver(game);
   const flags = flagsOf(game);
   const left = game.mines - flags;
-  const cell = `max(26px, min(38px, calc((100vw - 3.5rem) / ${game.width})))`;
+  // Nhân thêm mức thu phóng bàn (--board-zoom, nút −/+ trên bàn).
+  const cell = `calc(max(26px, min(38px, calc((100vw - 3.5rem) / ${game.width}))) * var(--board-zoom, 1))`;
 
   const lit = useMemo(() => {
     const set = new Set<number>();
@@ -348,7 +350,8 @@ export default function DoThamScreen() {
                 </ChoiceChip>
               ))}
             </div>
-            <div className="w-full overflow-x-auto pb-1">
+            <BoardZoomControls id="do-tham" className="self-end" />
+            <BoardZoomViewport id="do-tham" className="w-full pb-1">
               <div className="ui-frame-inset mx-auto w-fit p-1 sm:p-2">
                 <div
                   ref={boardRef}
@@ -411,7 +414,7 @@ export default function DoThamScreen() {
                   })}
                 </div>
               </div>
-            </div>
+            </BoardZoomViewport>
             <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-title-on-wood">
               {message || infoText(game.info, game.width)}
             </p>

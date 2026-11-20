@@ -69,6 +69,14 @@ Ba cách điều khiển dùng song song; người chơi đổi qua lại bất 
 
 > TODO: cho phép đổi phím trong cài đặt hay không; phím tắt cho nút Túi đồ và xem chi tiết sát thương.
 
+### 2.4 Thu phóng bàn cờ (Shan 20/11/2026)
+Thu phóng riêng bàn cờ, khác thu phóng cả trang của trình duyệt: chỉ ô cờ to/nhỏ, phần còn lại của màn giữ nguyên. Áp cho bàn match-3 (mọi chế độ đánh), Khai Lộ, Sử Lộ (bàn giao tranh boss) và Do Thám.
+- Hàng nút **− 100% +** ở mép phải phía trên bàn; mỗi nấc 10 %, từ 60 % đến 160 %; bấm số phần trăm để về 100 %.
+- Máy tính: Ctrl (⌘ trên Mac) + cuộn chuột, hoặc chụm hai ngón trên bàn di chuột, khi con trỏ ở trên bàn.
+- Điện thoại: chụm/mở hai ngón trên bàn; hai ngón kéo để dời khi bàn to hơn khung. Một ngón vẫn là vuốt đổi ô; lần nhấc ngón sau khi chụm không tính là vuốt.
+- Bàn to hơn cột thì khung quanh bàn cuộn được. Mức chọn nhớ riêng từng loại bàn trên trình duyệt (`localStorage`, khóa `colau.boardZoom.<bàn>.v1`).
+- Mã: `src/app/game/board-zoom/` (`BoardZoomControls`, `BoardZoomViewport` đặt biến CSS `--board-zoom`; bàn nhân cỡ ô với biến này).
+
 ## 3. Nguyên tắc chung
 
 - Responsive cho desktop và mobile; đổi ô bằng vuốt, click chọn hoặc bàn phím (mục 2).

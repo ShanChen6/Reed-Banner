@@ -37,6 +37,7 @@ import { readStorage, writeStorage } from "../formation/storage";
 import { Button, buttonVariants, choiceVariants } from "@/components/ui";
 import { ModeBanner, ModeScreen, OrnateFrame } from "@/components/game-ui";
 import { ModeGuideTabs } from "../ModeGuide";
+import { BoardZoomControls, BoardZoomViewport } from "../board-zoom/BoardZoom";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -360,7 +361,8 @@ export default function KhaiLoScreen() {
   };
 
   // Ô bàn cờ co theo bề rộng màn hình; phần trừ đi (--kl-gutter) là lề trang + đệm khung + đệm bàn: 3,5rem trên điện thoại để ô to nhất có thể, 6,25rem từ 640px.
-  const cell = `min(56px, calc((100vw - var(--kl-gutter)) / ${width}))`;
+  // Nhân thêm mức thu phóng bàn (--board-zoom, nút −/+ trên bàn).
+  const cell = `calc(min(56px, calc((100vw - var(--kl-gutter)) / ${width})) * var(--board-zoom, 1))`;
 
   return (
     <Shell>
@@ -391,7 +393,9 @@ export default function KhaiLoScreen() {
           </div>
           <Stats state={state} best={best} left={left} msLeft={timed ? msLeft : null} />
           {timed && <TimeBar msLeft={msLeft} limitMs={limitMs} paused={active && hidden} />}
-          <div className="ui-frame-inset w-fit p-1 sm:p-2">
+          <BoardZoomControls id="khai-lo" className="self-end" />
+          <BoardZoomViewport id="khai-lo" className="w-full">
+          <div className="ui-frame-inset mx-auto w-fit p-1 sm:p-2">
             <div
               ref={boardRef}
               role="grid"
@@ -449,6 +453,7 @@ export default function KhaiLoScreen() {
               </div>
             </div>
           </div>
+          </BoardZoomViewport>
           <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-title-on-wood">{message}</p>
           <p aria-hidden className="-mt-2 min-h-5 text-center text-sm text-on-wood-soft">
             {active ? preview.text || "Rê chuột (hoặc chạm một lần) để xem trước khối sẽ xóa." : ""}

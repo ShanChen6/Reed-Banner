@@ -50,6 +50,7 @@ import { useAudio } from "../audio/AudioProvider";
 import { cuesForAction, musicFor, SULO_PRELOAD } from "./sounds";
 import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
+import { BoardZoomControls, BoardZoomViewport } from "../board-zoom/BoardZoom";
 
 const SAVE_KEY = "reed-banner:su-lo:save:v1";
 const SETUP_KEY = "reed-banner:su-lo:setup:v1";
@@ -463,12 +464,14 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
           {meter("Kế sách", sk.energy, SK_ENERGY_MAX, "var(--stat-energy)")}
         </div>
       </div>
-      <div className="ui-frame-inset w-fit p-1 sm:p-2">
+      <BoardZoomControls id="su-lo" className="self-end" />
+      <BoardZoomViewport id="su-lo" className="w-full">
+      <div className="ui-frame-inset mx-auto w-fit p-1 sm:p-2">
         <div
           role="grid"
           aria-label="Bàn giao tranh"
           className="grid"
-          style={{ gridTemplateColumns: `repeat(${board.cols}, max(28px, min(52px, calc((100vw - 3.5rem) / ${board.cols}))))` }}
+          style={{ gridTemplateColumns: `repeat(${board.cols}, calc(max(28px, min(52px, calc((100vw - 3.5rem) / ${board.cols}))) * var(--board-zoom, 1)))` }}
         >
           {board.cells.map((t, i) => {
             const p = { row: Math.floor(i / board.cols), col: i % board.cols };
@@ -498,6 +501,7 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
           })}
         </div>
       </div>
+      </BoardZoomViewport>
       <div className="flex flex-wrap justify-center gap-2">
         <Button variant={stratagem ? "primary" : "secondary"} disabled={locked || sk.energy < SK_ENERGY_MAX} aria-pressed={stratagem} onClick={() => setStratagem((v) => !v)}>
           {stratagem ? "Chọn hàng để phá" : "Kế sách: phá một hàng"}

@@ -113,6 +113,7 @@ import { SkillBar } from "./SkillBar";
 import { useBattleKeyboard } from "./useBattleKeyboard";
 import { TeamColumn } from "./TeamColumn";
 import { BoardCells } from "./BoardCells";
+import { BoardZoomControls, BoardZoomViewport } from "../board-zoom/BoardZoom";
 import { BattleHeader } from "./BattleHeader";
 import { ProgressSection } from "./ProgressSection";
 
@@ -1283,9 +1284,12 @@ export default function DemoGame({
                 waiting={pending}
               />
             )}
-            {/* lg+: bàn cờ cố gắng vừa phần màn hình còn lại dưới sân đấu nhưng không nhỏ hơn 34rem; màn thấp thì cuộn, sân đấu dính trên đầu nên vẫn thấy hoạt ảnh. */}
+            {started && <BoardZoomControls id="battle" className="self-end" />}
+            {/* lg+: bàn cờ cố gắng vừa phần màn hình còn lại dưới sân đấu nhưng không nhỏ hơn 34rem; màn thấp thì cuộn, sân đấu dính trên đầu nên vẫn thấy hoạt ảnh.
+                Thu phóng bàn (--board-zoom) nhân cả bề rộng lẫn mức trần; to hơn cột thì khung cuộn ngang. Lề trên chừa chỗ cho huy hiệu. */}
+            <BoardZoomViewport id="battle" className="px-1 pb-2 pt-4 md:pt-5">
             <div
-              className="relative mx-auto mt-3 w-full rounded-xl border-2 border-[var(--primary)] bg-[var(--decorative-frame)] p-1.5 shadow-lg lg:max-w-[max(34rem,calc((100dvh-21rem)*var(--board-ratio)))]"
+              className="relative mx-auto w-[calc(100%*var(--board-zoom))] rounded-xl border-2 border-[var(--primary)] bg-[var(--decorative-frame)] p-1.5 shadow-lg lg:max-w-[calc(max(34rem,calc((100dvh-21rem)*var(--board-ratio)))*var(--board-zoom))]"
               style={{ "--board-ratio": board.cols / board.rows } as React.CSSProperties}
             >
               <BoardCrest className="pointer-events-none absolute -top-4 left-1/2 z-10 h-8 w-40 -translate-x-1/2 md:-top-5 md:h-10 md:w-52" />
@@ -1393,6 +1397,7 @@ export default function DemoGame({
                 )}
               </div>
             </div>
+            </BoardZoomViewport>
 
             {started && side(PLAYER, true)}
 
