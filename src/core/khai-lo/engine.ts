@@ -9,16 +9,32 @@ export const KL_WIDTH = 10;
 export const KL_HEIGHT = 8;
 /** Quân lực ban đầu; hết màn, mỗi ô còn sót trừ 1. Về 0 là hết ván. */
 export const KL_START_TROOPS = 30;
-/** Dọn sạch bàn: cộng quân lực và điểm thưởng theo màn. */
-export const KL_CLEAR_TROOPS = 5;
-export const KL_CLEAR_BONUS_PER_LEVEL = 800;
-export const KL_MAX_TOOLS = 9;
+/** Dọn sạch bàn: cộng quân lực và điểm thưởng (300 + 50 × màn). Cân bằng 20/11/2026: thưởng nhỏ lại để điểm gom khối
+ *  (n²) quyết định thứ hạng, trước đây thưởng dọn sạch chiếm 84% tổng điểm. */
+export const KL_CLEAR_TROOPS = 4;
+export const KL_CLEAR_BONUS_BASE = 300;
+export const KL_CLEAR_BONUS_PER_LEVEL = 50;
+/** Gần sạch: còn tối đa 3 quân vẫn được thưởng nhỏ (quân lực vẫn trừ theo quân còn lại). */
+export const KL_NEAR_CLEAR_LEFT = 3;
+export const KL_NEAR_CLEAR_BONUS = 100;
+/** Mỗi loại đạo cụ giữ tối đa 5 (trước là 9): tránh dồn kho kéo ván quá dài. */
+export const KL_MAX_TOOLS = 5;
 export const KL_START_TOOLS: Readonly<Record<KlTool, number>> = { whirl: 1, thunder: 1 };
 /** Lượt hoàn tác mỗi màn (không cộng dồn sang màn sau). */
 export const KL_UNDO_PER_LEVEL = 1;
 export const KL_MIN_GROUP = 2;
 
 export type KlTool = "whirl" | "thunder";
+
+/** Thưởng điểm khi dọn sạch bàn ở màn này. */
+export function clearBonus(level: number): number {
+  return KL_CLEAR_BONUS_BASE + KL_CLEAR_BONUS_PER_LEVEL * level;
+}
+
+/** Đạo cụ nhận khi dọn sạch bàn: màn lẻ được Sấm Sét, màn chẵn được Lốc Phong. */
+export function clearTool(level: number): KlTool {
+  return level % 2 === 1 ? "thunder" : "whirl";
+}
 
 /** Thường: không giới hạn thời gian. Cấp tốc: mỗi màn có đồng hồ, hết giờ là hết màn, dọn sạch thì giây dư thành điểm. */
 export type KlMode = "classic" | "timed";
@@ -51,6 +67,8 @@ export interface KlLevelSummary {
   /** Cấp tốc: màn kết thúc vì hết giờ. */
   readonly timeout: boolean;
   readonly troopsDelta: number;
+  /** Đạo cụ được cộng khi dọn sạch (null nếu không dọn sạch hoặc kho đã đầy). */
+  readonly toolGained: KlTool | null;
 }
 
 export interface KlState {
@@ -104,7 +122,7 @@ export interface KlLevelConfig {
 }
 
 export function levelConfig(level: number): KlLevelConfig {
-  const kinds = level <= 4 ? 3 : level <= 9 ? 4 : level <= 16 ? 5 : 6;
+  const kinds = level <= 3 ? 3 : level <= 7 ? 4 : level <= 13 ? 5 : 6;
   const banners = level < 3 ? 0 : Math.min(4, 1 + Math.floor((level - 3) / 3));
   return { kinds, banners };
 }
@@ -283,13 +301,13 @@ function finishLevel(s: KlState, events: KlEvent[], timeLeft?: number, timeout =
   const cleared = left === 0;
   const secs = s.mode === "timed" && cleared && timeLeft !== undefined ? Math.max(0, Math.min(levelTimeLimit(s.level), Math.floor(timeLeft))) : 0;
   const timeBonus = secs * KL_TIME_BONUS_PER_SECOND;
-  const bonus = (cleared ? KL_CLEAR_BONUS_PER_LEVEL * s.level : 0) + timeBonus;
+  const bonus = (cleared ? clearBonus(s.level) : left <= KL_NEAR_CLEAR_LEFT ? KL_NEAR_CLEAR_BONUS : 0) + timeBonus;
   const troopsDelta = cleared ? KL_CLEAR_TROOPS : -left;
   const troops = s.troops + troopsDelta;
-  const summary: KlLevelSummary = { level: s.level, cleared, left, bonus, timeBonus, timeout: timeout && s.mode === "timed", troopsDelta };
-  const tools = cleared
-    ? { whirl: Math.min(KL_MAX_TOOLS, s.tools.whirl + 1), thunder: Math.min(KL_MAX_TOOLS, s.tools.thunder + 1) }
-    : s.tools;
+  const gain = clearTool(s.level);
+  const toolGained = cleared && s.tools[gain] < KL_MAX_TOOLS ? gain : null;
+  const tools = toolGained ? { ...s.tools, [toolGained]: s.tools[toolGained] + 1 } : s.tools;
+  const summary: KlLevelSummary = { level: s.level, cleared, left, bonus, timeBonus, timeout: timeout && s.mode === "timed", troopsDelta, toolGained };
   events.push({ type: "levelDone", summary });
   const over = troops <= 0;
   if (over) events.push({ type: "over" });
@@ -409,7 +427,7 @@ export function parseGame(text: string | null): KlState | null {
     if (!v.tools || !num(v.tools.whirl) || !num(v.tools.thunder)) return null;
     if (!phases.includes(v.phase as KlPhase)) return null;
     const mode: KlMode = v.mode === "timed" ? "timed" : "classic";
-    const summary = v.summary ? { ...v.summary, timeBonus: v.summary.timeBonus ?? 0, timeout: v.summary.timeout ?? false } : null;
+    const summary = v.summary ? { ...v.summary, timeBonus: v.summary.timeBonus ?? 0, timeout: v.summary.timeout ?? false, toolGained: v.summary.toolGained ?? null } : null;
     return { ...(v as KlState), mode, summary, prev: null };
   } catch {
     return null;

@@ -510,8 +510,8 @@ export default function KhaiLoScreen() {
                     </h2>
                     <p className="text-[15px] text-on-wood">
                       {summary.cleared
-                        ? `Dọn sạch bàn: +${summary.bonus} điểm${summary.timeBonus ? ` (gồm ${summary.timeBonus} điểm giây dư)` : ""}, +${summary.troopsDelta} quân lực, +1 mỗi đạo cụ.`
-                        : `Còn ${summary.left} quân chưa dọn: mất ${-summary.troopsDelta} quân lực.`}
+                        ? `Dọn sạch bàn: +${summary.bonus} điểm${summary.timeBonus ? ` (gồm ${summary.timeBonus} điểm giây dư)` : ""}, +${summary.troopsDelta} quân lực${summary.toolGained ? `, +1 ${TOOL_NAME[summary.toolGained]}` : ""}.`
+                        : `Còn ${summary.left} quân chưa dọn: mất ${-summary.troopsDelta} quân lực${summary.bonus ? `, gần sạch +${summary.bonus} điểm` : ""}.`}
                     </p>
                     <button type="button" autoFocus onClick={() => act({ type: "nextLevel" })} className={buttonVariants({ size: "lg" })}>
                       Sang màn {state.level + 1}

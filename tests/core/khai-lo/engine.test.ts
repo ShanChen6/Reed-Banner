@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { Element } from "../../../src/core/battle/elements";
 import {
-  KL_CLEAR_BONUS_PER_LEVEL,
+  KL_CLEAR_TROOPS,
+  KL_MAX_TOOLS,
+  KL_NEAR_CLEAR_BONUS,
+  clearBonus,
   KL_TIME_BONUS_PER_SECOND,
   levelTimeLimit,
   KL_START_TROOPS,
@@ -83,18 +86,42 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.equal(r.state.score, groupScore(2, 1));
   });
 
-  it("dọn sạch bàn: thưởng điểm theo màn, +quân lực, +1 mỗi đạo cụ", () => {
+  it("dọn sạch bàn: thưởng 300 + 50 × màn, +quân lực, màn lẻ +1 Sấm, màn chẵn +1 Lốc", () => {
     const s = stateOf(["aa", "aa"]);
     const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
     assert.equal(r.state.phase, "levelDone");
-    assert.equal(r.state.score, 16 + KL_CLEAR_BONUS_PER_LEVEL);
-    assert.equal(r.state.troops, KL_START_TROOPS + 5);
-    assert.deepEqual(r.state.tools, { whirl: 2, thunder: 2 });
+    assert.equal(clearBonus(1), 350);
+    assert.equal(r.state.score, 16 + clearBonus(1));
+    assert.equal(r.state.troops, KL_START_TROOPS + KL_CLEAR_TROOPS);
+    assert.deepEqual(r.state.tools, { whirl: 1, thunder: 2 });
+    assert.equal(r.state.summary?.toolGained, "thunder");
+    const even = transition(stateOf(["aa", "aa"], { level: 2 }), { type: "pick", index: 0 });
+    assert.ok(even.ok);
+    assert.deepEqual(even.state.tools, { whirl: 2, thunder: 1 });
     const n = transition(r.state, { type: "nextLevel" });
     assert.ok(n.ok);
     assert.equal(n.state.level, 2);
     assert.equal(n.state.phase, "playing");
+  });
+
+  it("kho đạo cụ đầy thì không cộng thêm", () => {
+    const r = transition(stateOf(["aa", "aa"], { tools: { whirl: 0, thunder: KL_MAX_TOOLS } }), { type: "pick", index: 0 });
+    assert.ok(r.ok);
+    assert.equal(r.state.tools.thunder, KL_MAX_TOOLS);
+    assert.equal(r.state.summary?.toolGained, null);
+  });
+
+  it("gần sạch (còn tối đa 3 quân) được thưởng nhỏ, vẫn trừ quân lực", () => {
+    const r = transition(stateOf(["aab", "bcd"], { tools: { whirl: 0, thunder: 0 } }), { type: "pick", index: 0 });
+    assert.ok(r.ok);
+    // còn 4 quân: không thưởng
+    assert.equal(r.state.summary?.bonus, 0);
+    const near = transition(stateOf(["aab", "aac"], { tools: { whirl: 0, thunder: 0 } }), { type: "pick", index: 0 });
+    assert.ok(near.ok);
+    assert.equal(near.state.summary?.left, 2);
+    assert.equal(near.state.summary?.bonus, KL_NEAR_CLEAR_BONUS);
+    assert.equal(near.state.troops, KL_START_TROOPS - 2);
   });
 
   it("hết nhóm còn đạo cụ thì bế tắc; kết thúc màn trừ quân lực theo ô còn lại", () => {
@@ -157,9 +184,11 @@ describe("Khai Lộ: sinh bàn và lưu ván", () => {
       assert.equal(new Set(cells.map((c) => c?.kind)).size <= levelConfig(level).kinds, true);
       assert.equal(cells.filter((c) => c?.banner).length, levelConfig(level).banners);
     }
-    assert.equal(levelConfig(1).kinds, 3);
-    assert.equal(levelConfig(12).kinds, 5);
-    assert.equal(levelConfig(17).kinds, 6);
+    assert.equal(levelConfig(3).kinds, 3);
+    assert.equal(levelConfig(4).kinds, 4);
+    assert.equal(levelConfig(8).kinds, 5);
+    assert.equal(levelConfig(13).kinds, 5);
+    assert.equal(levelConfig(14).kinds, 6);
   });
 
   it("chơi tham lam tới hết ván luôn kết thúc, không kẹt", () => {
@@ -195,7 +224,7 @@ describe("Khai Lộ: Cấp tốc", () => {
     const r = transition(s, { type: "pick", index: 0, timeLeft: 12.7 });
     assert.ok(r.ok);
     assert.equal(r.state.summary?.timeBonus, 12 * KL_TIME_BONUS_PER_SECOND);
-    assert.equal(r.state.score, 16 + KL_CLEAR_BONUS_PER_LEVEL + 12 * KL_TIME_BONUS_PER_SECOND);
+    assert.equal(r.state.score, 16 + clearBonus(1) + 12 * KL_TIME_BONUS_PER_SECOND);
     const capped = transition(s, { type: "pick", index: 0, timeLeft: 9999 });
     assert.ok(capped.ok);
     assert.equal(capped.state.summary?.timeBonus, levelTimeLimit(1) * KL_TIME_BONUS_PER_SECOND);

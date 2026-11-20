@@ -1,7 +1,7 @@
 # 24 — Khai Lộ: giải đố xóa khối ô ngọc
 
-> Cập nhật: 20/11/2026 (tối ưu bố cục máy tính/điện thoại, hỏi lại khi kết thúc màn sớm)
-> Trạng thái: **DRAFT** — Shan duyệt ý tưởng và chốt tên **Khai Lộ** ngày 05/11/2026; có bản chơi thử offline (không thưởng, không xếp hạng) với hai chế độ Thường và Cấp tốc, quân là 7 nguyên tố. Các số ở [mục 4](#4-số-liệu-bản-đầu) do Claude đặt theo mô phỏng, chờ Shan chơi thử.
+> Cập nhật: 20/11/2026 (cân bằng lại độ khó, đạo cụ, thưởng; tối ưu bố cục máy tính/điện thoại)
+> Trạng thái: **DRAFT** — Shan duyệt ý tưởng và chốt tên **Khai Lộ** ngày 05/11/2026; có bản chơi thử offline (không thưởng, không xếp hạng) với hai chế độ Thường và Cấp tốc, quân là 7 nguyên tố. Ngày 20/11/2026 Shan duyệt bộ số cân bằng lại ở [mục 4](#4-số-liệu-bản-đầu).
 
 ## 1. Định vị
 
@@ -17,7 +17,7 @@ Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người ch�
 ### 2.1. Bàn cờ
 
 - Bàn 10 cột × 8 hàng, đầy ô khi bắt đầu màn.
-- Màn 1–4 có 3 hệ, màn 5–9 có 4, màn 10–16 có 5, từ màn 17 có 6. Hệ của mỗi màn được xáo theo seed.
+- Màn 1–3 có 3 hệ, màn 4–7 có 4, màn 8–13 có 5, từ màn 14 có 6. Hệ của mỗi màn được xáo theo seed.
 - Từ màn 3 có **quân hào quang** (viền vàng dày, ánh sáng lướt qua): 1 quân ở màn 3–5, thêm 1 mỗi 3 màn, tối đa 4.
 - Bàn sinh ra luôn có ít nhất một khối xóa được.
 
@@ -32,7 +32,8 @@ Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người ch�
 
 - Ván bắt đầu với **30 quân lực**.
 - Hết khối để xóa thì màn kết thúc: mỗi ô còn sót trừ 1 quân lực.
-- **Dọn sạch bàn**: cộng 800 × số màn điểm, +5 quân lực, +1 mỗi đạo cụ.
+- **Dọn sạch bàn**: cộng 300 + 50 × số màn điểm (`clearBonus`), +4 quân lực, +1 đạo cụ: màn lẻ Sấm Sét, màn chẵn Lốc Phong (`clearTool`).
+- **Gần sạch** (còn 1–3 quân): +100 điểm; quân còn lại vẫn trừ quân lực.
 - Hết khối nhưng còn đạo cụ thì màn ở trạng thái **bế tắc**: người chơi dùng đạo cụ hoặc bấm *Kết thúc màn*. Người chơi cũng có thể kết thúc màn sớm bất cứ lúc nào.
 - Quân lực về 0 thì hết ván. Điểm cuối là tổng điểm các màn.
 
@@ -40,10 +41,10 @@ Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người ch�
 
 | Đạo cụ | Tác dụng | Ban đầu | Nhận thêm |
 |---|---|---|---|
-| **Lốc Phong** | Chọn một tâm không sát mép: 8 ô quanh tâm xoay một nấc theo chiều kim đồng hồ (giống lốc xoáy hệ Phong trong trận), rồi ô rơi và dồn cột. Không cộng điểm. | 1 | +1 khi dọn sạch bàn |
-| **Sấm Sét** | Phá vùng 3×3 quanh ô được chọn. Không cộng điểm. | 1 | +1 khi dọn sạch bàn |
+| **Lốc Phong** | Chọn một tâm không sát mép: 8 ô quanh tâm xoay một nấc theo chiều kim đồng hồ (giống lốc xoáy hệ Phong trong trận), rồi ô rơi và dồn cột. Không cộng điểm. | 1 | +1 khi dọn sạch màn chẵn |
+| **Sấm Sét** | Phá vùng 3×3 quanh ô được chọn. Không cộng điểm. | 1 | +1 khi dọn sạch màn lẻ |
 
-- Mỗi loại giữ tối đa 9.
+- Mỗi loại giữ tối đa 5 (trước 20/11/2026 là 9).
 - **Hoàn tác**: mỗi màn 1 lần, chỉ lùi được nước vừa đi. Không lùi qua khi màn đã kết thúc.
 
 ### 2.5. Chế độ
@@ -51,7 +52,7 @@ Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người ch�
 | Chế độ | Luật riêng |
 |---|---|
 | **Thường** | Không giới hạn thời gian. |
-| **Cấp tốc** | Mỗi màn có đồng hồ: 60 giây với 3 hệ, thêm 15 giây mỗi hệ mới (75 / 90 / 105 giây). Hết giờ là hết màn (quân còn sót trừ quân lực như thường). Dọn sạch bàn thì mỗi giây dư được **25 điểm** (`KL_TIME_BONUS_PER_SECOND`). Đồng hồ chỉ chạy khi đang chơi màn và tab đang mở; giờ còn lại lưu cùng ván dở. |
+| **Cấp tốc** | Mỗi màn có đồng hồ: 60 giây với 3 hệ, thêm 15 giây mỗi hệ mới (75 / 90 / 105 giây; với đường cong mới: màn 1–3 60 giây, 4–7 75 giây, 8–13 90 giây, từ 14 là 105 giây). Hết giờ là hết màn (quân còn sót trừ quân lực như thường). Dọn sạch bàn thì mỗi giây dư được **25 điểm** (`KL_TIME_BONUS_PER_SECOND`). Đồng hồ chỉ chạy khi đang chơi màn và tab đang mở; giờ còn lại lưu cùng ván dở. |
 
 Hai chế độ có ván dở và điểm cao nhất riêng. Lõi không đọc giờ: giao diện truyền số giây còn lại (`timeLeft`) kèm nước đi và gửi `endLevel` với `timeout` khi hết giờ.
 
@@ -69,12 +70,24 @@ Khi đang cầm đạo cụ, phần xem trước đổi thành vòng 8 ô (Lốc
 
 ## 4. Số liệu bản đầu
 
-Mô phỏng bằng bot tham lam nhìn trước 1 nước, **không dùng đạo cụ**, 150 ván:
+### 4.1. Cân bằng lại 20/11/2026 (Shan duyệt)
 
-- Màn đạt được: trung vị 8, p10 = 6, p90 = 10.
-- Một màn riêng lẻ (bot, 200 bàn): 3 loại ô còn sót trung vị 2 ô, dọn sạch 21%; 4 loại sót 8; 5 loại sót 14; 6 loại sót 23.
+Mô phỏng 200 ván bằng bot tham lam nhìn trước 1 nước (chọn nước để lại ít quân lẻ nhất), **có dùng Sấm Sét khi bế tắc**. Bộ số cũ (3/4/5/6 hệ từ màn 1/5/10/17, kho đạo cụ 9, +1 mỗi loại và +5 quân lực khi dọn sạch, thưởng 800 × màn) cho thấy:
 
-Người chơi thật có đạo cụ và tính sâu hơn, nên kỳ vọng đi xa hơn bot vài màn. Các hằng số nằm đầu `src/core/khai-lo/engine.ts` (`KL_START_TROOPS`, `KL_CLEAR_*`, `levelConfig`).
+- Màn 1–9 quá dễ: dọn sạch 72–99% số màn; kho đạo cụ đầy trước màn 10.
+- Ván quá dài: trung vị tới màn 17 (p10 = 13, p90 = 21), khoảng 500 lần chạm; từ màn 17 không dọn sạch nổi màn nào (độ khó dựng đứng).
+- Thưởng dọn sạch chiếm 84% tổng điểm, gom khối to (n²) gần như không ảnh hưởng tới điểm.
+- Lốc Phong ít khi có ích.
+
+Bộ số mới (đang dùng): số hệ 3/4/5/6 từ màn 1/4/8/14; dọn sạch +4 quân lực, +1 đạo cụ xen kẽ, kho tối đa 5; thưởng dọn sạch 300 + 50 × màn, gần sạch (≤ 3 quân) 100 điểm. Cùng bot, 200 ván:
+
+| | Cũ | Mới |
+|---|---|---|
+| Màn đạt được (p10 / trung vị / p90) | 13 / 17 / 21 | 9 / 11 / 14 |
+| Tỉ lệ dọn sạch màn 4 / 7 / 10 | 98% / 81% / 47% | 64% / 18% / 2% |
+| Điểm từ gom khối / tổng điểm | 16% | 69% |
+
+Người chơi thật tính sâu hơn bot nên kỳ vọng đi xa hơn vài màn. Các hằng số nằm đầu `src/core/khai-lo/engine.ts` (`KL_START_TROOPS`, `KL_CLEAR_*`, `KL_NEAR_CLEAR_*`, `KL_MAX_TOOLS`, `levelConfig`). Chưa làm: Lốc Phong mạnh hơn (để sau).
 
 ## 5. Bản chơi thử hiện có (05/11/2026)
 

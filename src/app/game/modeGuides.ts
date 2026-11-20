@@ -8,7 +8,7 @@ import { SURVIVAL_BOSS_EVERY, SURVIVAL_WAVE_GOLD } from "@/core/survival/surviva
 import { TRIAL_FLOORS } from "@/core/progress/dualTowerState";
 import { DT_ITEM_PICKS, DT_LEVELS } from "@/core/do-tham";
 import { SL_AID_USE_MAX, SL_LEVELS } from "@/core/su-lo";
-import { KL_CLEAR_TROOPS, KL_HEIGHT, KL_START_TROOPS, KL_TIME_BONUS_PER_SECOND, KL_WIDTH, levelTimeLimit } from "@/core/khai-lo/engine";
+import { KL_CLEAR_BONUS_BASE, KL_CLEAR_BONUS_PER_LEVEL, KL_CLEAR_TROOPS, KL_HEIGHT, KL_MAX_TOOLS, KL_NEAR_CLEAR_BONUS, KL_NEAR_CLEAR_LEFT, KL_START_TROOPS, KL_TIME_BONUS_PER_SECOND, KL_WIDTH, levelTimeLimit } from "@/core/khai-lo/engine";
 import type { Scene } from "./scene";
 
 /** Các chế độ có thẻ Hướng dẫn (đúng mười hai chế độ ở thẻ Chiến Trường). */
@@ -240,7 +240,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     rules: [
       `Bàn có ${KL_WIDTH} cột và ${KL_HEIGHT} hàng. Quân lẻ không xóa được; liền cạnh không tính đường chéo. Không có quân mới rơi vào, cột trống thì các cột bên phải dồn sang trái.`,
-      "Màn càng sau càng nhiều hệ, từ 3 lên 6.",
+      "Màn càng sau càng nhiều hệ: 3 hệ ở màn 1–3, 4 hệ ở màn 4–7, 5 hệ ở màn 8–13, 6 hệ từ màn 14.",
       `Ván bắt đầu với ${KL_START_TROOPS} quân lực. Mỗi quân còn sót cuối màn trừ 1 quân lực; hết quân lực là hết ván.`,
       "Đạo cụ Lốc Phong xoay 8 ô quanh một tâm, Sấm Sét phá vùng 3×3. Hai đạo cụ không cộng điểm.",
       "Mỗi màn được hoàn tác một lần, chỉ lùi được nước vừa đi.",
@@ -248,7 +248,8 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     rewards: [
       "Khối n quân được n² điểm. Quân hào quang nhân điểm cả khối chứa nó, mỗi quân hào quang cộng thêm một lần.",
-      `Dọn sạch bàn: thưởng điểm theo màn, cộng ${KL_CLEAR_TROOPS} quân lực và 1 đạo cụ mỗi loại. Cấp tốc cộng thêm ${KL_TIME_BONUS_PER_SECOND} điểm cho mỗi giây còn dư.`,
+      `Dọn sạch bàn: thưởng ${KL_CLEAR_BONUS_BASE} điểm cộng ${KL_CLEAR_BONUS_PER_LEVEL} điểm × số màn, cộng ${KL_CLEAR_TROOPS} quân lực và 1 đạo cụ (màn lẻ Sấm Sét, màn chẵn Lốc Phong; mỗi loại giữ tối đa ${KL_MAX_TOOLS}). Cấp tốc cộng thêm ${KL_TIME_BONUS_PER_SECOND} điểm cho mỗi giây còn dư.`,
+      `Gần sạch (còn tối đa ${KL_NEAR_CLEAR_LEFT} quân): vẫn được ${KL_NEAR_CLEAR_BONUS} điểm, quân còn lại vẫn trừ quân lực.`,
       "Chơi ngay trên máy bạn, không thưởng và không xếp hạng.",
     ],
     tips: [
