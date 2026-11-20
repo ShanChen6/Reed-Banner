@@ -37,7 +37,7 @@ import { readStorage, writeStorage } from "../formation/storage";
 import { Button, buttonVariants, choiceVariants } from "@/components/ui";
 import { ModeBanner, ModeScreen, OrnateFrame } from "@/components/game-ui";
 import { ModeGuideTabs } from "../ModeGuide";
-import { BOARD_FOCUS_CLASS, BoardZoomControls, BoardZoomViewport, useBoardFocus } from "../board-zoom/BoardZoom";
+import { PlayCard } from "../PlayCard";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -113,7 +113,6 @@ function ElementGem({ element, banner }: { element: Element; banner?: boolean })
 }
 
 export default function KhaiLoScreen() {
-  const boardFocus = useBoardFocus();
   const [mode, setMode] = useState<KlMode>("classic");
   const [state, setState] = useState<KlState | null>(null);
   const [best, setBest] = useState(0);
@@ -362,8 +361,7 @@ export default function KhaiLoScreen() {
   };
 
   // Ô bàn cờ co theo bề rộng màn hình; phần trừ đi (--kl-gutter) là lề trang + đệm khung + đệm bàn: 3,5rem trên điện thoại để ô to nhất có thể, 6,25rem từ 640px.
-  // Nhân thêm mức thu phóng bàn (--board-zoom, nút −/+ trên bàn).
-  const cell = `calc(min(56px, calc((100vw - var(--kl-gutter)) / ${width})) * var(--board-zoom, 1))`;
+  const cell = `min(56px, calc((100vw - var(--kl-gutter)) / ${width}))`;
 
   return (
     <Shell>
@@ -375,7 +373,8 @@ export default function KhaiLoScreen() {
       />
       <ModeGuideTabs scene="KHAI_LO">
 
-      <div className={`grid content-start items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px] ${boardFocus.expanded ? BOARD_FOCUS_CLASS : ""}`}>
+      <PlayCard>
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <OrnateFrame aria-label="Vùng chơi" flush className="flex flex-col items-center gap-3 p-2 [--kl-gutter:3.5rem] sm:p-5 sm:[--kl-gutter:6.25rem]">
           <div role="tablist" aria-label="Chế độ chơi" className="grid w-full max-w-[560px] grid-cols-2 gap-2">
             {(["classic", "timed"] as const).map((m) => (
@@ -394,9 +393,7 @@ export default function KhaiLoScreen() {
           </div>
           <Stats state={state} best={best} left={left} msLeft={timed ? msLeft : null} />
           {timed && <TimeBar msLeft={msLeft} limitMs={limitMs} paused={active && hidden} />}
-          <BoardZoomControls id="khai-lo" focus={boardFocus} className="self-end" />
-          <BoardZoomViewport id="khai-lo" className="w-full">
-          <div className="ui-frame-inset mx-auto w-fit p-1 sm:p-2">
+          <div className="ui-frame-inset w-fit p-1 sm:p-2">
             <div
               ref={boardRef}
               role="grid"
@@ -454,7 +451,6 @@ export default function KhaiLoScreen() {
               </div>
             </div>
           </div>
-          </BoardZoomViewport>
           <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-title-on-wood">{message}</p>
           <p aria-hidden className="-mt-2 min-h-5 text-center text-sm text-on-wood-soft">
             {active ? preview.text || "Rê chuột (hoặc chạm một lần) để xem trước khối sẽ xóa." : ""}
@@ -520,6 +516,7 @@ export default function KhaiLoScreen() {
           <p className="text-sm text-on-wood-soft">Bản chơi thử, không cần mạng: chưa có thưởng và bảng công trạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.</p>
         </aside>
       </div>
+      </PlayCard>
       </ModeGuideTabs>
     </Shell>
   );

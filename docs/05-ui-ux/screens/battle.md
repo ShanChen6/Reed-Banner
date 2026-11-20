@@ -69,14 +69,11 @@ Ba cách điều khiển dùng song song; người chơi đổi qua lại bất 
 
 > TODO: cho phép đổi phím trong cài đặt hay không; phím tắt cho nút Túi đồ và xem chi tiết sát thương.
 
-### 2.4 Thu phóng bàn cờ (Shan 20/11/2026)
-Thu phóng riêng bàn cờ, khác thu phóng cả trang của trình duyệt: chỉ ô cờ to/nhỏ, phần còn lại của màn giữ nguyên. Áp cho bàn match-3 (mọi chế độ đánh), Khai Lộ, Sử Lộ (bàn giao tranh boss) và Do Thám.
-- Hàng nút **− 100% +** ở mép phải phía trên bàn; mỗi nấc 10 %, từ 60 % đến 160 %; bấm số phần trăm để về 100 %.
-- Nút **Toàn màn hình** (cùng hàng, Shan 20/11/2026): vùng chơi (trận: cả khung trận gồm sân đấu, bàn, thẻ tướng, kỹ năng; Khai Lộ, Do Thám, Sử Lộ: khung chơi và cột bên) phủ kín cửa sổ, che thanh đầu trang và chân trang; trình duyệt cho thì bật luôn toàn màn hình thật để ẩn thanh địa chỉ (iPhone Safari không cho thì vẫn phủ kín cửa sổ). Bấm **Thu về** hoặc Esc thoát toàn màn hình để về như cũ. Trong chế độ này vẫn dùng −/+ để chỉnh cỡ ô.
-- Máy tính: Ctrl (⌘ trên Mac) + cuộn chuột, hoặc chụm hai ngón trên bàn di chuột, khi con trỏ ở trên bàn.
-- Điện thoại: chụm/mở hai ngón trên bàn; hai ngón kéo để dời khi bàn to hơn khung. Một ngón vẫn là vuốt đổi ô; lần nhấc ngón sau khi chụm không tính là vuốt.
-- Bàn to hơn cột thì khung quanh bàn cuộn được. Mức chọn nhớ riêng từng loại bàn trên trình duyệt (`localStorage`, khóa `colau.boardZoom.<bàn>.v1`).
-- Mã: `src/app/game/board-zoom/` (`BoardZoomControls`, `BoardZoomViewport` đặt biến CSS `--board-zoom`, bàn nhân cỡ ô với biến này; `useBoardFocus`, `BoardFocusButton`, lớp `BOARD_FOCUS_CLASS` cho toàn màn hình).
+### 2.4 Thẻ vùng chơi và nút toàn màn hình (Shan 20/11/2026)
+Vùng chơi được bọc trong một thẻ (`PlayCard`, `src/app/game/PlayCard.tsx`): thanh trên thẻ ghi tên vùng và có nút **Toàn màn hình**. Bấm thì riêng thẻ ra toàn màn hình (Fullscreen API trên phần tử, giống nút toàn màn hình của cả trang nhưng chỉ còn vùng chơi; thanh đầu trang, chân trang, hướng dẫn ẩn đi). Bấm **Thu nhỏ** hoặc Esc để về. Trình duyệt không cho toàn màn hình một phần tử (iPhone Safari) thì thẻ phủ kín cửa sổ thay thế.
+- Trận match-3 (mọi chế độ đánh): thẻ "Trận đấu" gồm sân đấu, thẻ tướng hai phe, đồng hồ lượt, bàn cờ, kỹ năng; chỉ hiện khi đã vào trận. Sân đấu dính sát mép trên khi toàn màn hình.
+- Khai Lộ, Do Thám, Sử Lộ: thẻ "Vùng chơi" gồm khung chơi và cột bên (kết quả màn, đạo cụ).
+- Không thu phóng cỡ ô (Shan bỏ ý này 20/11/2026); thẻ chỉ mở rộng ra toàn màn hình. Dưới 1024px thẻ bỏ đệm và viền hai bên để cỡ ô tính theo bề rộng màn hình không đổi.
 
 ## 3. Nguyên tắc chung
 

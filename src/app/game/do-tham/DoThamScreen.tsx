@@ -31,7 +31,7 @@ import { ElementIcon } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
-import { BOARD_FOCUS_CLASS, BoardZoomControls, BoardZoomViewport, useBoardFocus } from "../board-zoom/BoardZoom";
+import { PlayCard } from "../PlayCard";
 import { useAudio } from "../audio/AudioProvider";
 import { cuesForAction, DOTHAM_MUSIC, DOTHAM_PRELOAD, REJECT } from "./sounds";
 
@@ -147,7 +147,6 @@ function TrapGlyph() {
 }
 
 export default function DoThamScreen() {
-  const boardFocus = useBoardFocus();
   const [level, setLevel] = useState<DtLevel>("nhapMon");
   const [picks, setPicks] = useState<Element[]>([]);
   const [game, setGame] = useState<DtState>(() => newGame("nhapMon", 1));
@@ -305,8 +304,7 @@ export default function DoThamScreen() {
   const over = isOver(game);
   const flags = flagsOf(game);
   const left = game.mines - flags;
-  // Nhân thêm mức thu phóng bàn (--board-zoom, nút −/+ trên bàn).
-  const cell = `calc(max(26px, min(38px, calc((100vw - 3.5rem) / ${game.width}))) * var(--board-zoom, 1))`;
+  const cell = `max(26px, min(38px, calc((100vw - 3.5rem) / ${game.width})))`;
 
   const lit = useMemo(() => {
     const set = new Set<number>();
@@ -342,7 +340,8 @@ export default function DoThamScreen() {
         ]}
       />
       <ModeGuideTabs scene="DO_THAM">
-        <div className={`grid grid-cols-[minmax(0,1fr)] content-start items-start gap-6 ${game.width > 16 ? "" : "lg:grid-cols-[minmax(0,1fr)_320px]"} ${boardFocus.expanded ? BOARD_FOCUS_CLASS : ""}`}>
+        <PlayCard>
+        <div className={`grid grid-cols-[minmax(0,1fr)] items-start gap-6 ${game.width > 16 ? "" : "lg:grid-cols-[minmax(0,1fr)_320px]"}`}>
           <OrnateFrame aria-label="Vùng chơi" flush className="flex min-w-0 flex-col items-center gap-3 p-2 sm:p-5">
             <div className="flex w-full flex-wrap items-center justify-center gap-2" role="group" aria-label="Bậc độ khó">
               {DT_LEVEL_ORDER.map((lv) => (
@@ -351,8 +350,7 @@ export default function DoThamScreen() {
                 </ChoiceChip>
               ))}
             </div>
-            <BoardZoomControls id="do-tham" focus={boardFocus} className="self-end" />
-            <BoardZoomViewport id="do-tham" className="w-full pb-1">
+            <div className="w-full overflow-x-auto pb-1">
               <div className="ui-frame-inset mx-auto w-fit p-1 sm:p-2">
                 <div
                   ref={boardRef}
@@ -415,7 +413,7 @@ export default function DoThamScreen() {
                   })}
                 </div>
               </div>
-            </BoardZoomViewport>
+            </div>
             <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-title-on-wood">
               {message || infoText(game.info, game.width)}
             </p>
@@ -501,6 +499,7 @@ export default function DoThamScreen() {
             </p>
           </aside>
         </div>
+        </PlayCard>
       </ModeGuideTabs>
     </ModeScreen>
   );

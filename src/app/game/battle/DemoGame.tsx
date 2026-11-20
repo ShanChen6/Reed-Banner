@@ -113,7 +113,7 @@ import { SkillBar } from "./SkillBar";
 import { useBattleKeyboard } from "./useBattleKeyboard";
 import { TeamColumn } from "./TeamColumn";
 import { BoardCells } from "./BoardCells";
-import { BOARD_FOCUS_CLASS, BoardZoomControls, BoardZoomViewport, useBoardFocus } from "../board-zoom/BoardZoom";
+import { PlayCard } from "../PlayCard";
 import { BattleHeader } from "./BattleHeader";
 import { ProgressSection } from "./ProgressSection";
 
@@ -246,8 +246,6 @@ export default function DemoGame({
   const clockOffset = useRef(0);
   const [clock, setClock] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
-  /** Nút "Toàn màn hình" trên bàn: cả khung trận phủ kín cửa sổ. */
-  const focus = useBoardFocus();
 
   /** Campaign V2: trạng thái mục tiêu, tính từ trạng thái server bằng chính hàm chốt của server. */
   const scenarioStatus = useMemo(() => {
@@ -1169,7 +1167,7 @@ export default function DemoGame({
   return (
     <div
       ref={rootRef}
-      className={`${palette} ui-mode-screen ${focus.expanded && started ? BOARD_FOCUS_CLASS : ""}`}
+      className={`${palette} ui-mode-screen`}
     >
       <OrnateFrame level="raised" flush className={`mx-auto flex w-full flex-col gap-3 p-4 sm:p-6 ${MODE_CONTENT_WIDTH}`}>
         <BattleHeader
@@ -1257,9 +1255,11 @@ export default function DemoGame({
           />
         )}
 
+        {/* Thẻ vùng chơi: sân đấu, thẻ tướng, bàn cờ; nút trên thẻ đưa riêng thẻ ra toàn màn hình. */}
+        <PlayCard label="Trận đấu" className={started ? "" : "hidden"}>
         {started && stageVisible && (
           /* md+: sân đấu dính dưới thanh đầu trang để cuộn xuống bàn cờ vẫn thấy hoạt ảnh khi đối thủ ra đòn. */
-          <div className={`z-20 md:sticky md:-mx-1 md:bg-[color-mix(in_srgb,var(--wood-lo,#1c120b)_94%,transparent)] md:px-1 md:pb-1 md:backdrop-blur ${focus.expanded ? "md:-top-2" : "md:top-16 xl:top-[68px]"}`}>
+          <div className="play-card-sticky z-20 md:sticky md:top-16 md:-mx-1 md:bg-[color-mix(in_srgb,var(--wood-lo,#1c120b)_94%,transparent)] md:px-1 md:pb-1 md:backdrop-blur xl:top-[68px]">
             <BattleStage
               sides={[(heldSides ?? state.sides)[PLAYER].fighters, (heldSides ?? state.sides)[AI].fighters]}
               actor={
@@ -1286,12 +1286,9 @@ export default function DemoGame({
                 waiting={pending}
               />
             )}
-            {started && <BoardZoomControls id="battle" focus={focus} className="self-end" />}
-            {/* lg+: bàn cờ cố gắng vừa phần màn hình còn lại dưới sân đấu nhưng không nhỏ hơn 34rem; màn thấp thì cuộn, sân đấu dính trên đầu nên vẫn thấy hoạt ảnh.
-                Thu phóng bàn (--board-zoom) nhân cả bề rộng lẫn mức trần; to hơn cột thì khung cuộn ngang. Lề trên chừa chỗ cho huy hiệu. */}
-            <BoardZoomViewport id="battle" className="px-1 pb-2 pt-4 md:pt-5">
+            {/* lg+: bàn cờ cố gắng vừa phần màn hình còn lại dưới sân đấu nhưng không nhỏ hơn 34rem; màn thấp thì cuộn, sân đấu dính trên đầu nên vẫn thấy hoạt ảnh. */}
             <div
-              className="relative mx-auto w-[calc(100%*var(--board-zoom))] rounded-xl border-2 border-[var(--primary)] bg-[var(--decorative-frame)] p-1.5 shadow-lg lg:max-w-[calc(max(34rem,calc((100dvh-21rem)*var(--board-ratio)))*var(--board-zoom))]"
+              className="relative mx-auto mt-3 w-full rounded-xl border-2 border-[var(--primary)] bg-[var(--decorative-frame)] p-1.5 shadow-lg lg:max-w-[max(34rem,calc((100dvh-21rem)*var(--board-ratio)))]"
               style={{ "--board-ratio": board.cols / board.rows } as React.CSSProperties}
             >
               <BoardCrest className="pointer-events-none absolute -top-4 left-1/2 z-10 h-8 w-40 -translate-x-1/2 md:-top-5 md:h-10 md:w-52" />
@@ -1399,7 +1396,6 @@ export default function DemoGame({
                 )}
               </div>
             </div>
-            </BoardZoomViewport>
 
             {started && side(PLAYER, true)}
 
@@ -1456,6 +1452,7 @@ export default function DemoGame({
 
           {side(AI)}
         </div>
+        </PlayCard>
 
         {/* Giao Tranh online: chỉ giữ chọn đội nhanh và lối sang Doanh Trại (trang bị, kỹ năng chỉnh ở đó). Lúc đang đánh thì ẩn hẳn
             để bàn cờ không bị đẩy xuống; hết trận cũng ẩn, màn kết thúc chỉ còn kết quả. Chơi thử Tiến trình (offline) vẫn đủ panel
