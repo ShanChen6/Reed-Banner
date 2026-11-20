@@ -43,7 +43,7 @@ Shan duyệt 05/11/2026 sau đợt kiểm kê 20 màn. Chuẩn lấy từ Chiế
 | --- | --- | --- |
 | Bề mặt | Gỗ tối là mặc định (chữ sáng). Giấy dó chỉ cho nội dung đọc dài (Bình Loạn, sử ký, luật chi tiết, thoại) và trạng thái đang chọn | `--wood*`, `--paper*`, `--ink*`; lớp Tailwind `bg-wood-panel`, `text-on-wood`, `text-ink` |
 | Thư cuộn | Khối liên hệ footer và form tài khoản (đăng nhập, đăng ký, tài khoản, quên/đặt lại mật khẩu) là thư cuộn treo: dây son, trục gỗ đầu đồng, giấy dó mép rách, tua rua, ấn "Cờ Lau" (08/11/2026). Component đặt trên giấy bọc trong `.ui-on-paper` để đổi token sang chữ mực | `ParchmentScroll`, `ScrollSeal`, `.ui-on-paper` |
-| Khung | 3 lớp (Shan chốt 20/11/2026, phương án A): **khung ngoài** có góc hoa văn và vạch vàng trong (khung màn `ModeScreen card`, banner `hero`, màn đứng riêng như cổng đăng nhập, Doanh Trại, sảnh trận); **card nội dung** bên trong khung màn chỉ một kiểu `panel`, viền mảnh, cùng một bóng đổ, không góc; **ô lõm** bên trong card (danh sách, ô số liệu, bộ lọc) nền sẫm, không bóng, không góc. Không đặt card `raised` trong khung màn; card trong card thì card con là ô lõm | `OrnateFrame level`, `FrameInset`, `FilterBar` |
+| Khung | 3 lớp (Shan chốt phương án B, 20/11/2026, thay phương án A cùng ngày): **khung ngoài** (khung màn `ModeScreen card`, banner `hero`, màn đứng riêng) có góc hoa văn và vạch vàng trong; **card lớn** là mọi khung `.ui-frame` đứng ngang hàng trong khung màn, cũng có vạch vàng trong và bốn góc hoa văn (CSS tự vẽ ở `::before`, không cần `level="raised"`); **ô lõm** bên trong card (danh sách, ô số liệu, bộ lọc) nền sẫm, không bóng, không góc. Khung lồng trong khung khác tự phẳng; ghi chú, thông báo một dòng thêm `.ui-frame--plain` để phẳng | `OrnateFrame level`, `FrameInset`, `FilterBar`, `.ui-frame--plain` |
 | Bộ lọc | Tìm tên, lọc hệ, nghề… bọc trong một ô lõm `FilterBar`, đặt trên danh sách nó lọc | `FilterBar` |
 | Hai cột | Hai cột cạnh nhau phải bằng đáy: cột ngắn đặt `ColumnFill` cuối cột (tranh/thơ lấp chỗ trống; chỗ trống dưới 5rem thì khung trên giãn tới đáy). Không `self-start` cho khung trong cột | `ColumnFill` |
 | Nút chính | Sơn mài đỏ viền vàng; mỗi màn tối đa một | `Button` (mặc định `primary`) |
@@ -97,7 +97,7 @@ import {
 | `CardTitle` | Tiêu đề h2 theo token |
 | `Button` | `variant`: primary (sơn mài)/secondary (gỗ viền đồng)/outline/ghost/danger/link, `ornate` là tên cũ của primary; `size`: sm/md/lg/icon; `fullWidth` |
 | `Tabs`, `ChoiceChip`, `choiceVariants()` | Lựa chọn: `role=tab` + `aria-selected`, chip `aria-pressed`; mũi tên/Home/End chuyển tab |
-| `OrnateFrame`, `FrameInset`, `FilterBar`, `FrameCorners` | `@/components/game-ui`; `level`: panel/raised/hero (raised chỉ cho khung đứng riêng, không đặt trong khung màn), `paper` |
+| `OrnateFrame`, `FrameInset`, `FilterBar`, `FrameCorners` | `@/components/game-ui`; `level`: panel/raised/hero (trong khung màn, panel tự có góc như raised), `paper` |
 | `ModeScreen`, `ModeBanner`, `SectionTitle` | `@/components/game-ui`; khung màn chế độ |
 | `Skeleton`, `SkeletonText`, `ModeSkeleton`, `ModeLoading` | `@/components/game-ui`; khung xương khi tải (20/11/2026): không dùng dòng chữ "Đang tải…". Màn chế độ dùng `ModeSkeleton` (banner, dãy thẻ, khung); màn có footer dùng `ModeLoading` (cao ít nhất một màn hình để footer không nhảy, nhận `error`); bảng xếp hạng dùng `BoardLoading`. Luôn kèm nhãn cho trình đọc màn hình; giảm chuyển động thì đứng yên (`.ui-skeleton`) |
 | `buttonVariants()` | Dùng cùng style với Link, SceneLink, a |
