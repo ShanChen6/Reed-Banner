@@ -26,6 +26,23 @@ test("khách chơi được trận Thao Luyện", async ({ page }) => {
   expectClean(problems);
 });
 
+test("Thao Luyện: Đầu hàng hỏi lại trước khi chốt thua", async ({ page }) => {
+  const problems = watchProblems(page);
+  await page.goto("/game/practice");
+  await expect(page.getByRole("grid", { name: "Bàn cờ" })).toBeVisible();
+  await page.getByRole("button", { name: "Đầu hàng" }).click();
+  const dialog = page.getByRole("dialog", { name: "Đầu hàng?" });
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole("button", { name: "Chơi tiếp" }).click();
+  await expect(dialog).toBeHidden();
+  await page.getByRole("button", { name: "Đầu hàng" }).click();
+  await dialog.getByRole("button", { name: "Đầu hàng" }).click();
+  // Chữ hiện ở cả thanh trạng thái lẫn bảng kết quả.
+  await expect(page.getByText("Chúa công thua", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: "Đầu hàng" })).toHaveCount(0);
+  expectClean(problems);
+});
+
 test("khách bị chặn ở chế độ xếp hạng và thấy màn nhắc đăng nhập", async ({ page }) => {
   const problems = watchProblems(page);
   await page.goto("/game/destiny");
@@ -183,6 +200,29 @@ test.describe("tài khoản đã đăng nhập", () => {
     await playMode(page);
     await page.getByRole("button", { name: /Lên đường/ }).click();
     await expect(page.getByRole("group", { name: /^Sa bàn mê cung .*, bản đồ sông Bạch Đằng$/ })).toBeVisible();
+    expectClean(problems);
+  });
+
+  test("Sử Lộ: chọn mê cung ở màn riêng, trong ván chỉ đầu hàng mới về màn chọn", async ({ page }) => {
+    const problems = watchProblems(page);
+    await page.goto("/game/maze");
+    await playMode(page);
+    await page.getByRole("radio", { name: /Loạn sứ quân/ }).click();
+    await page.getByRole("radio", { name: /^Khó/ }).click();
+    await page.getByRole("button", { name: "Lên đường" }).click();
+    await expect(page.getByRole("group", { name: /^Sa bàn mê cung 7 hàng 10 cột, bản đồ thành đất của sứ quân$/ })).toBeVisible();
+    // Trong ván không còn chỗ đổi mê cung.
+    await expect(page.getByRole("radiogroup", { name: "Mê cung" })).toHaveCount(0);
+    await page.getByRole("button", { name: "Đầu hàng…" }).click();
+    await page.getByRole("button", { name: "Chơi tiếp" }).click();
+    await expect(page.getByRole("group", { name: /^Sa bàn mê cung/ })).toBeVisible();
+    await page.getByRole("button", { name: "Đầu hàng…" }).click();
+    await page.getByRole("button", { name: "Đầu hàng", exact: true }).click();
+    await expect(page.getByRole("radiogroup", { name: "Mê cung" })).toBeVisible();
+    // Ván dở đã xóa: tải lại vẫn ở màn chọn.
+    await page.reload();
+    await playMode(page);
+    await expect(page.getByRole("radiogroup", { name: "Mê cung" })).toBeVisible();
     expectClean(problems);
   });
 

@@ -114,7 +114,7 @@ import { useBattleKeyboard } from "./useBattleKeyboard";
 import { TeamColumn } from "./TeamColumn";
 import { BoardCells } from "./BoardCells";
 import { PlayCard } from "../PlayCard";
-import { BattleHeader } from "./BattleHeader";
+import { BattleHeader, surrenderConsequence } from "./BattleHeader";
 import { ProgressSection } from "./ProgressSection";
 
 const FLOAT_MS = 1100;
@@ -667,6 +667,45 @@ export default function DemoGame({
     [state, actor, flash, play, commit, online, sendOnline],
   );
 
+  /** Đang trong ván, chưa phân thắng thua: hiện nút Đầu hàng. Nghỉ giữa đợt Trấn Ải đã có nút dừng riêng. */
+  const canSurrender = started && live !== null && state.winner === null && !scenarioOver;
+  const surrenderText = surrenderConsequence({
+    online,
+    survivalCleared: survival ? survival.cleared : null,
+    scenario: scenario !== null,
+    raid: raidBoss !== null,
+    trial: trialFloorNo !== null,
+    destiny: destinyFloorNo !== null,
+    daily: dailyDay !== null,
+    arena: arenaFoe !== null,
+    expedition: expeditionMatch,
+  });
+  /** Đầu hàng: dừng hoạt ảnh đang diễn (để không ghi đè kết quả), rồi chốt thua ở server hoặc ngay trên máy. */
+  const surrender = useCallback(() => {
+    for (const id of pacingTimeouts.current) window.clearTimeout(id);
+    pacingTimeouts.current.clear();
+    afterAnim.current = null;
+    setAnim(null);
+    setPacing(false);
+    setTurnBanner(null);
+    setHeldBoard(null);
+    setHeldSides(null);
+    setShownSide(null);
+    setSelected(null);
+    setAim(null);
+    setWhirlAim(null);
+    setPendingWhirl(null);
+    if (online) {
+      sendOnline({ type: "surrender" });
+      return;
+    }
+    setState((current) =>
+      current && current.winner === null
+        ? { ...current, winner: AI, turn: { ...current.turn, deadline: null } }
+        : current,
+    );
+  }, [online, sendOnline]);
+
   // Offline: transition player → AI đã được queue trình diễn xử lý trước khi state đổi phe.
   useEffect(() => {
     if (online || pacing || !started || state.winner !== null || state.turn.side !== AI)
@@ -1185,6 +1224,7 @@ export default function DemoGame({
           started={started}
           state={state}
           survival={survival}
+          surrender={canSurrender ? { consequence: surrenderText, onConfirm: surrender, disabled: pending } : null}
         />
         {scenario && live && !scenarioOver && (phaseTurns || labels.length > 1) && (
           <p className="rounded-md border border-frame-line bg-frame-gold/10 px-3 py-1 text-sm text-title-on-wood">

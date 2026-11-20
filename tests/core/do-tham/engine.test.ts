@@ -171,6 +171,20 @@ describe("Do Thám: mở, cờ và mở nhanh", () => {
   });
 });
 
+describe("Do Thám: đầu hàng", () => {
+  it("chỉ sau nước mở đầu; thua ngay, không có ô bẫy bị chạm", () => {
+    const ready = newGame("nhapMon", 3);
+    assert.deepEqual(dtAct(ready, { type: "surrender" }), { ok: false, reason: "notStarted" });
+    const playing = must(ready, { type: "open", index: mid(ready) });
+    if (playing.phase !== "playing") return;
+    const lost = must(playing, { type: "surrender" });
+    assert.equal(lost.phase, "lost");
+    assert.equal(lost.hit, null);
+    assert.deepEqual(lost.cells, playing.cells);
+    assert.deepEqual(dtAct(lost, { type: "surrender" }), { ok: false, reason: "notPlaying" });
+  });
+});
+
 describe("Do Thám: đạo cụ nguyên tố", () => {
   const started = (picks: Parameters<typeof newGame>[2], level: DtLevel = "thuong", seed = 5151) =>
     must(newGame(level, seed, picks), { type: "open", index: mid(DT_LEVELS[level]) });

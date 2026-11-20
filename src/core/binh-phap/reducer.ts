@@ -94,6 +94,7 @@ export function transition(state: PuzzleState, command: Command): Transition {
   if (!rules) return { ok: false, reason: "invalidCommand" };
   if (command.kind === "discard") return discard(state, rules);
   if (command.kind === "place") return place(state, rules, command.row, command.col);
+  if (command.kind === "surrender") return { ok: true, state: { ...state, phase: "lost" }, events: [{ type: "lost", reason: "surrender" }] };
   return { ok: false, reason: "invalidCommand" };
 }
 

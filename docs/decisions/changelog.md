@@ -4,6 +4,9 @@
 
 ## 20/11/2026
 
+**Hợp Kích: chuỗi phản ứng gọn khi nhiều combo (Shan yêu cầu)**
+- Chuỗi cùng dây bị động gộp làm một (`groupChains` trong `combos/links.ts`), chiêu mở xếp theo người (chồng biểu tượng kèm tên chiêu); các bước xếp lưới đều cột thay cho hàng mũi tên tràn dòng. Mọi chiêu mở đều được tính (trước giới hạn 8 chuỗi), chia trang 3 dây mỗi trang, giữ chiều cao khi trang cuối thiếu.
+
 **Dọn code không dùng (Shan yêu cầu)**
 - Gỡ các trang thử chỉ cho người làm game: `/demo/art`, `/demo/characters`, `/demo/ui`, `/demo/barracks` (`src/app/demo`). Đường dẫn cũ `/demo` vẫn chuyển về Thao Luyện (iframe ShanVerse).
 - Gỡ bản thử tĩnh `public/prototypes/water-mage.html`, hằng `TILE_COLOR`, lớp CSS không còn dùng (`demo-bg`, `fm-fogfill`, `ui-screen`).

@@ -4,15 +4,23 @@
 // bấm nút là đưa riêng vùng chơi ra toàn màn hình trong một khung toàn cảnh riêng; thanh đầu trang, chân trang và
 // phần còn lại của màn ẩn đi. Bấm lại hoặc Esc để về. Khác nút toàn màn hình cả trang web (FullscreenToggle, góc dưới phải cửa sổ); hai nút dùng song song.
 // Trình duyệt không cho toàn màn hình một phần tử (iPhone Safari) thì thẻ phủ kín cửa sổ thay thế.
+// Khi phóng to, thanh đầu trang ẩn đi nên tên chế độ hiện trên bảng tên đồng đè lên mép trên khung (Shan 20/11/2026,
+// cùng kiểu bảng tên ở thanh đầu trang).
 
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { FrameCorners } from "@/components/game-ui/FrameCorners";
 import { cn } from "@/lib/cn";
+import { SCENE_TITLE } from "./scene";
+import { SceneContext } from "./SceneContext";
 
 function subscribeFullscreen(onChange: () => void) {
   document.addEventListener("fullscreenchange", onChange);
   return () => document.removeEventListener("fullscreenchange", onChange);
 }
+
+/** Vùng chơi đang phóng to (toàn màn hình hoặc phủ kín cửa sổ): màn bên trong dùng để giãn lưới theo chỗ trống. */
+const ExpandedContext = createContext(false);
+export const usePlayCardExpanded = () => useContext(ExpandedContext);
 
 export function PlayCard({
   label = "Vùng chơi",
@@ -27,6 +35,8 @@ export function PlayCard({
   children: ReactNode;
 }) {
   const ref = useRef<HTMLElement>(null);
+  const scene = useContext(SceneContext)?.currentScene;
+  const title = scene ? SCENE_TITLE[scene] : null;
   const native = useSyncExternalStore(
     subscribeFullscreen,
     () => ref.current !== null && document.fullscreenElement === ref.current,
@@ -74,7 +84,12 @@ export function PlayCard({
       {/* Trang thường không có khung; khi phóng to, lớp trong thành khung toàn cảnh (viền, góc hoa văn), lớp ngoài thành nền tối có lề. */}
       <div className="play-card-body">
         {expanded && <FrameCorners size="size-8 sm:size-10" cornerClass="play-card-corner" />}
-        {children}
+        {expanded && title && (
+          <p aria-hidden className="play-card-title game-header-title truncate px-3 pt-[0.12em] text-center font-serif text-caption leading-[1.9] font-bold tracking-[0.12em] uppercase sm:px-5 sm:text-base sm:tracking-[0.2em]">
+            {title}
+          </p>
+        )}
+        <ExpandedContext.Provider value={expanded}>{children}</ExpandedContext.Provider>
       </div>
       {active && (
         <button

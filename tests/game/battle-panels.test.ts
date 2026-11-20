@@ -17,7 +17,7 @@ import {
 } from "../../src/core";
 import { SceneContext, type SceneApi } from "../../src/app/game/SceneContext";
 import { BattleResult, type BattleResultProps } from "../../src/app/game/battle/BattleResult";
-import { BattleHeader } from "../../src/app/game/battle/BattleHeader";
+import { BattleHeader, surrenderConsequence } from "../../src/app/game/battle/BattleHeader";
 import { CampaignResult } from "../../src/app/game/battle/CampaignResult";
 import { SkillBar } from "../../src/app/game/battle/SkillBar";
 import { TeamColumn } from "../../src/app/game/battle/TeamColumn";
@@ -104,10 +104,28 @@ describe("mảng màn trận tách từ DemoGame", () => {
     const props = {
       atBreak: false, difficulty: "normal" as const, pending: false, playerTurn: true, profession: "tuongSi" as const,
       scenarioFailed: false, scenarioOver: false, setDifficulty: noop, setProfile: noop, setStarted: noop,
-      started: true, state: battle(null), survival: null,
+      started: true, state: battle(null), survival: null, surrender: null,
     };
     assert.doesNotMatch(render(createElement(BattleHeader, { ...props, online: true })), /Độ khó/);
     assert.match(render(createElement(BattleHeader, { ...props, online: false })), /Độ khó/);
+  });
+
+  it("BattleHeader: ván đang dở có nút Đầu hàng; câu hậu quả theo chế độ", () => {
+    const props = {
+      atBreak: false, difficulty: "normal" as const, pending: false, playerTurn: true, profession: "tuongSi" as const,
+      scenarioFailed: false, scenarioOver: false, setDifficulty: noop, setProfile: noop, setStarted: noop,
+      started: true, state: battle(null), survival: null, online: true,
+    };
+    assert.doesNotMatch(render(createElement(BattleHeader, { ...props, surrender: null })), /Đầu hàng/);
+    const html = render(createElement(BattleHeader, {
+      ...props, surrender: { consequence: "Trận này tính là thua.", onConfirm: noop, disabled: false },
+    }));
+    assert.match(html, /Đầu hàng/);
+    const base = { online: true, survivalCleared: null, scenario: false, raid: false, trial: false, destiny: false, daily: false, arena: false, expedition: false };
+    assert.match(surrenderConsequence({ ...base, online: false }), /Thao Luyện/);
+    assert.match(surrenderConsequence({ ...base, survivalCleared: 4 }), /đợt 4/);
+    assert.match(surrenderConsequence({ ...base, arena: true }), /trừ điểm hạng/);
+    assert.match(surrenderConsequence(base), /tính là thua/);
   });
 
   it("BattleResult chế độ có màn riêng (Viễn Chinh, Trấn Ải…) không có nút nâng kỹ năng", () => {

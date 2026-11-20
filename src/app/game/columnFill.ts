@@ -78,8 +78,9 @@ export const COLUMN_FILL: Readonly<Record<ColumnFillMode, ColumnFillEntry>> = {
     ],
   },
   // Khai Lộ (Shan chọn phương án A 20/11/2026): tranh mở đường, prompt ở /mnt/project-files/art/prompts/khai-lo-nen.md.
-  // Shan vẽ xong thì lưu public/art/column-fill/clear-path.webp và điền `art: "/art/column-fill/clear-path.webp"`.
+  // Tranh cắt từ phần cây đa bên trái của nền Khai Lộ (public/art/khai-lo/bg.webp) Shan vẽ.
   clearPath: {
+    art: "/art/column-fill/clear-path.webp",
     poem: {
       lines: ["Thôn hậu thôn tiền đạm tự yên,", "Bán vô bán hữu tịch dương biên.", "Mục đồng địch lý quy ngưu tận,", "Bạch lộ song song phi hạ điền."],
       source: "Trần Nhân Tông, Thiên Trường vãn vọng",

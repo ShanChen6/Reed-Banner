@@ -36,10 +36,11 @@ import { ELEMENT_COLOR } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
 import { Button, buttonVariants, choiceVariants } from "@/components/ui";
-import { ModeScreen, OrnateFrame } from "@/components/game-ui";
+import { ModeScreen, OrnateFrame, SurrenderButton } from "@/components/game-ui";
 import { ModeGuideTabs } from "../ModeGuide";
 import { PlayCard } from "../PlayCard";
 import { ColumnFill } from "../ColumnFill";
+import { KL_TOOL_HINT as TOOL_HINT, KL_TOOL_NAME as TOOL_NAME } from "./tools";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -73,26 +74,6 @@ const REASON_TEXT: Record<KlReason, string> = {
 
 /** Ô to nhất (px) trên màn rộng: bàn 10×8 khi đó khoảng 880×704. */
 const KL_MAX_CELL = 88;
-
-/** 7 đạo cụ theo 7 hệ (Shan duyệt 20/11/2026), xếp theo thứ tự ELEMENTS (phím 1–7). */
-const TOOL_NAME: Record<KlTool, string> = {
-  kim: "Kim Đao",
-  moc: "Mộc Linh",
-  thuy: "Thủy Triều",
-  hoa: "Hỏa Cầu",
-  tho: "Địa Chấn",
-  loi: "Lôi Phạt",
-  phong: "Lốc Phong",
-};
-const TOOL_HINT: Record<KlTool, string> = {
-  kim: "Chọn ô: chém sạch cả hàng ngang.",
-  moc: "Chọn quân: đổi sang hệ của khối lớn nhất kề nó.",
-  thuy: "Chọn ô: cuốn sạch cả cột dọc.",
-  hoa: "Chọn ô: nổ vùng 3×3 quanh ô đó.",
-  tho: "Chọn ô bất kỳ: phá hàng dưới cùng, cả bàn sụt xuống.",
-  loi: "Chọn quân: xóa mọi quân cùng hệ trên bàn.",
-  phong: "Chọn tâm: 8 ô quanh xoay theo chiều kim đồng hồ.",
-};
 
 interface Ghost {
   readonly key: string;
@@ -159,6 +140,8 @@ export default function KhaiLoScreen() {
   /** Khung chứa bàn (gắn qua ref callback: bàn chỉ dựng khi mở thẻ Chơi, có thể sau lần vẽ đầu). */
   const [fitEl, setFitEl] = useState<HTMLDivElement | null>(null);
   const [confirmEnd, setConfirmEnd] = useState(false);
+  /** Lượt chơi vừa kết thúc vì người chơi đầu hàng (bảng kết thúc đổi tiêu đề). */
+  const [gaveUp, setGaveUp] = useState(false);
   /** Cỡ ô (px) đo theo chỗ trống thật: bề ngang khung bàn, và trên máy tính thêm chiều cao cửa sổ để cả bàn lọt màn hình. */
   const [fit, setFit] = useState<number | null>(null);
 
@@ -171,6 +154,7 @@ export default function KhaiLoScreen() {
     (m: KlMode, s: KlState) => {
       setMode(m);
       setState(s);
+      setGaveUp(false);
       setBest(readBest(m));
       setClock(m === "timed" ? readClock(s) : 0);
       setMessage("");
@@ -257,6 +241,7 @@ export default function KhaiLoScreen() {
           parts.push(e.cleared ? `Dọn sạch bàn, +${e.bonus} điểm. Bàn mới.` : `Bàn mới${e.bonus ? ` (gần sạch +${e.bonus} điểm)` : ""}.`);
         if (e.type === "goalReached") parts.push(`Đạt mốc! Lên bậc ${e.level}, +${KL_TIMED_LEVEL_SECONDS} giây.`);
         if (e.type === "timeUp") parts.push("Hết giờ!");
+        if (e.type === "surrender") parts.push("Đã đầu hàng.");
       }
       if (next.phase === "stuck") parts.push(`Hết khối để xóa: dùng đạo cụ hoặc ${next.mode === "timed" ? "đổi bàn" : "kết thúc màn"}.`);
       if (next.mode === "timed") {
@@ -281,6 +266,7 @@ export default function KhaiLoScreen() {
         setMessage(REASON_TEXT[r.reason]);
         return;
       }
+      if (action.type === "surrender") setGaveUp(true);
       if (action.type === "tool") setTool(null);
       commit(r.state, r.events, state);
     },
@@ -418,7 +404,6 @@ export default function KhaiLoScreen() {
   };
 
   const summary = state.phase === "levelDone" ? state.summary : null;
-  const backdrop = ELEMENTS[(state.level - 1) % ELEMENTS.length];
   // Đạo cụ hiện theo hệ có trên bàn (và hệ đã có sẵn đạo cụ/thanh nạp dở dù bàn này không còn).
   const onBoard = new Set(state.cells.map((c) => c?.kind));
   const shownTools = ELEMENTS.filter((e) => onBoard.has(e) || state.tools[e] > 0);
@@ -440,7 +425,15 @@ export default function KhaiLoScreen() {
           <p className="text-kicker text-frame-gold">Giải đố – {MODE_NAME[state.mode]}, {timed ? "Bậc" : "Màn"} {state.level}</p>
           <p className="hidden text-caption text-on-wood-soft sm:block">Chạm để xóa cả khối quân cùng hệ. Dọn sạch bàn để qua màn.</p>
         </div>
-        <Button variant="secondary" size="sm" onClick={newGame}>Ván mới</Button>
+        <div className="flex shrink-0 flex-wrap justify-end gap-2">
+          {state.phase !== "over" && (
+            <SurrenderButton
+              consequence={`Lượt ${MODE_NAME[state.mode]} kết thúc ngay ở ${timed ? "bậc" : "màn"} ${state.level} với ${state.score} điểm; điểm vẫn tính vào kỷ lục.`}
+              onConfirm={() => act({ type: "surrender" })}
+            />
+          )}
+          <Button variant="secondary" size="sm" onClick={newGame}>Ván mới</Button>
+        </div>
       </div>
       <ModeGuideTabs scene="KHAI_LO">
 
@@ -471,9 +464,9 @@ export default function KhaiLoScreen() {
         </div>
 
         <OrnateFrame aria-label="Vùng chơi" flush className="relative isolate -mx-2 flex flex-col items-center gap-2 overflow-hidden p-1 [grid-area:board] sm:mx-0 sm:p-4">
-          {/* Tranh hệ sau bàn (Shan chọn phương án A 20/11/2026), đổi theo màn; điện thoại khung sát bàn nên ẩn. */}
+          {/* Tranh nền Shan vẽ (20/11/2026) sau bàn: cây đa bên trái, rừng tre bên phải, giữa trống để đặt bàn; điện thoại khung sát bàn nên ẩn. */}
           {/* eslint-disable-next-line @next/next/no-img-element -- tranh nền trang trí co giãn theo khung */}
-          <img src={`/art/stage/he-${backdrop}.webp`} alt="" aria-hidden className="kl-backdrop pointer-events-none absolute inset-0 -z-10 hidden size-full object-cover sm:block" draggable={false} />
+          <img src="/art/khai-lo/bg.webp" alt="" aria-hidden className="kl-backdrop pointer-events-none absolute inset-0 -z-10 hidden size-full object-cover sm:block" draggable={false} />
           <div ref={setFitEl} className="w-full">
             <div className="ui-frame-inset relative mx-auto w-fit p-1 sm:p-1.5">
               <div
@@ -553,7 +546,7 @@ export default function KhaiLoScreen() {
               {state.phase === "over" && (
                 <div className="kl-overlay absolute inset-0 flex items-center justify-center p-3">
                   <section role="status" className="ui-frame flex w-full max-w-sm flex-col items-center gap-2 p-4 text-center sm:gap-3 sm:p-5">
-                    <h2 className="ui-title-on-wood text-xl font-bold sm:text-2xl">{timed ? "Hết giờ" : "Thất thủ"}</h2>
+                    <h2 className="ui-title-on-wood text-xl font-bold sm:text-2xl">{gaveUp ? "Đã đầu hàng" : timed ? "Hết giờ" : "Thất thủ"}</h2>
                     <p className="text-[15px] text-on-wood">
                       {!timed && state.summary ? `Còn ${state.summary.left} quân mà chỉ còn ${state.hearts} tim. ` : ""}
                       {MODE_NAME[state.mode]}: tướng quân đi tới {timed ? "bậc" : "màn"} {state.level}, đạt <b>{state.score} điểm</b>

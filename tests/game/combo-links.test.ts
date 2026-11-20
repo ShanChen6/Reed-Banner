@@ -54,6 +54,20 @@ describe("trang Hợp Kích: chuỗi phản ứng", () => {
     assert.ok(best.every((c, i) => i === 0 || c.steps.length <= best[i - 1]!.steps.length));
   });
 
+  it("gộp chuỗi cùng dây bị động: mỗi nhóm một dây, chiêu mở xếp theo người, không mất chiêu nào", async () => {
+    const { bestChains, groupChains } = await import("../../src/app/game/combos/links");
+    const team = [member("dinhBoLinh"), member("haVan"), member("maiThanh")];
+    const chains = bestChains(team, Infinity);
+    const groups = groupChains(chains);
+    assert.ok(groups.length > 0 && groups.length <= chains.length);
+    const path = (steps: readonly { fighter: number; passive: { id: string }; signal: string }[]) => steps.map((s) => `${s.fighter}:${s.passive.id}:${s.signal}`).join(">");
+    assert.equal(new Set(groups.map((g) => path(g.steps))).size, groups.length);
+    assert.equal(groups.flatMap((g) => g.openers.flatMap((o) => o.skills)).length, chains.length);
+    for (const g of groups) assert.equal(new Set(g.openers.map((o) => o.from)).size, g.openers.length);
+    for (const c of chains)
+      assert.ok(groups.some((g) => path(g.steps) === path(c.steps) && g.openers.some((o) => o.from === c.from && o.skills.includes(c.skill))));
+  });
+
   it("giảm Thủ không mạnh hơn mức đang có bị bỏ qua như trong trận: hai Kim phá trong đội chỉ một cái vào chuỗi", async () => {
     const { comboChains } = await import("../../src/app/game/combos/links");
     const kimDbl = comboMember("dinhBoLinh", withComboPassive(mainCharacter("kim", "tuongSi")));

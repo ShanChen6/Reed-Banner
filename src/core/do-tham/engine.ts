@@ -71,7 +71,9 @@ export type DtAction =
   | { readonly type: "open"; readonly index: number }
   | { readonly type: "flag"; readonly index: number }
   | { readonly type: "chord"; readonly index: number }
-  | { readonly type: "item"; readonly element: Element; readonly index?: number; readonly axis?: "row" | "col" };
+  | { readonly type: "item"; readonly element: Element; readonly index?: number; readonly axis?: "row" | "col" }
+  /** Đầu hàng: ván đã bắt đầu thì thua ngay, lộ hết bẫy (`hit` để null vì không chạm bẫy nào). */
+  | { readonly type: "surrender" };
 
 export type DtReason =
   | "notPlaying"
@@ -469,6 +471,10 @@ export const DT_ITEM_TARGET: Readonly<Record<Element, "none" | "cell" | "line">>
 
 export function dtAct(state: DtState, action: DtAction): DtResult {
   if (isOver(state)) return { ok: false, reason: "notPlaying" };
+  if (action.type === "surrender")
+    return state.phase === "playing"
+      ? { ok: true, state: { ...state, phase: "lost", hit: null, info: null } }
+      : { ok: false, reason: "notStarted" };
   if (action.type === "item") return applyItem(state, action);
   if (!inside(state, action.index)) return { ok: false, reason: "outOfBounds" };
   const index = action.index;

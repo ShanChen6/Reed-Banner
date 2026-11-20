@@ -1341,11 +1341,10 @@
     grid-template-areas: "head board tools";
   }
 }
-/* Tranh hệ sau bàn Khai Lộ: tối và mờ dần về mép để quân trên bàn vẫn nổi. */
+/* Tranh nền sau bàn Khai Lộ: giữa tranh đã trống và tối, chỉ mờ nhẹ mép để hòa vào khung gỗ. */
 .kl-backdrop {
-  opacity: 0.5;
-  filter: saturate(0.85);
-  mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, black 35%, transparent 100%);
+  opacity: 0.85;
+  mask-image: radial-gradient(ellipse 90% 85% at 50% 45%, black 60%, transparent 100%);
 }
 .kl-overlay {
   background: color-mix(in srgb, var(--black) 55%, transparent);
@@ -1630,6 +1629,21 @@ html {
 .play-card-corner {
   color: var(--frame-gold-hi);
 }
+/* Bảng tên chế độ khi phóng to: khung đồng như ở thanh đầu trang, nằm giữa mép trên khung, nửa trên nhô ra lề ngoài nên
+   không chiếm chỗ của màn chơi. Lề trên ngoài khung rộng hơn một chút để bảng không chạm mép màn hình. */
+.play-card-title {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 40;
+  max-width: calc(100% - 8rem);
+  transform: translate(-50%, -55%);
+  pointer-events: none;
+}
+.play-card:fullscreen:has(.play-card-title),
+.play-card--overlay:has(.play-card-title) {
+  padding-top: max(clamp(1.1rem, 1.6vw, 1.4rem), env(safe-area-inset-top));
+}
 /* Màn có thanh dính đáy (Trận Đồ, Tầm Tướng Ký trên điện thoại): chừa thêm chỗ để cuộn được nội dung lên trên thanh. */
 @media (width < 64rem) {
   .play-card:fullscreen:has(.mobile-dock),
@@ -1701,8 +1715,101 @@ html {
     max-width: none;
   }
 }
+/* Do Thám: trang thường ô 26–38px theo bề ngang màn. Phóng to màn chơi thì ô giãn lấp cả bề ngang lẫn bề cao màn (trừ lề,
+   hàng nút đạo cụ, dòng thông báo), tối đa 96px (Shan 20/11/2026: phóng to còn rất nhiều chỗ trống). */
+.dt-board {
+  --dt-cell: max(26px, min(38px, calc((100vw - 3.5rem) / var(--dt-cols))));
+}
+.play-card:fullscreen .dt-board,
+.play-card--overlay .dt-board {
+  --dt-cell: max(26px, min(calc((100vw - 6rem) / var(--dt-cols)), calc((100dvh - 14rem) / var(--dt-rows)), 96px));
+}
+/* Tầm Tướng Ký phóng to (máy tính): ba cột lấp hết chiều cao khung; màn từ 1600px thì Đài Hợp Nguyên rộng tối đa 40rem,
+   hai sổ hai bên nhận phần còn lại. Lưới Vạn Vật Lục, Tướng Lục đo hộp `.ttk-fit` để tính số cột × hàng mỗi trang (Shan 20/11/2026).
+   `contain: size` để nội dung lưới không đẩy hộp cao thêm (hộp chỉ lấy chỗ trống còn lại của cột). */
+@media (width >= 64rem) {
+  .play-card:fullscreen .ttk-board,
+  .play-card--overlay .ttk-board {
+    flex: 1 1 0;
+  }
+  .ttk-fit {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+    contain: size;
+  }
+}
+@media (width >= 100rem) {
+  .play-card:fullscreen .ttk-board,
+  .play-card--overlay .ttk-board {
+    grid-template-columns: minmax(16rem, 1fr) minmax(26rem, 40rem) minmax(16rem, 1fr);
+  }
+}
 /* Sân đấu dính dưới thanh đầu trang; khi thẻ toàn màn hình thì không còn thanh đầu trang nên dính sát mép trên. */
 .play-card:fullscreen .play-card-sticky,
 .play-card--overlay .play-card-sticky {
   top: 0;
+}
+
+/* Sử Lộ (src/app/game/su-lo/SuLoScreen.tsx). Trang thường: sa bàn và câu hỏi ở cột trái, bảng điều khiển cột phải.
+   Phóng to (Shan 20/11/2026: còn quá nhiều chỗ trống): sa bàn chiếm cả cột trái và lớn theo chiều cao màn, câu hỏi chuyển
+   lên đầu cột phải, ô giao tranh cũng giãn theo màn. */
+.sl-map {
+  max-width: 760px;
+}
+.sl-sk-grid {
+  --sk-cell: max(28px, min(52px, calc((100vw - 3.5rem) / var(--sk-cols))));
+  grid-template-columns: repeat(var(--sk-cols), var(--sk-cell));
+}
+@media (width >= 64rem) {
+  .sl-play {
+    grid-template-columns: minmax(0, 1fr) 340px;
+    grid-template-areas: "board side" "question side";
+  }
+  .sl-board {
+    grid-area: board;
+  }
+  .sl-question {
+    grid-area: question;
+  }
+  .sl-side {
+    grid-area: side;
+  }
+}
+.play-card:fullscreen .sl-map,
+.play-card--overlay .sl-map {
+  max-width: none;
+}
+.play-card:fullscreen .sl-picker,
+.play-card--overlay .sl-picker {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+@media (width >= 64rem) {
+  .play-card:fullscreen .sl-play,
+  .play-card--overlay .sl-play {
+    flex: 1 1 auto;
+    grid-template-columns: minmax(0, 1fr) clamp(360px, 28vw, 520px);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "board question" "board side";
+    align-items: stretch;
+  }
+  .play-card:fullscreen .sl-board,
+  .play-card--overlay .sl-board {
+    container-type: inline-size;
+  }
+  /* Bàn lớn nhất vừa bề ngang cột và chiều cao màn (trừ lề khung, bảng tên). */
+  .play-card:fullscreen .sl-map,
+  .play-card--overlay .sl-map {
+    width: min(100%, calc((100dvh - 8rem) * var(--sl-ratio)));
+  }
+  .play-card:fullscreen .sl-skirmish,
+  .play-card--overlay .sl-skirmish {
+    max-width: none;
+  }
+  /* Giao tranh: trừ phần đầu (tên, Thành lực, ba thanh) và hàng nút dưới bàn. */
+  .play-card:fullscreen .sl-sk-grid,
+  .play-card--overlay .sl-sk-grid {
+    --sk-cell: max(28px, min(calc((100dvh - 22rem) / var(--sk-rows)), calc((100cqw - 2rem) / var(--sk-cols)), 104px));
+  }
 }

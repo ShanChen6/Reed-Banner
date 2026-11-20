@@ -107,6 +107,7 @@ describe("dịch vụ trận online", () => {
       },
     );
     assert.equal(parseAction({ seq: "0", action: { type: "timeout" } }), null);
+    assert.deepEqual(parseAction({ seq: 3, action: { type: "surrender" } }), { seq: 3, action: { type: "surrender" } });
     assert.equal(
       parseAction({
         seq: 0,
@@ -574,6 +575,33 @@ describe("trận sinh tồn", () => {
       "phungPhong",
     ]);
     assert.deepEqual(saved!.match.survival!.roster.reserveIds, ["haVan"]);
+  });
+
+  it("đầu hàng giữa đợt: lượt Trấn Ải kết thúc, ghi kết quả như khi bị hạ", async () => {
+    const store = new MemoryMatchStore();
+    const profiles = new MemoryProfileStore();
+    const parsed = parseNewBattle({ ...input, survival: true });
+    assert.ok(parsed);
+    const created = await createBattleFor("g_surrender", parsed, {
+      store,
+      profiles,
+      now: T0,
+      seed: 34,
+      newId: () => "m_surrender",
+    });
+    assert.ok(created.ok);
+    const r = await actBattle(
+      created.id,
+      "g_surrender",
+      { seq: created.view.seq, action: { type: "surrender" } },
+      { store, profiles, now: T0 + 1000 },
+    );
+    assert.ok(r.ok);
+    assert.equal(r.view.battle.winner, 1);
+    assert.equal(r.view.survival?.done, true);
+    assert.ok(r.outcome?.survival);
+    const saved = await store.get(created.id);
+    assert.equal(saved!.match.forfeited, true);
   });
 
   it("xác thực lựa chọn round ở server và không commit request lỗi", async () => {

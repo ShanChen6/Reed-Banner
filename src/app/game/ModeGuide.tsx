@@ -3,14 +3,55 @@
 import { useState, type ReactNode } from "react";
 import { FrameInset, OrnateFrame } from "@/components/game-ui";
 import { Button, Tabs } from "@/components/ui";
-import { MODE_GUIDES, type GuideScene, type ModeGuide as ModeGuideData } from "./modeGuides";
+import { ElementIcon, SuLoAidIcon } from "./art/icons";
+import { Glyph } from "./formation/pieces";
+import { MODE_GUIDES, type GuideIcon, type GuideItems, type GuideScene, type ModeGuide as ModeGuideData } from "./modeGuides";
 
-const SECTIONS: readonly { readonly key: Exclude<keyof ModeGuideData, "goal">; readonly title: string }[] = [
+const SECTIONS: readonly { readonly key: Exclude<keyof ModeGuideData, "goal" | "items">; readonly title: string }[] = [
   { key: "steps", title: "Cách chơi" },
   { key: "rules", title: "Luật cần nhớ" },
   { key: "rewards", title: "Ban thưởng" },
   { key: "tips", title: "Mẹo nhỏ" },
 ];
+
+/** Icon đạo cụ trong Hướng dẫn, cùng hình với nút đạo cụ ở màn chơi. */
+function GuideItemIcon({ icon }: { icon: GuideIcon }) {
+  const box = "size-10 shrink-0";
+  if (icon.kind === "element") return <ElementIcon element={icon.element} className={box} />;
+  if (icon.kind === "suLoAid") return <SuLoAidIcon aid={icon.aid} className={box} />;
+  return (
+    <span className={`${box} block`}>
+      <Glyph kind={icon.piece} />
+    </span>
+  );
+}
+
+/** Mục đạo cụ: luật chung rồi từng món kèm icon, tên và cách dùng. */
+function GuideItemsSection({ items }: { items: GuideItems }) {
+  return (
+    <FrameInset className="flex flex-col gap-3 p-3">
+      <h3 className="text-base font-bold text-frame-gold">{items.title}</h3>
+      {items.notes.length > 0 && (
+        <ul className="flex list-disc flex-col gap-1.5 pl-5 text-on-wood">
+          {items.notes.map((text) => (
+            <li key={text}>{text}</li>
+          ))}
+        </ul>
+      )}
+      <ul className="grid gap-2 sm:grid-cols-2" aria-label={items.title}>
+        {items.list.map((item) => (
+          <li key={item.name} className="flex items-start gap-3 rounded-md border border-frame-bronze/40 bg-black/15 p-2">
+            <GuideItemIcon icon={item.icon} />
+            <div className="min-w-0">
+              <p className="font-bold text-title-on-wood">{item.name}</p>
+              <p className="text-sm text-on-wood">{item.text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </FrameInset>
+  );
+}
 
 /**
  * Chế độ đã qua màn hướng dẫn trong lần vào này. Vào một chế độ từ Chiến Trường thì gặp Hướng dẫn trước (Shan chốt
@@ -45,11 +86,13 @@ export function ModeGuidePanel({ scene, headingId, onPlay }: { scene: GuideScene
         </h2>
         <p className="text-on-wood">{guide.goal}</p>
       </section>
-      {SECTIONS.map(({ key, title }) => {
+      {SECTIONS.flatMap(({ key, title }) => {
         const items = guide[key];
-        if (items.length === 0) return null;
+        // Mục đạo cụ đứng ngay sau Luật cần nhớ, trước Ban thưởng.
+        const after = key === "rules" && guide.items ? [<GuideItemsSection key="items" items={guide.items} />] : [];
+        if (items.length === 0) return after;
         const List = key === "steps" ? "ol" : "ul";
-        return (
+        return [
           <FrameInset key={key} className="flex flex-col gap-2 p-3">
             <h3 className="text-base font-bold text-frame-gold">{title}</h3>
             <List className={`flex flex-col gap-1.5 pl-5 text-on-wood ${key === "steps" ? "list-decimal" : "list-disc"}`}>
@@ -57,8 +100,9 @@ export function ModeGuidePanel({ scene, headingId, onPlay }: { scene: GuideScene
                 <li key={text}>{text}</li>
               ))}
             </List>
-          </FrameInset>
-        );
+          </FrameInset>,
+          ...after,
+        ];
       })}
       {onPlay && (
         <Button className="min-h-11 self-center px-8" onClick={onPlay}>
@@ -77,14 +121,26 @@ export interface ModeExtraTab {
 }
 
 /**
+ * Thay thẻ "Chơi" bằng nhiều thẻ chơi (ví dụ Thường / Hạng tuần của Tầm Tướng Ký, Shan 20/11/2026): chọn một thẻ thì
+ * về nội dung chơi và báo `onChange`; màn tự đổi nội dung theo `value`.
+ */
+export interface ModePlayTabs {
+  readonly items: readonly { readonly value: string; readonly label: string }[];
+  readonly value: string;
+  readonly onChange: (value: string) => void;
+}
+
+/**
  * Thêm thẻ Hướng dẫn cho màn chế độ: hai thẻ "Chơi" và "Hướng dẫn" nằm dưới banner. Vào chế độ thì mở Hướng dẫn
  * trước (nút "Vào chơi" ở cuối), xem `guideFirst`. Thẻ Chơi giữ nguyên nội dung màn; chọn Hướng dẫn thì thay bằng
  * luật và thưởng của chế độ. Không gọi API, chuyển thẻ không mất tiến độ ván.
  * `extraTabs` chèn thẻ riêng của màn vào giữa hai thẻ đó; nội dung thẻ chỉ dựng khi được chọn.
  */
-export function ModeGuideTabs({ scene, extraTabs = [], children }: {
+export function ModeGuideTabs({ scene, extraTabs = [], playTabs, children }: {
   scene: GuideScene;
   extraTabs?: readonly ModeExtraTab[];
+  /** Nhiều thẻ chơi thay cho một thẻ "Chơi". */
+  playTabs?: ModePlayTabs;
   children: ReactNode;
 }) {
   const [view, setViewState] = useState<string>(() => (guideFirst(scene) ? "guide" : "play"));
@@ -93,14 +149,21 @@ export function ModeGuideTabs({ scene, extraTabs = [], children }: {
     setViewState(next);
   };
   const extra = extraTabs.find((tab) => tab.value === view);
+  const plays = playTabs?.items ?? [{ value: "play", label: "Chơi" }];
+  const pick = (next: string) => {
+    if (playTabs?.items.some((tab) => tab.value === next)) {
+      setView("play");
+      playTabs.onChange(next);
+    } else setView(next);
+  };
   return (
     <>
       <Tabs<string>
         label="Màn chế độ"
-        value={view}
-        onChange={setView}
+        value={view === "play" ? (playTabs?.value ?? "play") : view}
+        onChange={pick}
         items={[
-          { value: "play", label: "Chơi" },
+          ...plays,
           ...extraTabs.map(({ value, label }) => ({ value, label })),
           { value: "guide", label: "Hướng dẫn" },
         ]}

@@ -26,11 +26,12 @@ import {
   type DtState,
 } from "@/core/do-tham";
 import { Button, ChoiceChip } from "@/components/ui";
-import { ModeBanner, ModeScreen, OrnateFrame } from "@/components/game-ui";
+import { ModeBanner, ModeScreen, OrnateFrame, SurrenderButton } from "@/components/game-ui";
 import { ElementIcon } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
+import { DT_ITEM_INFO as ITEM_INFO } from "./items";
 import { PlayCard } from "../PlayCard";
 import { useAudio } from "../audio/AudioProvider";
 import { cuesForAction, cueTimes, DOTHAM_MUSIC, DOTHAM_PRELOAD, REJECT } from "./sounds";
@@ -41,21 +42,6 @@ const PICKS_KEY = "reed-banner:do-tham:picks:v1";
 const LEVEL_KEY = "reed-banner:do-tham:level:v1";
 
 const LEVEL_NAME: Record<DtLevel, string> = { nhapMon: "Nhập môn", thuong: "Thường", kho: "Khó" };
-
-interface ItemInfo {
-  readonly name: string;
-  readonly text: string;
-}
-
-const ITEM_INFO: Record<Element, ItemInfo> = {
-  kim: { name: "Dò chông", text: "Lộ một bẫy rồi cắm cờ lên đó." },
-  moc: { name: "Mầm xanh", text: "Chọn một ô: an toàn thì mở, có bẫy thì tự cắm cờ mà không thua." },
-  thuy: { name: "Soi nước", text: "Chọn một ô: biết trong vùng 3×3 quanh nó có bao nhiêu bẫy." },
-  hoa: { name: "Đốt lau", text: "Chọn một ô: mở hết ô an toàn trong vùng 3×3 và cắm cờ lên các bẫy." },
-  tho: { name: "Khiên đất", text: "Đỡ cho bạn một lần sa bẫy." },
-  loi: { name: "Sấm báo", text: "Chọn hàng hoặc cột rồi chọn một ô: biết trên đó có bao nhiêu bẫy." },
-  phong: { name: "Gió mách", text: "Chỉ ra một ô chắc chắn an toàn, hoặc chắc chắn có bẫy." },
-};
 
 const REASON_TEXT: Record<DtReason, string> = {
   notPlaying: "Ván đã kết thúc.",
@@ -304,9 +290,12 @@ export default function DoThamScreen() {
   };
 
   const over = isOver(game);
+  /** Thua mà không chạm bẫy nào: người chơi đã đầu hàng. */
+  const gaveUp = game.phase === "lost" && game.hit === null;
   const flags = flagsOf(game);
   const left = game.mines - flags;
-  const cell = `max(26px, min(38px, calc((100vw - 3.5rem) / ${game.width})))`;
+  // Cỡ ô tính trong globals.css (.dt-board) theo số hàng, cột; phóng to màn chơi thì ô giãn lấp màn.
+  const cell = "var(--dt-cell)";
 
   const lit = useMemo(() => {
     const set = new Set<number>();
@@ -379,6 +368,13 @@ export default function DoThamScreen() {
               <Button variant="secondary" onClick={() => startGame(level, picks)}>
                 Ván mới
               </Button>
+              {game.phase === "playing" && (
+                <SurrenderButton
+                  size="md"
+                  consequence="Ván này tính là thua và không ghi thời gian. Mọi bẫy sẽ lộ ra."
+                  onConfirm={() => void act({ type: "surrender" })}
+                />
+              )}
               <span aria-hidden className="mx-1 hidden h-8 w-px bg-frame-line-soft sm:block" />
               {game.items.length === 0 ? (
                 <span className="text-caption text-on-wood-soft">Chưa mang đạo cụ nào</span>
@@ -417,8 +413,8 @@ export default function DoThamScreen() {
                   ref={boardRef}
                   role="grid"
                   aria-label={`Sa bàn Do Thám ${game.height} hàng ${game.width} cột`}
-                  className="grid"
-                  style={{ gridTemplateColumns: `repeat(${game.width}, ${cell})`, gridAutoRows: cell }}
+                  className="dt-board grid"
+                  style={{ gridTemplateColumns: `repeat(${game.width}, ${cell})`, gridAutoRows: cell, ["--dt-cols" as string]: game.width, ["--dt-rows" as string]: game.height }}
                 >
                   {game.cells.map((c, i) => {
                     const trap = game.trap?.[i] === true;
@@ -480,11 +476,13 @@ export default function DoThamScreen() {
             </p>
             {over && (
               <div role="status" className="ui-frame flex w-full max-w-md flex-col items-center gap-2 p-4 text-center">
-                <h2 className="ui-title-on-wood text-2xl font-bold">{game.phase === "won" ? "Gỡ xong mọi bẫy!" : "Sa bẫy"}</h2>
+                <h2 className="ui-title-on-wood text-2xl font-bold">{game.phase === "won" ? "Gỡ xong mọi bẫy!" : gaveUp ? "Đã đầu hàng" : "Sa bẫy"}</h2>
                 <p className="text-[15px]">
                   {game.phase === "won"
                     ? `Bạn xong bậc ${LEVEL_NAME[level]} trong ${clock(secs)}.${best[level] === secs ? " Đây là thời gian tốt nhất của bạn." : ""}`
-                    : "Ô đỏ là bẫy bạn chạm phải. Các bẫy còn lại đã lộ ra."}
+                    : gaveUp
+                      ? "Các bẫy đã lộ ra. Vào ván mới để thử lại."
+                      : "Ô đỏ là bẫy bạn chạm phải. Các bẫy còn lại đã lộ ra."}
                 </p>
                 <Button size="lg" autoFocus onClick={() => startGame(level, picks)}>
                   Ván mới

@@ -39,6 +39,31 @@ const firstMove = (m: Match) => {
   return { type: "swap" as const, from: mv.from, to: mv.to };
 };
 
+describe("đầu hàng", () => {
+  it("chốt thua ngay, dừng đồng hồ, đánh dấu bỏ trận; cả khi đang lượt đối thủ", () => {
+    const m = newMatch();
+    const r = humanAct(m, { type: "surrender" }, m.seq, T0 + 500);
+    assert.ok(r.ok);
+    assert.equal(r.match.battle.winner, AI_SIDE);
+    assert.equal(r.match.battle.turn.deadline, null);
+    assert.equal(r.match.forfeited, true);
+    assert.equal(r.match.seq, m.seq + 1);
+    assert.equal(r.match.lastHumanAt, T0 + 500);
+  });
+
+  it("trận đã xong hoặc seq cũ thì từ chối", () => {
+    const m = newMatch();
+    const done = humanAct(m, { type: "surrender" }, m.seq, T0 + 500);
+    assert.ok(done.ok);
+    const again = humanAct(done.match, { type: "surrender" }, done.match.seq, T0 + 600);
+    assert.equal(again.ok, false);
+    if (!again.ok) assert.equal(again.error, "battleOver");
+    const stale = humanAct(m, { type: "surrender" }, m.seq - 1, T0 + 500);
+    assert.equal(stale.ok, false);
+    if (!stale.ok) assert.equal(stale.error, "staleSeq");
+  });
+});
+
 describe("trận online", () => {
   it("bắt đầu có đồng hồ; AI đi trước thì đánh luôn lượt đầu", () => {
     const m = newMatch();

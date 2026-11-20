@@ -14,9 +14,11 @@ import {
   type Element,
   type FighterConfig,
   type Profession,
+  type SkillDef,
 } from "@/core";
 import { ModeBanner, ModeLoading, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { buttonVariants } from "@/components/ui";
+import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { cn } from "@/lib/cn";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { PassiveIcon } from "../art/passives";
@@ -29,7 +31,7 @@ import { fighterOf } from "../profile/HeroDetail";
 import { ownedIds } from "../profile/roster";
 import { useProfile } from "../profile/useProfile";
 import { SceneLink } from "../SceneContext";
-import { bestChains, comboLinks, comboMember, crossLinksWith, type ComboChain, type ComboLink, type ComboMember } from "./links";
+import { bestChains, comboLinks, groupChains, comboMember, crossLinksWith, type ComboChain, type ComboLink, type ComboMember } from "./links";
 
 const passiveName = (p: PassiveRef) => (p.kind === "combo" ? COMBO_PASSIVES[p.id].name : CHASE_PASSIVES[p.id].name);
 const passiveText = (p: PassiveRef) => (p.kind === "combo" ? COMBO_PASSIVES[p.id].description : CHASE_PASSIVES[p.id].description);
@@ -59,7 +61,7 @@ export default function CombosScreen() {
   );
   const links = useMemo(() => comboLinks(team), [team]);
   const cross = links.filter((l) => l.from !== l.to);
-  const chains = useMemo(() => bestChains(team), [team]);
+  const chains = useMemo(() => bestChains(team, Infinity), [team]);
 
   // Gợi ý: số liên kết chéo mỗi tướng thêm vào đội hiện có (bỏ người đang ở ô đang chọn).
   const base = useMemo(() => team.filter((m) => m.id !== picks[slot]), [team, picks, slot]);
@@ -174,7 +176,7 @@ export default function CombosScreen() {
           ) : (
             <>
               <PairMatrix team={team} links={links} />
-              <ChainList team={team} chains={chains} />
+              <ChainList key={team.map((m) => m.id).join()} team={team} chains={chains} />
               <h3 className="font-serif text-lg font-bold text-title-on-wood">Liên kết theo cặp</h3>
               <PairGroups team={team} links={cross} />
               {links.length > cross.length && (
@@ -288,38 +290,78 @@ function LinkList({ team, links }: { team: readonly ComboMember[]; links: readon
 
 /**
  * Chuỗi phản ứng: kỹ năng mở bị động của một người, bị động đó phát tiếp tín hiệu mở bị động người kế, tối đa 4 bước
- * (luật bộ máy). Mỗi kỹ năng hiện chuỗi dài nhất.
+ * (luật bộ máy). Chuỗi cùng dây bị động gộp làm một, chiêu mở xếp theo người; chia trang để khung không dài ra khi đội có
+ * nhiều chuỗi (Shan 20/11/2026).
  */
+const CHAIN_PAGE = 3;
+
 function ChainList({ team, chains }: { team: readonly ComboMember[]; chains: readonly ComboChain[] }) {
+  const groups = useMemo(() => groupChains(chains), [chains]);
+  const paged = usePagedItems(groups, CHAIN_PAGE);
   return (
     <section aria-labelledby="hk-chains" className="flex flex-col gap-2">
-      <h3 id="hk-chains" className="font-serif text-lg font-bold text-title-on-wood">Chuỗi phản ứng</h3>
-      {chains.length === 0 ? (
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+        <h3 id="hk-chains" className="font-serif text-lg font-bold text-title-on-wood">Chuỗi phản ứng</h3>
+        {groups.length > 0 && (
+          <span className="text-caption text-on-wood-soft">
+            {groups.length} dây, {chains.length} chiêu mở
+          </span>
+        )}
+      </div>
+      {groups.length === 0 ? (
         <p className="text-sm text-on-wood-soft">Đội này chưa nối được chuỗi từ ba bước trở lên.</p>
       ) : (
-        <ol className="flex flex-col gap-2">
-          {chains.map((c, k) => (
-            <li key={k} className="rounded-lg border border-frame-line-soft bg-black/15 p-2">
-              <p className="mb-1.5 text-caption text-on-wood-soft">
-                Chuỗi {c.steps.length + 1} bước, mở từ chiêu <b className="text-on-wood">{c.skill.name}</b> của {team[c.from]!.name}
-              </p>
-              <div className="flex flex-wrap items-center gap-1.5">
-                <ChainNode icon={<SkillIcon def={c.skill} className="size-8" />} who={team[c.from]!.name} what={c.skill.name} />
-                {c.steps.map((st, i) => (
-                  <span key={i} className="contents">
-                    <span className="flex flex-col items-center text-caption leading-tight text-frame-gold" aria-label={`tín hiệu ${SIGNAL_NAME[st.signal]}`}>
-                      <span aria-hidden>→</span>
-                      <span>{SIGNAL_NAME[st.signal]}</span>
-                    </span>
-                    <ChainNode icon={<PassiveIcon id={st.passive.id} name={passiveName(st.passive)} className="size-8" />} who={team[st.fighter]!.name} what={passiveName(st.passive)} />
-                  </span>
-                ))}
-              </div>
-            </li>
-          ))}
-        </ol>
+        <>
+          <ol {...paged.listProps} className="flex flex-col gap-2">
+            {paged.pageItems.map((g) => {
+              const total = g.openers.reduce((n, o) => n + o.skills.length, 0);
+              return (
+                <li key={g.steps.map((s) => `${s.fighter}${s.passive.id}${s.signal}`).join("-")} className="flex flex-col gap-2 rounded-lg border border-frame-line-soft bg-black/15 p-2">
+                  <p className="text-caption text-on-wood-soft">
+                    <span className="font-semibold text-frame-gold">Chuỗi {g.steps.length + 1} bước</span>, mở từ {total} chiêu
+                  </p>
+                  <ul className="flex flex-wrap gap-1.5" aria-label="Chiêu mở chuỗi">
+                    {g.openers.map((o) => (
+                      <ChainOpenerChip key={o.from} who={team[o.from]!.name} skills={o.skills} />
+                    ))}
+                  </ul>
+                  <ol className="grid grid-cols-[repeat(auto-fill,minmax(7.5rem,1fr))] gap-1.5" aria-label="Các bước phản ứng">
+                    {g.steps.map((st, i) => (
+                      <li key={i} className="flex flex-col gap-0.5">
+                        <span className="text-caption leading-tight text-frame-gold">
+                          <span aria-hidden>↳ </span>bắt {SIGNAL_NAME[st.signal]}
+                        </span>
+                        <ChainNode icon={<PassiveIcon id={st.passive.id} name={passiveName(st.passive)} className="size-8" />} who={team[st.fighter]!.name} what={passiveName(st.passive)} />
+                      </li>
+                    ))}
+                  </ol>
+                </li>
+              );
+            })}
+          </ol>
+          <PageControls paged={paged} label="Trang chuỗi phản ứng" />
+        </>
       )}
     </section>
+  );
+}
+
+/** Chiêu mở của một người: chồng tối đa ba biểu tượng, tên chiêu đầy đủ ở dòng dưới. */
+function ChainOpenerChip({ who, skills }: { who: string; skills: readonly SkillDef[] }) {
+  return (
+    <li className="flex min-w-0 max-w-full items-center gap-1.5 rounded-md border border-frame-line-soft bg-wood-inset px-1.5 py-1">
+      <span className="flex shrink-0 -space-x-3">
+        {skills.slice(0, 3).map((s) => (
+          <SkillIcon key={s.id} def={s} className="size-8 rounded-md ring-1 ring-black/40" />
+        ))}
+      </span>
+      <span className="flex min-w-0 flex-col leading-tight">
+        <span className="text-caption font-semibold text-title-on-wood">
+          {who} <span className="font-normal text-on-wood-soft">· {skills.length} chiêu</span>
+        </span>
+        <span className="text-caption text-on-wood-soft">{skills.map((s) => s.name).join(", ")}</span>
+      </span>
+    </li>
   );
 }
 

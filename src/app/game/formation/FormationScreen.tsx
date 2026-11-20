@@ -5,7 +5,7 @@
 // server, client chỉ giữ bản công khai). Luật ở src/core/binh-phap, spec ở docs/02-game-modes/tran-do/gdd.md,
 // giao diện ở docs/05-ui-ux/screens/tran-do.md.
 
-import { ModeScreen as GameModeScreen } from "@/components/game-ui";
+import { ModeScreen as GameModeScreen, SurrenderButton } from "@/components/game-ui";
 import { buttonVariants } from "@/components/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -69,7 +69,7 @@ function describeEvents(events: readonly PuzzleEvent[]): string {
     if (e.type === "erased") phrases.push("Đã thu hồi quân.");
     if (e.type === "discarded") phrases.push("Đã bỏ lệnh.");
     if (e.type === "won") phrases.push("Khai thông toàn bộ sa bàn!");
-    if (e.type === "lost") phrases.push("Bỏ lệnh quá nhiều, thua trận.");
+    if (e.type === "lost") phrases.push(e.reason === "surrender" ? "Đã đầu hàng." : "Bỏ lệnh quá nhiều, thua trận.");
   }
   return phrases.join(" ");
 }
@@ -288,8 +288,11 @@ export default function FormationScreen({ rankedEnabled = false }: { rankedEnabl
   const theme = ranked ? ranked.puzzle.theme : state ? themeOfState(state) : 0;
   const rankedBusy = ranked ? busy : false;
 
+  /** Lệnh cuối cùng là đầu hàng: bảng kết quả nói "Đã đầu hàng" thay vì lý do thua do bỏ lệnh. */
+  const [gaveUp, setGaveUp] = useState(false);
   const onCommand = useCallback(
     (c: Parameters<typeof transition>[1]) => {
+      setGaveUp(c.kind === "surrender");
       if (ranked) void applyRanked(c);
       else apply(c);
     },
@@ -347,6 +350,7 @@ export default function FormationScreen({ rankedEnabled = false }: { rankedEnabl
         onLeave={ranked ? leaveRanked : leave}
         best={best[playRules.id] ?? 0}
         ranked={ranked ? { period: ranked.period, rank: ranked.rank, score: ranked.score } : undefined}
+        gaveUp={gaveUp}
       />
     </Shell>
   );
@@ -382,6 +386,7 @@ function PlayView({
   onLeave,
   best,
   ranked,
+  gaveUp,
 }: {
   state: PuzzleState;
   rules: Ruleset;
@@ -405,6 +410,7 @@ function PlayView({
   best: number;
   /** Có khi đang chơi xếp hạng: không có Ván mới, kết quả chờ kỳ khép lại mới nhận thưởng. */
   ranked?: { period: string; rank: number | null; score: number | null };
+  gaveUp: boolean;
 }) {
   const { width, height } = state;
   const finished = state.phase !== "playing";
@@ -435,7 +441,19 @@ function PlayView({
           </p>
           <h1 className="ui-title-on-wood font-serif text-3xl font-bold">Trận Đồ – {rules.name}{ranked ? " (xếp hạng)" : ""}</h1>
         </header>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
+          {!finished && (
+            <SurrenderButton
+              size="md"
+              disabled={busy}
+              consequence={
+                ranked
+                  ? `Ván xếp hạng kỳ ${ranked.period} tính là thua: không vào bảng công trạng, không có thưởng, và kỳ này không đánh lại được.`
+                  : "Ván này tính là thua. Chế độ chơi thường không mất gì, bạn có thể bày ván mới ngay."
+              }
+              onConfirm={() => onCommand({ kind: "surrender" })}
+            />
+          )}
           {ranked ? (
             <button type="button" onClick={onLeave} className={buttonVariants({ variant: "secondary", className: "min-h-11 px-4" })}>Về danh sách</button>
           ) : (
@@ -459,7 +477,7 @@ function PlayView({
         {/* Máy tính: vạch dọc ngăn bàn cờ với cột điều khiển bên phải. */}
         <aside className="flex flex-col gap-4 lg:self-stretch lg:border-l lg:border-frame-bronze/50 lg:pl-6" aria-label="Bảng điều khiển">
           {finished ? (
-            ranked ? <RankedResult state={state} rank={ranked.rank} score={ranked.score} period={ranked.period} map={map} onLeave={onLeave} /> : <Result state={state} best={best} map={map} custom={rules.id === CUSTOM_RULESET_ID} onRestart={onRestart} onLeave={onLeave} />
+            ranked ? <RankedResult state={state} rank={ranked.rank} score={ranked.score} period={ranked.period} map={map} gaveUp={gaveUp} onLeave={onLeave} /> : <Result state={state} best={best} map={map} custom={rules.id === CUSTOM_RULESET_ID} gaveUp={gaveUp} onRestart={onRestart} onLeave={onLeave} />
           ) : (
             <div className="hidden flex-col gap-4 lg:flex">
               <div className="flex items-start gap-3">
@@ -521,11 +539,11 @@ function CompletedMap({ map }: { map: FormationMap }) {
   );
 }
 
-function RankedResult({ state, rank, score, period, map, onLeave }: { state: PuzzleState; rank: number | null; score: number | null; period: string; map: FormationMap; onLeave: () => void }) {
+function RankedResult({ state, rank, score, period, map, gaveUp, onLeave }: { state: PuzzleState; rank: number | null; score: number | null; period: string; map: FormationMap; gaveUp: boolean; onLeave: () => void }) {
   const won = state.phase === "won";
   return (
     <section role="status" aria-label="Kết quả xếp hạng" className="ui-frame flex flex-col gap-3 p-4">
-      <h2 className="font-serif text-2xl font-bold text-title-on-wood">{won ? "Khai thông sa bàn!" : "Trận đồ vỡ"}</h2>
+      <h2 className="font-serif text-2xl font-bold text-title-on-wood">{won ? "Khai thông sa bàn!" : gaveUp ? "Đã đầu hàng" : "Trận đồ vỡ"}</h2>
       {won ? (
         <p className="text-[15px]">
           Bạn đạt <b>{score ?? state.score} điểm</b>{rank ? `, hạng tạm thời ${rank}` : ""}. Hạng chốt và thưởng nhận được sau khi kỳ {period} khép lại.
@@ -539,13 +557,17 @@ function RankedResult({ state, rank, score, period, map, onLeave }: { state: Puz
   );
 }
 
-function Result({ state, best, map, custom, onRestart, onLeave }: { state: PuzzleState; best: number; map: FormationMap; custom: boolean; onRestart: () => void; onLeave: () => void }) {
+function Result({ state, best, map, custom, gaveUp, onRestart, onLeave }: { state: PuzzleState; best: number; map: FormationMap; custom: boolean; gaveUp: boolean; onRestart: () => void; onLeave: () => void }) {
   const won = state.phase === "won";
   return (
     <section role="status" aria-label="Kết quả" className="ui-frame flex flex-col gap-3 p-4">
-      <h2 className="font-serif text-2xl font-bold text-title-on-wood">{won ? "Khai thông sa bàn!" : "Trận đồ vỡ"}</h2>
+      <h2 className="font-serif text-2xl font-bold text-title-on-wood">{won ? "Khai thông sa bàn!" : gaveUp ? "Đã đầu hàng" : "Trận đồ vỡ"}</h2>
       <p className="text-[15px]">
-        {won ? `Bạn đạt ${state.score} điểm${!custom && state.score >= best ? " (cao nhất từ trước tới nay)" : ""}.` : "Bỏ lệnh quá nhiều lần liên tiếp. Xin bày lại ván mới."}
+        {won
+          ? `Bạn đạt ${state.score} điểm${!custom && state.score >= best ? " (cao nhất từ trước tới nay)" : ""}.`
+          : gaveUp
+            ? "Ván này tính là thua. Xin bày lại ván mới."
+            : "Bỏ lệnh quá nhiều lần liên tiếp. Xin bày lại ván mới."}
       </p>
       <p className="text-sm text-on-wood-soft">Chế độ chơi thường: không có thưởng và không lên bảng công trạng.</p>
       {won && <CompletedMap map={map} />}
