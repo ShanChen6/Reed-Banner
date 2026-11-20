@@ -71,7 +71,15 @@ export function TurnClock({
       role="timer"
       aria-label={seconds === null ? label : `${label}, còn ${seconds} giây`}
     >
-      <span className="shrink-0 text-caption font-semibold">{label}</span>
+      {/* Mọi nhãn chồng cùng một ô lưới, chỉ hiện nhãn đang dùng: ô rộng bằng nhãn dài nhất nên thanh thời gian không
+          co giãn khi đổi lượt. */}
+      <span className="grid shrink-0 text-caption font-semibold">
+        {TIMER_LABELS.map((l) => (
+          <span key={l} aria-hidden={l !== label} className={`[grid-area:1/1] ${l === label ? "" : "invisible"}`}>
+            {l}
+          </span>
+        ))}
+      </span>
       <div className="h-1 min-w-0 flex-1 overflow-hidden rounded-full bg-black/30">
         <div
           className={`h-full rounded-full transition-[width] duration-300 ease-linear ${
@@ -92,6 +100,8 @@ export function TurnClock({
 }
 
 /** Dải trên bàn cờ của sinh tồn: đợt đang đánh và báo trước đợt kế. */
+const TIMER_LABELS = ["Đang chờ máy chủ…", "Lượt thêm của bạn", "Lượt của bạn", "Đối thủ đang đi"] as const;
+
 export function WaveBanner({
   survival,
   resting,

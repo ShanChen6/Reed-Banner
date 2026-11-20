@@ -113,6 +113,8 @@ function hasSavedBattle(): boolean {
   }
 }
 
+const HINT = "max-w-md text-[15px] leading-snug text-[var(--on-wood)]/90 [text-shadow:0_1px_3px_var(--black)]";
+
 export default function MenuScene({ account, towerFeatures }: { account: ShellAccount | null; towerFeatures: TowerFeatures }) {
   const saved = useSyncExternalStore(
     () => () => {},
@@ -176,14 +178,24 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
                   {plan.secondary && <HeroLink action={plan.secondary} className="home-secondary px-6 font-semibold" />}
                 </>
               ) : (
-                /* Khung chờ cùng kích thước với nút chính để bố cục không nhảy khi hồ sơ tải xong. */
-                <span aria-busy="true" role="status" className="home-cta flex min-h-12 animate-pulse items-center justify-center rounded-lg px-7 font-serif text-base font-bold tracking-[0.1em] whitespace-nowrap uppercase opacity-60 sm:text-lg">
-                  Đang chuẩn bị…
-                </span>
+                /* Khung chờ giữ chỗ cho cả nút chính, nút phụ và dòng gợi ý (gần như mọi hồ sơ đều có đủ ba) để bố cục
+                   không nhảy khi hồ sơ tải xong. */
+                <>
+                  <span aria-busy="true" role="status" className="home-cta flex min-h-12 animate-pulse items-center justify-center rounded-lg px-7 font-serif text-base font-bold tracking-[0.1em] whitespace-nowrap uppercase opacity-60 sm:text-lg">
+                    Đang chuẩn bị…
+                  </span>
+                  <span aria-hidden className="home-secondary invisible flex min-h-12 items-center justify-center rounded-lg px-6 font-serif font-semibold whitespace-nowrap">
+                    Thao Luyện
+                  </span>
+                </>
               )}
             </div>
-            {plan?.hint && (
-              <p className="max-w-md text-[15px] leading-snug text-[var(--on-wood)]/90 [text-shadow:0_1px_3px_var(--black)]">{plan.hint}</p>
+            {plan ? (
+              plan.hint && <p className={HINT}>{plan.hint}</p>
+            ) : (
+              <p aria-hidden className={`${HINT} invisible`}>
+                Bình Loạn, chương I: Hoa Lư dựng cờ. Chưa cần tài khoản.
+              </p>
             )}
             {!account && (
               <p className="text-sm text-[var(--on-wood)]/85 [text-shadow:0_1px_3px_var(--black)]">

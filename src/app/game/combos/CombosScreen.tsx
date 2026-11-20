@@ -15,7 +15,7 @@ import {
   type FighterConfig,
   type Profession,
 } from "@/core";
-import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { ModeBanner, ModeLoading, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { buttonVariants } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
@@ -77,7 +77,7 @@ export default function CombosScreen() {
   if (!profile)
     return (
       <ModeScreen label="Hợp Kích">
-        <p className="py-24 text-center text-on-wood-soft">{loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : "Đang tải…"}</p>
+        <ModeLoading error={loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : null} label="Đang tải Hợp Kích…" />
       </ModeScreen>
     );
 

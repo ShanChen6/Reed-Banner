@@ -147,6 +147,7 @@ function Collection({ collected }: { collected: readonly string[] }) {
 
 export default function ModeScreen({
   overview,
+  rankedEnabled,
   best,
   busy,
   note,
@@ -157,6 +158,8 @@ export default function ModeScreen({
   onExpire,
 }: {
   overview: Overview | null;
+  /** Cờ xếp hạng từ server, dùng khi overview chưa tải xong để dãy thẻ không xếp lại. */
+  rankedEnabled: boolean;
   best: Record<string, number>;
   busy: boolean;
   note: string;
@@ -225,7 +228,8 @@ export default function ModeScreen({
         onChange={setTab}
         items={[
           { value: "practice" as const, label: "Chơi thường" },
-          ...(rankedOn ? [{ value: "ranked" as const, label: "Xếp hạng" }] : []),
+          // Đang tải (overview null) thì theo cờ server, để dãy thẻ không xếp lại khi dữ liệu về.
+          ...((overview === null && rankedEnabled) || rankedOn ? [{ value: "ranked" as const, label: "Xếp hạng" }] : []),
           {
             value: "record" as const,
             label: (

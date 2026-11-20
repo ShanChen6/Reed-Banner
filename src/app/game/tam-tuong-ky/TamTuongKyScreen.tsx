@@ -6,7 +6,7 @@
 // Giao diện: docs/05-ui-ux/screens/tam-tuong-ky.md.
 
 import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
-import { ModeBanner, ModeCard } from "@/components/game-ui";
+import { ModeBanner, ModeCard, ModeSkeleton } from "@/components/game-ui";
 import { ChoiceChip, buttonVariants } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -244,8 +244,10 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
 
   if (!view || !state)
     return (
-      <main className="campaign-atlas ui-mode-screen flex items-center justify-center">
-        <p role="status">{loadError ?? "Đang mở Tướng Lục…"}</p>
+      <main className="campaign-atlas ui-mode-screen">
+        <div className={`mx-auto w-full ${MODE_CONTENT_WIDTH}`}>
+          {loadError ? <p role="alert" className="py-24 text-center">{loadError}</p> : <ModeSkeleton label="Đang mở Tướng Lục…" />}
+        </div>
       </main>
     );
 
@@ -253,7 +255,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
 
   return (
     <CatalogContext.Provider value={catalog}>
-    <main aria-label="Tầm Tướng Ký" className="campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
+    <main aria-label="Tầm Tướng Ký" className="has-mobile-dock campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
       <div className={`mx-auto flex w-full flex-col gap-4 ${MODE_CONTENT_WIDTH}`}>
         <ModeCard>
         <ModeBanner
@@ -399,8 +401,10 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
 
   if (!view)
     return (
-      <main className="campaign-atlas ui-mode-screen flex items-center justify-center">
-        <p role="status">{loadError ?? "Đang mở tuần Hạng…"}</p>
+      <main className="campaign-atlas ui-mode-screen">
+        <div className={`mx-auto w-full ${MODE_CONTENT_WIDTH}`}>
+          {loadError ? <p role="alert" className="py-24 text-center">{loadError}</p> : <ModeSkeleton label="Đang mở tuần Hạng…" />}
+        </div>
       </main>
     );
 
@@ -427,7 +431,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
 
   return (
     <CatalogContext.Provider value={catalog}>
-    <main aria-label="Tầm Tướng Ký" className="campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
+    <main aria-label="Tầm Tướng Ký" className="has-mobile-dock campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
       <div className={`mx-auto flex w-full flex-col gap-4 ${MODE_CONTENT_WIDTH}`}>
         <ModeCard>
         <ModeBanner

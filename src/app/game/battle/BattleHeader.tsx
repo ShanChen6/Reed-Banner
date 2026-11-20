@@ -66,7 +66,8 @@ export function BattleHeader({
       <h1 className="sr-only">
         {online ? "Cờ Lau · Giao Tranh" : "Cờ Lau · Thao Luyện"}
       </h1>
-      <div className="text-sm font-semibold text-title-on-wood" aria-live="polite">
+      {/* Chiếm phần trống còn lại: chữ trạng thái dài ngắn theo lượt không làm nút bên cạnh nhích qua lại. */}
+      <div className="min-w-0 flex-1 text-sm font-semibold text-title-on-wood" aria-live="polite">
         {!started
           ? ""
           : atBreak
