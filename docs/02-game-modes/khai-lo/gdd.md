@@ -32,7 +32,7 @@ Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người ch�
 
 - Ván bắt đầu với **30 quân lực**.
 - Hết khối để xóa thì màn kết thúc: mỗi ô còn sót trừ 1 quân lực.
-- **Dọn sạch bàn**: cộng 300 + 50 × số màn điểm (`clearBonus`), +4 quân lực, +1 đạo cụ: màn lẻ Sấm Sét, màn chẵn Lốc Phong (`clearTool`).
+- **Dọn sạch bàn**: cộng 300 + 50 × số màn điểm (`clearBonus`), +4 quân lực. Không tự cộng đạo cụ (đạo cụ nạp theo điểm, mục 2.4).
 - **Gần sạch** (còn 1–3 quân): +100 điểm; quân còn lại vẫn trừ quân lực.
 - Hết khối nhưng còn đạo cụ thì màn ở trạng thái **bế tắc**: người chơi dùng đạo cụ hoặc bấm *Kết thúc màn*. Người chơi cũng có thể kết thúc màn sớm bất cứ lúc nào.
 - Quân lực về 0 thì hết ván. Điểm cuối là tổng điểm các màn.
@@ -41,10 +41,11 @@ Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người ch�
 
 | Đạo cụ | Tác dụng | Ban đầu | Nhận thêm |
 |---|---|---|---|
-| **Lốc Phong** | Chọn một tâm không sát mép: 8 ô quanh tâm xoay một nấc theo chiều kim đồng hồ (giống lốc xoáy hệ Phong trong trận), rồi ô rơi và dồn cột. Không cộng điểm. | 1 | +1 khi dọn sạch màn chẵn |
-| **Sấm Sét** | Phá vùng 3×3 quanh ô được chọn. Không cộng điểm. | 1 | +1 khi dọn sạch màn lẻ |
+| **Lốc Phong** | Chọn một tâm không sát mép: 8 ô quanh tâm xoay một nấc theo chiều kim đồng hồ (giống lốc xoáy hệ Phong trong trận), rồi ô rơi và dồn cột. Không cộng điểm. | 1 | +1 mỗi 800 điểm gom khối |
+| **Sấm Sét** | Phá vùng 3×3 quanh ô được chọn. Không cộng điểm. | 1 | +1 mỗi 1200 điểm gom khối |
 
-- Mỗi loại giữ tối đa 5 (trước 20/11/2026 là 9).
+- **Thanh nạp** (Shan 20/11/2026, cả hai chế độ): điểm của mỗi khối xóa được nạp đồng thời vào hai thanh (`KL_TOOL_CHARGE`); đầy thanh thì +1 đạo cụ loại đó, phần dư giữ lại. Thưởng dọn sạch/gần sạch không nạp. Thanh hiện dưới nút đạo cụ.
+- Mỗi loại giữ tối đa 5 (trước 20/11/2026 là 9); kho đầy thì thanh dừng ở mức đầy.
 - **Hoàn tác**: mỗi màn 1 lần, chỉ lùi được nước vừa đi. Không lùi qua khi màn đã kết thúc.
 
 ### 2.5. Chế độ
@@ -52,9 +53,9 @@ Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người ch�
 | Chế độ | Luật riêng |
 |---|---|
 | **Thường** | Không giới hạn thời gian. |
-| **Cấp tốc** | Mỗi màn có đồng hồ: 60 giây với 3 hệ, thêm 15 giây mỗi hệ mới (75 / 90 / 105 giây; với đường cong mới: màn 1–3 60 giây, 4–7 75 giây, 8–13 90 giây, từ 14 là 105 giây). Hết giờ là hết màn (quân còn sót trừ quân lực như thường). Dọn sạch bàn thì mỗi giây dư được **25 điểm** (`KL_TIME_BONUS_PER_SECOND`). Đồng hồ chỉ chạy khi đang chơi màn và tab đang mở; giờ còn lại lưu cùng ván dở. |
+| **Cấp tốc** | Chạy đua mốc điểm (Shan 20/11/2026). Ván bắt đầu với **90 giây**. Mỗi bậc có mốc điểm cộng dồn: qua bậc n cần thêm 400 + 50 × (n − 1) điểm (`timedGoal`: 400, 850, 1350, 1900…). Đạt mốc thì lên bậc ngay, chia bàn mới của bậc đó và **cộng thêm 40 giây vào giờ còn lại** (giờ dư cộng dồn). Bàn dọn sạch hoặc hết đường thì tính thưởng dọn sạch/gần sạch rồi chia bàn mới cùng bậc; bàn bế tắc mà còn đạo cụ thì người chơi dùng đạo cụ hoặc bấm *Đổi bàn*. Không dùng quân lực; hết giờ là hết ván. Số hệ theo bậc như số hệ theo màn. Đồng hồ chỉ chạy khi tab đang mở; giờ còn lại lưu cùng ván dở. |
 
-Hai chế độ có ván dở và điểm cao nhất riêng. Lõi không đọc giờ: giao diện truyền số giây còn lại (`timeLeft`) kèm nước đi và gửi `endLevel` với `timeout` khi hết giờ.
+Hai chế độ có ván dở và điểm cao nhất riêng (Cấp tốc dùng khóa lưu v2 từ 20/11/2026, ván dở của luật cũ bỏ đi). Lõi không đọc giờ: giao diện đếm giờ, cộng `KL_TIMED_LEVEL_SECONDS` khi có sự kiện `goalReached` và gửi `timeUp` khi hết giờ.
 
 ## 3. Điều khiển
 
@@ -88,6 +89,12 @@ Bộ số mới (đang dùng): số hệ 3/4/5/6 từ màn 1/4/8/14; dọn sạc
 | Điểm từ gom khối / tổng điểm | 16% | 69% |
 
 Người chơi thật tính sâu hơn bot nên kỳ vọng đi xa hơn vài màn. Các hằng số nằm đầu `src/core/khai-lo/engine.ts` (`KL_START_TROOPS`, `KL_CLEAR_*`, `KL_NEAR_CLEAR_*`, `KL_MAX_TOOLS`, `levelConfig`). Chưa làm: Lốc Phong mạnh hơn (để sau).
+
+### 4.2. Thanh nạp đạo cụ và Cấp tốc theo mốc (20/11/2026)
+
+Thay "+1 đạo cụ khi dọn sạch" bằng thanh nạp (Lốc 800, Sấm 1200 điểm gom khối): Thường, bot 200 ván đạt màn p10 / trung vị / p90 = 10 / 12 / 15 (thử Sấm 800 thì trung vị 14, quá dễ).
+
+Cấp tốc, bot 200 ván, giả định mỗi nước tốn 1,5 / 2 / 3 giây: bậc trung vị 13 / 10 / 8. Với 2 giây một nước, ván trung vị kéo dài khoảng 7–8 phút.
 
 ## 5. Bản chơi thử hiện có (05/11/2026)
 

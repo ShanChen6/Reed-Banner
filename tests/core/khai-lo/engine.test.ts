@@ -6,8 +6,9 @@ import {
   KL_MAX_TOOLS,
   KL_NEAR_CLEAR_BONUS,
   clearBonus,
-  KL_TIME_BONUS_PER_SECOND,
-  levelTimeLimit,
+  KL_TIMED_START_SECONDS,
+  KL_TOOL_CHARGE,
+  timedGoal,
   KL_START_TROOPS,
   allGroups,
   createGame,
@@ -86,7 +87,7 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.equal(r.state.score, groupScore(2, 1));
   });
 
-  it("dọn sạch bàn: thưởng 300 + 50 × màn, +quân lực, màn lẻ +1 Sấm, màn chẵn +1 Lốc", () => {
+  it("dọn sạch bàn: thưởng 300 + 50 × màn, +quân lực, không tự cộng đạo cụ", () => {
     const s = stateOf(["aa", "aa"]);
     const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
@@ -94,22 +95,29 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.equal(clearBonus(1), 350);
     assert.equal(r.state.score, 16 + clearBonus(1));
     assert.equal(r.state.troops, KL_START_TROOPS + KL_CLEAR_TROOPS);
-    assert.deepEqual(r.state.tools, { whirl: 1, thunder: 2 });
-    assert.equal(r.state.summary?.toolGained, "thunder");
-    const even = transition(stateOf(["aa", "aa"], { level: 2 }), { type: "pick", index: 0 });
-    assert.ok(even.ok);
-    assert.deepEqual(even.state.tools, { whirl: 2, thunder: 1 });
+    assert.deepEqual(r.state.tools, { whirl: 1, thunder: 1 });
     const n = transition(r.state, { type: "nextLevel" });
     assert.ok(n.ok);
     assert.equal(n.state.level, 2);
     assert.equal(n.state.phase, "playing");
   });
 
-  it("kho đạo cụ đầy thì không cộng thêm", () => {
-    const r = transition(stateOf(["aa", "aa"], { tools: { whirl: 0, thunder: KL_MAX_TOOLS } }), { type: "pick", index: 0 });
+  it("điểm gom khối nạp thanh đạo cụ, đầy thanh thì +1; kho đầy thì thanh dừng ở mức đầy", () => {
+    const s = stateOf(["aab", "bcd"], { charge: { whirl: KL_TOOL_CHARGE.whirl - 1, thunder: KL_TOOL_CHARGE.thunder - 4 } });
+    const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
-    assert.equal(r.state.tools.thunder, KL_MAX_TOOLS);
-    assert.equal(r.state.summary?.toolGained, null);
+    assert.deepEqual(r.state.tools, { whirl: 2, thunder: 2 });
+    assert.deepEqual(r.state.charge, { whirl: 3, thunder: 0 });
+    assert.deepEqual(r.events.filter((e) => e.type === "toolCharged").map((e) => (e.type === "toolCharged" ? e.tool : "")), ["whirl", "thunder"]);
+    const full = transition(stateOf(["aab", "bcd"], { tools: { whirl: 1, thunder: KL_MAX_TOOLS }, charge: { whirl: 0, thunder: KL_TOOL_CHARGE.thunder - 1 } }), { type: "pick", index: 0 });
+    assert.ok(full.ok);
+    assert.equal(full.state.tools.thunder, KL_MAX_TOOLS);
+    assert.equal(full.state.charge.thunder, KL_TOOL_CHARGE.thunder);
+    // hoàn tác trả lại cả đạo cụ và thanh nạp
+    const u = transition(r.state, { type: "undo" });
+    assert.ok(u.ok);
+    assert.deepEqual(u.state.tools, s.tools);
+    assert.deepEqual(u.state.charge, s.charge);
   });
 
   it("gần sạch (còn tối đa 3 quân) được thưởng nhỏ, vẫn trừ quân lực", () => {
@@ -219,35 +227,68 @@ describe("Khai Lộ: sinh bàn và lưu ván", () => {
 });
 
 describe("Khai Lộ: Cấp tốc", () => {
-  it("dọn sạch bàn được cộng điểm theo giây dư, chặn trên bằng thời gian của màn", () => {
+  it("mốc điểm cộng dồn theo bậc: 400 + 50 × (bậc − 1)", () => {
+    assert.equal(timedGoal(1), 400);
+    assert.equal(timedGoal(2), 850);
+    assert.equal(timedGoal(3), 1350);
+  });
+
+  it("đạt mốc thì lên bậc ngay, chia bàn mới", () => {
+    const s = stateOf(["aab", "bcd"], { mode: "timed", score: timedGoal(1) - 4 });
+    const r = transition(s, { type: "pick", index: 0 });
+    assert.ok(r.ok);
+    assert.equal(r.state.level, 2);
+    assert.equal(r.state.phase, "playing");
+    assert.equal(r.state.deal, 0);
+    assert.ok(r.events.some((e) => e.type === "goalReached" && e.level === 2));
+    assert.equal(tilesLeft(r.state.cells), 6);
+    assert.equal(r.state.prev, null);
+  });
+
+  it("bàn dọn sạch thì thưởng rồi chia bàn mới cùng bậc, không trừ quân lực", () => {
     const s = stateOf(["aa", "aa"], { mode: "timed" });
-    const r = transition(s, { type: "pick", index: 0, timeLeft: 12.7 });
+    const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
-    assert.equal(r.state.summary?.timeBonus, 12 * KL_TIME_BONUS_PER_SECOND);
-    assert.equal(r.state.score, 16 + clearBonus(1) + 12 * KL_TIME_BONUS_PER_SECOND);
-    const capped = transition(s, { type: "pick", index: 0, timeLeft: 9999 });
-    assert.ok(capped.ok);
-    assert.equal(capped.state.summary?.timeBonus, levelTimeLimit(1) * KL_TIME_BONUS_PER_SECOND);
+    assert.equal(r.state.level, 1);
+    assert.equal(r.state.deal, 1);
+    assert.equal(r.state.phase, "playing");
+    assert.equal(r.state.score, 16 + clearBonus(1));
+    assert.equal(r.state.troops, KL_START_TROOPS);
+    assert.equal(tilesLeft(r.state.cells), 4);
+    assert.ok(r.events.some((e) => e.type === "redeal" && e.cleared));
   });
 
-  it("chế độ Thường bỏ qua giây dư", () => {
-    const r = transition(stateOf(["aa", "aa"]), { type: "pick", index: 0, timeLeft: 30 });
+  it("thưởng dọn sạch đủ mốc thì lên bậc luôn", () => {
+    const r = transition(stateOf(["aa", "aa"], { mode: "timed", score: timedGoal(1) - 100 }), { type: "pick", index: 0 });
     assert.ok(r.ok);
-    assert.equal(r.state.summary?.timeBonus, 0);
+    assert.equal(r.state.level, 2);
   });
 
-  it("hết giờ kết thúc màn, trừ quân lực theo ô còn lại", () => {
-    const s = stateOf(["aab", "ccd"], { mode: "timed" });
-    const r = transition(s, { type: "endLevel", timeout: true });
-    assert.ok(r.ok);
-    assert.equal(r.state.summary?.timeout, true);
-    assert.equal(r.state.troops, KL_START_TROOPS - 6);
+  it("bế tắc chỉ đổi bàn khi đã hết khối; Thường không có timeUp", () => {
+    const playing = stateOf(["aab", "bcd"], { mode: "timed" });
+    assert.deepEqual(transition(playing, { type: "endLevel" }), { ok: false, reason: "notStuck" });
+    const stuck = transition(playing, { type: "pick", index: 0 });
+    assert.ok(stuck.ok);
+    assert.equal(stuck.state.phase, "stuck");
+    const d = transition(stuck.state, { type: "endLevel" });
+    assert.ok(d.ok);
+    assert.equal(d.state.deal, 1);
+    assert.equal(d.state.phase, "playing");
+    assert.deepEqual(transition(stateOf(["aa", "bb"]), { type: "timeUp" }), { ok: false, reason: "notPlaying" });
   });
 
-  it("thời gian mỗi màn tăng theo số loại quân", () => {
-    assert.equal(levelTimeLimit(1), 60);
-    assert.equal(levelTimeLimit(5), 75);
-    assert.equal(levelTimeLimit(17), 105);
+  it("hết giờ là hết ván", () => {
+    const r = transition(stateOf(["aab", "ccd"], { mode: "timed" }), { type: "timeUp" });
+    assert.ok(r.ok);
+    assert.equal(r.state.phase, "over");
+    assert.ok(r.events.some((e) => e.type === "over"));
+    assert.equal(KL_TIMED_START_SECONDS, 90);
+  });
+
+  it("chia bàn khác nhau theo lượt chia", () => {
+    const a = generateBoard(3, 1, 1, 10, 8, 0).cells.map((c) => c?.kind).join();
+    const b = generateBoard(3, 1, 1, 10, 8, 1).cells.map((c) => c?.kind).join();
+    assert.notEqual(a, b);
   });
 
   it("lưu/đọc giữ chế độ; bản lưu cũ không có chế độ là Thường", () => {

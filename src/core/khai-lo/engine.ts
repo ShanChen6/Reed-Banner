@@ -1,6 +1,7 @@
 // Khai Lộ: mini game xóa khối ô ngọc, luật ở docs/02-game-modes/khai-lo/gdd.md.
 // Chạm một ô thuộc nhóm từ 2 ô cùng loại liền cạnh: cả nhóm biến mất, ô phía trên rơi xuống, cột trống thì các cột bên
-// phải dồn sang trái. Không có ô mới rơi vào, nên mỗi màn là một bài toán tất định theo seed. Logic thuần, không đọc giờ.
+// phải dồn sang trái. Không có ô mới rơi vào, nên mỗi bàn là một bài toán tất định theo seed. Logic thuần, không đọc giờ:
+// Cấp tốc do giao diện đếm giờ, hết giờ thì gửi "timeUp".
 
 import { createRng, type Rng } from "../rng";
 import { ELEMENTS, type Element } from "../battle/elements";
@@ -19,6 +20,9 @@ export const KL_NEAR_CLEAR_LEFT = 3;
 export const KL_NEAR_CLEAR_BONUS = 100;
 /** Mỗi loại đạo cụ giữ tối đa 5 (trước là 9): tránh dồn kho kéo ván quá dài. */
 export const KL_MAX_TOOLS = 5;
+/** Thanh nạp đạo cụ (Shan 20/11/2026): điểm gom khối nạp đồng thời hai thanh, đầy thanh thì được 1 đạo cụ loại đó.
+ *  Thưởng dọn sạch và thưởng gần sạch không nạp, để đạo cụ đến từ việc gom khối to. */
+export const KL_TOOL_CHARGE: Readonly<Record<KlTool, number>> = { whirl: 800, thunder: 1200 };
 export const KL_START_TOOLS: Readonly<Record<KlTool, number>> = { whirl: 1, thunder: 1 };
 /** Lượt hoàn tác mỗi màn (không cộng dồn sang màn sau). */
 export const KL_UNDO_PER_LEVEL = 1;
@@ -31,19 +35,21 @@ export function clearBonus(level: number): number {
   return KL_CLEAR_BONUS_BASE + KL_CLEAR_BONUS_PER_LEVEL * level;
 }
 
-/** Đạo cụ nhận khi dọn sạch bàn: màn lẻ được Sấm Sét, màn chẵn được Lốc Phong. */
-export function clearTool(level: number): KlTool {
-  return level % 2 === 1 ? "thunder" : "whirl";
-}
 
-/** Thường: không giới hạn thời gian. Cấp tốc: mỗi màn có đồng hồ, hết giờ là hết màn, dọn sạch thì giây dư thành điểm. */
+/** Thường: không giới hạn thời gian, hết khối thì hết màn và trừ quân lực.
+ *  Cấp tốc (Shan 20/11/2026): mỗi bậc có một mốc điểm; đạt mốc thì lên bậc, giờ còn lại cộng dồn thêm giờ của bậc mới.
+ *  Bàn dọn sạch hoặc hết đường thì chia bàn mới cùng bậc. Hết giờ là hết ván; không dùng quân lực. */
 export type KlMode = "classic" | "timed";
-/** Cấp tốc: điểm thưởng cho mỗi giây còn lại khi dọn sạch bàn. */
-export const KL_TIME_BONUS_PER_SECOND = 25;
+/** Cấp tốc: giờ lúc bắt đầu ván và giờ cộng thêm mỗi lần lên bậc (giây). */
+export const KL_TIMED_START_SECONDS = 90;
+export const KL_TIMED_LEVEL_SECONDS = 40;
+/** Cấp tốc: điểm cần thêm để qua bậc n là 400 + 50 × (n − 1). */
+export const KL_TIMED_GOAL_BASE = 400;
+export const KL_TIMED_GOAL_STEP = 50;
 
-/** Thời gian mỗi màn ở Cấp tốc (giây): 60 giây với 3 loại quân, mỗi loại thêm 15 giây. */
-export function levelTimeLimit(level: number): number {
-  return 60 + 15 * (levelConfig(level).kinds - 3);
+/** Cấp tốc: tổng điểm cần đạt để qua bậc này (mốc cộng dồn từ đầu ván). */
+export function timedGoal(level: number): number {
+  return KL_TIMED_GOAL_BASE * level + (KL_TIMED_GOAL_STEP * level * (level - 1)) / 2;
 }
 
 export interface KlCell {
@@ -62,13 +68,7 @@ export interface KlLevelSummary {
   readonly cleared: boolean;
   readonly left: number;
   readonly bonus: number;
-  /** Cấp tốc: phần thưởng giây dư (đã gồm trong bonus). */
-  readonly timeBonus: number;
-  /** Cấp tốc: màn kết thúc vì hết giờ. */
-  readonly timeout: boolean;
   readonly troopsDelta: number;
-  /** Đạo cụ được cộng khi dọn sạch (null nếu không dọn sạch hoặc kho đã đầy). */
-  readonly toolGained: KlTool | null;
 }
 
 export interface KlState {
@@ -83,6 +83,10 @@ export interface KlState {
   readonly score: number;
   readonly troops: number;
   readonly tools: Readonly<Record<KlTool, number>>;
+  /** Điểm đã nạp vào thanh của từng đạo cụ (chưa đủ một đạo cụ). */
+  readonly charge: Readonly<Record<KlTool, number>>;
+  /** Số bàn đã chia ở bậc/màn hiện tại (Cấp tốc chia bàn mới cùng bậc), để sinh bàn khác nhau theo seed. */
+  readonly deal: number;
   readonly undo: number;
   readonly moves: number;
   readonly phase: KlPhase;
@@ -93,12 +97,15 @@ export interface KlState {
 }
 
 export type KlAction =
-  | { readonly type: "pick"; readonly index: number; readonly timeLeft?: number }
-  | { readonly type: "whirl"; readonly index: number; readonly timeLeft?: number }
-  | { readonly type: "thunder"; readonly index: number; readonly timeLeft?: number }
+  | { readonly type: "pick"; readonly index: number }
+  | { readonly type: "whirl"; readonly index: number }
+  | { readonly type: "thunder"; readonly index: number }
   | { readonly type: "undo" }
-  | { readonly type: "endLevel"; readonly timeout?: boolean }
-  | { readonly type: "nextLevel" };
+  /** Thường: kết thúc màn. Cấp tốc: bỏ bàn đang bế tắc, chia bàn mới cùng bậc. */
+  | { readonly type: "endLevel" }
+  | { readonly type: "nextLevel" }
+  /** Cấp tốc: giao diện báo hết giờ. */
+  | { readonly type: "timeUp" };
 
 export type KlEvent =
   | { readonly type: "removed"; readonly cells: readonly number[]; readonly gained: number }
@@ -107,9 +114,16 @@ export type KlEvent =
   | { readonly type: "undone" }
   | { readonly type: "levelDone"; readonly summary: KlLevelSummary }
   | { readonly type: "over" }
-  | { readonly type: "newLevel"; readonly level: number };
+  | { readonly type: "newLevel"; readonly level: number }
+  /** Đầy thanh nạp: +1 đạo cụ. */
+  | { readonly type: "toolCharged"; readonly tool: KlTool }
+  /** Cấp tốc: đạt mốc, lên bậc mới (giao diện cộng thêm KL_TIMED_LEVEL_SECONDS). */
+  | { readonly type: "goalReached"; readonly level: number }
+  /** Cấp tốc: chia bàn mới cùng bậc (bàn dọn sạch hoặc hết đường); cleared/left/bonus như kết màn. */
+  | { readonly type: "redeal"; readonly cleared: boolean; readonly left: number; readonly bonus: number }
+  | { readonly type: "timeUp" };
 
-export type KlReason = "notPlaying" | "outOfBounds" | "empty" | "single" | "noTool" | "edge" | "noUndo";
+export type KlReason = "notPlaying" | "outOfBounds" | "empty" | "single" | "noTool" | "edge" | "noUndo" | "notStuck";
 
 export type KlResult =
   | { readonly ok: true; readonly state: KlState; readonly events: readonly KlEvent[] }
@@ -132,8 +146,8 @@ export function groupScore(size: number, banners: number): number {
   return size * size * (1 + banners);
 }
 
-export function levelSeed(seed: number, level: number): number {
-  return (seed ^ Math.imul(level, 0x9e3779b1)) >>> 0;
+export function levelSeed(seed: number, level: number, deal = 0): number {
+  return (seed ^ Math.imul(level, 0x9e3779b1) ^ Math.imul(deal, 0x85ebca6b)) >>> 0;
 }
 
 const shuffled = <T>(xs: readonly T[], rng: Rng): T[] => {
@@ -148,8 +162,8 @@ const shuffled = <T>(xs: readonly T[], rng: Rng): T[] => {
 };
 
 /** Sinh bàn cho một màn: loại ô xáo theo seed, ô hào quang rải ngẫu nhiên. Luôn có ít nhất một nhóm chạm được. */
-export function generateBoard(seed: number, level: number, firstId: number, width = KL_WIDTH, height = KL_HEIGHT): { cells: (KlCell | null)[]; nextId: number } {
-  const rng = createRng(levelSeed(seed, level));
+export function generateBoard(seed: number, level: number, firstId: number, width = KL_WIDTH, height = KL_HEIGHT, deal = 0): { cells: (KlCell | null)[]; nextId: number } {
+  const rng = createRng(levelSeed(seed, level, deal));
   const { kinds, banners } = levelConfig(level);
   const pool = shuffled(ELEMENTS, rng).slice(0, kinds);
   for (;;) {
@@ -178,6 +192,8 @@ export function createGame(seed: number, mode: KlMode = "classic", width = KL_WI
     score: 0,
     troops: KL_START_TROOPS,
     tools: { ...KL_START_TOOLS },
+    charge: { whirl: 0, thunder: 0 },
+    deal: 0,
     undo: KL_UNDO_PER_LEVEL,
     moves: 0,
     phase: "playing",
@@ -287,31 +303,76 @@ export function tilesLeft(cells: readonly (KlCell | null)[]): number {
   return cells.reduce((n, c) => n + (c ? 1 : 0), 0);
 }
 
-/** Sau mỗi nước: bàn sạch hoặc hết nhóm mà cũng hết đạo cụ thì tự kết thúc màn; hết nhóm còn đạo cụ thì "bế tắc". */
-function afterMove(s: KlState, events: KlEvent[], timeLeft: number | undefined): KlState {
-  const left = tilesLeft(s.cells);
-  if (left === 0) return finishLevel(s, events, timeLeft);
-  if (hasGroup(s.cells, s.width, s.height)) return { ...s, phase: "playing" };
-  if (s.tools.whirl + s.tools.thunder > 0) return { ...s, phase: "stuck" };
-  return finishLevel(s, events, timeLeft);
+/** Điểm gom khối nạp vào hai thanh đạo cụ; đầy thanh thì +1 đạo cụ (kho đầy thì thanh dừng ở mức đầy). */
+function addCharge(s: KlState, gained: number, events: KlEvent[]): KlState {
+  const tools = { ...s.tools };
+  const charge = { ...s.charge };
+  for (const t of ["whirl", "thunder"] as const) {
+    const need = KL_TOOL_CHARGE[t];
+    let c = charge[t] + gained;
+    while (c >= need && tools[t] < KL_MAX_TOOLS) {
+      c -= need;
+      tools[t] += 1;
+      events.push({ type: "toolCharged", tool: t });
+    }
+    charge[t] = Math.min(c, need);
+  }
+  return { ...s, tools, charge };
 }
 
-function finishLevel(s: KlState, events: KlEvent[], timeLeft?: number, timeout = false): KlState {
+const levelBonus = (level: number, left: number) => (left === 0 ? clearBonus(level) : left <= KL_NEAR_CLEAR_LEFT ? KL_NEAR_CLEAR_BONUS : 0);
+
+/** Cấp tốc: chia bàn mới; level khác bậc hiện tại nghĩa là vừa lên bậc. */
+function deal(s: KlState, level: number): KlState {
+  const n = level === s.level ? s.deal + 1 : 0;
+  const { cells, nextId } = generateBoard(s.seed, level, s.nextId, s.width, s.height, n);
+  return { ...s, level, cells, nextId, deal: n, undo: level === s.level ? s.undo : KL_UNDO_PER_LEVEL, phase: "playing", prev: null };
+}
+
+/** Cấp tốc: đủ mốc thì lên bậc (có thể lên nhiều bậc một lúc), mỗi bậc một bàn mới. */
+function checkGoal(s: KlState, events: KlEvent[]): KlState {
+  let level = s.level;
+  while (s.score >= timedGoal(level)) {
+    level += 1;
+    events.push({ type: "goalReached", level });
+  }
+  return level === s.level ? s : deal(s, level);
+}
+
+/** Sau mỗi nước: bàn sạch hoặc hết nhóm mà cũng hết đạo cụ thì tự kết thúc màn (Cấp tốc: chia bàn mới);
+ *  hết nhóm còn đạo cụ thì "bế tắc". */
+function afterMove(s: KlState, events: KlEvent[]): KlState {
+  if (s.mode === "timed") {
+    const leveled = checkGoal(s, events);
+    if (leveled !== s) return leveled;
+  }
+  const left = tilesLeft(s.cells);
+  if (left > 0 && hasGroup(s.cells, s.width, s.height)) return { ...s, phase: "playing" };
+  if (left > 0 && s.tools.whirl + s.tools.thunder > 0) return { ...s, phase: "stuck" };
+  return s.mode === "timed" ? redeal(s, events) : finishLevel(s, events);
+}
+
+/** Cấp tốc: bàn hết đường (hoặc người chơi bỏ bàn bế tắc) thì tính thưởng dọn sạch/gần sạch rồi chia bàn mới cùng bậc. */
+function redeal(s: KlState, events: KlEvent[]): KlState {
+  const left = tilesLeft(s.cells);
+  const bonus = levelBonus(s.level, left);
+  events.push({ type: "redeal", cleared: left === 0, left, bonus });
+  const scored = { ...s, score: s.score + bonus };
+  const leveled = checkGoal(scored, events);
+  return leveled !== scored ? leveled : deal(scored, s.level);
+}
+
+function finishLevel(s: KlState, events: KlEvent[]): KlState {
   const left = tilesLeft(s.cells);
   const cleared = left === 0;
-  const secs = s.mode === "timed" && cleared && timeLeft !== undefined ? Math.max(0, Math.min(levelTimeLimit(s.level), Math.floor(timeLeft))) : 0;
-  const timeBonus = secs * KL_TIME_BONUS_PER_SECOND;
-  const bonus = (cleared ? clearBonus(s.level) : left <= KL_NEAR_CLEAR_LEFT ? KL_NEAR_CLEAR_BONUS : 0) + timeBonus;
+  const bonus = levelBonus(s.level, left);
   const troopsDelta = cleared ? KL_CLEAR_TROOPS : -left;
   const troops = s.troops + troopsDelta;
-  const gain = clearTool(s.level);
-  const toolGained = cleared && s.tools[gain] < KL_MAX_TOOLS ? gain : null;
-  const tools = toolGained ? { ...s.tools, [toolGained]: s.tools[toolGained] + 1 } : s.tools;
-  const summary: KlLevelSummary = { level: s.level, cleared, left, bonus, timeBonus, timeout: timeout && s.mode === "timed", troopsDelta, toolGained };
+  const summary: KlLevelSummary = { level: s.level, cleared, left, bonus, troopsDelta };
   events.push({ type: "levelDone", summary });
   const over = troops <= 0;
   if (over) events.push({ type: "over" });
-  return { ...s, score: s.score + bonus, troops: Math.max(0, troops), tools, summary, phase: over ? "over" : "levelDone", prev: null };
+  return { ...s, score: s.score + bonus, troops: Math.max(0, troops), summary, phase: over ? "over" : "levelDone", prev: null };
 }
 
 const inBounds = (s: KlState, i: number) => Number.isInteger(i) && i >= 0 && i < s.width * s.height;
@@ -332,14 +393,12 @@ export function transition(state: KlState, action: KlAction): KlResult {
       const cells = state.cells.slice();
       for (const i of group) cells[i] = null;
       events.push({ type: "removed", cells: group, gained });
-      const next: KlState = {
-        ...state,
-        cells: settle(cells, state.width, state.height),
-        score: state.score + gained,
-        moves: state.moves + 1,
-        prev: withPrev(state),
-      };
-      return { ok: true, state: afterMove(next, events, action.timeLeft), events };
+      const next = addCharge(
+        { ...state, cells: settle(cells, state.width, state.height), score: state.score + gained, moves: state.moves + 1, prev: withPrev(state) },
+        gained,
+        events,
+      );
+      return { ok: true, state: afterMove(next, events), events };
     }
     case "whirl": {
       if (!active) return { ok: false, reason: "notPlaying" };
@@ -357,7 +416,7 @@ export function transition(state: KlState, action: KlAction): KlResult {
         moves: state.moves + 1,
         prev: withPrev(state),
       };
-      return { ok: true, state: afterMove(next, events, action.timeLeft), events };
+      return { ok: true, state: afterMove(next, events), events };
     }
     case "thunder": {
       if (!active) return { ok: false, reason: "notPlaying" };
@@ -375,7 +434,7 @@ export function transition(state: KlState, action: KlAction): KlResult {
         moves: state.moves + 1,
         prev: withPrev(state),
       };
-      return { ok: true, state: afterMove(next, events, action.timeLeft), events };
+      return { ok: true, state: afterMove(next, events), events };
     }
     case "undo": {
       if (!active || !state.prev) return { ok: false, reason: "noUndo" };
@@ -385,16 +444,26 @@ export function transition(state: KlState, action: KlAction): KlResult {
     }
     case "endLevel": {
       if (!active) return { ok: false, reason: "notPlaying" };
-      return { ok: true, state: finishLevel(state, events, undefined, action.timeout === true), events };
+      if (state.mode === "timed") {
+        // Cấp tốc chỉ bỏ bàn khi đã bế tắc, tránh chia lại liên tục để tìm bàn dễ.
+        if (state.phase !== "stuck") return { ok: false, reason: "notStuck" };
+        return { ok: true, state: redeal(state, events), events };
+      }
+      return { ok: true, state: finishLevel(state, events), events };
+    }
+    case "timeUp": {
+      if (state.mode !== "timed" || state.phase === "over") return { ok: false, reason: "notPlaying" };
+      events.push({ type: "timeUp" }, { type: "over" });
+      return { ok: true, state: { ...state, phase: "over", prev: null }, events };
     }
     case "nextLevel": {
-      if (state.phase !== "levelDone") return { ok: false, reason: "notPlaying" };
+      if (state.phase !== "levelDone" || state.mode === "timed") return { ok: false, reason: "notPlaying" };
       const level = state.level + 1;
       const { cells, nextId } = generateBoard(state.seed, level, state.nextId, state.width, state.height);
       events.push({ type: "newLevel", level });
       return {
         ok: true,
-        state: { ...state, level, cells, nextId, undo: KL_UNDO_PER_LEVEL, phase: "playing", summary: null, prev: null },
+        state: { ...state, level, cells, nextId, deal: 0, undo: KL_UNDO_PER_LEVEL, phase: "playing", summary: null, prev: null },
         events,
       };
     }
@@ -427,8 +496,9 @@ export function parseGame(text: string | null): KlState | null {
     if (!v.tools || !num(v.tools.whirl) || !num(v.tools.thunder)) return null;
     if (!phases.includes(v.phase as KlPhase)) return null;
     const mode: KlMode = v.mode === "timed" ? "timed" : "classic";
-    const summary = v.summary ? { ...v.summary, timeBonus: v.summary.timeBonus ?? 0, timeout: v.summary.timeout ?? false, toolGained: v.summary.toolGained ?? null } : null;
-    return { ...(v as KlState), mode, summary, prev: null };
+    const charge = v.charge && num(v.charge.whirl) && num(v.charge.thunder) ? v.charge : { whirl: 0, thunder: 0 };
+    const deal = num(v.deal) ? (v.deal as number) : 0;
+    return { ...(v as KlState), mode, charge, deal, summary: v.summary ?? null, prev: null };
   } catch {
     return null;
   }

@@ -1409,6 +1409,16 @@
 .kl-timebar[data-low] > div {
   background: linear-gradient(90deg, var(--tone-b8321f), var(--tone-ff8a5c));
 }
+.kl-charge {
+  background: var(--wood-inset);
+}
+.kl-charge > span {
+  background: linear-gradient(90deg, var(--frame-gold), var(--title-on-wood));
+  transition: width 0.25s ease-out;
+}
+.kl-charge[data-full] > span {
+  opacity: 0.45;
+}
 .kl-ghost {
   animation: kl-pop 0.3s ease-out forwards;
 }
