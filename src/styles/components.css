@@ -44,6 +44,8 @@
   @container (max-height: 11rem) { .ui-column-fill__poem { display: none; } }
   @container (max-height: 8rem) { .ui-column-fill__card--art { display: none; } }
   @container (max-height: 5rem) { .ui-column-fill__card { display: none; } }
+  /* Chỗ trống quá thấp (ColumnFill tự đặt data-collapsed): bỏ khối lấp, khung ngay trên giãn tới đáy cột. */
+  :has(+ .ui-column-fill[data-collapsed]) { flex-grow: 1; }
 
   @supports (appearance: base-select) {
     .ui-select,

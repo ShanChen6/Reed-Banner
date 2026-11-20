@@ -1,7 +1,7 @@
 "use client";
 import { requestJson, postJson } from "../api";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
-import { FrameInset, ModeBanner, ModeScreen, ModeSkeleton, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { FilterBar, FrameInset, ModeBanner, ModeScreen, ModeSkeleton, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { Alert, Button, ChoiceChip, choiceVariants } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
@@ -596,7 +596,7 @@ export default function DestinyScreen() {
             </ul>
           )}
 
-          <div role="group" aria-label="Lọc tướng" className="mt-3 flex flex-col gap-2">
+          <FilterBar label="Lọc tướng" className="mt-3">
             <div className="flex flex-wrap items-center gap-1.5">
               <input type="search" value={rosterFilter.query} onChange={(e) => changeFilter({ query: e.target.value })}
                 placeholder="Tìm tên…" aria-label="Tìm tướng theo tên"
@@ -635,7 +635,7 @@ export default function DestinyScreen() {
                 {shownRosterIds.length === 0 ? "Không có tướng nào khớp bộ lọc." : `${shownRosterIds.length} tướng khớp bộ lọc.`}
               </p>
             )}
-          </div>
+          </FilterBar>
 
           <div {...pagedRoster.listProps} className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-3">
             {pagedRoster.pageItems.map((id) => {

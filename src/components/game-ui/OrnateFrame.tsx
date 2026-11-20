@@ -32,6 +32,14 @@ export function OrnateFrame({ as: Tag = "section", level = "panel", paper, flush
   );
 }
 
+/**
+ * Khối bộ lọc (tìm tên, lọc hệ, nghề…) bọc trong ô lõm, tách khỏi danh sách bên dưới. Mọi bộ lọc trong game dùng
+ * khối này để cùng một kiểu (20/11/2026).
+ */
+export function FilterBar({ label, className, ...props }: ComponentProps<"div"> & { label: string }) {
+  return <div role="group" aria-label={label} data-slot="filter-bar" className={cn("ui-frame-inset flex flex-col gap-2 p-3", className)} {...props} />;
+}
+
 /** Ô lõm bên trong khung (danh sách, ô số liệu). */
 export function FrameInset({ className, ...props }: ComponentProps<"div">) {
   return <div className={cn("ui-frame-inset p-3", className)} {...props} />;
