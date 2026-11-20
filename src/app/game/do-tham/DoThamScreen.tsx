@@ -31,6 +31,7 @@ import { ElementIcon } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
+import { PlayCard } from "../PlayCard";
 import { useAudio } from "../audio/AudioProvider";
 import { cuesForAction, DOTHAM_MUSIC, DOTHAM_PRELOAD, REJECT } from "./sounds";
 
@@ -339,6 +340,7 @@ export default function DoThamScreen() {
         ]}
       />
       <ModeGuideTabs scene="DO_THAM">
+        <PlayCard>
         <div className={`grid grid-cols-[minmax(0,1fr)] items-start gap-6 ${game.width > 16 ? "" : "lg:grid-cols-[minmax(0,1fr)_320px]"}`}>
           <OrnateFrame aria-label="Vùng chơi" flush className="flex min-w-0 flex-col items-center gap-3 p-2 sm:p-5">
             <div className="flex w-full flex-wrap items-center justify-center gap-2" role="group" aria-label="Bậc độ khó">
@@ -497,6 +499,7 @@ export default function DoThamScreen() {
             </p>
           </aside>
         </div>
+        </PlayCard>
       </ModeGuideTabs>
     </ModeScreen>
   );

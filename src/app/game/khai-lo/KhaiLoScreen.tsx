@@ -39,6 +39,7 @@ import { readStorage, writeStorage } from "../formation/storage";
 import { Button, buttonVariants, choiceVariants } from "@/components/ui";
 import { ModeScreen, OrnateFrame } from "@/components/game-ui";
 import { ModeGuideTabs } from "../ModeGuide";
+import { PlayCard } from "../PlayCard";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -448,6 +449,7 @@ export default function KhaiLoScreen() {
       </div>
       <ModeGuideTabs scene="KHAI_LO">
 
+      <PlayCard>
       {/* Điện thoại: thanh số liệu → bàn → đạo cụ ngay dưới bàn. Máy tính: bàn bên trái, số liệu và đạo cụ ở cột phải. */}
       <div className="kl-layout grid items-start gap-3 sm:gap-4 lg:gap-6">
         <div className="flex flex-col gap-2 [grid-area:head] lg:gap-3">
@@ -626,6 +628,7 @@ export default function KhaiLoScreen() {
           <p className="text-caption text-on-wood-soft">Bản chơi thử, không cần mạng: chưa có thưởng và bảng công trạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.</p>
         </aside>
       </div>
+      </PlayCard>
       </ModeGuideTabs>
     </Shell>
   );

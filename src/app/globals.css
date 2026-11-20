@@ -1501,3 +1501,59 @@
     transition: none;
   }
 }
+
+/* Thẻ vùng chơi có nút toàn màn hình (src/app/game/PlayCard.tsx). */
+.play-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border: 1px solid var(--frame-bronze);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--wood-lo) 70%, transparent);
+  padding: 0.5rem;
+}
+/* Dưới 1024px: cỡ ô bàn cờ tính theo bề rộng màn hình nên thẻ không chiếm thêm chiều ngang (bỏ đệm và viền hai bên). */
+@media (max-width: 1023px) {
+  .play-card {
+    padding-inline: 0;
+    border-inline-width: 0;
+    border-radius: 0;
+  }
+}
+@media (min-width: 1024px) {
+  .play-card {
+    padding: 0.75rem;
+  }
+}
+.play-card-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.play-card-title {
+  font-family: var(--font-serif, serif);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--title-on-wood);
+}
+.play-card:fullscreen,
+.play-card--overlay {
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  border-radius: 0;
+  background: var(--wood-lo);
+  padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right)) max(0.75rem, env(safe-area-inset-bottom))
+    max(0.75rem, env(safe-area-inset-left));
+}
+.play-card--overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+/* Sân đấu dính dưới thanh đầu trang; khi thẻ toàn màn hình thì không còn thanh đầu trang nên dính sát mép trên. */
+.play-card:fullscreen .play-card-sticky,
+.play-card--overlay .play-card-sticky {
+  top: 0;
+}
