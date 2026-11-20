@@ -306,7 +306,8 @@ export default function DoThamScreen() {
   const over = isOver(game);
   const flags = flagsOf(game);
   const left = game.mines - flags;
-  const cell = `max(26px, min(38px, calc((100vw - 3.5rem) / ${game.width})))`;
+  // Cỡ ô tính trong globals.css (.dt-board) theo số hàng, cột; phóng to màn chơi thì ô giãn lấp màn.
+  const cell = "var(--dt-cell)";
 
   const lit = useMemo(() => {
     const set = new Set<number>();
@@ -417,8 +418,8 @@ export default function DoThamScreen() {
                   ref={boardRef}
                   role="grid"
                   aria-label={`Sa bàn Do Thám ${game.height} hàng ${game.width} cột`}
-                  className="grid"
-                  style={{ gridTemplateColumns: `repeat(${game.width}, ${cell})`, gridAutoRows: cell }}
+                  className="dt-board grid"
+                  style={{ gridTemplateColumns: `repeat(${game.width}, ${cell})`, gridAutoRows: cell, ["--dt-cols" as string]: game.width, ["--dt-rows" as string]: game.height }}
                 >
                   {game.cells.map((c, i) => {
                     const trap = game.trap?.[i] === true;
