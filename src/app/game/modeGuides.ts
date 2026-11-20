@@ -352,6 +352,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     rules: [
       "Trả lời sai thì tướng quay về ô bắt đầu lượt đó. Số lượt không giới hạn, chỉ dùng để chấm sao.",
+      "Đã lên đường thì không đổi mê cung, độ khó hay tướng đi cùng được nữa. Muốn chọn lại thì bấm Đầu hàng: ván dở mất, bạn về màn chọn mê cung.",
       "Ô Lục, Vàng, Đỏ là câu dễ tới khó. Ô Đỏ đáp đúng còn mở lối tắt khóa ở ngay bên cạnh.",
       "Ô Bẫy cũng là một câu hỏi: đúng thì gỡ bẫy, sai thì dính bẫy như Phục binh, Nước lũ hay Đốt cầu. Từ bậc Thường có bẫy ẩn trông như ô Vàng.",
       "Ô Ải phải đúng hai câu liền. Không đi xuyên qua Ải và ô Trấn khi chưa thông.",

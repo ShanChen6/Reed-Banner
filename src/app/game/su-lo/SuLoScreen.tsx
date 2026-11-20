@@ -170,7 +170,7 @@ function MazeBoard({ s, onMove }: { s: SlState; onMove: (to: number) => void }) 
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
-      className="h-auto w-full max-w-[760px] select-none rounded-xl shadow-2xl ring-2 ring-frame-line"
+      className="sl-map h-auto w-full select-none rounded-xl shadow-2xl ring-2 ring-frame-line"
       role="group"
       aria-label={`Sa bàn mê cung ${rows} hàng ${cols} cột, bản đồ ${map.place}`}
     >
@@ -445,7 +445,7 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
   );
 
   return (
-    <section className="flex w-full flex-col items-center gap-3" aria-label="Giao tranh">
+    <section className="sl-skirmish flex w-full flex-col items-center gap-3" aria-label="Giao tranh">
       <div className="ui-frame flex w-full flex-col gap-2 p-3">
         <h2 className="ui-title-on-wood font-bold">{boss.name}</h2>
         <p className="text-sm">{boss.phases[phase]}</p>
@@ -468,8 +468,8 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
         <div
           role="grid"
           aria-label="Bàn giao tranh"
-          className="grid"
-          style={{ gridTemplateColumns: `repeat(${board.cols}, max(28px, min(52px, calc((100vw - 3.5rem) / ${board.cols}))))` }}
+          className="sl-sk-grid grid"
+          style={{ "--sk-cols": board.cols, "--sk-rows": board.rows } as React.CSSProperties}
         >
           {board.cells.map((t, i) => {
             const p = { row: Math.floor(i / board.cols), col: i % board.cols };
@@ -506,6 +506,162 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
         <Button variant="secondary" disabled={locked} onClick={() => act({ type: "retreat" })}>
           Rút quân
         </Button>
+      </div>
+    </section>
+  );
+}
+
+// ── Màn chọn mê cung ──
+
+/** Lời ngắn cho từng bậc: cỡ sa bàn, sương, giờ mỗi câu, mốc lượt ★★. */
+function levelNotes(lv: SlLevel): string[] {
+  const c = SL_LEVELS[lv];
+  return [
+    `Sa bàn ${c.cols}×${c.rows}`,
+    c.fog === null ? "Không sương" : "Sương che ô ở xa",
+    c.questionSeconds ? `${c.questionSeconds} giây mỗi câu` : "Không tính giờ",
+    `Mốc ★★: ${c.starTurns} lượt`,
+  ];
+}
+
+function bestText(b: { stars: number; turns: number } | undefined): string {
+  return b ? `${"★".repeat(b.stars)}${"☆".repeat(3 - b.stars)} ${b.turns} lượt` : "Chưa thoát";
+}
+
+/** Màn riêng trước khi vào ván: chọn mê cung (thời kỳ), độ khó và hai tướng đi cùng. Đã vào ván thì chỉ Đầu hàng mới về lại đây. */
+function MazePicker({ setup, best, onChange, onStart }: { setup: Setup; best: Best; onChange: (s: Setup) => void; onStart: () => void }) {
+  const toggleAdvisor = (id: string) => {
+    const on = setup.advisors.includes(id);
+    onChange({ ...setup, advisors: on ? setup.advisors.filter((x) => x !== id) : [...setup.advisors, id].slice(-2) });
+  };
+  const ready = setup.advisors.length === 2;
+  return (
+    <div className="sl-picker flex flex-col gap-4">
+      <OrnateFrame aria-labelledby="sl-pick-era" className="flex flex-col gap-3">
+        <h2 id="sl-pick-era" className="ui-title-on-wood text-lg font-bold">
+          Chọn mê cung
+        </h2>
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 xl:grid-cols-4" role="radiogroup" aria-label="Mê cung">
+          {SL_ERAS.map((era) => {
+            const open = eraPlayable(era);
+            const on = setup.era === era;
+            return (
+              <button
+                key={era}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                disabled={!open}
+                onClick={() => onChange({ ...setup, era })}
+                className={`group relative flex flex-col overflow-hidden rounded-xl border-2 text-left transition ${
+                  on ? "border-frame-gold-hi shadow-[0_0_0_3px_color-mix(in_srgb,var(--frame-gold)_35%,transparent)]" : "border-frame-line hover:border-frame-gold"
+                } disabled:cursor-not-allowed disabled:opacity-60`}
+              >
+                <span className="relative block aspect-[16/9] w-full overflow-hidden bg-wood-inset">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- tranh bản đồ tĩnh, cùng tệp với nền sa bàn */}
+                  <img
+                    src={ERA_MAP[era].src}
+                    alt=""
+                    draggable={false}
+                    className={`size-full object-cover transition-transform duration-300 ${open ? "group-hover:scale-105" : "grayscale"}`}
+                  />
+                  {!open && (
+                    <span className="absolute inset-0 flex items-center justify-center bg-black/55 font-bold text-paper-hi">Chờ nguồn sử</span>
+                  )}
+                  {on && (
+                    <span className="absolute top-2 right-2 rounded-full bg-lacquer px-2 py-0.5 text-caption font-bold text-paper-hi ring-1 ring-frame-gold-hi">
+                      Đã chọn
+                    </span>
+                  )}
+                </span>
+                <span className="flex flex-1 flex-col gap-1 bg-wood-lo/80 p-2 sm:p-3">
+                  <span className="font-bold text-title-on-wood">{SL_ERA_NAME[era]}</span>
+                  <span className="text-sm text-on-wood-soft">Trấn cổng: {SL_BOSSES[era].name}</span>
+                  {open && (
+                    <span className="text-caption text-on-wood-soft">
+                      Tốt nhất ({LEVEL_NAME[setup.level]}): <span className="text-frame-gold">{bestText(best[`${era}:${setup.level}`])}</span>
+                    </span>
+                  )}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </OrnateFrame>
+
+      <div className="grid items-start gap-4 lg:grid-cols-2">
+        <OrnateFrame aria-labelledby="sl-pick-level" className="flex flex-col gap-3">
+          <h2 id="sl-pick-level" className="ui-title-on-wood text-lg font-bold">
+            Độ khó
+          </h2>
+          <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Độ khó">
+            {SL_LEVEL_ORDER.map((lv) => {
+              const on = setup.level === lv;
+              return (
+                <button
+                  key={lv}
+                  type="button"
+                  role="radio"
+                  aria-checked={on}
+                  onClick={() => onChange({ ...setup, level: lv })}
+                  className={`ui-frame-inset flex flex-col gap-1 rounded-lg border-2 p-2 text-left sm:p-3 transition ${on ? "border-frame-gold-hi" : "border-transparent hover:border-frame-gold"}`}
+                >
+                  <span className={`font-bold ${on ? "text-frame-gold-hi" : "text-title-on-wood"}`}>{LEVEL_NAME[lv]}</span>
+                  {levelNotes(lv).map((t) => (
+                    <span key={t} className="text-caption text-on-wood-soft">
+                      {t}
+                    </span>
+                  ))}
+                </button>
+              );
+            })}
+          </div>
+        </OrnateFrame>
+
+        <OrnateFrame aria-labelledby="sl-pick-advisors" className="flex flex-col gap-3">
+          <h2 id="sl-pick-advisors" className="ui-title-on-wood text-lg font-bold">
+            Hai tướng đi cùng <span className="text-sm font-normal text-on-wood-soft">– đã chọn {setup.advisors.length}/2, dùng cho trợ giúp Hỏi tướng</span>
+          </h2>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Tướng đi cùng">
+            {SL_ADVISORS.map((a) => (
+              <ChoiceChip key={a.id} size="md" selected={setup.advisors.includes(a.id)} onClick={() => toggleAdvisor(a.id)}>
+                {a.name}
+              </ChoiceChip>
+            ))}
+          </div>
+        </OrnateFrame>
+      </div>
+
+      <div className="ui-frame ui-frame--plain flex flex-wrap items-center justify-between gap-3 p-4">
+        <p className="text-[15px]">
+          <span className="font-bold text-title-on-wood">{SL_ERA_NAME[setup.era]}</span>, {LEVEL_NAME[setup.level]}
+          {ready
+            ? `, đi cùng ${setup.advisors.map((id) => SL_ADVISORS.find((x) => x.id === id)?.name).join(" và ")}`
+            : ". Chọn đủ hai tướng đi cùng để lên đường."}
+        </p>
+        <Button size="lg" disabled={!ready} onClick={onStart}>
+          Lên đường
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+/** Trong ván chỉ có một lối về màn chọn mê cung: đầu hàng, bấm hai lần để chắc chắn. */
+function SurrenderBar({ onConfirm }: { onConfirm: () => void }) {
+  const [asking, setAsking] = useState(false);
+  return (
+    <section className="ui-frame flex flex-col gap-2 p-4" aria-label="Đầu hàng">
+      {asking && <p className="text-sm">Bỏ ván này? Ván dở sẽ mất, bạn quay về màn chọn mê cung.</p>}
+      <div className="flex flex-wrap gap-2">
+        <Button variant={asking ? "danger" : "secondary"} size="sm" onClick={() => (asking ? onConfirm() : setAsking(true))}>
+          {asking ? "Đầu hàng" : "Đầu hàng…"}
+        </Button>
+        {asking && (
+          <Button variant="secondary" size="sm" autoFocus onClick={() => setAsking(false)}>
+            Chơi tiếp
+          </Button>
+        )}
       </div>
     </section>
   );
@@ -594,52 +750,35 @@ export default function SuLoScreen() {
     return "Câu hỏi";
   })();
 
-  const setupPanel = (
-    <section className="ui-frame flex flex-col gap-3 p-4" aria-label="Chuẩn bị">
-      <h2 className="ui-title-on-wood font-bold">Chọn mê cung</h2>
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Giai đoạn">
-        {SL_ERAS.map((era) => (
-          <ChoiceChip key={era} size="md" selected={setup.era === era} disabled={!eraPlayable(era)} onClick={() => changeSetup({ ...setup, era })}>
-            {SL_ERA_NAME[era]}
-            {!eraPlayable(era) && ", chờ nguồn"}
-          </ChoiceChip>
-        ))}
-      </div>
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Độ khó">
-        {SL_LEVEL_ORDER.map((lv) => (
-          <ChoiceChip key={lv} size="md" selected={setup.level === lv} onClick={() => changeSetup({ ...setup, level: lv })}>
-            {LEVEL_NAME[lv]}, {SL_LEVELS[lv].cols}×{SL_LEVELS[lv].rows}
-            {SL_LEVELS[lv].questionSeconds ? `, ${SL_LEVELS[lv].questionSeconds}s/câu` : ""}
-          </ChoiceChip>
-        ))}
-      </div>
-      <h3 className="font-semibold">Hai tướng đi cùng (trợ giúp Hỏi tướng)</h3>
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Tướng đi cùng">
-        {SL_ADVISORS.map((a) => {
-          const on = setup.advisors.includes(a.id);
-          return (
-            <ChoiceChip
-              key={a.id}
-              size="sm"
-              selected={on}
-              onClick={() => changeSetup({ ...setup, advisors: on ? setup.advisors.filter((x) => x !== a.id) : [...setup.advisors, a.id].slice(-2) })}
-            >
-              {a.name}
-            </ChoiceChip>
-          );
-        })}
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
-        <Button size="lg" disabled={setup.advisors.length !== 2} onClick={start}>
-          {game && game.phase !== "won" ? "Bỏ ván này, lên đường mới" : "Lên đường"}
-        </Button>
-        {best[`${setup.era}:${setup.level}`] && (
-          <span className="text-sm text-on-wood-soft">
-            Tốt nhất: {"★".repeat(best[`${setup.era}:${setup.level}`]!.stars)}, {best[`${setup.era}:${setup.level}`]!.turns} lượt
-          </span>
-        )}
-      </div>
-    </section>
+  const surrender = () => {
+    // Bỏ ván: xóa ván dở trên trình duyệt rồi về màn chọn mê cung.
+    writeStorage(SAVE_KEY, null);
+    setGame(null);
+    setMessage("");
+    setFastPick(false);
+  };
+
+  const playing = game !== null && game.phase !== "won";
+
+  const questionSlot = playing && (!game.skirmish || game.question) && (
+    // Chỗ câu hỏi giữ sẵn suốt ván để câu hỏi hiện ra không đẩy bố cục.
+    <div className="sl-question flex min-h-60 w-full flex-col" data-testid="question-slot">
+      {q && game.question ? (
+        <QuestionCard
+          key={`${game.question.id}:${game.question.chainLeft}:${game.asked.length}`}
+          q={q}
+          hidden={game.question.hidden}
+          hint={game.question.hint}
+          title={questionTitle}
+          seconds={cfg.questionSeconds}
+          onAnswer={onAnswer}
+        />
+      ) : (
+        <p className="ui-frame-inset flex flex-1 items-center justify-center p-4 text-center text-sm text-on-wood-soft">
+          Câu hỏi của ô bạn dừng chân sẽ hiện ở đây.
+        </p>
+      )}
+    </div>
   );
 
   return (
@@ -647,7 +786,7 @@ export default function SuLoScreen() {
       <ModeBanner
         title="Sử Lộ"
         art="/art/home/su-lo.webp"
-        kicker={`Giải đố lịch sử – ${game ? `${SL_ERA_NAME[game.era]}, ${LEVEL_NAME[game.level]}` : "Chuẩn bị"}`}
+        kicker={`Giải đố lịch sử – ${game ? `${SL_ERA_NAME[game.era]}, ${LEVEL_NAME[game.level]}` : "Chọn mê cung"}`}
         description="Đổ xúc xắc dẫn tướng qua mê cung, trả lời đúng mới đứng vững ở ô vừa tới. Sai thì quay về chỗ cũ, đọc sử chép rồi thử lại."
         stats={[
           { label: "Lượt", value: game ? `${game.turns}/${cfg.starTurns}` : "–" },
@@ -657,31 +796,84 @@ export default function SuLoScreen() {
       />
       <ModeGuideTabs scene="SU_LO">
         <PlayCard>
-        <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
-          <OrnateFrame aria-label="Vùng chơi" flush className="flex min-w-0 flex-col items-center gap-4 p-2 sm:p-5">
-            {!game && setupPanel}
-            {game && game.phase !== "won" && (game.skirmish ? <Skirmish s={game} act={act} /> : <MazeBoard s={game} onMove={(to) => act({ type: "move", to })} />)}
-            {/* Chỗ câu hỏi giữ sẵn dưới bàn suốt ván để câu hỏi hiện ra không đẩy bố cục. */}
-            {game && game.phase !== "won" && (!game.skirmish || game.question) && (
-              <div className="flex min-h-60 w-full flex-col" data-testid="question-slot">
-                {q && game.question ? (
-                  <QuestionCard
-                    key={`${game.question.id}:${game.question.chainLeft}:${game.asked.length}`}
-                    q={q}
-                    hidden={game.question.hidden}
-                    hint={game.question.hint}
-                    title={questionTitle}
-                    seconds={cfg.questionSeconds}
-                    onAnswer={onAnswer}
-                  />
-                ) : (
-                  <p className="ui-frame-inset flex flex-1 items-center justify-center p-4 text-center text-sm text-on-wood-soft">
-                    Câu hỏi của ô bạn dừng chân sẽ hiện ở đây.
+          {!game && <MazePicker setup={setup} best={best} onChange={changeSetup} onStart={start} />}
+
+          {playing && (
+            <div
+              className="sl-play grid grid-cols-[minmax(0,1fr)] items-start gap-4 lg:gap-6"
+              style={{ "--sl-ratio": game.skirmish ? 1 : game.maze.cols / game.maze.rows } as React.CSSProperties}
+            >
+              <OrnateFrame aria-label="Vùng chơi" flush className="sl-board flex min-w-0 flex-col items-center justify-center gap-4 p-2 sm:p-5">
+                {game.skirmish ? <Skirmish s={game} act={act} /> : <MazeBoard s={game} onMove={(to) => act({ type: "move", to })} />}
+              </OrnateFrame>
+
+              {questionSlot}
+
+              <aside className="sl-side flex flex-col gap-4" aria-label="Bảng điều khiển">
+                <section className="ui-frame flex flex-col gap-3 p-4" aria-label="Lượt đi">
+                  <h2 className="ui-title-on-wood font-bold">Lượt {game.turns + (game.phase === "roll" ? 1 : 0)}</h2>
+                  <p role="status" aria-live="polite" className="text-[15px]">
+                    {message || game.event.text}
                   </p>
-                )}
-              </div>
-            )}
-            {game?.phase === "won" && (
+                  {lastQ && game.event.explanation && (
+                    <div className="ui-frame-inset p-2 text-sm">
+                      <p className="font-semibold">Sử chép</p>
+                      <p>{game.event.explanation}</p>
+                      <p className="text-caption text-on-wood-soft">Nguồn: {lastQ.sources.map((x) => `${x.id}, ${x.locator}`).join("; ")}</p>
+                    </div>
+                  )}
+                  {game.phase === "roll" && (
+                    <div className="flex flex-wrap gap-2">
+                      <Button size="lg" onClick={() => act({ type: "roll" })}>
+                        {game.doubleRoll ? "Đổ hai xúc xắc" : "Đổ xúc xắc"}
+                      </Button>
+                      <Button variant="secondary" disabled={game.aids.hoaToc <= 0} aria-pressed={fastPick} onClick={() => setFastPick((v) => !v)}>
+                        Hỏa tốc ({game.aids.hoaToc})
+                      </Button>
+                    </div>
+                  )}
+                  {game.phase === "roll" && fastPick && (
+                    <div className="flex flex-wrap gap-2" role="group" aria-label="Chọn số bước">
+                      {[1, 2, 3, 4, 5, 6].map((v) => (
+                        <ChoiceChip key={v} size="md" selected={false} onClick={() => askAid("hoaToc", { value: v }) && setFastPick(false)}>
+                          {v}
+                        </ChoiceChip>
+                      ))}
+                    </div>
+                  )}
+                </section>
+
+                <section className="ui-frame flex flex-col gap-2 p-4" aria-label="Trợ giúp">
+                  <h2 className="ui-title-on-wood font-bold">
+                    Trợ giúp <span className="text-caption font-normal text-on-wood-soft">– đã dùng {game.aidsUsed}/{SL_AID_USE_MAX}</span>
+                  </h2>
+                  <div className="flex flex-wrap gap-2">
+                    {SL_AIDS.filter((a) => a !== "hoaToc" && a !== "hoiTuong").map((a) => (
+                      <Button key={a} size="sm" variant="secondary" disabled={game.phase !== "question" || game.aids[a] <= 0} onClick={() => askAid(a)}>
+                        {SL_AID_NAME[a]} ({game.aids[a]})
+                      </Button>
+                    ))}
+                    {game.advisors.map((id) => (
+                      <Button
+                        key={id}
+                        size="sm"
+                        variant="secondary"
+                        disabled={game.phase !== "question" || game.aids.hoiTuong <= 0}
+                        onClick={() => askAid("hoiTuong", { advisor: id })}
+                      >
+                        Hỏi {SL_ADVISORS.find((x) => x.id === id)?.name} ({game.aids.hoiTuong})
+                      </Button>
+                    ))}
+                  </div>
+                </section>
+
+                <SurrenderBar onConfirm={surrender} />
+              </aside>
+            </div>
+          )}
+
+          {game?.phase === "won" && (
+            <OrnateFrame aria-label="Kết quả" flush className="flex justify-center p-2 sm:p-5">
               <div role="status" className="ui-frame flex w-full max-w-xl flex-col items-center gap-3 p-4 text-center">
                 <h2 className="ui-title-on-wood text-2xl font-bold">Thoát khỏi mê cung!</h2>
                 <p className="text-3xl text-frame-gold" aria-label={`${starsOf(game)} sao`}>
@@ -707,83 +899,12 @@ export default function SuLoScreen() {
                     </ul>
                   </div>
                 )}
-                <Button size="lg" autoFocus onClick={() => setGame(null)}>
+                <Button size="lg" autoFocus onClick={surrender}>
                   Chọn mê cung khác
                 </Button>
               </div>
-            )}
-          </OrnateFrame>
-
-          <aside className="flex flex-col gap-4" aria-label="Bảng điều khiển">
-            {game && game.phase !== "won" && (
-              <section className="ui-frame flex flex-col gap-3 p-4" aria-label="Lượt đi">
-                <h2 className="ui-title-on-wood font-bold">Lượt {game.turns + (game.phase === "roll" ? 1 : 0)}</h2>
-                <p role="status" aria-live="polite" className="text-[15px]">
-                  {message || game.event.text}
-                </p>
-                {lastQ && game.event.explanation && (
-                  <div className="ui-frame-inset p-2 text-sm">
-                    <p className="font-semibold">Sử chép</p>
-                    <p>{game.event.explanation}</p>
-                    <p className="text-caption text-on-wood-soft">Nguồn: {lastQ.sources.map((x) => `${x.id}, ${x.locator}`).join("; ")}</p>
-                  </div>
-                )}
-                {game.phase === "roll" && (
-                  <div className="flex flex-wrap gap-2">
-                    <Button size="lg" onClick={() => act({ type: "roll" })}>
-                      {game.doubleRoll ? "Đổ hai xúc xắc" : "Đổ xúc xắc"}
-                    </Button>
-                    <Button variant="secondary" disabled={game.aids.hoaToc <= 0} aria-pressed={fastPick} onClick={() => setFastPick((v) => !v)}>
-                      Hỏa tốc ({game.aids.hoaToc})
-                    </Button>
-                  </div>
-                )}
-                {game.phase === "roll" && fastPick && (
-                  <div className="flex flex-wrap gap-2" role="group" aria-label="Chọn số bước">
-                    {[1, 2, 3, 4, 5, 6].map((v) => (
-                      <ChoiceChip key={v} size="md" selected={false} onClick={() => askAid("hoaToc", { value: v }) && setFastPick(false)}>
-                        {v}
-                      </ChoiceChip>
-                    ))}
-                  </div>
-                )}
-              </section>
-            )}
-
-            {game && game.phase !== "won" && (
-              <section className="ui-frame flex flex-col gap-2 p-4" aria-label="Trợ giúp">
-                <h2 className="ui-title-on-wood font-bold">
-                  Trợ giúp <span className="text-caption font-normal text-on-wood-soft">– đã dùng {game.aidsUsed}/{SL_AID_USE_MAX}</span>
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {SL_AIDS.filter((a) => a !== "hoaToc" && a !== "hoiTuong").map((a) => (
-                    <Button key={a} size="sm" variant="secondary" disabled={game.phase !== "question" || game.aids[a] <= 0} onClick={() => askAid(a)}>
-                      {SL_AID_NAME[a]} ({game.aids[a]})
-                    </Button>
-                  ))}
-                  {game.advisors.map((id) => (
-                    <Button
-                      key={id}
-                      size="sm"
-                      variant="secondary"
-                      disabled={game.phase !== "question" || game.aids.hoiTuong <= 0}
-                      onClick={() => askAid("hoiTuong", { advisor: id })}
-                    >
-                      Hỏi {SL_ADVISORS.find((x) => x.id === id)?.name} ({game.aids.hoiTuong})
-                    </Button>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {game && (
-              <details className="ui-frame p-0" open={game.phase === "won"}>
-                <summary className="cursor-pointer p-4 font-bold text-title-on-wood">Đổi mê cung, độ khó, tướng đi cùng</summary>
-                <div className="px-1 pb-1">{setupPanel}</div>
-              </details>
-            )}
-          </aside>
-        </div>
+            </OrnateFrame>
+          )}
         </PlayCard>
       </ModeGuideTabs>
     </ModeScreen>

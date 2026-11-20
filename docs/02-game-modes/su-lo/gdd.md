@@ -444,6 +444,8 @@ Các câu mê cung IV và phần sau năm 970 của mê cung III **chưa soạn 
 - Câu hỏi hiện trên thẻ tre trượt lên; sau khi trả lời lật mặt sau là sử chép kèm mã nguồn.
 - Ô giao tranh mở bàn cờ match-3 cỡ nhỏ (8×8 nếu lõi bàn cờ hỗ trợ kích thước khác, không thì 12×8), boss là chân dung lớn bên trên với thanh Thành lực ba pha.
 - Điện thoại: sa bàn kéo và phóng to được, tự cuộn theo tướng.
+- **Màn chọn mê cung riêng** (Shan 20/11/2026): trước khi vào ván là màn chọn mê cung (thẻ tranh bản đồ, tên quân giặc trấn cổng, kỷ lục ở bậc đang chọn), độ khó (cỡ sa bàn, sương, giờ mỗi câu, mốc ★★) và hai tướng đi cùng, rồi bấm Lên đường. Đã vào ván thì không đổi mê cung được nữa: chỉ có nút **Đầu hàng** (bấm hai lần) xóa ván dở và về màn chọn. Thoát mê cung xong cũng về màn chọn.
+- **Phóng to màn chơi** (Shan 20/11/2026): sa bàn chiếm cả cột trái, lớn tới mức vừa chiều cao màn; câu hỏi lên đầu cột phải, trên lượt đi và trợ giúp; ô giao tranh cũng giãn theo chiều cao màn (lớp `.sl-*` trong `globals.css`).
 
 ### 12.2 Kỹ thuật
 
