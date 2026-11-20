@@ -70,10 +70,11 @@ Ba cách điều khiển dùng song song; người chơi đổi qua lại bất 
 > TODO: cho phép đổi phím trong cài đặt hay không; phím tắt cho nút Túi đồ và xem chi tiết sát thương.
 
 ### 2.4 Thẻ vùng chơi và nút toàn màn hình (Shan 20/11/2026)
-Vùng chơi được bọc trong một thẻ (`PlayCard`, `src/app/game/PlayCard.tsx`): thanh trên thẻ ghi tên vùng và có nút **Toàn màn hình**. Bấm thì riêng thẻ ra toàn màn hình (Fullscreen API trên phần tử, giống nút toàn màn hình của cả trang nhưng chỉ còn vùng chơi; thanh đầu trang, chân trang, hướng dẫn ẩn đi). Bấm **Thu nhỏ** hoặc Esc để về. Trình duyệt không cho toàn màn hình một phần tử (iPhone Safari) thì thẻ phủ kín cửa sổ thay thế.
-- Trận match-3 (mọi chế độ đánh): thẻ "Trận đấu" gồm sân đấu, thẻ tướng hai phe, đồng hồ lượt, bàn cờ, kỹ năng; chỉ hiện khi đã vào trận. Sân đấu dính sát mép trên khi toàn màn hình.
-- Khai Lộ, Do Thám, Sử Lộ: thẻ "Vùng chơi" gồm khung chơi và cột bên (kết quả màn, đạo cụ).
-- Không thu phóng cỡ ô (Shan bỏ ý này 20/11/2026); thẻ chỉ mở rộng ra toàn màn hình. Dưới 1024px thẻ bỏ đệm và viền hai bên để cỡ ô tính theo bề rộng màn hình không đổi.
+Vùng chơi được bọc trong một thẻ (`PlayCard`, `src/app/game/PlayCard.tsx`), không có tiêu đề hay chữ trên thẻ. Ở màn có thẻ, nút toàn màn hình nổi ở góc dưới phải (cùng chỗ nút toàn màn hình của cả trang; nút đó ẩn đi) đưa riêng thẻ ra toàn màn hình (Fullscreen API trên phần tử): thanh đầu trang, chân trang, hướng dẫn ẩn đi. Bấm lại nút hoặc Esc để về. Trình duyệt không cho toàn màn hình một phần tử (iPhone Safari) thì thẻ phủ kín cửa sổ thay thế.
+- Áp cho: trận match-3 (mọi chế độ đánh: Giao Tranh, Thao Luyện, Bình Loạn, các tháp, Trấn Ải, Nhật Lệnh, Quần Hùng; thẻ chỉ có khi đã vào trận), Khai Lộ, Do Thám, Sử Lộ, Trận Đồ (khi đang chơi một ván), Tầm Tướng Ký (thường và hạng tuần), sa bàn Viễn Chinh khi đang hành quân.
+- Toàn màn hình: lề co giãn theo màn (1rem tới 2.5rem, cộng vùng tai thỏ), nội dung tối đa 1600px ở giữa, đáy chừa chỗ cho nút nổi và thanh dính đáy (nếu có). Sân đấu trận dính sát mép trên.
+- Dưới 1024px thẻ bỏ đệm và viền hai bên để cỡ ô tính theo bề rộng màn hình không đổi.
+- Không thu phóng cỡ ô (Shan bỏ ý này 20/11/2026).
 
 ## 3. Nguyên tắc chung
 
