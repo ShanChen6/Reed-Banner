@@ -8,7 +8,7 @@
 
 import { useState, type KeyboardEvent } from "react";
 import { BAG_LIMIT, CAMPAIGN_FOOD_MAX, GEAR_SETS } from "@/core";
-import { ModeBanner, ModeScreen, OrnateFrame } from "@/components/game-ui";
+import { ModeBanner, ModeLoading, ModeScreen } from "@/components/game-ui";
 import { Alert } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { GearIcon } from "../art/gear";
@@ -29,9 +29,7 @@ export default function ShopScreen() {
     return (
       <ModeScreen label="Cửa Hàng">
         <h1 className="sr-only">Cửa Hàng</h1>
-        <OrnateFrame as="div" role="status" className="py-16 text-center text-on-wood-soft">
-          {loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : "Đang mở Cửa Hàng…"}
-        </OrnateFrame>
+        <ModeLoading error={loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : null} label="Đang mở Cửa Hàng…" sections={2} />
       </ModeScreen>
     );
 

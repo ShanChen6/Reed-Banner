@@ -49,6 +49,8 @@ export interface TowerFeatures {
   readonly tamTuongKy?: boolean;
   /** Tầm Tướng Ký chế độ Hạng tuần (đi cùng `TAM_TUONG_KY_ENABLED`). */
   readonly tamTuongKyRanked?: boolean;
+  /** Trận Đồ xếp hạng, mặc định tắt (`FORMATION_RANKED_ENABLED`): biết sẵn từ server để giữ chỗ khi đang tải. */
+  readonly formationRanked?: boolean;
   /** Viễn Chinh, mặc định tắt (`EXPEDITION_ENABLED`). */
   readonly expedition?: boolean;
   /** Tầm Tướng Ký Gói 2 (đã duyệt, đi cùng cờ chế độ). */
@@ -147,7 +149,7 @@ function SceneView({
     case "ARENA":
       return account ? <ArenaScreen /> : <LoginGate scene="ARENA" name={SCENE_TITLE.ARENA} />;
     case "FORMATION":
-      return <FormationScreen />;
+      return <FormationScreen rankedEnabled={towerFeatures.formationRanked === true} />;
     case "TAM_TUONG_KY":
       if (!towerFeatures.tamTuongKy) return <DisabledTowerMode name={SCENE_TITLE.TAM_TUONG_KY} />;
       return account ? <TamTuongKyScreen ranked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate scene="TAM_TUONG_KY" name={SCENE_TITLE.TAM_TUONG_KY} reason="Chế độ này cần tài khoản đã ghi danh vì mỗi lượt chơi tốn một phiếu, và tiến trình Tướng Lục lưu theo tài khoản." />;
@@ -168,7 +170,7 @@ function SceneView({
     case "SHOP":
       return <ShopScreen />;
     case "LEADERBOARD":
-      return account ? <HonorsScreen destinyEnabled={towerFeatures.destiny} tamTuongKyRanked={towerFeatures.tamTuongKyRanked === true} /> : <LoginGate scene="LEADERBOARD" name={SCENE_TITLE.LEADERBOARD} />;
+      return account ? <HonorsScreen destinyEnabled={towerFeatures.destiny} tamTuongKyRanked={towerFeatures.tamTuongKyRanked === true} formationRanked={towerFeatures.formationRanked === true} /> : <LoginGate scene="LEADERBOARD" name={SCENE_TITLE.LEADERBOARD} />;
     case "PROFILE":
       return <ProfileScreen playerName={account?.name ?? null} />;
     case "LOGIN":

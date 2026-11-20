@@ -92,7 +92,7 @@ async function syncCollection(): Promise<string[] | null> {
   return union;
 }
 
-export default function FormationScreen() {
+export default function FormationScreen({ rankedEnabled = false }: { rankedEnabled?: boolean }) {
   const [state, setState] = useState<PuzzleState | null>(null);
   const [ready, setReady] = useState(false);
   const [best, setBest] = useState<Record<string, number>>({});
@@ -304,6 +304,7 @@ export default function FormationScreen() {
       <Shell>
         <ModeScreen
           overview={overview}
+          rankedEnabled={rankedEnabled}
           best={best}
           busy={busy}
           note={claimNote || message}

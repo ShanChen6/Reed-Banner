@@ -1,6 +1,6 @@
 "use client";
 import { requestJson } from "../api";
-import { ModeScreen } from "@/components/game-ui";
+import { ModeScreen, ModeSkeleton } from "@/components/game-ui";
 import { Button } from "@/components/ui";
 
 
@@ -103,18 +103,16 @@ export default function TrialScreen() {
   if (!overview || !profile) {
     return (
       <Shell>
-        <div className="py-24 text-center text-on-wood-soft">
-          {loadError ? (
-            <>
-              <p role="alert">Chưa mở được cửa Tháp Thí Luyện. Xin kiểm tra mạng rồi thử lại.</p>
-              <Button variant="secondary" type="button" onClick={() => void load()} className="mt-4 min-h-11">
-                Tải lại
-              </Button>
-            </>
-          ) : (
-            <p role="status">Đang tải Tháp Thí Luyện…</p>
-          )}
-        </div>
+        {loadError ? (
+          <div className="py-24 text-center text-on-wood-soft">
+            <p role="alert">Chưa mở được cửa Tháp Thí Luyện. Xin kiểm tra mạng rồi thử lại.</p>
+            <Button variant="secondary" type="button" onClick={() => void load()} className="mt-4 min-h-11">
+              Tải lại
+            </Button>
+          </div>
+        ) : (
+          <ModeSkeleton label="Đang tải Tháp Thí Luyện…" />
+        )}
       </Shell>
     );
   }

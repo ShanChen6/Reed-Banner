@@ -14,7 +14,7 @@ import {
   ONLINE_BATTLE_KEY,
   ONLINE_ERROR_TEXT,
 } from "../battle/online";
-import { ModeScreen } from "@/components/game-ui";
+import { ModeScreen, ModeSkeleton } from "@/components/game-ui";
 import ChapterOne from "./ChapterOne";
 import RaidHall from "./RaidPanel";
 import { useScene } from "../SceneContext";
@@ -27,11 +27,11 @@ export default function CampaignScreen() {
   if (!profile) {
     return (
       <Shell>
-        <p className="py-24 text-center text-on-wood-soft">
-          {loadError
-            ? "Chưa mở được hồ sơ. Xin tải lại trang."
-            : "Đang mở Bình Loạn…"}
-        </p>
+        {loadError ? (
+          <p role="alert" className="py-24 text-center text-on-wood-soft">Chưa mở được hồ sơ. Xin tải lại trang.</p>
+        ) : (
+          <ModeSkeleton label="Đang mở Bình Loạn…" />
+        )}
       </Shell>
     );
   }

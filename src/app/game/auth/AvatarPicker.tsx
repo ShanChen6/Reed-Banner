@@ -6,6 +6,7 @@
 // trang để thanh đầu trang và thẻ tài khoản (dựng ở server) hiện ảnh mới.
 
 import { useEffect, useRef, useState } from "react";
+import { Skeleton } from "@/components/game-ui";
 import { buttonVariants } from "@/components/ui";
 import { portraitUrl } from "../art/portrait-data";
 import { useProfile } from "../profile/useProfile";
@@ -134,7 +135,12 @@ export function AvatarPicker({ current }: { current: string | null }) {
             </div>
             <p className="text-caption text-on-wood-soft">Hoặc chọn chân dung một tướng quân đã về trại. Tuyển thêm tướng thì có thêm ảnh để chọn.</p>
             {!profile ? (
-              <p role="status" className="py-8 text-center text-on-wood-soft">Đang mở danh sách tướng quân…</p>
+              <div role="status" className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+                <span className="sr-only">Đang mở danh sách tướng quân…</span>
+                {Array.from({ length: 5 }, (_, i) => (
+                  <Skeleton key={i} className="aspect-square w-full" />
+                ))}
+              </div>
             ) : (
               <ul className="grid grid-cols-3 gap-2 sm:grid-cols-5">
                 {heroes.map((id) => {
