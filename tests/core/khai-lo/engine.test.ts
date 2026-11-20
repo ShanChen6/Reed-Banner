@@ -8,6 +8,7 @@ import {
   KL_TOOL_CHARGE,
   timedGoal,
   KL_START_TOOLS,
+  KL_MULT3_FROM,
   allGroups,
   createGame,
   generateBoard,
@@ -26,11 +27,11 @@ import {
 
 const K: Record<string, Element> = { a: "kim", b: "moc", c: "thuy", d: "hoa" };
 
-/** Dựng bàn từ chuỗi: mỗi dòng là một hàng, "." là ô trống, chữ hoa là ô hào quang. */
+/** Dựng bàn từ chuỗi: mỗi dòng là một hàng, "." là ô trống, chữ hoa là ô số ×2. */
 function board(rows: string[]): { cells: (KlCell | null)[]; width: number; height: number } {
   let id = 1;
   const cells = rows.flatMap((row) =>
-    [...row].map((ch) => (ch === "." ? null : { id: id++, kind: K[ch.toLowerCase()] as Element, ...(ch !== ch.toLowerCase() ? { banner: true as const } : {}) })),
+    [...row].map((ch) => (ch === "." ? null : { id: id++, kind: K[ch.toLowerCase()] as Element, ...(ch !== ch.toLowerCase() ? { mult: 2 as const } : {}) })),
   );
   return { cells, width: (rows[0] as string).length, height: rows.length };
 }
@@ -65,9 +66,9 @@ describe("Khai Lộ: nhóm và trọng lực", () => {
     assert.deepEqual(draw({ cells: settle(cells, 3, 3), width: 3 }), ["b..", "b..", "c.."]);
   });
 
-  it("điểm nhóm n² × (1 + số ô hào quang)", () => {
-    assert.equal(groupScore(3, 0), 9);
-    assert.equal(groupScore(5, 2), 75);
+  it("điểm khối n² × tích các ô số", () => {
+    assert.equal(groupScore(3), 9);
+    assert.equal(groupScore(5, 6), 150);
   });
 });
 
@@ -82,10 +83,16 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.deepEqual(draw(r.state), ["a..", "abb", "abb"]);
   });
 
-  it("ô hào quang nhân điểm nhóm", () => {
+  it("ô số ×2, ×3 nhân điểm khối chứa nó, nhiều ô thì nhân dồn", () => {
     const r = transition(stateOf(["aA", "bc"], { tools: kit({ hoa: 1 }) }), { type: "pick", index: 0 });
     assert.ok(r.ok);
-    assert.equal(r.state.score, groupScore(2, 1));
+    assert.equal(r.state.score, 4 * 2);
+    const s = stateOf(["aAa", "bcd"], { tools: kit({ hoa: 1 }) });
+    const cells = s.cells.slice();
+    cells[0] = { ...(cells[0] as KlCell), mult: 3 };
+    const r3 = transition({ ...s, cells }, { type: "pick", index: 0 });
+    assert.ok(r3.ok);
+    assert.equal(r3.state.score, 9 * 3 * 2);
   });
 
   it("ván mới có sẵn mỗi hệ một đạo cụ", () => {
@@ -232,7 +239,8 @@ describe("Khai Lộ: sinh bàn và lưu ván", () => {
       const { cells } = generateBoard(7, level, 1);
       assert.ok(hasGroup(cells, 10, 8));
       assert.equal(new Set(cells.map((c) => c?.kind)).size <= levelConfig(level).kinds, true);
-      assert.equal(cells.filter((c) => c?.banner).length, levelConfig(level).banners);
+      assert.equal(cells.filter((c) => c?.mult).length, levelConfig(level).mults);
+      if (level < KL_MULT3_FROM) assert.equal(cells.some((c) => c?.mult === 3), false);
     }
     assert.equal(levelConfig(3).kinds, 3);
     assert.equal(levelConfig(4).kinds, 4);
@@ -265,6 +273,12 @@ describe("Khai Lộ: sinh bàn và lưu ván", () => {
     assert.deepEqual(parseGame(serializeGame(s)), s);
     assert.equal(parseGame("{"), null);
     assert.equal(parseGame(JSON.stringify({ ...s, version: 2 })), null);
+  });
+
+  it("bản lưu cũ có ô hào quang (banner) đọc thành ô ×2", () => {
+    const s = createGame(9);
+    const old = { ...s, cells: s.cells.map((c, i) => (i === 0 && c ? { id: c.id, kind: c.kind, banner: true } : c)) };
+    assert.equal(parseGame(JSON.stringify(old))?.cells[0]?.mult, 2);
   });
 });
 
