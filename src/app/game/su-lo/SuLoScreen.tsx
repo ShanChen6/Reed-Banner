@@ -42,7 +42,8 @@ import {
   type SlState,
 } from "@/core/su-lo";
 import { Button, ChoiceChip } from "@/components/ui";
-import { ModeBanner, ModeScreen, OrnateFrame } from "@/components/game-ui";
+import { ModeBanner, ModeScreen, OrnateFrame, SurrenderButton } from "@/components/game-ui";
+import { SuLoAidIcon } from "../art/icons";
 import { TileArt } from "../art/tiles";
 import { destroyFrames, swapFrames, type Frame } from "../battle/animation";
 import { frameCue } from "../battle/sounds";
@@ -647,26 +648,6 @@ function MazePicker({ setup, best, onChange, onStart }: { setup: Setup; best: Be
   );
 }
 
-/** Trong ván chỉ có một lối về màn chọn mê cung: đầu hàng, bấm hai lần để chắc chắn. */
-function SurrenderBar({ onConfirm }: { onConfirm: () => void }) {
-  const [asking, setAsking] = useState(false);
-  return (
-    <section className="ui-frame flex flex-col gap-2 p-4" aria-label="Đầu hàng">
-      {asking && <p className="text-sm">Bỏ ván này? Ván dở sẽ mất, bạn quay về màn chọn mê cung.</p>}
-      <div className="flex flex-wrap gap-2">
-        <Button variant={asking ? "danger" : "secondary"} size="sm" onClick={() => (asking ? onConfirm() : setAsking(true))}>
-          {asking ? "Đầu hàng" : "Đầu hàng…"}
-        </Button>
-        {asking && (
-          <Button variant="secondary" size="sm" autoFocus onClick={() => setAsking(false)}>
-            Chơi tiếp
-          </Button>
-        )}
-      </div>
-    </section>
-  );
-}
-
 // ── Màn chính ──
 
 export default function SuLoScreen() {
@@ -828,6 +809,7 @@ export default function SuLoScreen() {
                         {game.doubleRoll ? "Đổ hai xúc xắc" : "Đổ xúc xắc"}
                       </Button>
                       <Button variant="secondary" disabled={game.aids.hoaToc <= 0} aria-pressed={fastPick} onClick={() => setFastPick((v) => !v)}>
+                        <SuLoAidIcon aid="hoaToc" className="size-5" />
                         Hỏa tốc ({game.aids.hoaToc})
                       </Button>
                     </div>
@@ -850,6 +832,7 @@ export default function SuLoScreen() {
                   <div className="flex flex-wrap gap-2">
                     {SL_AIDS.filter((a) => a !== "hoaToc" && a !== "hoiTuong").map((a) => (
                       <Button key={a} size="sm" variant="secondary" disabled={game.phase !== "question" || game.aids[a] <= 0} onClick={() => askAid(a)}>
+                        <SuLoAidIcon aid={a} className="size-4" />
                         {SL_AID_NAME[a]} ({game.aids[a]})
                       </Button>
                     ))}
@@ -861,13 +844,16 @@ export default function SuLoScreen() {
                         disabled={game.phase !== "question" || game.aids.hoiTuong <= 0}
                         onClick={() => askAid("hoiTuong", { advisor: id })}
                       >
+                        <SuLoAidIcon aid="hoiTuong" className="size-4" />
                         Hỏi {SL_ADVISORS.find((x) => x.id === id)?.name} ({game.aids.hoiTuong})
                       </Button>
                     ))}
                   </div>
                 </section>
 
-                <SurrenderBar onConfirm={surrender} />
+                <section className="ui-frame flex p-4" aria-label="Đầu hàng">
+                  <SurrenderButton consequence="Ván dở sẽ mất, bạn quay về màn chọn mê cung." onConfirm={surrender} />
+                </section>
               </aside>
             </div>
           )}
