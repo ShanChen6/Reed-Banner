@@ -40,6 +40,7 @@ import { ModeScreen, OrnateFrame } from "@/components/game-ui";
 import { ModeGuideTabs } from "../ModeGuide";
 import { PlayCard } from "../PlayCard";
 import { ColumnFill } from "../ColumnFill";
+import { KL_TOOL_HINT as TOOL_HINT, KL_TOOL_NAME as TOOL_NAME } from "./tools";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -73,26 +74,6 @@ const REASON_TEXT: Record<KlReason, string> = {
 
 /** Ô to nhất (px) trên màn rộng: bàn 10×8 khi đó khoảng 880×704. */
 const KL_MAX_CELL = 88;
-
-/** 7 đạo cụ theo 7 hệ (Shan duyệt 20/11/2026), xếp theo thứ tự ELEMENTS (phím 1–7). */
-const TOOL_NAME: Record<KlTool, string> = {
-  kim: "Kim Đao",
-  moc: "Mộc Linh",
-  thuy: "Thủy Triều",
-  hoa: "Hỏa Cầu",
-  tho: "Địa Chấn",
-  loi: "Lôi Phạt",
-  phong: "Lốc Phong",
-};
-const TOOL_HINT: Record<KlTool, string> = {
-  kim: "Chọn ô: chém sạch cả hàng ngang.",
-  moc: "Chọn quân: đổi sang hệ của khối lớn nhất kề nó.",
-  thuy: "Chọn ô: cuốn sạch cả cột dọc.",
-  hoa: "Chọn ô: nổ vùng 3×3 quanh ô đó.",
-  tho: "Chọn ô bất kỳ: phá hàng dưới cùng, cả bàn sụt xuống.",
-  loi: "Chọn quân: xóa mọi quân cùng hệ trên bàn.",
-  phong: "Chọn tâm: 8 ô quanh xoay theo chiều kim đồng hồ.",
-};
 
 interface Ghost {
   readonly key: string;

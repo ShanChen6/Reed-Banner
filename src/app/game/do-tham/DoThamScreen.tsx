@@ -31,6 +31,7 @@ import { ElementIcon } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
+import { DT_ITEM_INFO as ITEM_INFO } from "./items";
 import { PlayCard } from "../PlayCard";
 import { useAudio } from "../audio/AudioProvider";
 import { cuesForAction, cueTimes, DOTHAM_MUSIC, DOTHAM_PRELOAD, REJECT } from "./sounds";
@@ -41,21 +42,6 @@ const PICKS_KEY = "reed-banner:do-tham:picks:v1";
 const LEVEL_KEY = "reed-banner:do-tham:level:v1";
 
 const LEVEL_NAME: Record<DtLevel, string> = { nhapMon: "Nhập môn", thuong: "Thường", kho: "Khó" };
-
-interface ItemInfo {
-  readonly name: string;
-  readonly text: string;
-}
-
-const ITEM_INFO: Record<Element, ItemInfo> = {
-  kim: { name: "Dò chông", text: "Lộ một bẫy rồi cắm cờ lên đó." },
-  moc: { name: "Mầm xanh", text: "Chọn một ô: an toàn thì mở, có bẫy thì tự cắm cờ mà không thua." },
-  thuy: { name: "Soi nước", text: "Chọn một ô: biết trong vùng 3×3 quanh nó có bao nhiêu bẫy." },
-  hoa: { name: "Đốt lau", text: "Chọn một ô: mở hết ô an toàn trong vùng 3×3 và cắm cờ lên các bẫy." },
-  tho: { name: "Khiên đất", text: "Đỡ cho bạn một lần sa bẫy." },
-  loi: { name: "Sấm báo", text: "Chọn hàng hoặc cột rồi chọn một ô: biết trên đó có bao nhiêu bẫy." },
-  phong: { name: "Gió mách", text: "Chỉ ra một ô chắc chắn an toàn, hoặc chắc chắn có bẫy." },
-};
 
 const REASON_TEXT: Record<DtReason, string> = {
   notPlaying: "Ván đã kết thúc.",
