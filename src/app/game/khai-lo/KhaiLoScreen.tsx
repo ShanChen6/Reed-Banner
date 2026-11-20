@@ -39,6 +39,7 @@ import { Button, buttonVariants, choiceVariants } from "@/components/ui";
 import { ModeScreen, OrnateFrame } from "@/components/game-ui";
 import { ModeGuideTabs } from "../ModeGuide";
 import { PlayCard } from "../PlayCard";
+import { ColumnFill } from "../ColumnFill";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -417,6 +418,7 @@ export default function KhaiLoScreen() {
   };
 
   const summary = state.phase === "levelDone" ? state.summary : null;
+  const backdrop = ELEMENTS[(state.level - 1) % ELEMENTS.length];
   // Đạo cụ hiện theo hệ có trên bàn (và hệ đã có sẵn đạo cụ/thanh nạp dở dù bàn này không còn).
   const onBoard = new Set(state.cells.map((c) => c?.kind));
   const shownTools = ELEMENTS.filter((e) => onBoard.has(e) || state.tools[e] > 0);
@@ -445,7 +447,7 @@ export default function KhaiLoScreen() {
       <PlayCard>
       {/* Điện thoại: thanh số liệu → bàn → đạo cụ ngay dưới bàn. Máy tính: bàn bên trái, số liệu và đạo cụ ở cột phải. */}
       <div className="kl-layout grid items-start gap-3 sm:gap-4 lg:gap-6">
-        <div className="flex flex-col gap-2 [grid-area:head] lg:gap-3">
+        <div className="flex flex-col gap-2 [grid-area:head] lg:gap-3 xl:self-stretch">
           <div role="tablist" aria-label="Chế độ chơi" className="grid grid-cols-2 gap-2 xl:grid-cols-1">
             {(["classic", "timed"] as const).map((m) => (
               <button
@@ -464,9 +466,14 @@ export default function KhaiLoScreen() {
           </div>
           <Stats state={state} best={best} left={left} msLeft={timed ? msLeft : null} />
           {timed && <GoalBar state={state} paused={active && hidden} />}
+          {/* Ba cột (từ 1280px): tranh kèm thơ lấp phần trống dưới số liệu. */}
+          <ColumnFill mode="clearPath" className="lg:hidden xl:block" />
         </div>
 
-        <OrnateFrame aria-label="Vùng chơi" flush className="-mx-2 flex flex-col items-center gap-2 p-1 [grid-area:board] sm:mx-0 sm:p-4">
+        <OrnateFrame aria-label="Vùng chơi" flush className="relative isolate -mx-2 flex flex-col items-center gap-2 overflow-hidden p-1 [grid-area:board] sm:mx-0 sm:p-4">
+          {/* Tranh hệ sau bàn (Shan chọn phương án A 20/11/2026), đổi theo màn; điện thoại khung sát bàn nên ẩn. */}
+          {/* eslint-disable-next-line @next/next/no-img-element -- tranh nền trang trí co giãn theo khung */}
+          <img src={`/art/stage/he-${backdrop}.webp`} alt="" aria-hidden className="kl-backdrop pointer-events-none absolute inset-0 -z-10 hidden size-full object-cover sm:block" draggable={false} />
           <div ref={setFitEl} className="w-full">
             <div className="ui-frame-inset relative mx-auto w-fit p-1 sm:p-1.5">
               <div
