@@ -379,7 +379,7 @@ export default function ArenaScreen() {
           <ColumnFill mode="arena" />
         </div>
 
-        <OrnateFrame level="raised" className="order-1 flex min-w-0 flex-col gap-3 lg:order-2">
+        <OrnateFrame className="order-1 flex min-w-0 flex-col gap-3 lg:order-2">
           <SectionTitle
             description="Bạn ra trận với Đội ra trận ở trên. Đối thủ được bày theo điểm và lực chiến gần đội 3vs3 ở Doanh Trại; nhãn mạnh yếu so với đội ra trận. Điểm càng cao, thắng càng được nhiều điểm. Trang bị cộng tối đa 30% Công và máu gốc theo cấp."
             action={

@@ -546,7 +546,7 @@ export default function DestinyScreen() {
         milestones={overview.milestones ?? []} claimed={overview.progress?.claimedMilestones ?? []} />
 
       {noActiveRun && (
-        <OrnateFrame level="raised">
+        <OrnateFrame>
           {run?.completed && (
             <Alert className="mb-4 p-3 text-sm">
               <strong>Đã chinh phục trọn {run.floor} tầng.</strong> Thành tích đã ghi vào bảng công trạng chu kỳ.
@@ -726,7 +726,7 @@ export default function DestinyScreen() {
             <ColumnFill mode="destiny" />
           </div>
 
-          <OrnateFrame level="raised" className="order-1 min-w-0 lg:order-2">
+          <OrnateFrame className="order-1 min-w-0 lg:order-2">
             {run.phase === "battle" && (
               <>
                 <SectionTitle>Trận tầng {run.floor} đang dở</SectionTitle>

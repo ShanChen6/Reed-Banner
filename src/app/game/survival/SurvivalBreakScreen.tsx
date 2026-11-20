@@ -184,7 +184,7 @@ function SurvivalBreakReady({
 
   return (
     <section aria-labelledby="survival-break-title" className="flex flex-col gap-4">
-      <OrnateFrame level="raised" className="flex flex-wrap items-center justify-between gap-3">
+      <OrnateFrame className="flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="text-kicker text-jade">Nghỉ giữa các đợt, tiến độ đã lưu, rời trang lúc nào cũng được</p>
           <h2 id="survival-break-title" className="text-xl font-black text-title-on-wood sm:text-2xl">
@@ -364,7 +364,7 @@ function SurvivalBreakReady({
           </div>
 
           <aside className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-4 lg:self-start">
-            <OrnateFrame level="raised" className="flex flex-col gap-2">
+            <OrnateFrame className="flex flex-col gap-2">
               {error && <Alert>Máy chủ báo lỗi: {error}</Alert>}
               {pending && <p role="status" className="text-sm text-frame-gold">Đang chờ máy chủ xác nhận…</p>}
               {confirmEnd ? (

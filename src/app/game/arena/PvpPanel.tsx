@@ -195,7 +195,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
   const o = overview;
   return (
     <div className="flex flex-col gap-4">
-    <OrnateFrame level="raised" className="flex flex-col gap-4">
+    <OrnateFrame className="flex flex-col gap-4">
       <SectionTitle description="Đấu 1vs1 với người khác, mỗi bên chỉ có Đinh Bộ Lĩnh. Điểm hạng riêng cho Đấu người, thắng tăng, thua giảm. Số trận không giới hạn, vàng thưởng có trần mỗi ngày.">
         Đấu người
       </SectionTitle>
@@ -256,7 +256,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
       )}
     </OrnateFrame>
       {o && !o.queue && (
-        <OrnateFrame level="raised" className="flex flex-col gap-3">
+        <OrnateFrame className="flex flex-col gap-3">
           <SectionTitle description="Đấu 3vs3 xếp hạng: đủ sáu người thì cấm chọn ngay, chờ lâu thì máy điền chỗ trống (trận có máy được ít điểm hơn). Điểm 3vs3 tính riêng.">
             3vs3 xếp hạng
           </SectionTitle>
@@ -273,7 +273,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
         </OrnateFrame>
       )}
       {o && !o.queue && (
-        <OrnateFrame level="raised" className="flex flex-col gap-3">
+        <OrnateFrame className="flex flex-col gap-3">
           <SectionTitle description="Đấu 3vs3 giao hữu với bạn bè: mỗi người một tướng của mình, chỗ trống có thể để máy điều khiển. Giao hữu không tính điểm hạng, không có vàng.">
             Phòng 3vs3
           </SectionTitle>
@@ -441,7 +441,7 @@ function PvpRoom({ onMatch, onExit }: { onMatch: (matchId: string) => void; onEx
 
   if (!room || room.status === "closed") {
     return (
-      <OrnateFrame level="raised" className="flex flex-col gap-4">
+      <OrnateFrame className="flex flex-col gap-4">
         <SectionTitle description="Lập phòng rồi đưa mã cho bạn bè, hoặc gõ mã bạn bè đưa để vào. Mỗi phe ba chỗ.">Phòng 3vs3</SectionTitle>
         {message && <Alert role="alert">{message}</Alert>}
         <div className="flex flex-wrap items-end gap-3">
@@ -499,7 +499,7 @@ function PvpRoom({ onMatch, onExit }: { onMatch: (matchId: string) => void; onEx
   );
 
   return (
-    <OrnateFrame level="raised" className="flex flex-col gap-4">
+    <OrnateFrame className="flex flex-col gap-4">
       <SectionTitle description="Đưa mã này cho bạn bè để họ vào phòng. Rời màn quá 3 phút sẽ mất chỗ. Mất mạng rồi vào lại trong 3 phút vẫn về phòng này.">
         Phòng {room.code}
       </SectionTitle>
@@ -725,7 +725,7 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
 
   if (!view || !state) {
     return (
-      <OrnateFrame level="raised">
+      <OrnateFrame>
         <p role="status">{message || "Đang vào trận…"}</p>
         {message && (
           <Button variant="secondary" onClick={onExit} className="mt-2">
@@ -819,7 +819,7 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <OrnateFrame level="raised" className="flex flex-col gap-3">
+      <OrnateFrame className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="ui-title-on-wood text-xl font-bold" role="status" aria-live="polite">
             {over
@@ -972,7 +972,7 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
       </OrnateFrame>
 
       {over && (
-        <OrnateFrame level="raised" className="flex flex-col items-center gap-2 text-center" role="status">
+        <OrnateFrame className="flex flex-col items-center gap-2 text-center" role="status">
           <h3 className="ui-title-on-wood text-2xl font-bold">{view.winner === null ? "Trận bị hủy" : view.winner === mySide ? "Chúa công thắng!" : "Chúa công thua"}</h3>
           {view.friendly ? (
             <p>Trận giao hữu nên không đổi điểm hạng và không có vàng.</p>

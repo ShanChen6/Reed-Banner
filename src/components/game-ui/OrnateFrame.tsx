@@ -2,8 +2,9 @@ import type { ComponentProps } from "react";
 import { cn } from "@/lib/cn";
 import { FrameCorners } from "./FrameCorners";
 
-// Khung 3 mức (đồng bộ UI 05/11/2026). 1 "panel": gỗ viền mảnh, cho khối nội dung thường. 2 "raised": thêm vạch vàng
-// trong và góc hoa văn, cho khối chính của màn. 3 "hero": banner có tranh. Không lồng mức 2/3 trong mức 2/3.
+// Khung 3 mức (đồng bộ UI 05/11/2026). 1 "panel": gỗ viền mảnh, cho mọi card nội dung. 2 "raised": thêm vạch vàng
+// trong và góc hoa văn, chỉ cho khung đứng riêng (cổng đăng nhập, Doanh Trại, sảnh trận); trong khung màn chế độ
+// (ModeScreen card, đã có góc) không dùng (20/11/2026). 3 "hero": banner có tranh. Không lồng mức 2/3 trong mức 2/3.
 
 export type FrameLevel = "panel" | "raised" | "hero";
 

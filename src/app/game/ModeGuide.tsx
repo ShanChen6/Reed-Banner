@@ -38,7 +38,7 @@ export function markGuideSeen(scene: GuideScene): void {
 export function ModeGuidePanel({ scene, headingId, onPlay }: { scene: GuideScene; headingId?: string; onPlay?: () => void }) {
   const guide = MODE_GUIDES[scene];
   return (
-    <OrnateFrame level="raised" className="flex flex-col gap-4" aria-labelledby={headingId}>
+    <OrnateFrame className="flex flex-col gap-4" aria-labelledby={headingId}>
       <section className="flex flex-col gap-1">
         <h2 id={headingId} className="text-lg font-bold text-title-on-wood">
           Mục tiêu
