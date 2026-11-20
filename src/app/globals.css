@@ -1555,40 +1555,24 @@ html {
   }
 }
 
-/* Thẻ vùng chơi (src/app/game/PlayCard.tsx): lớp ngoài .play-card giữ nút và là khung toàn màn hình, lớp trong
-   .play-card-body là thẻ (viền đồng, nền gỗ). Nút "Phóng to màn chơi" nằm trên viền dưới, góc phải của thẻ. */
+/* Vùng chơi (src/app/game/PlayCard.tsx). Shan 20/11/2026: ở trang thường KHÔNG bọc thẻ (đã quá nhiều khung), chỉ chừa
+   một dải dưới cho nút "Phóng to màn chơi" ở góc dưới phải. Khi phóng to, lớp ngoài .play-card thành nền tối có lề và lớp
+   trong .play-card-body thành một khung riêng của màn toàn cảnh: viền vàng đôi, bốn góc hoa văn, nền gỗ có quầng sáng. */
 .play-card {
   position: relative;
-  margin-bottom: 1.5rem;
+  padding-bottom: 3rem;
 }
 .play-card-body {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  border: 1px solid var(--frame-bronze);
-  border-radius: 0.75rem;
-  background: color-mix(in srgb, var(--wood-lo) 70%, transparent);
-  padding: 0.5rem 0.5rem 1.75rem;
 }
 .play-card-toggle {
   position: absolute;
-  right: 0.75rem;
-  bottom: -1.25rem;
+  right: 0;
+  bottom: 0;
   z-index: 30;
   background: var(--wood-lo);
-}
-/* Dưới 1024px: cỡ ô bàn cờ tính theo bề rộng màn hình nên thẻ không chiếm thêm chiều ngang (bỏ đệm và viền hai bên). */
-@media (max-width: 1023px) {
-  .play-card-body {
-    padding-inline: 0;
-    border-inline-width: 0;
-    border-radius: 0;
-  }
-}
-@media (min-width: 1024px) {
-  .play-card-body {
-    padding: 0.75rem 0.75rem 1.75rem;
-  }
 }
 /* Toàn màn hình: lề co giãn theo màn (1rem tới 2.5rem, cộng vùng tai thỏ), nội dung tối đa 1600px ở giữa. */
 .play-card:fullscreen,
@@ -1598,7 +1582,9 @@ html {
   margin: 0;
   border: 0;
   border-radius: 0;
-  background: var(--wood-lo);
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--frame-gold) 10%, transparent) 0%, transparent 60%),
+    var(--black);
   padding-top: max(clamp(1rem, 3vw, 2.5rem), env(safe-area-inset-top));
   padding-bottom: max(clamp(4rem, 6vw, 5rem), env(safe-area-inset-bottom));
   padding-inline: max(clamp(1rem, 3vw, 2.5rem), env(safe-area-inset-left), env(safe-area-inset-right), calc((100% - 1600px) / 2));
@@ -1608,15 +1594,34 @@ html {
   inset: 0;
   z-index: 60;
 }
-/* Toàn màn hình vẫn giữ thẻ bọc: đủ viền, bo góc và đệm ở mọi cỡ màn; cao tối thiểu bằng khung để thẻ phủ hết màn. */
+/* Khung toàn cảnh: viền vàng ngoài, vạch đồng trong (::after), góc hoa văn (FrameCorners trong PlayCard), quầng sáng ở
+   giữa nền gỗ và bóng đổ sâu để tách khỏi nền tối. */
 .play-card:fullscreen .play-card-body,
 .play-card--overlay .play-card-body {
+  position: relative;
   min-height: 100%;
-  border-width: 1px;
-  border-radius: 0.75rem;
-  background: color-mix(in srgb, var(--wood) 55%, var(--wood-lo));
-  padding: clamp(0.5rem, 1.5vw, 1rem);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--frame-gold) 25%, transparent), 0 12px 32px -12px var(--black);
+  border: 1px solid var(--frame-gold);
+  border-radius: 1rem;
+  background:
+    radial-gradient(ellipse at 50% 35%, color-mix(in srgb, var(--frame-gold) 9%, transparent) 0%, transparent 65%),
+    linear-gradient(180deg, var(--wood) 0%, var(--wood-lo) 100%);
+  padding: clamp(1rem, 2.5vw, 2rem);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--wood-lo) 90%, transparent),
+    0 0 0 5px color-mix(in srgb, var(--frame-bronze) 70%, transparent),
+    0 24px 60px -16px var(--black);
+}
+.play-card:fullscreen .play-card-body::after,
+.play-card--overlay .play-card-body::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid color-mix(in srgb, var(--frame-gold) 30%, transparent);
+  border-radius: 0.7rem;
+  pointer-events: none;
+}
+.play-card-corner {
+  color: var(--frame-gold-hi);
 }
 /* Màn có thanh dính đáy (Trận Đồ, Tầm Tướng Ký trên điện thoại): chừa thêm chỗ để cuộn được nội dung lên trên thanh. */
 @media (width < 64rem) {
