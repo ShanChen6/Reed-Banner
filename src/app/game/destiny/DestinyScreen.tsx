@@ -60,6 +60,7 @@ import {
 } from "./destiny-ui";
 import { ModeGuideTabs } from "../ModeGuide";
 import ModeTierPanel from "../leaderboard/ModeTierPanel";
+import { ColumnFill } from "../ColumnFill";
 
 interface DestinyMilestoneView {
   readonly id: string;
@@ -670,57 +671,60 @@ export default function DestinyScreen() {
 
       {run && run.active && (
         <section className="grid gap-4 sm:gap-5 lg:grid-cols-[1fr_1.4fr]">
-          <OrnateFrame className="order-2 min-w-0 self-start lg:order-1">
-            <SectionTitle description={`${run.roster.length} tướng, lương ${run.food}/${DESTINY_FOOD_MAX}; mỗi tướng có thanh Nộ riêng, giữ qua các tầng`}>Đội hình</SectionTitle>
-            <ul {...pagedSquad.listProps} className="space-y-2">
-              {pagedSquad.pageItems.map((id) => {
-                const f = run.fighters?.[id];
-                if (!f) return null;
-                const onField = run.phase === "prepare" && active.includes(id);
-                return (
-                  <li key={id}>
-                    <FrameInset className={cn("flex items-center gap-3", f.downed && "opacity-70")}>
-                      <Portrait id={id} element={f.config.element} profession={f.config.profession} className="size-11 shrink-0" />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-baseline justify-between gap-x-2 text-sm">
-                          <strong className="text-on-wood">{f.config.name}</strong>
-                          <span className={f.downed ? "font-semibold text-danger" : "text-on-wood-soft"}>
-                            {f.downed ? "Đã gục" : `Máu ${f.hp}/${f.config.maxHp}`}
-                          </span>
+          <div className="order-2 flex min-w-0 flex-col gap-4 sm:gap-5 lg:order-1">
+            <OrnateFrame className="min-w-0">
+              <SectionTitle description={`${run.roster.length} tướng, lương ${run.food}/${DESTINY_FOOD_MAX}; mỗi tướng có thanh Nộ riêng, giữ qua các tầng`}>Đội hình</SectionTitle>
+              <ul {...pagedSquad.listProps} className="space-y-2">
+                {pagedSquad.pageItems.map((id) => {
+                  const f = run.fighters?.[id];
+                  if (!f) return null;
+                  const onField = run.phase === "prepare" && active.includes(id);
+                  return (
+                    <li key={id}>
+                      <FrameInset className={cn("flex items-center gap-3", f.downed && "opacity-70")}>
+                        <Portrait id={id} element={f.config.element} profession={f.config.profession} className="size-11 shrink-0" />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-baseline justify-between gap-x-2 text-sm">
+                            <strong className="text-on-wood">{f.config.name}</strong>
+                            <span className={f.downed ? "font-semibold text-danger" : "text-on-wood-soft"}>
+                              {f.downed ? "Đã gục" : `Máu ${f.hp}/${f.config.maxHp}`}
+                            </span>
+                          </div>
+                          <div className="text-on-wood-soft">
+                            {id === MAIN_ID
+                              ? <p className="text-caption">Thủ lĩnh, cấp {f.level}, đổi nghề và hệ trước mỗi tầng</p>
+                              : <FighterMeta element={f.config.element} profession={f.config.profession} level={f.level} />}
+                            <p className="text-caption">
+                              {f.downed ? "Cần Cứu viện để ra trận lại" : `Năng lượng ${f.energy}, Nộ ${destinyRageOf(run, id)}/${RAGE_MAX}`}
+                              {onField && id !== MAIN_ID && <strong className="text-frame-gold">, ra trận</strong>}
+                            </p>
+                          </div>
+                          <div className="mt-1.5"><HpBar hp={f.hp} maxHp={f.config.maxHp} /></div>
                         </div>
-                        <div className="text-on-wood-soft">
-                          {id === MAIN_ID
-                            ? <p className="text-caption">Thủ lĩnh, cấp {f.level}, đổi nghề và hệ trước mỗi tầng</p>
-                            : <FighterMeta element={f.config.element} profession={f.config.profession} level={f.level} />}
-                          <p className="text-caption">
-                            {f.downed ? "Cần Cứu viện để ra trận lại" : `Năng lượng ${f.energy}, Nộ ${destinyRageOf(run, id)}/${RAGE_MAX}`}
-                            {onField && id !== MAIN_ID && <strong className="text-frame-gold">, ra trận</strong>}
-                          </p>
-                        </div>
-                        <div className="mt-1.5"><HpBar hp={f.hp} maxHp={f.config.maxHp} /></div>
-                      </div>
-                    </FrameInset>
-                  </li>
-                );
-              })}
-            </ul>
-            <PageControls paged={pagedSquad} label="Phân trang đội hình" className="mt-2" />
-            <h3 className="ui-title-on-wood mt-4 text-base">Phúc đang có</h3>
-            {run.boons?.length ? (
-              <ul className="mt-1.5 space-y-1.5">
-                {run.boons.map((b) => (
-                  <li key={b.id} className="text-sm text-on-wood">
-                    <strong>{DESTINY_BOON_TEXT[b.id].name}</strong>{" "}
-                    <span className="text-frame-gold">×{b.stacks}</span>
-                    <span className="block text-caption text-on-wood-soft">{DESTINY_BOON_TEXT[b.id].body}</span>
-                  </li>
-                ))}
-                <li className="text-caption text-on-wood-soft">Hiệu ứng ghi cho một lần chọn; ×2, ×3 là đã cộng dồn.</li>
+                      </FrameInset>
+                    </li>
+                  );
+                })}
               </ul>
-            ) : (
-              <p className="text-sm text-on-wood-soft">Chưa có Phúc. Thắng một tầng để chọn Phúc hoặc hồi phục.</p>
-            )}
-          </OrnateFrame>
+              <PageControls paged={pagedSquad} label="Phân trang đội hình" className="mt-2" />
+              <h3 className="ui-title-on-wood mt-4 text-base">Phúc đang có</h3>
+              {run.boons?.length ? (
+                <ul className="mt-1.5 space-y-1.5">
+                  {run.boons.map((b) => (
+                    <li key={b.id} className="text-sm text-on-wood">
+                      <strong>{DESTINY_BOON_TEXT[b.id].name}</strong>{" "}
+                      <span className="text-frame-gold">×{b.stacks}</span>
+                      <span className="block text-caption text-on-wood-soft">{DESTINY_BOON_TEXT[b.id].body}</span>
+                    </li>
+                  ))}
+                  <li className="text-caption text-on-wood-soft">Hiệu ứng ghi cho một lần chọn; ×2, ×3 là đã cộng dồn.</li>
+                </ul>
+              ) : (
+                <p className="text-sm text-on-wood-soft">Chưa có Phúc. Thắng một tầng để chọn Phúc hoặc hồi phục.</p>
+              )}
+            </OrnateFrame>
+            <ColumnFill mode="destiny" />
+          </div>
 
           <OrnateFrame level="raised" className="order-1 min-w-0 lg:order-2">
             {run.phase === "battle" && (

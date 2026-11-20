@@ -62,6 +62,7 @@ import { ModeGuideTabs } from "../ModeGuide";
 import SurvivalBreakScreen from "./SurvivalBreakScreen";
 import { TierLadder } from "../leaderboard/RankBoard";
 import { SURVIVAL_LADDER, tierClaimNote, tierErrorNote, tierRewards } from "../arena/tiers";
+import { ColumnFill } from "../ColumnFill";
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
@@ -454,45 +455,48 @@ export default function SurvivalScreen() {
         </section>
       </OrnateFrame>
 
-      <OrnateFrame level="raised" className="flex min-w-0 flex-col gap-3 self-start lg:sticky lg:top-4">
-        <SectionTitle>Lượt chơi mới</SectionTitle>
-        <ul className="list-disc space-y-1 pl-5 text-sm text-on-wood">
-          <li>
-            Đối thủ kéo đến theo đợt, mạnh dần trên cùng bàn cờ; cứ {SURVIVAL_BOSS_EVERY} đợt có một sứ quân dẫn quân.
-          </li>
-          <li>
-            Hạ hết một đợt thì nghỉ: ra trận còn sống hồi {pct(SURVIVAL_HEAL)} máu, dự bị hồi {pct(SURVIVAL_RESERVE_HEAL)}, thêm {SURVIVAL_FOOD} lương.
-            Người gục tự đứng dậy sau {SURVIVAL_REVIVE_WAVES} đợt, hoặc trả {SURVIVAL_REVIVE_FOOD} lương để đứng dậy ngay với {pct(SURVIVAL_REVIVE_HP)} máu.
-          </li>
-          <li>
-            Lúc nghỉ có thể tạm nghỉ để quay lại sau: tiến độ giữ tới hết mùa tuần. Đang đánh dở một đợt mà bỏ quá 24 giờ thì dừng ở đợt cuối đã vượt.
-          </li>
-          <li>Mỗi đợt vượt qua thưởng {SURVIVAL_WAVE_GOLD} vàng; điểm mùa là số đợt cao nhất trong một lượt chơi.</li>
-        </ul>
-        <p className="text-sm text-on-wood-soft">
-          Đợt 1: {first.foes.length} đối thủ cấp {first.level}, {DIFFICULTY_NAME[first.difficulty]}. Đối thủ mỗi lượt chơi một khác.
-        </p>
-        {selectionError && (
-          <Alert tone="warning" className="p-3 text-sm">
-            {SELECTION_ERROR[selectionError]}
-          </Alert>
-        )}
-        {runError && (
-          <Alert tone="warning" className="p-3 text-sm">
-            Chưa đọc được lượt chơi đang dở. Xin tải lại trước khi mở lượt mới.{" "}
-            <Button variant="link" size="sm" onClick={() => void load()}>Tải lại</Button>
-          </Alert>
-        )}
-        <Button
-          size="lg"
-          type="button"
-          disabled={busy || selectionError !== null || runError}
-          onClick={() => void start()}
-          className="min-h-11"
-        >
-          {busy ? "Đang vào trận…" : "Bắt đầu Trấn Ải"}
-        </Button>
-      </OrnateFrame>
+      <div className="flex min-w-0 flex-col gap-4">
+        <OrnateFrame level="raised" className="flex min-w-0 flex-col gap-3">
+          <SectionTitle>Lượt chơi mới</SectionTitle>
+          <ul className="list-disc space-y-1 pl-5 text-sm text-on-wood">
+            <li>
+              Đối thủ kéo đến theo đợt, mạnh dần trên cùng bàn cờ; cứ {SURVIVAL_BOSS_EVERY} đợt có một sứ quân dẫn quân.
+            </li>
+            <li>
+              Hạ hết một đợt thì nghỉ: ra trận còn sống hồi {pct(SURVIVAL_HEAL)} máu, dự bị hồi {pct(SURVIVAL_RESERVE_HEAL)}, thêm {SURVIVAL_FOOD} lương.
+              Người gục tự đứng dậy sau {SURVIVAL_REVIVE_WAVES} đợt, hoặc trả {SURVIVAL_REVIVE_FOOD} lương để đứng dậy ngay với {pct(SURVIVAL_REVIVE_HP)} máu.
+            </li>
+            <li>
+              Lúc nghỉ có thể tạm nghỉ để quay lại sau: tiến độ giữ tới hết mùa tuần. Đang đánh dở một đợt mà bỏ quá 24 giờ thì dừng ở đợt cuối đã vượt.
+            </li>
+            <li>Mỗi đợt vượt qua thưởng {SURVIVAL_WAVE_GOLD} vàng; điểm mùa là số đợt cao nhất trong một lượt chơi.</li>
+          </ul>
+          <p className="text-sm text-on-wood-soft">
+            Đợt 1: {first.foes.length} đối thủ cấp {first.level}, {DIFFICULTY_NAME[first.difficulty]}. Đối thủ mỗi lượt chơi một khác.
+          </p>
+          {selectionError && (
+            <Alert tone="warning" className="p-3 text-sm">
+              {SELECTION_ERROR[selectionError]}
+            </Alert>
+          )}
+          {runError && (
+            <Alert tone="warning" className="p-3 text-sm">
+              Chưa đọc được lượt chơi đang dở. Xin tải lại trước khi mở lượt mới.{" "}
+              <Button variant="link" size="sm" onClick={() => void load()}>Tải lại</Button>
+            </Alert>
+          )}
+          <Button
+            size="lg"
+            type="button"
+            disabled={busy || selectionError !== null || runError}
+            onClick={() => void start()}
+            className="min-h-11"
+          >
+            {busy ? "Đang vào trận…" : "Bắt đầu Trấn Ải"}
+          </Button>
+        </OrnateFrame>
+        <ColumnFill mode="survival" />
+      </div>
     </div>
   );
 

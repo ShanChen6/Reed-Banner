@@ -37,6 +37,14 @@
   .ui-select option { background: var(--wood-panel); color: var(--on-wood); }
   .ui-on-paper .ui-select { background-color: var(--paper-hi); border-color: var(--frame-bronze); color: var(--ink); }
 
+  /* Khối lấp cột ngắn (ColumnFill): giãn hết chỗ trống. Chỗ trống thấp thì bớt dần: dưới 11rem bỏ thơ (chỉ còn mẹo),
+     dưới 5rem ẩn cả thẻ để khỏi thành dải mỏng; tranh cần tối thiểu 8rem. */
+  .ui-column-fill { flex: 1 1 0; min-height: 0; container-type: size; }
+  .ui-column-fill__card { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+  @container (max-height: 11rem) { .ui-column-fill__poem { display: none; } }
+  @container (max-height: 8rem) { .ui-column-fill__card--art { display: none; } }
+  @container (max-height: 5rem) { .ui-column-fill__card { display: none; } }
+
   @supports (appearance: base-select) {
     .ui-select,
     .ui-select::picker(select) { appearance: base-select; }
