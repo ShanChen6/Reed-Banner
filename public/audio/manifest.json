@@ -441,16 +441,16 @@
     },
     "sulo.won": {
       "files": [
-        "sfx/formation/win_a",
-        "sfx/formation/win_b"
+        "sfx/su-lo/won_a"
       ],
       "volume": 0.9
     },
     "dotham.open": {
       "files": [
-        "sfx/formation/place_a",
-        "sfx/formation/place_b",
-        "sfx/formation/place_c"
+        "sfx/do-tham/open_a",
+        "sfx/do-tham/open_b",
+        "sfx/do-tham/open_c",
+        "sfx/do-tham/open_d"
       ],
       "volume": 0.8
     },
@@ -543,11 +543,11 @@
       "volume": 0.5
     },
     "sulo_maze": {
-      "file": "music/atlas",
+      "file": "music/sulo_maze",
       "volume": 0.45
     },
     "sulo_boss": {
-      "file": "music/battle_boss",
+      "file": "music/sulo_boss",
       "volume": 0.5
     },
     "dotham": {

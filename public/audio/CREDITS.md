@@ -22,7 +22,10 @@
 | `sfx/su-lo/aid_a..b`, `stele_a` | Dựng từ đoạn Gemini tạo (19/11/2026, prompt `sulo_aid`): aid là tiếng sột soạt ở giây 0,03 và 0,98 trộn với tiếng chuông ở giây 7,43 (vào sau 0,15 giây, nhỏ hơn 6 dB); stele là tiếng sột soạt dài ở giây 5,13–6,58 của cùng đoạn. Đoạn prompt `sulo_stele` chỉ có tiếng tách ngắn trên nền ồn nên không dùng | Như trên |
 | `sfx/su-lo/boss_a..b` | Cắt tay từ đoạn nhạc trống trận Gemini tạo (19/11/2026, prompt `sulo_boss`): boss_a là phần mở đầu giây 0,03–1,83 (tắt dần 0,6 giây), boss_b là phần kết giây 53,75–55,75 | Như trên |
 | `sfx/su-lo/bosslost_a..b`, `bosswon_a..b`, `counsel_a..c` | Cắt tay từ ba đoạn Gemini tạo (19/11/2026, prompt `sulo_bosslost`, `sulo_bosswon`, `sulo_counsel`): bosslost là câu chiêng lặp ở giây 5,90 và 11,755; bosswon là phần mở đầu giây 2,68 và phần kết giây 57,4; counsel là ba tiếng gảy đàn rời ở giây 6,69, 8,17 và 8,91 | Như trên |
+| `sfx/su-lo/won_a` | Cắt tay phần kết bài (giây 99,3–103,9) của đoạn Gemini tạo (20/11/2026, prompt `sulo_won`) | Như trên |
+| `music/sulo_maze`, `music/sulo_boss` | Hai bản nhạc Gemini tạo (20/11/2026, prompt `music_sulo_maze`, `music_sulo_boss`), làm vòng lặp bằng `scripts/make-music-loop.py`: maze lấy giây 31,0–119,6 (bỏ đoạn vào nhỏ hơn hẳn), boss lấy giây 0–95,3 cho tệp dưới 1,5 MB | Như trên |
+| `sfx/do-tham/open_a..d` | Cắt tay bốn tiếng sột soạt rời ở giây 2,18, 2,72, 3,26 và 3,80 của đoạn Gemini tạo (20/11/2026, prompt `dotham_open`; phần sau là nhạc) | Như trên |
 
-Cue `sulo.*` và nhạc `sulo_maze`, `sulo_boss` của Sử Lộ chưa có tệp riêng: manifest trỏ về các tệp ở bảng trên (xem bảng 5.6 trong `docs/05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md`).
+Sử Lộ đã có tệp riêng cho mọi cue `sulo.*` và hai bản nhạc (20/11/2026).
 
-Cue `dotham.*` và nhạc `dotham` của Do Thám cũng chưa có tệp riêng: manifest trỏ về các tệp ở bảng trên (xem bảng 5.7 cùng tài liệu).
+Do Thám: `dotham.open` đã có tệp riêng; các cue `dotham.*` khác và nhạc `dotham` còn trỏ về tệp ở bảng trên (xem bảng 5.7 trong `docs/05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md`).

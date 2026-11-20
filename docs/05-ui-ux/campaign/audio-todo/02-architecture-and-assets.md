@@ -141,25 +141,25 @@ Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến)
 
 ### 5.6 Sử Lộ (`sulo.*`, đã nối 19/11/2026)
 
-`su-lo/sounds.ts` ánh xạ nước đi và sự kiện `SlEvent` sang cue; trận trùm match-3 dùng tiếng ghép ô của trận đánh (`frameCue`) theo từng khung hoạt ảnh. Chưa có tệp riêng: manifest trỏ cue về tệp sẵn có (cột "Tệp tạm"); có tệp riêng thì chỉ sửa manifest.
+`su-lo/sounds.ts` ánh xạ nước đi và sự kiện `SlEvent` sang cue; trận trùm match-3 dùng tiếng ghép ô của trận đánh (`frameCue`) theo từng khung hoạt ảnh. Mọi cue và hai bản nhạc đã có tệp riêng ở `public/audio/sfx/su-lo/` và `music/` (19–20/11/2026, cắt từ đoạn Gemini tạo; vị trí cắt ghi ở `public/audio/CREDITS.md`).
 
-| Cue | Khi nào | Tệp tạm | Ưu tiên |
+| Cue | Khi nào | Tệp | Ưu tiên |
 |---|---|---|---|
-| `sulo.roll` | Đổ xúc xắc | Đã có tệp riêng `su-lo/roll` | P1 |
-| `sulo.move` | Đi quân tới ô | Đã có tệp riêng `su-lo/move` | P1 |
-| `sulo.nomove` | Đổ ra số không đi được | Đã có tệp riêng `su-lo/nomove` | P2 |
-| `sulo.correct` / `sulo.wrong` | Trả lời đúng / sai | Đã có tệp riêng `su-lo/correct`, `su-lo/wrong` | P1 |
-| `sulo.disarm` / `sulo.trap` | Gỡ bẫy / sập bẫy | Đã có tệp riêng `su-lo/disarm`, `su-lo/trap` | P1 |
-| `sulo.luck` | Ô may mắn | Đã có tệp riêng `su-lo/luck` | P2 |
-| `sulo.gate` | Mở cửa ải | Đã có tệp riêng `su-lo/gate` | P2 |
-| `sulo.stele` | Đọc bia đá | Đã có tệp riêng `su-lo/stele` | P2 |
-| `sulo.aid` | Dùng trợ giúp | Đã có tệp riêng `su-lo/aid` | P2 |
-| `sulo.boss` | Vào trận trùm trấn cổng | Đã có tệp riêng `su-lo/boss` | P1 |
-| `sulo.counsel` | Quân sư hiến kế giữa trận | Đã có tệp riêng `su-lo/counsel` | P2 |
-| `sulo.bosswon` / `sulo.bosslost` | Hạ trùm / thua hoặc rút | Đã có tệp riêng `su-lo/bosswon`, `su-lo/bosslost` | P1 |
-| `sulo.won` | Thoát mê cung | `formation/win` | P1 |
+| `sulo.roll` | Đổ xúc xắc | `su-lo/roll` | P1 |
+| `sulo.move` | Đi quân tới ô | `su-lo/move` | P1 |
+| `sulo.nomove` | Đổ ra số không đi được | `su-lo/nomove` | P2 |
+| `sulo.correct` / `sulo.wrong` | Trả lời đúng / sai | `su-lo/correct`, `su-lo/wrong` | P1 |
+| `sulo.disarm` / `sulo.trap` | Gỡ bẫy / sập bẫy | `su-lo/disarm`, `su-lo/trap` | P1 |
+| `sulo.luck` | Ô may mắn | `su-lo/luck` | P2 |
+| `sulo.gate` | Mở cửa ải | `su-lo/gate` | P2 |
+| `sulo.stele` | Đọc bia đá | `su-lo/stele` | P2 |
+| `sulo.aid` | Dùng trợ giúp | `su-lo/aid` | P2 |
+| `sulo.boss` | Vào trận trùm trấn cổng | `su-lo/boss` | P1 |
+| `sulo.counsel` | Quân sư hiến kế giữa trận | `su-lo/counsel` | P2 |
+| `sulo.bosswon` / `sulo.bosslost` | Hạ trùm / thua hoặc rút | `su-lo/bosswon`, `su-lo/bosslost` | P1 |
+| `sulo.won` | Thoát mê cung | `su-lo/won` | P1 |
 
-Nhạc: `sulo_maze` (mê cung và màn chuẩn bị, tạm dùng tệp `music/atlas`) và `sulo_boss` (trong trận trùm, kể cả lúc trả lời câu Quân sư; tạm dùng `music/battle_boss`). Phân cảnh `SU_LO` là `SELF` trong `sceneMusic.ts`.
+Nhạc: `sulo_maze` (mê cung và màn chuẩn bị) và `sulo_boss` (trong trận trùm, kể cả lúc trả lời câu Quân sư), tệp riêng `music/sulo_maze`, `music/sulo_boss`. Phân cảnh `SU_LO` là `SELF` trong `sceneMusic.ts`.
 
 ### 5.7 Do Thám (`dotham.*`, đã nối 19/11/2026)
 
@@ -167,7 +167,7 @@ Engine Do Thám không phát sự kiện nên `do-tham/sounds.ts` so trạng th�
 
 | Cue | Khi nào | Tệp tạm | Ưu tiên |
 |---|---|---|---|
-| `dotham.open` | Mở một vài ô (dưới 4 ô) | `formation/place` | P1 |
+| `dotham.open` | Mở một vài ô (dưới 4 ô) | Đã có tệp riêng `do-tham/open` | P1 |
 | `dotham.cascade` | Mở lan từ 4 ô trở lên (gặp ô số 0) | `formation/fogclear` | P1 |
 | `dotham.flag` | Cắm cờ lau; gỡ cờ cùng tiếng, trầm hơn | `battle/swap` | P1 |
 | `dotham.shield` | Khiên đất đỡ một lần sa bẫy | `formation/match` | P2 |
