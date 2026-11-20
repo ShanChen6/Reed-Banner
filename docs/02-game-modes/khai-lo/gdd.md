@@ -1,6 +1,6 @@
 # 24 — Khai Lộ: giải đố xóa khối ô ngọc
 
-> Cập nhật: 05/11/2026 (thêm Cấp tốc, quân nguyên tố)
+> Cập nhật: 20/11/2026 (tối ưu bố cục máy tính/điện thoại, hỏi lại khi kết thúc màn sớm)
 > Trạng thái: **DRAFT** — Shan duyệt ý tưởng và chốt tên **Khai Lộ** ngày 05/11/2026; có bản chơi thử offline (không thưởng, không xếp hạng) với hai chế độ Thường và Cấp tốc, quân là 7 nguyên tố. Các số ở [mục 4](#4-số-liệu-bản-đầu) do Claude đặt theo mô phỏng, chờ Shan chơi thử.
 
 ## 1. Định vị
@@ -81,6 +81,8 @@ Người chơi thật có đạo cụ và tính sâu hơn, nên kỳ vọng đi 
 - Lõi: `src/core/khai-lo/` (thuần TypeScript, seed qua `src/core/rng.ts`), test ở `tests/core/khai-lo/`.
 - Màn chơi: `/game/clear-path` (phân cảnh `KHAI_LO`), `src/app/game/khai-lo/KhaiLoScreen.tsx`. Thẻ ở hàng "Sắp ra mắt / đã mở" trên Home cạnh Trận Đồ.
 - Offline: ván dở và điểm cao nhất lưu `localStorage` (`reed-banner:khai-lo:*`); không cần đăng nhập, không thưởng.
+- Bố cục (20/11/2026): điện thoại xếp dọc số liệu → bàn → thanh 4 nút (Lốc, Sấm, Hoàn tác, Kết thúc màn) ngay dưới bàn; từ 1024px bàn bên trái, chế độ, số liệu và đạo cụ ở cột phải. Cỡ ô đo theo chỗ trống thật (tối đa 60px), trên máy tính còn giới hạn theo chiều cao cửa sổ để cả bàn lọt màn hình. Bảng kết màn và hết ván hiện đè lên bàn.
+- *Kết thúc màn* khi bàn còn khối xóa được phải bấm hai lần (lần đầu hỏi lại và nói rõ mỗi quân còn lại trừ 1 quân lực); lúc bế tắc thì một lần.
 - Ô rơi và dồn cột có hoạt ảnh (đổi `transform`), khối vừa xóa bung mờ; tôn trọng `prefers-reduced-motion`.
 - Chưa có: âm thanh, tranh thẻ Home (`public/art/home/khai-lo.webp`), hướng dẫn từng bước.
 

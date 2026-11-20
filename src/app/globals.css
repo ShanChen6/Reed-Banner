@@ -1307,6 +1307,32 @@
   .barracks * { transition: none !important; }
 }
 
+/* Khai Lộ: điện thoại xếp dọc số liệu → bàn → đạo cụ; từ lg bàn bên trái, số liệu và đạo cụ ở cột phải; từ xl ba cột. */
+.kl-layout {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "head" "board" "tools";
+}
+@media (width >= 64rem) {
+  .kl-layout {
+    scroll-margin-top: 5.5rem;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "board head" "board tools";
+  }
+}
+/* Từ 1280px: số liệu bên trái, bàn giữa, đạo cụ bên phải để bàn chiếm hết chiều ngang còn lại. */
+@media (width >= 80rem) {
+  .kl-layout {
+    grid-template-columns: 250px minmax(0, 1fr) 270px;
+    grid-template-rows: auto;
+    grid-template-areas: "head board tools";
+  }
+}
+.kl-overlay {
+  background: color-mix(in srgb, var(--black) 55%, transparent);
+  backdrop-filter: blur(1.5px);
+  animation: barracks-fade 0.25s ease-out;
+}
 /* Khai Lộ: ô ngọc đặt tuyệt đối, đổi vị trí bằng transform để ô rơi/dồn cột có hoạt ảnh. */
 .kl-board {
   background: radial-gradient(ellipse at 50% 40%, var(--tone-233042) 0%, var(--tone-141c27) 80%);
