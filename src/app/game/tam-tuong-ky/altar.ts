@@ -20,11 +20,27 @@ import type { Profession } from "@/core/battle";
 export type Slots = readonly [NodeId | null, NodeId | null];
 export const EMPTY_SLOTS: Slots = [null, null];
 
-/** Bấm một yếu tố: điền vào ô trống đầu tiên; đủ hai ô thì thay ô sau. Cho chọn cùng yếu tố hai lần (A+A). */
+/** Bấm một yếu tố ở Vạn Vật Lục chế độ Hạng: điền vào ô trống đầu tiên; đủ hai ô thì thay ô sau. Cho chọn cùng yếu tố hai lần (A+A). */
 export function pickInto(slots: Slots, id: NodeId): Slots {
   if (slots[0] === null) return [id, slots[1]];
   if (slots[1] === null) return [slots[0], id];
   return [slots[0], id];
+}
+
+export interface PickerGrid {
+  readonly cols: 4 | 6;
+  readonly rows: number;
+}
+
+/**
+ * Số cột, số hàng của lưới trong hộp thoại chọn nguyên liệu theo khung nhìn (Shan 20/11/2026: bảng co theo chiều cao
+ * màn hình, hạn chế thanh cuộn). Phần cố định của hộp thoại (lề ngoài, viền, đệm, tiêu đề, ô tìm, hàng lọc, nút trang)
+ * khoảng 292px, mỗi hàng ô 90px (ô 84px + khe 6px, hàng cuối không có khe). Từ 2 đến 5 hàng; màn thấp hơn mức 2 hàng
+ * thì hộp thoại vẫn cuộn được. 6 cột từ 640px.
+ */
+export function pickerGrid(width: number, height: number): PickerGrid {
+  const rows = Math.max(2, Math.min(5, Math.floor((height - 292 + 6) / 90)));
+  return { cols: width >= 640 ? 6 : 4, rows };
 }
 
 /** Chọn từ hộp thoại của một ô: đặt đúng vào ô đó, ô kia giữ nguyên. */
