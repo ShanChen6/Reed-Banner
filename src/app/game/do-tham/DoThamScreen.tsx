@@ -445,16 +445,10 @@ export default function DoThamScreen() {
                   Ván mới
                 </Button>
               </div>
-              <p className="text-sm text-on-wood-soft">
-                Chuột phải hoặc chạm giữ để cắm cờ. Bấm vào ô số đã đủ cờ để mở nhanh các ô quanh nó.
-              </p>
             </section>
 
             <section className="ui-frame flex flex-col gap-3 p-4" aria-label="Đạo cụ nguyên tố">
               <h2 className="ui-title-on-wood font-bold">Đạo cụ nguyên tố</h2>
-              <p className="text-sm text-on-wood-soft">
-                Mang tối đa {DT_ITEM_PICKS} đạo cụ vào ván, mỗi đạo cụ dùng một lần.
-              </p>
               <div className="flex flex-wrap gap-2" role="group" aria-label="Chọn đạo cụ">
                 {ELEMENTS.map((e) => (
                   <ChoiceChip key={e} selected={picks.includes(e)} size="sm" onClick={() => togglePick(e)}>
@@ -495,10 +489,6 @@ export default function DoThamScreen() {
               )}
               {game.shield === "active" && <p className="text-sm text-title-on-wood">Khiên đất đang giữ: lần sa bẫy kế tiếp được đỡ.</p>}
             </section>
-
-            <p className="text-sm text-on-wood-soft">
-              Bản chơi thử, không cần mạng: chưa có thưởng và bảng công trạng. Ván dở và thời gian tốt nhất mỗi bậc lưu trên trình duyệt này.
-            </p>
           </aside>
         </div>
         </PlayCard>

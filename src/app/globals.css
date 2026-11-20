@@ -1574,7 +1574,8 @@ html {
   z-index: 30;
   background: var(--wood-lo);
 }
-/* Toàn màn hình: lề co giãn theo màn (1rem tới 2.5rem, cộng vùng tai thỏ), nội dung tối đa 1600px ở giữa. */
+/* Toàn màn hình: lề mỏng (0.5rem tới 1rem, cộng vùng tai thỏ) để khung lấp gần hết màn; màn siêu rộng thì nội dung tối đa
+   2400px ở giữa. Shan 20/11/2026: lề cũ (2.5rem, đáy 5rem, tối đa 1600px) để lại viền đen rộng quanh khung. */
 .play-card:fullscreen,
 .play-card--overlay {
   overflow: auto;
@@ -1585,9 +1586,9 @@ html {
   background:
     radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--frame-gold) 10%, transparent) 0%, transparent 60%),
     var(--black);
-  padding-top: max(clamp(1rem, 3vw, 2.5rem), env(safe-area-inset-top));
-  padding-bottom: max(clamp(4rem, 6vw, 5rem), env(safe-area-inset-bottom));
-  padding-inline: max(clamp(1rem, 3vw, 2.5rem), env(safe-area-inset-left), env(safe-area-inset-right), calc((100% - 1600px) / 2));
+  padding-top: max(clamp(0.5rem, 1.2vw, 1rem), env(safe-area-inset-top));
+  padding-bottom: max(clamp(0.5rem, 1.2vw, 1rem), env(safe-area-inset-bottom));
+  padding-inline: max(clamp(0.5rem, 1.2vw, 1rem), env(safe-area-inset-left), env(safe-area-inset-right), calc((100% - 2400px) / 2));
 }
 .play-card--overlay {
   position: fixed;
@@ -1605,7 +1606,7 @@ html {
   background:
     radial-gradient(ellipse at 50% 35%, color-mix(in srgb, var(--frame-gold) 9%, transparent) 0%, transparent 65%),
     linear-gradient(180deg, var(--wood) 0%, var(--wood-lo) 100%);
-  padding: clamp(1rem, 2.5vw, 2rem);
+  padding: clamp(0.75rem, 1.6vw, 1.5rem);
   box-shadow:
     0 0 0 4px color-mix(in srgb, var(--wood-lo) 90%, transparent),
     0 0 0 5px color-mix(in srgb, var(--frame-bronze) 70%, transparent),
@@ -1627,15 +1628,15 @@ html {
 @media (width < 64rem) {
   .play-card:fullscreen:has(.mobile-dock),
   .play-card--overlay:has(.mobile-dock) {
-    padding-bottom: calc(max(4rem, env(safe-area-inset-bottom)) + 6rem);
+    padding-bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 6rem);
   }
 }
-/* Toàn màn hình: nút về góc dưới phải màn hình. */
+/* Toàn màn hình: nút nằm trong góc dưới phải của khung, ngay trên góc hoa văn. */
 .play-card:fullscreen .play-card-toggle,
 .play-card--overlay .play-card-toggle {
   position: fixed;
-  right: max(clamp(1rem, 3vw, 2.5rem), env(safe-area-inset-right));
-  bottom: max(clamp(1rem, 3vw, 2.5rem), env(safe-area-inset-bottom));
+  right: max(clamp(1.25rem, 2.6vw, 2.25rem), env(safe-area-inset-right));
+  bottom: max(clamp(1.25rem, 2.6vw, 2.25rem), env(safe-area-inset-bottom));
 }
 @media (width < 64rem) {
   .play-card:fullscreen:has(.mobile-dock) .play-card-toggle,
@@ -1643,8 +1644,8 @@ html {
     bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 5.5rem);
   }
 }
-/* Trận Đồ: máy tính cho ô giãn theo chiều cao màn; thẻ toàn màn hình thì bàn lấp chiều cao (trừ lề, dòng thông báo, nút
-   gợi ý) và vẫn vừa bề ngang cột. */
+/* Trận Đồ: máy tính cho ô giãn theo chiều cao màn; thẻ toàn màn hình thì bàn lấp chiều cao (trừ lề, hai dòng thông báo)
+   và vẫn vừa bề ngang cột. */
 @media (width >= 64rem) {
   .fm-board {
     --fm-cell: min(max(var(--fm-max), calc((100dvh - 20rem) / var(--fm-rows))), calc((100cqw - 20px) / var(--fm-cols)), 128px);
@@ -1652,12 +1653,46 @@ html {
 }
 .play-card:fullscreen .fm-board,
 .play-card--overlay .fm-board {
-  --fm-cell: min(calc((100dvh - 18rem) / var(--fm-rows)), calc((100cqw - 20px) / var(--fm-cols)), 200px);
+  --fm-cell: min(calc((100dvh - 12rem) / var(--fm-rows)), calc((100cqw - 20px) / var(--fm-cols)), 200px);
 }
 @media (width < 64rem) {
   .play-card:fullscreen .fm-board,
   .play-card--overlay .fm-board {
     --fm-cell: min(calc((100dvh - 24rem) / var(--fm-rows)), calc((100cqw - 20px) / var(--fm-cols)), 112px);
+  }
+}
+/* Trận đấu toàn màn hình (md+, sân đấu và ba cột cạnh nhau): hàng ba cột giãn hết phần còn lại dưới sân đấu, bàn cờ lớn nhất vừa cả bề ngang lẫn bề cao ô chứa (container query) thay vì công thức theo thanh đầu trang. */
+@media (width >= 48rem) {
+  /* Khung đã cao tối thiểu bằng màn (min-height 100%); hàng ba cột giãn hết phần còn lại nhưng không thấp hơn cột thẻ tướng,
+     màn thấp thì cuộn như trang thường. */
+  .play-card:fullscreen .battle-fill,
+  .play-card--overlay .battle-fill {
+    flex: 1 1 0;
+    align-items: stretch;
+  }
+  /* Chừa sẵn chỗ cho dòng nhắm kỹ năng để bàn cờ không co lại khi dòng đó hiện. */
+  .play-card:fullscreen .battle-aim-slot,
+  .play-card--overlay .battle-aim-slot {
+    display: flex;
+    min-height: 2.75rem;
+  }
+  .play-card:fullscreen .battle-center,
+  .play-card--overlay .battle-center {
+    max-width: none;
+  }
+  .play-card:fullscreen .battle-board-box,
+  .play-card--overlay .battle-board-box {
+    flex: 1 1 0;
+    min-height: 0;
+    container-type: size;
+    margin-top: 0.75rem;
+  }
+  .play-card:fullscreen .battle-board,
+  .play-card--overlay .battle-board {
+    margin-top: 0;
+    /* Màn thấp: cột thẻ tướng cao hơn màn làm hộp cao theo, nên chặn thêm theo chiều cao màn (trừ sân đấu, đồng hồ, lề). */
+    width: min(100cqw, calc((100cqh - 16px) * var(--board-ratio) + 16px), calc((100dvh - 21rem) * var(--board-ratio)));
+    max-width: none;
   }
 }
 /* Sân đấu dính dưới thanh đầu trang; khi thẻ toàn màn hình thì không còn thanh đầu trang nên dính sát mép trên. */

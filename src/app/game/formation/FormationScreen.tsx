@@ -36,7 +36,6 @@ import { cuesForEvents, FORMATION_PRELOAD, isPerfectPlacement, musicFor, REJECT,
 import { obstacleKind, obstacleLabel } from "./pieces";
 import { fetchProfile, sendProfileAction } from "../battle/online";
 import { claimRanked, fetchOverview, moveRanked, startRanked, toPuzzleState, type FormationView, type Overview } from "./rankedClient";
-import Rules from "./Rules";
 import { PlayCard } from "../PlayCard";
 import {
   BEST_KEY,
@@ -449,21 +448,24 @@ function PlayView({
       </div>
 
       <PlayCard label="Sa bàn Trận Đồ">
-      <div className={`grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px] ${finished ? "" : "pb-28 lg:pb-0"}`}>
+      <div className={`grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_364px] ${finished ? "" : "pb-28 lg:pb-0"}`}>
         <div className="fm-board-col flex flex-col items-center gap-3">
           <BoardView state={state} map={map} legal={legal} showHints={hintsOn} playing={playing} last={last} focus={focus} setFocus={setFocus} setPeek={setPeek} boardRef={boardRef} sweeps={sweeps} onPlace={(row, col) => onCommand({ kind: "place", row, col })} />
           <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-title-on-wood">{message}</p>
           <p aria-hidden className="-mt-2 min-h-5 text-center text-sm text-on-wood-soft">{peekText}</p>
           {tip && <div className="w-full max-w-xl"><TutorialTip text={tip} onDismiss={onDismissTip} /></div>}
-          {!finished && <HintToggle on={hintsOn} onToggle={onToggleHints} />}
         </div>
 
-        <aside className="flex flex-col gap-4" aria-label="Bảng điều khiển">
+        {/* Máy tính: vạch dọc ngăn bàn cờ với cột điều khiển bên phải. */}
+        <aside className="flex flex-col gap-4 lg:self-stretch lg:border-l lg:border-frame-bronze/50 lg:pl-6" aria-label="Bảng điều khiển">
           {finished ? (
             ranked ? <RankedResult state={state} rank={ranked.rank} score={ranked.score} period={ranked.period} map={map} onLeave={onLeave} /> : <Result state={state} best={best} map={map} custom={rules.id === CUSTOM_RULESET_ID} onRestart={onRestart} onLeave={onLeave} />
           ) : (
             <div className="hidden flex-col gap-4 lg:flex">
-              <CommandCard state={state} />
+              <div className="flex items-start gap-3">
+                <div className="min-w-0 flex-1"><CommandCard state={state} /></div>
+                <HintToggle on={hintsOn} onToggle={onToggleHints} />
+              </div>
               <div className="ui-frame flex flex-col gap-3 p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
@@ -491,15 +493,11 @@ function PlayView({
               {best > 0 && !ranked && (<><dt className="text-on-wood-soft">Điểm cao nhất</dt><dd className="text-right font-semibold">{best}</dd></>)}
             </dl>
           </details>
-          <details className="ui-frame p-4">
-            <summary className="cursor-pointer font-serif font-bold text-title-on-wood">Luật chơi</summary>
-            <div className="mt-2"><Rules /></div>
-          </details>
         </aside>
       </div>
 
       {!finished && (
-        <MobileBar state={state} rules={rules} noMove={noMove} disabled={busy} covered={state.coveredCount} total={total} onDiscard={() => onCommand({ kind: "discard" })} />
+        <MobileBar state={state} rules={rules} noMove={noMove} disabled={busy} covered={state.coveredCount} total={total} onDiscard={() => onCommand({ kind: "discard" })} hintsOn={hintsOn} onToggleHints={onToggleHints} />
       )}
       </PlayCard>
     </>
