@@ -255,7 +255,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
 
   return (
     <CatalogContext.Provider value={catalog}>
-    <main aria-label="Tầm Tướng Ký" className="campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
+    <main aria-label="Tầm Tướng Ký" className="has-mobile-dock campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
       <div className={`mx-auto flex w-full flex-col gap-4 ${MODE_CONTENT_WIDTH}`}>
         <ModeCard>
         <ModeBanner
@@ -431,7 +431,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
 
   return (
     <CatalogContext.Provider value={catalog}>
-    <main aria-label="Tầm Tướng Ký" className="campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
+    <main aria-label="Tầm Tướng Ký" className="has-mobile-dock campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
       <div className={`mx-auto flex w-full flex-col gap-4 ${MODE_CONTENT_WIDTH}`}>
         <ModeCard>
         <ModeBanner

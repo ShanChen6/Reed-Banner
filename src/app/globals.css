@@ -1453,13 +1453,15 @@
 }
 
 /* Nút toàn màn hình nổi ở góc dưới phải (FullscreenToggle.tsx), chừa vùng an toàn của tai thỏ/thanh home. Dưới lg,
-   màn nào có thanh dính đáy (.mobile-dock: Bày trận Bình Loạn, Trận Đồ, Tầm Tướng Ký) thì nút nhích lên trên thanh. */
+   màn nào có thanh dính đáy (.mobile-dock: Bày trận Bình Loạn, Trận Đồ, Tầm Tướng Ký) thì nút nằm sẵn trên thanh. Màn mà
+   thanh chỉ hiện ở một mục (Tầm Tướng Ký: mục Chơi có, mục Hướng dẫn không) gắn .has-mobile-dock lên khung màn để nút
+   giữ nguyên chỗ khi đổi mục, không nhảy lên xuống. */
 .fullscreen-fab {
   right: max(0.75rem, env(safe-area-inset-right));
   bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 @media (width < 64rem) {
-  body:has(.mobile-dock) .fullscreen-fab {
+  body:has(.mobile-dock, .has-mobile-dock) .fullscreen-fab {
     bottom: calc(max(0.75rem, env(safe-area-inset-bottom)) + 5.5rem);
   }
 }
@@ -1511,27 +1513,39 @@ html {
   }
 }
 
-/* Thẻ vùng chơi (src/app/game/PlayCard.tsx); nút toàn màn hình của thẻ nổi ở góc dưới phải như .fullscreen-fab. */
+/* Thẻ vùng chơi (src/app/game/PlayCard.tsx): lớp ngoài .play-card giữ nút và là khung toàn màn hình, lớp trong
+   .play-card-body là thẻ (viền đồng, nền gỗ). Nút "Phóng to màn chơi" nằm trên viền dưới, góc phải của thẻ. */
 .play-card {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+.play-card-body {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   border: 1px solid var(--frame-bronze);
   border-radius: 0.75rem;
   background: color-mix(in srgb, var(--wood-lo) 70%, transparent);
-  padding: 0.5rem;
+  padding: 0.5rem 0.5rem 1.75rem;
+}
+.play-card-toggle {
+  position: absolute;
+  right: 0.75rem;
+  bottom: -1.25rem;
+  z-index: 30;
+  background: var(--wood-lo);
 }
 /* Dưới 1024px: cỡ ô bàn cờ tính theo bề rộng màn hình nên thẻ không chiếm thêm chiều ngang (bỏ đệm và viền hai bên). */
 @media (max-width: 1023px) {
-  .play-card {
+  .play-card-body {
     padding-inline: 0;
     border-inline-width: 0;
     border-radius: 0;
   }
 }
 @media (min-width: 1024px) {
-  .play-card {
-    padding: 0.75rem;
+  .play-card-body {
+    padding: 0.75rem 0.75rem 1.75rem;
   }
 }
 /* Toàn màn hình: lề co giãn theo màn (1rem tới 2.5rem, cộng vùng tai thỏ), nội dung tối đa 1600px ở giữa. */
@@ -1552,6 +1566,16 @@ html {
   inset: 0;
   z-index: 60;
 }
+/* Toàn màn hình vẫn giữ thẻ bọc: đủ viền, bo góc và đệm ở mọi cỡ màn; cao tối thiểu bằng khung để thẻ phủ hết màn. */
+.play-card:fullscreen .play-card-body,
+.play-card--overlay .play-card-body {
+  min-height: 100%;
+  border-width: 1px;
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--wood) 55%, var(--wood-lo));
+  padding: clamp(0.5rem, 1.5vw, 1rem);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--frame-gold) 25%, transparent), 0 12px 32px -12px var(--black);
+}
 /* Màn có thanh dính đáy (Trận Đồ, Tầm Tướng Ký trên điện thoại): chừa thêm chỗ để cuộn được nội dung lên trên thanh. */
 @media (width < 64rem) {
   .play-card:fullscreen:has(.mobile-dock),
@@ -1559,8 +1583,18 @@ html {
     padding-bottom: calc(max(4rem, env(safe-area-inset-bottom)) + 6rem);
   }
 }
-.play-card--overlay .fullscreen-fab {
-  z-index: 61;
+/* Toàn màn hình: nút về góc dưới phải màn hình. */
+.play-card:fullscreen .play-card-toggle,
+.play-card--overlay .play-card-toggle {
+  position: fixed;
+  right: max(clamp(1rem, 3vw, 2.5rem), env(safe-area-inset-right));
+  bottom: max(clamp(1rem, 3vw, 2.5rem), env(safe-area-inset-bottom));
+}
+@media (width < 64rem) {
+  .play-card:fullscreen:has(.mobile-dock) .play-card-toggle,
+  .play-card--overlay:has(.mobile-dock) .play-card-toggle {
+    bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 5.5rem);
+  }
 }
 /* Sân đấu dính dưới thanh đầu trang; khi thẻ toàn màn hình thì không còn thanh đầu trang nên dính sát mép trên. */
 .play-card:fullscreen .play-card-sticky,
