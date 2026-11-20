@@ -52,6 +52,7 @@ Phe đi trước bốc ngẫu nhiên hoặc phe điểm thấp hơn đi trước
 - **Hàng đợi theo Elo**, mở rộng khoảng cách điểm dần theo thời gian chờ; chỉ giữ người đang mở màn Quần Hùng (hết hạn nếu im lặng quá vài chục giây).
 - **3vs3 cần sáu người cùng lúc.** Ba đường vào: (a) hàng đợi cá nhân, hệ thống ghép đủ sáu và chia đội cân điểm; (b) **phòng mời bạn bè bằng mã**, đủ sáu người thì bắt đầu; (c) hết thời gian chờ thì **điền AI** vào chỗ trống. Trận có AI điền: AI điều khiển tướng đó theo luật AI hiện có. **Trận vẫn tính Elo nhưng được ít điểm hơn** (mục 3.6).
 - Phòng mời bạn bè dùng được cho **giao hữu không tính Elo, không thưởng** (Shan đồng ý).
+- **Giữ chỗ trong phòng (20/11/2026):** mỗi lần người trong phòng hỏi phòng hay thao tác là một tín hiệu còn ở đó (ghi tối đa 20 giây một lần). Vắng quá **3 phút** (`PVP_ROOM_SEAT_TTL_MS`) thì mất chỗ, nên mất mạng hay tải lại trang trong 3 phút vẫn về phòng cũ, còn bỏ đi nhiều ngày thì vào lại là ở ngoài phòng. Chủ phòng rời hay mất chỗ thì người còn lại hoạt động gần nhất làm chủ; hết người thì phòng đóng. Việc định kỳ mỗi ngày xóa phòng không đổi gì quá một ngày.
 - Chặn đánh lại **cùng một người** quá N lần mỗi ngày để tránh đổi điểm qua lại giữa hai tài khoản.
 
 ### 3.3 Chọn tướng 3vs3 (lần lượt, có cấm chọn)

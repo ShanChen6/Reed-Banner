@@ -1,6 +1,9 @@
 // Phòng mời bằng mã của Đấu người 3vs3 (giao hữu): chủ phòng tạo phòng, bạn bè vào bằng mã, mỗi người chọn một tướng của mình,
 // chủ phòng bắt đầu (chỗ trống có thể để AI điền). Giao hữu không tính điểm hạng, không có vàng, không vào bảng mùa. Cấm và
 // chọn tướng lần lượt, Nộ riêng từng người là bước sau (PVP-06). Luật ở docs/02-game-modes/future/quan-hung-pvp-truc-tiep.md.
+// Giữ chỗ: mỗi lần người trong phòng hỏi phòng hay thao tác là một tín hiệu còn ở đó. Vắng quá PVP_ROOM_SEAT_TTL_MS thì mất chỗ
+// (mất mạng, tắt máy rồi vào lại trong thời gian đó vẫn về đúng phòng cũ). Chủ phòng mất chỗ thì người còn lại hoạt động gần nhất
+// làm chủ; không còn ai thì phòng đóng. Việc định kỳ mỗi ngày xóa hẳn phòng không đổi gì quá một ngày.
 
 import {
   ELEMENTS,
@@ -34,6 +37,8 @@ export interface PvpRoomSlot {
   readonly element: Element | null;
   readonly profession: Profession | null;
   readonly level: number | null;
+  /** Lần cuối người ngồi chỗ này còn ở phòng (ms). Phòng cũ chưa có trường này thì lấy `updatedAt` của phòng. */
+  readonly seenAt?: number;
 }
 
 export interface PvpRoomRecord {
@@ -105,6 +110,10 @@ const EMPTY: PvpRoomSlot = { owner: null, name: null, hero: null, heroName: null
 const MAX_TRIES = 5;
 
 export const PVP_ROOM_SIZE = 6;
+/** Vắng quá mốc này thì mất chỗ trong phòng đang mở. Đủ dài để mất mạng hay tải lại trang vẫn về phòng cũ. */
+export const PVP_ROOM_SEAT_TTL_MS = 3 * 60_000;
+/** Ghi tín hiệu còn ở phòng tối đa một lần mỗi khoảng này, để việc hỏi phòng liên tục không ghi cơ sở dữ liệu mỗi lần. */
+const SEEN_EVERY_MS = 20_000;
 
 /** Mã phòng: chữ in hoa và số, bỏ các ký tự dễ nhầm (0, O, 1, I). */
 export const normalizeRoomCode = (v: unknown): string | null => {
@@ -121,6 +130,25 @@ export const makeRoomCode = (rand: () => number): string => {
 const sideOfSlot = (slot: number): SideIndex => (slot < 3 ? 0 : 1);
 const slotOf = (r: PvpRoomRecord, owner: string) => r.slots.findIndex((s) => s.owner === owner);
 const replaceSlot = (r: PvpRoomRecord, i: number, s: PvpRoomSlot): PvpRoomSlot[] => r.slots.map((x, k) => (k === i ? s : x));
+const seenAt = (r: PvpRoomRecord, s: PvpRoomSlot) => s.seenAt ?? r.updatedAt;
+const isStale = (r: PvpRoomRecord, s: PvpRoomSlot, now: number) => s.owner !== null && now - seenAt(r, s) > PVP_ROOM_SEAT_TTL_MS;
+
+/** Bỏ người vắng quá hạn khỏi phòng đang mở: chủ phòng vắng thì người hoạt động gần nhất làm chủ, hết người thì đóng phòng. */
+export function expireSeats(r: PvpRoomRecord, now: number): { readonly room: PvpRoomRecord; readonly dropped: readonly string[] } {
+  if (r.status !== "open") return { room: r, dropped: [] };
+  const dropped = r.slots.flatMap((s) => (isStale(r, s, now) ? [s.owner as string] : []));
+  if (dropped.length === 0) return { room: r, dropped };
+  const slots = r.slots.map((s) => (isStale(r, s, now) ? EMPTY : s));
+  const left = slots.filter((s) => s.owner !== null).sort((a, b) => seenAt(r, b) - seenAt(r, a));
+  if (left.length === 0) return { room: { ...r, slots, status: "closed" }, dropped };
+  return { room: { ...r, slots, host: dropped.includes(r.host) ? (left[0]!.owner as string) : r.host }, dropped };
+}
+
+/** Ghi nhận người này còn ở phòng. */
+const markSeen = (r: PvpRoomRecord, owner: string | null, now: number): PvpRoomRecord => {
+  const at = owner === null ? -1 : slotOf(r, owner);
+  return at < 0 ? r : { ...r, slots: replaceSlot(r, at, { ...r.slots[at]!, seenAt: now }) };
+};
 
 export interface HeroInfo {
   readonly id: string;
@@ -176,21 +204,46 @@ async function viewOf(r: PvpRoomRecord, owner: string, deps: PvpDeps): Promise<P
   };
 }
 
-/** Đọc, đổi, ghi kèm điều kiện seq; trùng thì đọc lại thử tiếp. `change` trả phòng mới hoặc lỗi. */
+/**
+ * Đọc, đổi, ghi kèm điều kiện seq; trùng thì đọc lại thử tiếp. Trước khi đổi thì bỏ người vắng quá hạn và ghi nhận `actor` còn
+ * ở phòng. `change` trả phòng mới hoặc lỗi; lỗi mà có người bị bỏ thì vẫn ghi phần bỏ người.
+ */
 async function mutate(
   code: string,
-  deps: PvpRoomDeps,
+  deps: PvpDeps,
+  actor: string | null,
   change: (r: PvpRoomRecord) => Promise<PvpRoomRecord | PvpRoomError> | PvpRoomRecord | PvpRoomError,
 ): Promise<{ ok: true; room: PvpRoomRecord } | { ok: false; error: PvpRoomError }> {
   for (let i = 0; i < MAX_TRIES; i++) {
     const cur = await deps.pvp.getRoom(code);
     if (!cur) return { ok: false, error: "notFound" };
-    const next = await change(cur);
-    if (typeof next === "string") return { ok: false, error: next };
-    const saved: PvpRoomRecord = { ...next, seq: cur.seq + 1, updatedAt: deps.now };
-    if (await deps.pvp.saveRoom(saved, cur.seq)) return { ok: true, room: saved };
+    const { room, dropped } = expireSeats(cur, deps.now);
+    const next = await change(markSeen(room, actor, deps.now));
+    const saved: PvpRoomRecord = { ...(typeof next === "string" ? room : next), seq: cur.seq + 1, updatedAt: deps.now };
+    if (typeof next === "string" && dropped.length === 0) return { ok: false, error: next };
+    if (!(await deps.pvp.saveRoom(saved, cur.seq))) continue;
+    for (const o of dropped) await deps.pvp.clearMember(o, code);
+    return typeof next === "string" ? { ok: false, error: next } : { ok: true, room: saved };
   }
   return { ok: false, error: "conflict" };
+}
+
+/**
+ * Đọc phòng, bỏ người vắng quá hạn và ghi nhận `viewer` còn ở đó (chỉ ghi khi cần). Người xem không còn chỗ trong phòng mở
+ * hay phòng đã đóng thì bỏ liên kết phòng của họ. Trả null khi không có phòng.
+ */
+export async function refreshRoom(code: string, viewer: string, deps: PvpDeps): Promise<PvpRoomRecord | null> {
+  let room = await deps.pvp.getRoom(code);
+  if (room && room.status === "open") {
+    const at = slotOf(room, viewer);
+    const due = at >= 0 && deps.now - seenAt(room, room.slots[at]!) >= SEEN_EVERY_MS;
+    if (due || room.slots.some((s) => isStale(room!, s, deps.now))) {
+      const res = await mutate(code, deps, viewer, (r) => r);
+      room = res.ok ? res.room : await deps.pvp.getRoom(code);
+    }
+  }
+  if (!room || room.status === "closed" || (room.status === "open" && slotOf(room, viewer) < 0)) await deps.pvp.clearMember(viewer, code);
+  return room;
 }
 
 async function finish(res: { ok: true; room: PvpRoomRecord } | { ok: false; error: PvpRoomError }, owner: string, deps: PvpDeps): Promise<PvpRoomResult> {
@@ -199,11 +252,12 @@ async function finish(res: { ok: true; room: PvpRoomRecord } | { ok: false; erro
 
 /** Phòng của người này (nếu có). */
 export async function pvpRoomGet(owner: string, code: string | null, deps: PvpRoomDeps): Promise<PvpRoomResult> {
-  const mine = await deps.pvp.roomCodeOf(owner);
-  const target = code ?? mine;
+  const target = code ?? (await deps.pvp.roomCodeOf(owner));
   if (!target) return { ok: false, error: "notFound" };
-  const room = await deps.pvp.getRoom(target);
+  const room = await refreshRoom(target, owner, deps);
   if (!room) return { ok: false, error: "notFound" };
+  // Phòng của chính mình mà đã mất chỗ (vắng quá lâu) thì coi như không còn ở phòng nào.
+  if (code === null && room.status === "open" && slotOf(room, owner) < 0) return { ok: false, error: "notFound" };
   return { ok: true, room: await viewOf(room, owner, deps) };
 }
 
@@ -218,7 +272,7 @@ export async function pvpRoomCreate(owner: string, deps: PvpRoomDeps): Promise<P
       code,
       host: owner,
       status: "open",
-      slots: [{ ...EMPTY, owner, name }, ...Array.from({ length: PVP_ROOM_SIZE - 1 }, () => EMPTY)],
+      slots: [{ ...EMPTY, owner, name, seenAt: deps.now }, ...Array.from({ length: PVP_ROOM_SIZE - 1 }, () => EMPTY)],
       fillAi: false,
       matchId: null,
       seq: 1,
@@ -244,7 +298,7 @@ export async function pvpRoomJoin(owner: string, rawCode: unknown, deps: PvpRoom
   if (q?.matchId && (await deps.pvp.getMatch(q.matchId))?.status === "active") return { ok: false, error: "inMatch" };
   if (!(await deps.pvp.setMember(owner, code))) return { ok: false, error: "inRoom" };
   const name = await deps.nameOf(owner);
-  const res = await mutate(code, deps, (r) => {
+  const res = await mutate(code, deps, owner, (r) => {
     if (r.status !== "open") return r.status === "closed" ? "closed" : "started";
     if (slotOf(r, owner) >= 0) return r;
     // Vào phe đang ít người hơn (hòa thì phe thứ nhất; người đầu tiên vào sau chủ phòng thì sang phe thứ hai).
@@ -252,7 +306,7 @@ export async function pvpRoomJoin(owner: string, rawCode: unknown, deps: PvpRoom
     const order: SideIndex[] = count(0) <= count(1) ? [0, 1] : [1, 0];
     for (const side of order) {
       const at = r.slots.findIndex((s, i) => sideOfSlot(i) === side && s.owner === null);
-      if (at >= 0) return { ...r, slots: replaceSlot(r, at, { ...EMPTY, owner, name }) };
+      if (at >= 0) return { ...r, slots: replaceSlot(r, at, { ...EMPTY, owner, name, seenAt: deps.now }) };
     }
     return "full";
   });
@@ -265,11 +319,12 @@ export async function pvpRoomLeave(owner: string, deps: PvpRoomDeps): Promise<{ 
   if (!code) return { ok: false, error: "notMember" };
   const room = await deps.pvp.getRoom(code);
   if (room && room.status === "open") {
-    await mutate(code, deps, (r) => {
+    await mutate(code, deps, null, (r) => {
       const at = slotOf(r, owner);
       if (at < 0) return r;
       const slots = replaceSlot(r, at, EMPTY);
-      const remaining = slots.filter((s) => s.owner !== null);
+      // Chủ phòng rời thì người hoạt động gần nhất làm chủ.
+      const remaining = slots.filter((s) => s.owner !== null).sort((a, b) => seenAt(r, b) - seenAt(r, a));
       if (remaining.length === 0) return { ...r, slots, status: "closed" as const };
       return { ...r, slots, host: r.host === owner ? (remaining[0]!.owner as string) : r.host };
     });
@@ -284,7 +339,7 @@ export async function pvpRoomMove(owner: string, to: unknown, deps: PvpRoomDeps)
   if (!code) return { ok: false, error: "notMember" };
   if (!Number.isInteger(to) || (to as number) < 0 || (to as number) >= PVP_ROOM_SIZE) return { ok: false, error: "badSlot" };
   const target = to as number;
-  const res = await mutate(code, deps, (r) => {
+  const res = await mutate(code, deps, owner, (r) => {
     if (r.status !== "open") return r.status === "closed" ? "closed" : "started";
     const at = slotOf(r, owner);
     if (at < 0) return "notMember";
@@ -321,7 +376,7 @@ export async function pvpRoomHero(
       info = { ...info, element: el as Element, profession: pr as Profession };
     }
   }
-  const res = await mutate(code, deps, (r) => {
+  const res = await mutate(code, deps, owner, (r) => {
     if (r.status !== "open") return r.status === "closed" ? "closed" : "started";
     const at = slotOf(r, owner);
     if (at < 0) return "notMember";
@@ -341,7 +396,7 @@ export async function pvpRoomHero(
 export async function pvpRoomFillAi(owner: string, on: unknown, deps: PvpRoomDeps): Promise<PvpRoomResult> {
   const code = await deps.pvp.roomCodeOf(owner);
   if (!code) return { ok: false, error: "notMember" };
-  const res = await mutate(code, deps, (r) => {
+  const res = await mutate(code, deps, owner, (r) => {
     if (r.host !== owner) return "notHost";
     if (r.status !== "open") return r.status === "closed" ? "closed" : "started";
     return { ...r, fillAi: on === true };
@@ -353,7 +408,7 @@ export async function pvpRoomFillAi(owner: string, on: unknown, deps: PvpRoomDep
 export async function pvpRoomStart(owner: string, deps: PvpRoomDeps): Promise<PvpRoomResult> {
   const code = await deps.pvp.roomCodeOf(owner);
   if (!code) return { ok: false, error: "notMember" };
-  const room = await deps.pvp.getRoom(code);
+  const room = await refreshRoom(code, owner, deps);
   if (!room) return { ok: false, error: "notFound" };
   if (room.host !== owner) return { ok: false, error: "notHost" };
   const block = startBlock(room);
@@ -422,9 +477,11 @@ export async function pvpRoomStart(owner: string, deps: PvpRoomDeps): Promise<Pv
     settledAt: null,
   };
   await deps.pvp.createMatch(record);
-  const res = await mutate(code, deps, (r) => {
+  const res = await mutate(code, deps, owner, (r) => {
     if (r.host !== owner) return "notHost";
     if (r.status !== "open") return r.status === "closed" ? "closed" : "started";
+    // Có người rời hay mất chỗ trong lúc dựng trận thì đội đã dựng không còn đúng: bắt đầu lại.
+    if (r.slots.some((s, i) => s.owner !== room.slots[i]!.owner)) return "conflict";
     return { ...r, status: "started" as const, matchId: record.id };
   });
   if (!res.ok) {
