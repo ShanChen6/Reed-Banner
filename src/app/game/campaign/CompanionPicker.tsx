@@ -6,7 +6,7 @@
 
 import { useState } from "react";
 import { companionById, ELEMENTS, type Element, type Profession } from "@/core";
-import { choiceVariants } from "@/components/ui";
+import { choiceVariants, Select } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
@@ -124,11 +124,12 @@ export default function CompanionPicker({
             <ElementIcon element={e} className="size-4" />
           </button>
         ))}
-        <select
+        <Select
+          uiSize="sm"
+          active={profession !== ""}
           value={profession}
           onChange={(e) => filter(setProfession)(e.target.value as Profession | "")}
           aria-label="Lọc theo nghề"
-          className="min-h-9 rounded-control border border-frame-line bg-wood-inset px-2 text-caption text-on-wood pointer-coarse:min-h-11"
         >
           <option value="">Mọi nghề</option>
           {professions.map((p) => (
@@ -136,10 +137,10 @@ export default function CompanionPicker({
               {PROFESSION_NAME[p]}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
 
-      <ul className={`grid gap-1.5 ${narrow ? "grid-cols-2" : "grid-cols-[repeat(auto-fill,minmax(12.5rem,1fr))]"}`} role="group" aria-labelledby={labelId}>
+      <ul className={`grid gap-1.5 ${narrow ? "grid-cols-2" : "grid-cols-[repeat(auto-fill,minmax(12.5rem,1fr))]"}`} role="group" aria-labelledby={labelId} {...paged.listProps}>
         {shown.map((c) => {
           const on = team.includes(c.id);
           return (

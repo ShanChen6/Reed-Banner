@@ -114,7 +114,7 @@ export default function HeroGrid({
       {shown.length === 0 ? (
         <p className="py-4 text-center text-sm text-on-wood-soft">Không có tướng khớp bộ lọc.</p>
       ) : (
-        <div className={cn("grid grid-cols-1 gap-2", gridClassName)}>
+        <div {...paged.listProps} className={cn("grid grid-cols-1 gap-2", gridClassName)}>
           {paged.pageItems.map((h) => (
             <ChoiceChip
               key={h.id}

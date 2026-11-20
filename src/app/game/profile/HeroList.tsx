@@ -5,6 +5,7 @@
 
 import { useId, useRef, useState, type KeyboardEvent, type Ref } from "react";
 import { ELEMENTS, PROFESSIONS, type Element, type Profession } from "@/core";
+import { Select } from "@/components/ui";
 import { Pagination } from "@/components/ui/Pagination";
 import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
@@ -149,21 +150,20 @@ export default function HeroList({
               <span className="rounded-full bg-[var(--frame-gold-hi)] px-1.5 text-caption font-bold text-primary-foreground tabular-nums">{active}</span>
             )}
           </button>
-          <label className="barracks-field relative flex min-h-10 pointer-coarse:min-h-11 min-w-0 flex-1 items-center">
-            <SortGlyph className="pointer-events-none absolute left-2.5 size-4 text-[var(--on-wood-soft)]" />
-            <select
+          <label className="relative flex min-w-0 flex-1 items-center">
+            <SortGlyph className="pointer-events-none absolute left-2.5 z-10 size-4 text-[var(--on-wood-soft)]" />
+            <Select
               value={sort}
               onChange={(e) => onSort(e.target.value as RosterSort)}
               aria-label="Sắp xếp tướng quân"
-              className="size-full min-h-10 pointer-coarse:min-h-11 cursor-pointer appearance-none rounded-md bg-transparent pr-6 pl-8 text-[15px] text-on-wood outline-none"
+              className="w-full pl-8 text-[15px]"
             >
               {(Object.keys(SORT_NAME) as RosterSort[]).map((s) => (
-                <option key={s} value={s} className="bg-wood-inset">
+                <option key={s} value={s}>
                   {SORT_NAME[s]}
                 </option>
               ))}
-            </select>
-            <span aria-hidden className="pointer-events-none absolute right-2.5 text-caption text-[var(--on-wood-soft)]">▾</span>
+            </Select>
           </label>
         </div>
       </div>

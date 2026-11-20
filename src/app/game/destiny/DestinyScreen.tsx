@@ -636,7 +636,7 @@ export default function DestinyScreen() {
             )}
           </div>
 
-          <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-3">
+          <div {...pagedRoster.listProps} className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-3">
             {pagedRoster.pageItems.map((id) => {
               const companion = companionById(id);
               if (!companion) return null;
@@ -672,7 +672,7 @@ export default function DestinyScreen() {
         <section className="grid gap-4 sm:gap-5 lg:grid-cols-[1fr_1.4fr]">
           <OrnateFrame className="order-2 min-w-0 self-start lg:order-1">
             <SectionTitle description={`${run.roster.length} tướng, lương ${run.food}/${DESTINY_FOOD_MAX}; mỗi tướng có thanh Nộ riêng, giữ qua các tầng`}>Đội hình</SectionTitle>
-            <ul className="space-y-2">
+            <ul {...pagedSquad.listProps} className="space-y-2">
               {pagedSquad.pageItems.map((id) => {
                 const f = run.fighters?.[id];
                 if (!f) return null;
@@ -809,7 +809,7 @@ export default function DestinyScreen() {
                     );
                   })}
                 </ul>
-                <ul aria-label="Tướng có thể chọn" className="grid gap-2 sm:grid-cols-2">
+                <ul aria-label="Tướng có thể chọn" {...pagedBench.listProps} className="grid gap-2 sm:grid-cols-2">
                   {pagedBench.pageItems.map((c) => (
                     <li key={c.id}>
                       <ChoiceChip size="md" selected={false} disabled={c.disabled} title={c.reason ?? undefined}

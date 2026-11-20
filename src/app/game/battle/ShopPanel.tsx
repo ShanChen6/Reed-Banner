@@ -118,7 +118,7 @@ function PagedGrid({ items, label, className }: { items: readonly React.ReactNod
   const paged = usePagedItems(items, SHOP_PAGE_SIZE);
   return (
     <>
-      <ul className={cn("grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3", className)}>{paged.pageItems}</ul>
+      <ul {...paged.listProps} className={cn("grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3", className)}>{paged.pageItems}</ul>
       <PageControls paged={paged} label={`Phân trang ${label}`} className="mt-2" />
     </>
   );

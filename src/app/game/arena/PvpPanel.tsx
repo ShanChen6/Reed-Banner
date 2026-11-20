@@ -33,7 +33,7 @@ import {
 } from "@/core";
 import type { PvpMatchView, PvpOverview } from "@/server/pvp";
 import type { PvpRoomView } from "@/server/pvpRooms";
-import { Alert, Button, ChoiceChip } from "@/components/ui";
+import { Alert, Button, ChoiceChip, Select } from "@/components/ui";
 import { FrameInset, OrnateFrame, SectionTitle, Skeleton } from "@/components/game-ui";
 import { ElementIcon } from "../art/icons";
 import { TileArt } from "../art/tiles";
@@ -511,8 +511,7 @@ function PvpRoom({ onMatch, onExit }: { onMatch: (matchId: string) => void; onEx
       <div className="flex flex-wrap items-end gap-3" role="group" aria-label="Chọn tướng">
         <label className="flex flex-col gap-1 text-sm text-on-wood-soft">
           Tướng của bạn
-          <select
-            className="min-h-11 rounded-control border border-frame-line bg-wood-inset px-3 text-on-wood"
+          <Select
             value={myHero?.id ?? ""}
             disabled={busy}
             onChange={(e) => e.target.value && void act({ action: "hero", hero: e.target.value, element: pick.element, profession: pick.profession })}
@@ -523,14 +522,13 @@ function PvpRoom({ onMatch, onExit }: { onMatch: (matchId: string) => void; onEx
                 {h.name}, cấp {h.level}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         {myHero?.id === MAIN_ID && chosen && (
           <>
             <label className="flex flex-col gap-1 text-sm text-on-wood-soft">
               Nghề
-              <select
-                className="min-h-11 rounded-control border border-frame-line bg-wood-inset px-3 text-on-wood"
+              <Select
                 value={pick.profession ?? myHero.profession}
                 onChange={(e) => {
                   const profession = e.target.value as Profession;
@@ -543,12 +541,11 @@ function PvpRoom({ onMatch, onExit }: { onMatch: (matchId: string) => void; onEx
                     {PROFESSION_NAME[x as keyof typeof PROFESSION_NAME] ?? x}
                   </option>
                 ))}
-              </select>
+              </Select>
             </label>
             <label className="flex flex-col gap-1 text-sm text-on-wood-soft">
               Hệ
-              <select
-                className="min-h-11 rounded-control border border-frame-line bg-wood-inset px-3 text-on-wood"
+              <Select
                 value={pick.element ?? myHero.element}
                 onChange={(e) => {
                   const element = e.target.value as Element;
@@ -561,7 +558,7 @@ function PvpRoom({ onMatch, onExit }: { onMatch: (matchId: string) => void; onEx
                     {ELEMENT_NAME[x]}
                   </option>
                 ))}
-              </select>
+              </Select>
             </label>
           </>
         )}
