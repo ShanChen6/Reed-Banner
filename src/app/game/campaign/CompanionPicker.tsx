@@ -164,7 +164,7 @@ export default function CompanionPicker({
                     // Cột hẹp: chỉ icon (tên hệ/nghề ở tooltip) để chữ không vỡ dòng.
                     <span
                       className="flex items-center gap-1"
-                      title={`${ELEMENT_NAME[c.element]} · ${PROFESSION_NAME[c.profession]}`}
+                      title={`${ELEMENT_NAME[c.element]}, ${PROFESSION_NAME[c.profession]}`}
                     >
                       <ElementIcon element={c.element} className="size-4 opacity-80" />
                       <ProfessionIcon profession={c.profession} className="size-4 opacity-80" />
@@ -173,7 +173,7 @@ export default function CompanionPicker({
                   ) : (
                     <span className="flex items-center gap-1 text-caption opacity-80">
                       <ElementIcon element={c.element} className="size-3.5" />
-                      {ELEMENT_NAME[c.element]} ·
+                      {ELEMENT_NAME[c.element]},
                       <ProfessionIcon profession={c.profession} className="size-3.5" />
                       {PROFESSION_NAME[c.profession]}
                       <LevelTag level={levels[c.id]} suggest={suggestLevel} plain={on} />

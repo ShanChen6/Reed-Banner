@@ -51,7 +51,7 @@ export default function MusterPanel({
     >
       <header>
         <p className="text-kicker text-frame-gold">
-          Tổng kết Chương III · Hội quân Hoa Lư
+          Tổng kết Chương III – Hội quân Hoa Lư
         </p>
         <h2 id="muster-title"
           tabIndex={-1} className="text-xl font-black text-title-on-wood">
@@ -97,7 +97,7 @@ export default function MusterPanel({
               (r) =>
                 `${companionById(r.faction)?.name ?? r.faction}: ${FACTION_STATUS_TEXT[r.status].toLowerCase()}`,
             )
-            .join(" · ")}
+            .join(", ")}
         </p>
       </div>
 
@@ -130,7 +130,7 @@ export default function MusterPanel({
         <div className="rounded-md border border-white/10 bg-black/25 p-2 text-sm">
           <h3 className="font-semibold text-frame-gold">Tài nguyên</h3>
           <p className="text-on-wood">
-            {profile.gold} vàng · {campaign.supply}/{CAMPAIGN_FOOD_MAX} lương
+            {profile.gold} vàng, {campaign.supply}/{CAMPAIGN_FOOD_MAX} lương
           </p>
           {missingFood > 0 && (
             <button
@@ -163,10 +163,10 @@ export default function MusterPanel({
                 className="flex flex-col gap-1 rounded-lg border border-white/15 bg-black/30 p-2 text-sm"
               >
                 <p className="font-bold text-on-wood">
-                  {route.name} · Chương {route.chapter === 4 ? "IV" : "V"}
+                  {route.name}, Chương {route.chapter === 4 ? "IV" : "V"}
                 </p>
                 <p className="text-on-wood-soft">
-                  {done}/{route.missions.length} nhiệm vụ ·{" "}
+                  {done}/{route.missions.length} nhiệm vụ,{" "}
                   {open ? "đã mở" : "chưa mở"}
                 </p>
                 {next && (

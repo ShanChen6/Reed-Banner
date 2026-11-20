@@ -126,15 +126,15 @@ export function FighterCard({
 
   // Nội tại chỉ nằm trong tooltip; thẻ chỉ hiện buff/debuff.
   const cardTitle = [
-    `Công ${fighter.atk} · Thủ ${fighter.def} · Máu tối đa ${fighter.maxHp}`,
+    `Công ${fighter.atk}, Thủ ${fighter.def}, máu tối đa ${fighter.maxHp}`,
     fusionSummary(fighter),
     isFusion(fighter)
-      ? `Nội tại: ${fusionPassiveLines(fighter).map((l) => l.name).join(" · ")}`
-      : fighter.comboPassive && `Nội tại · ${comboDescription(fighter)}`,
+      ? `Nội tại: ${fusionPassiveLines(fighter).map((l) => l.name).join(", ")}`
+      : fighter.comboPassive && `Nội tại: ${comboDescription(fighter)}`,
     !isFusion(fighter) &&
       fighter.chasePassives &&
-      `Truy kích: ${chasePassives(fighter).map((id) => CHASE_PASSIVES[id].name).join(" · ")}`,
-    `Tinh thần: Công/Thủ ${Math.round(spiritStatMultiplier(fighter.spirit, experimentalSpirit) * 100)}% · Hồi/Khiên mới ${Math.round(spiritHealMultiplier(fighter.spirit, experimentalSpirit) * 100)}%`,
+      `Truy kích: ${chasePassives(fighter).map((id) => CHASE_PASSIVES[id].name).join(", ")}`,
+    `Tinh thần: Công/Thủ ${Math.round(spiritStatMultiplier(fighter.spirit, experimentalSpirit) * 100)}%, Hồi/Khiên mới ${Math.round(spiritHealMultiplier(fighter.spirit, experimentalSpirit) * 100)}%`,
   ]
     .filter(Boolean)
     .join("\n");
@@ -209,20 +209,20 @@ export function FighterCard({
           {rageTurns > 0 && (
             <span
               className="inline-flex items-center gap-1 rounded bg-stat-rage/40 px-1 py-0.5 text-caption"
-              title={`Bị động khi đầy Nộ · ${passiveText(fighter.element)} · còn ${rageTurns} lượt`}
+              title={`Bị động khi đầy Nộ, ${passiveText(fighter.element)}, còn ${rageTurns} lượt`}
             >
               <PassiveIcon id={ragePassiveId(fighter.element)} name={PASSIVES[fighter.element].name} className="size-3.5" />
-              {PASSIVES[fighter.element].name} · {rageTurns}
+              {PASSIVES[fighter.element].name}, {rageTurns}
             </span>
           )}
           {fighter.comboReady && fighter.comboPassive && (
             <span
               className={`inline-flex items-center gap-1 rounded px-1 py-0.5 text-caption ${comboBlocked ? "bg-ash/50" : "bg-frame-bronze/40"}`}
-              title={`Do ${comboSource} mở${comboTarget ? ` · mục tiêu ${comboTarget}` : ""} · ${comboTurns ? `${comboTurns} lượt thường kế tiếp` : "lượt hiện tại"}. Chọn hành động để tận dụng.`}
+              title={`Do ${comboSource} mở${comboTarget ? `, mục tiêu ${comboTarget}` : ""}, ${comboTurns ? `${comboTurns} lượt thường kế tiếp` : "lượt hiện tại"}. Chọn hành động để tận dụng.`}
             >
               <PassiveIcon id={fighter.comboPassive} name={COMBO_PASSIVES[fighter.comboPassive].name} className="size-3.5" />
               {COMBO_PASSIVES[fighter.comboPassive].name}
-              {comboBlocked ? " · bị chặn" : ""}
+              {comboBlocked ? ", bị chặn" : ""}
             </span>
           )}
           {fighter.effects.map((e) => (

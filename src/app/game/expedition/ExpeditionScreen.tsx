@@ -429,7 +429,7 @@ function SetupView(props: {
                 </span>
                 <span className="mt-1 block text-sm opacity-80">{m.blurb}</span>
                 <span className="mt-2 block text-caption opacity-80">
-                  Chiến địa hệ {ELEMENT_NAME[m.element]} · {m.days} ngày · chuẩn {m.parDays} ngày
+                  Chiến địa hệ {ELEMENT_NAME[m.element]}, {m.days} ngày, chuẩn {m.parDays} ngày
                 </span>
                 </span>
               </button>
@@ -449,7 +449,7 @@ function SetupView(props: {
             >
               <span><strong>{t.name}</strong> <Stars n={t.stars} className="ml-1" /></span>
               <span className="block text-caption font-normal opacity-80">
-                {t.unlocked ? `Cấp gợi ý ${t.level} · lần đầu ${t.firstGold} vàng + món ${TIER_COLOR_NAME[(t.tier + 2) as 3 | 4 | 5]}` : "Thắng bậc trước để mở"}
+                {t.unlocked ? `Cấp gợi ý ${t.level}, lần đầu ${t.firstGold} vàng + món ${TIER_COLOR_NAME[(t.tier + 2) as 3 | 4 | 5]}` : "Thắng bậc trước để mở"}
               </span>
               {t.bestDays !== null && <span className="block text-caption font-normal">Nhanh nhất {t.bestDays} ngày</span>}
             </button>
@@ -478,7 +478,7 @@ function SetupView(props: {
             const size = 3;
             return (
               <div key={a} className="ui-frame-inset p-3">
-                <h3 className="font-semibold" style={{ color: ARMY_COLOR[a] }}>{ARMY_NAME[a]} · {ids.length}/{size}</h3>
+                <h3 className="font-semibold" style={{ color: ARMY_COLOR[a] }}>{ARMY_NAME[a]}, {ids.length}/{size}</h3>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {ids.map((id) => {
                     const c = id === MAIN_ID ? null : companionById(id);
@@ -544,7 +544,7 @@ function SetupView(props: {
         {owned.length < 5 && <p className="mt-2 text-sm text-danger">Cần ít nhất 5 tướng ngoài Đinh Bộ Lĩnh.</p>}
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <Button variant="primary" disabled={props.busy || !ready} onClick={props.onStart}>
-            {props.busy ? "Đang xuất quân…" : `Xuất quân: ${map.name} · ${info.name}`}
+            {props.busy ? "Đang xuất quân…" : `Xuất quân: ${map.name}, ${info.name}`}
           </Button>
           <span className={`text-sm ${props.runsLeft > 0 ? "text-on-wood-soft" : "text-danger"}`}>
             {props.runsLeft > 0
@@ -803,10 +803,10 @@ function RunView(props: {
     <section className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
       <div className="ui-frame p-4 sm:p-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="font-serif text-xl font-bold">{map.name} · {tierInfo.name}</h2>
+          <h2 className="font-serif text-xl font-bold">{map.name}, {tierInfo.name}</h2>
           <p className="text-sm">
-            Ngày <strong className="text-frame-gold">{run.day}</strong>/{map.days} · chuẩn {map.parDays} ngày
-            {reinforce > 0 && <> · giặc tăng viện <strong className="text-danger">+{reinforce}%</strong></>}
+            Ngày <strong className="text-frame-gold">{run.day}</strong>/{map.days}, chuẩn {map.parDays} ngày
+            {reinforce > 0 && <>, giặc tăng viện <strong className="text-danger">+{reinforce}%</strong></>}
           </p>
         </div>
         <SandTable
@@ -858,7 +858,7 @@ function RunView(props: {
             {node ? (
               <>
                 <h3 className="flex items-center gap-2 font-serif text-lg font-bold">
-                  {node.name} <span className="text-caption font-normal text-on-wood-soft">{KIND_NAME[node.kind]}{cleared(node.id) ? " · đã chiếm" : ""}</span>
+                  {node.name} <span className="text-caption font-normal text-on-wood-soft">{KIND_NAME[node.kind]}{cleared(node.id) ? ", đã chiếm" : ""}</span>
                 </h3>
                 <p className="mt-1 text-sm text-on-wood-soft">{KIND_TEXT[node.kind]}</p>
                 {chase && (
@@ -885,7 +885,7 @@ function RunView(props: {
                 {preview && (
                   <div className="mt-2 space-y-1.5">
                     <p className="text-caption text-on-wood-soft">
-                      AI {DIFFICULTY_NAME[preview.difficulty]} · cấp {preview.foes[0]?.level}
+                      AI {DIFFICULTY_NAME[preview.difficulty]}, cấp {preview.foes[0]?.level}
                       {preview.pincer && <span className="ml-2 rounded bg-jade/20 px-1.5 py-0.5 text-jade">Giáp công: máu địch −{Math.round((1 - EXPEDITION_PINCER_HP) * 100)}%</span>}
                     </p>
                     {preview.foes.map((f, i) => (
@@ -943,7 +943,7 @@ function RunView(props: {
             >
               <div className="flex items-baseline justify-between">
                 <strong style={{ color: ARMY_COLOR[i] }}>{ARMY_NAME[i]}</strong>
-                <span className="flex items-center gap-1 text-caption text-on-wood-soft"><FoodIcon className="size-3.5" />{a.food} · tại {at?.name}</span>
+                <span className="flex items-center gap-1 text-caption text-on-wood-soft"><FoodIcon className="size-3.5" />{a.food}, tại {at?.name}</span>
               </div>
               <div className="mt-2 space-y-1.5">
                 {a.ids.map((id) => {
@@ -1091,20 +1091,20 @@ function ResultView({ run, map, result, onNew }: { run: Omit<ExpeditionRun, "see
             ? `Đã chiếm ${map.nodes.find((n) => n.id === map.citadel)?.name}!`
             : "Viễn chinh thất bại"}
       </h2>
-      <p className="mt-1 text-sm text-on-wood-soft">{map.name} · {tierName} · {result.days} ngày</p>
+      <p className="mt-1 text-sm text-on-wood-soft">{map.name}, {tierName}, {result.days} ngày</p>
       {result.won || result.ending ? (
         <>
           <Stars n={result.stars} className="mt-2 block text-3xl" />
           <p className="mt-1 text-caption text-on-wood-soft">
             {result.ending
-              ? `★★★ toàn thắng · ★★ chiếm trại trong ${map.parDays} ngày · ★ chiếm trại muộn hoặc giữ dân`
-              : `★ chiếm thành · ★ xong trong ${map.parDays} ngày · ★ không thua trận nào`}
+              ? `★★★ toàn thắng, ★★ chiếm trại trong ${map.parDays} ngày, ★ chiếm trại muộn hoặc giữ dân`
+              : `★ chiếm thành, ★ xong trong ${map.parDays} ngày, ★ không thua trận nào`}
           </p>
           <p className="mt-3 font-semibold text-frame-gold">
-            +{result.gold} vàng{result.firstClear ? " (thắng lần đầu)" : ""}{result.mission ? " · xong nhiệm vụ" : ""}
-            {result.item && ` · ${SLOT_NAME[result.item.slot]} phẩm ${TIER_COLOR_NAME[result.item.tier]} hệ ${ELEMENT_NAME[result.item.element]}`}
-            {result.bonusItem && ` · thưởng toàn thắng: ${SLOT_NAME[result.bonusItem.slot]} phẩm ${TIER_COLOR_NAME[result.bonusItem.tier]}`}
-            {result.soldFor > 0 && ` · túi đầy, món thưởng bán được ${result.soldFor} vàng`}
+            +{result.gold} vàng{result.firstClear ? " (thắng lần đầu)" : ""}{result.mission ? ", xong nhiệm vụ" : ""}
+            {result.item && `, ${SLOT_NAME[result.item.slot]} phẩm ${TIER_COLOR_NAME[result.item.tier]} hệ ${ELEMENT_NAME[result.item.element]}`}
+            {result.bonusItem && `, thưởng toàn thắng: ${SLOT_NAME[result.bonusItem.slot]} phẩm ${TIER_COLOR_NAME[result.bonusItem.tier]}`}
+            {result.soldFor > 0 && `, túi đầy, món thưởng bán được ${result.soldFor} vàng`}
           </p>
           {!result.won && result.ending && (
             <p className="mt-1 text-caption text-on-wood-soft">Giữ dân chưa tính là qua bậc: phải chiếm thành mới mở bậc sau.</p>

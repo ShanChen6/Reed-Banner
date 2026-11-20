@@ -96,7 +96,7 @@ function LineText({ line }: { line: DialogueLine }) {
       <div className="mb-1 flex flex-wrap items-center gap-1.5">
         {line.cinematic ? (
           <span className="text-kicker text-frame-gold">
-            Cảnh dựng · game sáng tác
+            Cảnh dựng, game sáng tác
           </span>
         ) : (
           <BasisBadge basis={beat.basis} />

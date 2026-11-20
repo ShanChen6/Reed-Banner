@@ -18,7 +18,7 @@ import { OrnateFrame } from "@/components/game-ui";
 import { NumberWords } from "../home/words";
 
 export const metadata: Metadata = {
-  title: "Cẩm nang · Cờ Lau",
+  title: "Cẩm nang – Cờ Lau",
   description: "Luật chơi chi tiết của Cờ Lau: bảy loại ô, ô đặc biệt, Nộ, nội tại tám nghề, kỹ năng từng hệ và hệ số khắc chế.",
 };
 
@@ -137,7 +137,7 @@ export default function GuidePage() {
                       <Portrait id={s.who} element={c?.element ?? "moc"} profession={c?.profession ?? "tuongSi"} className="size-9 shrink-0" />
                       {s.passive && <PassiveIcon id={s.passive} name={s.what} className="size-7 shrink-0" />}
                       <span className="min-w-0">
-                        <b>{s.name}</b> {s.what} <span className="text-on-wood-soft">· {s.note}</span>
+                        <b>{s.name}</b> {s.what} <span className="text-on-wood-soft">– {s.note}</span>
                       </span>
                     </li>
                   );

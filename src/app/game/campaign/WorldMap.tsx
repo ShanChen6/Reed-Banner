@@ -610,7 +610,7 @@ export default function WorldMap({
               />
               <span className="text-caption leading-tight">
                 <span className="block font-bold">
-                  {s.place} · {strongholdLeader(s)}
+                  {s.place}, {strongholdLeader(s)}
                 </span>
                 <span className="block italic opacity-80">
                   vị trí còn tranh luận

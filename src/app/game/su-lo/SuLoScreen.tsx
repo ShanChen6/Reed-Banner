@@ -452,7 +452,7 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
         <p className="text-sm italic text-on-wood-soft">“{boss.lines[phase]}” (lời game)</p>
         <div className="flex flex-col gap-1">
           <span className="text-sm font-semibold">
-            Thành lực {sk.hp}/{sk.maxHp} · còn {sk.movesLeft} nước{sk.lastDamage > 0 ? ` · vừa gây ${sk.lastDamage}` : ""}
+            Thành lực {sk.hp}/{sk.maxHp}, còn {sk.movesLeft} nước{sk.lastDamage > 0 ? `, vừa gây ${sk.lastDamage}` : ""}
           </span>
           <div className="h-3 overflow-hidden rounded bg-wood-inset">
             <div className="h-full bg-lacquer transition-[width]" style={{ width: `${(sk.hp / sk.maxHp) * 100}%` }} />
@@ -590,7 +590,7 @@ export default function SuLoScreen() {
     if (!game?.question) return "";
     if (game.question.forCounsel) return "Quân sư hiến kế";
     const c = game.maze.cells[game.question.cell]!;
-    if (c.kind === "gate") return game.question.chainLeft > 0 ? "Cửa ải · câu 1/2" : "Cửa ải · câu 2/2";
+    if (c.kind === "gate") return game.question.chainLeft > 0 ? "Cửa ải, câu 1/2" : "Cửa ải, câu 2/2";
     if (c.kind === "stele") return "Bia đá";
     if (c.kind === "trap") return trapShown(game, game.question.cell) ? `Gỡ bẫy ${SL_TRAP_NAME[c.trap]}` : "Câu hỏi Vàng";
     if (c.kind === "luck") return SL_LUCK_NAME[c.luck];
@@ -605,15 +605,15 @@ export default function SuLoScreen() {
         {SL_ERAS.map((era) => (
           <ChoiceChip key={era} size="md" selected={setup.era === era} disabled={!eraPlayable(era)} onClick={() => changeSetup({ ...setup, era })}>
             {SL_ERA_NAME[era]}
-            {!eraPlayable(era) && " · chờ nguồn"}
+            {!eraPlayable(era) && ", chờ nguồn"}
           </ChoiceChip>
         ))}
       </div>
       <div className="flex flex-wrap gap-2" role="group" aria-label="Độ khó">
         {SL_LEVEL_ORDER.map((lv) => (
           <ChoiceChip key={lv} size="md" selected={setup.level === lv} onClick={() => changeSetup({ ...setup, level: lv })}>
-            {LEVEL_NAME[lv]} · {SL_LEVELS[lv].cols}×{SL_LEVELS[lv].rows}
-            {SL_LEVELS[lv].questionSeconds ? ` · ${SL_LEVELS[lv].questionSeconds}s/câu` : ""}
+            {LEVEL_NAME[lv]}, {SL_LEVELS[lv].cols}×{SL_LEVELS[lv].rows}
+            {SL_LEVELS[lv].questionSeconds ? `, ${SL_LEVELS[lv].questionSeconds}s/câu` : ""}
           </ChoiceChip>
         ))}
       </div>
@@ -639,7 +639,7 @@ export default function SuLoScreen() {
         </Button>
         {best[`${setup.era}:${setup.level}`] && (
           <span className="text-sm text-on-wood-soft">
-            Tốt nhất: {"★".repeat(best[`${setup.era}:${setup.level}`]!.stars)} · {best[`${setup.era}:${setup.level}`]!.turns} lượt
+            Tốt nhất: {"★".repeat(best[`${setup.era}:${setup.level}`]!.stars)}, {best[`${setup.era}:${setup.level}`]!.turns} lượt
           </span>
         )}
       </div>
@@ -651,11 +651,11 @@ export default function SuLoScreen() {
       <ModeBanner
         title="Sử Lộ"
         art="/art/home/su-lo.webp"
-        kicker={`Giải đố lịch sử · ${game ? `${SL_ERA_NAME[game.era]} · ${LEVEL_NAME[game.level]}` : "Chuẩn bị"}`}
+        kicker={`Giải đố lịch sử – ${game ? `${SL_ERA_NAME[game.era]}, ${LEVEL_NAME[game.level]}` : "Chuẩn bị"}`}
         description="Đổ xúc xắc dẫn tướng qua mê cung, trả lời đúng mới đứng vững ở ô vừa tới. Sai thì quay về chỗ cũ, đọc sử chép rồi thử lại."
         stats={[
           { label: "Lượt", value: game ? `${game.turns}/${cfg.starTurns}` : "–" },
-          { label: "Đúng · sai", value: game ? `${game.correct} · ${game.wrong}` : "–" },
+          { label: "Đúng/sai", value: game ? `${game.correct}/${game.wrong}` : "–" },
           { label: "Ấn sử", value: game?.seals ?? "–" },
         ]}
       />
@@ -684,7 +684,7 @@ export default function SuLoScreen() {
                   <span className="opacity-30">{"★".repeat(3 - starsOf(game))}</span>
                 </p>
                 <p className="text-[15px]">
-                  {game.turns} lượt (mốc ★★: {cfg.starTurns}) · đúng {game.correct}, sai {game.wrong} · {game.seals} Ấn sử
+                  {game.turns} lượt (mốc ★★: {cfg.starTurns}), đúng {game.correct}, sai {game.wrong}, {game.seals} Ấn sử
                 </p>
                 {game.review.length > 0 && (
                   <div className="w-full text-left">
@@ -749,7 +749,7 @@ export default function SuLoScreen() {
             {game && game.phase !== "won" && (
               <section className="ui-frame flex flex-col gap-2 p-4" aria-label="Trợ giúp">
                 <h2 className="ui-title-on-wood font-bold">
-                  Trợ giúp <span className="text-caption font-normal text-on-wood-soft">· đã dùng {game.aidsUsed}/{SL_AID_USE_MAX}</span>
+                  Trợ giúp <span className="text-caption font-normal text-on-wood-soft">– đã dùng {game.aidsUsed}/{SL_AID_USE_MAX}</span>
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {SL_AIDS.filter((a) => a !== "hoaToc" && a !== "hoiTuong").map((a) => (

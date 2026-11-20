@@ -112,7 +112,7 @@ function build(floor: number): { spec: TrialFloorSpec; weightName: WeightName; i
   const difficulty = floor % 10 === 0 ? "nightmare" : boss ? "boss" : "hard";
   const note = WEIGHT_NOTE[weightName];
   const intro = `${parts.phrases.join(", ").replace(/^./, (c) => c.toUpperCase())}${note ? `; ${note}` : ""}.`;
-  const title = floor === 100 ? "Thiên Đỉnh Thí Luyện" : floor % 10 === 0 ? `Ải Trùm Chặng ${ROMAN[Math.floor((floor - 1) / 10) + 1]}` : boss ? `Ải ${parts.shorts[0]}` : parts.shorts.slice(0, 2).join(" · ");
+  const title = floor === 100 ? "Thiên Đỉnh Thí Luyện" : floor % 10 === 0 ? `Ải Trùm Chặng ${ROMAN[Math.floor((floor - 1) / 10) + 1]}` : boss ? `Ải ${parts.shorts[0]}` : parts.shorts.slice(0, 2).join(", ");
   const power = 0.9 + (floor - 50) * 0.012;
   const spec: TrialFloorSpec = {
     schema: 1,

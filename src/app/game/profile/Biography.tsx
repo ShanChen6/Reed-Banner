@@ -14,7 +14,7 @@ export default function Biography({ id }: { id: string }) {
     <section aria-label="Tiểu sử" className="barracks-inset flex flex-col gap-2 rounded-md p-3">
       <p>
         <span className="font-serif text-lg font-bold text-title-on-wood">{lore.epithet}</span>
-        {lore.epithetMeaning && <span className="text-sm text-[var(--on-wood-soft)]"> · {lore.epithetMeaning}</span>}
+        {lore.epithetMeaning && <span className="text-sm text-[var(--on-wood-soft)]">, {lore.epithetMeaning}</span>}
       </p>
       <p className="flex items-center gap-2 text-sm">
         {FLAG_ART.has(lore.faction) && (
@@ -28,7 +28,7 @@ export default function Biography({ id }: { id: string }) {
       </p>
       {lore.age !== undefined && lore.hometown && (
         <p className="text-sm text-[var(--on-wood-soft)]">
-          Khoảng {lore.age} tuổi · {lore.hometown}
+          Khoảng {lore.age} tuổi, {lore.hometown}
         </p>
       )}
       <p className="leading-relaxed">{lore.backstory}</p>

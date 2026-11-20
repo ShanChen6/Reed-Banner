@@ -78,7 +78,7 @@ export function SiteHeader() {
 export function MobilePlayBar() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-frame-gold/40 bg-wood-lo/95 px-4 py-2.5 backdrop-blur md:hidden">
-      <PlayButton className="w-full justify-center text-base">Chơi ngay · không cần tài khoản</PlayButton>
+      <PlayButton className="w-full justify-center text-base">Chơi ngay, không cần tài khoản</PlayButton>
     </div>
   );
 }

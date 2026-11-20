@@ -68,6 +68,6 @@ export function heroPlan(profile: Profile | null, savedBattle: boolean): HeroPla
   return {
     primary: campaignAction!,
     secondary: PLAY,
-    hint: `Chương ${chapter.chapter}: ${chapter.title} · ${done}/${list.length} nhiệm vụ`,
+    hint: `Chương ${chapter.chapter}: ${chapter.title}, ${done}/${list.length} nhiệm vụ`,
   };
 }

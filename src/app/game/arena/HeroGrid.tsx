@@ -135,7 +135,7 @@ export default function HeroGrid({
                   <span className="flex items-center gap-1 text-caption font-normal">
                     <ElementIcon element={h.element} className="size-4" />
                     <ProfessionIcon profession={h.profession} className="size-4" />
-                    <span className="sr-only">{ELEMENT_NAME[h.element]} · {PROFESSION_NAME[h.profession]}</span>
+                    <span className="sr-only">{ELEMENT_NAME[h.element]}, {PROFESSION_NAME[h.profession]}</span>
                   </span>
                 )}
                 {h.blocked && <span className="text-caption font-normal">{h.blocked}</span>}

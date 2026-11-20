@@ -202,7 +202,7 @@ export default function Armory({
                     aria-pressed={goodId === g.id}
                     onClick={() => setGoodId(goodId === g.id ? null : g.id)}
                     aria-label={`${g.name}, có ${n} ${g.unit}`}
-                    title={`${g.name} · ${n} ${g.unit}`}
+                    title={`${g.name}, ${n} ${g.unit}`}
                     className={`gear-slot relative flex aspect-square w-full items-center justify-center rounded-lg p-0.5 ${goodId === g.id ? "is-selected" : ""}`}
                   >
                     <ItemIcon id={g.id} className="size-full" />
@@ -252,7 +252,7 @@ export default function Armory({
                       aria-pressed={on}
                       onClick={() => clickItem(it)}
                       aria-label={`${gearText(it)}${by ? `, ${nameOf(by)} đang dùng` : ""}`}
-                      title={`${gearText(it)}${by ? ` · ${nameOf(by)} đang dùng` : ""}`}
+                      title={`${gearText(it)}${by ? `, ${nameOf(by)} đang dùng` : ""}`}
                       className={`gear-slot relative flex aspect-square w-full items-center justify-center rounded-lg p-0.5 ${on ? "is-selected" : ""} ${dim ? "opacity-35" : ""}`}
                     >
                       <GearIcon slot={it.slot} element={it.element} tier={it.tier} set={it.set} profession={it.profession} className="size-full" />
@@ -455,7 +455,7 @@ function GoodPanel({
             >
               {heroes.map((h) => (
                 <option key={h} value={h} className="bg-wood-inset">
-                  {nameOf(h)} · cấp {progressOf(profile, h).level}
+                  {nameOf(h)}, cấp {progressOf(profile, h).level}
                 </option>
               ))}
             </select>
@@ -479,7 +479,7 @@ function GoodPanel({
       )}
       <p className="text-sm"><b>Dùng ở:</b> {g.use}</p>
       <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 self-start rounded-md px-4">
-        <ShopGlyph className="size-4" /> Mua thêm ở Cửa Hàng · {g.price} vàng/{g.unit}
+        <ShopGlyph className="size-4" /> Mua thêm ở Cửa Hàng, {g.price} vàng/{g.unit}
       </SceneLink>
     </div>
   );
@@ -528,7 +528,7 @@ function EnhanceBox({
             onClick={() => onAction({ type: "enhance", item: item.id })}
             className="barracks-btn is-action min-h-10 pointer-coarse:min-h-11 self-start rounded-md px-3 disabled:opacity-50"
           >
-            Cường hóa lên +{level + 1} · {cost.stones} đá, {cost.gold} vàng
+            Cường hóa lên +{level + 1}, {cost.stones} đá, {cost.gold} vàng
           </button>
           {short && (
             <p className="text-sm text-[var(--on-wood-soft)]">

@@ -98,7 +98,7 @@ export default function QuestsScreen({
       <div className="grid gap-4 lg:grid-cols-3">
         <OrnateFrame className="flex flex-col gap-3 self-start">
           <SectionTitle description="Điểm danh và nhiệm vụ ngày đã chuyển sang Nhật Lệnh, làm và nhận thưởng ngay cạnh đề hôm nay.">
-            Điểm danh · nhiệm vụ ngày
+            Điểm danh – nhiệm vụ ngày
           </SectionTitle>
           <ul className="list-disc space-y-1 pl-5 text-sm text-on-wood">
             <li>{checkedToday ? "Hôm nay đã điểm danh." : "Hôm nay chưa điểm danh."}</li>

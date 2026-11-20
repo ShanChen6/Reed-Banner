@@ -53,7 +53,7 @@ export default function ModeTierPanel({ mode }: { mode: ModeTierId }) {
   return (
     <OrnateFrame className="flex flex-col gap-2">
       <h3 className="font-bold text-frame-gold">
-        {ladder.title} · {score} {ladder.unit}
+        {ladder.title}, {score} {ladder.unit}
       </h3>
       <TierLadder
         tiers={ladderOf(ladder.tiers)}

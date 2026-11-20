@@ -39,7 +39,7 @@ export function CampaignResult({
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-lg bg-wood-lo/90 p-4 text-center text-on-wood">
       <p className="text-kicker text-frame-gold">
-        {scenario.nodeId} · {storyNodeById(scenario.nodeId)?.title}
+        {scenario.nodeId}, {storyNodeById(scenario.nodeId)?.title}
       </p>
       <p className="text-xl font-bold">
         {scenarioFailed
@@ -78,10 +78,10 @@ export function CampaignResult({
       )}
       {outcome && (
         <p className="text-sm">
-          +{outcome.rewards.xp[0]} kinh nghiệm mỗi người · +
+          +{outcome.rewards.xp[0]} kinh nghiệm mỗi người, +
           {outcome.rewards.gold} vàng
           {outcome.campaignV2?.firstClear &&
-            ` · thưởng lần đầu +${outcome.campaignV2.totalGold} vàng`}
+            `, thưởng lần đầu +${outcome.campaignV2.totalGold} vàng`}
         </p>
       )}
       <SceneLink

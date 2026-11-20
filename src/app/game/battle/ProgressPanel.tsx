@@ -116,7 +116,7 @@ function SkillRow({
       <SkillIcon def={def} className="size-7 shrink-0" />
       <span className="min-w-0 flex-1 truncate" title={skillText(scaled)}>
         {def.name}
-        <span className="ml-1 opacity-60">· {scaled.cost} NL</span>
+        <span className="ml-1 opacity-60">– {scaled.cost} NL</span>
       </span>
       {extra}
       {lockedText ? (
@@ -259,7 +259,7 @@ export default function ProgressPanel({
               <SkillDetails fighter={isMain ? {profession:profile.profession,element:profile.element} : companionOf(id)!} passive={PROFESSION_COMBO[isMain ? profile.profession : companionOf(id)!.profession]} skills={(isMain ? characterSkills(profile.profession, profile.element) : characterSkills(companionOf(id)!.profession, companionOf(id)!.element, id)).map(d => scaleSkill(d,p.skillLevels[mainSlotKey(d.slot!)] ?? 1))} />
               {!isMain && (
                 <p className="opacity-60">
-                  {PROFESSION_NAME[companionProfession(id)]} · kỹ năng nâng
+                  {PROFESSION_NAME[companionProfession(id)]}, kỹ năng nâng
                   theo ô như Đinh Bộ Lĩnh, ô 4 là kỹ năng riêng.
                 </p>
               )}
