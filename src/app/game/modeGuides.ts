@@ -7,8 +7,12 @@ import { DAILY_GOLD } from "@/core/daily/daily";
 import { SURVIVAL_BOSS_EVERY, SURVIVAL_WAVE_GOLD } from "@/core/survival/survival";
 import { TRIAL_FLOORS } from "@/core/progress/dualTowerState";
 import { DT_ITEM_PICKS, DT_LEVELS } from "@/core/do-tham";
-import { SL_AID_USE_MAX, SL_LEVELS } from "@/core/su-lo";
+import { SL_AID_USE_MAX, SL_LEVELS, SL_START_AIDS, type SlAid } from "@/core/su-lo";
 import { KL_CLEAR_BONUS_BASE, KL_CLEAR_BONUS_PER_LEVEL, KL_CLEAR_HEARTS, KL_HEIGHT, KL_NEAR_CLEAR_BONUS, KL_NEAR_CLEAR_LEFT, KL_START_HEARTS, KL_START_TOOLS, KL_TIMED_LEVEL_SECONDS, KL_TIMED_START_SECONDS, KL_TOOL_CHARGE, KL_WIDTH, timedGoal } from "@/core/khai-lo/engine";
+import { ELEMENTS, type Element } from "@/core/battle/elements";
+import { ELEMENT_NAME } from "./battle/labels";
+import { DT_ITEM_INFO } from "./do-tham/items";
+import { KL_TOOL_HINT, KL_TOOL_NAME } from "./khai-lo/tools";
 import type { Scene } from "./scene";
 
 /** Các chế độ có thẻ Hướng dẫn (đúng mười hai chế độ ở thẻ Chiến Trường). */
@@ -39,7 +43,34 @@ export interface ModeGuide {
   readonly rewards: readonly string[];
   /** Lời khuyên ngắn. */
   readonly tips: readonly string[];
+  /** Đạo cụ (hoặc trợ giúp, quân đặc biệt) của chế độ, mỗi món kèm icon như trong màn chơi. */
+  readonly items?: GuideItems;
 }
+
+/** Icon của một đạo cụ trong Hướng dẫn; ModeGuide.tsx vẽ đúng hình đang dùng ở màn chơi. */
+export type GuideIcon =
+  | { readonly kind: "element"; readonly element: Element }
+  | { readonly kind: "suLoAid"; readonly aid: SlAid }
+  | { readonly kind: "formation"; readonly piece: "wild" | "eraser" };
+
+export interface GuideItem {
+  readonly icon: GuideIcon;
+  readonly name: string;
+  /** Cách dùng, một câu. */
+  readonly text: string;
+}
+
+export interface GuideItems {
+  /** Tiêu đề mục, ví dụ "Đạo cụ" hoặc "Trợ giúp". */
+  readonly title: string;
+  /** Luật chung của các đạo cụ: có bao nhiêu, nạp thế nào. */
+  readonly notes: readonly string[];
+  readonly list: readonly GuideItem[];
+}
+
+/** Bảy đạo cụ theo hệ, xếp theo thứ tự ELEMENTS (đúng thứ tự phím 1–7 trong màn chơi). */
+const elementItems = (info: (e: Element) => { name: string; text: string }): GuideItem[] =>
+  ELEMENTS.map((e) => ({ icon: { kind: "element", element: e }, name: `${info(e).name} (${ELEMENT_NAME[e]})`, text: info(e).text }));
 
 export const GUIDE_SCENES: readonly GuideScene[] = [
   "CAMPAIGN",
@@ -229,7 +260,6 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Quân mới phải cùng nghề hoặc cùng hệ với từng quân kề (trên, dưới, trái, phải). Chỉ cần một quân kề không khớp là không đặt được.",
       "Quân tướng kế tiếp luôn có chung nghề hoặc hệ với một quân trên bàn, nhưng chưa chắc còn chỗ đặt. Lúc đó hãy Bỏ Lệnh.",
       "Bỏ Lệnh đổi sang quân khác nhưng làm ngọn lửa bùng lên. Lửa đầy mà còn bỏ nữa là thua. Đặt quân thành công hạ lửa 1 bậc, dọn được hàng hoặc cột thì tắt hết.",
-      "Quân Lệnh đặt ở ô trống bất kỳ và khớp mọi quân kề. Thu Hồi xóa một quân trên bàn.",
       "Chướng ngại (núi, rừng, đầm lầy, thành lũy) mọc ngẫu nhiên: không đặt quân được, không cần khai thông và không nối được hai quân.",
     ],
     rewards: [
@@ -239,6 +269,14 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Điểm: đặt quân 10, mỗi quân kề khớp cả nghề lẫn hệ thêm 5, mỗi hàng hoặc cột dọn 50, thắng thêm 500 và thưởng theo bậc lửa còn trống.",
     ],
     tips: ["Bắt đầu ở bậc Hướng dẫn để quen luật khớp nghề và hệ."],
+    items: {
+      title: "Quân đặc biệt",
+      notes: ["Thỉnh thoảng lệnh bài trao cho bạn một quân đặc biệt thay cho quân tướng."],
+      list: [
+        { icon: { kind: "formation", piece: "wild" }, name: "Quân Lệnh", text: "Đặt ở ô trống bất kỳ, khớp mọi quân kề." },
+        { icon: { kind: "formation", piece: "eraser" }, name: "Thu Hồi", text: "Chạm vào một quân trên bàn để xóa, ô vẫn giữ vệt khai thông." },
+      ],
+    },
   },
   KHAI_LO: {
     goal: "Giải đố trên bàn cờ quân nguyên tố. Chạm một quân để xóa cả khối cùng hệ, gom khối to để được nhiều điểm và mở đường xuyên bàn cờ.",
@@ -251,8 +289,6 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       `Bàn có ${KL_WIDTH} cột và ${KL_HEIGHT} hàng. Quân lẻ không xóa được; liền cạnh không tính đường chéo. Không có quân mới rơi vào, cột trống thì các cột bên phải dồn sang trái.`,
       "Màn càng sau càng nhiều hệ: 3 hệ ở màn 1–3, 4 hệ ở màn 4–7, 5 hệ ở màn 8–13, 6 hệ từ màn 14.",
       `Thường: hết khối và hết đạo cụ thì hết màn, mỗi quân còn sót trừ 1 tim. Số quân sót nhiều hơn số tim còn lại là hết ván. Dọn sạch bàn được thêm ${KL_CLEAR_HEARTS} tim. Có thể bấm Kết thúc màn sớm (quân sót vẫn trừ tim).`,
-      `7 đạo cụ theo 7 hệ: Kim Đao chém một hàng, Thủy Triều cuốn một cột, Hỏa Cầu nổ vùng 3×3, Lôi Phạt xóa mọi quân cùng hệ, Mộc Linh đổi một quân sang hệ của khối lớn nhất kề nó, Địa Chấn phá hàng dưới cùng, Lốc Phong xoay 8 ô quanh tâm. Đạo cụ không cộng điểm.`,
-      `Ván bắt đầu với ${KL_START_TOOLS} đạo cụ mỗi hệ. Chạm khối hệ nào thì thanh nạp hệ đó đầy dần: đủ ${KL_TOOL_CHARGE} quân thì được thêm 1 đạo cụ của hệ ấy, tích không giới hạn. Chỉ hiện đạo cụ của các hệ có trên bàn.`,
       "Mỗi màn được hoàn tác một lần, chỉ lùi được nước vừa đi.",
       `Cấp tốc: ván bắt đầu với ${KL_TIMED_START_SECONDS} giây. Đạt mốc điểm (bậc 1 là ${timedGoal(1)}, bậc 2 là ${timedGoal(2)}…) thì lên bậc, bàn mới và cộng thêm ${KL_TIMED_LEVEL_SECONDS} giây vào giờ còn lại. Bàn hết đường thì chia bàn mới cùng bậc; hết giờ là hết ván. Đồng hồ dừng khi bạn rời trang.`,
     ],
@@ -265,8 +301,16 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     tips: [
       "Rê chuột qua khối để xem trước số quân và điểm. Trên điện thoại, chạm lần đầu để xem, chạm lần nữa để xóa.",
       "Xóa khối nhỏ trước để các khối khác dồn lại thành khối lớn.",
-      "Phím 1–7 chọn nhanh đạo cụ, Esc để bỏ chọn.",
     ],
+    items: {
+      title: "Đạo cụ",
+      notes: [
+        `Ván bắt đầu với ${KL_START_TOOLS} đạo cụ mỗi hệ. Chạm khối hệ nào thì thanh nạp hệ đó đầy dần: đủ ${KL_TOOL_CHARGE} quân thì được thêm 1 đạo cụ của hệ ấy, tích không giới hạn.`,
+        "Chỉ hiện đạo cụ của các hệ có trên bàn. Đạo cụ không cộng điểm.",
+        "Bấm đạo cụ rồi chọn ô trên bàn. Phím 1–7 chọn nhanh, Esc để bỏ chọn.",
+      ],
+      list: elementItems((e) => ({ name: KL_TOOL_NAME[e], text: KL_TOOL_HINT[e] })),
+    },
   },
   DO_THAM: {
     goal: "Dò bẫy trên sa bàn. Mở từng ô, suy ra chỗ giấu bẫy từ các con số rồi cắm cờ lau. Mọi bàn đều suy luận được từ đầu đến cuối, bạn không cần đoán.",
@@ -280,7 +324,6 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Số 0 tự mở lan ra các ô kề.",
       "Chuột phải hoặc chạm giữ để cắm cờ. Cờ chỉ là dấu ghi nhớ, không làm ván thắng hay thua. Bấm vào ô số đã đủ cờ thì mở nhanh các ô còn lại quanh nó; cắm sai cờ thì có thể sa bẫy.",
       "Mở trúng bẫy là thua, trừ khi Khiên đất còn.",
-      "Mỗi đạo cụ dùng một lần: Dò chông (Kim) lộ một bẫy; Mầm xanh (Mộc) mở thử một ô không sợ bẫy; Soi nước (Thủy) báo số bẫy trong vùng 3×3; Đốt lau (Hỏa) mở sạch vùng 3×3; Khiên đất (Thổ) đỡ một lần sa bẫy; Sấm báo (Lôi) báo số bẫy cả hàng hoặc cột; Gió mách (Phong) chỉ ra một ô chắc chắn.",
     ],
     rewards: [
       "Chơi ngay trên máy bạn, không thưởng và không xếp hạng. Thời gian tốt nhất của từng bậc lưu trên trình duyệt này.",
@@ -290,6 +333,14 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Khi hai ô số chung nhau vài ô trống, so sánh số bẫy của chúng để tìm ô chắc chắn.",
       "Cất Gió mách cho lúc bí: nó luôn chỉ ra một ô suy ra được.",
     ],
+    items: {
+      title: "Đạo cụ",
+      notes: [
+        `Trước nước đầu, chọn tối đa ${DT_ITEM_PICKS} đạo cụ mang theo. Mỗi đạo cụ dùng một lần trong ván.`,
+        "Đạo cụ cần chọn ô thì bấm đạo cụ trước rồi bấm ô. Chỉ dùng được sau khi đã mở ô đầu tiên.",
+      ],
+      list: elementItems((e) => DT_ITEM_INFO[e]),
+    },
   },
   SU_LO: {
     goal: "Dẫn tướng qua mê cung lịch sử từ thời Ngô Quyền tới loạn sứ quân. Mỗi ô dừng chân là một câu hỏi sử, đáp đúng mới đứng vững, sai thì đọc sử chép rồi thử lại.",
@@ -304,7 +355,6 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Ô Lục, Vàng, Đỏ là câu dễ tới khó. Ô Đỏ đáp đúng còn mở lối tắt khóa ở ngay bên cạnh.",
       "Ô Bẫy cũng là một câu hỏi: đúng thì gỡ bẫy, sai thì dính bẫy như Phục binh, Nước lũ hay Đốt cầu. Từ bậc Thường có bẫy ẩn trông như ô Vàng.",
       "Ô Ải phải đúng hai câu liền. Không đi xuyên qua Ải và ô Trấn khi chưa thông.",
-      `Trợ giúp có hạn, cả mê cung dùng tối đa ${SL_AID_USE_MAX} lần: Lọc lời bỏ hai đáp án sai, Đổi câu thay câu khác, Hỏi tướng nhờ tướng đi cùng gợi ý, Hỏa tốc tự chọn số bước. Ô Sử quan cho thêm lượt trợ giúp.`,
       "Đáp đúng ô Vàng được 1 Ấn sử, ô Đỏ được 2. Lộc là ô may mắn, Bia là câu đọc đoạn trích, Trấn là quân giặc giữ cổng. Lối nét đứt là lối tắt còn khóa. Từ bậc Thường, sương che các ô ở xa.",
       "Trong giao tranh, đổi hai ô kề nhau để ghép ba. Kiếm đánh mạnh nhất; trống và tim nạp Sĩ khí; sách nạp Mưu để Quân sư hiến kế; âm dương nạp Kế sách; bánh chưng cho thêm nước.",
       "Trong giao tranh, ai cũng có sức như nhau, cấp và đồ của bạn không tính. Kẻ địch không đánh lại; hết nước thì lui về, Thành lực đã mất vẫn giữ nguyên.",
@@ -318,6 +368,19 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Khi đổ số lớn, cân nhắc dừng ở ô Lục gần cổng thay vì chạy vào ô Đỏ xa.",
       "Trong giao tranh, ghép sách để Quân sư hiến kế: đáp đúng thì Thành lực giảm mạnh.",
     ],
+    items: {
+      title: "Trợ giúp",
+      notes: [
+        `Mỗi mê cung bắt đầu với ${SL_START_AIDS.locLoi} Lọc lời, ${SL_START_AIDS.doiCau} Đổi câu, ${SL_START_AIDS.hoiTuong} Hỏi tướng và ${SL_START_AIDS.hoaToc} Hỏa tốc. Cả mê cung dùng tối đa ${SL_AID_USE_MAX} lần.`,
+        "Ô Sử quan cho thêm một trợ giúp, loại bạn đang còn ít nhất. Có bẫy lấy mất một trợ giúp.",
+      ],
+      list: [
+        { icon: { kind: "suLoAid", aid: "locLoi" }, name: "Lọc lời", text: "Bỏ hai đáp án sai của câu đang hỏi. Chỉ dùng cho câu một đáp án có từ bốn lựa chọn." },
+        { icon: { kind: "suLoAid", aid: "doiCau" }, name: "Đổi câu", text: "Thay câu đang hỏi bằng một câu khác cùng độ khó." },
+        { icon: { kind: "suLoAid", aid: "hoiTuong" }, name: "Hỏi tướng", text: "Nhờ một trong hai tướng đi cùng gợi ý. Tướng rành người hoặc nơi trong câu thì loại thêm một đáp án sai." },
+        { icon: { kind: "suLoAid", aid: "hoaToc" }, name: "Hỏa tốc", text: "Dùng thay cho đổ xúc xắc: bạn tự chọn đi từ 1 đến 6 bước." },
+      ],
+    },
   },
   TAM_TUONG_KY: {
     goal: "Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng. Không đánh nhau. Công thức là biểu trưng của trò chơi, không phải diễn giải sử học.",

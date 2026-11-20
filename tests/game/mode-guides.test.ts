@@ -4,7 +4,7 @@ import { MODE_TEXT } from "../../src/app/game/modeInfo";
 import { GUIDE_SCENES, MODE_GUIDES } from "../../src/app/game/modeGuides";
 
 const lines = Object.entries(MODE_GUIDES).flatMap(([scene, g]) =>
-  [g.goal, ...g.steps, ...g.rules, ...g.rewards, ...g.tips].map((text) => ({ scene, text })),
+  [g.goal, ...g.steps, ...g.rules, ...g.rewards, ...g.tips, ...(g.items?.notes ?? []), ...(g.items?.list.map((i) => i.text) ?? [])].map((text) => ({ scene, text })),
 );
 
 describe("Thẻ Hướng dẫn của các chế độ", () => {
@@ -20,6 +20,17 @@ describe("Thẻ Hướng dẫn của các chế độ", () => {
       assert.ok(g.steps.length >= 2, `${scene}: cách chơi`);
       assert.ok(g.rules.length >= 2, `${scene}: luật`);
       assert.ok(g.rewards.length >= 1, `${scene}: thưởng`);
+    }
+  });
+
+  it("chế độ có đạo cụ thì Hướng dẫn có mục đạo cụ kèm icon, tên không trùng", () => {
+    const withItems = { KHAI_LO: 7, DO_THAM: 7, SU_LO: 4, FORMATION: 2 } as const;
+    for (const [scene, count] of Object.entries(withItems)) {
+      const items = MODE_GUIDES[scene as keyof typeof withItems].items;
+      assert.ok(items, `${scene}: thiếu mục đạo cụ`);
+      assert.equal(items.list.length, count, `${scene}: số đạo cụ`);
+      assert.equal(new Set(items.list.map((i) => i.name)).size, count, `${scene}: tên trùng`);
+      for (const i of items.list) assert.ok(i.icon, `${scene}: ${i.name} thiếu icon`);
     }
   });
 

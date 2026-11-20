@@ -2,6 +2,7 @@
 
 import { useId } from "react";
 import type { Element, Profession } from "@/core";
+import type { SlAid } from "@/core/su-lo";
 import { INK, TILE_GLYPH } from "./tiles";
 
 export const ELEMENT_COLOR: Record<Element, string> = {
@@ -71,6 +72,48 @@ export function ShieldIcon({ className = "size-4" }: { className?: string }) {
     <svg viewBox="0 0 24 24" className={className} aria-hidden focusable="false">
       <path d="M12 2.5 L20 5.5 V11 C20 16 16.5 19.5 12 21.5 C7.5 19.5 4 16 4 11 V5.5 Z" fill="#38bdf8" stroke={INK} strokeWidth={1.5} strokeLinejoin="round" />
       <path d="M12 5.5 V18.5 M7 10 H17" stroke="#e0f2fe" strokeWidth={1.5} strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/** Bốn trợ giúp Sử Lộ, vẽ tay theo quy tắc không dùng emoji: Lọc lời (tờ đáp án gạch hai dòng), Đổi câu (tờ câu hỏi giữa
+ * hai mũi tên xoay), Hỏi tướng (lời bàn có dấu hỏi), Hỏa tốc (xúc xắc bốc lửa, tự chọn số bước). */
+export function SuLoAidIcon({ aid, className = "size-4" }: { aid: SlAid; className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden focusable="false" strokeLinecap="round" strokeLinejoin="round">
+      {aid === "locLoi" && (
+        <>
+          <rect x={4.5} y={2.5} width={15} height={19} rx={1.5} fill="#efcf94" stroke={INK} strokeWidth={1.4} />
+          <path d="M7.5 7 H16.5 M7.5 11 H16.5 M7.5 15 H16.5 M7.5 19 H13" stroke="#8a5a2b" strokeWidth={1.3} />
+          <path d="M6 11 H18 M6 15 H18" stroke="#c0392b" strokeWidth={2} />
+        </>
+      )}
+      {aid === "doiCau" && (
+        <>
+          <rect x={8} y={7} width={8} height={10} rx={1} fill="#efcf94" stroke={INK} strokeWidth={1.3} />
+          <path d="M10 10.5 H14 M10 13.5 H14" stroke="#8a5a2b" strokeWidth={1.2} />
+          <path d="M4.5 10 A8 8 0 0 1 18 5.5" fill="none" stroke="#c9a25a" strokeWidth={2} />
+          <path d="M18.6 2.6 L18.4 6 L15 5.6" fill="none" stroke="#c9a25a" strokeWidth={2} />
+          <path d="M19.5 14 A8 8 0 0 1 6 18.5" fill="none" stroke="#c9a25a" strokeWidth={2} />
+          <path d="M5.4 21.4 L5.6 18 L9 18.4" fill="none" stroke="#c9a25a" strokeWidth={2} />
+        </>
+      )}
+      {aid === "hoiTuong" && (
+        <>
+          <path d="M3 4.5 C3 3.4 3.9 2.5 5 2.5 H19 C20.1 2.5 21 3.4 21 4.5 V14 C21 15.1 20.1 16 19 16 H11 L6 21 V16 H5 C3.9 16 3 15.1 3 14 Z" fill="#efcf94" stroke={INK} strokeWidth={1.4} />
+          <path d="M9.5 7.5 C9.5 5.9 10.6 5 12 5 C13.4 5 14.5 5.9 14.5 7.2 C14.5 9 12 9.2 12 11" fill="none" stroke="#a3261c" strokeWidth={1.9} />
+          <circle cx={12} cy={13.4} r={1.1} fill="#a3261c" />
+        </>
+      )}
+      {aid === "hoaToc" && (
+        <>
+          <path d="M8 21.5 C3 20 2 15 5 11 C5.5 13 6.5 13.8 7.5 14 C7 10.5 8.5 7.5 11.5 5.5 C11.5 8 12.5 9 13.5 9.5" fill="#f6a723" stroke="#b4400c" strokeWidth={1.2} />
+          <rect x={10} y={10} width={11.5} height={11.5} rx={2.2} fill="#f8f1df" stroke={INK} strokeWidth={1.4} />
+          <circle cx={12.9} cy={12.9} r={1.1} fill="#a3261c" />
+          <circle cx={15.75} cy={15.75} r={1.1} fill="#a3261c" />
+          <circle cx={18.6} cy={18.6} r={1.1} fill="#a3261c" />
+        </>
+      )}
     </svg>
   );
 }
