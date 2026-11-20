@@ -1,7 +1,7 @@
 "use client";
 import { requestJson, postJson } from "../api";
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
-import { FrameInset, ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { FrameInset, ModeBanner, ModeScreen, ModeSkeleton, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { Alert, Button, ChoiceChip, choiceVariants } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
@@ -466,14 +466,12 @@ export default function DestinyScreen() {
 
   if (!overview || !profile) return (
     <ModeScreen card label="Tháp Thiên Mệnh">
-      <div className="py-24 text-center text-on-wood-soft">
-        {failed ? (
-          <>
-            <p role="alert">Chưa mở được cửa Tháp Thiên Mệnh. Xin tải lại trang.</p>
-            <Button variant="secondary" className="mt-3 min-h-11" onClick={() => void load()}>Tải lại</Button>
-          </>
-        ) : <p role="status">Đang tải Tháp Thiên Mệnh…</p>}
-      </div>
+      {failed ? (
+        <div className="py-24 text-center text-on-wood-soft">
+          <p role="alert">Chưa mở được cửa Tháp Thiên Mệnh. Xin tải lại trang.</p>
+          <Button variant="secondary" className="mt-3 min-h-11" onClick={() => void load()}>Tải lại</Button>
+        </div>
+      ) : <ModeSkeleton label="Đang tải Tháp Thiên Mệnh…" />}
     </ModeScreen>
   );
 

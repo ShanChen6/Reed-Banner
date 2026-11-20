@@ -77,7 +77,7 @@ export default function CombosScreen() {
   if (!profile)
     return (
       <ModeScreen label="Hợp Kích">
-        <ModeLoading>{loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : "Đang tải…"}</ModeLoading>
+        <ModeLoading error={loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : null} label="Đang tải Hợp Kích…" />
       </ModeScreen>
     );
 

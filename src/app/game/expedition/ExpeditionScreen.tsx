@@ -5,7 +5,7 @@
 
 import { requestJson, postJson } from "../api";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ModeBanner, ModeScreen } from "@/components/game-ui";
+import { ModeBanner, ModeScreen, ModeSkeleton } from "@/components/game-ui";
 import { Alert, Button, ChoiceChip, choiceVariants } from "@/components/ui";
 import {
   EXPEDITION_PINCER_HP,
@@ -263,16 +263,14 @@ export default function ExpeditionScreen() {
   if (!overview || !profile)
     return (
       <ModeScreen card label="Viễn Chinh">
-        <div className="py-24 text-center text-on-wood-soft">
         {failed ? (
-          <div className="text-center">
+          <div className="py-24 text-center text-on-wood-soft">
             <p role="alert">Chưa mở được sa bàn Viễn Chinh. Xin tải lại trang.</p>
             <Button variant="secondary" className="mt-3" onClick={() => void load()}>Tải lại</Button>
           </div>
         ) : (
-          <p role="status">Đang tải sa bàn…</p>
+          <ModeSkeleton label="Đang tải sa bàn…" />
         )}
-        </div>
       </ModeScreen>
     );
 

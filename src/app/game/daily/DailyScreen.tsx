@@ -1,6 +1,6 @@
 "use client";
 
-import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { ModeBanner, ModeScreen, ModeSkeleton, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { Alert, Button, buttonVariants } from "@/components/ui";
 
 // Thử thách hằng ngày: đề chung hôm nay (đội cho sẵn, đối thủ, sân nhà), lượt của mình, bảng xếp hạng, điểm danh và nhiệm vụ ngày.
@@ -87,11 +87,11 @@ export default function DailyScreen() {
   if (!data?.setup) {
     return (
       <ModeScreen card label="Nhật Lệnh">
-        <p className="py-24 text-center text-on-wood-soft">
-          {data
-            ? "Chưa nhận được Nhật Lệnh hôm nay. Xin tải lại trang."
-            : "Đang tải…"}
-        </p>
+        {data ? (
+          <p role="alert" className="py-24 text-center text-on-wood-soft">Chưa nhận được Nhật Lệnh hôm nay. Xin tải lại trang.</p>
+        ) : (
+          <ModeSkeleton label="Đang tải Nhật Lệnh…" />
+        )}
       </ModeScreen>
     );
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { ModeBanner, ModeScreen, ModeSkeleton, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { Alert, Button, ChoiceChip, buttonVariants } from "@/components/ui";
 
 // Quần Hùng: điểm và thành tích, đội phòng thủ (bản chụp đội 3vs3 đang chọn), 3 đối thủ đang bày.
@@ -122,9 +122,11 @@ export default function ArenaScreen() {
   if (data?.rating === undefined) {
     return (
       <ModeScreen card label="Quần Hùng">
-        <p className="py-24 text-center text-on-wood-soft">
-          {data ? "Chưa mở được Quần Hùng. Xin tải lại trang." : "Đang tải…"}
-        </p>
+        {data ? (
+          <p role="alert" className="py-24 text-center text-on-wood-soft">Chưa mở được Quần Hùng. Xin tải lại trang.</p>
+        ) : (
+          <ModeSkeleton label="Đang tải Quần Hùng…" />
+        )}
       </ModeScreen>
     );
   }

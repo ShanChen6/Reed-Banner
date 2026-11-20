@@ -3,7 +3,7 @@
 // Bảng xếp hạng mùa hiện tại dùng ngay trong màn từng chế độ (V2-06): Trấn Ải, Quần Hùng (mùa tuần), Tháp Thiên Mệnh
 // (chu kỳ hiện tại). Không dẫn sang trang Công Trạng. Bảng Trận Đồ và Tầm Tướng Ký nằm trong màn của chúng.
 
-import { OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { OrnateFrame, SectionTitle, Skeleton } from "@/components/game-ui";
 import { buttonVariants } from "@/components/ui";
 import { Children, useEffect, useState, type ReactNode } from "react";
 import { RankBoard } from "./RankBoard";
@@ -52,6 +52,17 @@ export function BoardNote({ children }: { children: ReactNode }) {
 export function BoardEmpty({ children }: { children: ReactNode }) {
   return <p className="py-6 text-center text-sm text-on-wood-soft">{children}</p>;
 }
+/** Bảng đang tải: vài dòng xương thay cho chữ "Đang tải…". */
+export function BoardLoading({ rows = 3, className }: { rows?: number; className?: string }) {
+  return (
+    <div role="status" className={`flex flex-col gap-2 ${className ?? ""}`}>
+      <span className="sr-only">Đang tải…</span>
+      {Array.from({ length: rows }, (_, i) => (
+        <Skeleton key={i} className="h-10" />
+      ))}
+    </div>
+  );
+}
 /** Bảng xếp hạng: hiện `initial` dòng đầu, còn lại mở bằng nút (bảng mùa có tới 50 dòng, dài trên điện thoại). */
 export function RankList({ children, initial = 10 }: { children: ReactNode; initial?: number }) {
   const items = Children.toArray(children);
@@ -99,7 +110,7 @@ export function SeasonBoardPanel({ board, myExtra }: { board: "survival" | "aren
     <OrnateFrame className="flex flex-col gap-3">
       <SectionTitle description={`${SEASON_NOTE[board]}${data?.season ? ` (mùa bắt đầu ${data.season})` : ""}`}>Công trạng mùa này</SectionTitle>
       {!data?.top ? (
-        <BoardEmpty>{data?.error ? "Chưa mở được bảng công trạng. Xin tải lại trang." : "Đang tải…"}</BoardEmpty>
+        data?.error ? <BoardEmpty>Chưa mở được bảng công trạng. Xin tải lại trang.</BoardEmpty> : <BoardLoading />
       ) : data.top.length === 0 ? (
         <BoardEmpty>Chưa có ai trên bảng mùa này.</BoardEmpty>
       ) : (
@@ -120,7 +131,7 @@ export function DestinyBoardPanel() {
     <OrnateFrame className="flex flex-col gap-3">
       <SectionTitle description="Xếp theo tầng cao nhất đã vượt. Bằng tầng thì ai dùng ít lượt đánh hơn đứng trên, rồi tới ai xong sớm hơn.">Công trạng chu kỳ này</SectionTitle>
       {!data?.entries ? (
-        <BoardEmpty>{data?.error ? "Chưa mở được bảng công trạng. Xin tải lại trang." : "Đang tải…"}</BoardEmpty>
+        data?.error ? <BoardEmpty>Chưa mở được bảng công trạng. Xin tải lại trang.</BoardEmpty> : <BoardLoading />
       ) : data.entries.length === 0 ? (
         <BoardEmpty>Chưa có thành tích trong chu kỳ này.</BoardEmpty>
       ) : (
@@ -139,7 +150,7 @@ export function TtkBoard({ data }: { data: TtkBoardResponse | null }) {
     <OrnateFrame className="flex flex-col gap-3">
       <BoardNote>{TTK_NOTE}{data?.week ? ` (tuần bắt đầu ${data.week})` : ""}</BoardNote>
       {!data?.top ? (
-        <BoardEmpty>{data?.error ? "Chưa mở được bảng công trạng. Xin tải lại trang." : "Đang tải…"}</BoardEmpty>
+        data?.error ? <BoardEmpty>Chưa mở được bảng công trạng. Xin tải lại trang.</BoardEmpty> : <BoardLoading />
       ) : data.top.length === 0 ? (
         <BoardEmpty>Tuần này chưa có ai ghép ra tướng đề cử.</BoardEmpty>
       ) : (

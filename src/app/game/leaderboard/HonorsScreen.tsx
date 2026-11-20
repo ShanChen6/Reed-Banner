@@ -4,10 +4,10 @@
 // tại của mình; phần "Các mùa trước" liệt kê các kỳ đã nhận thưởng (hạng, vàng). Bảng xếp hạng đầy đủ của mùa hiện tại
 // nằm trong màn từng chế độ và không dẫn sang trang này.
 
-import { ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { ModeScreen, OrnateFrame, SectionTitle, SkeletonText } from "@/components/game-ui";
 import { useEffect, useState } from "react";
 import { fetchOverview, type Overview } from "../formation/rankedClient";
-import { BoardEmpty, RankList, useJson, type DestinyBoardResponse, type SeasonBoardResponse, type TtkBoardResponse } from "./boards";
+import { BoardEmpty, BoardLoading, RankList, useJson, type DestinyBoardResponse, type SeasonBoardResponse, type TtkBoardResponse } from "./boards";
 import type { HonorItem } from "@/server/honors";
 import { RANKED_LEVELS } from "@/core/binh-phap";
 
@@ -82,7 +82,9 @@ export default function HonorsScreen({
             {standings.map((s) => (
               <li key={s.title} className="rounded-control border border-frame-line-soft bg-wood-inset px-3 py-2">
                 <p className="text-caption text-on-wood-soft">{s.title}</p>
-                <p className="font-semibold text-title-on-wood">{s.text === undefined ? "Đang tải…" : (s.text ?? "Chưa có tên trên bảng")}</p>
+                <p className="font-semibold text-title-on-wood">
+                  {s.text === undefined ? <><SkeletonText className="w-40" /><span className="sr-only">Đang tải…</span></> : (s.text ?? "Chưa có tên trên bảng")}
+                </p>
               </li>
             ))}
           </ul>
@@ -91,7 +93,12 @@ export default function HonorsScreen({
         <OrnateFrame className="flex flex-col gap-3">
           <SectionTitle description="Các kỳ đã khép mà bạn nhận thưởng hạng, mới nhất trước.">Các mùa trước</SectionTitle>
           {!honors?.items ? (
-            <BoardEmpty>{honors?.error ? "Chưa tải được Công Trạng. Xin tải lại trang." : "Đang tải…"}</BoardEmpty>
+            honors?.error ? (
+              <BoardEmpty>Chưa tải được Công Trạng. Xin tải lại trang.</BoardEmpty>
+            ) : (
+              /* Cao gần bằng dòng "Chưa có kỳ nào…" (trường hợp hay gặp nhất) để footer không nhích khi tải xong. */
+              <BoardLoading rows={1} className="py-3.5" />
+            )
           ) : honors.items.length === 0 ? (
             <BoardEmpty>Chưa có kỳ nào được nhận thưởng. Lên hạng ở một kỳ rồi nhận thưởng khi kỳ khép lại.</BoardEmpty>
           ) : (

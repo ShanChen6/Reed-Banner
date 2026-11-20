@@ -1,6 +1,6 @@
 "use client";
 
-import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { ModeBanner, ModeScreen, ModeSkeleton, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { Alert, Button, ChoiceChip, buttonVariants } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { cn } from "@/lib/cn";
@@ -177,18 +177,16 @@ export default function SurvivalScreen() {
   if (!profile) {
     return (
       <ModeScreen card label="Trấn Ải">
-        <div className="py-24 text-center text-on-wood-soft">
-          {loadError ? (
-            <>
-              <p>Chưa mở được hồ sơ. Xin kiểm tra mạng rồi thử lại.</p>
-              <Button variant="secondary" type="button" onClick={() => { setLoadError(false); void load(); }} className="mt-4">
-                Tải lại hồ sơ
-              </Button>
-            </>
-          ) : (
-            <p role="status">Đang tải hồ sơ…</p>
-          )}
-        </div>
+        {loadError ? (
+          <div className="py-24 text-center text-on-wood-soft">
+            <p>Chưa mở được hồ sơ. Xin kiểm tra mạng rồi thử lại.</p>
+            <Button variant="secondary" type="button" onClick={() => { setLoadError(false); void load(); }} className="mt-4">
+              Tải lại hồ sơ
+            </Button>
+          </div>
+        ) : (
+          <ModeSkeleton label="Đang tải Trấn Ải…" />
+        )}
       </ModeScreen>
     );
   }

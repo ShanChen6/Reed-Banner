@@ -96,6 +96,7 @@ import {
 | `Tabs`, `ChoiceChip`, `choiceVariants()` | Lựa chọn: `role=tab` + `aria-selected`, chip `aria-pressed`; mũi tên/Home/End chuyển tab |
 | `OrnateFrame`, `FrameInset`, `FrameCorners` | `@/components/game-ui`; `level`: panel/raised/hero, `paper` |
 | `ModeScreen`, `ModeBanner`, `SectionTitle` | `@/components/game-ui`; khung màn chế độ |
+| `Skeleton`, `SkeletonText`, `ModeSkeleton`, `ModeLoading` | `@/components/game-ui`; khung xương khi tải (20/11/2026): không dùng dòng chữ "Đang tải…". Màn chế độ dùng `ModeSkeleton` (banner, dãy thẻ, khung); màn có footer dùng `ModeLoading` (cao ít nhất một màn hình để footer không nhảy, nhận `error`); bảng xếp hạng dùng `BoardLoading`. Luôn kèm nhãn cho trình đọc màn hình; giảm chuyển động thì đứng yên (`.ui-skeleton`) |
 | `buttonVariants()` | Dùng cùng style với Link, SceneLink, a |
 | `Input`, `Select` | Thuộc tính native, ref, sự kiện, validation, disabled và aria-invalid |
 | `FormField` | Label bao quanh control, hint tùy chọn |

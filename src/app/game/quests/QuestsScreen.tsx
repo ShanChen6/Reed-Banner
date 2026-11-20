@@ -44,7 +44,7 @@ export default function QuestsScreen({
   if (!profile) {
     return (
       <Shell>
-        <ModeLoading>{loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : "Đang tải…"}</ModeLoading>
+        <ModeLoading error={loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : null} label="Đang tải Nhiệm vụ…" />
       </Shell>
     );
   }

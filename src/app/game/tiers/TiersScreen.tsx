@@ -70,7 +70,7 @@ export default function TiersScreen() {
   if (!ladders)
     return (
       <ModeScreen label="Ban Thưởng">
-        <ModeLoading>{failed ? "Chưa mở được Ban Thưởng. Xin tải lại trang." : "Đang tải…"}</ModeLoading>
+        <ModeLoading error={failed ? "Chưa mở được Ban Thưởng. Xin tải lại trang." : null} label="Đang tải Ban Thưởng…" />
       </ModeScreen>
     );
 

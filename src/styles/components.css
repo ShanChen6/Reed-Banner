@@ -333,7 +333,21 @@
   @media (min-width: 640px) {
     .ui-action-bar { position: static; margin-inline: 0; padding: 0; background: none; }
   }
+  /* Khung xương khi tải (Skeleton.tsx): khối gỗ lõm, một vệt sáng đồng lướt qua. Giảm chuyển động thì đứng yên. */
+  .ui-skeleton {
+    display: block;
+    border-radius: 0.5rem;
+    background:
+      linear-gradient(100deg, transparent 30%, color-mix(in srgb, var(--frame-bronze) 14%, transparent) 50%, transparent 70%) 0 0 / 300% 100%,
+      color-mix(in srgb, var(--wood-hi) 70%, var(--wood-inset));
+    animation: ui-skeleton-sweep 1.6s ease-in-out infinite;
+  }
+  @keyframes ui-skeleton-sweep {
+    from { background-position: 100% 0, 0 0; }
+    to { background-position: -50% 0, 0 0; }
+  }
   @media (prefers-reduced-motion: reduce) {
     .ui-choice, .ui-button--primary, .ui-button--secondary { transition: none; }
+    .ui-skeleton { animation: none; }
   }
 }

@@ -34,7 +34,7 @@ import {
 import type { PvpMatchView, PvpOverview } from "@/server/pvp";
 import type { PvpRoomView } from "@/server/pvpRooms";
 import { Alert, Button, ChoiceChip } from "@/components/ui";
-import { FrameInset, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { FrameInset, OrnateFrame, SectionTitle, Skeleton } from "@/components/game-ui";
 import { ElementIcon } from "../art/icons";
 import { TileArt } from "../art/tiles";
 import { EffectBadge } from "../art/effects";
@@ -430,7 +430,14 @@ function PvpRoom({ onMatch, onExit }: { onMatch: (matchId: string) => void; onEx
     onExit();
   };
 
-  if (!looked) return <p role="status" className="text-on-wood-soft">Đang tải…</p>;
+  if (!looked)
+    return (
+      <div role="status" className="flex flex-col gap-3">
+        <span className="sr-only">Đang tải…</span>
+        <Skeleton className="h-40" />
+        <Skeleton className="h-12 w-48" />
+      </div>
+    );
 
   if (!room || room.status === "closed") {
     return (
