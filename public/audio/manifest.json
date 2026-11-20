@@ -269,10 +269,11 @@
     },
     "battle.combo4": {
       "files": [
-        "sfx/battle/combo3_a",
-        "sfx/battle/combo3_b"
+        "sfx/battle/combo4_a",
+        "sfx/battle/combo4_b",
+        "sfx/battle/combo4_c"
       ],
-      "volume": 0.95
+      "volume": 0.9
     },
     "battle.win": {
       "files": [
@@ -358,6 +359,35 @@
         "sfx/battle/skill_c"
       ],
       "volume": 0.8
+    },
+    "battle.ultimate": {
+      "files": [
+        "sfx/battle/ultimate_a"
+      ],
+      "volume": 0.9
+    },
+    "battle.heal": {
+      "files": [
+        "sfx/battle/heal_a",
+        "sfx/battle/heal_b",
+        "sfx/battle/heal_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.shield": {
+      "files": [
+        "sfx/battle/shield_a",
+        "sfx/battle/shield_b",
+        "sfx/battle/shield_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.buff": {
+      "files": [
+        "sfx/battle/buff_a",
+        "sfx/battle/buff_b"
+      ],
+      "volume": 0.75
     },
     "sulo.roll": {
       "files": [
