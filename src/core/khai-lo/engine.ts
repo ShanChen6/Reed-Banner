@@ -25,6 +25,8 @@ const startTools = (): Record<KlTool, number> => ({ kim: KL_START_TOOLS, moc: KL
 /** Lượt hoàn tác mỗi màn (không cộng dồn sang màn sau). */
 export const KL_UNDO_PER_LEVEL = 1;
 export const KL_MIN_GROUP = 2;
+/** Ô ×3 xuất hiện từ màn/bậc này (trước đó chỉ có ×2). */
+export const KL_MULT3_FROM = 6;
 
 /** Đạo cụ mang tên hệ của nó: kim Kim Đao (hàng), thuy Thủy Triều (cột), hoa Hỏa Cầu (3×3), loi Lôi Phạt (cùng hệ),
  *  moc Mộc Linh (đổi hệ một quân), tho Địa Chấn (hàng đáy), phong Lốc Phong (xoay 8 ô). */
@@ -57,8 +59,8 @@ export interface KlCell {
   readonly id: number;
   /** Quân nguyên tố (7 hệ của game), mỗi hệ một màu riêng. */
   readonly kind: Element;
-  /** Ô hào quang: nhóm chứa nó được nhân điểm (×1 thêm cho mỗi ô hào quang). */
-  readonly banner?: true;
+  /** Ô số (Shan 20/11/2026, theo ô số 2, 3 của Block'D): khối chứa nó được nhân ×2 hoặc ×3 điểm. Không có là quân thường. */
+  readonly mult?: 2 | 3;
 }
 
 export type KlPhase = "playing" | "stuck" | "levelDone" | "over";
@@ -129,18 +131,21 @@ export type KlResult =
 export interface KlLevelConfig {
   /** Số loại ô trên bàn: càng nhiều càng khó nối nhóm. */
   readonly kinds: number;
-  readonly banners: number;
+  /** Số ô số trên bàn; từ màn KL_MULT3_FROM có thể ra ô ×3. */
+  readonly mults: number;
+  readonly maxMult: 2 | 3;
 }
 
 export function levelConfig(level: number): KlLevelConfig {
   const kinds = level <= 3 ? 3 : level <= 7 ? 4 : level <= 13 ? 5 : 6;
-  const banners = level < 3 ? 0 : Math.min(4, 1 + Math.floor((level - 3) / 3));
-  return { kinds, banners };
+  const mults = level < 2 ? 0 : Math.min(5, 1 + Math.floor((level - 2) / 3));
+  const maxMult = level < KL_MULT3_FROM ? 2 : 3;
+  return { kinds, mults, maxMult };
 }
 
-/** Điểm một nhóm n ô có b ô hào quang: n² × (1 + b). */
-export function groupScore(size: number, banners: number): number {
-  return size * size * (1 + banners);
+/** Điểm một khối n quân: n² nhân với tích các ô số trong khối (×2 và ×3 cùng khối là ×6). */
+export function groupScore(size: number, mult = 1): number {
+  return size * size * mult;
 }
 
 export function levelSeed(seed: number, level: number, deal = 0): number {
@@ -158,10 +163,10 @@ const shuffled = <T>(xs: readonly T[], rng: Rng): T[] => {
   return a;
 };
 
-/** Sinh bàn cho một màn: loại ô xáo theo seed, ô hào quang rải ngẫu nhiên. Luôn có ít nhất một nhóm chạm được. */
+/** Sinh bàn cho một màn: loại ô xáo theo seed, ô số ×2, ×3 rải ngẫu nhiên. Luôn có ít nhất một nhóm chạm được. */
 export function generateBoard(seed: number, level: number, firstId: number, width = KL_WIDTH, height = KL_HEIGHT, deal = 0): { cells: (KlCell | null)[]; nextId: number } {
   const rng = createRng(levelSeed(seed, level, deal));
-  const { kinds, banners } = levelConfig(level);
+  const { kinds, mults, maxMult } = levelConfig(level);
   const pool = shuffled(ELEMENTS, rng).slice(0, kinds);
   for (;;) {
     let id = firstId;
@@ -169,8 +174,8 @@ export function generateBoard(seed: number, level: number, firstId: number, widt
     const order = shuffled(
       cells.map((_, i) => i),
       rng,
-    ).slice(0, banners);
-    for (const i of order) cells[i] = { ...(cells[i] as KlCell), banner: true };
+    ).slice(0, mults);
+    for (const i of order) cells[i] = { ...(cells[i] as KlCell), mult: rng.int(2, maxMult) as 2 | 3 };
     if (hasGroup(cells, width, height)) return { cells, nextId: id };
   }
 }
@@ -378,6 +383,11 @@ function mocTarget(cells: readonly (KlCell | null)[], width: number, height: num
   return best;
 }
 
+/** Tích các ô số trong khối (1 nếu không có). */
+export function groupMult(cells: readonly (KlCell | null)[], group: readonly number[]): number {
+  return group.reduce((m, i) => m * (cells[i]?.mult ?? 1), 1);
+}
+
 const levelBonus = (level: number, left: number) => (left === 0 ? clearBonus(level) : left <= KL_NEAR_CLEAR_LEFT ? KL_NEAR_CLEAR_BONUS : 0);
 
 /** Cấp tốc: chia bàn mới; level khác bậc hiện tại nghĩa là vừa lên bậc. */
@@ -444,8 +454,7 @@ export function transition(state: KlState, action: KlAction): KlResult {
       if (!state.cells[action.index]) return { ok: false, reason: "empty" };
       const group = groupAt(state.cells, state.width, state.height, action.index);
       if (group.length < KL_MIN_GROUP) return { ok: false, reason: "single" };
-      const banners = group.reduce((n, i) => n + (state.cells[i]?.banner ? 1 : 0), 0);
-      const gained = groupScore(group.length, banners);
+      const gained = groupScore(group.length, groupMult(state.cells, group));
       const cells = state.cells.slice();
       for (const i of group) cells[i] = null;
       events.push({ type: "removed", cells: group, gained });
@@ -528,7 +537,14 @@ const isCell = (v: unknown): v is KlCell | null =>
     v !== null &&
     Number.isInteger((v as KlCell).id) &&
     (ELEMENTS as readonly string[]).includes((v as KlCell).kind) &&
-    ((v as KlCell).banner === undefined || (v as KlCell).banner === true));
+    ((v as KlCell).mult === undefined || (v as KlCell).mult === 2 || (v as KlCell).mult === 3));
+
+/** Bản lưu trước 20/11/2026 ghi ô hào quang là banner: true, nay là ô ×2. */
+const upgradeCell = (v: unknown): unknown => {
+  if (!v || typeof v !== "object" || !("banner" in v)) return v;
+  const { banner, ...rest } = v as Record<string, unknown>;
+  return banner === true ? { ...rest, mult: 2 } : rest;
+};
 
 /** Đọc lại ván đã lưu; dữ liệu hỏng hoặc khác phiên bản trả về null. */
 export function parseGame(text: string | null): KlState | null {
@@ -539,7 +555,8 @@ export function parseGame(text: string | null): KlState | null {
     const num = (x: unknown) => typeof x === "number" && Number.isFinite(x) && x >= 0;
     if (v.version !== 1 || !num(v.seed) || !num(v.level) || !num(v.score) || !num(v.moves) || !num(v.undo) || !num(v.nextId)) return null;
     if (!Number.isInteger(v.width) || !Number.isInteger(v.height) || (v.width as number) < 3 || (v.height as number) < 3) return null;
-    if (!Array.isArray(v.cells) || v.cells.length !== (v.width as number) * (v.height as number) || !v.cells.every(isCell)) return null;
+    const cells = Array.isArray(v.cells) ? v.cells.map(upgradeCell) : null;
+    if (!cells || cells.length !== (v.width as number) * (v.height as number) || !cells.every(isCell)) return null;
     // Bản lưu trước 20/11/2026 có Lốc/Sấm: Lốc thành Lốc Phong, Sấm thành Hỏa Cầu (cùng vùng 3×3).
     const rawTools = (v.tools ?? {}) as Record<string, unknown>;
     const legacy = "whirl" in rawTools || "thunder" in rawTools;
@@ -555,7 +572,7 @@ export function parseGame(text: string | null): KlState | null {
     const charge = noTools();
     for (const e of ELEMENTS) if (num(rawCharge[e])) charge[e] = Math.min(KL_TOOL_CHARGE, rawCharge[e] as number);
     const deal = num(v.deal) ? (v.deal as number) : 0;
-    return { ...(v as KlState), mode, tools, charge, deal, summary: v.summary ?? null, prev: null };
+    return { ...(v as KlState), cells, mode, tools, charge, deal, summary: v.summary ?? null, prev: null };
   } catch {
     return null;
   }

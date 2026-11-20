@@ -15,7 +15,6 @@ import {
   KL_MIN_GROUP,
   createGame,
   groupAt,
-  groupScore,
   KL_TIMED_LEVEL_SECONDS,
   KL_TIMED_START_SECONDS,
   KL_TOOL_CHARGE,
@@ -128,12 +127,12 @@ function loadGame(mode: KlMode): KlState {
   return saved && saved.phase !== "over" && saved.mode === mode ? saved : createGame(freshSeed(), mode);
 }
 
-/** Quân nguyên tố: nền ngọc nhuộm màu của hệ, biểu tượng hệ vẽ tay ở giữa; quân hào quang có viền vàng và quầng sáng. */
-function ElementGem({ element, banner }: { element: Element; banner?: boolean }) {
+/** Quân nguyên tố: nền ngọc nhuộm màu của hệ, biểu tượng hệ vẽ tay ở giữa; ô số có viền vàng, quầng sáng và nhãn ×2/×3. */
+function ElementGem({ element, mult }: { element: Element; mult?: 2 | 3 }) {
   return (
-    <div className="kl-gem" data-el={element} data-banner={banner || undefined} style={{ ["--el" as string]: ELEMENT_COLOR[element] }}>
-      {/* Quân hào quang: khối chứa nó được nhân điểm, mỗi quân hào quang thêm ×1 (một quân là ×2). */}
-      {banner && <span className="kl-mult" aria-hidden>×2</span>}
+    <div className="kl-gem" data-el={element} data-mult={mult} style={{ ["--el" as string]: ELEMENT_COLOR[element] }}>
+      {/* Ô số (Shan 20/11/2026, như ô 2, 3 của Block'D): khối chứa nó nhân ×2 hoặc ×3 điểm. */}
+      {mult && <span className="kl-mult" aria-hidden>×{mult}</span>}
       {/* eslint-disable-next-line @next/next/no-img-element -- biểu tượng tĩnh 128px, dùng lại cho mọi ô */}
       <img src={`/art/elements/${element}.webp`} alt="" draggable={false} />
     </div>
@@ -332,23 +331,16 @@ export default function KhaiLoScreen() {
 
   // Ô sẽ bị tác động nếu chọn ô đang rê/chạm: khối, hoặc vùng của đạo cụ đang cầm.
   const preview = useMemo(() => {
-    if (!state || peek === null) return { cells: new Set<number>(), text: "" };
+    const none = { cells: new Set<number>() };
+    if (!state || peek === null) return none;
     const { width, height, cells } = state;
     if (tool) {
       const t = toolTargets(cells, width, height, tool, peek);
-      if (typeof t === "string") return { cells: new Set<number>(), text: REASON_TEXT[t] };
-      const hit = t.remove.length ? t.remove : tool === "phong" ? [...t.change, peek] : t.change;
-      return { cells: new Set(hit), text: t.remove.length ? `${TOOL_NAME[tool]}: phá ${t.remove.length} quân (không cộng điểm).` : TOOL_HINT[tool] };
+      if (typeof t === "string") return none;
+      return { cells: new Set(t.remove.length ? t.remove : tool === "phong" ? [...t.change, peek] : t.change) };
     }
-    const cell = cells[peek];
-    if (!cell) return { cells: new Set<number>(), text: "" };
     const g = groupAt(cells, width, height, peek);
-    if (g.length < KL_MIN_GROUP) return { cells: new Set<number>(), text: `Hệ ${ELEMENT_NAME[cell.kind]}: quân lẻ, không xóa được.` };
-    const banners = g.reduce((n, i) => n + (cells[i]?.banner ? 1 : 0), 0);
-    return {
-      cells: new Set(g),
-      text: `${g.length} quân hệ ${ELEMENT_NAME[cell.kind]}${banners ? `, ${banners} quân hào quang` : ""}: +${groupScore(g.length, banners)} điểm.`,
-    };
+    return g.length < KL_MIN_GROUP ? none : { cells: new Set(g) };
   }, [state, peek, tool]);
 
   const choose = useCallback(
@@ -495,7 +487,7 @@ export default function KhaiLoScreen() {
                       data-tool={preview.cells.has(i) && tool ? (tool === "phong" || tool === "moc" ? "change" : "remove") : undefined}
                       style={{ transform: `translate(calc(var(--kl-cell) * ${i % width}), calc(var(--kl-cell) * ${Math.floor(i / width)}))` }}
                     >
-                      <ElementGem element={c.kind} banner={c.banner} />
+                      <ElementGem element={c.kind} mult={c.mult} />
                     </div>
                   ) : null,
                 )}
@@ -506,7 +498,7 @@ export default function KhaiLoScreen() {
                     className="kl-tile kl-ghost"
                     style={{ transform: `translate(calc(var(--kl-cell) * ${g.index % width}), calc(var(--kl-cell) * ${Math.floor(g.index / width)}))` }}
                   >
-                    <ElementGem element={g.cell.kind} banner={g.cell.banner} />
+                    <ElementGem element={g.cell.kind} mult={g.cell.mult} />
                   </div>
                 ))}
                 <div className="absolute inset-0 grid" style={{ gridTemplateColumns: `repeat(${width}, 1fr)`, gridTemplateRows: `repeat(${height}, 1fr)` }}>
@@ -517,7 +509,7 @@ export default function KhaiLoScreen() {
                         data-cell
                         tabIndex={i === focus ? 0 : -1}
                         disabled={!active}
-                        aria-label={`Hàng ${Math.floor(i / width) + 1}, cột ${(i % width) + 1}: ${c ? `hệ ${ELEMENT_NAME[c.kind]}${c.banner ? ", hào quang" : ""}` : "trống"}`}
+                        aria-label={`Hàng ${Math.floor(i / width) + 1}, cột ${(i % width) + 1}: ${c ? `hệ ${ELEMENT_NAME[c.kind]}${c.mult ? `, nhân ${c.mult}` : ""}` : "trống"}`}
                         className="kl-hit focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-frame-gold"
                         onPointerDown={(e) => (touchRef.current = e.pointerType === "touch")}
                         onMouseEnter={() => !touchRef.current && setPeek(i)}
@@ -565,15 +557,10 @@ export default function KhaiLoScreen() {
               )}
             </div>
           </div>
-          <p role="status" aria-live="polite" className="min-h-5 text-center text-sm text-title-on-wood sm:min-h-6 sm:text-[15px]">
-            {message || (active ? preview.text : "")}
+          {/* Shan 20/11/2026: bỏ dòng thông báo dưới bàn để bố cục không nhảy; chỉ giữ cho trình đọc màn hình. */}
+          <p role="status" aria-live="polite" className="sr-only">
+            {message}
           </p>
-          {active && !message && !preview.text && (
-            <p aria-hidden className="-mt-2 text-center text-caption text-on-wood-soft">
-              <span className="pointer-coarse:hidden">Rê chuột lên quân để xem trước khối sẽ xóa, bấm để xóa.</span>
-              <span className="hidden pointer-coarse:inline">Chạm một lần để xem trước, chạm lại để xóa.</span>
-            </p>
-          )}
         </OrnateFrame>
 
         <aside className="flex flex-col gap-3 [grid-area:tools] lg:gap-4" aria-label="Bảng điều khiển">
@@ -621,6 +608,9 @@ export default function KhaiLoScreen() {
                 <p className="text-sm text-on-wood-soft"><b className="text-title-on-wood">{TOOL_NAME[tool]}</b>: {TOOL_HINT[tool]} <span className="pointer-coarse:hidden">Esc để bỏ chọn.</span></p>
               ) : (
                 <p className="hidden text-caption text-on-wood-soft lg:block">Xóa {KL_TOOL_CHARGE} quân của một hệ (bằng cách chạm khối) để được 1 đạo cụ hệ đó, tích không giới hạn. Phím 1–7 chọn nhanh.</p>
+              )}
+              {state.phase === "stuck" && !confirmEnd && (
+                <p className="text-sm text-warning">Hết khối để xóa: dùng đạo cụ hoặc {timed ? "đổi bàn" : "chịu thua"}.</p>
               )}
               {confirmEnd && <p className="text-sm text-warning">Chịu thua là hết ván. Bấm lần nữa nếu chắc chắn.</p>}
             </div>

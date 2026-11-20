@@ -248,7 +248,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       `Cấp tốc: ván bắt đầu với ${KL_TIMED_START_SECONDS} giây. Đạt mốc điểm (bậc 1 là ${timedGoal(1)}, bậc 2 là ${timedGoal(2)}…) thì lên bậc, bàn mới và cộng thêm ${KL_TIMED_LEVEL_SECONDS} giây vào giờ còn lại. Bàn hết đường thì chia bàn mới cùng bậc; hết giờ là hết ván. Đồng hồ dừng khi bạn rời trang.`,
     ],
     rewards: [
-      "Khối n quân được n² điểm. Quân hào quang (viền vàng, nhãn ×2) nhân đôi điểm cả khối chứa nó; mỗi quân hào quang thêm một lần nhân.",
+      "Khối n quân được n² điểm. Ô số (viền vàng, nhãn ×2 hoặc ×3, từ màn 2) nhân điểm cả khối chứa nó; khối có nhiều ô số thì nhân dồn, ví dụ ×2 và ×3 thành ×6.",
       `Dọn sạch bàn: thưởng ${KL_CLEAR_BONUS_BASE} điểm cộng ${KL_CLEAR_BONUS_PER_LEVEL} điểm × số màn (Cấp tốc: × số bậc).`,
       `Cấp tốc: bàn hết đường mà chỉ còn tối đa ${KL_NEAR_CLEAR_LEFT} quân vẫn được ${KL_NEAR_CLEAR_BONUS} điểm.`,
       "Chơi ngay trên máy bạn, không thưởng và không xếp hạng.",
