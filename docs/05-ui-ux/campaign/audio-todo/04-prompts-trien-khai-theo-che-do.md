@@ -265,8 +265,8 @@ Có thể giao bước 2–5 cho Claude: gửi tệp gốc kèm prompt:
 
 ### D2. Tệp trận đánh còn thiếu
 
-- **Shan tạo tệp:** B4 dòng `match3` (phần `match4`, `match5`, `combo1..4`), B6 dòng `battle.ultimate`, `heal`, `shield`, `buff`, `debuff`, `burn`, `freeze`, `poison`. Nếu muốn tách tiếng theo nghề/hệ: B4 dòng `battle.hit.<nghe>` và `battle.skill.<he>` (hiện 8 nghề và 7 hệ dùng chung một bộ).
-- **Giao Claude:** prompt D0 với các cue trên; tệp ở `sfx/battle/`. Riêng `match4`, `match5` khi có tệp riêng thì bỏ `rate` 1,08/1,16 trong `frameCue` (`src/app/game/battle/sounds.ts`) và sửa test `tests/game/battle-sounds.test.ts`.
+- **Shan tạo tệp:** B4 dòng `match3` (phần `combo4`, nếu muốn tiếng chiêng riêng; `match4`, `match5`, `combo1..3` đã có từ 20/11/2026), B6 dòng `battle.ultimate`, `heal`, `shield`, `buff`, `debuff`, `burn`, `freeze`, `poison`. Nếu muốn tách tiếng theo nghề/hệ: B4 dòng `battle.hit.<nghe>` và `battle.skill.<he>` (hiện 8 nghề và 7 hệ dùng chung một bộ).
+- **Giao Claude:** prompt D0 với các cue trên; tệp ở `sfx/battle/`. Riêng `combo4` khi có tệp riêng thì bỏ `rate` 1,12 trong `frameCue` (`src/app/game/battle/sounds.ts`) và sửa test `tests/game/battle-sounds.test.ts`.
 - **Xong khi:** mọi cue trong `BATTLE_CUES` có dòng manifest; chơi một trận Giao Tranh nghe đủ combo, tuyệt chiêu, hồi máu, khiên, hiệu ứng trạng thái.
 
 ### D3. Nhạc đã nối mà chưa có tệp (song song D2)
