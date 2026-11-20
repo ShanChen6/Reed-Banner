@@ -26,7 +26,7 @@ import {
   type DtState,
 } from "@/core/do-tham";
 import { Button, ChoiceChip } from "@/components/ui";
-import { ModeBanner, ModeScreen, OrnateFrame } from "@/components/game-ui";
+import { ModeBanner, ModeScreen, OrnateFrame, SurrenderButton } from "@/components/game-ui";
 import { ElementIcon } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
@@ -304,6 +304,8 @@ export default function DoThamScreen() {
   };
 
   const over = isOver(game);
+  /** Thua mà không chạm bẫy nào: người chơi đã đầu hàng. */
+  const gaveUp = game.phase === "lost" && game.hit === null;
   const flags = flagsOf(game);
   const left = game.mines - flags;
   const cell = `max(26px, min(38px, calc((100vw - 3.5rem) / ${game.width})))`;
@@ -379,6 +381,13 @@ export default function DoThamScreen() {
               <Button variant="secondary" onClick={() => startGame(level, picks)}>
                 Ván mới
               </Button>
+              {game.phase === "playing" && (
+                <SurrenderButton
+                  size="md"
+                  consequence="Ván này tính là thua và không ghi thời gian. Mọi bẫy sẽ lộ ra."
+                  onConfirm={() => void act({ type: "surrender" })}
+                />
+              )}
               <span aria-hidden className="mx-1 hidden h-8 w-px bg-frame-line-soft sm:block" />
               {game.items.length === 0 ? (
                 <span className="text-caption text-on-wood-soft">Chưa mang đạo cụ nào</span>
@@ -480,11 +489,13 @@ export default function DoThamScreen() {
             </p>
             {over && (
               <div role="status" className="ui-frame flex w-full max-w-md flex-col items-center gap-2 p-4 text-center">
-                <h2 className="ui-title-on-wood text-2xl font-bold">{game.phase === "won" ? "Gỡ xong mọi bẫy!" : "Sa bẫy"}</h2>
+                <h2 className="ui-title-on-wood text-2xl font-bold">{game.phase === "won" ? "Gỡ xong mọi bẫy!" : gaveUp ? "Đã đầu hàng" : "Sa bẫy"}</h2>
                 <p className="text-[15px]">
                   {game.phase === "won"
                     ? `Bạn xong bậc ${LEVEL_NAME[level]} trong ${clock(secs)}.${best[level] === secs ? " Đây là thời gian tốt nhất của bạn." : ""}`
-                    : "Ô đỏ là bẫy bạn chạm phải. Các bẫy còn lại đã lộ ra."}
+                    : gaveUp
+                      ? "Các bẫy đã lộ ra. Vào ván mới để thử lại."
+                      : "Ô đỏ là bẫy bạn chạm phải. Các bẫy còn lại đã lộ ra."}
                 </p>
                 <Button size="lg" autoFocus onClick={() => startGame(level, picks)}>
                   Ván mới

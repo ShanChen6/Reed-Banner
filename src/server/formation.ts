@@ -274,6 +274,7 @@ export function parseCommand(v: unknown): Command | null {
   if (typeof v !== "object" || v === null) return null;
   const c = v as Record<string, unknown>;
   if (c.kind === "discard") return { kind: "discard" };
+  if (c.kind === "surrender") return { kind: "surrender" };
   if (c.kind === "place" && Number.isInteger(c.row) && Number.isInteger(c.col)) return { kind: "place", row: c.row as number, col: c.col as number };
   return null;
 }

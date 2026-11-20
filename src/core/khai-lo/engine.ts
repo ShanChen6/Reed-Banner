@@ -112,7 +112,9 @@ export type KlAction =
   | { readonly type: "endLevel" }
   | { readonly type: "nextLevel" }
   /** Cấp tốc: giao diện báo hết giờ. */
-  | { readonly type: "timeUp" };
+  | { readonly type: "timeUp" }
+  /** Đầu hàng: kết thúc lượt chơi ngay, giữ điểm đã đạt. */
+  | { readonly type: "surrender" };
 
 export type KlEvent =
   | { readonly type: "removed"; readonly cells: readonly number[]; readonly gained: number }
@@ -128,7 +130,8 @@ export type KlEvent =
   | { readonly type: "goalReached"; readonly level: number }
   /** Cấp tốc: chia bàn mới cùng bậc (bàn dọn sạch hoặc hết đường); cleared/left/bonus như kết màn. */
   | { readonly type: "redeal"; readonly cleared: boolean; readonly left: number; readonly bonus: number }
-  | { readonly type: "timeUp" };
+  | { readonly type: "timeUp" }
+  | { readonly type: "surrender" };
 
 export type KlReason = "notPlaying" | "outOfBounds" | "empty" | "single" | "noTool" | "edge" | "noUndo" | "notStuck" | "noTarget";
 
@@ -522,6 +525,11 @@ export function transition(state: KlState, action: KlAction): KlResult {
       if (state.mode !== "timed" || state.phase === "over") return { ok: false, reason: "notPlaying" };
       events.push({ type: "timeUp" }, { type: "over" });
       return { ok: true, state: { ...state, phase: "over", prev: null }, events };
+    }
+    case "surrender": {
+      if (state.phase === "over") return { ok: false, reason: "notPlaying" };
+      events.push({ type: "surrender" }, { type: "over" });
+      return { ok: true, state: { ...state, phase: "over", summary: null, prev: null }, events };
     }
     case "nextLevel": {
       if (state.phase !== "levelDone" || state.mode === "timed") return { ok: false, reason: "notPlaying" };

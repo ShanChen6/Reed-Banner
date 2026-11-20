@@ -235,6 +235,18 @@ describe("Bỏ Lệnh", () => {
   });
 });
 
+describe("Đầu hàng", () => {
+  it("ván đang chơi thì thua ngay, ván đã xong thì từ chối", () => {
+    const s = createPuzzle(HUONG_DAN, 7);
+    const t = transition(s, { kind: "surrender" });
+    assert.ok(t.ok);
+    assert.equal(t.state.phase, "lost");
+    assert.deepEqual(t.events, [{ type: "lost", reason: "surrender" }]);
+    assert.equal(t.state.score, s.score);
+    assert.deepEqual(transition(t.state, { kind: "surrender" }), { ok: false, reason: "finished" });
+  });
+});
+
 describe("bất biến và xác định", () => {
   it("lệnh sai không đổi gì (state, RNG, điểm, thanh)", () => {
     const s = setup(KHO, { "3,3": n("ySu", "kim") }, n("ySu", "moc"), { discardHeat: 1, score: 40 });

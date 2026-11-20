@@ -47,7 +47,9 @@ export type Phase = "playing" | "won" | "lost";
 
 export type Command =
   | { readonly kind: "place"; readonly row: number; readonly col: number }
-  | { readonly kind: "discard" };
+  | { readonly kind: "discard" }
+  /** Đầu hàng: ván kết thúc ngay, tính thua. */
+  | { readonly kind: "surrender" };
 
 /** Bộ luật một ván. Đổi bất kỳ trường nào phải tăng `version` để save cũ không bị hiểu sai. */
 export interface Ruleset {
@@ -146,7 +148,7 @@ export type PuzzleEvent =
   | { readonly type: "heat"; readonly heat: number }
   | { readonly type: "spawned"; readonly piece: Piece }
   | { readonly type: "won" }
-  | { readonly type: "lost"; readonly reason: "heat" };
+  | { readonly type: "lost"; readonly reason: "heat" | "surrender" };
 
 export type RejectReason =
   | "finished"

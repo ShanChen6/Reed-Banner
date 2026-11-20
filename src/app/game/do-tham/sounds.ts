@@ -37,6 +37,8 @@ export const REJECT: CuePlay = { id: "dotham.reject" };
 export function cuesForAction(before: DtState, after: DtState, action: DtAction): CuePlay[] {
   const out: CuePlay[] = [];
   if (action.type === "item") out.push({ id: `battle.skill.${action.element}` });
+  // Đầu hàng: không chạm bẫy nên chỉ có tiếng thua.
+  if (action.type === "surrender") return after.phase === "lost" ? [{ id: "dotham.lose" }] : [];
   if (after.phase === "lost" && before.phase !== "lost") return [...out, { id: "dotham.trap" }, { id: "dotham.lose", afterMs: LOSE_AFTER_TRAP_MS }];
   if (after.phase === "won" && before.phase !== "won") return [...out, { id: "dotham.win" }];
   if (before.shield === "active" && after.shield === "spent") out.push({ id: "dotham.shield" });

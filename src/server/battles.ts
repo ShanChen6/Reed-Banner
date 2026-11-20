@@ -501,6 +501,8 @@ function toAction(a: Record<string, unknown>): MatchAction | null {
         : null;
     case "timeout":
       return { type: "timeout" };
+    case "surrender":
+      return { type: "surrender" };
     case "whirl": {
       const whirl = toWhirl(a.whirl);
       return whirl ? { type: "whirl", whirl } : null;
