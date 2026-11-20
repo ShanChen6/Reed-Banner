@@ -26,6 +26,23 @@ test("khách chơi được trận Thao Luyện", async ({ page }) => {
   expectClean(problems);
 });
 
+test("Thao Luyện: Đầu hàng hỏi lại trước khi chốt thua", async ({ page }) => {
+  const problems = watchProblems(page);
+  await page.goto("/game/practice");
+  await expect(page.getByRole("grid", { name: "Bàn cờ" })).toBeVisible();
+  await page.getByRole("button", { name: "Đầu hàng" }).click();
+  const dialog = page.getByRole("dialog", { name: "Đầu hàng?" });
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole("button", { name: "Chơi tiếp" }).click();
+  await expect(dialog).toBeHidden();
+  await page.getByRole("button", { name: "Đầu hàng" }).click();
+  await dialog.getByRole("button", { name: "Đầu hàng" }).click();
+  // Chữ hiện ở cả thanh trạng thái lẫn bảng kết quả.
+  await expect(page.getByText("Chúa công thua", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: "Đầu hàng" })).toHaveCount(0);
+  expectClean(problems);
+});
+
 test("khách bị chặn ở chế độ xếp hạng và thấy màn nhắc đăng nhập", async ({ page }) => {
   const problems = watchProblems(page);
   await page.goto("/game/destiny");
