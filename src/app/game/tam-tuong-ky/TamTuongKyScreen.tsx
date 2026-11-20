@@ -64,8 +64,8 @@ import {
   type TtkRankedView,
   type TtkView,
 } from "./client";
-import { ModeGuideTabs } from "../ModeGuide";
-import { PlayCard } from "../PlayCard";
+import { ModeGuideTabs, type ModePlayTabs } from "../ModeGuide";
+import { PlayCard, usePlayCardExpanded } from "../PlayCard";
 import ModeTierPanel from "../leaderboard/ModeTierPanel";
 
 /** Thẻ Bậc thưởng của Tầm Tướng Ký: bậc theo số tướng đã khám phá (cả chế độ Thường và Hạng). */
@@ -93,6 +93,46 @@ function useIsDesktop(): boolean {
   );
 }
 
+/** Cỡ ô trong lưới (px) để tính số cột × hàng vừa hộp khi phóng to. */
+interface FitCell {
+  readonly minWidth: number;
+  readonly height: number;
+  readonly gap: number;
+}
+
+/**
+ * Vùng chơi phóng to trên máy tính: đo hộp chứa lưới (lớp `.ttk-fit`) và trả số cột × hàng vừa khít, để Vạn Vật Lục,
+ * Tướng Lục hiện nhiều ô hơn thay vì để trống (Shan 20/11/2026). Không phóng to thì `fit` là null, dùng cỡ trang cố định.
+ */
+function useFitGrid(cell: FitCell, wanted = true): { ref: React.RefCallback<HTMLDivElement> | undefined; fit: { cols: number; rows: number } | null } {
+  const expanded = usePlayCardExpanded();
+  const desktop = useIsDesktop();
+  const enabled = wanted && expanded && desktop;
+  const [fit, setFit] = useState<{ cols: number; rows: number } | null>(null);
+  const ref = useCallback(
+    (el: HTMLDivElement | null) => {
+      if (!el || typeof ResizeObserver === "undefined") return;
+      const measure = () => {
+        const cols = Math.max(1, Math.floor((el.clientWidth + cell.gap) / (cell.minWidth + cell.gap)));
+        const rows = Math.max(1, Math.floor((el.clientHeight + cell.gap) / (cell.height + cell.gap)));
+        setFit((prev) => (prev && prev.cols === cols && prev.rows === rows ? prev : { cols, rows }));
+      };
+      const observer = new ResizeObserver(measure);
+      observer.observe(el);
+      return () => {
+        observer.disconnect();
+        setFit(null);
+      };
+    },
+    [cell.gap, cell.height, cell.minWidth],
+  );
+  return enabled ? { ref, fit } : { ref: undefined, fit: null };
+}
+
+/** Ô Vạn Vật Lục: rộng tối thiểu 88px, cao 5.25rem; Tướng Lục: rộng tối thiểu 100px, cao 6.75rem. */
+const LIBRARY_CELL: FitCell = { minWidth: 88, height: 84, gap: 6 };
+const LEDGER_CELL: FitCell = { minWidth: 100, height: 108, gap: 8 };
+
 /**
  * Thẻ dưới hai ô (mục 7.5, mở rộng 06/11/2026): kết quả lần ghép vừa rồi, sổ công thức của yếu tố vừa bấm, hoặc
  * gợi ý vừa xin. Thẻ cao cố định nên đổi loại không đẩy bố cục.
@@ -111,7 +151,7 @@ interface Focus {
 
 type Mode = "normal" | "ranked";
 
-/** Màn chế độ: tab Thường / Hạng tuần (Hạng bật cùng cờ `TAM_TUONG_KY_ENABLED`). */
+/** Màn chế độ. Cờ Hạng bật thì thẻ "Chơi" tách thành hai thẻ Thường / Hạng tuần, cùng hàng với Ban thưởng và Hướng dẫn (Shan 20/11/2026). */
 export default function TamTuongKyScreen({
   initial = null,
   ranked = false,
@@ -124,25 +164,52 @@ export default function TamTuongKyScreen({
   initialMode?: Mode;
 }) {
   const [mode, setMode] = useState<Mode>(ranked ? initialMode : "normal");
+  const playTabs: ModePlayTabs | undefined = ranked
+    ? { items: MODE_TABS, value: mode, onChange: (m) => setMode(m === "ranked" ? "ranked" : "normal") }
+    : undefined;
+  return mode === "normal" ? <NormalMode initial={initial} playTabs={playTabs} /> : <RankedMode initial={initialRanked} playTabs={playTabs} />;
+}
+
+const MODE_TABS = [
+  { value: "normal", label: "Thường" },
+  { value: "ranked", label: "Hạng tuần" },
+] as const;
+
+const DEFAULT_BANNER = {
+  title: "Tầm Tướng Ký",
+  kicker: "Ghép yếu tố",
+  description: "Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng. Công thức biểu trưng của trò chơi, không phải diễn giải sử học.",
+};
+
+/**
+ * Khung chung của hai chế độ: banner, hàng thẻ (chế độ chơi, Ban thưởng, Hướng dẫn) và nội dung. Lúc chờ dữ liệu hay
+ * lỗi vẫn giữ hàng thẻ để đổi chế độ được.
+ */
+function TtkShell({ banner, playTabs, dock = false, children }: { banner: Partial<React.ComponentProps<typeof ModeBanner>>; playTabs?: ModePlayTabs; dock?: boolean; children: React.ReactNode }) {
   return (
-    <>
-      {ranked && (
-        <div className="campaign-atlas ui-mode-screen !pb-0">
-          <div role="group" aria-label="Chế độ" className={`mx-auto flex w-full gap-2 ${MODE_CONTENT_WIDTH}`}>
-            {(["normal", "ranked"] as const).map((m) => (
-              <ChoiceChip key={m} size="md" selected={mode === m} onClick={() => setMode(m)}>
-                {m === "normal" ? "Thường" : "Hạng tuần"}
-              </ChoiceChip>
-            ))}
-          </div>
-        </div>
-      )}
-      {mode === "normal" ? <NormalMode initial={initial} /> : <RankedMode initial={initialRanked} />}
-    </>
+    <main aria-label="Tầm Tướng Ký" className={`campaign-atlas ui-mode-screen flex flex-col ${dock ? "has-mobile-dock pb-28 lg:pb-10" : ""}`}>
+      <div className={`mx-auto flex w-full flex-col gap-4 ${MODE_CONTENT_WIDTH}`}>
+        <ModeCard>
+          <ModeBanner {...DEFAULT_BANNER} art="/art/home/tam-tuong-ky.webp" {...banner} />
+          <ModeGuideTabs scene="TAM_TUONG_KY" extraTabs={TTK_TIER_TAB} playTabs={playTabs}>
+            {children}
+          </ModeGuideTabs>
+        </ModeCard>
+      </div>
+    </main>
   );
 }
 
-function NormalMode({ initial }: { initial: TtkView | null }) {
+/** Chờ dữ liệu hoặc lỗi tải. */
+function TtkLoading({ error, label, playTabs }: { error: string | null; label: string; playTabs?: ModePlayTabs }) {
+  return (
+    <TtkShell banner={{}} playTabs={playTabs}>
+      {error ? <p role="alert" className="py-24 text-center">{error}</p> : <ModeSkeleton label={label} />}
+    </TtkShell>
+  );
+}
+
+function NormalMode({ initial, playTabs }: { initial: TtkView | null; playTabs?: ModePlayTabs }) {
   const [view, setView] = useState<TtkView | null>(initial);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [slots, setSlots] = useState<Slots>(EMPTY_SLOTS);
@@ -205,7 +272,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
       const n = noticeFor(catalog, r.response);
       setNotice(n);
       const res = altarResult(r.response, ++seq.current, [a, b]);
-      if (res) setRecent((list) => [{ first: a, second: b, result: res.kind === "miss" ? null : (res.nodeId ?? null), text: `${nameOf(catalog, a)} + ${nameOf(catalog, b)}: ${n.text}` }, ...list].slice(0, 5));
+      if (res) setRecent((list) => [{ first: a, second: b, result: res.kind === "miss" ? null : (res.nodeId ?? null), text: `${nameOf(catalog, a)} + ${nameOf(catalog, b)}: ${n.text}` }, ...list].slice(0, HISTORY_MAX));
       setCard(res ? { kind: "result", result: res } : null);
       setHintId(null);
       if (res?.kind === "new" && res.nodeId) setFlash({ id: res.nodeId, seq: res.seq });
@@ -245,33 +312,16 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
     });
   };
 
-  if (!view || !state)
-    return (
-      <main className="campaign-atlas ui-mode-screen">
-        <div className={`mx-auto w-full ${MODE_CONTENT_WIDTH}`}>
-          {loadError ? <p role="alert" className="py-24 text-center">{loadError}</p> : <ModeSkeleton label="Đang mở Tướng Lục…" />}
-        </div>
-      </main>
-    );
+  if (!view || !state) return <TtkLoading error={loadError} label="Đang mở Tướng Lục…" playTabs={playTabs} />;
 
   const tip = tutorialTip(state);
 
   return (
     <CatalogContext.Provider value={catalog}>
-    <main aria-label="Tầm Tướng Ký" className="has-mobile-dock campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
-      <div className={`mx-auto flex w-full flex-col gap-4 ${MODE_CONTENT_WIDTH}`}>
-        <ModeCard>
-        <ModeBanner
-          title="Tầm Tướng Ký"
-          kicker="Ghép yếu tố"
-          art="/art/home/tam-tuong-ky.webp"
-          description="Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng. Công thức biểu trưng của trò chơi, không phải diễn giải sử học."
-          stats={[{ label: "Phiếu", value: `${view.tickets}/${view.maxTickets}` }]}
-        />
-        <ModeGuideTabs scene="TAM_TUONG_KY" extraTabs={TTK_TIER_TAB}>
+    <TtkShell dock playTabs={playTabs} banner={{ stats: [{ label: "Phiếu", value: `${view.tickets}/${view.maxTickets}` }] }}>
 
         <PlayCard label="Đài Hợp Nguyên">
-        <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
+        <div className="ttk-board grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
           <Altar
             view={view}
             slots={slots}
@@ -341,10 +391,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
         </div>
         <MobileBar slots={slots} ready={ready} tried={tried} onCombine={combine} />
         </PlayCard>
-        </ModeGuideTabs>
-        </ModeCard>
-      </div>
-    </main>
+    </TtkShell>
     </CatalogContext.Provider>
   );
 }
@@ -367,7 +414,7 @@ function TriedWarning({ cost }: { cost: string }) {
 }
 
 /** Chế độ Hạng tuần (LT-06): túi nguyên tố tự chọn, kho tuần, ô đề cử chỉ có lời dẫn (A-23), cửa hàng bó, bảng tuần. */
-function RankedMode({ initial }: { initial: TtkRankedView | null }) {
+function RankedMode({ initial, playTabs }: { initial: TtkRankedView | null; playTabs?: ModePlayTabs }) {
   const [view, setView] = useState<TtkRankedView | null>(initial);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [slots, setSlots] = useState<Slots>(EMPTY_SLOTS);
@@ -404,14 +451,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
     else setNotice({ tone: "invalid", text: ERROR_TEXT[r.error] ?? ERROR_TEXT.network! });
   }, []);
 
-  if (!view)
-    return (
-      <main className="campaign-atlas ui-mode-screen">
-        <div className={`mx-auto w-full ${MODE_CONTENT_WIDTH}`}>
-          {loadError ? <p role="alert" className="py-24 text-center">{loadError}</p> : <ModeSkeleton label="Đang mở tuần Hạng…" />}
-        </div>
-      </main>
-    );
+  if (!view) return <TtkLoading error={loadError} label="Đang mở tuần Hạng…" playTabs={playTabs} />;
 
   const catalog = catalogForPack(view.packId);
   const ready = !pending && slots[0] !== null && slots[1] !== null;
@@ -436,24 +476,23 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
 
   return (
     <CatalogContext.Provider value={catalog}>
-    <main aria-label="Tầm Tướng Ký" className="has-mobile-dock campaign-atlas ui-mode-screen flex flex-col pb-28 lg:pb-10">
-      <div className={`mx-auto flex w-full flex-col gap-4 ${MODE_CONTENT_WIDTH}`}>
-        <ModeCard>
-        <ModeBanner
-          title={`Tầm Tướng Ký – Hạng tuần ${view.week}`}
-          kicker={`Hạng tuần ${view.week}`}
-          art="/art/home/tam-tuong-ky.webp"
-          description="Không có gợi ý. Mỗi lần ghép tiêu nguyên liệu, ghép sai cũng mất."
-          stats={[
-            { label: "Túi nguyên tố", value: view.units },
-            { label: "Điểm", value: view.points },
-            { label: "Đã tiêu", value: view.unitsSpent },
-          ]}
-        />
-        <ModeGuideTabs scene="TAM_TUONG_KY" extraTabs={TTK_TIER_TAB}>
+    <TtkShell
+      dock
+      playTabs={playTabs}
+      banner={{
+        title: `Tầm Tướng Ký – Hạng tuần ${view.week}`,
+        kicker: `Hạng tuần ${view.week}`,
+        description: "Không có gợi ý. Mỗi lần ghép tiêu nguyên liệu, ghép sai cũng mất.",
+        stats: [
+          { label: "Túi nguyên tố", value: view.units },
+          { label: "Điểm", value: view.points },
+          { label: "Đã tiêu", value: view.unitsSpent },
+        ],
+      }}
+    >
 
         <PlayCard label="Đài Hợp Nguyên">
-        <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
+        <div className="ttk-board grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
           <Panel id="ttk-ranked-altar" title="Đài Hợp Nguyên">
             <SlotsRow
               slots={slots}
@@ -514,10 +553,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
         </div>
         <MobileBar slots={slots} ready={ready} tried={tried} onCombine={combine} />
         </PlayCard>
-        </ModeGuideTabs>
-        </ModeCard>
-      </div>
-    </main>
+    </TtkShell>
     </CatalogContext.Provider>
   );
 }
@@ -723,7 +759,7 @@ function Library({
 }) {
   return (
     <Panel id="ttk-library" title="Vạn Vật Lục" hidden={hidden} className="lg:order-first">
-      <LibraryBody nodes={all} onPick={onPick} badges={badges} counts={counts} units={units} flash={flash} help={showHelp ? help : undefined} hintId={hintId} filter={filter} viewing={viewing} />
+      <LibraryBody nodes={all} onPick={onPick} badges={badges} counts={counts} units={units} flash={flash} help={showHelp ? help : undefined} hintId={hintId} filter={filter} viewing={viewing} fitToBox />
       {detail && <div className="lg:hidden">{detail}</div>}
     </Panel>
   );
@@ -743,6 +779,7 @@ function LibraryBody({
   autoFocus = false,
   viewing = null,
   layout,
+  fitToBox = false,
 }: {
   nodes: readonly CatalogNode[];
   onPick: (id: NodeId) => void;
@@ -757,6 +794,8 @@ function LibraryBody({
   viewing?: NodeId | null;
   /** Hộp thoại chọn nguyên liệu: số ô mỗi trang, số cột; `fixed` lấp ô trống và luôn hiện phân trang. Mặc định theo Vạn Vật Lục. */
   layout?: { readonly pageSize: number; readonly grid: string; readonly fixed?: boolean };
+  /** Vạn Vật Lục khi vùng chơi phóng to: lưới lấp chỗ trống của cột (`useFitGrid`). */
+  fitToBox?: boolean;
 }) {
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<string | null>(null);
@@ -779,7 +818,8 @@ function LibraryBody({
   // 2 cột × 8 hàng trên máy tính, 12 ô trên điện thoại (mục 7.6). Đổi từ khóa/nhóm thì về trang 1 (key mới);
   // có yếu tố mới trong danh sách đang lọc thì mở trang có nó.
   const desktop = useIsDesktop();
-  const pageSize = layout?.pageSize ?? (desktop ? 24 : 16);
+  const { ref: boxRef, fit } = useFitGrid(LIBRARY_CELL, fitToBox);
+  const pageSize = fit ? fit.cols * fit.rows : (layout?.pageSize ?? (desktop ? 24 : 16));
   const flashIndex = flash ? nodes.findIndex((n) => n.id === flash.id) : -1;
   const listKey = `${query}|${group ?? ""}${flashIndex >= 0 ? `|${flash!.seq}` : ""}`;
   return (
@@ -828,6 +868,8 @@ function LibraryBody({
         viewing={viewing ?? undefined}
         grid={layout?.grid}
         fixed={layout?.fixed}
+        boxRef={boxRef}
+        cols={fit?.cols}
       />
       {nodes.length === 0 && <p className="text-sm text-[var(--ash)]">Không có yếu tố nào khớp.</p>}
     </>
@@ -923,6 +965,8 @@ function LibraryPage({
   viewing,
   grid = "grid-cols-4 sm:grid-cols-8 lg:grid-cols-4",
   fixed = false,
+  boxRef,
+  cols,
 }: {
   nodes: readonly CatalogNode[];
   pageSize: number;
@@ -936,12 +980,14 @@ function LibraryPage({
   grid?: string;
   /** Luôn đủ `pageSize` chỗ (chỗ thiếu là ô vuông trống) và luôn hiện phân trang. */
   fixed?: boolean;
+  /** Hộp đo của `useFitGrid` (vùng chơi phóng to) và số cột đo được. */
+  boxRef?: React.RefCallback<HTMLDivElement>;
+  cols?: number;
 }) {
   const paged = usePagedItems(nodes, pageSize, initialPage);
   const cells = fixed ? padPage(paged.pageItems, pageSize) : paged.pageItems;
-  return (
-    <>
-      <ul {...paged.listProps} className={`grid gap-1.5 ${grid}`}>
+  const list = (
+      <ul {...paged.listProps} style={fitStyle(paged.listProps.style, cols)} className={`grid gap-1.5 ${grid}`}>
         {cells.map((n, i) =>
           n === null ? (
             <li key={`empty-${i}`} aria-hidden>
@@ -962,9 +1008,18 @@ function LibraryPage({
           ),
         )}
       </ul>
+  );
+  return (
+    <>
+      {boxRef ? <div ref={boxRef} className="ttk-fit">{list}</div> : list}
       <PageControls paged={paged} always={fixed} label="Trang Vạn Vật Lục" className="mt-auto" />
     </>
   );
+}
+
+/** Lưới theo số cột đo được (ghi đè lớp `grid-cols-*`). */
+function fitStyle(style: React.CSSProperties | undefined, cols: number | undefined): React.CSSProperties | undefined {
+  return cols ? { ...style, gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` } : style;
 }
 
 function Altar(props: {
@@ -1021,9 +1076,12 @@ function Altar(props: {
       )}
       {/* Cảnh báo đặt dưới nút để nút Hợp Nguyên không nhảy khi đặt lại một cặp đã thử (mục 7.4). */}
       {session && props.tried && <TriedWarning cost="trừ 1 lần ghép" />}
-      {/* Khi thẻ dưới hai ô đã nói kết quả hoặc gợi ý, ô thông báo chỉ còn cho máy đọc màn hình (không lặp chữ). */}
-      <div aria-live="polite" role="status" className={props.card && notice && notice.tone !== "invalid" ? "sr-only" : `min-h-12 rounded-lg border px-3 py-2 text-sm ${toneClass}`}>
-        {notice?.text ?? (session ? "Chọn hai yếu tố rồi bấm Hợp Nguyên." : view.tickets > 0 ? "Mở lượt để bắt đầu ghép." : ERROR_TEXT.noTicket)}
+      {/* Khi thẻ dưới hai ô đã nói kết quả hoặc gợi ý, ô thông báo chỉ còn cho máy đọc màn hình (không lặp chữ); khung
+          ngoài vẫn giữ chỗ để phần dưới không nhảy lên xuống sau mỗi lần ghép (Shan 20/11/2026). */}
+      <div className="min-h-12">
+        <div aria-live="polite" role="status" className={props.card && notice && notice.tone !== "invalid" ? "sr-only" : `min-h-12 rounded-lg border px-3 py-2 text-sm ${toneClass}`}>
+          {notice?.text ?? (session ? "Chọn hai yếu tố rồi bấm Hợp Nguyên." : view.tickets > 0 ? "Mở lượt để bắt đầu ghép." : ERROR_TEXT.noTicket)}
+        </div>
       </div>
       <p className="text-sm">
         {session ? (
@@ -1241,16 +1299,18 @@ function HintCard({ hint, onUse, onFilterGroup }: { hint: Hint | null; onUse: (i
   );
 }
 
-/** Lịch sử 5 lần ghép gần nhất dạng icon: bấm một dòng để đặt lại đúng cặp đó vào hai ô. */
+/**
+ * Lịch sử 5 lần ghép gần nhất dạng icon: bấm một dòng để đặt lại đúng cặp đó vào hai ô. Khung luôn cao đủ 5 dòng
+ * (Shan 20/11/2026): chưa ghép gì thì để trống, ghép thêm không đẩy bố cục xuống.
+ */
 function History({ entries, onReplay }: { entries: readonly HistoryEntry[]; onReplay: (e: HistoryEntry) => void }) {
-  if (entries.length === 0) return null;
   return (
     <section aria-label="Lần ghép gần đây" className="flex flex-col gap-1">
-      <h3 className="text-caption text-[var(--ash)]">Lần ghép gần đây, bấm để ghép lại</h3>
-      <ol className="flex flex-col gap-1">
-        {entries.map((e, i) => (
+      <h3 className="text-caption text-[var(--ash)]">Lần ghép gần đây{entries.length > 0 && ", bấm để ghép lại"}</h3>
+      <ol className="flex h-[calc(5*1.625rem+4*0.25rem)] flex-col gap-1 overflow-hidden">
+        {entries.slice(0, HISTORY_MAX).map((e, i) => (
           <li key={i}>
-            <button type="button" onClick={() => onReplay(e)} aria-label={`${e.text} Đặt lại cặp này`} title={e.text} className="flex w-full items-center gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-left text-caption hover:border-[var(--frame-line-mid)]">
+            <button type="button" onClick={() => onReplay(e)} aria-label={`${e.text} Đặt lại cặp này`} title={e.text} className="flex h-[1.625rem] w-full items-center gap-1.5 rounded-md border border-transparent px-1.5 text-left text-caption hover:border-[var(--frame-line-mid)]">
               <MiniGlyph id={e.first} />
               <span aria-hidden>+</span>
               <MiniGlyph id={e.second} />
@@ -1264,6 +1324,8 @@ function History({ entries, onReplay }: { entries: readonly HistoryEntry[]; onRe
     </section>
   );
 }
+
+const HISTORY_MAX = 5;
 
 function ResultName({ id }: { id: NodeId }) {
   return <>{nameOf(useCatalog(), id)}</>;
@@ -1352,7 +1414,9 @@ function Ledger({
   const sections = ledgerSections(groups);
   const active = groups.find((g) => g.id === group) ?? groups.find((g) => g.id === defaultLedgerGroup(groups)) ?? groups[0];
   const activeSection = active ? sectionOf(active.id) : undefined;
-  const pageSize = useIsDesktop() ? 9 : 6;
+  const desktop = useIsDesktop();
+  const { ref: boxRef, fit } = useFitGrid(LEDGER_CELL);
+  const pageSize = fit ? fit.cols * fit.rows : desktop ? 9 : 6;
   const focusIndex = active && focus ? active.entries.findIndex((e) => e.nodeId === focus.id) : -1;
   const [detail, setDetail] = useState<LedgerEntry | null>(null);
   const pickSection = (sec: (typeof sections)[number]) => onGroup((defaultLedgerGroup(sec.groups) ?? sec.groups[0]!.id) as LedgerGroupId);
@@ -1412,6 +1476,8 @@ function Ledger({
             initialPage={focusIndex >= 0 ? Math.floor(focusIndex / pageSize) : 0}
             focusId={focusIndex >= 0 ? focus!.id : undefined}
             onOpen={setDetail}
+            boxRef={boxRef}
+            cols={fit?.cols}
           />
         </>
       )}
@@ -1426,23 +1492,30 @@ function LedgerPage({
   initialPage,
   focusId,
   onOpen,
+  boxRef,
+  cols,
 }: {
   entries: readonly LedgerEntry[];
   pageSize: number;
   initialPage: number;
   focusId?: NodeId;
   onOpen: (e: LedgerEntry) => void;
+  boxRef?: React.RefCallback<HTMLDivElement>;
+  cols?: number;
 }) {
   const paged = usePagedItems(entries, pageSize, initialPage);
-  return (
-    <>
-      <ul {...paged.listProps} className="grid grid-cols-3 gap-2 sm:grid-cols-6 lg:grid-cols-3">
+  const list = (
+      <ul {...paged.listProps} style={fitStyle(paged.listProps.style, cols)} className="grid grid-cols-3 gap-2 sm:grid-cols-6 lg:grid-cols-3">
         {paged.pageItems.map((e) => (
           <li key={e.nodeId} className={e.nodeId === focusId ? "rounded-lg motion-safe:animate-[ttk-glow_1.1s_ease-out_2]" : undefined}>
             <LedgerTile entry={e} onOpen={onOpen} />
           </li>
         ))}
       </ul>
+  );
+  return (
+    <>
+      {boxRef ? <div ref={boxRef} className="ttk-fit">{list}</div> : list}
       <PageControls paged={paged} label="Trang Tướng Lục" className="mt-auto" />
     </>
   );
