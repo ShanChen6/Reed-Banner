@@ -193,6 +193,25 @@ function HpBar({ ratio }: { ratio: number }) {
   );
 }
 
+/** Lượt viễn chinh đã xem bảng kết quả (lưu id lượt gần nhất trên trình duyệt). */
+const RESULT_SEEN_KEY = "coLau.expedition.resultSeen";
+
+function resultSeen(runId: string): boolean {
+  try {
+    return window.localStorage.getItem(RESULT_SEEN_KEY) === runId;
+  } catch {
+    return false;
+  }
+}
+
+function markResultSeen(runId: string) {
+  try {
+    window.localStorage.setItem(RESULT_SEEN_KEY, runId);
+  } catch {
+    /* không lưu được thì lần sau vẫn hiện kết quả, không hỏng gì */
+  }
+}
+
 export default function ExpeditionScreen() {
   const { go } = useScene();
   const [overview, setOverview] = useState<Overview | null>(null);
@@ -221,6 +240,13 @@ export default function ExpeditionScreen() {
     setOverview(o);
     setProfile(p.profile);
     setTarget(null);
+    // Bảng kết quả chỉ hiện ở lần vào đầu tiên sau khi lượt kết thúc; vào lại thì về màn chọn sa bàn.
+    if (o.run?.result) {
+      if (resultSeen(o.run.id)) {
+        setSetup(true);
+        setMapId(o.run.map);
+      } else markResultSeen(o.run.id);
+    }
   }, []);
 
   useEffect(() => {

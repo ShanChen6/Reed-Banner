@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { filterHeroes } from "../../src/app/game/arena/HeroGrid";
+import { filterHeroes } from "../../src/app/game/arena/HeroFilterBar";
 import LeaderBuildPicker from "../../src/app/game/arena/LeaderBuildPicker";
 
 const heroes = [

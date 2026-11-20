@@ -20,6 +20,7 @@ import {
   libraryNodes,
   noticeFor,
   pickInto,
+  padPage,
   pickerGrid,
   putInto,
   recipeBook,
@@ -68,19 +69,17 @@ describe("Đài Hợp Nguyên: chọn ô", () => {
     assert.deepEqual(putInto(["elt.moc", "elt.thuy"], 0, "elt.kim"), ["elt.kim", "elt.thuy"]);
   });
 
-  it("hộp thoại chọn nguyên liệu co lưới theo khung nhìn: vừa màn hình, không cần cuộn", () => {
-    // Máy tính 1920×1080 trừ thanh trình duyệt (~860px khung nhìn): 6 cột × 5 hàng.
+  it("hộp thoại chọn nguyên liệu co lưới theo khung nhìn, trang thiếu lấp ô trống", () => {
     assert.deepEqual(pickerGrid(1920, 860), { cols: 6, rows: 5 });
-    // Laptop thấp hơn: ít hàng hơn, vẫn 6 cột.
     assert.deepEqual(pickerGrid(1366, 640), { cols: 6, rows: 3 });
-    // Điện thoại: 4 cột; màn rất thấp vẫn giữ tối thiểu 2 hàng.
     assert.deepEqual(pickerGrid(390, 760), { cols: 4, rows: 5 });
     assert.deepEqual(pickerGrid(740, 360), { cols: 6, rows: 2 });
-    // Hộp thoại (phần cố định 292px + mỗi hàng 90px, trừ khe hàng cuối) không cao hơn khung nhìn trừ lề 2rem.
     for (const [w, h] of [[1920, 860], [1366, 640], [390, 667], [1024, 700]] as const) {
       const { rows } = pickerGrid(w, h);
       assert.ok(292 + rows * 90 - 6 <= h, `${w}×${h}`);
     }
+    assert.deepEqual(padPage(["a", "b"], 4), ["a", "b", null, null]);
+    assert.deepEqual(padPage(["a", "b"], 2), ["a", "b"]);
   });
 
   it("chọn cùng yếu tố hai lần (A+A)", () => {

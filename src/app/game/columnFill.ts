@@ -17,7 +17,7 @@ export interface ColumnFillEntry {
   readonly tips: readonly string[];
 }
 
-export type ColumnFillMode = "daily" | "arena" | "destiny" | "survival" | "trial";
+export type ColumnFillMode = "daily" | "arena" | "destiny" | "survival" | "trial" | "clearPath";
 
 const NAM_QUOC_SON_HA: ColumnPoem = {
   lines: ["Nam quốc sơn hà Nam đế cư,", "Tiệt nhiên định phận tại thiên thư.", "Như hà nghịch lỗ lai xâm phạm,", "Nhữ đẳng hành khan thủ bại hư."],
@@ -75,6 +75,18 @@ export const COLUMN_FILL: Readonly<Record<ColumnFillMode, ColumnFillEntry>> = {
     tips: [
       "Đánh lại tầng đã qua bao nhiêu lần cũng được; Đá Cường Hóa chỉ nhận lần đầu.",
       "Đọc luật tầng trước khi chọn tướng kèm: nghề hoặc hệ bị cấm sẽ mờ đi.",
+    ],
+  },
+  // Khai Lộ (Shan chọn phương án A 20/11/2026): tranh mở đường, prompt ở /mnt/project-files/art/prompts/khai-lo-nen.md.
+  // Shan vẽ xong thì lưu public/art/column-fill/clear-path.webp và điền `art: "/art/column-fill/clear-path.webp"`.
+  clearPath: {
+    poem: {
+      lines: ["Thôn hậu thôn tiền đạm tự yên,", "Bán vô bán hữu tịch dương biên.", "Mục đồng địch lý quy ngưu tận,", "Bạch lộ song song phi hạ điền."],
+      source: "Trần Nhân Tông, Thiên Trường vãn vọng",
+    },
+    tips: [
+      "Khối càng lớn điểm càng cao: gom quân cùng hệ lại rồi mới xóa.",
+      "Để dành đạo cụ cho mấy quân lẻ cuối bàn.",
     ],
   },
 };

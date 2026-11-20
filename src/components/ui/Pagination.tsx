@@ -100,8 +100,9 @@ export function usePagedItems<T>(items: readonly T[], pageSize: number, initialP
 }
 
 /** Nút Trang trước/sau kèm "Trang x/y" cho `usePagedItems`; ẩn khi chỉ có một trang. */
-export function PageControls({ paged, label, className }: { paged: PagedItems<unknown>; label?: string; className?: string }) {
-  if (paged.pages <= 1) return null;
+/** `always`: hiện cả khi chỉ một trang (hai nút khóa), để khung cố định không đổi cỡ. */
+export function PageControls({ paged, label, className, always = false }: { paged: PagedItems<unknown>; label?: string; className?: string; always?: boolean }) {
+  if (paged.pages <= 1 && !always) return null;
   return (
     <Pagination
       label={label}

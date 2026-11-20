@@ -36,7 +36,9 @@ import {
   sectionOf,
   noticeFor,
   pickInto,
+  padPage,
   pickerGrid,
+  type PickerGrid,
   recipeBook,
   swapSlots,
   tutorialTip,
@@ -45,7 +47,6 @@ import {
   type LedgerEntry,
   type LedgerGroupId,
   type Notice,
-  type PickerGrid,
   type Slots,
 } from "./altar";
 import {
@@ -754,8 +755,8 @@ function LibraryBody({
   filter?: { readonly group: string | null; readonly seq: number } | null;
   autoFocus?: boolean;
   viewing?: NodeId | null;
-  /** Hộp thoại chọn nguyên liệu: số ô mỗi trang và số cột theo chỗ trống của màn hình. Mặc định theo Vạn Vật Lục. */
-  layout?: { readonly pageSize: number; readonly grid: string };
+  /** Hộp thoại chọn nguyên liệu: số ô mỗi trang, số cột; `fixed` lấp ô trống và luôn hiện phân trang. Mặc định theo Vạn Vật Lục. */
+  layout?: { readonly pageSize: number; readonly grid: string; readonly fixed?: boolean };
 }) {
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<string | null>(null);
@@ -768,6 +769,13 @@ function LibraryBody({
   }
   const nodes = filterNodes(all, query, group);
   const groups = groupsOf(all);
+  // Hàng tab nhóm cuộn ngang: nhóm đang chọn (bấm hoặc gợi ý đặt sẵn) tự cuộn vào giữa hàng.
+  const tabsRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const row = tabsRef.current;
+    const tab = row?.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if (row && tab) centerInRow(row, tab);
+  }, [group]);
   // 2 cột × 8 hàng trên máy tính, 12 ô trên điện thoại (mục 7.6). Đổi từ khóa/nhóm thì về trang 1 (key mới);
   // có yếu tố mới trong danh sách đang lọc thì mở trang có nó.
   const desktop = useIsDesktop();
@@ -788,7 +796,7 @@ function LibraryBody({
         />
       </label>
       {/* Mọi nhóm là một hàng tab, cuộn ngang khi chật (hộp thoại chọn nguyên liệu tính chiều cao theo một hàng). */}
-      <div className="-mx-1 flex items-center gap-1.5 overflow-x-auto px-1 pb-1" role="group" aria-label="Lọc theo nhóm">
+      <div ref={tabsRef} className="-mx-1 flex items-center gap-1.5 overflow-x-auto scroll-smooth px-1 pb-1" role="group" aria-label="Lọc theo nhóm">
         {[{ id: null, name: "Tất cả" }, ...groups].map((g) => (
           <button
             key={g.id ?? "all"}
@@ -819,10 +827,18 @@ function LibraryBody({
         hintId={hintId ?? undefined}
         viewing={viewing ?? undefined}
         grid={layout?.grid}
+        fixed={layout?.fixed}
       />
       {nodes.length === 0 && <p className="text-sm text-[var(--ash)]">Không có yếu tố nào khớp.</p>}
     </>
   );
+}
+
+/** Cuộn ngang `row` để `tab` nằm giữa (chỉ cuộn hàng, không kéo cả trang như scrollIntoView). */
+function centerInRow(row: HTMLElement, tab: HTMLElement) {
+  const r = row.getBoundingClientRect();
+  const t = tab.getBoundingClientRect();
+  row.scrollLeft += t.left + t.width / 2 - (r.left + r.width / 2);
 }
 
 /** Nguồn của hộp thoại chọn nguyên liệu: cùng danh sách với Vạn Vật Lục của chế độ đang chơi. */
@@ -883,7 +899,7 @@ function PickerDialog({ index, picker, onClose }: { index: 0 | 1 | null; picker:
             counts={picker.counts}
             units={picker.units}
             autoFocus
-            layout={{ pageSize: grid.cols * grid.rows, grid: grid.cols === 6 ? "grid-cols-6" : "grid-cols-4" }}
+            layout={{ pageSize: grid.cols * grid.rows, grid: grid.cols === 6 ? "grid-cols-6" : "grid-cols-4", fixed: true }}
             onPick={(id) => {
               picker.onPick(index, id);
               onClose();
@@ -906,6 +922,7 @@ function LibraryPage({
   hintId,
   viewing,
   grid = "grid-cols-4 sm:grid-cols-8 lg:grid-cols-4",
+  fixed = false,
 }: {
   nodes: readonly CatalogNode[];
   pageSize: number;
@@ -917,12 +934,20 @@ function LibraryPage({
   hintId?: NodeId;
   viewing?: NodeId;
   grid?: string;
+  /** Luôn đủ `pageSize` chỗ (chỗ thiếu là ô vuông trống) và luôn hiện phân trang. */
+  fixed?: boolean;
 }) {
   const paged = usePagedItems(nodes, pageSize, initialPage);
+  const cells = fixed ? padPage(paged.pageItems, pageSize) : paged.pageItems;
   return (
     <>
       <ul {...paged.listProps} className={`grid gap-1.5 ${grid}`}>
-        {paged.pageItems.map((n) => (
+        {cells.map((n, i) =>
+          n === null ? (
+            <li key={`empty-${i}`} aria-hidden>
+              <span className="block h-[5.25rem] rounded-lg border border-dashed border-[var(--frame-line-soft)] bg-[var(--wood-lo)]/40" />
+            </li>
+          ) : (
           <li key={n.id}>
             <NodeChip
               node={n}
@@ -934,9 +959,10 @@ function LibraryPage({
               selected={n.id === viewing}
             />
           </li>
-        ))}
+          ),
+        )}
       </ul>
-      <PageControls paged={paged} label="Trang Vạn Vật Lục" className="mt-auto" />
+      <PageControls paged={paged} always={fixed} label="Trang Vạn Vật Lục" className="mt-auto" />
     </>
   );
 }
@@ -973,7 +999,6 @@ function Altar(props: {
     <Panel id="ttk-altar" title="Đài Hợp Nguyên">
       <SlotsRow slots={slots} busy={pending} result={props.card?.kind === "result" ? props.card.result : null} onClear={props.onClear} onSwap={props.onSwap} picker={props.picker} />
       <AltarCard card={props.card} state={props.state} onUse={props.onUseResult} onFilterGroup={props.onFilterGroup} />
-      <p className="text-caption text-[var(--ash)]">Thứ tự ô có nghĩa: “Mộc + Thủy” khác “Thủy + Mộc”.</p>
       {session ? (
         <button
           type="button"
@@ -1390,7 +1415,6 @@ function Ledger({
           />
         </>
       )}
-      <p className="text-caption text-[var(--ash)]">Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội.</p>
       <HeroDetail entry={detail} onClose={() => setDetail(null)} />
     </Panel>
   );
