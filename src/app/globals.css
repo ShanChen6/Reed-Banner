@@ -1630,6 +1630,21 @@ html {
 .play-card-corner {
   color: var(--frame-gold-hi);
 }
+/* Bảng tên chế độ khi phóng to: khung đồng như ở thanh đầu trang, nằm giữa mép trên khung, nửa trên nhô ra lề ngoài nên
+   không chiếm chỗ của màn chơi. Lề trên ngoài khung rộng hơn một chút để bảng không chạm mép màn hình. */
+.play-card-title {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 40;
+  max-width: calc(100% - 8rem);
+  transform: translate(-50%, -55%);
+  pointer-events: none;
+}
+.play-card:fullscreen:has(.play-card-title),
+.play-card--overlay:has(.play-card-title) {
+  padding-top: max(clamp(1.1rem, 1.6vw, 1.4rem), env(safe-area-inset-top));
+}
 /* Màn có thanh dính đáy (Trận Đồ, Tầm Tướng Ký trên điện thoại): chừa thêm chỗ để cuộn được nội dung lên trên thanh. */
 @media (width < 64rem) {
   .play-card:fullscreen:has(.mobile-dock),
