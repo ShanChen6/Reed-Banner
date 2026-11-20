@@ -141,7 +141,7 @@ export default function Home() {
                 bày binh, dò bẫy, đọc sử, từng bước thu non sông về một mối.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <PlayButton className="text-base">Chơi ngay · không cần tài khoản</PlayButton>
+                <PlayButton className="text-base">Chơi ngay, không cần tài khoản</PlayButton>
                 <a
                   href="#modes"
                   className="fx-btn-ghost inline-flex items-center rounded-lg px-5 py-2.5 font-semibold text-title-on-wood transition hover:brightness-125"
@@ -160,7 +160,7 @@ export default function Home() {
                   </div>
                 ))}
               </dl>
-              <p className="mt-5 text-sm text-on-wood-soft/80">Chạy ngay trên trình duyệt · Máy tính và điện thoại xoay ngang · Miễn phí</p>
+              <p className="mt-5 text-sm text-on-wood-soft/80">Chạy ngay trên trình duyệt, máy tính lẫn điện thoại xoay ngang, miễn phí</p>
             </div>
 
             <div className="relative mb-14 ml-8 md:mb-12 md:ml-6">

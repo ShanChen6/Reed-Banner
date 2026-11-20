@@ -213,7 +213,7 @@ function MissionList({
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-semibold">{n.title}</span>
                 <span className="block truncate text-caption opacity-75">
-                  {STATUS_TEXT[s]} · Chương {ROMAN[n.chapter]} ·{" "}
+                  {STATUS_TEXT[s]}, Chương {ROMAN[n.chapter]},{" "}
                   {n.rewards.firstClearGold} vàng lần đầu
                 </span>
               </span>
@@ -249,7 +249,7 @@ export function ChapterPanel({
       <div className="atlas-scroll flex min-h-0 flex-1 flex-col gap-3">
         <header>
           <p className="text-caption font-semibold tracking-widest uppercase opacity-75">
-            Chương {roman} · {finished}/{chapter.missions.length} nhiệm vụ
+            Chương {roman}, {finished}/{chapter.missions.length} nhiệm vụ
           </p>
           <h2 id="atlas-panel-title" className="text-2xl font-black">
             {chapter.title}
@@ -473,7 +473,7 @@ export function StrongholdPanel({
           />
           <div className="min-w-0 flex-1">
             <p className="text-caption font-semibold tracking-widest uppercase opacity-75">
-              {s.faction ? "Cứ điểm sứ quân" : "Đầu não"} · {STATE_TEXT[state]}
+              {s.faction ? "Cứ điểm sứ quân" : "Đầu não"}, {STATE_TEXT[state]}
             </p>
             <h2
               id="atlas-panel-title"
@@ -483,7 +483,7 @@ export function StrongholdPanel({
             </h2>
             <p className="text-[15px] italic">
               {strongholdLeader(s)}
-              {record ? ` · ${record.title}` : ""}
+              {record ? `, ${record.title}` : ""}
             </p>
           </div>
           <button
@@ -507,7 +507,7 @@ export function StrongholdPanel({
           <dt className="opacity-70">Địa danh</dt>
           <dd>
             {CERTAINTY_TEXT[s.certainty]}
-            {s.modernRegion ? ` · ngày nay: ${s.modernRegion}` : ""}
+            {s.modernRegion ? `, ngày nay: ${s.modernRegion}` : ""}
           </dd>
           {record && record.aliases.length > 0 && (
             <>
@@ -724,7 +724,7 @@ export function AtlasHeader({
         >
           Sử ký Đại Việt
         </h1>
-        <p className="text-caption text-on-wood-soft">Loạn 12 sứ quân · thế kỷ X</p>
+        <p className="text-caption text-on-wood-soft">Loạn 12 sứ quân, thế kỷ X</p>
       </div>
       <nav
         aria-label="Màn Sử ký"

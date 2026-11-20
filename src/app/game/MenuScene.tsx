@@ -53,18 +53,18 @@ const MODES: readonly Mode[] = [
     art: "campaign",
     kicker: "Cốt truyện",
     featured: true,
-    status: "Sáu chương sử Việt · tái đấu sứ quân",
+    status: "Sáu chương sử Việt, tái đấu sứ quân",
     cta: "Dẹp loạn",
   },
-  { scene: "TRIAL", group: "battle", title: "Tháp Thí Luyện", text: MODE_TEXT.TRIAL, art: "trial", kicker: "Leo tháp", status: "100 tầng · thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
-  { scene: "DESTINY", group: "battle", title: "Tháp Thiên Mệnh", text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp", status: "Mỗi chu kỳ một vận · tranh hạng thiên hạ", cta: "Leo tháp", lockedText: "Sắp khai mở · tiến trình vẫn được giữ" },
+  { scene: "TRIAL", group: "battle", title: "Tháp Thí Luyện", text: MODE_TEXT.TRIAL, art: "trial", kicker: "Leo tháp", status: "100 tầng, thưởng Đá Cường Hóa", cta: "Leo tháp", lockedText: "Sắp khai mở, tiến trình vẫn được giữ" },
+  { scene: "DESTINY", group: "battle", title: "Tháp Thiên Mệnh", text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp", status: "Mỗi chu kỳ một vận, tranh hạng thiên hạ", cta: "Leo tháp", lockedText: "Sắp khai mở, tiến trình vẫn được giữ" },
   { scene: "SURVIVAL", group: "battle", title: "Trấn Ải", text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Sinh tồn", status: "Ghi danh bảng công trạng mỗi tuần", cta: "Giữ ải" },
   { scene: "DAILY", group: "battle", title: "Nhật Lệnh", text: MODE_TEXT.DAILY, art: "daily", kicker: "Mỗi ngày", status: "Lệnh mới ban mỗi ngày", cta: "Nhận lệnh" },
   { scene: "ARENA", group: "battle", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Đấu người", status: "Tranh ngôi đầu bảng mỗi tuần", cta: "Thách đấu" },
-  { scene: "FORMATION", group: "puzzle", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Vào trận ngay · không cần tài khoản", cta: "Bày trận" },
-  { scene: "KHAI_LO", group: "puzzle", title: "Khai Lộ", text: MODE_TEXT.KHAI_LO, art: "khai-lo", kicker: "Giải đố", status: "Giải đố ngay · không cần tài khoản", cta: "Giải đố" },
-  { scene: "DO_THAM", group: "puzzle", title: "Do Thám", text: MODE_TEXT.DO_THAM, art: "do-tham", kicker: "Giải đố", status: "Dò bẫy ngay · không cần tài khoản", cta: "Do thám" },
-  { scene: "SU_LO", group: "puzzle", title: "Sử Lộ", text: MODE_TEXT.SU_LO, art: "su-lo", kicker: "Học sử", status: "Chơi thử ngay · không cần tài khoản", cta: "Lên đường" },
+  { scene: "FORMATION", group: "puzzle", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Vào trận ngay, không cần tài khoản", cta: "Bày trận" },
+  { scene: "KHAI_LO", group: "puzzle", title: "Khai Lộ", text: MODE_TEXT.KHAI_LO, art: "khai-lo", kicker: "Giải đố", status: "Giải đố ngay, không cần tài khoản", cta: "Giải đố" },
+  { scene: "DO_THAM", group: "puzzle", title: "Do Thám", text: MODE_TEXT.DO_THAM, art: "do-tham", kicker: "Giải đố", status: "Dò bẫy ngay, không cần tài khoản", cta: "Do thám" },
+  { scene: "SU_LO", group: "puzzle", title: "Sử Lộ", text: MODE_TEXT.SU_LO, art: "su-lo", kicker: "Học sử", status: "Chơi thử ngay, không cần tài khoản", cta: "Lên đường" },
   { scene: "TAM_TUONG_KY", group: "puzzle", title: "Tầm Tướng Ký", text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Một phiếu, một lượt tìm tướng", cta: "Ghép tướng", lockedText: "Sắp khai mở" },
   { scene: "EXPEDITION", group: "battle", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, art: "vien-chinh", kicker: "Hành quân", status: "Bày mưu tính kế trên sa bàn", cta: "Hành quân", lockedText: "Sắp khai mở" },
 ];
@@ -304,7 +304,7 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
         <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-2 text-sm">
           {locked ? (
             <span className="flex items-center gap-1.5 text-[var(--ash)]">
-              <LockGlyph /> {mode.lockedText ?? "Sắp khai mở · tiến trình vẫn được giữ"}
+              <LockGlyph /> {mode.lockedText ?? "Sắp khai mở, tiến trình vẫn được giữ"}
             </span>
           ) : (
             <>
@@ -359,7 +359,7 @@ function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
         <p className="text-[15px] leading-snug text-[var(--on-wood)]/90">{mode.text}</p>
         {mode.scene ? (
           <div className="mt-auto flex items-center justify-between gap-2 text-sm">
-            <span className="text-[var(--ash)]">{mode.note ?? "Chơi thường · có xếp hạng khi bật"}</span>
+            <span className="text-[var(--ash)]">{mode.note ?? "Chơi thường, có xếp hạng khi bật"}</span>
             <span className="home-enter flex items-center gap-1 font-serif font-semibold">Vào <span aria-hidden>›</span></span>
           </div>
         ) : (

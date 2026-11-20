@@ -28,6 +28,6 @@ describe("Công Trạng (V2-06)", () => {
     assert.equal(r.signedIn, true);
     assert.deepEqual(r.items.map((i) => [i.source, i.rank, i.gold]), [["survival", 3, 300], ["formation:kho", 2, 150]]);
     assert.equal(r.items[1]!.participants, 2);
-    assert.equal(r.items[1]!.title, "Trận Đồ · Khó");
+    assert.equal(r.items[1]!.title, "Trận Đồ – Khó");
   });
 });

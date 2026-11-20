@@ -1190,7 +1190,7 @@ export default function DemoGame({
           <p className="rounded-md border border-frame-line bg-frame-gold/10 px-3 py-1 text-sm text-title-on-wood">
             {storyNodeById(scenario.nodeId)?.title}
             {labels.length > 1 &&
-              ` · giai đoạn ${scenario.phaseIndex + 1}/${labels.length}: ${labels[scenario.phaseIndex]}`}
+              `, giai đoạn ${scenario.phaseIndex + 1}/${labels.length}: ${labels[scenario.phaseIndex]}`}
             {phaseTurns ? (
               <>
                 : {labels.length > 1 ? "đã giữ" : "cầm cự"}{" "}

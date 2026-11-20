@@ -53,10 +53,10 @@ export function describe(state: BattleState, e: BattleEvent): string | null {
         : null;
     case "shuffle":
       return "Hết nước đi, bàn cờ được xáo lại";
-    case "chase": return `${name(e.side,e.fighter)} · ${CHASE_PASSIVES[e.passive].name}: truy kích → ${name(e.target.side,e.target.fighter)} (nhịp ${e.depth})`;
+    case "chase": return `${name(e.side,e.fighter)}, ${CHASE_PASSIVES[e.passive].name}: truy kích → ${name(e.target.side,e.target.fighter)} (nhịp ${e.depth})`;
     case "combo": {
       const passive=COMBO_PASSIVES[e.passive].name;
-      return `${name(e.side,e.fighter)} · ${passive}: ${e.outcome==='opened'?'sẵn sàng phối hợp':e.outcome==='used'?'đã tận dụng':e.outcome==='expired'?'cơ hội hết hạn':'cơ hội bị phá'}`;
+      return `${name(e.side,e.fighter)}, ${passive}: ${e.outcome==='opened'?'sẵn sàng phối hợp':e.outcome==='used'?'đã tận dụng':e.outcome==='expired'?'cơ hội hết hạn':'cơ hội bị phá'}`;
     }
     case "spirit": {
       const firstAlive = state.sides[e.side].fighters.findIndex(

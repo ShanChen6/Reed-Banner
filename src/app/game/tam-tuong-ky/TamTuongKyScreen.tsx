@@ -435,7 +435,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
       <div className={`mx-auto flex w-full flex-col gap-4 ${MODE_CONTENT_WIDTH}`}>
         <ModeCard>
         <ModeBanner
-          title={`Tầm Tướng Ký · Hạng tuần ${view.week}`}
+          title={`Tầm Tướng Ký – Hạng tuần ${view.week}`}
           kicker={`Hạng tuần ${view.week}`}
           art="/art/home/tam-tuong-ky.webp"
           description="Không có gợi ý. Mỗi lần ghép tiêu nguyên liệu, ghép sai cũng mất."
@@ -468,7 +468,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
               {notice?.text ?? "Đoán tướng từ lời dẫn, rồi ghép theo công thức đã học ở chế độ Thường."}
             </div>
             <div className="flex flex-wrap items-center gap-2 text-sm">
-              <span>Cửa hàng: {view.shop.price} vàng một bó · tuần này {view.shop.bought}/{view.shop.max} · vàng: {view.gold}</span>
+              <span>Cửa hàng: {view.shop.price} vàng một bó, tuần này {view.shop.bought}/{view.shop.max}, vàng: {view.gold}</span>
               <button type="button" disabled={pending || view.shop.bought >= view.shop.max || view.gold < view.shop.price} onClick={buy} className="min-h-11 rounded border border-[var(--frame-gold)] px-3 font-semibold disabled:opacity-50">
                 Mua 1 bó
               </button>
@@ -477,14 +477,14 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
 
           <Library nodes={rankedNodes(catalog, view.stock)} counts={view.stock} units={view.units} onPick={(id) => setSlots((s) => pickInto(s, id))} hidden={false} />
 
-          <Panel id="ttk-featured" title={`Đề cử tuần · ${view.featured.filter((f) => f.found).length}/${view.featured.length}`}>
+          <Panel id="ttk-featured" title={`Đề cử tuần – ${view.featured.filter((f) => f.found).length}/${view.featured.length}`}>
             <ul className="flex flex-col gap-2">
               {view.featured.map((f) => (
                 <li key={f.slot} className={`rounded-lg border p-3 ${f.found ? "border-[var(--frame-gold)] bg-[var(--wood-hi)]" : "border-dashed border-[var(--frame-line-mid)]"}`}>
                   {f.found ? (
-                    <p className="font-serif font-bold text-[var(--title-on-wood)]">{f.found.name} · +{f.points}</p>
+                    <p className="font-serif font-bold text-[var(--title-on-wood)]">{f.found.name}, +{f.points}</p>
                   ) : (
-                    <p className="text-caption text-[var(--ash)]">Tướng chưa tìm thấy · {f.points} điểm</p>
+                    <p className="text-caption text-[var(--ash)]">Tướng chưa tìm thấy, {f.points} điểm</p>
                   )}
                   <p className="mt-1 text-sm italic">“{f.clue}”</p>
                 </li>
@@ -498,12 +498,12 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
                 <ol className="mt-1 space-y-0.5 text-sm">
                   {view.board.top.map((e) => (
                     <li key={e.rank} className={e.mine ? "font-bold text-[var(--title-on-wood)]" : ""}>
-                      {e.rank}. {e.name} · {e.points} điểm
+                      {e.rank}. {e.name}, {e.points} điểm
                     </li>
                   ))}
                 </ol>
               )}
-              {view.board.mine && !view.board.top.some((e) => e.mine) && <p className="mt-1 text-sm">Bạn: hạng {view.board.mine.rank} · {view.board.mine.points} điểm</p>}
+              {view.board.mine && !view.board.top.some((e) => e.mine) && <p className="mt-1 text-sm">Bạn: hạng {view.board.mine.rank}, {view.board.mine.points} điểm</p>}
             </section>
           </Panel>
         </div>
@@ -962,7 +962,7 @@ function Altar(props: {
           onClick={props.onOpenSession}
           className={buttonVariants({ className: "min-h-12 text-lg" })}
         >
-          Mở lượt mới · 1 phiếu
+          Mở lượt mới, 1 phiếu
         </button>
       )}
       {/* Cảnh báo đặt dưới nút để nút Hợp Nguyên không nhảy khi đặt lại một cặp đã thử (mục 7.4). */}
@@ -1192,7 +1192,7 @@ function History({ entries, onReplay }: { entries: readonly HistoryEntry[]; onRe
   if (entries.length === 0) return null;
   return (
     <section aria-label="Lần ghép gần đây" className="flex flex-col gap-1">
-      <h3 className="text-caption text-[var(--ash)]">Lần ghép gần đây · bấm để ghép lại</h3>
+      <h3 className="text-caption text-[var(--ash)]">Lần ghép gần đây, bấm để ghép lại</h3>
       <ol className="flex flex-col gap-1">
         {entries.map((e, i) => (
           <li key={i}>
@@ -1244,7 +1244,7 @@ function ResultCard({ result, onUse }: { result: AltarResult; onUse: (id: NodeId
         <span className="min-w-0">
           <span className="block font-serif font-bold text-[var(--title-on-wood)]">{node.nameVi}</span>
           <span className="block text-caption text-[var(--ash)]">
-            {TIER_NAME[node.tier ?? "thuong"]} · đã ghi vào Tướng Lục{result.points ? ` · +${result.points} điểm` : ""}
+            {TIER_NAME[node.tier ?? "thuong"]}, đã ghi vào Tướng Lục{result.points ? `, +${result.points} điểm` : ""}
           </span>
         </span>
       </div>
@@ -1304,7 +1304,7 @@ function Ledger({
   const pickSection = (sec: (typeof sections)[number]) => onGroup((defaultLedgerGroup(sec.groups) ?? sec.groups[0]!.id) as LedgerGroupId);
   const professions = sections.find((x) => x.id === "thuong")?.groups ?? [];
   return (
-    <Panel id="ttk-ledger" title={`Tướng Lục · ${found}/${entries.length}`} hidden={hidden}>
+    <Panel id="ttk-ledger" title={`Tướng Lục – ${found}/${entries.length}`} hidden={hidden}>
       <div role="group" aria-label="Nhóm tướng" className="grid auto-cols-fr grid-flow-col gap-1 rounded-lg border border-[var(--frame-line-mid)] bg-[var(--wood-lo)] p-1">
         {sections.map((sec) => {
           const selected = sec.id === activeSection;
@@ -1407,7 +1407,7 @@ function LedgerTile({ entry, onOpen }: { entry: LedgerEntry; onOpen: (e: LedgerE
   const tile = "flex h-[6.75rem] w-full flex-col items-center justify-center gap-1 rounded-lg border p-1.5 text-center";
   if (!entry.found)
     return (
-      <div className={`${tile} border-dashed border-[var(--frame-line-mid)] opacity-80`} title={`Tướng chưa tìm thấy · ${TIER_NAME[entry.tier]}`}>
+      <div className={`${tile} border-dashed border-[var(--frame-line-mid)] opacity-80`} title={`Tướng chưa tìm thấy, ${TIER_NAME[entry.tier]}`}>
         <span aria-hidden className={`grid size-12 place-items-center rounded-full border-2 bg-[var(--wood-lo)] font-serif text-xl text-[var(--ash)] ${TIER_RING[entry.tier]}`}>?</span>
         <span className="sr-only">Tướng chưa tìm thấy</span>
         <span className="text-caption leading-tight text-[var(--ash)]">{TIER_NAME[entry.tier]}</span>

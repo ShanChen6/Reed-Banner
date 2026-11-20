@@ -34,7 +34,7 @@ const STAT_NAME = { atk: "Công", maxHp: "Máu", def: "Thủ" } as const;
 const bonusText = (b: StatBonus) =>
   Object.entries(b)
     .map(([stat, v]) => `${STAT_NAME[stat as keyof typeof STAT_NAME]} +${Math.round((v ?? 0) * 100)}%`)
-    .join(" · ");
+    .join(", ");
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -79,10 +79,10 @@ export default function GearStore({
         <span className="flex min-w-0 flex-1 flex-col gap-1">
           <span className="truncate font-serif font-bold text-title-on-wood">
             {SLOT_NAME[slot]}
-            {weapon && <span className="text-caption font-normal text-on-wood-soft"> · {PROFESSION_NAME[profession]}</span>}
+            {weapon && <span className="text-caption font-normal text-on-wood-soft">, {PROFESSION_NAME[profession]}</span>}
           </span>
           <span className="text-sm tabular-nums text-on-wood">
-            <span className={TIER_CLASS[tier]}>{TIER_COLOR_NAME[tier]}</span> · +{value} {STAT_NAME[stat]}
+            <span className={TIER_CLASS[tier]}>{TIER_COLOR_NAME[tier]}</span>, +{value} {STAT_NAME[stat]}
           </span>
           <span className="text-caption text-on-wood-soft tabular-nums">{owned > 0 ? `Đang có ${owned}` : "Chưa có"}</span>
         <Button
@@ -94,7 +94,7 @@ export default function GearStore({
           aria-label={`Mua ${SLOT_NAME[slot]}${weapon ? ` ${PROFESSION_NAME[profession]}` : ""} ${TIER_COLOR_NAME[tier]} hệ ${ELEMENT_NAME[element]}, ${price} vàng`}
           onClick={() => onBuy({ type: "buyGear", slot, element, set, tier, ...(weapon ? { profession } : {}) })}
         >
-          Mua · {price} vàng
+          Mua – {price} vàng
         </Button>
         </span>
       </li>
@@ -147,7 +147,7 @@ export default function GearStore({
             <div className="min-w-0 text-caption text-on-wood-soft">
               <p className="font-serif text-base font-bold text-title-on-wood">Bộ {def.name}</p>
               <p>
-                Mặc 6 món: <span className="text-on-wood">{bonusText(def.six)}</span> · đủ 9 món: thêm <span className="text-on-wood">{bonusText(def.nine)}</span>.
+                Mặc 6 món: <span className="text-on-wood">{bonusText(def.six)}</span>, đủ 9 món: thêm <span className="text-on-wood">{bonusText(def.nine)}</span>.
               </p>
               <p>Chỉ số trên thẻ tính cho Đinh Bộ Lĩnh hệ {ELEMENT_NAME[profile.element]}; trang bị cùng hệ người mặc mạnh nhất.</p>
             </div>

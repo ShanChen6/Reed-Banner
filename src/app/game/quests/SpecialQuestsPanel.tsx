@@ -72,7 +72,7 @@ export default function SpecialQuestsPanel({ profile }: { profile: Profile }) {
               />
               <div className="min-w-0 flex-1">
                 <p className="font-semibold text-title-on-wood">
-                  {open ? base.name : "???"} · {def.title}
+                  {open ? base.name : "???"}, {def.title}
                 </p>
                 {!open ? (
                   <p className="mt-1 text-caption text-on-wood-soft">Qua hết Chương {ROMAN[def.chapter]} Bình Loạn để mở.</p>

@@ -83,7 +83,7 @@ export default function StartBar({
             {target.title}
           </h2>
           <p className="text-caption text-on-wood-soft">
-            Chương {ROMAN[target.chapter]} · {target.chapterTitle} ·{" "}
+            Chương {ROMAN[target.chapter]} – {target.chapterTitle},{" "}
             {target.place}
           </p>
         </div>

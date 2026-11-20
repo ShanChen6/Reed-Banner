@@ -163,7 +163,7 @@ export const SKILL_TARGET_NAME: Record<SkillDef["target"], string> = { enemy: "�
 /** Nguồn kỹ năng: nghề, hệ hay tuyệt chiêu/chiêu riêng của nhân vật. */
 export function skillSourceName(def: SkillDef): string {
   // Chiêu nhân vật đặc biệt: hệ của đòn tách khỏi hệ phòng thủ của người tung chiêu.
-  const hit = def.damageElement ? ` · đòn hệ ${ELEMENT_NAME[def.damageElement]}` : "";
+  const hit = def.damageElement ? `, đòn hệ ${ELEMENT_NAME[def.damageElement]}` : "";
   if (skillSource(def) === "character") {
     if (!def.ultimate) return `Chiêu dung hợp${hit}`;
     return (def.characterKind === "signature" ? "Chiêu riêng" : "Tuyệt chiêu tướng quân") + hit;
@@ -193,7 +193,7 @@ export function skillStepTexts(def: SkillDef): string[] {
 
 export function skillText(def: SkillDef): string {
   const partners=skillComboPartners(def);
-  return `${def.name} · ${skillSourceName(def)} · ô ${def.slot ?? "—"} · mở cấp ${SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1} · ${def.cost} năng lượng · ${SKILL_TARGET_NAME[def.target]}: ${skillStepTexts(def).join("; ")}${partners.length ? `. Có thể mở: ${partners.join(", ")} (cần tác dụng thực)` : ""}`;
+  return `${def.name}, ${skillSourceName(def)}, ô ${def.slot ?? "—"}, mở cấp ${SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1}, ${def.cost} năng lượng, ${SKILL_TARGET_NAME[def.target]}: ${skillStepTexts(def).join("; ")}${partners.length ? `. Có thể mở: ${partners.join(", ")} (cần tác dụng thực)` : ""}`;
 }
 
 /**

@@ -1,6 +1,6 @@
 # Thuật ngữ
 
-> Cập nhật: 19/11/2026 (rà soát toàn dự án: lữ khách, câu báo lỗi, ngoặc cong, chỉ số; 18/11: công trạng, ban thưởng, kho đồ; 13/11: Xưng hô: vài chỗ gọi "Chúa công"; thêm mục Văn phong giao diện, Shan duyệt; 11/11: thêm từ của Tháp Thiên Mệnh; 27/10: tách từ `docs/README.md` ở DOC-02, nội dung giữ nguyên)
+> Cập nhật: 20/11/2026 (bỏ dấu chấm giữa "·", phân cách bằng dấu phẩy hoặc gạch ngang; 19/11: rà soát toàn dự án: lữ khách, câu báo lỗi, ngoặc cong, chỉ số; 18/11: công trạng, ban thưởng, kho đồ; 13/11: Xưng hô: vài chỗ gọi "Chúa công"; thêm mục Văn phong giao diện, Shan duyệt; 11/11: thêm từ của Tháp Thiên Mệnh; 27/10: tách từ `docs/README.md` ở DOC-02, nội dung giữ nguyên)
 > Trạng thái: **REFERENCE** — thuật ngữ dùng chung.
 
 | Thuật ngữ | Nghĩa |
@@ -49,7 +49,7 @@ Quy ước Shan duyệt 13/11/2026, rà soát toàn dự án 19/11/2026. Áp cho
 | Viết hoa nút, tiêu đề, nhãn | Chỉ hoa chữ đầu (Thu hồi, Hoàn thành chương), trừ phần là tên riêng. Chữ in to làm bằng CSS `uppercase`, không gõ cứng |
 | Hiệu ứng và tài nguyên | Hiệu ứng hoa chữ đầu như tên riêng (Khiên, Đóng băng, Câm lặng, Phản đòn, Nộ). Tài nguyên viết thường giữa câu (máu, năng lượng, lương, vàng) |
 | Số | "12 sứ quân", "Loạn 12 sứ quân" dùng số; thẻ chế độ và hero viết chữ ("mười hai"). "sứ quân" luôn viết thường |
-| Dấu câu | Câu đầy đủ có dấu chấm; nhãn, nút không chấm. Luôn "…" (một ký tự), ngoặc kép cong “ ” (cả trích sử trong câu hỏi Sử Lộ), phân cách "·" |
+| Dấu câu | Câu đầy đủ có dấu chấm; nhãn, nút không chấm. Luôn "…" (một ký tự), ngoặc kép cong “ ” (cả trích sử trong câu hỏi Sử Lộ). Phân cách các mẩu thông tin bằng dấu phẩy ("Mộc, Y sư, cấp 5"); tên mục với phần phụ đề dùng gạch ngang có cách hai bên ("Trận Đồ – Đại trận", "Tái đấu – Hoa Lư", tiêu đề tab "Trấn Ải – Cờ Lau"). Không dùng dấu chấm giữa "·" (Shan, 20/11/2026). Chữ sau dấu phẩy viết thường trừ tên riêng, chỉ số và hiệu ứng |
 | Chính tả | Kiểu dấu cũ: hòa, thủy, khóa, tùy, hủy; luôn "kỹ", "đăng ký" |
 
 Quy tắc commit và PR (Shan chốt cùng ngày) ở [AGENTS.md](../../AGENTS.md#commit-và-pr).

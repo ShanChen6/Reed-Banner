@@ -45,7 +45,7 @@ export async function honorsOf(deps: HonorsDeps, ownerId: string | null): Promis
         const [rank, participants] = await Promise.all([deps.formation.rankOf(e), deps.formation.countWinners(e.level, e.period)]);
         return rank === null || e.claimedAt === null
           ? null
-          : { source: `formation:${e.level}`, title: `Trận Đồ · ${RULESETS.find((r) => r.id === e.level)?.name ?? e.level}`, period: e.period, rank, participants, gold: e.rewardGold ?? 0, claimedAt: e.claimedAt };
+          : { source: `formation:${e.level}`, title: `Trận Đồ – ${RULESETS.find((r) => r.id === e.level)?.name ?? e.level}`, period: e.period, rank, participants, gold: e.rewardGold ?? 0, claimedAt: e.claimedAt };
       }),
     )
   ).filter((x): x is HonorItem => x !== null);

@@ -59,7 +59,7 @@ export function Beats({ beats }: { beats: readonly StoryBeat[] }) {
               <p className="mt-1 text-caption text-on-wood-soft">
                 Nguồn: {b.refs.join(", ")}
                 {sources.length > 0 &&
-                  ` · ${sources.map((s) => SOURCE_TITLE[s] ?? s).join("; ")}`}
+                  `, ${sources.map((s) => SOURCE_TITLE[s] ?? s).join("; ")}`}
               </p>
             )}
           </li>

@@ -75,7 +75,7 @@ export function TeamColumn({
           {s === PLAYER
             ? "Phe bạn"
             : arenaFoe
-              ? `Bóng ma · ${arenaFoe.rating} điểm`
+              ? `Bóng ma, ${arenaFoe.rating} điểm`
               : "Đối thủ"}
         </span>
         <span

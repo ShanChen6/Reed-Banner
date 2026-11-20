@@ -22,7 +22,7 @@ export default function DailyQuestsPanel({ profile, now, busy, act }: {
     <OrnateFrame className="flex min-w-0 flex-col gap-2" aria-labelledby="daily-quests-title">
       <SectionTitle
         id="daily-quests-title"
-        description={`Làm lại lúc 0 giờ mỗi ngày · đã nhận ${done}/${DAILY_QUESTS.length}${ready > 0 ? ` · ${ready} chờ nhận` : ""}.${
+        description={`Làm lại lúc 0 giờ mỗi ngày, đã nhận ${done}/${DAILY_QUESTS.length}${ready > 0 ? `, ${ready} chờ nhận` : ""}.${
           // Phiếu Tầm Tướng Ký chỉ cộng cho người đã vào chế độ đó.
           profile.tamTuongKy ? ` Nhận đủ: +${TTK_TICKETS_DAILY_ALL} phiếu Tầm Tướng Ký.` : ""
         }`}

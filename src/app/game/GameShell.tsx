@@ -91,7 +91,7 @@ export default function GameShell({
   );
 
   useEffect(() => {
-    document.title = currentScene === "MENU" ? "Cờ Lau" : `${SCENE_TITLE[currentScene]} · Cờ Lau`;
+    document.title = currentScene === "MENU" ? "Cờ Lau" : `${SCENE_TITLE[currentScene]} – Cờ Lau`;
   }, [currentScene]);
 
   return (

@@ -77,7 +77,7 @@ export default function GearPicker({
           <GearIcon slot={slot} element={current?.element ?? fighter.element} tier={current?.tier} set={current?.set} profession={slot === "vuKhi" ? fighter.profession : undefined} className="size-10 shrink-0" />
           <div className="min-w-0 flex-1">
             <h2 id="gear-picker-title" className="barracks-title font-serif text-lg font-bold">
-              {SLOT_NAME[slot]} · {name}
+              {SLOT_NAME[slot]}, {name}
             </h2>
             <p className="text-sm text-[var(--on-wood-soft)]">
               {slot === "vuKhi" ? `Chỉ vũ khí nghề ${PROFESSION_NAME[fighter.profession]}.` : "Mọi tướng quân mặc được."} Mỗi món chỉ một người dùng.

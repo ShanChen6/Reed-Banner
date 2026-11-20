@@ -22,7 +22,7 @@ describe("nút chính ở hero Chiến trường theo ngữ cảnh người chơ
     assert.equal(plan.primary.scene, "CAMPAIGN");
     assert.equal(plan.primary.label, "Tiếp tục Bình Loạn");
     assert.equal(plan.secondary?.scene, "PLAYING");
-    assert.match(plan.hint ?? "", /^Chương \d+: .+ · \d+\/\d+ nhiệm vụ$/);
+    assert.match(plan.hint ?? "", /^Chương \d+: .+, \d+\/\d+ nhiệm vụ$/);
   });
 
   it("nhiệm vụ đang dở (chưa xong cái nào) cũng tính là đã bắt đầu", () => {

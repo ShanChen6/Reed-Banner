@@ -67,7 +67,7 @@ export function activeBonusText(
     : `Cộng hưởng ${ELEMENT_NAME[bonus.id as Element]}`;
   const stats = Object.entries(bonus.bonus)
     .map(([stat, value]) => `${stat === "maxHp" ? "Máu" : stat.toUpperCase()} +${Math.round(value * 100)}%`)
-    .join(" · ");
+    .join(", ");
   return `${name} ${bonus.level}: ${stats}`;
 }
 
@@ -93,7 +93,7 @@ export function gearComparison(
     const name = stat === "maxHp" ? "Máu" : stat.toUpperCase();
     return [flat ? `${name} ${signed(flat)}` : null, percent ? `${name} ${signed(percent, "%")}` : null].filter(Boolean);
   });
-  return parts.length ? `So với đang mặc: ${parts.join(" · ")}` : "So với đang mặc: không đổi tổng chỉ số";
+  return parts.length ? `So với đang mặc: ${parts.join(", ")}` : "So với đang mặc: không đổi tổng chỉ số";
 }
 
 const SHOP_TIERS = Object.keys(SHOP_GEAR_PRICE).map(Number) as Tier[];
@@ -196,7 +196,7 @@ export default function GearPanel({
     >
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-semibold">
-          Trang bị · Kho đồ {profile.bag.length}/{BAG_LIMIT}
+          Trang bị – Kho đồ {profile.bag.length}/{BAG_LIMIT}
         </h2>
         <span className="tabular-nums">Vàng: {profile.gold}</span>
         {message && <span className="text-danger">{message}</span>}
@@ -242,7 +242,7 @@ export default function GearPanel({
               }
               title={
                 item
-                  ? `${gearText(item)} · bấm để tháo`
+                  ? `${gearText(item)}, bấm để tháo`
                   : `${SLOT_NAME[slot]}: trống`
               }
               className="rounded disabled:cursor-default"
@@ -263,8 +263,8 @@ export default function GearPanel({
           );
         })}
         <span className="ml-1 tabular-nums opacity-80">
-          +{stats.flat.atk} Công · +{stats.flat.maxHp} Máu · +{stats.flat.def}{" "}
-          Thủ · +{Math.round(stats.percent.atk * 100)}% Công · +{Math.round(stats.percent.maxHp * 100)}% Máu · +{Math.round(stats.percent.def * 100)}% Thủ
+          +{stats.flat.atk} Công, +{stats.flat.maxHp} Máu, +{stats.flat.def}{" "}
+          Thủ, +{Math.round(stats.percent.atk * 100)}% Công, +{Math.round(stats.percent.maxHp * 100)}% Máu, +{Math.round(stats.percent.def * 100)}% Thủ
         </span>
       </div>
       {stats.bonuses.length > 0 && (
@@ -295,7 +295,7 @@ export default function GearPanel({
                   type="button"
                   aria-pressed={on}
                   onClick={() => toggle(it.id)}
-                  title={`${gearText(it)}${worn ? ` · ${nameOf(worn)} đang mặc` : ""}`}
+                  title={`${gearText(it)}${worn ? `, ${nameOf(worn)} đang mặc` : ""}`}
                   className={`rounded ${on ? "ring-2 ring-frame-gold" : ""}`}
                 >
                   <GearIcon
@@ -327,11 +327,11 @@ export default function GearPanel({
                 {wearer && (
                   <span className="opacity-70">
                     {" "}
-                    · {nameOf(wearer)} đang mặc
+                    , {nameOf(wearer)} đang mặc
                   </span>
                 )}
                 <span className="block opacity-70">
-                  +{itemStat(one, elementOf(profile, character))} chỉ số · {gearComparison(profile, character, one)}
+                  +{itemStat(one, elementOf(profile, character))} chỉ số, {gearComparison(profile, character, one)}
                 </span>
               </span>
               {wearer !== character && (
@@ -498,7 +498,7 @@ export function GearShop({
           })
         }
       >
-        Mua · {price} vàng
+        Mua – {price} vàng
       </Button>
     </div>
   );

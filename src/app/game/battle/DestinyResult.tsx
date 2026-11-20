@@ -32,7 +32,7 @@ export function DestinyResult({ floor, outcome, state }: {
           won ? "border-frame-gold/70" : "border-danger/50",
         )}>
         <div>
-          <p className="text-kicker text-frame-gold">Tháp Thiên Mệnh · Tầng {floor}/{floorCount}</p>
+          <p className="text-kicker text-frame-gold">Tháp Thiên Mệnh – Tầng {floor}/{floorCount}</p>
           <h2 id="destiny-result-title" className={cn("mt-1 font-serif text-2xl font-bold", won ? "text-title-on-wood" : "text-danger")}>
             {title}
           </h2>

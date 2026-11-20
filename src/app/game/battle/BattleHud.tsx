@@ -114,7 +114,7 @@ export function WaveBanner({
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 ui-frame-inset rounded-lg px-3 py-1.5 text-sm">
       <span className="font-bold">
         Đợt {survival.wave}
-        {current.boss && <span className="text-stat-hp"> · trùm</span>}
+        {current.boss && <span className="text-stat-hp">, trùm</span>}
       </span>
       <span className="text-caption opacity-80">
         Đã vượt qua {survival.cleared} đợt

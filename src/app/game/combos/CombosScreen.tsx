@@ -138,7 +138,7 @@ export default function CombosScreen() {
                       <span className="min-w-0">
                         <span className="block truncate font-serif font-bold text-title-on-wood">{m.name}</span>
                         <span className="flex items-center gap-1 text-caption text-on-wood-soft">
-                          <ElementIcon element={m.fighter.element} className="size-4" /> {ELEMENT_NAME[m.fighter.element]} · <ProfessionIcon profession={m.fighter.profession} className="size-4" /> {PROFESSION_NAME[m.fighter.profession]}
+                          <ElementIcon element={m.fighter.element} className="size-4" /> {ELEMENT_NAME[m.fighter.element]}, <ProfessionIcon profession={m.fighter.profession} className="size-4" /> {PROFESSION_NAME[m.fighter.profession]}
                         </span>
                         <span className="block text-caption text-frame-gold">{active ? "Đang chọn ô này" : "Bấm để đổi"}</span>
                       </span>
@@ -271,12 +271,12 @@ function LinkList({ team, links }: { team: readonly ComboMember[]; links: readon
           <SkillIcon def={l.skill} className="size-9 shrink-0" />
           <div className="min-w-0 flex-1">
             <p className="leading-snug">
-              <span className="font-semibold text-title-on-wood">{team[l.from]!.name}</span> · {l.skill.name}
+              <span className="font-semibold text-title-on-wood">{team[l.from]!.name}</span>, {l.skill.name}
               <span className="mx-1 text-frame-gold" aria-label="mở">→</span>
-              <span className="font-semibold text-title-on-wood">{team[l.to]!.name}</span> · {passiveName(l.passive)}
+              <span className="font-semibold text-title-on-wood">{team[l.to]!.name}</span>, {passiveName(l.passive)}
             </p>
             <p className="text-caption text-on-wood-soft">
-              {l.signals.map((s) => SIGNAL_NAME[s]).join(", ")} · {passiveText(l.passive)}
+              {l.signals.map((s) => SIGNAL_NAME[s]).join(", ")}, {passiveText(l.passive)}
             </p>
           </div>
           <PassiveIcon id={l.passive.id} name={passiveName(l.passive)} className="size-9 shrink-0" />
@@ -301,7 +301,7 @@ function ChainList({ team, chains }: { team: readonly ComboMember[]; chains: rea
           {chains.map((c, k) => (
             <li key={k} className="rounded-lg border border-frame-line-soft bg-black/15 p-2">
               <p className="mb-1.5 text-caption text-on-wood-soft">
-                Chuỗi {c.steps.length + 1} bước · mở từ chiêu <b className="text-on-wood">{c.skill.name}</b> của {team[c.from]!.name}
+                Chuỗi {c.steps.length + 1} bước, mở từ chiêu <b className="text-on-wood">{c.skill.name}</b> của {team[c.from]!.name}
               </p>
               <div className="flex flex-wrap items-center gap-1.5">
                 <ChainNode icon={<SkillIcon def={c.skill} className="size-8" />} who={team[c.from]!.name} what={c.skill.name} />

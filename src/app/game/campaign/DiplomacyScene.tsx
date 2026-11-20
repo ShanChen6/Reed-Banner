@@ -118,7 +118,7 @@ export default function DiplomacyScene({
     >
       <header className="rounded-lg border border-frame-line-soft bg-wood-inset px-3 py-2">
         <p className="text-kicker text-frame-gold">
-          Hội kiến · {node.location.name}
+          Hội kiến – {node.location.name}
           {node.location.modernRegion ? `, ${node.location.modernRegion}` : ""}
         </p>
         <h3
@@ -259,7 +259,7 @@ export default function DiplomacyScene({
               </span>
               {counterpart && (
                 <span className="text-sm text-on-wood">
-                  {counterpart.name} · ghi vào thế cục sứ quân một lần
+                  {counterpart.name}, ghi vào thế cục sứ quân một lần
                 </span>
               )}
             </p>

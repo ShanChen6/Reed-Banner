@@ -84,7 +84,7 @@ function RankedCard({ l, now, busy, canPlay, onPlay }: { l: LevelOverview; now: 
           <p className="text-sm text-on-wood-soft">Mỗi kỳ một ván, cả kỳ cùng một bản đồ.</p>
         ) : m.status === "playing" ? (
           <div className="flex flex-col gap-1">
-            <p className="text-sm">Đang chơi dở · khai thông {Math.round(reveal * 100)}%</p>
+            <p className="text-sm">Đang chơi dở, khai thông {Math.round(reveal * 100)}%</p>
             <div className="h-1.5 overflow-hidden rounded-full bg-black/40" aria-hidden>
               <div className="h-full bg-frame-gold" style={{ width: `${reveal * 100}%` }} />
             </div>
@@ -95,13 +95,13 @@ function RankedCard({ l, now, busy, canPlay, onPlay }: { l: LevelOverview; now: 
               Đã thắng <b>{m.score} điểm</b>
               {m.rank ? (
                 <>
-                  {" "}· hạng <b>{m.rank}/{l.winners}</b>
+                  , hạng <b>{m.rank}/{l.winners}</b>
                 </>
               ) : null}
             </p>
             {reward && (
               <p className="text-caption text-on-wood-soft">
-                {TIER_LABEL[reward.tier]} · dự kiến <b className="text-frame-gold">{reward.gold} vàng</b> khi kỳ khép lại
+                {TIER_LABEL[reward.tier]}, dự kiến <b className="text-frame-gold">{reward.gold} vàng</b> khi kỳ khép lại
               </p>
             )}
           </div>
@@ -124,8 +124,8 @@ function PracticeCard({ rules, best, onStart }: { rules: Ruleset; best: number; 
         <span className="flex flex-col gap-1 p-4">
           <span className="text-[15px] leading-snug text-on-wood/90">{rules.blurb}</span>
           <span className="text-sm text-on-wood-soft">
-            {rules.randomSize ? `cỡ ngẫu nhiên ${rules.randomSize.min}–${rules.randomSize.max}` : `${rules.width}×${rules.height}`} · {rules.professions.length} nghề × {rules.elements.length} hệ{rules.obstaclePercent > 0 ? " · có chướng ngại" : ""}
-            {best ? ` · Điểm cao nhất ${best}` : ""}
+            {rules.randomSize ? `cỡ ngẫu nhiên ${rules.randomSize.min}–${rules.randomSize.max}` : `${rules.width}×${rules.height}`}, {rules.professions.length} nghề × {rules.elements.length} hệ{rules.obstaclePercent > 0 ? ", có chướng ngại" : ""}
+            {best ? `, điểm cao nhất ${best}` : ""}
           </span>
         </span>
       </button>
@@ -285,7 +285,7 @@ export default function ModeScreen({
                 {pending.map((c) => (
                   <li key={`${c.level}-${c.period}`} className="flex flex-wrap items-center justify-between gap-2 text-[15px]">
                     <span>
-                      {RULESETS.find((r) => r.id === c.level)?.name} · kỳ {c.period}: hạng {c.rank}/{c.winners} ({TIER_LABEL[c.tier]}) · <b>{c.gold} vàng</b>
+                      {RULESETS.find((r) => r.id === c.level)?.name}, kỳ {c.period}: hạng {c.rank}/{c.winners} ({TIER_LABEL[c.tier]}), <b>{c.gold} vàng</b>
                     </span>
                     <button type="button" onClick={() => onClaim(c.level, c.period)} className={buttonVariants({ className: "min-h-11 px-5" })}>Nhận</button>
                   </li>
@@ -305,7 +305,7 @@ export default function ModeScreen({
               />
               {overview.levels.filter((l) => l.level === (boardLevel ?? overview.levels[0]!.level)).map((l) => (
                 <div key={l.level} className="ui-frame flex flex-col gap-4 p-4">
-                  <p className="text-sm text-on-wood-soft">{CADENCE[l.cadence]} · còn {now ? formatRemaining(l.endsAt - now) : "…"} · {l.winners} người đã thắng</p>
+                  <p className="text-sm text-on-wood-soft">{CADENCE[l.cadence]}, còn {now ? formatRemaining(l.endsAt - now) : "…"}, {l.winners} người đã thắng</p>
                   <RankBoard
                       entries={l.top.slice(0, 20).map((r) => ({ rank: r.rank, name: r.name, mine: r.mine, score: `${r.score} đ`, detail: `${r.turns} nước`, reward: rewardGold(l.level, r.rank, l.winners)?.gold ?? null }))}
                       mine={
