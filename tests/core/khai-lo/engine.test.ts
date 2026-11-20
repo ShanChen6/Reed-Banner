@@ -2,14 +2,12 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { Element } from "../../../src/core/battle/elements";
 import {
-  KL_CLEAR_TROOPS,
-  KL_MAX_TOOLS,
   KL_NEAR_CLEAR_BONUS,
   clearBonus,
   KL_TIMED_START_SECONDS,
   KL_TOOL_CHARGE,
   timedGoal,
-  KL_START_TROOPS,
+  KL_START_TOOLS,
   allGroups,
   createGame,
   generateBoard,
@@ -39,7 +37,7 @@ function board(rows: string[]): { cells: (KlCell | null)[]; width: number; heigh
 
 function stateOf(rows: string[], over: Partial<KlState> = {}): KlState {
   const b = board(rows);
-  return { ...createGame(1, "classic", b.width, b.height), ...b, nextId: 1000, ...over };
+  return { ...createGame(1, "classic", b.width, b.height), ...b, nextId: 1000, tools: kit(), ...over };
 }
 
 /** Kho đạo cụ: mặc định 0 mọi hệ, ghi đè hệ cần dùng. */
@@ -90,14 +88,17 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.equal(r.state.score, groupScore(2, 1));
   });
 
-  it("dọn sạch bàn: thưởng 300 + 50 × màn, +quân lực, không tự cộng đạo cụ", () => {
+  it("ván mới có sẵn mỗi hệ một đạo cụ", () => {
+    assert.deepEqual(createGame(1).tools, kit({ kim: KL_START_TOOLS, moc: KL_START_TOOLS, thuy: KL_START_TOOLS, hoa: KL_START_TOOLS, tho: KL_START_TOOLS, loi: KL_START_TOOLS, phong: KL_START_TOOLS }));
+  });
+
+  it("dọn sạch bàn: thưởng 300 + 50 × màn, không tự cộng đạo cụ", () => {
     const s = stateOf(["aa", "aa"]);
     const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
     assert.equal(r.state.phase, "levelDone");
     assert.equal(clearBonus(1), 350);
     assert.equal(r.state.score, 16 + clearBonus(1));
-    assert.equal(r.state.troops, KL_START_TROOPS + KL_CLEAR_TROOPS);
     assert.deepEqual(r.state.tools, kit());
     const n = transition(r.state, { type: "nextLevel" });
     assert.ok(n.ok);
@@ -105,7 +106,7 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.equal(n.state.phase, "playing");
   });
 
-  it("chạm khối nạp thanh của hệ đó, đủ quân thì +1 đạo cụ hệ ấy; kho đầy thì thanh dừng ở mức đầy", () => {
+  it("chạm khối nạp thanh của hệ đó, đủ quân thì +1 đạo cụ hệ ấy, tích không giới hạn", () => {
     const s = stateOf(["aab", "bcd"], { charge: kit({ kim: KL_TOOL_CHARGE - 1 }) });
     const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
@@ -113,10 +114,10 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.deepEqual(r.state.charge, kit({ kim: 1 }));
     assert.ok(r.events.some((e) => e.type === "toolCharged" && e.tool === "kim"));
     assert.equal(r.state.phase, "stuck");
-    const full = transition(stateOf(["aab", "bcd"], { tools: kit({ kim: KL_MAX_TOOLS }), charge: kit({ kim: KL_TOOL_CHARGE - 1 }) }), { type: "pick", index: 0 });
-    assert.ok(full.ok);
-    assert.equal(full.state.tools.kim, KL_MAX_TOOLS);
-    assert.equal(full.state.charge.kim, KL_TOOL_CHARGE);
+    const many = transition(stateOf(["aab", "bcd"], { tools: kit({ kim: 20 }), charge: kit({ kim: KL_TOOL_CHARGE - 1 }) }), { type: "pick", index: 0 });
+    assert.ok(many.ok);
+    assert.equal(many.state.tools.kim, 21);
+    assert.equal(many.state.charge.kim, 1);
     // hoàn tác trả lại cả đạo cụ và thanh nạp
     const u = transition(r.state, { type: "undo" });
     assert.ok(u.ok);
@@ -130,35 +131,24 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.deepEqual(r.state.charge, kit());
   });
 
-  it("gần sạch (còn tối đa 3 quân) được thưởng nhỏ, vẫn trừ quân lực", () => {
-    const r = transition(stateOf(["aab", "bcd"], {}), { type: "pick", index: 0 });
+  it("Thường: hết khối mà còn quân, hết đạo cụ là thua ngay", () => {
+    const r = transition(stateOf(["aab", "aac"]), { type: "pick", index: 0 });
     assert.ok(r.ok);
-    // còn 4 quân: không thưởng
+    assert.equal(r.state.phase, "over");
+    assert.equal(r.state.summary?.left, 2);
     assert.equal(r.state.summary?.bonus, 0);
-    const near = transition(stateOf(["aab", "aac"], {}), { type: "pick", index: 0 });
-    assert.ok(near.ok);
-    assert.equal(near.state.summary?.left, 2);
-    assert.equal(near.state.summary?.bonus, KL_NEAR_CLEAR_BONUS);
-    assert.equal(near.state.troops, KL_START_TROOPS - 2);
+    assert.ok(r.events.some((e) => e.type === "over"));
   });
 
-  it("hết nhóm còn đạo cụ thì bế tắc; kết thúc màn trừ quân lực theo ô còn lại", () => {
+  it("hết khối còn đạo cụ thì bế tắc; chịu thua là hết ván", () => {
     const s = stateOf(["aab", "bcd"], { tools: kit({ loi: 1 }) });
     const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
     assert.equal(r.state.phase, "stuck");
     const e = transition(r.state, { type: "endLevel" });
     assert.ok(e.ok);
-    assert.equal(e.state.troops, KL_START_TROOPS - tilesLeft(r.state.cells));
+    assert.equal(e.state.phase, "over");
     assert.equal(e.state.summary?.cleared, false);
-  });
-
-  it("hết nhóm và hết đạo cụ thì tự kết thúc màn; quân lực về 0 là hết ván", () => {
-    const s = stateOf(["aab", "bcd"], { troops: 3 });
-    const r = transition(s, { type: "pick", index: 0 });
-    assert.ok(r.ok);
-    assert.equal(r.state.phase, "over");
-    assert.equal(r.state.troops, 0);
   });
 
   it("Lốc Phong xoay 8 ô quanh tâm theo chiều kim đồng hồ, không dùng ở mép", () => {
@@ -297,7 +287,7 @@ describe("Khai Lộ: Cấp tốc", () => {
     assert.equal(r.state.prev, null);
   });
 
-  it("bàn dọn sạch thì thưởng rồi chia bàn mới cùng bậc, không trừ quân lực", () => {
+  it("bàn dọn sạch thì thưởng rồi chia bàn mới cùng bậc", () => {
     const s = stateOf(["aa", "aa"], { mode: "timed" });
     const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
@@ -305,9 +295,16 @@ describe("Khai Lộ: Cấp tốc", () => {
     assert.equal(r.state.deal, 1);
     assert.equal(r.state.phase, "playing");
     assert.equal(r.state.score, 16 + clearBonus(1));
-    assert.equal(r.state.troops, KL_START_TROOPS);
     assert.equal(tilesLeft(r.state.cells), 4);
     assert.ok(r.events.some((e) => e.type === "redeal" && e.cleared));
+  });
+
+  it("bàn hết đường còn tối đa 3 quân: thưởng gần sạch rồi chia bàn mới", () => {
+    const r = transition(stateOf(["aab", "aac"], { mode: "timed" }), { type: "pick", index: 0 });
+    assert.ok(r.ok);
+    assert.equal(r.state.phase, "playing");
+    assert.equal(r.state.score, 16 + KL_NEAR_CLEAR_BONUS);
+    assert.equal(r.state.deal, 1);
   });
 
   it("thưởng dọn sạch đủ mốc thì lên bậc luôn", () => {

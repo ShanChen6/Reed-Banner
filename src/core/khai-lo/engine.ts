@@ -7,23 +7,21 @@ import { createRng, type Rng } from "../rng";
 import { ELEMENTS, type Element } from "../battle/elements";
 
 export const KL_WIDTH = 10;
-export const KL_HEIGHT = 8;
-/** Quân lực ban đầu; hết màn, mỗi ô còn sót trừ 1. Về 0 là hết ván. */
-export const KL_START_TROOPS = 30;
-/** Dọn sạch bàn: cộng quân lực và điểm thưởng (300 + 50 × màn). Cân bằng 20/11/2026: thưởng nhỏ lại để điểm gom khối
- *  (n²) quyết định thứ hạng, trước đây thưởng dọn sạch chiếm 84% tổng điểm. */
-export const KL_CLEAR_TROOPS = 4;
+export const KL_HEIGHT = 12;
+/** Dọn sạch bàn: thưởng điểm 300 + 50 × màn. Cân bằng 20/11/2026: thưởng nhỏ lại để điểm gom khối (n²) quyết định
+ *  thứ hạng, trước đây thưởng dọn sạch chiếm 84% tổng điểm. Chế độ Thường (Shan 20/11/2026): không dọn sạch là thua. */
 export const KL_CLEAR_BONUS_BASE = 300;
 export const KL_CLEAR_BONUS_PER_LEVEL = 50;
-/** Gần sạch: còn tối đa 3 quân vẫn được thưởng nhỏ (quân lực vẫn trừ theo quân còn lại). */
+/** Cấp tốc: bàn hết đường mà chỉ còn tối đa 3 quân vẫn được thưởng nhỏ trước khi chia bàn mới. */
 export const KL_NEAR_CLEAR_LEFT = 3;
 export const KL_NEAR_CLEAR_BONUS = 100;
-/** Mỗi loại đạo cụ giữ tối đa 3: tránh dồn kho kéo ván quá dài. */
-export const KL_MAX_TOOLS = 3;
 /** 7 đạo cụ theo 7 hệ (Shan 20/11/2026): xóa quân hệ nào bằng cách chạm khối thì thanh nạp của hệ đó đầy dần; đủ số quân
  *  thì được 1 đạo cụ của hệ ấy. Quân bị đạo cụ phá không nạp, để đạo cụ đến từ việc gom khối. */
-export const KL_TOOL_CHARGE = 80;
+export const KL_TOOL_CHARGE = 90;
 const noTools = (): Record<KlTool, number> => ({ kim: 0, moc: 0, thuy: 0, hoa: 0, tho: 0, loi: 0, phong: 0 });
+/** Đạo cụ lúc bắt đầu ván: mỗi hệ KL_START_TOOLS cái. */
+export const KL_START_TOOLS = 1;
+const startTools = (): Record<KlTool, number> => ({ kim: KL_START_TOOLS, moc: KL_START_TOOLS, thuy: KL_START_TOOLS, hoa: KL_START_TOOLS, tho: KL_START_TOOLS, loi: KL_START_TOOLS, phong: KL_START_TOOLS });
 /** Lượt hoàn tác mỗi màn (không cộng dồn sang màn sau). */
 export const KL_UNDO_PER_LEVEL = 1;
 export const KL_MIN_GROUP = 2;
@@ -70,7 +68,6 @@ export interface KlLevelSummary {
   readonly cleared: boolean;
   readonly left: number;
   readonly bonus: number;
-  readonly troopsDelta: number;
 }
 
 export interface KlState {
@@ -83,7 +80,6 @@ export interface KlState {
   /** Hàng trước, hàng 0 ở trên cùng; null là ô trống. */
   readonly cells: readonly (KlCell | null)[];
   readonly score: number;
-  readonly troops: number;
   readonly tools: Readonly<Record<KlTool, number>>;
   /** Điểm đã nạp vào thanh của từng đạo cụ (chưa đủ một đạo cụ). */
   readonly charge: Readonly<Record<KlTool, number>>;
@@ -191,8 +187,7 @@ export function createGame(seed: number, mode: KlMode = "classic", width = KL_WI
     height,
     cells,
     score: 0,
-    troops: KL_START_TROOPS,
-    tools: noTools(),
+    tools: startTools(),
     charge: noTools(),
     deal: 0,
     undo: KL_UNDO_PER_LEVEL,
@@ -304,17 +299,17 @@ export function tilesLeft(cells: readonly (KlCell | null)[]): number {
   return cells.reduce((n, c) => n + (c ? 1 : 0), 0);
 }
 
-/** Quân xóa bằng chạm khối nạp thanh của hệ đó; đầy thanh thì +1 đạo cụ (kho đầy thì thanh dừng ở mức đầy). */
+/** Quân xóa bằng chạm khối nạp thanh của hệ đó; đầy thanh thì +1 đạo cụ, không giới hạn số tích được (Shan 20/11/2026). */
 function addCharge(s: KlState, kind: Element, count: number, events: KlEvent[]): KlState {
   const tools = { ...s.tools };
   const charge = { ...s.charge };
   let c = charge[kind] + count;
-  while (c >= KL_TOOL_CHARGE && tools[kind] < KL_MAX_TOOLS) {
+  while (c >= KL_TOOL_CHARGE) {
     c -= KL_TOOL_CHARGE;
     tools[kind] += 1;
     events.push({ type: "toolCharged", tool: kind });
   }
-  charge[kind] = Math.min(c, KL_TOOL_CHARGE);
+  charge[kind] = c;
   return { ...s, tools, charge };
 }
 
@@ -425,17 +420,15 @@ function redeal(s: KlState, events: KlEvent[]): KlState {
   return leveled !== scored ? leveled : deal(scored, s.level);
 }
 
+/** Thường: dọn sạch thì sang màn sau, còn quân nào trên bàn là thua (hết ván). */
 function finishLevel(s: KlState, events: KlEvent[]): KlState {
   const left = tilesLeft(s.cells);
   const cleared = left === 0;
-  const bonus = levelBonus(s.level, left);
-  const troopsDelta = cleared ? KL_CLEAR_TROOPS : -left;
-  const troops = s.troops + troopsDelta;
-  const summary: KlLevelSummary = { level: s.level, cleared, left, bonus, troopsDelta };
+  const bonus = cleared ? clearBonus(s.level) : 0;
+  const summary: KlLevelSummary = { level: s.level, cleared, left, bonus };
   events.push({ type: "levelDone", summary });
-  const over = troops <= 0;
-  if (over) events.push({ type: "over" });
-  return { ...s, score: s.score + bonus, troops: Math.max(0, troops), summary, phase: over ? "over" : "levelDone", prev: null };
+  if (!cleared) events.push({ type: "over" });
+  return { ...s, score: s.score + bonus, summary, phase: cleared ? "levelDone" : "over", prev: null };
 }
 
 const inBounds = (s: KlState, i: number) => Number.isInteger(i) && i >= 0 && i < s.width * s.height;
@@ -544,17 +537,17 @@ export function parseGame(text: string | null): KlState | null {
     const v = JSON.parse(text) as Partial<KlState>;
     const phases: KlPhase[] = ["playing", "stuck", "levelDone", "over"];
     const num = (x: unknown) => typeof x === "number" && Number.isFinite(x) && x >= 0;
-    if (v.version !== 1 || !num(v.seed) || !num(v.level) || !num(v.score) || !num(v.troops) || !num(v.moves) || !num(v.undo) || !num(v.nextId)) return null;
+    if (v.version !== 1 || !num(v.seed) || !num(v.level) || !num(v.score) || !num(v.moves) || !num(v.undo) || !num(v.nextId)) return null;
     if (!Number.isInteger(v.width) || !Number.isInteger(v.height) || (v.width as number) < 3 || (v.height as number) < 3) return null;
     if (!Array.isArray(v.cells) || v.cells.length !== (v.width as number) * (v.height as number) || !v.cells.every(isCell)) return null;
     // Bản lưu trước 20/11/2026 có Lốc/Sấm: Lốc thành Lốc Phong, Sấm thành Hỏa Cầu (cùng vùng 3×3).
     const rawTools = (v.tools ?? {}) as Record<string, unknown>;
     const legacy = "whirl" in rawTools || "thunder" in rawTools;
     const tools = noTools();
-    for (const e of ELEMENTS) if (num(rawTools[e])) tools[e] = Math.min(KL_MAX_TOOLS, rawTools[e] as number);
+    for (const e of ELEMENTS) if (num(rawTools[e])) tools[e] = rawTools[e] as number;
     if (legacy) {
-      tools.phong = Math.min(KL_MAX_TOOLS, num(rawTools.whirl) ? (rawTools.whirl as number) : 0);
-      tools.hoa = Math.min(KL_MAX_TOOLS, num(rawTools.thunder) ? (rawTools.thunder as number) : 0);
+      tools.phong = num(rawTools.whirl) ? (rawTools.whirl as number) : 0;
+      tools.hoa = num(rawTools.thunder) ? (rawTools.thunder as number) : 0;
     }
     if (!phases.includes(v.phase as KlPhase)) return null;
     const mode: KlMode = v.mode === "timed" ? "timed" : "classic";
