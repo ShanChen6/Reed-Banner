@@ -26,7 +26,7 @@ Ba khung cùng một hàng lưới trên máy tính, mép trên thẳng hàng v�
 
 **Vạn Vật Lục**
 - Ô tìm kiếm không phân biệt dấu (“thap dao” ra “Thập đạo”).
-- Lọc theo nhóm, một hàng: chip “Tất cả” và “Nguyên tố”, các nhóm còn lại (Thiên nhiên, Binh khí, Cờ hiệu, Thư tịch, Ngọc, Vai trò, Tuyệt chiêu) trong ô chọn “Nhóm khác…”; chỉ hiện nhóm đã có yếu tố. Câu hướng dẫn cách đặt ô chỉ hiện cho người mới (chưa ghép ra gì).
+- Lọc theo nhóm, một hàng tab: “Tất cả” rồi mọi nhóm đã có yếu tố (Nguyên tố, Thiên nhiên, Binh khí, Cờ hiệu, Thư tịch, Ngọc, Vai trò, Tuyệt chiêu), cuộn ngang khi chật; bỏ ô chọn “Nhóm khác…” (Shan 20/11/2026). Giữ một hàng vì hộp thoại chọn nguyên liệu tính số hàng ô theo hàng lọc cao một dòng. Câu hướng dẫn cách đặt ô chỉ hiện cho người mới (chưa ghép ra gì).
 - Ô yếu tố là thẻ vuông, icon là chính (icon 36px trên, tên tối đa 2 dòng chữ nhỏ dưới, cao cố định 84px, `title` đủ tên), lưới 4 cột (8 cột ở máy tính bảng); chấm vàng “còn công thức” (Thường) hoặc `×n` (Hạng) ở góc trên phải. Mọi yếu tố trừ tướng có icon: nguyên tố dùng icon hệ, yếu tố khác dùng tranh ở `public/art/tam-tuong-ky/`, tuyệt chiêu Gói 3 dùng ảnh kỹ năng ô 4 của chính tướng (test chốt trong `tests/game/skill-art.test.ts`).
 - Phân trang 24 ô (máy tính, 4 × 6) / 16 ô (điện thoại); đổi từ khóa hoặc nhóm thì về trang 1. Yếu tố vừa khám phá: mở trang có nó (nếu nằm trong danh sách đang lọc) và nhấp nháy một lần.
 - Bấm yếu tố: điền ô trước, rồi ô sau; đủ hai ô thì thay ô sau. Bấm cùng yếu tố hai lần được (`A+A`). Không có kéo thả.

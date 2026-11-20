@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useCallback, useState, type CSSProperties, type ReactNode, type RefCallback } from "react";
 import { Button } from "./button";
 import { cn } from "@/lib/cn";
 
@@ -32,6 +32,33 @@ export interface PagedItems<T> {
   pages: number;
   pageItems: readonly T[];
   setPage: (page: number) => void;
+  /**
+   * Trải lên phần tử bọc danh sách (`{...paged.listProps}`) để trang ít mục hơn (trang cuối) giữ chiều cao của
+   * trang đầy, khối bên dưới và nút phân trang không nhảy lên.
+   */
+  listProps: PagedListProps;
+}
+
+export interface PagedListProps {
+  ref: RefCallback<HTMLElement>;
+  style: CSSProperties | undefined;
+  /** Trang đang đầy mục: chỉ đo chiều cao những trang này. */
+  "data-page-full": boolean;
+}
+
+/** Chiều cao trang đầy đo được, theo bề ngang lúc đo (đổi bề ngang thì đo lại). */
+interface HeightLock {
+  width: number;
+  height: number;
+}
+
+/**
+ * Chiều cao giữ cho trang thiếu mục: chỉ khi có nhiều trang và trang hiện tại thiếu mục, đã đo được trang đầy.
+ * `alignContent: start` để lưới không giãn các hàng còn lại cho đầy khoảng trống.
+ */
+export function pagedListStyle(lock: HeightLock | null, pages: number, full: boolean): CSSProperties | undefined {
+  if (!lock || pages <= 1 || full) return undefined;
+  return { minHeight: lock.height, alignContent: "start" };
 }
 
 /**
@@ -41,13 +68,34 @@ export interface PagedItems<T> {
  */
 export function usePagedItems<T>(items: readonly T[], pageSize: number, initialPage = 0): PagedItems<T> {
   const [page, setPage] = useState(initialPage);
+  const [lock, setLock] = useState<HeightLock | null>(null);
   const pages = Math.max(1, Math.ceil(items.length / pageSize));
   const current = Math.min(page, pages - 1);
+  const pageItems = items.slice(current * pageSize, (current + 1) * pageSize);
+  const full = pageItems.length >= pageSize;
+  // ResizeObserver đọc trang đầy hay thiếu qua data-page-full, khỏi gắn lại observer mỗi lần đổi trang.
+  const observe = useCallback<RefCallback<HTMLElement>>((el) => {
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const measure = () => {
+      const width = Math.round(el.clientWidth);
+      const height = el.offsetHeight;
+      const isFull = el.dataset.pageFull === "true";
+      setLock((prev) => {
+        if (prev && prev.width !== width) return isFull ? { width, height } : null;
+        if (!isFull) return prev;
+        return prev && prev.height >= height ? prev : { width, height };
+      });
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
   return {
     page: current,
     pages,
-    pageItems: items.slice(current * pageSize, (current + 1) * pageSize),
+    pageItems,
     setPage: (p) => setPage(Math.max(0, Math.min(p, pages - 1))),
+    listProps: { ref: observe, style: pagedListStyle(lock, pages, full), "data-page-full": full },
   };
 }
 

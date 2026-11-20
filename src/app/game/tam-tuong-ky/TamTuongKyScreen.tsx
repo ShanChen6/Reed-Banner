@@ -749,9 +749,6 @@ function LibraryBody({
   // 2 cột × 8 hàng trên máy tính, 12 ô trên điện thoại (mục 7.6). Đổi từ khóa/nhóm thì về trang 1 (key mới);
   // có yếu tố mới trong danh sách đang lọc thì mở trang có nó.
   const pageSize = useIsDesktop() ? 24 : 16;
-  // Một hàng lọc: “Tất cả” + nhóm đầu (Nguyên tố) là chip, nhóm còn lại gom vào ô chọn lấp phần còn lại của hàng.
-  const shown = groups.slice(0, 1);
-  const more = groups.slice(1);
   const flashIndex = flash ? nodes.findIndex((n) => n.id === flash.id) : -1;
   const listKey = `${query}|${group ?? ""}${flashIndex >= 0 ? `|${flash!.seq}` : ""}`;
   return (
@@ -767,8 +764,9 @@ function LibraryBody({
           className="min-h-11 rounded-lg border border-[var(--frame-line-mid)] bg-[var(--wood-lo)] px-3 text-[var(--on-wood)] placeholder:text-[var(--ash)]"
         />
       </label>
-      <div className="flex items-center gap-1.5" role="group" aria-label="Lọc theo nhóm">
-        {[{ id: null, name: "Tất cả" }, ...shown].map((g) => (
+      {/* Mọi nhóm là một hàng tab, cuộn ngang khi chật (hộp thoại chọn nguyên liệu tính chiều cao theo một hàng). */}
+      <div className="-mx-1 flex items-center gap-1.5 overflow-x-auto px-1 pb-1" role="group" aria-label="Lọc theo nhóm">
+        {[{ id: null, name: "Tất cả" }, ...groups].map((g) => (
           <button
             key={g.id ?? "all"}
             type="button"
@@ -779,23 +777,6 @@ function LibraryBody({
             {g.name}
           </button>
         ))}
-        {more.length > 0 && (
-          <label className="min-w-0 flex-1">
-            <span className="sr-only">Nhóm khác</span>
-            <select
-              value={more.some((g) => g.id === group) ? (group ?? "") : ""}
-              onChange={(e) => setGroup(e.target.value || null)}
-              className={`min-h-8 pointer-coarse:min-h-11 w-full rounded-full border bg-[var(--wood-lo)] px-2.5 text-caption ${more.some((g) => g.id === group) ? "border-[var(--frame-gold)] text-[var(--title-on-wood)]" : "border-[var(--frame-line-mid)]"}`}
-            >
-              <option value="">Nhóm khác…</option>
-              {more.map((g) => (
-                <option key={g.id} value={g.id}>
-                  {g.name}
-                </option>
-              ))}
-            </select>
-          </label>
-        )}
       </div>
       {(showHelp || units !== undefined) && (
         <p className="text-caption text-[var(--ash)]">
@@ -893,7 +874,7 @@ function LibraryPage({
   const paged = usePagedItems(nodes, pageSize, initialPage);
   return (
     <>
-      <ul className="grid grid-cols-4 gap-1.5 sm:grid-cols-8 lg:grid-cols-4">
+      <ul {...paged.listProps} className="grid grid-cols-4 gap-1.5 sm:grid-cols-8 lg:grid-cols-4">
         {paged.pageItems.map((n) => (
           <li key={n.id}>
             <NodeChip
@@ -1383,7 +1364,7 @@ function LedgerPage({
   const paged = usePagedItems(entries, pageSize, initialPage);
   return (
     <>
-      <ul className="grid grid-cols-3 gap-2 sm:grid-cols-6 lg:grid-cols-3">
+      <ul {...paged.listProps} className="grid grid-cols-3 gap-2 sm:grid-cols-6 lg:grid-cols-3">
         {paged.pageItems.map((e) => (
           <li key={e.nodeId} className={e.nodeId === focusId ? "rounded-lg motion-safe:animate-[ttk-glow_1.1s_ease-out_2]" : undefined}>
             <LedgerTile entry={e} onOpen={onOpen} />

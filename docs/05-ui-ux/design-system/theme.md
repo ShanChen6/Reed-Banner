@@ -98,12 +98,12 @@ import {
 | `ModeScreen`, `ModeBanner`, `SectionTitle` | `@/components/game-ui`; khung màn chế độ |
 | `Skeleton`, `SkeletonText`, `ModeSkeleton`, `ModeLoading` | `@/components/game-ui`; khung xương khi tải (20/11/2026): không dùng dòng chữ "Đang tải…". Màn chế độ dùng `ModeSkeleton` (banner, dãy thẻ, khung); màn có footer dùng `ModeLoading` (cao ít nhất một màn hình để footer không nhảy, nhận `error`); bảng xếp hạng dùng `BoardLoading`. Luôn kèm nhãn cho trình đọc màn hình; giảm chuyển động thì đứng yên (`.ui-skeleton`) |
 | `buttonVariants()` | Dùng cùng style với Link, SceneLink, a |
-| `Input`, `Select` | Thuộc tính native, ref, sự kiện, validation, disabled và aria-invalid |
+| `Input`, `Select` | Thuộc tính native, ref, sự kiện, validation, disabled và aria-invalid. `Select` là ô chọn duy nhất của game (20/11/2026): gỗ lõm viền đồng, mũi tên vàng; `uiSize="sm"` cho hàng lọc, `active` khi đang lọc khác mặc định (viền vàng). Chrome/Edge (`appearance: base-select`) vẽ cả bảng xổ xuống cùng kiểu gỗ, mục đang chọn là giấy dó chữ mực; trình duyệt khác giữ bảng của hệ điều hành. Không viết `<select>` thô |
 | `FormField` | Label bao quanh control, hint tùy chọn |
 | `Alert` | error/warning/success/info; role alert cho lỗi, status cho thông báo |
 | `Badge` | default/muted/success/warning/danger |
 | `Divider` | Đường ngăn có chữ ở giữa |
-| `Pagination`, `usePagedItems`, `PageControls` | Import riêng từ `@/components/ui/Pagination`. `Pagination` cho API cursor (busy, nhãn, className); `usePagedItems(items, pageSize)` + `PageControls` cắt trang danh sách có sẵn ở client, hiện "Trang x/y", ẩn khi chỉ một trang |
+| `Pagination`, `usePagedItems`, `PageControls` | Import riêng từ `@/components/ui/Pagination`. `Pagination` cho API cursor (busy, nhãn, className); `usePagedItems(items, pageSize)` + `PageControls` cắt trang danh sách có sẵn ở client, hiện "Trang x/y", ẩn khi chỉ một trang. Trải `{...paged.listProps}` lên phần tử bọc danh sách để trang ít mục (trang cuối) giữ chiều cao trang đầy, nút phân trang và khối bên dưới không nhảy |
 
 `Button` mặc định `type="button"`; nút gửi form phải đặt `type="submit"`. Dùng link thật khi điều hướng; không bọc link bên trong button. `Pagination` nhận hasPrevious/hasNext/onPrevious/onNext; logic cursor và truy vấn nằm ở màn gọi. Danh sách dài (thẻ bán, túi đồ, lưới tướng) cắt trang bằng `usePagedItems` thay vì bắt người chơi cuộn; đặt `key` theo bộ lọc để về trang đầu khi đổi lọc.
 

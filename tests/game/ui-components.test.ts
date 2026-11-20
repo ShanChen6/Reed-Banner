@@ -4,7 +4,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Button, Card, CardHeader, CardBody, CardFooter, CardTitle, FormField, Input, Select, Alert, buttonVariants } from "../../src/components/ui";
 import { cn } from "../../src/lib/cn";
-import { Pagination } from "../../src/components/ui/Pagination";
+import { Pagination, pagedListStyle } from "../../src/components/ui/Pagination";
 
 describe("shared UI contracts", () => {
   it("buttons do not accidentally submit forms, but support explicit submit", () => {
@@ -37,6 +37,14 @@ describe("shared UI contracts", () => {
     assert.doesNotMatch(buttons[1]!, /disabled/);
     const busy = renderToStaticMarkup(createElement(Pagination, { ...props, busy: true }));
     assert.equal((busy.match(/disabled=""/g) ?? []).length, 2);
+  });
+
+  it("paged lists keep the full-page height only on a shorter page", () => {
+    const lock = { width: 600, height: 420 };
+    assert.equal(pagedListStyle(null, 3, false), undefined, "chưa đo trang đầy thì không giữ");
+    assert.equal(pagedListStyle(lock, 3, true), undefined, "trang đầy tự cao đúng");
+    assert.equal(pagedListStyle(lock, 1, false), undefined, "một trang (lọc ra ít mục) thì co lại");
+    assert.deepEqual(pagedListStyle(lock, 3, false), { minHeight: 420, alignContent: "start" });
   });
 
   it("pagination delegates navigation without changing cursor semantics", () => {

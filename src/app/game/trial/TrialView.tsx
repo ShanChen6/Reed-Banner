@@ -374,7 +374,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
                 );
               })}
             </ul>
-            <ul aria-label="Tướng kèm có thể chọn" className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <ul aria-label="Tướng kèm có thể chọn" {...pagedOptions.listProps} className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {pagedOptions.pageItems.map((o) => (
                 <li key={o.id}>
                   <button

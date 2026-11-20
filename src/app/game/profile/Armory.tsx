@@ -25,6 +25,7 @@ import {
   type Profile,
   type ProfileAction,
 } from "@/core";
+import { Select } from "@/components/ui";
 import { Pagination } from "@/components/ui/Pagination";
 import { ItemIcon, type ItemArtId } from "../art/items";
 import { ITEMS } from "../items/catalog";
@@ -160,24 +161,24 @@ export default function Armory({
             Vật phẩm <span className="text-sm opacity-75 tabular-nums">{ITEMS.filter((g) => g.have(profile) > 0).length}</span>
           </button>
           {!itemShelf && slots.length > 1 && (
-            <label className="barracks-field ml-auto flex min-h-9 pointer-coarse:min-h-11 items-center rounded-md">
-              <span className="sr-only">Lọc theo ô</span>
-              <select
-                value={slotFilter}
-                onChange={(e) => {
-                  setSlotFilter(e.target.value as GearSlot | "all");
-                  setPage(0);
-                }}
-                className="min-h-9 pointer-coarse:min-h-11 cursor-pointer bg-transparent px-2 text-[15px] text-on-wood outline-none"
-              >
-                <option value="all" className="bg-wood-inset">Mọi ô</option>
-                {slots.map((s) => (
-                  <option key={s} value={s} className="bg-wood-inset">
-                    {SLOT_NAME[s]}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <Select
+              aria-label="Lọc theo ô"
+              uiSize="sm"
+              active={slotFilter !== "all"}
+              value={slotFilter}
+              onChange={(e) => {
+                setSlotFilter(e.target.value as GearSlot | "all");
+                setPage(0);
+              }}
+              className="ml-auto text-[15px]"
+            >
+              <option value="all">Mọi ô</option>
+              {slots.map((s) => (
+                <option key={s} value={s}>
+                  {SLOT_NAME[s]}
+                </option>
+              ))}
+            </Select>
           )}
         </div>
         {merging && (
@@ -367,17 +368,13 @@ function ItemPanel({
       <div className="barracks-inset flex flex-col gap-2 rounded-md p-2.5">
         <label className="flex flex-col gap-1 text-sm text-[var(--on-wood-soft)]">
           Mặc cho
-          <select
-            value={to}
-            onChange={(e) => onTarget(e.target.value)}
-            className="barracks-field min-h-10 pointer-coarse:min-h-11 rounded-md bg-transparent px-2 text-[15px] text-on-wood"
-          >
+          <Select value={to} onChange={(e) => onTarget(e.target.value)} className="text-[15px]">
             {who.map((id) => (
-              <option key={id} value={id} className="bg-wood-inset">
+              <option key={id} value={id}>
                 {nameOf(id)}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <p className="text-sm tabular-nums">
           {STAT_NAME[SLOT_STAT[item.slot]]} +{itemStat(item, element)} khi {nameOf(to)} mặc
@@ -448,17 +445,13 @@ function GoodPanel({
         <div className="flex flex-col gap-2">
           <label className="flex flex-col gap-1 text-sm text-[var(--on-wood-soft)]">
             Dùng cho
-            <select
-              value={reader}
-              onChange={(e) => onHero(e.target.value)}
-              className="barracks-field min-h-10 pointer-coarse:min-h-11 rounded-md bg-transparent px-2 text-[15px] text-on-wood"
-            >
+            <Select value={reader} onChange={(e) => onHero(e.target.value)} className="text-[15px]">
               {heroes.map((h) => (
-                <option key={h} value={h} className="bg-wood-inset">
+                <option key={h} value={h}>
                   {nameOf(h)} · cấp {progressOf(profile, h).level}
                 </option>
               ))}
-            </select>
+            </Select>
           </label>
           {progressOf(profile, reader).level >= MAX_LEVEL ? (
             <p className="text-sm text-[var(--on-wood-soft)]">{nameOf(reader)} đã đạt cấp tối đa.</p>

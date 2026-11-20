@@ -414,7 +414,7 @@ export default function SurvivalScreen() {
           {shown.length === 0 ? (
             <p className="py-4 text-center text-sm text-on-wood-soft">Chưa có tướng hệ này.</p>
           ) : (
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
+            <div {...paged.listProps} className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
               {paged.pageItems.map(({ fighter, level }) => {
                 const at = slots.indexOf(fighter.id);
                 return (
