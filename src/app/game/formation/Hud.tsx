@@ -95,12 +95,27 @@ export function CommandCard({ state }: { state: PuzzleState }) {
   );
 }
 
-/** Nút gợi ý ô đặt được (bật tắt, nhớ lựa chọn). */
-export function HintToggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
+/**
+ * Nút gợi ý ô đặt được (bật tắt, nhớ lựa chọn): một biểu tượng tròn nhỏ (sa bàn có chấm sáng) đặt cạnh lệnh bài, thay
+ * cho nút chữ "Gợi ý ô đặt được: Bật" dưới bàn (Shan 20/11/2026: nút chữ chiếm nhiều chỗ).
+ */
+export function HintToggle({ on, onToggle, className = "" }: { on: boolean; onToggle: () => void; className?: string }) {
+  const label = `Gợi ý ô đặt được: ${on ? "đang bật" : "đang tắt"}`;
   return (
-    <button type="button" aria-pressed={on} onClick={onToggle} className={`flex min-h-11 items-center gap-2 rounded-full border px-4 text-[15px] ${on ? "border-frame-gold bg-frame-gold/25 font-semibold" : "border-frame-bronze/50 bg-black/20 text-on-wood-soft"}`}>
-      <span aria-hidden className={`size-2.5 rounded-full ${on ? "bg-frame-gold-hi shadow-[0_0_6px_var(--frame-gold-hi)]" : "bg-frame-line"}`} />
-      Gợi ý ô đặt được: {on ? "Bật" : "Tắt"}
+    <button
+      type="button"
+      aria-pressed={on}
+      aria-label="Gợi ý ô đặt được"
+      title={label}
+      onClick={onToggle}
+      className={`flex size-11 shrink-0 items-center justify-center rounded-full border transition-colors ${on ? "border-frame-gold bg-frame-gold/25 text-frame-gold-hi shadow-[0_0_10px_color-mix(in_srgb,var(--frame-gold)_45%,transparent)]" : "border-frame-bronze/50 bg-black/20 text-on-wood-soft"} ${className}`}
+    >
+      <svg aria-hidden viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth={1.5}>
+        <rect x="3.5" y="3.5" width="17" height="17" rx="2" />
+        <path d="M9.2 3.5v17M14.8 3.5v17M3.5 9.2h17M3.5 14.8h17" opacity={0.55} />
+        <circle cx="12" cy="12" r={on ? 2.2 : 1.6} fill="currentColor" stroke="none" />
+        {on && <circle cx="12" cy="12" r="4" opacity={0.5} />}
+      </svg>
     </button>
   );
 }
@@ -109,7 +124,7 @@ export function HintToggle({ on, onToggle }: { on: boolean; onToggle: () => void
  * Thanh dưới màn hình cho điện thoại (ngón cái chạm tới): quân đang cầm thu nhỏ, ngọn lửa Bỏ Lệnh, nút Bỏ Lệnh và tiến độ.
  * Ẩn ở màn rộng (đã có bảng điều khiển bên phải).
  */
-export function MobileBar({ state, rules, noMove, disabled, covered, total, onDiscard }: { state: PuzzleState; rules: Ruleset; noMove: boolean; disabled: boolean; covered: number; total: number; onDiscard: () => void }) {
+export function MobileBar({ state, rules, noMove, disabled, covered, total, onDiscard, hintsOn, onToggleHints }: { state: PuzzleState; rules: Ruleset; noMove: boolean; disabled: boolean; covered: number; total: number; onDiscard: () => void; hintsOn: boolean; onToggleHints: () => void }) {
   const h = state.hand;
   const pct = total > 0 ? Math.round((100 * covered) / total) : 0;
   return (
@@ -123,6 +138,7 @@ export function MobileBar({ state, rules, noMove, disabled, covered, total, onDi
           </p>
           <p className="text-caption text-on-wood-soft">Khai thông {pct}%</p>
         </div>
+        <HintToggle on={hintsOn} onToggle={onToggleHints} />
         <div className="flex flex-col items-center gap-1">
           <HeatFlames heat={state.discardHeat} max={rules.maxHeat} />
           <button type="button" disabled={disabled} onClick={onDiscard} className={buttonVariants({ variant: "secondary", className: "min-h-11 px-3 text-sm" })}>

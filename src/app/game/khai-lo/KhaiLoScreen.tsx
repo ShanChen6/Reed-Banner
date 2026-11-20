@@ -605,10 +605,9 @@ export default function KhaiLoScreen() {
                   {confirmEnd ? "Bấm lần nữa" : timed ? "Đổi bàn" : "Kết thúc màn"}
                 </button>
               </div>
-              {tool ? (
-                <p className="text-sm text-on-wood-soft"><b className="text-title-on-wood">{TOOL_NAME[tool]}</b>: {TOOL_HINT[tool]} <span className="pointer-coarse:hidden">Esc để bỏ chọn.</span></p>
-              ) : (
-                <p className="hidden text-caption text-on-wood-soft lg:block">Xóa {KL_TOOL_CHARGE} quân của một hệ (bằng cách chạm khối) để được 1 đạo cụ hệ đó, tích không giới hạn. Phím 1–7 chọn nhanh.</p>
+              {/* Cách nạp đạo cụ và phím tắt nằm ở thẻ Hướng dẫn; chỉ còn mô tả đạo cụ đang chọn. */}
+              {tool && (
+                <p className="text-sm text-on-wood-soft"><b className="text-title-on-wood">{TOOL_NAME[tool]}</b>: {TOOL_HINT[tool]}</p>
               )}
               {state.phase === "stuck" && !confirmEnd && (
                 <p className="text-sm text-warning">Hết khối để xóa: dùng đạo cụ hoặc {timed ? "đổi bàn" : "kết thúc màn"}.</p>
@@ -620,7 +619,6 @@ export default function KhaiLoScreen() {
               )}
             </div>
           )}
-          <p className="text-caption text-on-wood-soft">Bản chơi thử, không cần mạng: chưa có thưởng và bảng công trạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.</p>
         </aside>
       </div>
       </PlayCard>

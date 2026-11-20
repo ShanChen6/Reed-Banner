@@ -1,7 +1,7 @@
 # Prompt video hướng dẫn Trận Đồ (Veo 3)
 
 > Cập nhật: 02/11/2026
-> Trạng thái: **DRAFT** — prompt để Shan tạo video bằng Veo 3; chưa có video. Luật chơi lấy từ [giao diện Trận Đồ](../../05-ui-ux/screens/tran-do.md) (bảng luật ở `src/app/game/formation/Rules.tsx`).
+> Trạng thái: **DRAFT** — prompt để Shan tạo video bằng Veo 3; chưa có video. Luật chơi lấy từ [giao diện Trận Đồ](../../05-ui-ux/screens/tran-do.md) (luật đầy đủ ở thẻ Hướng dẫn, `src/app/game/modeGuides.ts` mục `FORMATION`).
 
 Chọn nơi tạo: Google Flow (gói miễn phí), Gemini app hoặc Vertex AI; tránh trang trung gian chèn watermark. Veo 3 tạo clip ngắn (khoảng 8 giây, có tiếng). Veo vẽ chữ và giao diện game rất kém, nên video **không quay màn hình game** mà diễn tả luật bằng một **sa bàn thật**: quân tướng là thẻ gỗ sơn mài đặt lên bản đồ bị phủ sương. Chữ và giải thích để lời dẫn tiếng Việt và phụ đề dựng sau.
 

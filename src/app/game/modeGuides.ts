@@ -56,6 +56,10 @@ export const GUIDE_SCENES: readonly GuideScene[] = [
   "EXPEDITION",
 ];
 
+/** Cách đổi ô và phím tắt trên bàn cờ trận đấu; trước đây là dòng chữ dưới bàn cờ (Shan 20/11/2026: gợi ý đưa vào Hướng dẫn). */
+const BATTLE_CONTROLS =
+  "Vuốt, kéo hoặc bấm hai ô kề nhau để đổi chỗ. Bàn phím: mũi tên hoặc WASD di chuyển, Enter chọn ô, 1–6 dùng kỹ năng, Tab đổi người hành động, Esc hủy.";
+
 export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
   CAMPAIGN: {
     goal: "Bạn đóng vai Đinh Bộ Lĩnh, đi qua 6 chương và 24 nhiệm vụ, từ thuở nhỏ ở Hoa Lư đến đại lễ đăng quang năm 968.",
@@ -77,6 +81,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Tướng lịch sử mở theo mốc chương. Bình Loạn không phát Đá Cường Hóa.",
     ],
     tips: [
+      BATTLE_CONTROLS,
       "Đội dưới cấp gợi ý thì nên luyện thêm ở Giao Tranh trước khi vào trận.",
       "Qua các nhiệm vụ mốc, bạn mở thêm các trận tái đấu sứ quân ở khó hơn, có thưởng riêng.",
     ],
@@ -101,6 +106,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Đá Cường Hóa hiện chỉ tích trong tài khoản, chưa có chỗ dùng.",
     ],
     tips: [
+      BATTLE_CONTROLS,
       "Đọc luật tầng rồi mới chọn tướng. Nếu chưa xếp đủ ba người hợp luật, hãy đổi nghề và hệ của Đinh Bộ Lĩnh.",
     ],
   },
@@ -127,6 +133,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Bảng công trạng riêng theo chu kỳ tuần (thẻ Công trạng tuần), có thưởng vàng theo hạng cuối kỳ cho tài khoản đã ghi danh.",
     ],
     tips: [
+      BATTLE_CONTROLS,
       "Đừng dồn hết sức vào các tầng đầu: tầng sau khó dần và máu không tự đầy lại.",
       "Cần trình danh để chơi và lên bảng.",
     ],
@@ -154,6 +161,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Bậc theo kỷ lục số đợt: Đồng 1, Bạc 5, Vàng 10, Bạch Kim 15, Kim Cương 20, Huyền Thoại 25. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Công trạng, mỗi bậc một lần.",
     ],
     tips: [
+      BATTLE_CONTROLS,
       "Xoay người giữa các đợt để tướng yếu có lúc hồi sức.",
       "Cần trình danh để chơi và lên bảng.",
     ],
@@ -179,7 +187,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Điểm danh mỗi ngày ở đầu màn: liền 7 ngày thì vàng tăng dần, bỏ một ngày thì chuỗi về ngày 1.",
       "Nhiệm vụ ngày nằm ngay cạnh đề hôm nay: đánh đủ trận, thắng, nhặt ô vàng và nhận Nhật Lệnh để lấy thêm vàng.",
     ],
-    tips: ["Chưa nghĩ ra thế đánh thì cứ thử một nước nhỏ: đề chỉ chơi một lần nên hãy đọc kỹ đội trước."],
+    tips: [BATTLE_CONTROLS, "Chưa nghĩ ra thế đánh thì cứ thử một nước nhỏ: đề chỉ chơi một lần nên hãy đọc kỹ đội trước."],
   },
   ARENA: {
     goal: "Đánh với đội phòng thủ của người khác, do máy điều khiển ở mức Khó. Thắng tăng điểm hạng, thua giảm điểm hạng.",
@@ -201,6 +209,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Bảng mùa theo tuần chỉ tính các trận bạn đi đánh, không tính phòng thủ. Hạng cuối mùa có thưởng vàng.",
     ],
     tips: [
+      BATTLE_CONTROLS,
       "Khi Đấu người được mở, bạn chọn Đấu người để đánh trực tiếp 1vs1 với người khác: ai cũng dùng Đinh Bộ Lĩnh, hệ thống ghép người có điểm gần bạn, mỗi lượt 30 giây.",
       "Đấu người có một dải bậc hạng chung cho 1vs1 và 3vs3, tính theo điểm hạng cao hơn của hai thể thức, cùng mốc và thưởng với bóng ma; lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Công trạng.",
       "Ở Đấu người, bỏ lượt liên tục là phá trận và không được tính điểm. Mất mạng được tha 3 lần mỗi ngày; mất mạng quá 90 giây thì máy điều khiển tướng của bạn.",
@@ -251,11 +260,12 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Khối n quân được n² điểm. Ô số (viền vàng, nhãn ×2 hoặc ×3, từ màn 2) nhân điểm cả khối chứa nó; khối có nhiều ô số thì nhân dồn, ví dụ ×2 và ×3 thành ×6.",
       `Dọn sạch bàn: thưởng ${KL_CLEAR_BONUS_BASE} điểm cộng ${KL_CLEAR_BONUS_PER_LEVEL} điểm × số màn (Cấp tốc: × số bậc).`,
       `Cấp tốc: bàn hết đường mà chỉ còn tối đa ${KL_NEAR_CLEAR_LEFT} quân vẫn được ${KL_NEAR_CLEAR_BONUS} điểm.`,
-      "Chơi ngay trên máy bạn, không thưởng và không xếp hạng.",
+      "Chơi ngay trên máy bạn, không thưởng và không xếp hạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.",
     ],
     tips: [
       "Rê chuột qua khối để xem trước số quân và điểm. Trên điện thoại, chạm lần đầu để xem, chạm lần nữa để xóa.",
       "Xóa khối nhỏ trước để các khối khác dồn lại thành khối lớn.",
+      "Phím 1–7 chọn nhanh đạo cụ, Esc để bỏ chọn.",
     ],
   },
   DO_THAM: {
@@ -285,7 +295,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     goal: "Dẫn tướng qua mê cung lịch sử từ thời Ngô Quyền tới loạn sứ quân. Mỗi ô dừng chân là một câu hỏi sử, đáp đúng mới đứng vững, sai thì đọc sử chép rồi thử lại.",
     steps: [
       `Chọn mê cung, độ khó và hai tướng đi cùng. Dễ ${SL_LEVELS.de.cols}×${SL_LEVELS.de.rows} không sương, Thường ${SL_LEVELS.thuong.cols}×${SL_LEVELS.thuong.rows} có ${SL_LEVELS.thuong.questionSeconds} giây mỗi câu, Khó ${SL_LEVELS.kho.cols}×${SL_LEVELS.kho.rows} có ${SL_LEVELS.kho.questionSeconds} giây mỗi câu.`,
-      "Đổ xúc xắc rồi chọn một ô viền vàng để tới. Bạn được dừng sớm hơn số đã đổ.",
+      "Đổ xúc xắc rồi chọn một ô viền vàng để tới (rê chuột vào ô để xem đường đi). Bạn được dừng sớm hơn số đã đổ.",
       "Trả lời câu hỏi ở ô vừa tới. Đúng thì cắm cờ lau, ô đó đã thông.",
       "Tới ô Trấn giữ cổng thì vào giao tranh: đổi ô ghép ba để hạ Thành lực. Hạ xong thì đi vào Cổng là thoát.",
     ],
@@ -294,11 +304,13 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Ô Lục, Vàng, Đỏ là câu dễ tới khó. Ô Đỏ đáp đúng còn mở lối tắt khóa ở ngay bên cạnh.",
       "Ô Bẫy cũng là một câu hỏi: đúng thì gỡ bẫy, sai thì dính bẫy như Phục binh, Nước lũ hay Đốt cầu. Từ bậc Thường có bẫy ẩn trông như ô Vàng.",
       "Ô Ải phải đúng hai câu liền. Không đi xuyên qua Ải và ô Trấn khi chưa thông.",
-      `Trợ giúp có hạn: Lọc lời, Đổi câu, Hỏi tướng và Hỏa tốc, cả mê cung dùng tối đa ${SL_AID_USE_MAX} lần.`,
+      `Trợ giúp có hạn, cả mê cung dùng tối đa ${SL_AID_USE_MAX} lần: Lọc lời bỏ hai đáp án sai, Đổi câu thay câu khác, Hỏi tướng nhờ tướng đi cùng gợi ý, Hỏa tốc tự chọn số bước. Ô Sử quan cho thêm lượt trợ giúp.`,
+      "Đáp đúng ô Vàng được 1 Ấn sử, ô Đỏ được 2. Lộc là ô may mắn, Bia là câu đọc đoạn trích, Trấn là quân giặc giữ cổng. Lối nét đứt là lối tắt còn khóa. Từ bậc Thường, sương che các ô ở xa.",
+      "Trong giao tranh, đổi hai ô kề nhau để ghép ba. Kiếm đánh mạnh nhất; trống và tim nạp Sĩ khí; sách nạp Mưu để Quân sư hiến kế; âm dương nạp Kế sách; bánh chưng cho thêm nước.",
       "Trong giao tranh, ai cũng có sức như nhau, cấp và đồ của bạn không tính. Kẻ địch không đánh lại; hết nước thì lui về, Thành lực đã mất vẫn giữ nguyên.",
     ],
     rewards: [
-      "Bản chơi thử chạy ngay trên máy bạn, chưa có thưởng và bảng công trạng. Số sao và số lượt tốt nhất lưu trên trình duyệt này.",
+      "Bản chơi thử chạy ngay trên máy bạn, chưa có thưởng và bảng công trạng. Ván dở, số sao và số lượt tốt nhất lưu trên trình duyệt này. Câu hỏi đã qua lần duyệt thứ nhất, đang chờ duyệt lần hai.",
       "Thoát trong mốc lượt và sai không quá hai câu thì được ba sao.",
     ],
     tips: [
@@ -318,6 +330,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Chế độ Thường: mỗi lượt chơi tốn một phiếu, nguyên liệu không mất. Có gợi ý, nhưng gợi ý không lộ đủ công thức.",
       "Chế độ Hạng tuần: mỗi lần ghép tiêu nguyên liệu, ghép sai cũng mất, không hoàn lại. Danh sách tướng đề cử đổi theo tuần.",
       "Cần trình danh, lữ khách không chơi được.",
+      "Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội.",
     ],
     rewards: [
       "Bậc Tầm Tướng Ký theo số tướng đã khám phá: Đồng 10, Bạc 20, Vàng 35, Bạch Kim 50, Kim Cương 65, Huyền Thoại 76. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Ban thưởng, mỗi bậc một lần.",
@@ -345,6 +358,6 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Thưởng trận như trận thường, lần đầu thắng mỗi bậc có thưởng lớn.",
       "Lữ khách chơi được, không có bảng công trạng.",
     ],
-    tips: ["Đừng để một đạo đi quá xa: chờ đạo kia tới kề để giáp công thì trận nhẹ hơn nhiều."],
+    tips: [BATTLE_CONTROLS, "Đừng để một đạo đi quá xa: chờ đạo kia tới kề để giáp công thì trận nhẹ hơn nhiều."],
   },
 };
