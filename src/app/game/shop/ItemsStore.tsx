@@ -31,7 +31,7 @@ function ItemCard({ item, profile, busy, onAction }: { item: ItemDef; profile: P
         <div className="min-w-0 flex-1">
           <h2 className="ui-title-on-wood truncate font-serif text-base font-bold">{item.name}</h2>
           <p className="text-caption text-on-wood-soft tabular-nums">
-            {item.price} vàng / {item.unit} · đang có <b className="text-on-wood">{have}</b>
+            {item.price} vàng / {item.unit}, đang có <b className="text-on-wood">{have}</b>
             {item.id === "food" && `/${item.max}`}
           </p>
         </div>
@@ -39,7 +39,7 @@ function ItemCard({ item, profile, busy, onAction }: { item: ItemDef; profile: P
       <p className="text-caption text-on-wood-soft">{item.text}</p>
       {morale && (
         <p className={cn("text-caption", morale === "eager" ? "text-frame-gold" : morale === "normal" ? "text-on-wood-soft" : "text-danger")}>
-          {MORALE_NAME[morale]} · {damageText(morale)}
+          {MORALE_NAME[morale]}, {damageText(morale)}
         </p>
       )}
       <div className="mt-auto flex flex-wrap gap-1.5">
@@ -58,7 +58,7 @@ function ItemCard({ item, profile, busy, onAction }: { item: ItemDef; profile: P
               onClick={() => onAction(item.buy(n))}
               className="tabular-nums"
             >
-              {item.id === "food" && n === room && n > 10 ? "Đầy" : `+${n}`} · {n * item.price}
+              {item.id === "food" && n === room && n > 10 ? "Đầy" : `+${n}`}, {n * item.price}
             </Button>
           ))
         )}

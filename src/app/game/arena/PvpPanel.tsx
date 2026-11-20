@@ -208,7 +208,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
         <FrameInset>
           <p className="text-caption text-on-wood-soft">Đánh</p>
           <p className="text-base font-bold text-title-on-wood">
-            {o ? `${o.ratings.duel.wins} thắng · ${o.ratings.duel.losses} thua` : "–"}
+            {o ? `${o.ratings.duel.wins} thắng, ${o.ratings.duel.losses} thua` : "–"}
           </p>
         </FrameInset>
         <FrameInset>
@@ -261,7 +261,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
             3vs3 xếp hạng
           </SectionTitle>
           <p className="text-on-wood">
-            Điểm {o.ratings.team.rating} · {o.ratings.team.wins} thắng · {o.ratings.team.losses} thua
+            Điểm {o.ratings.team.rating}, {o.ratings.team.wins} thắng, {o.ratings.team.losses} thua
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Button disabled={busy || !!o.banUntil || o.heroCount.have < o.heroCount.need} onClick={() => void queue("team")}>
@@ -332,7 +332,7 @@ export function PvpTierPanel() {
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="font-bold text-frame-gold">Bậc hạng Đấu người</h3>
         <p className="text-caption text-on-wood-soft">
-          Điểm xét bậc <strong className="text-title-on-wood">{score}</strong> · 1vs1 {duel.rating} · 3vs3 {team.rating}
+          Điểm xét bậc <strong className="text-title-on-wood">{score}</strong>, 1vs1 {duel.rating}, 3vs3 {team.rating}
         </p>
       </div>
       <TierLadder
@@ -479,11 +479,11 @@ function PvpRoom({ onMatch, onExit }: { onMatch: (matchId: string) => void; onEx
         <FrameInset key={x.slot} className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <p className="text-on-wood">
-              {x.occupied ? `${x.name ?? "Hào kiệt"}${x.host ? " (chủ phòng)" : ""}${x.mine ? " · bạn" : ""}` : "Chỗ trống"}
+              {x.occupied ? `${x.name ?? "Hào kiệt"}${x.host ? " (chủ phòng)" : ""}${x.mine ? ", bạn" : ""}` : "Chỗ trống"}
             </p>
             {x.hero && (
               <p className="text-sm text-on-wood-soft">
-                {x.hero.name} · cấp {x.hero.level} · {PROFESSION_NAME[x.hero.profession as keyof typeof PROFESSION_NAME] ?? x.hero.profession} · {ELEMENT_NAME[x.hero.element]}
+                {x.hero.name}, cấp {x.hero.level}, {PROFESSION_NAME[x.hero.profession as keyof typeof PROFESSION_NAME] ?? x.hero.profession}, {ELEMENT_NAME[x.hero.element]}
               </p>
             )}
             {x.occupied && !x.hero && <p className="text-sm text-on-wood-soft">Chưa chọn tướng</p>}
@@ -519,7 +519,7 @@ function PvpRoom({ onMatch, onExit }: { onMatch: (matchId: string) => void; onEx
             <option value="">Chọn tướng</option>
             {room.heroes.map((h) => (
               <option key={h.id} value={h.id}>
-                {h.name} · cấp {h.level}
+                {h.name}, cấp {h.level}
               </option>
             ))}
           </Select>
@@ -624,8 +624,8 @@ function FighterPanel({ f, rage, showRage, mine, active, tag }: { f: Fighter; ra
         <p className="font-semibold">
           {f.name}
           <span className="ml-2 text-caption font-normal text-on-wood-soft">
-            {tag ?? (mine ? "Bạn" : "Đối thủ")} · {PROFESSION_NAME[f.profession as keyof typeof PROFESSION_NAME] ?? f.profession} · {ELEMENT_NAME[f.element]}
-            {f.level ? ` · cấp ${f.level}` : ""}
+            {tag ?? (mine ? "Bạn" : "Đối thủ")}, {PROFESSION_NAME[f.profession as keyof typeof PROFESSION_NAME] ?? f.profession}, {ELEMENT_NAME[f.element]}
+            {f.level ? `, cấp ${f.level}` : ""}
           </span>
         </p>
       </div>
@@ -956,7 +956,7 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
                     title={skillText(def)}
                     onClick={() => pickSkill(def)}
                   >
-                    {def.name} · {cost}
+                    {def.name}, {cost}
                   </Button>
                 );
               })}

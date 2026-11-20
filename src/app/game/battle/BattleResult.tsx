@@ -151,7 +151,7 @@ export function BattleResult({
         <div className="text-center text-sm">
           {!trialMatch && (
             <p>
-              +{outcome.rewards.xp[0]} kinh nghiệm mỗi người · +
+              +{outcome.rewards.xp[0]} kinh nghiệm mỗi người, +
               {outcome.rewards.gold} vàng
             </p>
           )}
@@ -224,9 +224,9 @@ export function BattleResult({
               Thắng {RAID_TIER_INFO[outcome.raid.tier].name} lần
               đầu: +{outcome.raid.bonusGold} vàng
               {outcome.raid.item
-                ? ` · ${gearText(outcome.raid.item)}`
+                ? `, ${gearText(outcome.raid.item)}`
                 : outcome.raid.soldFor > 0
-                  ? ` · túi đầy, món thưởng bán được ${outcome.raid.soldFor} vàng`
+                  ? `, túi đầy, món thưởng bán được ${outcome.raid.soldFor} vàng`
                   : ""}
             </p>
           )}

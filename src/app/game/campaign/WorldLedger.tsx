@@ -43,7 +43,7 @@ export default function WorldLedger({
         id="world-ledger-title"
         className="mb-1 text-kicker text-frame-gold"
       >
-        Sổ thế cục 12 vùng · {ledger.resolvedCount}/12 có kết cục
+        Sổ thế cục 12 vùng – {ledger.resolvedCount}/12 có kết cục
       </h3>
       <ul className="mb-2 grid grid-cols-2 gap-1 text-caption">
         {CAMPAIGN_LEDGER_GROUPS.map((group) => (
@@ -76,8 +76,8 @@ export default function WorldLedger({
                   </span>
                   <span className="text-right text-on-wood-soft">
                     {view.resolved
-                      ? `${METHOD_TEXT[view.resolutionMethod] ?? view.status} · ${CONFIDENCE_TEXT[view.confidence]} · ${view.mission}`
-                      : `chưa có kết cục · ${r.mission}`}
+                      ? `${METHOD_TEXT[view.resolutionMethod] ?? view.status}, ${CONFIDENCE_TEXT[view.confidence]}, ${view.mission}`
+                      : `chưa có kết cục, ${r.mission}`}
                   </span>
                 </li>
               ))}

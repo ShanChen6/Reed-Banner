@@ -434,7 +434,7 @@ export default function KhaiLoScreen() {
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <h1 className="sr-only">Khai Lộ</h1>
-          <p className="text-kicker text-frame-gold">Giải đố · {MODE_NAME[state.mode]} · {timed ? "Bậc" : "Màn"} {state.level}</p>
+          <p className="text-kicker text-frame-gold">Giải đố – {MODE_NAME[state.mode]}, {timed ? "Bậc" : "Màn"} {state.level}</p>
           <p className="hidden text-caption text-on-wood-soft sm:block">Chạm để xóa cả khối quân cùng hệ. Dọn sạch bàn để qua màn.</p>
         </div>
         <Button variant="secondary" size="sm" onClick={newGame}>Ván mới</Button>

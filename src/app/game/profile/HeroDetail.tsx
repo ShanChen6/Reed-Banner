@@ -236,7 +236,7 @@ function TeamControl({
   if (id === MAIN_ID)
     return (
       <span className="barracks-pill is-gold">
-        <TeamGlyph className="size-4" /> Chủ tướng · luôn ra trận
+        <TeamGlyph className="size-4" /> Chủ tướng, luôn ra trận
       </span>
     );
   if (profile.team.includes(id))
@@ -362,7 +362,7 @@ export function XpBooks({ profile, id, busy, onAction }: { profile: Profile; id:
     <div className="barracks-inset flex flex-wrap items-center gap-2 rounded-md px-2.5 py-2 text-sm">
       <ItemIcon id="xpBook" className="size-8 shrink-0" />
       <span className="min-w-0 flex-1">
-        Sách kinh nghiệm: <b className="tabular-nums text-title-on-wood">{have}</b> cuốn · mỗi cuốn +{XP_BOOK_XP}
+        Sách kinh nghiệm: <b className="tabular-nums text-title-on-wood">{have}</b> cuốn, mỗi cuốn +{XP_BOOK_XP}
       </span>
       {have > 0 ? (
         packs.map((n) => (
@@ -519,7 +519,7 @@ function SkillUpgrade({
         {level >= SKILL_MAX_LEVEL
           ? `Đã tối đa: mọi hệ số +${Math.round(SKILL_LEVEL_BONUS * (SKILL_MAX_LEVEL - 1) * 100)}%, năng lượng −${Math.round(SKILL_MAX_LEVEL_DISCOUNT * 100)}%.`
           : gains.length > 0
-            ? `Lên cấp ${level + 1}: ${gains.join(" · ")}`
+            ? `Lên cấp ${level + 1}: ${gains.join(", ")}`
             : `Lên cấp ${level + 1}: chiêu không có hệ số tăng theo cấp.`}
       </span>
       <button
@@ -529,7 +529,7 @@ function SkillUpgrade({
         aria-label={cost === null ? `${def.name} đã tối đa` : `Nâng ${def.name} lên cấp ${level + 1}, tốn ${cost} điểm`}
         className="barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-2.5 text-sm whitespace-nowrap disabled:opacity-45"
       >
-        {cost === null ? "Tối đa" : `Nâng · ${cost} điểm`}
+        {cost === null ? "Tối đa" : `Nâng – ${cost} điểm`}
       </button>
     </div>
   );
@@ -581,7 +581,7 @@ function Details({ profile, id, fighter, bare, worn }: { profile: Profile; id: s
             <dt className="text-[var(--on-wood-soft)]">Kỹ năng riêng</dt>
             <dd>
               <span className="font-semibold text-title-on-wood">{ultimate.name}</span>
-              {p.level < MAIN_SLOT_UNLOCK[4]! && <span className="text-[var(--on-wood-soft)]"> · mở ở cấp {MAIN_SLOT_UNLOCK[4]}</span>}
+              {p.level < MAIN_SLOT_UNLOCK[4]! && <span className="text-[var(--on-wood-soft)]">, mở ở cấp {MAIN_SLOT_UNLOCK[4]}</span>}
             </dd>
           </>
         )}

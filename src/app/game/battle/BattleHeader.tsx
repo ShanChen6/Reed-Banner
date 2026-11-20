@@ -59,12 +59,12 @@ export function BattleHeader({
   survival,
 }: BattleHeaderProps) {
   // Sảnh chờ trước trận đã có banner, độ khó và nút riêng: thanh này chỉ còn tiêu đề cho trình đọc màn hình.
-  if (!started) return <h1 className="sr-only">{online ? "Cờ Lau · Giao Tranh" : "Cờ Lau · Thao Luyện"}</h1>;
+  if (!started) return <h1 className="sr-only">{online ? "Cờ Lau – Giao Tranh" : "Cờ Lau – Thao Luyện"}</h1>;
   return (
     <header className="flex flex-wrap items-center justify-between gap-2 border-b border-frame-line-soft pb-2">
       {/* Tên chế độ đã ở header chung; giữ h1 cho trình đọc màn hình. */}
       <h1 className="sr-only">
-        {online ? "Cờ Lau · Giao Tranh" : "Cờ Lau · Thao Luyện"}
+        {online ? "Cờ Lau – Giao Tranh" : "Cờ Lau – Thao Luyện"}
       </h1>
       {/* Chiếm phần trống còn lại: chữ trạng thái dài ngắn theo lượt không làm nút bên cạnh nhích qua lại. */}
       <div className="min-w-0 flex-1 text-sm font-semibold text-title-on-wood" aria-live="polite">

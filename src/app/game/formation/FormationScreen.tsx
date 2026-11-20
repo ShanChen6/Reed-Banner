@@ -432,9 +432,9 @@ function PlayView({
       <div className="flex flex-wrap items-end justify-between gap-3">
         <header>
           <p className="text-caption font-semibold tracking-[0.25em] text-frame-gold uppercase">
-            {ranked ? `Kỳ ${ranked.period} · ` : ""}Sa bàn {width}×{height}
+            {ranked ? `Kỳ ${ranked.period}, ` : ""}Sa bàn {width}×{height}
           </p>
-          <h1 className="ui-title-on-wood font-serif text-3xl font-bold">Trận Đồ · {rules.name}{ranked ? " · Xếp hạng" : ""}</h1>
+          <h1 className="ui-title-on-wood font-serif text-3xl font-bold">Trận Đồ – {rules.name}{ranked ? " (xếp hạng)" : ""}</h1>
         </header>
         <div className="flex gap-2">
           {ranked ? (
@@ -450,7 +450,7 @@ function PlayView({
 
       <PlayCard label="Sa bàn Trận Đồ">
       <div className={`grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px] ${finished ? "" : "pb-28 lg:pb-0"}`}>
-        <div className="flex flex-col items-center gap-3">
+        <div className="fm-board-col flex flex-col items-center gap-3">
           <BoardView state={state} map={map} legal={legal} showHints={hintsOn} playing={playing} last={last} focus={focus} setFocus={setFocus} setPeek={setPeek} boardRef={boardRef} sweeps={sweeps} onPlace={(row, col) => onCommand({ kind: "place", row, col })} />
           <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-title-on-wood">{message}</p>
           <p aria-hidden className="-mt-2 min-h-5 text-center text-sm text-on-wood-soft">{peekText}</p>
@@ -467,7 +467,7 @@ function PlayView({
               <div className="ui-frame flex flex-col gap-3 p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm text-on-wood-soft">Bỏ Lệnh {state.discardHeat}/{rules.maxHeat}{state.discardHeat >= rules.maxHeat ? " · bỏ nữa là thua" : ""}</p>
+                    <p className="text-sm text-on-wood-soft">Bỏ Lệnh {state.discardHeat}/{rules.maxHeat}{state.discardHeat >= rules.maxHeat ? ", bỏ nữa là thua" : ""}</p>
                     <HeatFlames heat={state.discardHeat} max={rules.maxHeat} />
                   </div>
                   <button type="button" disabled={busy} onClick={() => onCommand({ kind: "discard" })} className={buttonVariants({ variant: "secondary", className: "min-h-12 px-4" })}>

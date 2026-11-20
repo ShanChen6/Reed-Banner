@@ -215,7 +215,7 @@ export function comboDescription(
   f: Pick<FighterConfig, "comboPassive"> & Partial<Pick<FighterConfig,"profession"|"element"|"chasePassives">>,
 ): string {
   const p = comboPassive(f);
-  const chase = f.profession && f.element ? chasePassives({profession:f.profession,element:f.element,chasePassives:f.chasePassives}).map(id=>`${CHASE_PASSIVES[id].name}: ${CHASE_PASSIVES[id].description}`).join(" · ") : "";
+  const chase = f.profession && f.element ? chasePassives({profession:f.profession,element:f.element,chasePassives:f.chasePassives}).map(id=>`${CHASE_PASSIVES[id].name}: ${CHASE_PASSIVES[id].description}`).join(", ") : "";
   return p
     ? `${p.name}: ${p.description} Cơ hội nghề 1 không tự tung chiêu; chỉ một cơ hội, không cộng dồn. Dùng trong hai lượt thường tiếp theo của phe; lượt thêm không rút thời hạn. Câm lặng/Đóng băng chặn kích hoạt và tận dụng; Xua tan xóa cơ hội. ${chase ? `Ba bị động truy kích: ${chase} Mỗi bị động một lần/hành động; chuỗi tối đa12 phản ứng, sâu4.` : ""}`
     : "";

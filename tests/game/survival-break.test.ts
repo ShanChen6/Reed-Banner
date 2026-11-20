@@ -160,8 +160,8 @@ describe("màn nghỉ Sinh tồn", () => {
     assert.match(html, /Sau tiếp tế<\/dt><dd[^>]*>60/);
     assert.match(html, /Sau hồi sinh<\/dt><dd[^>]*>20/);
     assert.match(html, /Dự bị/);
-    assert.match(html, /Đủ điều kiện · chờ lượt hồi sinh/);
-    assert.match(html, /Hồi sinh Lê Thạch · 40 lương · dự bị/);
+    assert.match(html, /Đủ điều kiện, chờ lượt hồi sinh/);
+    assert.match(html, /Hồi sinh Lê Thạch, 40 lương, dự bị/);
     assert.match(html, /aria-label="Hà Vân: đang ra trận, bấm để về dự bị"/);
     // Tướng gục chưa được hồi sinh không đưa ra trận được.
     assert.match(html, /aria-label="Lê Thạch: dự bị, bấm để ra trận" disabled=""/);
@@ -170,12 +170,12 @@ describe("màn nghỉ Sinh tồn", () => {
     assert.match(html, /Nghề Đinh Bộ Lĩnh/);
     assert.match(html, /Nguyên tố Đinh Bộ Lĩnh/);
     assert.match(html, /Máu 400\/500 →/);
-    assert.match(html, /Đối thủ đợt 5 · cấp 5/);
+    assert.match(html, /Đối thủ đợt 5, cấp 5/);
     assert.match(html, /Kỹ năng dự kiến/);
     assert.match(html, /Xác nhận và vào đợt 5/);
     // Màn chuẩn bị là trang thường, không còn khung nổi trên bàn cờ.
     assert.doesNotMatch(html, /fixed inset/);
-    assert.match(html, /Đã thắng đợt 4 · chuẩn bị đợt 5/);
+    assert.match(html, /Đã thắng đợt 4, chuẩn bị đợt 5/);
   });
 
   it("hiển thị thiếu lương, trạng thái hồi sinh tự động và chờ server", () => {
@@ -197,7 +197,7 @@ describe("màn nghỉ Sinh tồn", () => {
     };
     const html = render(insufficient, true, "Lỗi máy chủ");
     assert.match(html, /Không đủ lương sau tiếp tế/);
-    assert.match(html, /Chờ hồi sinh · còn 1 đợt/);
+    assert.match(html, /Chờ hồi sinh, còn 1 đợt/);
     assert.match(html, /disabled=""[^>]*>Hồi sinh Lê Thạch/);
     assert.match(html, /Đang chờ máy chủ xác nhận/);
     assert.match(html, /Máy chủ báo lỗi: Lỗi máy chủ/);

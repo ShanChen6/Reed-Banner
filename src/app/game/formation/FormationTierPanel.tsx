@@ -43,7 +43,7 @@ export default function FormationTierPanel() {
   return (
     <section aria-labelledby="formation-tier-title" className="ui-frame flex flex-col gap-2 p-4">
       <h2 id="formation-tier-title" className="font-serif text-xl font-bold text-title-on-wood">
-        Bậc Trận Đồ · đã thắng {wins} ván xếp hạng
+        Bậc Trận Đồ – đã thắng {wins} ván xếp hạng
       </h2>
       <TierLadder
         tiers={FORMATION_LADDER}

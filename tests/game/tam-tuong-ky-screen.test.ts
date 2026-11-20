@@ -209,7 +209,7 @@ describe("Màn chơi", () => {
     assert.ok(r.ok);
     const html = renderToStaticMarkup(createElement(TamTuongKyScreen, { initial: r.view }));
     assert.match(html, />Phiếu<\/div><div[^>]*>3\/10<\/div>/);
-    assert.match(html, /Mở lượt mới · 1 phiếu/);
+    assert.match(html, /Mở lượt mới, 1 phiếu/);
     assert.match(html, /Mẹo: chọn Mộc vào ô trước và Mộc vào ô sau/);
     for (const t of ["Vạn Vật Lục", "Đài Hợp Nguyên", "Tướng Lục", "Ô trước", "Ô sau", "aria-live"]) assert.match(html, new RegExp(t));
     assert.equal(tutorialTip(r.view.discovery) !== null, true);
@@ -217,7 +217,7 @@ describe("Màn chơi", () => {
     assert.match(html, /Công thức biểu trưng của trò chơi, không phải diễn giải sử học/);
     for (const bad of ["Nhận tướng", "Chiêu mộ", "vàng"]) assert.doesNotMatch(html, new RegExp(bad));
     // Tướng Lục chia nhóm và phân trang (mục 7.2): 12 tướng Gói 1, nhóm đầu Cờ lau Hoa Lư có 6 người, vừa một trang.
-    assert.match(html, /Tướng Lục · 0\/12/);
+    assert.match(html, /Tướng Lục – 0\/12/);
     assert.match(html, /Cờ lau Hoa Lư/);
     // Ô chân dung: chữ cho máy đọc màn hình, mỗi ô một lần.
     assert.equal((html.match(/>Tướng chưa tìm thấy</g) ?? []).length, 6);
@@ -260,7 +260,7 @@ describe("Màn chơi", () => {
     assert.match(html, /Hạng tuần/);
     assert.match(html, />Túi nguyên tố<\/div><div[^>]*>21<\/div>/);
     assert.match(html, /Mua 1 bó/);
-    assert.equal((html.match(/Tướng chưa tìm thấy · /g) ?? []).length, 7);
+    assert.equal((html.match(/Tướng chưa tìm thấy, /g) ?? []).length, 7);
     for (const name of PACK_1_NAMES) assert.doesNotMatch(html, new RegExp(name));
     assert.doesNotMatch(html, /Gợi ý nhóm|Gợi ý nguyên liệu/);
   });
@@ -288,7 +288,7 @@ describe("Tướng Lục khi bật Gói 2", () => {
     const r = await getTamTuongKy({ profiles: new MemoryProfileStore(), now: Date.parse("2026-11-04T05:00:00Z"), enabled: true, pack2: true, isSignedIn: async () => true }, "acc-1");
     assert.ok(r.ok && r.view.packId === "pack-1-2");
     const html = renderToStaticMarkup(createElement(TamTuongKyScreen, { initial: r.view }));
-    assert.match(html, /Tướng Lục · 0\/21/);
+    assert.match(html, /Tướng Lục – 0\/21/);
     // Tầng trên: Hoa Lư · Sứ quân · Kỳ nhân (Gói 1 + 2 chưa có tướng thường nên không có mục Tướng thường).
     for (const chip of [/>Hoa Lư<\/span><span[^>]*>0\/7</, />Sứ quân<\/span><span[^>]*>0\/12</, />Kỳ nhân<\/span><span[^>]*>0\/2</]) assert.match(html, chip);
     assert.doesNotMatch(html, />Tướng thường</);

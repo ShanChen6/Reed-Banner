@@ -19,7 +19,7 @@ interface Standing {
 
 const levelName = (id: string) => (id === "thuong" ? "Thường" : id === "kho" ? "Khó" : id === "dai-tran" ? "Đại trận" : id);
 
-const rankText = (rank: number, detail: string) => `Hạng ${rank} · ${detail}`;
+const rankText = (rank: number, detail: string) => `Hạng ${rank}, ${detail}`;
 
 function useStandings(destinyEnabled: boolean, tamTuongKyRanked: boolean, formationRanked: boolean): Standing[] {
   const survival = useJson<SeasonBoardResponse>("/api/leaderboard?board=survival&season=current");
@@ -32,18 +32,18 @@ function useStandings(destinyEnabled: boolean, tamTuongKyRanked: boolean, format
   }, []);
 
   const out: Standing[] = [
-    { title: "Trấn Ải · mùa tuần", text: survival === null ? undefined : survival.mine ? rankText(survival.mine.rank, `${survival.mine.score} đợt`) : null },
-    { title: "Quần Hùng · mùa tuần", text: arena === null ? undefined : arena.mine ? rankText(arena.mine.rank, `+${arena.mine.score} điểm`) : null },
+    { title: "Trấn Ải – mùa tuần", text: survival === null ? undefined : survival.mine ? rankText(survival.mine.rank, `${survival.mine.score} đợt`) : null },
+    { title: "Quần Hùng – mùa tuần", text: arena === null ? undefined : arena.mine ? rankText(arena.mine.rank, `+${arena.mine.score} điểm`) : null },
   ];
-  if (destinyEnabled) out.push({ title: "Tháp Thiên Mệnh · chu kỳ", text: destiny === null ? undefined : destiny.mine ? rankText(destiny.mine.rank, `tầng ${destiny.mine.clearedFloor}`) : null });
-  if (tamTuongKyRanked) out.push({ title: "Tầm Tướng Ký · hạng tuần", text: ttk === null ? undefined : ttk.mine ? rankText(ttk.mine.rank, `${ttk.mine.points} điểm`) : null });
+  if (destinyEnabled) out.push({ title: "Tháp Thiên Mệnh – chu kỳ", text: destiny === null ? undefined : destiny.mine ? rankText(destiny.mine.rank, `tầng ${destiny.mine.clearedFloor}`) : null });
+  if (tamTuongKyRanked) out.push({ title: "Tầm Tướng Ký – hạng tuần", text: ttk === null ? undefined : ttk.mine ? rankText(ttk.mine.rank, `${ttk.mine.points} điểm`) : null });
   if (formation === null && formationRanked) {
     // Đang tải: giữ chỗ cho các bậc Trận Đồ để lưới không cao thêm (và đẩy phần dưới) khi dữ liệu về.
-    for (const l of RANKED_LEVELS) out.push({ title: `Trận Đồ · ${levelName(l.id)}`, text: undefined });
+    for (const l of RANKED_LEVELS) out.push({ title: `Trận Đồ – ${levelName(l.id)}`, text: undefined });
   } else if (formation?.enabled) {
     for (const l of formation.levels) {
       const won = l.mine?.status === "won" && l.mine.rank ? l.mine : null;
-      out.push({ title: `Trận Đồ · ${levelName(l.level)}`, text: won ? rankText(won.rank!, `${won.score} điểm`) : null });
+      out.push({ title: `Trận Đồ – ${levelName(l.level)}`, text: won ? rankText(won.rank!, `${won.score} điểm`) : null });
     }
   }
   return out;

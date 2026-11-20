@@ -111,7 +111,7 @@ function offerText(offer: DestinyRewardOffer, run: DestinyRun): OfferText {
       const text = DESTINY_BOON_TEXT[offer.boonId];
       const owned = run.boons?.find(({ id }) => id === offer.boonId)?.stacks ?? 0;
       return {
-        tag: `Phúc · ${DESTINY_RARITY_NAME[boon.rarity]}`,
+        tag: `Phúc – ${DESTINY_RARITY_NAME[boon.rarity]}`,
         title: text.name,
         body: text.body,
         note: `Đang có ${owned}/${boon.maxStacks} lần. Phúc giữ tới hết lượt leo.`,
@@ -147,7 +147,7 @@ function FighterMeta({ element, profession, level, children }: {
     <span className="flex min-w-0 items-center gap-x-1 text-caption font-normal opacity-80">
       <ElementIcon element={element} className="size-3.5 shrink-0" />
       <ProfessionIcon profession={profession} className="size-3.5 shrink-0" />
-      <span className="truncate">{ELEMENT_NAME[element]} · {PROFESSION_NAME[profession]}{level === undefined ? "" : ` · Cấp ${level}`}</span>
+      <span className="truncate">{ELEMENT_NAME[element]}, {PROFESSION_NAME[profession]}{level === undefined ? "" : `, cấp ${level}`}</span>
       {children}
     </span>
   );
@@ -238,7 +238,7 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
             { label: "Kỷ lục", value: `${best}/${floorCount}` },
             {
               label: "Mốc đá kế",
-              value: nextMilestone ? `Tầng ${nextMilestone.floor} · +${nextMilestone.stones}` : milestones.length > 0 ? "Đã nhận đủ" : "—",
+              value: nextMilestone ? `Tầng ${nextMilestone.floor}, +${nextMilestone.stones}` : milestones.length > 0 ? "Đã nhận đủ" : "—",
             },
           ].map((item) => (
             <div key={item.label} className="ui-frame-inset min-w-24 px-3 py-1.5">
@@ -482,7 +482,7 @@ export default function DestinyScreen() {
   const best = overview.progress?.cycleBest ?? 0;
   const cycleText = overview.cycle
     ? `Chu kỳ ${formatCycleRange(overview.cycle.startAt, overview.cycle.endAt)}` +
-      (loadedAt === null ? "" : ` · ${formatCycleLeft(overview.cycle.endAt, loadedAt)}`)
+      (loadedAt === null ? "" : `, ${formatCycleLeft(overview.cycle.endAt, loadedAt)}`)
     : "Chu kỳ tuần";
   // Trong lượt leo: tầng đã vượt là tầng trước tầng đang đứng; đang chờ nhận thưởng thì tính cả tầng vừa thắng.
   const clearedInRun = run?.active ? (run.phase === "reward" ? run.floor : run.floor - 1) : run?.completed ? run.floor : 0;
@@ -566,7 +566,7 @@ export default function DestinyScreen() {
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
             <h3 className="ui-title-on-wood text-base">
               Đã chọn {Math.max(0, roster.length - 1)}/{companionMax} tướng{" "}
-              <span className="text-sm font-normal text-on-wood-soft">· bạn có {rosterIds.length} tướng</span>
+              <span className="text-sm font-normal text-on-wood-soft">– bạn có {rosterIds.length} tướng</span>
             </h3>
             <div className="flex flex-wrap gap-2">
               <ChoiceChip selected={false} onClick={() => setRoster([MAIN_ID, ...rosterIds.slice(0, DESTINY_ROSTER_MAX - 1)])}>
@@ -671,7 +671,7 @@ export default function DestinyScreen() {
       {run && run.active && (
         <section className="grid gap-4 sm:gap-5 lg:grid-cols-[1fr_1.4fr]">
           <OrnateFrame className="order-2 min-w-0 self-start lg:order-1">
-            <SectionTitle description={`${run.roster.length} tướng · Lương ${run.food}/${DESTINY_FOOD_MAX} · Mỗi tướng có thanh Nộ riêng, giữ qua các tầng`}>Đội hình</SectionTitle>
+            <SectionTitle description={`${run.roster.length} tướng, lương ${run.food}/${DESTINY_FOOD_MAX}; mỗi tướng có thanh Nộ riêng, giữ qua các tầng`}>Đội hình</SectionTitle>
             <ul {...pagedSquad.listProps} className="space-y-2">
               {pagedSquad.pageItems.map((id) => {
                 const f = run.fighters?.[id];
@@ -690,11 +690,11 @@ export default function DestinyScreen() {
                         </div>
                         <div className="text-on-wood-soft">
                           {id === MAIN_ID
-                            ? <p className="text-caption">Thủ lĩnh · Cấp {f.level} · đổi nghề và hệ trước mỗi tầng</p>
+                            ? <p className="text-caption">Thủ lĩnh, cấp {f.level}, đổi nghề và hệ trước mỗi tầng</p>
                             : <FighterMeta element={f.config.element} profession={f.config.profession} level={f.level} />}
                           <p className="text-caption">
-                            {f.downed ? "Cần Cứu viện để ra trận lại" : `Năng lượng ${f.energy} · Nộ ${destinyRageOf(run, id)}/${RAGE_MAX}`}
-                            {onField && id !== MAIN_ID && <strong className="text-frame-gold"> · Ra trận</strong>}
+                            {f.downed ? "Cần Cứu viện để ra trận lại" : `Năng lượng ${f.energy}, Nộ ${destinyRageOf(run, id)}/${RAGE_MAX}`}
+                            {onField && id !== MAIN_ID && <strong className="text-frame-gold">, ra trận</strong>}
                           </p>
                         </div>
                         <div className="mt-1.5"><HpBar hp={f.hp} maxHp={f.config.maxHp} /></div>
@@ -739,7 +739,7 @@ export default function DestinyScreen() {
 
             {run.phase === "prepare" && rules && (
               <>
-                <SectionTitle description={`Độ khó ${difficultyName(overview.floor?.difficulty)}${foeLevel ? ` · Đối thủ cấp ${foeLevel}` : ""}`}>
+                <SectionTitle description={`Độ khó ${difficultyName(overview.floor?.difficulty)}${foeLevel ? `, đối thủ cấp ${foeLevel}` : ""}`}>
                   Chuẩn bị tầng {run.floor}/{floorCount}
                 </SectionTitle>
 
@@ -907,7 +907,7 @@ export default function DestinyScreen() {
                           <ChoiceChip key={id} selected={selected}
                             disabled={(!selected && targets.length >= max) || (leaderNeedsRescue && id !== MAIN_ID)}
                             onClick={() => setTargets(selected ? targets.filter((x) => x !== id) : [...targets, id])}>
-                            {fighterName(id)}{f && ` · ${f.downed ? "đã gục" : `máu ${f.hp}/${f.config.maxHp}`}`}
+                            {fighterName(id)}{f && `, ${f.downed ? "đã gục" : `máu ${f.hp}/${f.config.maxHp}`}`}
                           </ChoiceChip>
                         );
                       })}

@@ -84,7 +84,7 @@ export function SkillBar({
             className={`relative flex w-full flex-col items-center gap-0.5 rounded-lg p-1 text-caption leading-tight ${stacked ? "" : "sm:w-[4.5rem]"} border ${aiming ? "border-stat-hp bg-stat-hp text-white" : "border-frame-line-soft bg-wood-panel hover:border-frame-gold"} ${
               disabled && !aiming ? "opacity-40 grayscale" : ""
             }`}
-            title={`${skillText(def)} · phím ${i + 1}`}
+            title={`${skillText(def)}, phím ${i + 1}`}
           >
             <SkillIcon def={def} className="size-10" />
             <span className="absolute left-1 top-1 rounded-br bg-black/60 px-1 text-[11px] font-bold text-white">

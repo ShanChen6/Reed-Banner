@@ -82,7 +82,7 @@ export function ActiveSkillCard({ def, extra, dim = false }: { def: SkillDef; ex
           <Tag>mở cấp {SKILL_SLOT_UNLOCK[def.slot ?? 0] ?? 1}</Tag>
         </p>
         <p className="leading-snug">
-          <span className="font-semibold">{SKILL_TARGET_NAME[def.target]}:</span> {skillStepTexts(def).join(" · ")}
+          <span className="font-semibold">{SKILL_TARGET_NAME[def.target]}:</span> {skillStepTexts(def).join(", ")}
         </p>
         {emits.length > 0 && (
           <p className="flex flex-wrap items-center gap-1.5 text-caption">
@@ -199,7 +199,7 @@ export default function SkillDetails({
   return (
     <details className={box} open={open}>
       <summary className="cursor-pointer font-semibold pointer-coarse:py-3.5">
-        Bộ {skills.length} chủ động · {passives.length} {fusion ? "nội tại dung hợp" : "bị động"}
+        Bộ {skills.length} chủ động, {passives.length} {fusion ? "nội tại dung hợp" : "bị động"}
       </summary>
       {body}
     </details>

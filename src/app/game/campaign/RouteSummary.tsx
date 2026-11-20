@@ -88,7 +88,7 @@ function RouteColumn({
                       ? "Chưa mở"
                       : "Đã xong"}
                 {r.bestTurns !== undefined
-                  ? ` · tốt nhất ${r.bestTurns} lượt`
+                  ? `, tốt nhất ${r.bestTurns} lượt`
                   : ""}
               </span>
             </button>
@@ -102,7 +102,7 @@ function RouteColumn({
 /** Tên vùng kèm tên nhiệm vụ; bỏ phần lặp khi tên nhiệm vụ đã chứa tên đất (vd. "Siêu Loại"). */
 function regionName(place: string, mission: CampaignMissionId) {
   const title = missionLabel(mission);
-  return title.includes(place) ? title : `${place} · ${title}`;
+  return title.includes(place) ? title : `${place}, ${title}`;
 }
 
 const ROUTE_ROMAN = ["", "I", "II", "III", "IV", "V", "VI"] as const;

@@ -168,7 +168,7 @@ export default function SetupLobby({
             <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Chế độ">
               {(["practice", "progress"] as const).map((m) => (
                 <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => onMode(m)} className={`${chip(mode === m)} min-h-11 backdrop-blur-sm`}>
-                  {m === "practice" ? "Luyện tập · tối đa" : `Tiến trình · cấp ${level}`}
+                  {m === "practice" ? "Luyện tập, tối đa" : `Tiến trình, cấp ${level}`}
                 </button>
               ))}
             </div>
@@ -197,7 +197,7 @@ export default function SetupLobby({
                 ))}
               </div>
               <p className="mt-1.5 text-caption text-on-wood-soft">
-                Bị động thủ lĩnh <span className="font-semibold text-on-wood">{PASSIVES[element].name}</span> · {ELEMENT_TRAIT[element].role}
+                Bị động thủ lĩnh <span className="font-semibold text-on-wood">{PASSIVES[element].name}</span>, {ELEMENT_TRAIT[element].role}
               </p>
             </Row>
 
@@ -213,7 +213,7 @@ export default function SetupLobby({
               <p className="mt-1.5 text-caption text-on-wood-soft">{PROFESSION_PERK[profession]}</p>
             </Row>
 
-            <Row title="Kỹ năng" hint="3 nghề · 2 hệ · 1 tuyệt chiêu">
+            <Row title="Kỹ năng" hint="3 nghề, 2 hệ, 1 tuyệt chiêu">
               <ul className="grid grid-cols-3 gap-2 sm:grid-cols-6">
                 {characterSkills(profession, element).map((def) => {
                   const locked = !practice && level < MAIN_SLOT_UNLOCK[def.slot!]!;
@@ -287,7 +287,7 @@ export default function SetupLobby({
                 <p className="text-caption text-frame-gold">Thủ lĩnh</p>
                 <p className="truncate font-serif text-lg font-bold text-title-on-wood">{leader.name}</p>
                 <p className="flex items-center gap-1 text-caption text-on-wood-soft">
-                  <ElementIcon element={element} className="size-4" /> {ELEMENT_NAME[element]} · <ProfessionIcon profession={profession} className="size-4" /> {PROFESSION_NAME[profession]}
+                  <ElementIcon element={element} className="size-4" /> {ELEMENT_NAME[element]}, <ProfessionIcon profession={profession} className="size-4" /> {PROFESSION_NAME[profession]}
                 </p>
               </div>
             </div>

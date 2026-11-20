@@ -52,7 +52,7 @@ export default function CheckInPanel({ profile, now, busy, act }: {
             <span aria-hidden className="text-jade">✓</span>
             <span className="min-w-0 flex-1">
               <strong className="text-title-on-wood">Đã điểm danh hôm nay</strong>
-              <span className="text-on-wood-soft"> · ngày {streak}/{CHECKIN_GOLD.length} · mai nhận {nextGold} vàng{streak >= CHECKIN_GOLD.length ? " (chuỗi mới)" : ""}</span>
+              <span className="text-on-wood-soft">, ngày {streak}/{CHECKIN_GOLD.length}, mai nhận {nextGold} vàng{streak >= CHECKIN_GOLD.length ? " (chuỗi mới)" : ""}</span>
             </span>
             <span className="shrink-0 text-caption text-frame-gold underline underline-offset-2">
               <span className="group-open:hidden">Xem chuỗi</span>

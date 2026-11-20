@@ -262,7 +262,7 @@ export default function SurvivalScreen() {
     setMessage(null);
     const res = await actOnline(run.id, run.view.seq, { type: "endRun" });
     if (res.outcome?.survival)
-      setNotice(`Đã dừng Trấn Ải: ghi ${res.outcome.survival.cleared} đợt, nhận ${res.outcome.survival.gold} vàng${res.outcome.survival.newBest ? " · kỷ lục mới" : ""}.`);
+      setNotice(`Đã dừng Trấn Ải: ghi ${res.outcome.survival.cleared} đợt, nhận ${res.outcome.survival.gold} vàng${res.outcome.survival.newBest ? ", kỷ lục mới" : ""}.`);
     else if (res.error) setMessage(ONLINE_ERROR_TEXT[res.error] ?? "Chưa dừng được lượt chơi. Xin thử lại.");
     await load();
     setBusy(false);
@@ -303,7 +303,7 @@ export default function SurvivalScreen() {
         >
           <span className={cn("mb-1 block text-kicker", index < 2 ? "text-frame-gold" : "text-on-wood-soft")}>
             {SURVIVAL_SLOT_LABEL[index]}
-            {isTarget && <span className="ml-1 normal-case text-jade">· đang chọn</span>}
+            {isTarget && <span className="ml-1 normal-case text-jade">– đang chọn</span>}
           </span>
           {entry ? (
             <FighterSummary fighter={entry.fighter} level={entry.level} />
@@ -356,7 +356,7 @@ export default function SurvivalScreen() {
         </SectionTitle>
         <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
           <div className="min-w-0 rounded-lg border border-frame-gold/50 bg-wood-inset p-2">
-            <span className="mb-1 block text-kicker text-frame-gold">Thủ lĩnh · cố định</span>
+            <span className="mb-1 block text-kicker text-frame-gold">Thủ lĩnh, cố định</span>
             <FighterSummary fighter={leader} level={profile.main.level} />
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
@@ -365,7 +365,7 @@ export default function SurvivalScreen() {
           </div>
         </div>
         <div>
-          <h3 className="font-bold text-title">Doanh Trại · Dự bị</h3>
+          <h3 className="font-bold text-title">Doanh Trại – Dự bị</h3>
           <p className="mb-2 text-caption text-on-wood-soft">
             Dự bị không đánh trong đợt nhưng hồi {pct(SURVIVAL_RESERVE_HEAL)} máu mỗi lần nghỉ và thay người khi đồng đội gục.
           </p>
@@ -436,10 +436,10 @@ export default function SurvivalScreen() {
                         <span className="shrink-0 text-caption font-normal opacity-80">cấp {level}</span>
                       </span>
                       <span className="text-caption font-normal opacity-80">
-                        {ELEMENT_NAME[fighter.element]} · {PROFESSION_NAME[fighter.profession]}
+                        {ELEMENT_NAME[fighter.element]}, {PROFESSION_NAME[fighter.profession]}
                       </span>
                       <span className="text-caption font-normal opacity-80">
-                        {at >= 0 ? SURVIVAL_SLOT_LABEL[at] : `${fighter.maxHp} máu · ${fighter.atk} công`}
+                        {at >= 0 ? SURVIVAL_SLOT_LABEL[at] : `${fighter.maxHp} máu, ${fighter.atk} công`}
                       </span>
                     </span>
                   </ChoiceChip>
@@ -500,7 +500,7 @@ export default function SurvivalScreen() {
     <ModeScreen card label="Trấn Ải">
       <ModeBanner
         title="Trấn Ải"
-        kicker="Giữ ải · vô hạn"
+        kicker="Giữ ải, vô hạn"
         art="/art/home/survival.webp"
         description="Đối thủ kéo đến theo đợt trên cùng một bàn cờ, mạnh dần qua từng đợt."
         stats={[
@@ -524,7 +524,7 @@ export default function SurvivalScreen() {
             content: (
               <>
                 <OrnateFrame className="flex flex-col gap-2">
-                  <h3 className="font-bold text-frame-gold">Bậc Trấn Ải · kỷ lục {profile.survival.best} đợt</h3>
+                  <h3 className="font-bold text-frame-gold">Bậc Trấn Ải – kỷ lục {profile.survival.best} đợt</h3>
                   <TierLadder
                     tiers={SURVIVAL_LADDER}
                     score={profile.survival.best}
@@ -573,7 +573,7 @@ function OpenRunPanel({ run, busy, onResume }: { run: OpenRun; busy: boolean; on
       <SectionTitle
         description={`Đồng hồ lượt vẫn chạy khi bạn rời trận; bỏ quá 24 giờ thì lượt chơi dừng ở đợt ${survival.cleared}.`}
       >
-        Đang đánh dở đợt {survival.wave} · đã vượt {survival.cleared} đợt
+        Đang đánh dở đợt {survival.wave}, đã vượt {survival.cleared} đợt
       </SectionTitle>
       <ul className="grid gap-2 sm:grid-cols-3">
         {fighters.map((f) => {
@@ -628,12 +628,12 @@ function FighterSummary({
         <p className="flex flex-wrap items-center gap-x-1 text-caption text-on-wood-soft">
           <ElementIcon element={fighter.element} className="size-3.5" />
           {ELEMENT_NAME[fighter.element]}
-          <span aria-hidden>·</span>
+          <span aria-hidden>–</span>
           <ProfessionIcon profession={fighter.profession} className="size-3.5" />
           {PROFESSION_NAME[fighter.profession]}
         </p>
         <p className="text-caption text-on-wood-soft">
-          {fighter.maxHp} máu · {fighter.atk} công · {fighter.def} thủ
+          {fighter.maxHp} máu, {fighter.atk} công, {fighter.def} thủ
         </p>
       </div>
     </div>

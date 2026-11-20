@@ -119,7 +119,7 @@ export function MobileBar({ state, rules, noMove, disabled, covered, total, onDi
         <div className="min-w-0 flex-1 text-sm leading-tight">
           <p className="truncate font-serif font-bold text-title-on-wood">{h.kind === "normal" || h.kind === "fusion" ? nameOf(h.characterId) : h.kind === "wild" ? "Quân Lệnh" : "Thu Hồi"}</p>
           <p className="truncate text-on-wood-soft">
-            {h.kind === "normal" ? `${PROFESSION_NAME[h.profession]} · ${ELEMENT_NAME[h.element]}` : h.kind === "fusion" ? "Dung hợp: khớp mọi quân" : h.kind === "wild" ? "Đặt ở ô trống bất kỳ" : "Chạm vào quân để xóa"}
+            {h.kind === "normal" ? `${PROFESSION_NAME[h.profession]}, ${ELEMENT_NAME[h.element]}` : h.kind === "fusion" ? "Dung hợp: khớp mọi quân" : h.kind === "wild" ? "Đặt ở ô trống bất kỳ" : "Chạm vào quân để xóa"}
           </p>
           <p className="text-caption text-on-wood-soft">Khai thông {pct}%</p>
         </div>

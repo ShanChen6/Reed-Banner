@@ -78,10 +78,10 @@ function CompanionCard({
           <ElementIcon element={c.element} className="size-3.5 shrink-0" />
         </div>
         <div className="truncate text-caption text-on-wood-soft" title={ultimate ? `${hero || warlord ? "Chiêu riêng" : "Tuyệt chiêu"}: ${ultimate.name}` : undefined}>
-          {PROFESSION_NAME[c.profession]} · {ELEMENT_NAME[c.element]}
-          {ultimate && <> · {ultimate.name}</>}
-          {hero && <> · Tướng lịch sử</>}
-          {warlord && <> · Sứ quân</>}
+          {PROFESSION_NAME[c.profession]}, {ELEMENT_NAME[c.element]}
+          {ultimate && <>, {ultimate.name}</>}
+          {hero && <>, tướng lịch sử</>}
+          {warlord && <>, sứ quân</>}
         </div>
       </div>
       {owned ? (

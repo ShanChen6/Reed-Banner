@@ -161,7 +161,7 @@ export default function BattlePrep({
             >
               {i < phase ? "✓ " : ""}
               {i + 1}/{labels.length}
-              {i === phase ? ` · ${label}` : ""}
+              {i === phase ? `, ${label}` : ""}
             </li>
           ))}
         </ol>
@@ -231,7 +231,7 @@ export default function BattlePrep({
               className="ui-frame-inset flex flex-col items-center gap-0.5 p-1.5 text-center text-caption"
               title={
                 encounter.foes[i]?.hero
-                  ? "Sứ quân có tên trong sử · trận do game dựng"
+                  ? "Sứ quân có tên trong sử, trận do game dựng"
                   : "Nhân vật hư cấu"
               }
             >
@@ -245,7 +245,7 @@ export default function BattlePrep({
               <span className="flex items-center gap-1 text-on-wood-soft">
                 <ElementIcon element={f.element} className="size-3.5" />
                 <ProfessionIcon profession={f.profession} className="size-3.5" />
-                {encounter.foes[i]?.hero && <span className="text-frame-gold">· sử</span>}
+                {encounter.foes[i]?.hero && <span className="text-frame-gold">– sử</span>}
               </span>
             </li>
           ))}
@@ -270,12 +270,12 @@ export default function BattlePrep({
           <Portrait id={MAIN_ID} element={element} profession={profession} className="size-9 shrink-0" />
           <span className="min-w-0 flex-1 leading-tight">
             <span className="flex items-baseline gap-2">
-              <span className="truncate font-semibold">Đinh Bộ Lĩnh · chủ tướng</span>
+              <span className="truncate font-semibold">Đinh Bộ Lĩnh, chủ tướng</span>
               <LevelTag level={profile.main.level} suggest={advice.recommendedLevel} />
             </span>
             <span className="flex items-center gap-1 text-caption opacity-80">
               <ElementIcon element={element} className="size-3.5" />
-              {ELEMENT_NAME[element]} ·
+              {ELEMENT_NAME[element]},
               <ProfessionIcon profession={profession} className="size-3.5" />
               {PROFESSION_NAME[profession]}
             </span>
@@ -359,7 +359,7 @@ export default function BattlePrep({
 
       <div className="flex flex-wrap items-center gap-2" aria-label="Lương mang theo">
         <Chip tone={advice.lowFood ? "bad" : undefined}>
-          Lương {advice.food}/{CAMPAIGN_FOOD_MAX} · gợi ý từ {advice.suggestedFood}
+          Lương {advice.food}/{CAMPAIGN_FOOD_MAX}, gợi ý từ {advice.suggestedFood}
         </Chip>
         {advice.lowFood && (
           <Button

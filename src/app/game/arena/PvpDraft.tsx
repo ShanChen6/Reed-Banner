@@ -168,7 +168,7 @@ export default function PvpDraftScreen({ id, onMatch, onExit }: { id: string; on
           {view.steps.map((s, i) => (
             <li
               key={i}
-              title={`${s.kind === "ban" ? "Cấm" : "Chọn"} · ${s.name}`}
+              title={`${s.kind === "ban" ? "Cấm" : "Chọn"}, ${s.name}`}
               className={cn(
                 "rounded px-1.5 py-0.5 text-caption font-semibold",
                 s.current ? "bg-frame-gold text-wood-lo" : s.done ? "bg-black/30 text-on-wood-soft line-through decoration-1" : "bg-wood-inset text-on-wood-soft",
@@ -203,7 +203,7 @@ export default function PvpDraftScreen({ id, onMatch, onExit }: { id: string; on
                         <>
                           <Portrait id={p.hero.id} element={p.hero.element} profession={p.hero.profession} className="size-11" />
                           <span className="w-full truncate text-caption font-semibold text-on-wood">{p.hero.name}</span>
-                          <span className="w-full truncate text-caption text-on-wood-soft">cấp {p.hero.level} · {p.name}</span>
+                          <span className="w-full truncate text-caption text-on-wood-soft">cấp {p.hero.level}, {p.name}</span>
                         </>
                       ) : (
                         <>
@@ -322,10 +322,10 @@ export default function PvpDraftScreen({ id, onMatch, onExit }: { id: string; on
                   <span className="grid size-8 shrink-0 place-items-center rounded-full bg-frame-gold/20 font-bold text-frame-gold">{i + 1}</span>
                   <Portrait id={slot.hero.id} element={slot.hero.element} profession={slot.hero.profession} className="size-11 shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-semibold text-on-wood">{slot.hero.name} <span className="font-normal text-on-wood-soft">· cấp {slot.hero.level}</span></p>
+                    <p className="truncate font-semibold text-on-wood">{slot.hero.name} <span className="font-normal text-on-wood-soft">– cấp {slot.hero.level}</span></p>
                     <p className="flex flex-wrap items-center gap-1 text-caption text-on-wood-soft">
                       <ElementIcon element={slot.hero.element} className="size-3.5" />
-                      {ELEMENT_NAME[slot.hero.element]} · {PROFESSION_NAME[slot.hero.profession]} · {slot.mine ? "bạn" : (slot.name ?? "máy điều khiển")}
+                      {ELEMENT_NAME[slot.hero.element]}, {PROFESSION_NAME[slot.hero.profession]}, {slot.mine ? "bạn" : (slot.name ?? "máy điều khiển")}
                     </p>
                   </div>
                   {view.prep!.captain && (
