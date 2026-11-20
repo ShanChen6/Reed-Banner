@@ -1,6 +1,6 @@
 "use client";
 
-import { FrameInset, ModeBanner, OrnateFrame } from "@/components/game-ui";
+import { FrameInset, ModeBanner, OrnateFrame, SurrenderButton } from "@/components/game-ui";
 import { Alert, Button, ChoiceChip, Tabs, choiceVariants } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
@@ -481,9 +481,12 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
           {busy ? "Đang vào tầng…" : hasActiveHere ? "Tiếp tục trận" : entry.state === "cleared" ? "Đánh lại" : "Vào tầng"}
         </Button>
         {hasActiveHere && (
-          <Button variant="secondary" type="button" disabled={busy} onClick={props.onAbandon} className="min-h-11">
-            Bỏ trận này
-          </Button>
+          <SurrenderButton
+            size="md"
+            disabled={busy}
+            consequence={`Trận dở ở tầng ${f.floor} tính là thua, tầng chưa được vượt. Bạn có thể đổi đội rồi vào lại tầng này.`}
+            onConfirm={props.onAbandon}
+          />
         )}
         {activeElsewhere && (
           <span role="status" className="text-sm text-frame-gold">

@@ -68,7 +68,7 @@ export interface Match {
   readonly startedAt: number;
   /** Lần cuối người chơi tự ra tay (không tính hết giờ). */
   readonly lastHumanAt: number;
-  /** Trận kết thúc vì người chơi bỏ dở quá ABANDON_MS. */
+  /** Trận kết thúc vì người chơi bỏ dở quá ABANDON_MS hoặc tự đầu hàng. */
   readonly forfeited: boolean;
   /**
    * Đánh trùm: id sứ quân trong danh mục 12 sứ quân (campaign/warlords.ts). Trận lưu từ trước CAMP-08.04 có thể
@@ -283,7 +283,12 @@ export type SurvivalAction =
   /** Dừng lượt chơi, ghi điểm theo số đợt đã vượt qua. */
   | { readonly type: "endRun" };
 
-export type MatchAction = BattleAction | SurvivalAction;
+/** Người chơi đầu hàng: trận đang dở kết thúc, tính thua theo luật chế độ (Trấn Ải dừng ở đợt đã vượt). */
+export interface SurrenderAction {
+  readonly type: "surrender";
+}
+
+export type MatchAction = BattleAction | SurvivalAction | SurrenderAction;
 
 const isSurvivalAction = (a: MatchAction): a is SurvivalAction =>
   a.type === "nextWave" || a.type === "endRun";
@@ -432,6 +437,21 @@ export type MatchResult =
       readonly events: readonly BattleEvent[];
     };
 
+/** Đầu hàng: phe máy thắng, đồng hồ lượt dừng; Trấn Ải đóng lượt chơi ở số đợt đã vượt qua. */
+function surrender(m: Match, now: number): Match {
+  const battle = structuredClone(m.battle);
+  battle.winner = AI_SIDE;
+  battle.turn.deadline = null;
+  return {
+    ...m,
+    battle,
+    seq: m.seq + 1,
+    lastHumanAt: now,
+    forfeited: true,
+    ...(m.survival ? { survival: { ...m.survival, done: true } } : {}),
+  };
+}
+
 /**
  * Một hành động của người chơi. Trước khi xử lý, trận được chạy bù tới `now`; `expectedSeq` (seq client
  * đang thấy) khác seq sau khi chạy bù thì từ chối. Nếu lượt chuyển sang AI, AI đánh luôn.
@@ -456,6 +476,10 @@ export function humanAct(
   if (isSurvivalAction(action)) {
     const r = coordinateSurvivalRoundTransition(m, action, now);
     return { ...r, events: [...settled.events, ...r.events] };
+  }
+  if (action.type === "surrender") {
+    if (m.battle.winner !== null || m.survival?.done) return fail("battleOver");
+    return { ok: true, match: surrender(m, now), events: settled.events };
   }
   if (m.battle.winner !== null) return fail("battleOver");
   if (m.battle.turn.side !== HUMAN) return fail("notYourTurn");

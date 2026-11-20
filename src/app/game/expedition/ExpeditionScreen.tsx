@@ -5,7 +5,7 @@
 
 import { requestJson, postJson } from "../api";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ModeBanner, ModeScreen, ModeSkeleton } from "@/components/game-ui";
+import { ModeBanner, ModeScreen, ModeSkeleton, SurrenderButton } from "@/components/game-ui";
 import { Alert, Button, ChoiceChip, choiceVariants } from "@/components/ui";
 import {
   EXPEDITION_PINCER_HP,
@@ -41,6 +41,9 @@ import { useScene } from "../SceneContext";
 import { ModeGuideTabs } from "../ModeGuide";
 import { PlayCard } from "../PlayCard";
 import HeroGrid from "../arena/HeroGrid";
+
+/** Hộp thoại xác nhận rút khỏi viễn chinh. */
+const ABANDON_TEXT = "Lượt viễn chinh kết thúc ngay và tính là thua; trận đang dở (nếu có) cũng tính thua.";
 
 interface TierView {
   readonly tier: ExpeditionTier;
@@ -876,7 +879,7 @@ function RunView(props: {
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button variant="primary" disabled={props.busy} onClick={props.onResume}>Vào trận</Button>
-              <Button variant="secondary" disabled={props.busy} onClick={props.onAbandon}>Rút khỏi viễn chinh</Button>
+              <SurrenderButton size="md" label="Rút khỏi viễn chinh" disabled={props.busy} consequence={ABANDON_TEXT} onConfirm={props.onAbandon} />
             </div>
           </div>
         ) : (
@@ -996,7 +999,7 @@ function RunView(props: {
               {ARMY_NAME[army]} trinh sát
             </Button>
             <Button variant="secondary" disabled={props.busy || !!counter} onClick={props.onCamp}>Đóng quân (cả hai đạo nghỉ 1 ngày)</Button>
-            <Button variant="secondary" disabled={props.busy} onClick={props.onAbandon}>Rút khỏi viễn chinh</Button>
+            <SurrenderButton size="md" label="Rút khỏi viễn chinh" disabled={props.busy} consequence={ABANDON_TEXT} onConfirm={props.onAbandon} />
             <p className="w-full text-caption text-on-wood-soft">Thua một trận: đạo đó rút về ô cũ, cả ba gục, phải nghỉ để hồi. Không mất lượt viễn chinh.</p>
             <p className="w-full text-caption text-on-wood-soft">
               Trinh sát: đạo đang chọn đứng yên 1 ngày (không hồi sức), vén sương mọi ô trong {EXPEDITION_SCOUT_SIGHT} bước

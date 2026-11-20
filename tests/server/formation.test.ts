@@ -134,6 +134,18 @@ describe("Trận Đồ xếp hạng: mở ván", () => {
     assert.deepEqual(again.view, moved.view);
   });
 
+  it("đầu hàng ván xếp hạng: ván chốt thua, không đánh tiếp được", async () => {
+    const d = deps();
+    const first = await startFormation(d, "a", "thuong");
+    assert.ok(first.ok);
+    const r = await moveFormation(d, "a", "thuong", first.view.seq, { kind: "surrender" });
+    assert.ok(r.ok);
+    assert.equal(r.view.status, "lost");
+    assert.deepEqual(r.events, [{ type: "lost", reason: "surrender" }]);
+    const after = await moveFormation(d, "a", "thuong", r.view.seq, { kind: "discard" });
+    assert.equal(after.ok, false);
+  });
+
   it("hai request mở cùng lúc chỉ tạo một ván", async () => {
     const d = deps();
     const rs = await Promise.all([startFormation(d, "a", "thuong"), startFormation(d, "a", "thuong")]);

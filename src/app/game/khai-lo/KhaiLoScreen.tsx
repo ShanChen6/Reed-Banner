@@ -36,7 +36,7 @@ import { ELEMENT_COLOR } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
 import { Button, buttonVariants, choiceVariants } from "@/components/ui";
-import { ModeScreen, OrnateFrame } from "@/components/game-ui";
+import { ModeScreen, OrnateFrame, SurrenderButton } from "@/components/game-ui";
 import { ModeGuideTabs } from "../ModeGuide";
 import { PlayCard } from "../PlayCard";
 import { ColumnFill } from "../ColumnFill";
@@ -140,6 +140,8 @@ export default function KhaiLoScreen() {
   /** Khung chứa bàn (gắn qua ref callback: bàn chỉ dựng khi mở thẻ Chơi, có thể sau lần vẽ đầu). */
   const [fitEl, setFitEl] = useState<HTMLDivElement | null>(null);
   const [confirmEnd, setConfirmEnd] = useState(false);
+  /** Lượt chơi vừa kết thúc vì người chơi đầu hàng (bảng kết thúc đổi tiêu đề). */
+  const [gaveUp, setGaveUp] = useState(false);
   /** Cỡ ô (px) đo theo chỗ trống thật: bề ngang khung bàn, và trên máy tính thêm chiều cao cửa sổ để cả bàn lọt màn hình. */
   const [fit, setFit] = useState<number | null>(null);
 
@@ -152,6 +154,7 @@ export default function KhaiLoScreen() {
     (m: KlMode, s: KlState) => {
       setMode(m);
       setState(s);
+      setGaveUp(false);
       setBest(readBest(m));
       setClock(m === "timed" ? readClock(s) : 0);
       setMessage("");
@@ -238,6 +241,7 @@ export default function KhaiLoScreen() {
           parts.push(e.cleared ? `Dọn sạch bàn, +${e.bonus} điểm. Bàn mới.` : `Bàn mới${e.bonus ? ` (gần sạch +${e.bonus} điểm)` : ""}.`);
         if (e.type === "goalReached") parts.push(`Đạt mốc! Lên bậc ${e.level}, +${KL_TIMED_LEVEL_SECONDS} giây.`);
         if (e.type === "timeUp") parts.push("Hết giờ!");
+        if (e.type === "surrender") parts.push("Đã đầu hàng.");
       }
       if (next.phase === "stuck") parts.push(`Hết khối để xóa: dùng đạo cụ hoặc ${next.mode === "timed" ? "đổi bàn" : "kết thúc màn"}.`);
       if (next.mode === "timed") {
@@ -262,6 +266,7 @@ export default function KhaiLoScreen() {
         setMessage(REASON_TEXT[r.reason]);
         return;
       }
+      if (action.type === "surrender") setGaveUp(true);
       if (action.type === "tool") setTool(null);
       commit(r.state, r.events, state);
     },
@@ -420,7 +425,15 @@ export default function KhaiLoScreen() {
           <p className="text-kicker text-frame-gold">Giải đố – {MODE_NAME[state.mode]}, {timed ? "Bậc" : "Màn"} {state.level}</p>
           <p className="hidden text-caption text-on-wood-soft sm:block">Chạm để xóa cả khối quân cùng hệ. Dọn sạch bàn để qua màn.</p>
         </div>
-        <Button variant="secondary" size="sm" onClick={newGame}>Ván mới</Button>
+        <div className="flex shrink-0 flex-wrap justify-end gap-2">
+          {state.phase !== "over" && (
+            <SurrenderButton
+              consequence={`Lượt ${MODE_NAME[state.mode]} kết thúc ngay ở ${timed ? "bậc" : "màn"} ${state.level} với ${state.score} điểm; điểm vẫn tính vào kỷ lục.`}
+              onConfirm={() => act({ type: "surrender" })}
+            />
+          )}
+          <Button variant="secondary" size="sm" onClick={newGame}>Ván mới</Button>
+        </div>
       </div>
       <ModeGuideTabs scene="KHAI_LO">
 
@@ -533,7 +546,7 @@ export default function KhaiLoScreen() {
               {state.phase === "over" && (
                 <div className="kl-overlay absolute inset-0 flex items-center justify-center p-3">
                   <section role="status" className="ui-frame flex w-full max-w-sm flex-col items-center gap-2 p-4 text-center sm:gap-3 sm:p-5">
-                    <h2 className="ui-title-on-wood text-xl font-bold sm:text-2xl">{timed ? "Hết giờ" : "Thất thủ"}</h2>
+                    <h2 className="ui-title-on-wood text-xl font-bold sm:text-2xl">{gaveUp ? "Đã đầu hàng" : timed ? "Hết giờ" : "Thất thủ"}</h2>
                     <p className="text-[15px] text-on-wood">
                       {!timed && state.summary ? `Còn ${state.summary.left} quân mà chỉ còn ${state.hearts} tim. ` : ""}
                       {MODE_NAME[state.mode]}: tướng quân đi tới {timed ? "bậc" : "màn"} {state.level}, đạt <b>{state.score} điểm</b>

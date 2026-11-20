@@ -312,6 +312,19 @@ describe("Khai Lộ: sinh bàn và lưu ván", () => {
   });
 });
 
+describe("Khai Lộ: Đầu hàng", () => {
+  it("kết thúc lượt chơi ngay, giữ điểm; lượt đã xong thì từ chối", () => {
+    const s = stateOf(["aab", "bcd"], { score: 120 });
+    const r = transition(s, { type: "surrender" });
+    assert.ok(r.ok);
+    assert.equal(r.state.phase, "over");
+    assert.equal(r.state.score, 120);
+    assert.equal(r.state.summary, null);
+    assert.deepEqual(r.events, [{ type: "surrender" }, { type: "over" }]);
+    assert.deepEqual(transition(r.state, { type: "surrender" }), { ok: false, reason: "notPlaying" });
+  });
+});
+
 describe("Khai Lộ: Cấp tốc", () => {
   it("mốc điểm cộng dồn theo bậc: 400 + 50 × (bậc − 1)", () => {
     assert.equal(timedGoal(1), 400);
