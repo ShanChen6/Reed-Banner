@@ -5,6 +5,7 @@
 
 import { useState, type ReactNode } from "react";
 import { ELEMENTS, PROFESSIONS, type Element, type Profession } from "@/core";
+import { FilterBar } from "@/components/game-ui";
 import { ChoiceChip, Input } from "@/components/ui";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
@@ -50,7 +51,7 @@ export function HeroFilterBar({
 }) {
   const { query, element, profession } = filter;
   return (
-    <div className="flex flex-col gap-2">
+    <FilterBar label="Bộ lọc tướng">
       <Input
         type="search"
         aria-label="Tìm tướng theo tên"
@@ -80,6 +81,6 @@ export function HeroFilterBar({
           ))}
         </div>
       </div>
-    </div>
+    </FilterBar>
   );
 }

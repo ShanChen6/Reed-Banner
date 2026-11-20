@@ -6,6 +6,7 @@
 
 import { useState } from "react";
 import { companionById, ELEMENTS, type Element, type Profession } from "@/core";
+import { FilterBar } from "@/components/game-ui";
 import { choiceVariants, Select } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
@@ -89,7 +90,7 @@ export default function CompanionPicker({
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Lọc người đi cùng">
+      <FilterBar label="Lọc người đi cùng" className="flex-row flex-wrap items-center gap-1.5 p-2.5">
         <input
           type="search"
           value={query}
@@ -138,7 +139,7 @@ export default function CompanionPicker({
             </option>
           ))}
         </Select>
-      </div>
+      </FilterBar>
 
       <ul className={`grid gap-1.5 ${narrow ? "grid-cols-2" : "grid-cols-[repeat(auto-fill,minmax(12.5rem,1fr))]"}`} role="group" aria-labelledby={labelId} {...paged.listProps}>
         {shown.map((c) => {

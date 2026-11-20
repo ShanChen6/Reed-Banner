@@ -507,10 +507,6 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
           Rút quân
         </Button>
       </div>
-      <p className="max-w-xl text-center text-sm text-on-wood-soft">
-        Đổi hai ô kề nhau để ghép ba. Kiếm đánh mạnh nhất; trống và tim nạp Sĩ khí; sách nạp Mưu để Quân sư hiến kế; âm dương nạp Kế sách; bánh chưng
-        cho thêm nước. Quân giặc không đánh lại.
-      </p>
     </section>
   );
 }
@@ -751,7 +747,6 @@ export default function SuLoScreen() {
                     ))}
                   </div>
                 )}
-                {game.phase === "move" && <p className="text-sm text-on-wood-soft">Ô viền vàng là nơi tới được. Rê vào để xem đường đi.</p>}
               </section>
             )}
 
@@ -778,20 +773,6 @@ export default function SuLoScreen() {
                     </Button>
                   ))}
                 </div>
-                <p className="text-sm text-on-wood-soft">
-                  Lọc lời bỏ hai đáp án sai, Đổi câu thay câu khác, Hỏi tướng nhờ tướng đi cùng gợi ý, Hỏa tốc tự chọn số bước. Ô Sử quan cho thêm lượt trợ giúp.
-                </p>
-              </section>
-            )}
-
-            {game && game.phase !== "won" && !game.skirmish && (
-              <section className="ui-frame flex flex-col gap-2 p-4 text-sm" aria-label="Chú giải">
-                <h2 className="ui-title-on-wood font-bold">Chú giải</h2>
-                <p>
-                  Ô Lục, Vàng, Đỏ là câu hỏi dễ tới khó (đúng ô Vàng +1, ô Đỏ +2 Ấn sử, ô Đỏ còn mở lối tắt kề bên). Bẫy: trả lời đúng thì gỡ được, sai thì
-                  dính bẫy.{cfg.fog !== null ? " Có bẫy ẩn trông như ô Vàng, và sương che ô ở xa." : ""} Lộc là ô may mắn, Bia là câu đọc đoạn trích, Ải
-                  phải đúng hai câu liền, Trấn là quân giặc giữ cổng. Lối nét đứt là lối tắt còn khóa.
-                </p>
               </section>
             )}
 
@@ -801,10 +782,6 @@ export default function SuLoScreen() {
                 <div className="px-1 pb-1">{setupPanel}</div>
               </details>
             )}
-            <p className="text-sm text-on-wood-soft">
-              Bản chơi thử, không cần mạng: chưa có thưởng và bảng công trạng. Câu hỏi đã qua lần duyệt thứ nhất, đang chờ duyệt lần hai. Ván dở lưu trên
-              trình duyệt này.
-            </p>
           </aside>
         </div>
         </PlayCard>

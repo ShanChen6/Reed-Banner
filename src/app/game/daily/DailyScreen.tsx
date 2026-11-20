@@ -187,7 +187,7 @@ export default function DailyScreen() {
       {quests.profile && <CheckInPanel profile={quests.profile} now={now} busy={quests.busy} act={quests.act} />}
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-        <OrnateFrame level="raised" className="flex min-w-0 flex-col gap-3">
+        <OrnateFrame className="flex min-w-0 flex-col gap-3">
           <SectionTitle>Đề hôm nay</SectionTitle>
           <p className="text-sm text-on-wood">
             Đội cho sẵn, cấp {DAILY_LEVEL}, không trang bị. Đối thủ đánh ở mức{" "}

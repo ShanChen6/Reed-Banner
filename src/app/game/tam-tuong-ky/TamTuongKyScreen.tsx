@@ -982,7 +982,6 @@ function Altar(props: {
     <Panel id="ttk-altar" title="Đài Hợp Nguyên">
       <SlotsRow slots={slots} busy={pending} result={props.card?.kind === "result" ? props.card.result : null} onClear={props.onClear} onSwap={props.onSwap} picker={props.picker} />
       <AltarCard card={props.card} state={props.state} onUse={props.onUseResult} onFilterGroup={props.onFilterGroup} />
-      <p className="text-caption text-[var(--ash)]">Thứ tự ô có nghĩa: “Mộc + Thủy” khác “Thủy + Mộc”.</p>
       {session ? (
         <button
           type="button"
@@ -1399,7 +1398,6 @@ function Ledger({
           />
         </>
       )}
-      <p className="text-caption text-[var(--ash)]">Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội.</p>
       <HeroDetail entry={detail} onClose={() => setDetail(null)} />
     </Panel>
   );

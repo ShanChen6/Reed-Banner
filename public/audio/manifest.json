@@ -234,19 +234,45 @@
     },
     "battle.match4": {
       "files": [
-        "sfx/battle/match3_a",
-        "sfx/battle/match3_b",
-        "sfx/battle/match3_c"
+        "sfx/battle/match4_a",
+        "sfx/battle/match4_b"
       ],
       "volume": 0.8
     },
     "battle.match5": {
       "files": [
-        "sfx/battle/match3_a",
-        "sfx/battle/match3_b",
-        "sfx/battle/match3_c"
+        "sfx/battle/match5_a",
+        "sfx/battle/match5_b"
       ],
-      "volume": 0.8
+      "volume": 0.85
+    },
+    "battle.combo1": {
+      "files": [
+        "sfx/battle/combo1_a",
+        "sfx/battle/combo1_b"
+      ],
+      "volume": 0.85
+    },
+    "battle.combo2": {
+      "files": [
+        "sfx/battle/combo2_a",
+        "sfx/battle/combo2_b"
+      ],
+      "volume": 0.85
+    },
+    "battle.combo3": {
+      "files": [
+        "sfx/battle/combo3_a",
+        "sfx/battle/combo3_b"
+      ],
+      "volume": 0.85
+    },
+    "battle.combo4": {
+      "files": [
+        "sfx/battle/combo3_a",
+        "sfx/battle/combo3_b"
+      ],
+      "volume": 0.95
     },
     "battle.win": {
       "files": [

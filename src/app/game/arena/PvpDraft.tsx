@@ -135,7 +135,7 @@ export default function PvpDraftScreen({ id, onMatch, onExit }: { id: string; on
   };
 
   return (
-    <OrnateFrame level="raised" className="flex flex-col gap-4">
+    <OrnateFrame className="flex flex-col gap-4">
       <SectionTitle description="Phe có điểm cao hơn cấm trước, phe có điểm thấp hơn chọn trước. Mỗi phe cấm 3 lần. Đinh Bộ Lĩnh chỉ bị cấm theo hệ hoặc nghề, và cả trận chỉ một người được chọn.">
         Cấm chọn tướng
       </SectionTitle>

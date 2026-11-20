@@ -1273,11 +1273,11 @@ export default function DemoGame({
         )}
 
         <div
-          className={`flex flex-col gap-3 md:flex-row md:items-start ${started ? "" : "hidden"}`}
+          className={`battle-fill flex flex-col gap-3 md:flex-row md:items-start ${started ? "" : "hidden"}`}
         >
           {side(PLAYER)}
 
-          <div className="order-2 mx-auto flex w-full min-w-0 flex-1 flex-col gap-2 md:order-none xl:max-w-[46rem] 3xl:max-w-[56rem]">
+          <div className="battle-center order-2 mx-auto flex w-full min-w-0 flex-1 flex-col gap-2 md:order-none xl:max-w-[46rem] 3xl:max-w-[56rem]">
             {started && state.winner === null && !atBreak && (
               <TurnClock
                 seconds={playerTurn && !replaying ? secondsLeft : null}
@@ -1286,9 +1286,11 @@ export default function DemoGame({
                 waiting={pending}
               />
             )}
-            {/* lg+: bàn cờ cố gắng vừa phần màn hình còn lại dưới sân đấu nhưng không nhỏ hơn 34rem; màn thấp thì cuộn, sân đấu dính trên đầu nên vẫn thấy hoạt ảnh. */}
+            {/* lg+: bàn cờ cố gắng vừa phần màn hình còn lại dưới sân đấu nhưng không nhỏ hơn 34rem; màn thấp thì cuộn, sân đấu dính trên đầu nên vẫn thấy hoạt ảnh.
+                Toàn màn hình: hộp .battle-board-box giãn hết chiều cao còn lại, bàn cờ vừa hộp (globals.css). */}
+            <div className="battle-board-box">
             <div
-              className="relative mx-auto mt-3 w-full rounded-xl border-2 border-[var(--primary)] bg-[var(--decorative-frame)] p-1.5 shadow-lg lg:max-w-[max(34rem,calc((100dvh-21rem)*var(--board-ratio)))]"
+              className="battle-board relative mx-auto mt-3 w-full rounded-xl border-2 border-[var(--primary)] bg-[var(--decorative-frame)] p-1.5 shadow-lg lg:max-w-[max(34rem,calc((100dvh-21rem)*var(--board-ratio)))]"
               style={{ "--board-ratio": board.cols / board.rows } as React.CSSProperties}
             >
               <BoardCrest className="pointer-events-none absolute -top-4 left-1/2 z-10 h-8 w-40 -translate-x-1/2 md:-top-5 md:h-10 md:w-52" />
@@ -1396,10 +1398,12 @@ export default function DemoGame({
                 )}
               </div>
             </div>
+            </div>
 
             {started && side(PLAYER, true)}
 
             {skillBar(false)}
+            <div className="battle-aim-slot flex flex-col gap-2 empty:hidden">
             {whirlAim && (
               <div className="flex flex-wrap items-center gap-1.5 text-caption">
                 {whirlAim.center &&
@@ -1440,14 +1444,8 @@ export default function DemoGame({
                     }. Esc để hủy.`}
               </p>
             )}
-            <p className="text-caption opacity-70 md:hidden">
-              Vuốt hoặc chạm hai ô kề nhau để đổi chỗ.
-            </p>
-            <p className="hidden text-caption opacity-70 md:block">
-              Vuốt, kéo hoặc bấm hai ô kề nhau để đổi chỗ. Bàn phím: mũi tên
-              hoặc WASD, Enter chọn ô, 1–6 dùng kỹ năng, Tab đổi người hành
-              động, Esc hủy.
-            </p>
+            </div>
+            {/* Cách đổi ô và phím tắt nằm ở thẻ Hướng dẫn (Shan 20/11/2026: gợi ý đưa hết vào Hướng dẫn). */}
           </div>
 
           {side(AI)}

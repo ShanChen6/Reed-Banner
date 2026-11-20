@@ -493,9 +493,6 @@ export default function DoThamScreen() {
             )}
           </OrnateFrame>
         </PlayCard>
-        <p className="mt-3 text-sm text-on-wood-soft">
-          Bản chơi thử, không cần mạng: chưa có thưởng và bảng công trạng. Ván dở và thời gian tốt nhất mỗi bậc lưu trên trình duyệt này.
-        </p>
       </ModeGuideTabs>
     </ModeScreen>
   );

@@ -268,7 +268,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
   const noLegalBuild = companions.length >= 2 && preview.status === "invalid" && picker.suggestion === null;
 
   return (
-    <OrnateFrame level="raised" aria-labelledby="trial-floor-title" className={cn("flex min-w-0 flex-col gap-4", props.className)}>
+    <OrnateFrame aria-labelledby="trial-floor-title" className={cn("flex min-w-0 flex-col gap-4", props.className)}>
       <header>
         <p className="text-kicker text-frame-gold">
           {FLOOR_STATE_TEXT[entry.state]}, độ khó {DIFFICULTY_NAME[f.difficulty]}

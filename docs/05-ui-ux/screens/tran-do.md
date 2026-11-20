@@ -54,9 +54,9 @@ Cấu trúc `ModeScreen.tsx` (Shan 18/11/2026): hàng thẻ **Chơi thường** 
 - **Bản đồ là trung tâm**, vệt sáng quét qua hàng hoặc cột vừa dọn (0,7 giây; giảm chuyển động thì chỉ nháy sáng). Rê chuột hoặc dùng bàn phím lên ô thì dòng dưới sa bàn nói ô đó đặt được hay không và vì sao.
 - **Lệnh bài** (`Hud.tsx`, `CommandCard`): tấm bài giấy dó có dấu son "LỆNH BÀI", chân dung lớn, tên, nghề, hệ hoặc công dụng quân đặc biệt.
 - **Thanh Bỏ Lệnh là ba ngọn lửa**: mỗi lần bỏ một ngọn bùng lên, ngọn cuối đổi màu đỏ khi bỏ nữa là thua; đặt quân thì dịu đi.
-- **Tiến độ** là thanh đầy dần kèm phần trăm; thống kê khô (điểm, quân đã đặt, hàng đã dọn, điểm cao nhất) gập vào "Thống kê ván"; luật gập vào "Luật chơi".
+- **Tiến độ** là thanh đầy dần kèm phần trăm; thống kê khô (điểm, quân đã đặt, hàng đã dọn, điểm cao nhất) gập vào "Thống kê ván". Khối "Luật chơi" trong ván đã bỏ (Shan 20/11/2026): luật nằm ở thẻ Hướng dẫn. Máy tính có vạch dọc ngăn bàn cờ với cột điều khiển bên phải.
 - **Điện thoại**: thanh cố định ở đáy màn hình (`MobileBar`) có quân đang cầm thu nhỏ, ba ngọn lửa, nút Bỏ Lệnh và phần trăm khai thông, để ngón cái chạm tới; ẩn ở màn rộng.
-- **Gợi ý ô đặt được** là nút bật tắt, nhớ lựa chọn ở máy; **mặc định bật ở bậc Hướng dẫn, tắt ở các bậc khác** (đề xuất, chờ góp ý).
+- **Gợi ý ô đặt được** là nút biểu tượng tròn (sa bàn có chấm sáng) đặt cạnh lệnh bài trên máy tính và trong thanh đáy trên điện thoại, thay nút chữ dưới bàn (Shan 20/11/2026); bật tắt, nhớ lựa chọn ở máy; **mặc định bật ở bậc Hướng dẫn, tắt ở các bậc khác** (đề xuất, chờ góp ý).
 - **Hướng dẫn từng bước** ở Hướng dẫn (`TutorialTip`): bước 1 chạm ô đầu tiên, bước 2 luật kề và khớp, nhắc Bỏ Lệnh khi hết nước, nhắc dọn hàng; bấm "Đã hiểu" thì không hiện lại.
 - **Kết quả**: sa bàn mờ quân và chướng ngại để hiện cả bản đồ, khung kết quả có bản đồ đầy đủ kèm địa danh; thắng thì thêm vào bộ sưu tập.
 
