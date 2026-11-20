@@ -160,6 +160,35 @@ export function bestChains(team: readonly ComboMember[], limit = 8): ComboChain[
   return out;
 }
 
+/** Các chiêu của một tướng cùng mở một dây phản ứng. */
+export interface ChainOpener {
+  readonly from: number;
+  readonly skills: readonly SkillDef[];
+}
+
+/** Các chuỗi cùng dây bị động (chỉ khác chiêu mở) gộp làm một nhóm; chiêu mở xếp theo người. */
+export interface ChainGroup {
+  readonly steps: readonly ChainStep[];
+  readonly openers: readonly ChainOpener[];
+}
+
+/**
+ * Gộp chuỗi trùng dây phản ứng: nhiều chiêu (của một hay nhiều người) cùng mở một dây bị động thì chỉ hiện một dây, kèm
+ * danh sách chiêu mở theo người. Giữ thứ tự của `chains` (nhóm và người mở đứng ở vị trí xuất hiện đầu tiên).
+ */
+export function groupChains(chains: readonly ComboChain[]): ChainGroup[] {
+  const groups = new Map<string, { steps: readonly ChainStep[]; openers: { from: number; skills: SkillDef[] }[] }>();
+  for (const c of chains) {
+    const key = c.steps.map((s) => `${s.fighter}:${s.passive.kind}:${s.passive.id}:${s.signal}`).join(">");
+    let g = groups.get(key);
+    if (!g) groups.set(key, (g = { steps: c.steps, openers: [] }));
+    let o = g.openers.find((x) => x.from === c.from);
+    if (!o) g.openers.push((o = { from: c.from, skills: [] }));
+    if (!o.skills.some((s) => s.id === c.skill.id)) o.skills.push(c.skill);
+  }
+  return [...groups.values()];
+}
+
 /** Mức giảm Thủ chiêu tự đặt lên địch; truy kích giảm Thủ yếu hơn mức này bị bỏ qua. */
 function skillArmor(skill: SkillDef): number {
   return Math.max(0, ...skill.steps.map((st) => (st.type === "effect" && st.effect === "defDown" && st.to !== "self" && st.to !== "team" ? st.value : 0)));
