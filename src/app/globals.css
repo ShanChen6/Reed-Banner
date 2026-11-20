@@ -947,7 +947,15 @@
 /* Trận Đồ: sa bàn là một tấm bản đồ. Ô chưa khai thông được phủ bằng ảnh che ĐẶC KÍN (không trong suốt, để không nhầm với
    ô đã mở); ô khai thông trong suốt để lộ bản đồ; ô chướng ngại có nền riêng, không lấy ảnh của bản đồ. Lớp phủ nằm ở
    ::before và đổi bằng opacity nên có chuyển động mượt khi ô được mở. */
+/* Cỡ ô (--fm-cell): BoardView truyền số cột, số hàng và cỡ trần theo số cột. Cột chứa bàn là khung đo (cqw) nên bàn luôn
+   vừa bề ngang cột; máy tính thì ô giãn theo chiều cao màn (không nhỏ hơn cỡ trần), toàn màn hình thì lấp chiều cao. */
+.fm-board-col {
+  container-type: inline-size;
+}
 .fm-board {
+  --fm-cell: min(var(--fm-max), calc((100cqw - 20px) / var(--fm-cols)));
+  grid-template-columns: repeat(var(--fm-cols), var(--fm-cell));
+  grid-auto-rows: var(--fm-cell);
   background-color: var(--wood-lo);
   background-repeat: no-repeat;
   background-position: center;
@@ -982,6 +990,18 @@
 .fm-cell > * {
   position: relative;
 }
+/* Đường kẻ phân cách giữa các ô: mép tối một bên, ánh sáng mảnh bên kia như khắc lên sa bàn. Nằm trên lớp phủ nhưng dưới
+   quân (z-index 1, quân ở .fm-cell > * cũng relative nhưng đứng sau trong DOM). */
+.fm-cell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow:
+    inset -1px -1px 0 0 rgb(0 0 0 / 0.6),
+    inset 1px 1px 0 0 color-mix(in srgb, var(--frame-gold) 35%, transparent);
+  transition: opacity 0.45s ease;
+}
 .fm-token,
 .fm-obstacle {
   transition: opacity 0.8s ease;
@@ -999,6 +1019,9 @@
 }
 [data-won="true"] .fm-cell {
   box-shadow: none;
+}
+[data-won="true"] .fm-cell::after {
+  opacity: 0;
 }
 @media (prefers-reduced-motion: reduce) {
   .fm-cell::before,
@@ -1456,6 +1479,25 @@
    màn nào có thanh dính đáy (.mobile-dock: Bày trận Bình Loạn, Trận Đồ, Tầm Tướng Ký) thì nút nằm sẵn trên thanh. Màn mà
    thanh chỉ hiện ở một mục (Tầm Tướng Ký: mục Chơi có, mục Hướng dẫn không) gắn .has-mobile-dock lên khung màn để nút
    giữ nguyên chỗ khi đổi mục, không nhảy lên xuống. */
+/* Hai nút toàn màn hình (cả trang, màn chơi) để mờ cho đỡ che màn, rê chuột hoặc chọn bằng phím thì hiện rõ. Máy không
+   có chuột (điện thoại) vẫn bấm được, chỉ mờ nhẹ hơn để dễ thấy. */
+.fullscreen-fab,
+.play-card-toggle {
+  opacity: 0.35;
+  transition: opacity 0.2s ease;
+}
+.fullscreen-fab:hover,
+.fullscreen-fab:focus-visible,
+.play-card-toggle:hover,
+.play-card-toggle:focus-visible {
+  opacity: 1;
+}
+@media (hover: none) {
+  .fullscreen-fab,
+  .play-card-toggle {
+    opacity: 0.6;
+  }
+}
 .fullscreen-fab {
   right: max(0.75rem, env(safe-area-inset-right));
   bottom: max(0.75rem, env(safe-area-inset-bottom));
@@ -1594,6 +1636,23 @@ html {
   .play-card:fullscreen:has(.mobile-dock) .play-card-toggle,
   .play-card--overlay:has(.mobile-dock) .play-card-toggle {
     bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 5.5rem);
+  }
+}
+/* Trận Đồ: máy tính cho ô giãn theo chiều cao màn; thẻ toàn màn hình thì bàn lấp chiều cao (trừ lề, dòng thông báo, nút
+   gợi ý) và vẫn vừa bề ngang cột. */
+@media (width >= 64rem) {
+  .fm-board {
+    --fm-cell: min(max(var(--fm-max), calc((100dvh - 20rem) / var(--fm-rows))), calc((100cqw - 20px) / var(--fm-cols)), 128px);
+  }
+}
+.play-card:fullscreen .fm-board,
+.play-card--overlay .fm-board {
+  --fm-cell: min(calc((100dvh - 18rem) / var(--fm-rows)), calc((100cqw - 20px) / var(--fm-cols)), 200px);
+}
+@media (width < 64rem) {
+  .play-card:fullscreen .fm-board,
+  .play-card--overlay .fm-board {
+    --fm-cell: min(calc((100dvh - 24rem) / var(--fm-rows)), calc((100cqw - 20px) / var(--fm-cols)), 112px);
   }
 }
 /* Sân đấu dính dưới thanh đầu trang; khi thẻ toàn màn hình thì không còn thanh đầu trang nên dính sát mép trên. */
