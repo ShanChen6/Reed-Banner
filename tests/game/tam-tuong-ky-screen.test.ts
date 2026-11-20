@@ -20,9 +20,8 @@ import {
   libraryNodes,
   noticeFor,
   pickInto,
-  PICKER_COLS,
-  PICKER_ROWS,
   padPage,
+  pickerGrid,
   putInto,
   recipeBook,
   swapSlots,
@@ -70,8 +69,15 @@ describe("Đài Hợp Nguyên: chọn ô", () => {
     assert.deepEqual(putInto(["elt.moc", "elt.thuy"], 0, "elt.kim"), ["elt.kim", "elt.thuy"]);
   });
 
-  it("hộp thoại chọn nguyên liệu cố định 5 hàng × 6 cột", () => {
-    assert.equal(PICKER_ROWS * PICKER_COLS, 30);
+  it("hộp thoại chọn nguyên liệu co lưới theo khung nhìn, trang thiếu lấp ô trống", () => {
+    assert.deepEqual(pickerGrid(1920, 860), { cols: 6, rows: 5 });
+    assert.deepEqual(pickerGrid(1366, 640), { cols: 6, rows: 3 });
+    assert.deepEqual(pickerGrid(390, 760), { cols: 4, rows: 5 });
+    assert.deepEqual(pickerGrid(740, 360), { cols: 6, rows: 2 });
+    for (const [w, h] of [[1920, 860], [1366, 640], [390, 667], [1024, 700]] as const) {
+      const { rows } = pickerGrid(w, h);
+      assert.ok(292 + rows * 90 - 6 <= h, `${w}×${h}`);
+    }
     assert.deepEqual(padPage(["a", "b"], 4), ["a", "b", null, null]);
     assert.deepEqual(padPage(["a", "b"], 2), ["a", "b"]);
   });

@@ -36,9 +36,9 @@ import {
   sectionOf,
   noticeFor,
   pickInto,
-  PICKER_COLS,
-  PICKER_ROWS,
   padPage,
+  pickerGrid,
+  type PickerGrid,
   recipeBook,
   swapSlots,
   tutorialTip,
@@ -850,9 +850,26 @@ interface SlotPicker {
   readonly onPick: (index: 0 | 1, id: NodeId) => void;
 }
 
+/** `pickerGrid` theo khung nhìn, mã hóa thành một số để `useSyncExternalStore` so sánh được (cột × 10 + hàng). */
+function usePickerGrid(): PickerGrid {
+  const code = useSyncExternalStore(
+    (onChange) => {
+      window.addEventListener("resize", onChange);
+      return () => window.removeEventListener("resize", onChange);
+    },
+    () => {
+      const g = pickerGrid(window.innerWidth, window.innerHeight);
+      return g.cols * 10 + g.rows;
+    },
+    () => 64,
+  );
+  return { cols: Math.floor(code / 10) as 4 | 6, rows: code % 10 };
+}
+
 /** Hộp thoại chọn nguyên liệu cho một ô (hộp thoại gốc của trình duyệt: Esc hoặc bấm nền để đóng). */
 function PickerDialog({ index, picker, onClose }: { index: 0 | 1 | null; picker: SlotPicker; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const grid = usePickerGrid();
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
@@ -882,7 +899,7 @@ function PickerDialog({ index, picker, onClose }: { index: 0 | 1 | null; picker:
             counts={picker.counts}
             units={picker.units}
             autoFocus
-            layout={{ pageSize: PICKER_COLS * PICKER_ROWS, grid: "grid-cols-6", fixed: true }}
+            layout={{ pageSize: grid.cols * grid.rows, grid: grid.cols === 6 ? "grid-cols-6" : "grid-cols-4", fixed: true }}
             onPick={(id) => {
               picker.onPick(index, id);
               onClose();

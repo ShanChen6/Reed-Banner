@@ -27,12 +27,21 @@ export function pickInto(slots: Slots, id: NodeId): Slots {
   return [slots[0], id];
 }
 
+export interface PickerGrid {
+  readonly cols: 4 | 6;
+  readonly rows: number;
+}
+
 /**
- * Lưới hộp thoại chọn nguyên liệu (Shan 20/11/2026, lần hai): cố định 5 hàng × 6 cột ở mọi màn, luôn có thanh phân
- * trang kể cả khi chỉ một trang; trang thiếu mục thì các chỗ còn lại là ô vuông trống, hộp thoại không đổi cỡ.
+ * Số cột, số hàng của lưới trong hộp thoại chọn nguyên liệu theo khung nhìn (Shan 20/11/2026: co theo màn hình, không
+ * cố định). Phần cố định của hộp thoại (lề ngoài, viền, đệm, tiêu đề, ô tìm, hàng lọc, thanh trang luôn hiện) khoảng
+ * 292px, mỗi hàng ô 90px (ô 84px + khe 6px, hàng cuối không có khe). Từ 2 đến 5 hàng; 6 cột từ 640px, 4 cột dưới đó.
+ * Trang thiếu mục thì lấp ô trống (`padPage`) để hộp thoại giữ cỡ khi sang trang.
  */
-export const PICKER_COLS = 6;
-export const PICKER_ROWS = 5;
+export function pickerGrid(width: number, height: number): PickerGrid {
+  const rows = Math.max(2, Math.min(5, Math.floor((height - 292 + 6) / 90)));
+  return { cols: width >= 640 ? 6 : 4, rows };
+}
 
 /** Trang đủ `size` chỗ: mục thật trước, `null` (ô trống) lấp phần còn lại. */
 export function padPage<T>(items: readonly T[], size: number): readonly (T | null)[] {
