@@ -27,20 +27,16 @@ export function pickInto(slots: Slots, id: NodeId): Slots {
   return [slots[0], id];
 }
 
-export interface PickerGrid {
-  readonly cols: 4 | 6;
-  readonly rows: number;
-}
-
 /**
- * Số cột, số hàng của lưới trong hộp thoại chọn nguyên liệu theo khung nhìn (Shan 20/11/2026: bảng co theo chiều cao
- * màn hình, hạn chế thanh cuộn). Phần cố định của hộp thoại (lề ngoài, viền, đệm, tiêu đề, ô tìm, hàng lọc, nút trang)
- * khoảng 292px, mỗi hàng ô 90px (ô 84px + khe 6px, hàng cuối không có khe). Từ 2 đến 5 hàng; màn thấp hơn mức 2 hàng
- * thì hộp thoại vẫn cuộn được. 6 cột từ 640px.
+ * Lưới hộp thoại chọn nguyên liệu (Shan 20/11/2026, lần hai): cố định 5 hàng × 6 cột ở mọi màn, luôn có thanh phân
+ * trang kể cả khi chỉ một trang; trang thiếu mục thì các chỗ còn lại là ô vuông trống, hộp thoại không đổi cỡ.
  */
-export function pickerGrid(width: number, height: number): PickerGrid {
-  const rows = Math.max(2, Math.min(5, Math.floor((height - 292 + 6) / 90)));
-  return { cols: width >= 640 ? 6 : 4, rows };
+export const PICKER_COLS = 6;
+export const PICKER_ROWS = 5;
+
+/** Trang đủ `size` chỗ: mục thật trước, `null` (ô trống) lấp phần còn lại. */
+export function padPage<T>(items: readonly T[], size: number): readonly (T | null)[] {
+  return [...items, ...Array.from({ length: Math.max(0, size - items.length) }, () => null)];
 }
 
 /** Chọn từ hộp thoại của một ô: đặt đúng vào ô đó, ô kia giữ nguyên. */

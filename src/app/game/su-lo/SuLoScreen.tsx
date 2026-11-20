@@ -311,7 +311,7 @@ function QuestionCard({
 
   const single = typeof q.answer === "number";
   return (
-    <section className="ui-frame flex w-full flex-col gap-3 p-4" aria-label="Câu hỏi" aria-live="polite">
+    <section className="ui-frame flex w-full flex-1 flex-col gap-3 p-4" aria-label="Câu hỏi" aria-live="polite">
       <div className="flex items-center justify-between gap-2">
         <h2 className="ui-title-on-wood font-bold">{title}</h2>
         {left !== null && (
@@ -665,16 +665,25 @@ export default function SuLoScreen() {
           <OrnateFrame aria-label="Vùng chơi" flush className="flex min-w-0 flex-col items-center gap-4 p-2 sm:p-5">
             {!game && setupPanel}
             {game && game.phase !== "won" && (game.skirmish ? <Skirmish s={game} act={act} /> : <MazeBoard s={game} onMove={(to) => act({ type: "move", to })} />)}
-            {game && q && game.question && (
-              <QuestionCard
-                key={`${game.question.id}:${game.question.chainLeft}:${game.asked.length}`}
-                q={q}
-                hidden={game.question.hidden}
-                hint={game.question.hint}
-                title={questionTitle}
-                seconds={cfg.questionSeconds}
-                onAnswer={onAnswer}
-              />
+            {/* Chỗ câu hỏi giữ sẵn dưới bàn suốt ván để câu hỏi hiện ra không đẩy bố cục. */}
+            {game && game.phase !== "won" && (!game.skirmish || game.question) && (
+              <div className="flex min-h-60 w-full flex-col" data-testid="question-slot">
+                {q && game.question ? (
+                  <QuestionCard
+                    key={`${game.question.id}:${game.question.chainLeft}:${game.asked.length}`}
+                    q={q}
+                    hidden={game.question.hidden}
+                    hint={game.question.hint}
+                    title={questionTitle}
+                    seconds={cfg.questionSeconds}
+                    onAnswer={onAnswer}
+                  />
+                ) : (
+                  <p className="ui-frame-inset flex flex-1 items-center justify-center p-4 text-center text-sm text-on-wood-soft">
+                    Câu hỏi của ô bạn dừng chân sẽ hiện ở đây.
+                  </p>
+                )}
+              </div>
             )}
             {game?.phase === "won" && (
               <div role="status" className="ui-frame flex w-full max-w-xl flex-col items-center gap-3 p-4 text-center">
