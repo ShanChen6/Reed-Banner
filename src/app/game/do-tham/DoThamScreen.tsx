@@ -33,7 +33,7 @@ import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
 import { PlayCard } from "../PlayCard";
 import { useAudio } from "../audio/AudioProvider";
-import { cuesForAction, DOTHAM_MUSIC, DOTHAM_PRELOAD, REJECT } from "./sounds";
+import { cuesForAction, cueTimes, DOTHAM_MUSIC, DOTHAM_PRELOAD, REJECT } from "./sounds";
 
 const SAVE_KEY = "reed-banner:do-tham:save:v1";
 const BEST_KEY = "reed-banner:do-tham:best:v1";
@@ -240,11 +240,13 @@ export default function DoThamScreen() {
         return false;
       }
       setGame(r.state);
-      // Tiếng của nước đi trước, tiếng kết quả theo sau một nhịp ngắn để không chồng lên nhau.
-      cuesForAction(game, r.state, action).forEach((c, i) => {
+      // Tiếng của nước đi trước, tiếng kết quả theo sau một nhịp để không chồng lên nhau.
+      const cues = cuesForAction(game, r.state, action);
+      const times = cueTimes(cues);
+      cues.forEach((c, i) => {
         const go = () => playSound(c.id, { rate: c.rate });
-        if (i === 0) go();
-        else window.setTimeout(go, 220 * i);
+        if (times[i] === 0) go();
+        else window.setTimeout(go, times[i]);
       });
       setMessage("");
       if (r.state.phase === "won" && game.phase !== "won") {
