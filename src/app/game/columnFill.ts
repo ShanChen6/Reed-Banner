@@ -1,6 +1,6 @@
 // Khối lấp chỗ trống ở cột ngắn khi hai cột của màn chế độ cao bằng nhau (Shan chọn "kết hợp" 20/11/2026).
 // Chế độ có `art` thì hiện tranh kèm thơ đè lên; chưa có tranh thì hiện mẹo chơi và thơ trên nền gỗ lõm.
-// Tranh Shan vẽ đặt ở public/art/column-fill/<chế độ>.webp rồi điền `art`; prompt ở
+// Tranh Shan vẽ (900 × 1200, đáy tối sẵn để đặt thơ) ở public/art/column-fill/<chế độ>.webp, điền `art`; prompt ở
 // /mnt/project-files/art/prompts/tranh-lap-cot.md. Thơ dùng nguyên tác phiên âm Hán Việt (tác phẩm cổ, không vướng
 // bản quyền bản dịch).
 
@@ -26,6 +26,7 @@ const NAM_QUOC_SON_HA: ColumnPoem = {
 
 export const COLUMN_FILL: Readonly<Record<ColumnFillMode, ColumnFillEntry>> = {
   daily: {
+    art: "/art/column-fill/daily.webp",
     poem: {
       lines: ["Đoạt sáo Chương Dương độ,", "Cầm Hồ Hàm Tử quan.", "Thái bình tu trí lực,", "Vạn cổ thử giang san."],
       source: "Trần Quang Khải, Tụng giá hoàn kinh sư",
@@ -36,6 +37,7 @@ export const COLUMN_FILL: Readonly<Record<ColumnFillMode, ColumnFillEntry>> = {
     ],
   },
   arena: {
+    art: "/art/column-fill/arena.webp",
     poem: {
       lines: ["Hoành sóc giang sơn cáp kỷ thu,", "Tam quân tì hổ khí thôn ngưu.", "Nam nhi vị liễu công danh trái,", "Tu thính nhân gian thuyết Vũ hầu."],
       source: "Phạm Ngũ Lão, Thuật hoài",
@@ -46,6 +48,7 @@ export const COLUMN_FILL: Readonly<Record<ColumnFillMode, ColumnFillEntry>> = {
     ],
   },
   destiny: {
+    art: "/art/column-fill/destiny.webp",
     poem: {
       lines: ["Quốc tộ như đằng lạc,", "Nam thiên lý thái bình.", "Vô vi cư điện các,", "Xứ xứ tức đao binh."],
       source: "Pháp Thuận, Quốc tộ",
@@ -56,6 +59,7 @@ export const COLUMN_FILL: Readonly<Record<ColumnFillMode, ColumnFillEntry>> = {
     ],
   },
   survival: {
+    art: "/art/column-fill/survival.webp",
     poem: NAM_QUOC_SON_HA,
     tips: [
       "Dự bị không đánh nhưng hồi 10% máu mỗi lần nghỉ và thay người gục.",
@@ -63,6 +67,7 @@ export const COLUMN_FILL: Readonly<Record<ColumnFillMode, ColumnFillEntry>> = {
     ],
   },
   trial: {
+    art: "/art/column-fill/trial.webp",
     poem: {
       lines: ["Mạc vị xuân tàn hoa lạc tận,", "Đình tiền tạc dạ nhất chi mai."],
       source: "Mãn Giác thiền sư, Cáo tật thị chúng",
