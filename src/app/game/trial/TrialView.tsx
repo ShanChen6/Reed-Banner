@@ -45,6 +45,7 @@ import {
   type TrialOverview,
 } from "./trial-ui";
 import { ModeGuideTabs } from "../ModeGuide";
+import { HeroFilterBar, filterHeroes, useHeroFilter } from "../arena/HeroFilterBar";
 import { ColumnFill } from "../ColumnFill";
 
 /** Số cột của lưới tầng ở mọi bề rộng (khớp class grid-cols-5 bên dưới). Dùng cho phím lên/xuống. */
@@ -251,7 +252,11 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
   // Tướng đã chọn nằm ở hai ô riêng phía trên; danh sách dưới chỉ còn tướng chưa chọn, tướng bị luật cấm xếp cuối.
   const picked = companions.flatMap((id) => options.filter((o) => o.id === id));
   const candidates = options.filter((o) => !o.selected).sort((a, b) => Number(a.reason !== null) - Number(b.reason !== null));
-  const pagedOptions = usePagedItems(candidates, 12);
+  // Lọc tên, hệ, nghề như Viễn Chinh; đổi bộ lọc thì về trang đầu.
+  const [filter, updateFilter] = useHeroFilter();
+  const shown = filterHeroes(candidates, filter.query, filter.element, filter.profession);
+  const pagedOptions = usePagedItems(shown, 12);
+  const setFilter = (patch: Parameters<typeof updateFilter>[0]) => { updateFilter(patch); pagedOptions.setPage(0); };
   const build = props.build ?? defaultBuild(profile);
   const preview = previewLineup(profile, f.rules, companions, build);
   const picker = leaderPicker(profile, f.rules, companions, build);
@@ -375,6 +380,11 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
                 );
               })}
             </ul>
+            <HeroFilterBar filter={filter} onChange={setFilter} />
+            <p className="mb-2 mt-2 text-caption text-on-wood-soft" role="status">
+              {shown.length === candidates.length ? `${candidates.length} tướng` : `${shown.length}/${candidates.length} tướng khớp bộ lọc`}
+            </p>
+            {shown.length === 0 && <p className="py-4 text-center text-sm text-on-wood-soft">Không có tướng khớp bộ lọc.</p>}
             <ul aria-label="Tướng kèm có thể chọn" {...pagedOptions.listProps} className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {pagedOptions.pageItems.map((o) => (
                 <li key={o.id}>

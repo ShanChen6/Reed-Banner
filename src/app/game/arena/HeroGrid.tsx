@@ -3,15 +3,15 @@
 // Lưới tướng có tìm tên, lọc theo hệ và nghề, cắt trang: dùng cho lượt cấm và lượt chọn ở Đấu người 3vs3, và chia hai
 // đạo quân ở Viễn Chinh.
 
-import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
-import { ELEMENTS, PROFESSIONS, type Element, type Profession } from "@/core";
-import { FilterBar } from "@/components/game-ui";
-import { ChoiceChip, Input } from "@/components/ui";
+import { useMemo, type CSSProperties, type ReactNode } from "react";
+import type { Element, Profession } from "@/core";
+import { ChoiceChip } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { cn } from "@/lib/cn";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
+import { HeroFilterBar, filterHeroes, useHeroFilter } from "./HeroFilterBar";
 
 export interface HeroGridItem {
   readonly id: string;
@@ -23,17 +23,6 @@ export interface HeroGridItem {
   readonly blocked?: string | null;
   /** Tướng đổi được hệ và nghề (Đinh Bộ Lĩnh): khớp mọi bộ lọc hệ, nghề. */
   readonly anyBuild?: boolean;
-}
-
-const fold = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/gi, "d").toLowerCase();
-
-/** Lọc theo tên (không dấu), hệ và nghề. */
-export function filterHeroes<T extends HeroGridItem>(items: readonly T[], query: string, element: Element | "all", profession: Profession | "all"): T[] {
-  const q = fold(query.trim());
-  return items.filter((h) =>
-    (!q || fold(h.name).includes(q)) &&
-    (h.anyBuild || element === "all" || h.element === element) &&
-    (h.anyBuild || profession === "all" || h.profession === profession));
 }
 
 export default function HeroGrid({
@@ -66,49 +55,19 @@ export default function HeroGrid({
   /** Số cột theo khổ màn (mặc định 1/2/3); màn rộng như sảnh Giao Tranh truyền thêm cột. */
   gridClassName?: string;
 }) {
-  const [query, setQuery] = useState("");
-  const [element, setElement] = useState<Element | "all">("all");
-  const [profession, setProfession] = useState<Profession | "all">("all");
   const matches = extraFilter?.matches;
+  const [filter, updateFilter] = useHeroFilter();
+  const { element, profession } = filter;
   const shown = useMemo(
-    () => filterHeroes(items, query, element, profession).filter((h) => !matches || matches(h.id)),
-    [items, query, element, profession, matches],
+    () => filterHeroes(items, filter.query, element, profession).filter((h) => !matches || matches(h.id)),
+    [items, filter.query, element, profession, matches],
   );
   const paged = usePagedItems(shown, pageSize);
-  const resetPage = () => paged.setPage(0);
+  // Đổi bộ lọc thì về trang đầu.
+  const setFilter = (patch: Parameters<typeof updateFilter>[0]) => { updateFilter(patch); paged.setPage(0); };
   return (
     <div className="flex flex-col gap-2" role="group" aria-label={label}>
-      <FilterBar label="Bộ lọc tướng">
-        <Input
-          type="search"
-          aria-label="Tìm tướng theo tên"
-          placeholder="Tìm tên tướng…"
-          value={query}
-          onChange={(e) => { setQuery(e.currentTarget.value); resetPage(); }}
-          className="min-h-11 sm:max-w-xs"
-        />
-        {extraFilter?.node}
-        <div className="flex flex-col gap-1.5 lg:flex-row lg:flex-wrap lg:items-center lg:gap-4">
-        <div className="flex flex-wrap gap-1.5" role="group" aria-label="Lọc theo hệ">
-          <ChoiceChip selected={element === "all"} onClick={() => { setElement("all"); resetPage(); }}>Mọi hệ</ChoiceChip>
-          {ELEMENTS.map((e) => (
-            <ChoiceChip key={e} selected={element === e} className="min-w-11 px-2" aria-label={`Hệ ${ELEMENT_NAME[e]}`} title={`Hệ ${ELEMENT_NAME[e]}`}
-              onClick={() => { setElement(e); resetPage(); }}>
-              <ElementIcon element={e} className="size-5" />
-            </ChoiceChip>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-1.5" role="group" aria-label="Lọc theo nghề">
-          <ChoiceChip selected={profession === "all"} onClick={() => { setProfession("all"); resetPage(); }}>Mọi nghề</ChoiceChip>
-          {PROFESSIONS.map((p) => (
-            <ChoiceChip key={p} selected={profession === p} className="min-w-11 px-2" aria-label={`Nghề ${PROFESSION_NAME[p]}`} title={`Nghề ${PROFESSION_NAME[p]}`}
-              onClick={() => { setProfession(p); resetPage(); }}>
-              <ProfessionIcon profession={p} className="size-5" />
-            </ChoiceChip>
-          ))}
-        </div>
-        </div>
-      </FilterBar>
+      <HeroFilterBar filter={filter} onChange={setFilter} extra={extraFilter?.node} />
       <p className="text-caption text-on-wood-soft" role="status">
         {shown.length === items.length ? `${items.length} tướng` : `${shown.length}/${items.length} tướng khớp bộ lọc`}
       </p>

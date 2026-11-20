@@ -342,16 +342,75 @@ export default function DoThamScreen() {
         ]}
       />
       <ModeGuideTabs scene="DO_THAM">
-        <PlayCard>
-        <div className={`grid grid-cols-[minmax(0,1fr)] items-start gap-6 ${game.width > 16 ? "" : "lg:grid-cols-[minmax(0,1fr)_320px]"}`}>
-          <OrnateFrame aria-label="Vùng chơi" flush className="flex min-w-0 flex-col items-center gap-3 p-2 sm:p-5">
-            <div className="flex w-full flex-wrap items-center justify-center gap-2" role="group" aria-label="Bậc độ khó">
+        <section className="ui-frame flex flex-col gap-4 p-4 lg:flex-row lg:items-start lg:gap-10" aria-label="Chuẩn bị ván">
+          <div className="flex flex-col gap-2">
+            <h2 className="ui-title-on-wood font-bold">Bậc độ khó</h2>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Bậc độ khó">
               {DT_LEVEL_ORDER.map((lv) => (
                 <ChoiceChip key={lv} selected={lv === level} size="md" onClick={() => chooseLevel(lv)}>
                   {LEVEL_NAME[lv]}, {DT_LEVELS[lv].width}×{DT_LEVELS[lv].height}, {DT_LEVELS[lv].mines} bẫy
                 </ChoiceChip>
               ))}
             </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <h2 className="ui-title-on-wood font-bold">
+              Đạo cụ mang theo <span className="text-sm font-normal text-on-wood-soft">(tối đa {DT_ITEM_PICKS}, đổi trước nước đầu)</span>
+            </h2>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Chọn đạo cụ">
+              {ELEMENTS.map((e) => (
+                <ChoiceChip key={e} selected={picks.includes(e)} size="md" title={`${ITEM_INFO[e].name}: ${ITEM_INFO[e].text}`} onClick={() => togglePick(e)}>
+                  <ElementIcon element={e} className="size-4" />
+                  {ITEM_INFO[e].name}
+                </ChoiceChip>
+              ))}
+            </div>
+          </div>
+        </section>
+        <PlayCard className="mt-5">
+          <OrnateFrame aria-label="Vùng chơi" flush className="flex min-w-0 flex-col items-center gap-3 p-2 sm:p-5">
+            <div className="flex w-full flex-wrap items-center justify-center gap-2" role="toolbar" aria-label="Thao tác và đạo cụ">
+              <ChoiceChip selected={flagMode} onClick={() => setFlagMode((v) => !v)} size="md">
+                <span aria-hidden className="grid size-6 place-items-center text-on-wood [&>svg]:size-full">
+                  <FlagGlyph />
+                </span>
+                Cắm cờ lau
+              </ChoiceChip>
+              <Button variant="secondary" onClick={() => startGame(level, picks)}>
+                Ván mới
+              </Button>
+              <span aria-hidden className="mx-1 hidden h-8 w-px bg-frame-line-soft sm:block" />
+              {game.items.length === 0 ? (
+                <span className="text-caption text-on-wood-soft">Chưa mang đạo cụ nào</span>
+              ) : (
+                game.items.map((it) => (
+                  <Button
+                    key={it.element}
+                    variant={armed === it.element ? "primary" : "secondary"}
+                    disabled={it.used || over}
+                    aria-pressed={armed === it.element}
+                    title={`${ITEM_INFO[it.element].name} (${ELEMENT_NAME[it.element]}): ${ITEM_INFO[it.element].text}`}
+                    onClick={() => onItem(it.element)}
+                    className="gap-1.5"
+                  >
+                    <ElementIcon element={it.element} className="size-5" />
+                    {ITEM_INFO[it.element].name}
+                    {it.used && <span className="text-caption font-normal">(đã dùng)</span>}
+                  </Button>
+                ))
+              )}
+            </div>
+            {armed === "loi" && (
+              <div className="flex items-center gap-2" role="group" aria-label="Hàng hay cột">
+                <ChoiceChip selected={axis === "row"} size="sm" onClick={() => setAxis("row")}>Hàng</ChoiceChip>
+                <ChoiceChip selected={axis === "col"} size="sm" onClick={() => setAxis("col")}>Cột</ChoiceChip>
+              </div>
+            )}
+            {(armed || game.shield === "active") && (
+              <p className="text-center text-sm text-on-wood-soft">
+                {armed ? `${ITEM_INFO[armed].name}: ${ITEM_INFO[armed].text}` : "Khiên đất đang giữ: lần sa bẫy kế tiếp được đỡ."}
+              </p>
+            )}
             <div className="w-full overflow-x-auto pb-1">
               <div className="ui-frame-inset mx-auto w-fit p-1 sm:p-2">
                 <div
@@ -433,64 +492,6 @@ export default function DoThamScreen() {
               </div>
             )}
           </OrnateFrame>
-
-          <aside className="flex flex-col gap-4" aria-label="Bảng điều khiển">
-            <section className="ui-frame flex flex-col gap-3 p-4">
-              <h2 className="ui-title-on-wood font-bold">Thao tác</h2>
-              <div className="flex flex-wrap gap-2">
-                <ChoiceChip selected={flagMode} onClick={() => setFlagMode((v) => !v)} size="md">
-                  Cắm cờ lau
-                </ChoiceChip>
-                <Button variant="secondary" onClick={() => startGame(level, picks)}>
-                  Ván mới
-                </Button>
-              </div>
-            </section>
-
-            <section className="ui-frame flex flex-col gap-3 p-4" aria-label="Đạo cụ nguyên tố">
-              <h2 className="ui-title-on-wood font-bold">Đạo cụ nguyên tố</h2>
-              <div className="flex flex-wrap gap-2" role="group" aria-label="Chọn đạo cụ">
-                {ELEMENTS.map((e) => (
-                  <ChoiceChip key={e} selected={picks.includes(e)} size="sm" onClick={() => togglePick(e)}>
-                    <ElementIcon element={e} className="size-4" />
-                    {ELEMENT_NAME[e]}
-                  </ChoiceChip>
-                ))}
-              </div>
-              {game.items.length > 0 && (
-                <ul className="flex flex-col gap-2">
-                  {game.items.map((it) => (
-                    <li key={it.element} className="ui-frame-inset flex items-start gap-2 p-2">
-                      <ElementIcon element={it.element} className="mt-0.5 size-5 shrink-0" />
-                      <div className="min-w-0 flex-1">
-                        <p className="font-semibold">
-                          {ITEM_INFO[it.element].name} <span className="text-caption font-normal text-on-wood-soft">– {ELEMENT_NAME[it.element]}</span>
-                        </p>
-                        <p className="text-sm text-on-wood-soft">{ITEM_INFO[it.element].text}</p>
-                        {it.element === "loi" && !it.used && (
-                          <div className="mt-1 flex gap-2" role="group" aria-label="Hàng hay cột">
-                            <ChoiceChip selected={axis === "row"} size="sm" onClick={() => setAxis("row")}>Hàng</ChoiceChip>
-                            <ChoiceChip selected={axis === "col"} size="sm" onClick={() => setAxis("col")}>Cột</ChoiceChip>
-                          </div>
-                        )}
-                      </div>
-                      <Button
-                        variant={armed === it.element ? "primary" : "secondary"}
-                        size="sm"
-                        disabled={it.used || over}
-                        aria-pressed={armed === it.element}
-                        onClick={() => onItem(it.element)}
-                      >
-                        {it.used ? "Đã dùng" : armed === it.element ? "Bỏ chọn" : "Dùng"}
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {game.shield === "active" && <p className="text-sm text-title-on-wood">Khiên đất đang giữ: lần sa bẫy kế tiếp được đỡ.</p>}
-            </section>
-          </aside>
-        </div>
         </PlayCard>
       </ModeGuideTabs>
     </ModeScreen>
