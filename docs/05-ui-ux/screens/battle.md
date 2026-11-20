@@ -70,16 +70,15 @@ Ba cách điều khiển dùng song song; người chơi đổi qua lại bất 
 > TODO: cho phép đổi phím trong cài đặt hay không; phím tắt cho nút Túi đồ và xem chi tiết sát thương.
 
 ### 2.4 Thẻ vùng chơi và nút toàn màn hình (Shan 20/11/2026)
-Vùng chơi được bọc trong một thẻ (`PlayCard`, `src/app/game/PlayCard.tsx`), không có tiêu đề hay chữ trên thẻ. Có hai nút toàn màn hình riêng, dùng song song:
-- **Phóng to màn chơi**: nút tròn (mũi tên chéo) nằm trên viền dưới, góc phải của thẻ. Bấm là đưa riêng thẻ ra toàn màn hình (Fullscreen API trên phần tử): thanh đầu trang, chân trang, hướng dẫn ẩn đi; nút về góc dưới phải màn hình và thành "Thu nhỏ màn chơi". Bấm lại hoặc Esc để về. Trình duyệt không cho toàn màn hình một phần tử (iPhone Safari) thì thẻ phủ kín cửa sổ thay thế.
+Vùng chơi nằm trong `PlayCard` (`src/app/game/PlayCard.tsx`). Ở trang thường không bọc khung (Shan 20/11/2026: đã quá nhiều khung), chỉ chừa một dải dưới cho nút phóng to. Có hai nút toàn màn hình riêng, dùng song song:
+- **Phóng to màn chơi**: nút tròn (mũi tên chéo) ở góc dưới phải vùng chơi. Bấm là đưa riêng thẻ ra toàn màn hình (Fullscreen API trên phần tử): thanh đầu trang, chân trang, hướng dẫn ẩn đi; nút về góc dưới phải màn hình và thành "Thu nhỏ màn chơi". Bấm lại hoặc Esc để về. Trình duyệt không cho toàn màn hình một phần tử (iPhone Safari) thì thẻ phủ kín cửa sổ thay thế.
 - **Toàn màn hình trang web**: nút nổi (bốn góc) ở góc dưới phải cửa sổ, đưa cả trang ra toàn màn hình như trước. Khi thẻ đang toàn màn hình thì nút này không coi là trang đang toàn màn hình.
 - Hai nút để mờ (điện thoại mờ nhẹ hơn vì không có rê chuột), rê chuột hoặc chọn bằng phím thì hiện rõ.
-- Khi toàn màn hình, màn chơi vẫn nằm trong thẻ (viền đồng, bo góc, nền gỗ sáng hơn nền tối xung quanh).
+- Khi toàn màn hình, vùng chơi nằm trong một khung toàn cảnh riêng: viền vàng ngoài, vạch đồng trong, bốn góc hoa văn, nền gỗ có quầng sáng, đặt trên nền tối.
 - Trên điện thoại, màn có thanh dính đáy (Bày trận Bình Loạn, Trận Đồ, Tầm Tướng Ký) thì nút trang web nằm sẵn trên thanh và giữ nguyên chỗ khi đổi mục Chơi/Hướng dẫn.
 - Áp cho: trận match-3 (mọi chế độ đánh: Giao Tranh, Thao Luyện, Bình Loạn, các tháp, Trấn Ải, Nhật Lệnh, Quần Hùng; thẻ chỉ có khi đã vào trận), Khai Lộ, Do Thám, Sử Lộ, Trận Đồ (khi đang chơi một ván), Tầm Tướng Ký (thường và hạng tuần), sa bàn Viễn Chinh khi đang hành quân.
 - Toàn màn hình: lề co giãn theo màn (1rem tới 2.5rem, cộng vùng tai thỏ), nội dung tối đa 1600px ở giữa, đáy chừa chỗ cho nút nổi và thanh dính đáy (nếu có). Sân đấu trận dính sát mép trên.
 - Trận Đồ: ô có đường kẻ phân cách; trên máy tính ô giãn theo chiều cao màn, toàn màn hình thì bàn lấp chiều cao màn (vẫn vừa bề ngang cột).
-- Dưới 1024px thẻ bỏ đệm và viền hai bên để cỡ ô tính theo bề rộng màn hình không đổi.
 - Không thu phóng cỡ ô (Shan bỏ ý này 20/11/2026).
 
 ## 3. Nguyên tắc chung
