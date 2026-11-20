@@ -1297,6 +1297,32 @@
   .barracks * { transition: none !important; }
 }
 
+/* Khai Lộ: điện thoại xếp dọc số liệu → bàn → đạo cụ; từ lg bàn bên trái, số liệu và đạo cụ ở cột phải; từ xl ba cột. */
+.kl-layout {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "head" "board" "tools";
+}
+@media (width >= 64rem) {
+  .kl-layout {
+    scroll-margin-top: 5.5rem;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "board head" "board tools";
+  }
+}
+/* Từ 1280px: số liệu bên trái, bàn giữa, đạo cụ bên phải để bàn chiếm hết chiều ngang còn lại. */
+@media (width >= 80rem) {
+  .kl-layout {
+    grid-template-columns: 250px minmax(0, 1fr) 270px;
+    grid-template-rows: auto;
+    grid-template-areas: "head board tools";
+  }
+}
+.kl-overlay {
+  background: color-mix(in srgb, var(--black) 55%, transparent);
+  backdrop-filter: blur(1.5px);
+  animation: barracks-fade 0.25s ease-out;
+}
 /* Khai Lộ: ô ngọc đặt tuyệt đối, đổi vị trí bằng transform để ô rơi/dồn cột có hoạt ảnh. */
 .kl-board {
   background: radial-gradient(ellipse at 50% 40%, var(--tone-233042) 0%, var(--tone-141c27) 80%);
@@ -1317,10 +1343,10 @@
 .kl-tile[data-hl] {
   filter: brightness(1.2) drop-shadow(0 0 6px var(--tone-e8c477));
 }
-.kl-tile[data-hl][data-tool="thunder"] {
+.kl-tile[data-hl][data-tool="remove"] {
   filter: brightness(1.15) drop-shadow(0 0 6px var(--tone-ff8a5c));
 }
-.kl-tile[data-hl][data-tool="whirl"] {
+.kl-tile[data-hl][data-tool="change"] {
   filter: brightness(1.15) drop-shadow(0 0 6px var(--tone-8fe3d4));
 }
 .kl-gem {
@@ -1357,6 +1383,19 @@
   animation: kl-shine 3s linear infinite;
   pointer-events: none;
 }
+/* Nhãn ×2 trên quân hào quang: khối chứa nó được nhân điểm. */
+.kl-mult {
+  position: absolute;
+  right: 4%;
+  bottom: 2%;
+  z-index: 1;
+  font-size: max(9px, calc(var(--kl-cell) * 0.24));
+  font-weight: 800;
+  line-height: 1;
+  color: var(--tone-f0c867);
+  text-shadow: 0 1px 2px var(--black), 0 0 3px var(--black);
+  pointer-events: none;
+}
 @keyframes kl-shine {
   to {
     rotate: 1turn;
@@ -1372,6 +1411,14 @@
 }
 .kl-timebar[data-low] > div {
   background: linear-gradient(90deg, var(--tone-b8321f), var(--tone-ff8a5c));
+}
+.kl-charge {
+  background: var(--wood-inset);
+}
+/* Thanh nạp mang màu hệ của đạo cụ (--el đặt trên nút). */
+.kl-charge > span {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--el, var(--frame-gold)) 70%, var(--black)), var(--el, var(--title-on-wood)));
+  transition: width 0.25s ease-out;
 }
 .kl-ghost {
   animation: kl-pop 0.3s ease-out forwards;

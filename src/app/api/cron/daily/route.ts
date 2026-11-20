@@ -1,12 +1,12 @@
 // GET /api/cron/daily: việc định kỳ mỗi ngày, Vercel Cron gọi theo lịch trong vercel.json.
 // Chốt trận bỏ dở quá 24 giờ (xử thua, cộng thưởng vào hồ sơ), xóa khách không chơi quá 30 ngày và mã email
-// đã hết hạn.
+// đã hết hạn, phòng 3vs3 giao hữu bỏ không quá một ngày.
 // Vercel gửi `Authorization: Bearer <CRON_SECRET>`; thiếu CRON_SECRET thì từ chối mọi lời gọi.
 
 import { NextResponse, type NextRequest } from "next/server";
 import { ABANDON_MS } from "@/core";
 import { settleAbandoned } from "@/server/battles";
-import { deleteExpiredTokens, deleteGuests, staleGuestIds, staleMatchIds } from "@/server/db/maintenance";
+import { deleteExpiredTokens, deleteGuests, deleteStaleRooms, staleGuestIds, staleMatchIds } from "@/server/db/maintenance";
 import { arenaStore, dailyStore, database, leaderboardStore, matchStore, profileStore } from "@/server/store";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +15,8 @@ export const maxDuration = 60;
 
 /** Khách không có trận hay hồ sơ nào thay đổi quá mốc này thì bị xóa. */
 const GUEST_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+/** Phòng 3vs3 giao hữu không đổi gì quá mốc này thì bị xóa. */
+const ROOM_TTL_MS = 24 * 60 * 60 * 1000;
 /** Giới hạn mỗi lần chạy để không vượt thời gian; còn sót thì lần sau làm tiếp. */
 const MATCH_BATCH = 200;
 const GUEST_BATCH = 500;
@@ -32,5 +34,6 @@ export async function GET(request: NextRequest) {
   const guests = await staleGuestIds(db, now - GUEST_TTL_MS, GUEST_BATCH);
   await deleteGuests(db, guests);
   const expiredTokens = await deleteExpiredTokens(db, now);
-  return NextResponse.json({ ok: true, settled, deletedGuests: guests.length, expiredTokens });
+  const deletedRooms = await deleteStaleRooms(db, now - ROOM_TTL_MS);
+  return NextResponse.json({ ok: true, settled, deletedGuests: guests.length, expiredTokens, deletedRooms });
 }

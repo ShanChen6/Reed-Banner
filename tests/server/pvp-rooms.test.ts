@@ -19,6 +19,7 @@ import {
   pvpRoomLeave,
   pvpRoomMove,
   pvpRoomStart,
+  PVP_ROOM_SEAT_TTL_MS,
   type PvpRoomDeps,
   type PvpRoomResult,
   type PvpRoomView,
@@ -229,6 +230,67 @@ for (const [name, factory] of stores) {
       assert.deepEqual(await pvpRoomLeave("u2", mk(T0 + 50)), { ok: true });
       assert.equal(err(await pvpRoomJoin("u3", r.code, mk(T0 + 60))), "closed");
       assert.deepEqual(await pvpRoomLeave("u2", mk(T0 + 70)), { ok: false, error: "notMember" });
+    });
+
+    it("giữ chỗ: vắng dưới hạn vẫn về phòng cũ, hỏi phòng thường xuyên thì không mất chỗ", async () => {
+      const { mk } = await setup();
+      const r = ok(await pvpRoomCreate("u1", mk(T0)));
+      ok(await pvpRoomJoin("u2", r.code, mk(T0 + 10)));
+      // u1 mất mạng gần hết hạn rồi vào lại: vẫn ở phòng cũ, vẫn là chủ.
+      const back = ok(await pvpRoomGet("u1", null, mk(T0 + PVP_ROOM_SEAT_TTL_MS - 1000)));
+      assert.deepEqual([back.code, back.you.slot, back.you.host], [r.code, 0, true]);
+      // u2 hỏi phòng đều đặn mỗi phút trong mười phút: không mất chỗ.
+      for (let m = 1; m <= 10; m++) ok(await pvpRoomGet("u2", null, mk(T0 + m * 60_000)));
+      assert.equal(ok(await pvpRoomGet("u2", null, mk(T0 + 10 * 60_000 + 1))).slots[3]!.occupied, true);
+    });
+
+    it("vắng quá hạn: mất chỗ, chủ phòng chuyển cho người còn hoạt động, vào lại thì ở ngoài phòng", async () => {
+      const { mk, pvp } = await setup();
+      const r = ok(await pvpRoomCreate("u1", mk(T0)));
+      ok(await pvpRoomJoin("u2", r.code, mk(T0 + 10)));
+      ok(await pvpRoomJoin("u3", r.code, mk(T0 + 20)));
+      // u2 còn ở phòng, u1 (chủ) và u3 bỏ đi.
+      const later = T0 + PVP_ROOM_SEAT_TTL_MS + 5000;
+      ok(await pvpRoomGet("u2", null, mk(T0 + 60_000)));
+      const v = ok(await pvpRoomGet("u2", null, mk(later)));
+      assert.deepEqual([v.you.host, v.slots.filter((s) => s.occupied).length], [true, 1]);
+      // Chỗ trống được người khác vào.
+      ok(await pvpRoomJoin("u4", r.code, mk(later + 10)));
+      // u1 quay lại sau nhiều ngày: không còn ở phòng, lập phòng mới được.
+      assert.equal(err(await pvpRoomGet("u1", null, mk(later + 3 * 86_400_000))), "notFound");
+      assert.equal(await pvp.roomCodeOf("u1"), null);
+      assert.equal((await pvpOverview("u3", mk(later + 100))).room, null);
+      ok(await pvpRoomCreate("u1", mk(later + 3 * 86_400_000 + 10)));
+    });
+
+    it("phòng bỏ hoang: mọi người vắng quá hạn thì phòng đóng, ai vào lại cũng ở ngoài", async () => {
+      const { mk, pvp } = await setup();
+      const r = ok(await pvpRoomCreate("u1", mk(T0)));
+      ok(await pvpRoomJoin("u2", r.code, mk(T0 + 10)));
+      const days = T0 + 5 * 86_400_000;
+      assert.equal((await pvpOverview("u2", mk(days))).room, null);
+      assert.equal((await pvp.getRoom(r.code))!.status, "closed");
+      assert.equal(err(await pvpRoomJoin("u3", r.code, mk(days + 10))), "closed");
+      assert.equal(err(await pvpRoomGet("u1", null, mk(days + 20))), "notFound");
+      assert.equal(await pvp.roomCodeOf("u1"), null);
+    });
+
+    it("thao tác khi đã mất chỗ thì báo không ở phòng; bắt đầu trận không tính người đã mất chỗ", async () => {
+      const { mk } = await setup();
+      const r = ok(await pvpRoomCreate("u1", mk(T0)));
+      ok(await pvpRoomJoin("u2", r.code, mk(T0 + 10)));
+      ok(await pvpRoomJoin("u3", r.code, mk(T0 + 20)));
+      const h = ok(await pvpRoomGet("u1", null, mk(T0 + 30))).heroes;
+      ok(await pvpRoomHero("u1", MAIN_ID, undefined, mk(T0 + 40)));
+      ok(await pvpRoomHero("u3", h[1]!.id, undefined, mk(T0 + 50)));
+      ok(await pvpRoomHero("u2", h[2]!.id, undefined, mk(T0 + 60)));
+      ok(await pvpRoomFillAi("u1", true, mk(T0 + 70)));
+      // u1 và u3 còn hoạt động; u2 (phe duy nhất bên kia) bỏ đi nên không bắt đầu được.
+      const later = T0 + PVP_ROOM_SEAT_TTL_MS + 1000;
+      ok(await pvpRoomGet("u3", null, mk(T0 + 90_000)));
+      ok(await pvpRoomGet("u1", null, mk(T0 + 90_000)));
+      assert.equal(err(await pvpRoomStart("u1", mk(later))), "needHumans");
+      assert.equal(err(await pvpRoomHero("u2", null, undefined, mk(later + 10))), "notMember");
     });
   });
 }

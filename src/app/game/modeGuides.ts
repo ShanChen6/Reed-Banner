@@ -8,7 +8,7 @@ import { SURVIVAL_BOSS_EVERY, SURVIVAL_WAVE_GOLD } from "@/core/survival/surviva
 import { TRIAL_FLOORS } from "@/core/progress/dualTowerState";
 import { DT_ITEM_PICKS, DT_LEVELS } from "@/core/do-tham";
 import { SL_AID_USE_MAX, SL_LEVELS } from "@/core/su-lo";
-import { KL_CLEAR_TROOPS, KL_HEIGHT, KL_START_TROOPS, KL_TIME_BONUS_PER_SECOND, KL_WIDTH, levelTimeLimit } from "@/core/khai-lo/engine";
+import { KL_CLEAR_BONUS_BASE, KL_CLEAR_BONUS_PER_LEVEL, KL_HEIGHT, KL_NEAR_CLEAR_BONUS, KL_NEAR_CLEAR_LEFT, KL_START_TOOLS, KL_TIMED_LEVEL_SECONDS, KL_TIMED_START_SECONDS, KL_TOOL_CHARGE, KL_WIDTH, timedGoal } from "@/core/khai-lo/engine";
 import type { Scene } from "./scene";
 
 /** Các chế độ có thẻ Hướng dẫn (đúng mười hai chế độ ở thẻ Chiến Trường). */
@@ -234,21 +234,23 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
   KHAI_LO: {
     goal: "Giải đố trên bàn cờ quân nguyên tố. Chạm một quân để xóa cả khối cùng hệ, gom khối to để được nhiều điểm và mở đường xuyên bàn cờ.",
     steps: [
-      "Chọn Thường (không giới hạn thời gian) hoặc Cấp tốc (có đồng hồ cho mỗi màn).",
+      "Chọn Thường (không giới hạn thời gian) hoặc Cấp tốc (chạy đua với đồng hồ để vượt mốc điểm từng bậc).",
       "Chạm vào một quân có ít nhất 1 quân cùng hệ liền cạnh. Cả khối biến mất, quân phía trên rơi xuống.",
-      "Hết khối để xóa thì màn kết thúc. Dọn sạch bàn được thưởng.",
+      "Thường: dọn sạch bàn để qua màn; hết khối mà còn quân (và không dùng đạo cụ được nữa) là thua.",
     ],
     rules: [
       `Bàn có ${KL_WIDTH} cột và ${KL_HEIGHT} hàng. Quân lẻ không xóa được; liền cạnh không tính đường chéo. Không có quân mới rơi vào, cột trống thì các cột bên phải dồn sang trái.`,
-      "Màn càng sau càng nhiều hệ, từ 3 lên 6.",
-      `Ván bắt đầu với ${KL_START_TROOPS} quân lực. Mỗi quân còn sót cuối màn trừ 1 quân lực; hết quân lực là hết ván.`,
-      "Đạo cụ Lốc Phong xoay 8 ô quanh một tâm, Sấm Sét phá vùng 3×3. Hai đạo cụ không cộng điểm.",
+      "Màn càng sau càng nhiều hệ: 3 hệ ở màn 1–3, 4 hệ ở màn 4–7, 5 hệ ở màn 8–13, 6 hệ từ màn 14.",
+      "Thường: phải dọn sạch bàn mới qua màn. Còn quân mà hết khối và hết đạo cụ là thua, hết ván.",
+      `7 đạo cụ theo 7 hệ: Kim Đao chém một hàng, Thủy Triều cuốn một cột, Hỏa Cầu nổ vùng 3×3, Lôi Phạt xóa mọi quân cùng hệ, Mộc Linh đổi một quân sang hệ của khối lớn nhất kề nó, Địa Chấn phá hàng dưới cùng, Lốc Phong xoay 8 ô quanh tâm. Đạo cụ không cộng điểm.`,
+      `Ván bắt đầu với ${KL_START_TOOLS} đạo cụ mỗi hệ. Chạm khối hệ nào thì thanh nạp hệ đó đầy dần: đủ ${KL_TOOL_CHARGE} quân thì được thêm 1 đạo cụ của hệ ấy, tích không giới hạn. Chỉ hiện đạo cụ của các hệ có trên bàn.`,
       "Mỗi màn được hoàn tác một lần, chỉ lùi được nước vừa đi.",
-      `Cấp tốc: mỗi màn ${levelTimeLimit(1)} giây ở bàn 3 hệ, thêm 15 giây cho mỗi hệ mới. Hết giờ là hết màn. Đồng hồ dừng khi bạn rời trang.`,
+      `Cấp tốc: ván bắt đầu với ${KL_TIMED_START_SECONDS} giây. Đạt mốc điểm (bậc 1 là ${timedGoal(1)}, bậc 2 là ${timedGoal(2)}…) thì lên bậc, bàn mới và cộng thêm ${KL_TIMED_LEVEL_SECONDS} giây vào giờ còn lại. Bàn hết đường thì chia bàn mới cùng bậc; hết giờ là hết ván. Đồng hồ dừng khi bạn rời trang.`,
     ],
     rewards: [
-      "Khối n quân được n² điểm. Quân hào quang nhân điểm cả khối chứa nó, mỗi quân hào quang cộng thêm một lần.",
-      `Dọn sạch bàn: thưởng điểm theo màn, cộng ${KL_CLEAR_TROOPS} quân lực và 1 đạo cụ mỗi loại. Cấp tốc cộng thêm ${KL_TIME_BONUS_PER_SECOND} điểm cho mỗi giây còn dư.`,
+      "Khối n quân được n² điểm. Quân hào quang (viền vàng, nhãn ×2) nhân đôi điểm cả khối chứa nó; mỗi quân hào quang thêm một lần nhân.",
+      `Dọn sạch bàn: thưởng ${KL_CLEAR_BONUS_BASE} điểm cộng ${KL_CLEAR_BONUS_PER_LEVEL} điểm × số màn (Cấp tốc: × số bậc).`,
+      `Cấp tốc: bàn hết đường mà chỉ còn tối đa ${KL_NEAR_CLEAR_LEFT} quân vẫn được ${KL_NEAR_CLEAR_BONUS} điểm.`,
       "Chơi ngay trên máy bạn, không thưởng và không xếp hạng.",
     ],
     tips: [
