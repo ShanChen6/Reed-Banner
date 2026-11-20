@@ -62,6 +62,7 @@ import {
   type TtkView,
 } from "./client";
 import { ModeGuideTabs } from "../ModeGuide";
+import { PlayCard } from "../PlayCard";
 import ModeTierPanel from "../leaderboard/ModeTierPanel";
 
 /** Thẻ Bậc thưởng của Tầm Tướng Ký: bậc theo số tướng đã khám phá (cả chế độ Thường và Hạng). */
@@ -264,6 +265,7 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
         />
         <ModeGuideTabs scene="TAM_TUONG_KY" extraTabs={TTK_TIER_TAB}>
 
+        <PlayCard label="Đài Hợp Nguyên">
         <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
           <Altar
             view={view}
@@ -330,10 +332,11 @@ function NormalMode({ initial }: { initial: TtkView | null }) {
           />
           <Ledger entries={entries} found={found} hidden={tab !== "ledger"} group={ledgerTab} onGroup={setLedgerTab} focus={ledgerFocus} />
         </div>
+        <MobileBar slots={slots} ready={ready} tried={tried} onCombine={combine} />
+        </PlayCard>
         </ModeGuideTabs>
         </ModeCard>
       </div>
-      <MobileBar slots={slots} ready={ready} tried={tried} onCombine={combine} />
     </main>
     </CatalogContext.Provider>
   );
@@ -440,6 +443,7 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
         />
         <ModeGuideTabs scene="TAM_TUONG_KY" extraTabs={TTK_TIER_TAB}>
 
+        <PlayCard label="Đài Hợp Nguyên">
         <div className="grid gap-4 lg:grid-cols-[minmax(16rem,26fr)_minmax(20rem,44fr)_minmax(16rem,30fr)]">
           <Panel id="ttk-ranked-altar" title="Đài Hợp Nguyên">
             <SlotsRow
@@ -499,10 +503,11 @@ function RankedMode({ initial }: { initial: TtkRankedView | null }) {
             </section>
           </Panel>
         </div>
+        <MobileBar slots={slots} ready={ready} tried={tried} onCombine={combine} />
+        </PlayCard>
         </ModeGuideTabs>
         </ModeCard>
       </div>
-      <MobileBar slots={slots} ready={ready} tried={tried} onCombine={combine} />
     </main>
     </CatalogContext.Provider>
   );
