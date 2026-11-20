@@ -541,7 +541,7 @@ function MazePicker({ setup, best, onChange, onStart }: { setup: Setup; best: Be
         <h2 id="sl-pick-era" className="ui-title-on-wood text-lg font-bold">
           Chọn mê cung
         </h2>
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" role="radiogroup" aria-label="Mê cung">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 xl:grid-cols-4" role="radiogroup" aria-label="Mê cung">
           {SL_ERAS.map((era) => {
             const open = eraPlayable(era);
             const on = setup.era === era;
@@ -574,7 +574,7 @@ function MazePicker({ setup, best, onChange, onStart }: { setup: Setup; best: Be
                     </span>
                   )}
                 </span>
-                <span className="flex flex-1 flex-col gap-1 bg-wood-lo/80 p-3">
+                <span className="flex flex-1 flex-col gap-1 bg-wood-lo/80 p-2 sm:p-3">
                   <span className="font-bold text-title-on-wood">{SL_ERA_NAME[era]}</span>
                   <span className="text-sm text-on-wood-soft">Trấn cổng: {SL_BOSSES[era].name}</span>
                   {open && (
@@ -594,7 +594,7 @@ function MazePicker({ setup, best, onChange, onStart }: { setup: Setup; best: Be
           <h2 id="sl-pick-level" className="ui-title-on-wood text-lg font-bold">
             Độ khó
           </h2>
-          <div className="grid gap-2 sm:grid-cols-3" role="radiogroup" aria-label="Độ khó">
+          <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Độ khó">
             {SL_LEVEL_ORDER.map((lv) => {
               const on = setup.level === lv;
               return (
@@ -604,7 +604,7 @@ function MazePicker({ setup, best, onChange, onStart }: { setup: Setup; best: Be
                   role="radio"
                   aria-checked={on}
                   onClick={() => onChange({ ...setup, level: lv })}
-                  className={`ui-frame-inset flex flex-col gap-1 rounded-lg border-2 p-3 text-left transition ${on ? "border-frame-gold-hi" : "border-transparent hover:border-frame-gold"}`}
+                  className={`ui-frame-inset flex flex-col gap-1 rounded-lg border-2 p-2 text-left sm:p-3 transition ${on ? "border-frame-gold-hi" : "border-transparent hover:border-frame-gold"}`}
                 >
                   <span className={`font-bold ${on ? "text-frame-gold-hi" : "text-title-on-wood"}`}>{LEVEL_NAME[lv]}</span>
                   {levelNotes(lv).map((t) => (
