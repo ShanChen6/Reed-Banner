@@ -10,14 +10,11 @@ import ts from "typescript";
 const ROOTS = ["src/app", "src/core/progress"];
 /** Phạm vi rộng cho các luật về chữ: mọi chuỗi có dấu tiếng Việt trong app, core và server (cốt truyện, câu hỏi, tên lữ khách). */
 const WIDE_ROOTS = ["src/app", "src/core", "src/server"];
-/** Trang xem thử nội bộ, không phải giao diện người chơi. */
-const SKIP_DIRS = ["src/app/demo"];
 const VIETNAMESE = /[À-ỹĐđ]/;
 
 interface Text { readonly file: string; readonly line: number; readonly text: string }
 
 function files(dir: string): string[] {
-  if (SKIP_DIRS.includes(dir)) return [];
   return readdirSync(dir).flatMap((name) => {
     const path = join(dir, name);
     if (statSync(path).isDirectory()) return files(path);

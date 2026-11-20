@@ -1,8 +1,8 @@
 // Truy vấn cho việc định kỳ (Vercel Cron): tìm trận bỏ dở và tài khoản khách đã lâu không chơi.
 // Chỉ chạy với Postgres; bản bộ nhớ khi dev không cần dọn.
 
-import { and, inArray, isNull, lt, sql } from "drizzle-orm";
-import { arenaPlayers, dailyEntries, destinyLeaderboardScores, emailTokens, leaderboardScores, matches, profiles } from "./schema";
+import { and, inArray, isNull, lt, notInArray, sql } from "drizzle-orm";
+import { arenaPlayers, dailyEntries, destinyLeaderboardScores, emailTokens, leaderboardScores, matches, profiles, pvpRoomMembers, pvpRooms } from "./schema";
 import type { Db } from "./store";
 
 /** Trận chưa cộng thưởng và không có gì thay đổi từ trước `before` (cũ nhất trước). */
@@ -51,5 +51,15 @@ export async function deleteGuests(db: Db, ids: readonly string[]): Promise<void
 /** Xóa mã email (xác nhận, đặt lại mật khẩu) đã hết hạn mà chưa dùng; trả về số mã đã xóa. */
 export async function deleteExpiredTokens(db: Db, now: number): Promise<number> {
   const rows = await db.delete(emailTokens).where(lt(emailTokens.expiresAt, now)).returning({ hash: emailTokens.tokenHash });
+  return rows.length;
+}
+
+/**
+ * Xóa phòng 3vs3 giao hữu không đổi gì từ trước `before` (phòng còn người thì mỗi lần hỏi phòng đều cập nhật, nên phòng cũ chắc
+ * chắn đã hết người hoặc trận đã xong), rồi xóa liên kết phòng trỏ tới phòng không còn. Trả về số phòng đã xóa.
+ */
+export async function deleteStaleRooms(db: Db, before: number): Promise<number> {
+  const rows = await db.delete(pvpRooms).where(lt(pvpRooms.updatedAt, before)).returning({ code: pvpRooms.code });
+  await db.delete(pvpRoomMembers).where(notInArray(pvpRoomMembers.code, db.select({ code: pvpRooms.code }).from(pvpRooms)));
   return rows.length;
 }

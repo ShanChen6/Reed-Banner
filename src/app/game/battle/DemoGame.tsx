@@ -113,6 +113,7 @@ import { SkillBar } from "./SkillBar";
 import { useBattleKeyboard } from "./useBattleKeyboard";
 import { TeamColumn } from "./TeamColumn";
 import { BoardCells } from "./BoardCells";
+import { PlayCard } from "../PlayCard";
 import { BattleHeader } from "./BattleHeader";
 import { ProgressSection } from "./ProgressSection";
 
@@ -1254,9 +1255,11 @@ export default function DemoGame({
           />
         )}
 
+        {/* Thẻ vùng chơi: sân đấu, thẻ tướng, bàn cờ; nút trên thẻ đưa riêng thẻ ra toàn màn hình. */}
+        <PlayCard label="Trận đấu" className={started ? "" : "hidden"}>
         {started && stageVisible && (
           /* md+: sân đấu dính dưới thanh đầu trang để cuộn xuống bàn cờ vẫn thấy hoạt ảnh khi đối thủ ra đòn. */
-          <div className="z-20 md:sticky md:top-16 md:-mx-1 md:bg-[color-mix(in_srgb,var(--wood-lo,#1c120b)_94%,transparent)] md:px-1 md:pb-1 md:backdrop-blur xl:top-[68px]">
+          <div className="play-card-sticky z-20 md:sticky md:top-16 md:-mx-1 md:bg-[color-mix(in_srgb,var(--wood-lo,#1c120b)_94%,transparent)] md:px-1 md:pb-1 md:backdrop-blur xl:top-[68px]">
             <BattleStage
               sides={[(heldSides ?? state.sides)[PLAYER].fighters, (heldSides ?? state.sides)[AI].fighters]}
               actor={
@@ -1449,6 +1452,7 @@ export default function DemoGame({
 
           {side(AI)}
         </div>
+        </PlayCard>
 
         {/* Giao Tranh online: chỉ giữ chọn đội nhanh và lối sang Doanh Trại (trang bị, kỹ năng chỉnh ở đó). Lúc đang đánh thì ẩn hẳn
             để bàn cờ không bị đẩy xuống; hết trận cũng ẩn, màn kết thúc chỉ còn kết quả. Chơi thử Tiến trình (offline) vẫn đủ panel

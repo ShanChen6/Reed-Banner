@@ -59,7 +59,7 @@ Hệ chính quyết định khắc hệ, nên người chơi phải luôn thấy
 | Trong trận, bảng khắc hệ | Icon hệ chính, thêm dấu nhỏ báo có hệ phụ |
 | Màn chi tiết | Liệt kê rõ hệ chính, hệ phụ, nghề chính, nghề phụ |
 
-Hai icon tổng hợp đã có trong code: `ProfessionIcon` và `ElementIcon` nhận `"tongHop"` ([icons.tsx](../../src/app/game/art/icons.tsx)). Trang [xem thử nhân vật](../../src/app/demo/characters/CharacterPreviewer.tsx) đã dùng chúng cho Minh Nguyệt.
+Hai icon tổng hợp đã có trong code: `ProfessionIcon` và `ElementIcon` nhận `"tongHop"` ([icons.tsx](../../src/app/game/art/icons.tsx)). Trang xem thử nhân vật `/demo/characters` từng dùng chúng cho Minh Nguyệt (đã gỡ 20/11/2026).
 
 ## Tác động lên code (chưa làm)
 

@@ -37,7 +37,7 @@ function checkFall(step: CascadeStep, anims: Readonly<Record<number, { dx: numbe
   }
 }
 
-describe("hoạt ảnh trang /demo", () => {
+describe("hoạt ảnh bàn cờ trong trận", () => {
   it("khung cuối của mỗi lượt khớp bàn cờ thật, kể cả lốc xoáy, kỹ năng và xáo bàn", () => {
     let s = battle(7);
     let checked = 0;

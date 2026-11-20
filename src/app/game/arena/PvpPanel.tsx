@@ -493,7 +493,7 @@ function PvpRoom({ onMatch, onExit }: { onMatch: (matchId: string) => void; onEx
 
   return (
     <OrnateFrame level="raised" className="flex flex-col gap-4">
-      <SectionTitle description="Đưa mã này cho bạn bè để họ vào phòng.">
+      <SectionTitle description="Đưa mã này cho bạn bè để họ vào phòng. Rời màn quá 3 phút sẽ mất chỗ. Mất mạng rồi vào lại trong 3 phút vẫn về phòng này.">
         Phòng {room.code}
       </SectionTitle>
       {message && <Alert role="alert">{message}</Alert>}

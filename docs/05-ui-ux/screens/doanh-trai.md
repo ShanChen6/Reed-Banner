@@ -33,4 +33,4 @@ Kệ **Vật phẩm** (19/11/2026) cạnh Tất cả/Vũ khí/Phục sức/Trang
 
 ## 4. Xem thử
 
-`/demo/barracks?n=0|1|9|30|100` dựng Doanh Trại với hồ sơ giả trong bộ nhớ trang (không gọi server, không đụng localStorage). Quá số nhân vật có thật thì nhân bản thẻ để thử danh sách dài và tên dài.
+Trang thử `/demo/barracks` (hồ sơ giả nhiều tướng) đã gỡ ngày 20/11/2026 khi dọn code thừa; thử danh sách dài bằng tài khoản thật hoặc e2e.

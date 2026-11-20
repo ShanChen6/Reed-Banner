@@ -192,11 +192,6 @@
   }
 }
 
-/* Nền /demo: hoa văn sóng nước rất mờ, dùng được cho cả nền sáng lẫn tối. */
-.demo-bg {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='24' viewBox='0 0 48 24'%3E%3Cpath d='M0 24a12 12 0 0 1 24 0a12 12 0 0 1 24 0M6 24a6 6 0 0 1 12 0M30 24a6 6 0 0 1 12 0M-12 12a12 12 0 0 1 24 0a12 12 0 0 1 24 0a12 12 0 0 1 24 0' fill='none' stroke='%23b48c50' stroke-opacity='0.09' stroke-width='1.5'/%3E%3C/svg%3E");
-}
-
 /* Nút hoa đồng ở giao điểm ô của bàn cờ trong trận: mỗi ô nền lặp lại một bước ô, bốn góc mỗi ô là một phần tư nút hoa
    nên ghép lại thành nút trọn ở các giao điểm bên trong. Cỡ bước ô đặt bằng style theo số cột/hàng. */
 .board-knots {
@@ -1013,11 +1008,6 @@
   }
 }
 
-/* Trận Đồ: lớp che dùng ở thẻ bản đồ (cùng họa tiết với ô che trên sa bàn). */
-.fm-fogfill {
-  background: var(--wood) url("/art/formation/fog.webp") center / 96px 96px;
-}
-
 /* Trận Đồ: vệt sáng quét qua hàng hoặc cột vừa được dọn. */
 .fm-sweep {
   position: absolute;
@@ -1307,6 +1297,32 @@
   .barracks * { transition: none !important; }
 }
 
+/* Khai Lộ: điện thoại xếp dọc số liệu → bàn → đạo cụ; từ lg bàn bên trái, số liệu và đạo cụ ở cột phải; từ xl ba cột. */
+.kl-layout {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "head" "board" "tools";
+}
+@media (width >= 64rem) {
+  .kl-layout {
+    scroll-margin-top: 5.5rem;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "board head" "board tools";
+  }
+}
+/* Từ 1280px: số liệu bên trái, bàn giữa, đạo cụ bên phải để bàn chiếm hết chiều ngang còn lại. */
+@media (width >= 80rem) {
+  .kl-layout {
+    grid-template-columns: 250px minmax(0, 1fr) 270px;
+    grid-template-rows: auto;
+    grid-template-areas: "head board tools";
+  }
+}
+.kl-overlay {
+  background: color-mix(in srgb, var(--black) 55%, transparent);
+  backdrop-filter: blur(1.5px);
+  animation: barracks-fade 0.25s ease-out;
+}
 /* Khai Lộ: ô ngọc đặt tuyệt đối, đổi vị trí bằng transform để ô rơi/dồn cột có hoạt ảnh. */
 .kl-board {
   background: radial-gradient(ellipse at 50% 40%, var(--tone-233042) 0%, var(--tone-141c27) 80%);
@@ -1327,10 +1343,10 @@
 .kl-tile[data-hl] {
   filter: brightness(1.2) drop-shadow(0 0 6px var(--tone-e8c477));
 }
-.kl-tile[data-hl][data-tool="thunder"] {
+.kl-tile[data-hl][data-tool="remove"] {
   filter: brightness(1.15) drop-shadow(0 0 6px var(--tone-ff8a5c));
 }
-.kl-tile[data-hl][data-tool="whirl"] {
+.kl-tile[data-hl][data-tool="change"] {
   filter: brightness(1.15) drop-shadow(0 0 6px var(--tone-8fe3d4));
 }
 .kl-gem {
@@ -1367,6 +1383,19 @@
   animation: kl-shine 3s linear infinite;
   pointer-events: none;
 }
+/* Nhãn ×2 trên quân hào quang: khối chứa nó được nhân điểm. */
+.kl-mult {
+  position: absolute;
+  right: 4%;
+  bottom: 2%;
+  z-index: 1;
+  font-size: max(9px, calc(var(--kl-cell) * 0.24));
+  font-weight: 800;
+  line-height: 1;
+  color: var(--tone-f0c867);
+  text-shadow: 0 1px 2px var(--black), 0 0 3px var(--black);
+  pointer-events: none;
+}
 @keyframes kl-shine {
   to {
     rotate: 1turn;
@@ -1382,6 +1411,14 @@
 }
 .kl-timebar[data-low] > div {
   background: linear-gradient(90deg, var(--tone-b8321f), var(--tone-ff8a5c));
+}
+.kl-charge {
+  background: var(--wood-inset);
+}
+/* Thanh nạp mang màu hệ của đạo cụ (--el đặt trên nút). */
+.kl-charge > span {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--el, var(--frame-gold)) 70%, var(--black)), var(--el, var(--title-on-wood)));
+  transition: width 0.25s ease-out;
 }
 .kl-ghost {
   animation: kl-pop 0.3s ease-out forwards;
@@ -1463,4 +1500,60 @@
   [data-scroll] {
     transition: none;
   }
+}
+
+/* Thẻ vùng chơi có nút toàn màn hình (src/app/game/PlayCard.tsx). */
+.play-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border: 1px solid var(--frame-bronze);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--wood-lo) 70%, transparent);
+  padding: 0.5rem;
+}
+/* Dưới 1024px: cỡ ô bàn cờ tính theo bề rộng màn hình nên thẻ không chiếm thêm chiều ngang (bỏ đệm và viền hai bên). */
+@media (max-width: 1023px) {
+  .play-card {
+    padding-inline: 0;
+    border-inline-width: 0;
+    border-radius: 0;
+  }
+}
+@media (min-width: 1024px) {
+  .play-card {
+    padding: 0.75rem;
+  }
+}
+.play-card-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.play-card-title {
+  font-family: var(--font-serif, serif);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--title-on-wood);
+}
+.play-card:fullscreen,
+.play-card--overlay {
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  border-radius: 0;
+  background: var(--wood-lo);
+  padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right)) max(0.75rem, env(safe-area-inset-bottom))
+    max(0.75rem, env(safe-area-inset-left));
+}
+.play-card--overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+/* Sân đấu dính dưới thanh đầu trang; khi thẻ toàn màn hình thì không còn thanh đầu trang nên dính sát mép trên. */
+.play-card:fullscreen .play-card-sticky,
+.play-card--overlay .play-card-sticky {
+  top: 0;
 }

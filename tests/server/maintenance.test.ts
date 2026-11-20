@@ -7,7 +7,8 @@ import { ABANDON_MS, newProfile } from "../../src/core";
 import { signIn } from "../../src/server/accounts";
 import { createBattleFor, parseNewBattle, settleAbandoned } from "../../src/server/battles";
 import { DrizzleAccountStore } from "../../src/server/db/accounts";
-import { deleteGuests, staleGuestIds, staleMatchIds } from "../../src/server/db/maintenance";
+import { deleteGuests, deleteStaleRooms, staleGuestIds, staleMatchIds } from "../../src/server/db/maintenance";
+import { DrizzlePvpStore } from "../../src/server/db/pvp";
 import { DrizzleProfileStore } from "../../src/server/db/profiles";
 import { DrizzleMatchStore, type Db } from "../../src/server/db/store";
 import { loadProfile } from "../../src/server/profiles";
@@ -57,5 +58,20 @@ describe("việc định kỳ (Postgres qua PGlite)", () => {
     assert.ok(await store.get("m_2"));
     assert.ok(await profiles.get("g_moi"));
     await deleteGuests(db, []);
+  });
+
+  it("xóa phòng 3vs3 bỏ không quá một ngày cùng liên kết phòng của người trong đó, giữ phòng còn mới", async () => {
+    const { db } = await setup();
+    const pvp = new DrizzlePvpStore(db);
+    const room = (code: string, at: number) => ({ code, host: "a", status: "open" as const, slots: [], fillAi: false, matchId: null, seq: 1, createdAt: at, updatedAt: at });
+    await pvp.createRoom(room("OLDAAA", T0));
+    await pvp.createRoom(room("NEWAAA", T0 + 2 * DAY));
+    await pvp.setMember("a", "OLDAAA");
+    await pvp.setMember("b", "NEWAAA");
+    assert.equal(await deleteStaleRooms(db, T0 + DAY), 1);
+    assert.equal(await pvp.getRoom("OLDAAA"), null);
+    assert.ok(await pvp.getRoom("NEWAAA"));
+    assert.equal(await pvp.roomCodeOf("a"), null);
+    assert.equal(await pvp.roomCodeOf("b"), "NEWAAA");
   });
 });

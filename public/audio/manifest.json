@@ -412,75 +412,74 @@
     },
     "sulo.boss": {
       "files": [
-        "sfx/formation/flame3_a",
-        "sfx/formation/flame3_b"
+        "sfx/su-lo/boss_a",
+        "sfx/su-lo/boss_b"
       ],
       "volume": 0.85
     },
     "sulo.counsel": {
       "files": [
-        "sfx/formation/fusion_a",
-        "sfx/formation/fusion_b"
+        "sfx/su-lo/counsel_a",
+        "sfx/su-lo/counsel_b",
+        "sfx/su-lo/counsel_c"
       ],
       "volume": 0.85
     },
     "sulo.bosswon": {
       "files": [
-        "sfx/battle/win_a"
+        "sfx/su-lo/bosswon_a",
+        "sfx/su-lo/bosswon_b"
       ],
       "volume": 0.9
     },
     "sulo.bosslost": {
       "files": [
-        "sfx/battle/lose_a",
-        "sfx/battle/lose_b"
+        "sfx/su-lo/bosslost_a",
+        "sfx/su-lo/bosslost_b"
       ],
       "volume": 0.9
     },
     "sulo.won": {
       "files": [
-        "sfx/formation/win_a",
-        "sfx/formation/win_b"
+        "sfx/su-lo/won_a"
       ],
       "volume": 0.9
     },
     "dotham.open": {
       "files": [
-        "sfx/formation/place_a",
-        "sfx/formation/place_b",
-        "sfx/formation/place_c"
+        "sfx/do-tham/open_a",
+        "sfx/do-tham/open_b",
+        "sfx/do-tham/open_c",
+        "sfx/do-tham/open_d"
       ],
       "volume": 0.8
     },
     "dotham.cascade": {
       "files": [
-        "sfx/formation/fogclear_a",
-        "sfx/formation/fogclear_b",
-        "sfx/formation/fogclear_c"
+        "sfx/do-tham/cascade_a",
+        "sfx/do-tham/cascade_b"
       ],
       "volume": 0.75
     },
     "dotham.flag": {
       "files": [
-        "sfx/battle/swap_a",
-        "sfx/battle/swap_b",
-        "sfx/battle/swap_c"
+        "sfx/do-tham/flag_a",
+        "sfx/do-tham/flag_b",
+        "sfx/do-tham/flag_c"
       ],
       "volume": 0.8
     },
     "dotham.shield": {
       "files": [
-        "sfx/formation/match_a",
-        "sfx/formation/match_b",
-        "sfx/formation/match_c"
+        "sfx/do-tham/shield_a"
       ],
       "volume": 0.85
     },
     "dotham.reject": {
       "files": [
-        "sfx/formation/reject_a",
-        "sfx/formation/reject_b",
-        "sfx/formation/reject_c"
+        "sfx/do-tham/reject_a",
+        "sfx/do-tham/reject_b",
+        "sfx/do-tham/reject_c"
       ],
       "volume": 0.8
     },
@@ -541,11 +540,11 @@
       "volume": 0.5
     },
     "sulo_maze": {
-      "file": "music/atlas",
+      "file": "music/sulo_maze",
       "volume": 0.45
     },
     "sulo_boss": {
-      "file": "music/battle_boss",
+      "file": "music/sulo_boss",
       "volume": 0.5
     },
     "dotham": {

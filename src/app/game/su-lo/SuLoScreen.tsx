@@ -50,6 +50,7 @@ import { useAudio } from "../audio/AudioProvider";
 import { cuesForAction, musicFor, SULO_PRELOAD } from "./sounds";
 import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
+import { PlayCard } from "../PlayCard";
 
 const SAVE_KEY = "reed-banner:su-lo:save:v1";
 const SETUP_KEY = "reed-banner:su-lo:setup:v1";
@@ -659,6 +660,7 @@ export default function SuLoScreen() {
         ]}
       />
       <ModeGuideTabs scene="SU_LO">
+        <PlayCard>
         <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
           <OrnateFrame aria-label="Vùng chơi" flush className="flex min-w-0 flex-col items-center gap-4 p-2 sm:p-5">
             {!game && setupPanel}
@@ -796,6 +798,7 @@ export default function SuLoScreen() {
             </p>
           </aside>
         </div>
+        </PlayCard>
       </ModeGuideTabs>
     </ModeScreen>
   );
