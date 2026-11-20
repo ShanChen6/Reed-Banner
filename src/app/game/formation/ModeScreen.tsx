@@ -135,7 +135,7 @@ function PracticeCard({ rules, best, onStart }: { rules: Ruleset; best: number; 
 
 function Collection({ collected }: { collected: readonly string[] }) {
   return (
-    <p className="ui-frame flex flex-wrap items-center justify-between gap-2 p-4 text-[15px]">
+    <p className="ui-frame ui-frame--plain flex flex-wrap items-center justify-between gap-2 p-4 text-[15px]">
       <span>
         Bộ sưu tập địa danh: <b className="text-title-on-wood">{collected.length}/{MAP_POOL.length}</b>
         <span className="block text-sm text-on-wood-soft">Khai thông trọn một sa bàn để thêm địa danh (chơi thường hay xếp hạng đều tính).</span>
@@ -199,13 +199,13 @@ export default function ModeScreen({
   const gate = (
     <>
       {overview?.failed && (
-        <div role="alert" className="ui-frame flex flex-wrap items-center justify-between gap-3 p-4">
+        <div role="alert" className="ui-frame ui-frame--plain flex flex-wrap items-center justify-between gap-3 p-4">
           <p className="max-w-xl text-[15px]">Chưa mở được chế độ xếp hạng. Xin kiểm tra mạng rồi thử lại; chơi thường vẫn chơi được.</p>
           <button type="button" onClick={onExpire} className={buttonVariants({ className: "flex min-h-12 items-center px-6" })}>Thử lại</button>
         </div>
       )}
       {!overview?.canPlay && !overview?.failed && (
-        <div role="note" className="ui-frame flex flex-wrap items-center justify-between gap-3 p-4">
+        <div role="note" className="ui-frame ui-frame--plain flex flex-wrap items-center justify-between gap-3 p-4">
           <p className="max-w-xl text-[15px]">Chế độ xếp hạng chỉ dành cho tài khoản đã ghi danh. Chơi thường vẫn thoải mái, không cần trình danh.</p>
           <SceneLink scene="LOGIN" className={buttonVariants({ className: "flex min-h-12 items-center px-6" })}>Trình danh</SceneLink>
         </div>

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { SLICE_PACK, buildCatalog, catalogForPack, combineNormal, initialDiscovery, makeableRecipes, type DiscoveryState } from "../../src/core/tam-tuong-ky";
+import { HINT_GROUP_NAMES, SLICE_PACK, buildCatalog, catalogForPack, combineNormal, initialDiscovery, makeableRecipes, type DiscoveryState } from "../../src/core/tam-tuong-ky";
 import {
   EMPTY_SLOTS,
   clearSlot,
@@ -109,8 +109,14 @@ describe("Vạn Vật Lục", () => {
   it("lọc nhóm giữ đúng nhóm và có tên tiếng Việt", () => {
     const all = discoverAll();
     const groups = libraryGroups(catalog, all);
-    assert.ok(groups.some((g) => g.id === "binh-khi" && g.name === "Binh khí"));
-    assert.ok(libraryNodes(catalog, all, "", "binh-khi").every((n) => n.hintGroup === "binh-khi"));
+    assert.ok(groups.some((g) => g.id === "quan-bi" && g.name === "Quân bị"));
+    assert.ok(libraryNodes(catalog, all, "", "quan-bi").every((n) => n.hintGroup === "quan-bi"));
+  });
+
+  it("hàng tab theo thứ tự nhóm khai báo, không theo thứ tự node", () => {
+    const ids = libraryGroups(catalog, discoverAll()).map((g) => g.id);
+    const order = Object.keys(HINT_GROUP_NAMES);
+    assert.deepEqual(ids, order.filter((id) => ids.includes(id)));
   });
 });
 
@@ -137,7 +143,7 @@ describe("Thông báo và gợi ý", () => {
   });
 
   it("lời gợi ý không chứa tên tướng hay tên node chưa mở", () => {
-    const text = hintText({ level: 2, hintGroup: "co-hieu", ingredientId: "mat.cloth" }) + hintText({ level: 1, hintGroup: "ngoc" });
+    const text = hintText({ level: 2, hintGroup: "vat-lieu", ingredientId: "mat.cloth" }) + hintText({ level: 1, hintGroup: "ngoc" });
     for (const name of HERO_NAMES) assert.doesNotMatch(text, new RegExp(name));
   });
 });

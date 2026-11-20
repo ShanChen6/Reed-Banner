@@ -77,14 +77,26 @@ export interface ModeExtraTab {
 }
 
 /**
+ * Thay thẻ "Chơi" bằng nhiều thẻ chơi (ví dụ Thường / Hạng tuần của Tầm Tướng Ký, Shan 20/11/2026): chọn một thẻ thì
+ * về nội dung chơi và báo `onChange`; màn tự đổi nội dung theo `value`.
+ */
+export interface ModePlayTabs {
+  readonly items: readonly { readonly value: string; readonly label: string }[];
+  readonly value: string;
+  readonly onChange: (value: string) => void;
+}
+
+/**
  * Thêm thẻ Hướng dẫn cho màn chế độ: hai thẻ "Chơi" và "Hướng dẫn" nằm dưới banner. Vào chế độ thì mở Hướng dẫn
  * trước (nút "Vào chơi" ở cuối), xem `guideFirst`. Thẻ Chơi giữ nguyên nội dung màn; chọn Hướng dẫn thì thay bằng
  * luật và thưởng của chế độ. Không gọi API, chuyển thẻ không mất tiến độ ván.
  * `extraTabs` chèn thẻ riêng của màn vào giữa hai thẻ đó; nội dung thẻ chỉ dựng khi được chọn.
  */
-export function ModeGuideTabs({ scene, extraTabs = [], children }: {
+export function ModeGuideTabs({ scene, extraTabs = [], playTabs, children }: {
   scene: GuideScene;
   extraTabs?: readonly ModeExtraTab[];
+  /** Nhiều thẻ chơi thay cho một thẻ "Chơi". */
+  playTabs?: ModePlayTabs;
   children: ReactNode;
 }) {
   const [view, setViewState] = useState<string>(() => (guideFirst(scene) ? "guide" : "play"));
@@ -93,14 +105,21 @@ export function ModeGuideTabs({ scene, extraTabs = [], children }: {
     setViewState(next);
   };
   const extra = extraTabs.find((tab) => tab.value === view);
+  const plays = playTabs?.items ?? [{ value: "play", label: "Chơi" }];
+  const pick = (next: string) => {
+    if (playTabs?.items.some((tab) => tab.value === next)) {
+      setView("play");
+      playTabs.onChange(next);
+    } else setView(next);
+  };
   return (
     <>
       <Tabs<string>
         label="Màn chế độ"
-        value={view}
-        onChange={setView}
+        value={view === "play" ? (playTabs?.value ?? "play") : view}
+        onChange={pick}
         items={[
-          { value: "play", label: "Chơi" },
+          ...plays,
           ...extraTabs.map(({ value, label }) => ({ value, label })),
           { value: "guide", label: "Hướng dẫn" },
         ]}

@@ -19,15 +19,21 @@ const ELEMENT_NAMES: Readonly<Record<Element, string>> = {
   phong: "Phong",
 };
 
-/** Tên hiển thị của nhóm gợi ý (`hintGroup`). */
+/**
+ * Tên hiển thị của nhóm gợi ý (`hintGroup`). Xếp nhóm theo *món đó là gì*, không theo món đó dùng để làm gì (Shan, 20/11/2026):
+ * Thiên nhiên có sẵn trong tự nhiên, Vật liệu do người làm ra để chế đồ, Danh tích là mọi dấu danh tính của tướng.
+ */
 export const HINT_GROUP_NAMES: Readonly<Record<string, string>> = {
   "nguyen-to": "Nguyên tố",
   "thien-nhien": "Thiên nhiên",
-  "binh-khi": "Binh khí",
-  "co-hieu": "Cờ hiệu",
-  "thu-tich": "Thư tịch",
+  "vat-lieu": "Vật liệu",
   ngoc: "Ngọc",
+  "quan-bi": "Quân bị",
+  "thu-tich": "Thư tịch",
+  "cong-trinh": "Công trình",
+  "tri-thuc": "Tri thức nghề",
   "vai-tro": "Vai trò",
+  "danh-tich": "Danh tích",
   "tuyet-chieu": "Tuyệt chiêu",
 };
 
@@ -76,15 +82,15 @@ const PACK_1_NODES: readonly CatalogNode[] = [
   // Bậc 1: hai nguyên tố. Cặp gương: Mộc+Thủy ≠ Thủy+Mộc, Kim+Thổ ≠ Thổ+Kim.
   mat("reed", "Lau sậy", "thien-nhien"),
   mat("herbs", "Dược thảo", "thien-nhien"),
-  mat("forgedIron", "Sắt rèn", "binh-khi"),
+  mat("forgedIron", "Sắt rèn", "vat-lieu"),
   mat("bamboo", "Tre", "thien-nhien"),
-  mat("cloth", "Vải gai", "co-hieu"),
+  mat("cloth", "Vải gai", "vat-lieu"),
   mat("storm", "Giông tố", "thien-nhien"),
-  mat("charcoal", "Than củi", "thu-tich"),
-  mat("dew", "Giọt sương", "ngoc"),
+  mat("charcoal", "Than củi", "vat-lieu"),
+  mat("dew", "Giọt sương", "thien-nhien"),
   mat("jadeStone", "Đá ngọc thô", "ngoc"),
-  mat("rampart", "Lũy đất", "thien-nhien"),
-  mat("blackBronze", "Đồng đen", "binh-khi"),
+  mat("rampart", "Lũy đất", "cong-trinh"),
+  mat("blackBronze", "Đồng đen", "vat-lieu"),
   mat("mountain", "Núi", "thien-nhien"),
   mat("boulder", "Đá tảng", "thien-nhien"),
   mat("estuary", "Cửa sông", "thien-nhien"),
@@ -92,24 +98,24 @@ const PACK_1_NODES: readonly CatalogNode[] = [
   // Vật dụng chung, không gắn với art của tướng nào.
   mat("ink", "Mực", "thu-tich"),
   mat("bambooSlips", "Thẻ tre", "thu-tich"),
-  mat("commandFlag", "Cờ lệnh", "co-hieu"),
-  mat("weapon", "Binh khí", "binh-khi"),
-  mat("armor", "Giáp", "binh-khi"),
+  mat("commandFlag", "Cờ lệnh", "quan-bi"),
+  mat("weapon", "Binh khí", "quan-bi"),
+  mat("armor", "Giáp", "quan-bi"),
   mat("seal", "Ấn đồng", "thu-tich"),
-  mat("boat", "Thuyền", "thien-nhien"),
-  mat("village", "Lũy tre làng", "thien-nhien"),
+  mat("boat", "Thuyền", "quan-bi"),
+  mat("village", "Lũy tre làng", "cong-trinh"),
   mat("gourd", "Quả bầu", "thien-nhien"),
-  mat("road", "Đường xa", "thien-nhien"),
+  mat("road", "Đường xa", "cong-trinh"),
   mat("waterOrb", "Ngọc tụ khí", "ngoc"),
-  mat("fortress", "Lũy kép", "thien-nhien"),
-  mat("hoaLu", "Hoa Lư", "thien-nhien"),
+  mat("fortress", "Lũy kép", "cong-trinh"),
+  mat("hoaLu", "Hoa Lư", "cong-trinh"),
   // Tri thức nghề.
-  { ...know("martial", "Võ nghệ", "thu-tich"), professionHint: "tuongSi" },
-  { ...know("troops", "Đội ngũ", "thu-tich"), professionHint: "binhLinh" },
-  { ...know("stratagem", "Mưu kế", "thu-tich"), professionHint: "muuSi" },
-  { ...know("medicine", "Y thuật", "thu-tich"), professionHint: "ySu" },
-  { ...know("warManual", "Binh thư", "thu-tich"), professionHint: "quanSu" },
-  { ...know("magic", "Pháp thuật", "thu-tich"), professionHint: "phapSu" },
+  { ...know("martial", "Võ nghệ", "tri-thuc"), professionHint: "tuongSi" },
+  { ...know("troops", "Đội ngũ", "tri-thuc"), professionHint: "binhLinh" },
+  { ...know("stratagem", "Mưu kế", "tri-thuc"), professionHint: "muuSi" },
+  { ...know("medicine", "Y thuật", "tri-thuc"), professionHint: "ySu" },
+  { ...know("warManual", "Binh thư", "tri-thuc"), professionHint: "quanSu" },
+  { ...know("magic", "Pháp thuật", "tri-thuc"), professionHint: "phapSu" },
   // Vai trò: tri thức nghề nhuộm hệ. Đổi nghề/hệ trong roster thì validator báo `roleMismatch`.
   role("tuongSiHoa", "Võ nghệ hệ Hỏa", { profession: "tuongSi", element: "hoa" }),
   role("tuongSiTho", "Võ nghệ hệ Thổ", { profession: "tuongSi", element: "tho" }),
@@ -122,19 +128,19 @@ const PACK_1_NODES: readonly CatalogNode[] = [
   role("phapSuThuy", "Pháp thuật hệ Thủy", { profession: "phapSu", element: "thuy" }),
   role("hybrid", "Vạn tượng", { hybrid: true }, "Dung hợp tám nghề, bảy hệ của tướng đặc biệt"),
   // Dấu danh tính.
-  know("reedBanner", "Cờ lau", "co-hieu", "Mốc Bình Loạn: Nguyễn Bặc gia nhập ở “Cờ lau tập trận”"),
-  know("outerArmor", "Ngoại giáp", "binh-khi", "Chức Ngoại giáp của Đinh Điền (chiêu Ngoại Giáp Hộ Quân)"),
-  know("doHoPhu", "Đô hộ phủ", "thu-tich", "Chức Đô hộ phủ sĩ sư của Lưu Cơ (chiêu Đô Hộ Phủ Lệnh)"),
-  know("hoaLuHerbs", "Thảo dược Hoa Lư", "thien-nhien", "Chiêu Hoa Lư Thảo Dược của Trịnh Tú"),
-  know("tenCircuits", "Thập đạo", "co-hieu", "Chức Thập đạo tướng quân của Lê Hoàn (chiêu Thập Đạo Lôi Binh)"),
-  know("royalSeal", "Vương ấn Nam Việt", "thu-tich", "Tước Nam Việt vương của Đinh Liễn (chiêu Nam Việt Vương Ấn)"),
-  know("whiteTiger", "Mãnh thú trắng", "thien-nhien"),
-  know("tigerLeaves", "Hổ xuất sơn", "thien-nhien", "Tên Phạm Bạch Hổ, chiêu Bạch Hổ Xuất Sơn"),
-  know("steadfast", "Đỗ Động kiên tâm", "thien-nhien", "Đất Đỗ Động, chiêu Đỗ Động Kiên Tâm của Đỗ Cảnh Thạc"),
-  know("riverGuard", "Bố Hải trấn giang", "co-hieu", "Đất Bố Hải Khẩu, chiêu Bố Hải Trấn Giang của Trần Lãm"),
-  know("duongLam", "Đường Lâm phong khởi", "thien-nhien", "Đất Đường Lâm, chiêu Đường Lâm Phong Khởi của Ngô Nhật Khánh"),
-  know("guardRoad", "Giữ đường cứu người", "thien-nhien", "Chủ đề nhiệm vụ mở khóa của Minh Nguyệt: cứu trợ, giữ đường"),
-  know("wandering", "Vân du", "thien-nhien", "Danh xưng Vân Du Tử, chủ đề rong ruổi tìm người của Trần Vũ Phong"),
+  know("reedBanner", "Cờ lau", "danh-tich", "Mốc Bình Loạn: Nguyễn Bặc gia nhập ở “Cờ lau tập trận”"),
+  know("outerArmor", "Ngoại giáp", "danh-tich", "Chức Ngoại giáp của Đinh Điền (chiêu Ngoại Giáp Hộ Quân)"),
+  know("doHoPhu", "Đô hộ phủ", "danh-tich", "Chức Đô hộ phủ sĩ sư của Lưu Cơ (chiêu Đô Hộ Phủ Lệnh)"),
+  know("hoaLuHerbs", "Thảo dược Hoa Lư", "danh-tich", "Chiêu Hoa Lư Thảo Dược của Trịnh Tú"),
+  know("tenCircuits", "Thập đạo", "danh-tich", "Chức Thập đạo tướng quân của Lê Hoàn (chiêu Thập Đạo Lôi Binh)"),
+  know("royalSeal", "Vương ấn Nam Việt", "danh-tich", "Tước Nam Việt vương của Đinh Liễn (chiêu Nam Việt Vương Ấn)"),
+  know("whiteTiger", "Mãnh thú trắng", "danh-tich"),
+  know("tigerLeaves", "Hổ xuất sơn", "danh-tich", "Tên Phạm Bạch Hổ, chiêu Bạch Hổ Xuất Sơn"),
+  know("steadfast", "Đỗ Động kiên tâm", "danh-tich", "Đất Đỗ Động, chiêu Đỗ Động Kiên Tâm của Đỗ Cảnh Thạc"),
+  know("riverGuard", "Bố Hải trấn giang", "danh-tich", "Đất Bố Hải Khẩu, chiêu Bố Hải Trấn Giang của Trần Lãm"),
+  know("duongLam", "Đường Lâm phong khởi", "danh-tich", "Đất Đường Lâm, chiêu Đường Lâm Phong Khởi của Ngô Nhật Khánh"),
+  know("guardRoad", "Giữ đường cứu người", "danh-tich", "Chủ đề nhiệm vụ mở khóa của Minh Nguyệt: cứu trợ, giữ đường"),
+  know("wandering", "Vân du", "danh-tich", "Danh xưng Vân Du Tử, chủ đề rong ruổi tìm người của Trần Vũ Phong"),
   // Tướng. Lời dẫn chế độ Hạng là chữ của trò chơi, không phải trích dẫn lịch sử.
   hero("nguyenBac", "Nguyễn Bặc", "lichSu", [{ kind: "campaign", text: "Cờ lau tập trận" }, { kind: "skill", text: "Định Quốc Hỏa Kỳ" }],
     "Võ tướng mang lửa trong tay, theo về từ buổi tập trận cờ lau.", DBL_SOURCES),
@@ -292,22 +298,22 @@ export const PACK_1: Pack = {
 
 const PACK_2_NODES: readonly CatalogNode[] = [
   mat("grain", "Lúa", "thien-nhien"),
-  mat("bridge", "Cầu tre", "thien-nhien"),
+  mat("bridge", "Cầu tre", "cong-trinh"),
   mat("lake", "Hồ nước", "thien-nhien"),
-  mat("granary", "Kho lương", "thien-nhien"),
+  mat("granary", "Kho lương", "cong-trinh"),
   role("tuongSiKim", "Võ nghệ hệ Kim", { profession: "tuongSi", element: "kim" }),
   role("muuSiThuy", "Mưu kế hệ Thủy", { profession: "muuSi", element: "thuy" }),
   role("phapSuLoi", "Pháp thuật hệ Lôi", { profession: "phapSu", element: "loi" }),
   role("binhLinhHoa", "Đội ngũ hệ Hỏa", { profession: "binhLinh", element: "hoa" }),
-  know("ngoGia", "Ngô gia di mưu", "thu-tich", "Đất Bình Kiều, chiêu Ngô Gia Di Mưu của Ngô Xương Xí"),
-  know("tamDai", "Tam Đái kiên thành", "thien-nhien", "Đất Tam Đái, chiêu Tam Đái Kiên Thành của Nguyễn Khoan"),
-  know("phongChau", "Phong Châu lôi kích", "thien-nhien", "Đất Phong Châu, chiêu Phong Châu Lôi Kích của Kiều Công Hãn"),
-  know("hoiHo", "Hồi Hồ sinh khí", "thien-nhien", "Đất Hồi Hồ, chiêu Hồi Hồ Sinh Khí của Kiều Thuận"),
-  know("phaGiap", "Siêu Loại phá giáp", "binh-khi", "Đất Siêu Loại, chiêu Siêu Loại Phá Giáp của Lý Khuê"),
-  know("tienDu", "Tiên Du đoạt lương", "thien-nhien", "Đất Tiên Du, chiêu Tiên Du Đoạt Lương của Nguyễn Thủ Tiệp"),
-  know("teGiang", "Tế Giang thủy trận", "thien-nhien", "Đất Tế Giang, chiêu Tế Giang Thủy Trận của Lữ Đường"),
-  know("hoaLuy", "Phù Liệt hỏa lũy", "thien-nhien", "Đất Tây Phù Liệt, chiêu Phù Liệt Hỏa Lũy của Nguyễn Siêu"),
-  know("daiCoViet", "Dựng nước Đại Cồ Việt", "thien-nhien", "Đinh Bộ Lĩnh dẹp loạn, dựng nước Đại Cồ Việt ở Hoa Lư"),
+  know("ngoGia", "Ngô gia di mưu", "danh-tich", "Đất Bình Kiều, chiêu Ngô Gia Di Mưu của Ngô Xương Xí"),
+  know("tamDai", "Tam Đái kiên thành", "danh-tich", "Đất Tam Đái, chiêu Tam Đái Kiên Thành của Nguyễn Khoan"),
+  know("phongChau", "Phong Châu lôi kích", "danh-tich", "Đất Phong Châu, chiêu Phong Châu Lôi Kích của Kiều Công Hãn"),
+  know("hoiHo", "Hồi Hồ sinh khí", "danh-tich", "Đất Hồi Hồ, chiêu Hồi Hồ Sinh Khí của Kiều Thuận"),
+  know("phaGiap", "Siêu Loại phá giáp", "danh-tich", "Đất Siêu Loại, chiêu Siêu Loại Phá Giáp của Lý Khuê"),
+  know("tienDu", "Tiên Du đoạt lương", "danh-tich", "Đất Tiên Du, chiêu Tiên Du Đoạt Lương của Nguyễn Thủ Tiệp"),
+  know("teGiang", "Tế Giang thủy trận", "danh-tich", "Đất Tế Giang, chiêu Tế Giang Thủy Trận của Lữ Đường"),
+  know("hoaLuy", "Phù Liệt hỏa lũy", "danh-tich", "Đất Tây Phù Liệt, chiêu Phù Liệt Hỏa Lũy của Nguyễn Siêu"),
+  know("daiCoViet", "Dựng nước Đại Cồ Việt", "danh-tich", "Đinh Bộ Lĩnh dẹp loạn, dựng nước Đại Cồ Việt ở Hoa Lư"),
   hero("ngoXuongXi", "Ngô Xương Xí", "lichSu", [{ kind: "place", text: "Bình Kiều" }, { kind: "skill", text: "Ngô Gia Di Mưu" }],
     "Người nhà Ngô giữ đất Bình Kiều, mưu kế sắc như kim.", WARLORD_SOURCES, "pack-2"),
   hero("nguyenKhoan", "Nguyễn Khoan", "lichSu", [{ kind: "place", text: "Tam Đái" }, { kind: "skill", text: "Tam Đái Kiên Thành" }],
@@ -484,7 +490,7 @@ function buildPack3(): { nodes: CatalogNode[]; recipes: Recipe[] } {
   const nodes: CatalogNode[] = [];
   const recipes: Recipe[] = [];
   for (const b of BASICS) {
-    nodes.push({ ...know(`basic.${b.profession}`, b.nameVi, "vai-tro"), professionHint: b.profession });
+    nodes.push({ ...know(`basic.${b.profession}`, b.nameVi, "tri-thuc"), professionHint: b.profession });
     recipes.push(r(`basic.${b.profession}`, b.first, b.second, `know.basic.${b.profession}`, b.reason));
   }
   for (const c of COMMONERS) {
