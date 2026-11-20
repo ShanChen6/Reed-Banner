@@ -141,7 +141,7 @@ export default function ElementPicker() {
           </div>
 
           <div>
-            <p className="mb-2 text-kicker text-on-wood-soft">Sáu kỹ năng chủ động · chạm để xem chi tiết</p>
+            <p className="mb-2 text-kicker text-on-wood-soft">Sáu kỹ năng chủ động, chạm để xem chi tiết</p>
             <ul role="tablist" aria-label="Chọn kỹ năng" className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {skills.map((s) => (
                 <li key={s.id}>
@@ -174,7 +174,7 @@ export default function ElementPicker() {
               <li className="flex gap-2">
                 <PassiveIcon id={PROFESSION_COMBO[profession]} name={combo.name} className="size-9" />
                 <div>
-                  <span className="font-semibold text-on-wood">{passiveKind({ kind: "combo", id: PROFESSION_COMBO[profession] })} · {combo.name}:</span> {combo.description}
+                  <span className="font-semibold text-on-wood">{passiveKind({ kind: "combo", id: PROFESSION_COMBO[profession] })}, {combo.name}:</span> {combo.description}
                   <Trigger lines={comboTriggerText(combo)} />
                 </div>
               </li>
@@ -182,7 +182,7 @@ export default function ElementPicker() {
                 <li key={id} className="flex gap-2">
                   <PassiveIcon id={id} name={CHASE_PASSIVES[id].name} className="size-9" />
                   <div>
-                    <span className="font-semibold text-on-wood">{passiveKind({ kind: "chase", id })} · {CHASE_PASSIVES[id].name}:</span> {CHASE_PASSIVES[id].description}
+                    <span className="font-semibold text-on-wood">{passiveKind({ kind: "chase", id })}, {CHASE_PASSIVES[id].name}:</span> {CHASE_PASSIVES[id].description}
                     <Trigger lines={chaseTriggerText(CHASE_PASSIVES[id])} />
                   </div>
                 </li>

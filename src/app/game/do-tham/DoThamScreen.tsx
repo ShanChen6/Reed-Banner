@@ -33,7 +33,7 @@ import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
 import { PlayCard } from "../PlayCard";
 import { useAudio } from "../audio/AudioProvider";
-import { cuesForAction, DOTHAM_MUSIC, DOTHAM_PRELOAD, REJECT } from "./sounds";
+import { cuesForAction, cueTimes, DOTHAM_MUSIC, DOTHAM_PRELOAD, REJECT } from "./sounds";
 
 const SAVE_KEY = "reed-banner:do-tham:save:v1";
 const BEST_KEY = "reed-banner:do-tham:best:v1";
@@ -240,11 +240,13 @@ export default function DoThamScreen() {
         return false;
       }
       setGame(r.state);
-      // Tiếng của nước đi trước, tiếng kết quả theo sau một nhịp ngắn để không chồng lên nhau.
-      cuesForAction(game, r.state, action).forEach((c, i) => {
+      // Tiếng của nước đi trước, tiếng kết quả theo sau một nhịp để không chồng lên nhau.
+      const cues = cuesForAction(game, r.state, action);
+      const times = cueTimes(cues);
+      cues.forEach((c, i) => {
         const go = () => playSound(c.id, { rate: c.rate });
-        if (i === 0) go();
-        else window.setTimeout(go, 220 * i);
+        if (times[i] === 0) go();
+        else window.setTimeout(go, times[i]);
       });
       setMessage("");
       if (r.state.phase === "won" && game.phase !== "won") {
@@ -331,7 +333,7 @@ export default function DoThamScreen() {
       <ModeBanner
         title="Do Thám"
         art="/art/home/do-tham.webp"
-        kicker={`Giải đố · ${LEVEL_NAME[level]}`}
+        kicker={`Giải đố – ${LEVEL_NAME[level]}`}
         description="Mở từng ô, suy ra chỗ giấu bẫy từ các con số rồi cắm cờ lau. Bàn nào cũng suy luận được, không cần đoán."
         stats={[
           { label: "Bẫy còn lại", value: left },
@@ -346,7 +348,7 @@ export default function DoThamScreen() {
             <div className="flex w-full flex-wrap items-center justify-center gap-2" role="group" aria-label="Bậc độ khó">
               {DT_LEVEL_ORDER.map((lv) => (
                 <ChoiceChip key={lv} selected={lv === level} size="md" onClick={() => chooseLevel(lv)}>
-                  {LEVEL_NAME[lv]} · {DT_LEVELS[lv].width}×{DT_LEVELS[lv].height} · {DT_LEVELS[lv].mines} bẫy
+                  {LEVEL_NAME[lv]}, {DT_LEVELS[lv].width}×{DT_LEVELS[lv].height}, {DT_LEVELS[lv].mines} bẫy
                 </ChoiceChip>
               ))}
             </div>
@@ -468,7 +470,7 @@ export default function DoThamScreen() {
                       <ElementIcon element={it.element} className="mt-0.5 size-5 shrink-0" />
                       <div className="min-w-0 flex-1">
                         <p className="font-semibold">
-                          {ITEM_INFO[it.element].name} <span className="text-caption font-normal text-on-wood-soft">· {ELEMENT_NAME[it.element]}</span>
+                          {ITEM_INFO[it.element].name} <span className="text-caption font-normal text-on-wood-soft">– {ELEMENT_NAME[it.element]}</span>
                         </p>
                         <p className="text-sm text-on-wood-soft">{ITEM_INFO[it.element].text}</p>
                         {it.element === "loi" && !it.used && (

@@ -66,7 +66,7 @@ function SourceList({ sources }: { sources: readonly HistorySource[] }) {
           <span className="font-mono text-on-wood-soft/80">{s.id}</span>{" "}
           <ExternalLink href={s.url}>{s.title}</ExternalLink>
           <span className="block text-on-wood-soft">
-            {s.publisher} · {KIND_TEXT[s.kind]} · chỗ cần xem: {s.locator}
+            {s.publisher}, {KIND_TEXT[s.kind]}, chỗ cần xem: {s.locator}
           </span>
           <span className="block text-on-wood-soft/80">Giới hạn: {s.limits}</span>
         </li>
@@ -110,7 +110,7 @@ export function MissionSources({ nodeId, children }: { nodeId: CampaignMissionId
           <p className="mt-1 text-caption text-on-wood-soft">
             Địa danh: {h.location.name} ({CERTAINTY_TEXT[h.location.certainty]})
             {h.location.modernRegion
-              ? ` · ngày nay: ${h.location.modernRegion}`
+              ? `, ngày nay: ${h.location.modernRegion}`
               : ""}
           </p>
         </section>
@@ -128,7 +128,7 @@ export function MissionSources({ nodeId, children }: { nodeId: CampaignMissionId
                       <BasisBadge key={b} basis={b} />
                     ))}
                     <span className="text-on-wood-soft/80">
-                      {c.id} · độ tin cậy {CONFIDENCE_TEXT[c.confidence]} ·
+                      {c.id}, độ tin cậy {CONFIDENCE_TEXT[c.confidence]},
                       nguồn {c.sources.join(", ")}
                     </span>
                   </div>
@@ -149,7 +149,7 @@ export function MissionSources({ nodeId, children }: { nodeId: CampaignMissionId
               {h.unresolved.map((u) => (
                 <li key={u.id} className="rounded bg-wood-inset p-2 text-caption">
                   <p className="text-on-wood">
-                    <span className="text-on-wood-soft/80">{u.id} · </span>
+                    <span className="text-on-wood-soft/80">{u.id}, </span>
                     {u.question}
                   </p>
                   <p className="mt-0.5 text-on-wood-soft">
@@ -229,7 +229,7 @@ export default function WarlordCodex({
       className="rounded-xl border border-frame-line-soft bg-wood-inset p-3 text-sm"
     >
       <h2 id="warlord-codex-title" className="font-semibold text-frame-gold">
-        Sứ quân ký · {known}/12 hồ sơ đã mở
+        Sứ quân ký – {known}/12 hồ sơ đã mở
       </h2>
       <p className="mb-2 text-caption text-on-wood-soft">
         Hồ sơ mở khi nhiệm vụ của sứ quân đó mở; kết cục chỉ hiện khi bạn đã đi
@@ -253,7 +253,7 @@ export default function WarlordCodex({
                   <summary className="flex min-h-11 cursor-pointer flex-wrap items-center gap-x-1.5 font-semibold text-on-wood focus-visible:ring-2 focus-visible:ring-frame-gold focus-visible:outline-none">
                     {w.name}
                     <span className="text-caption font-normal text-on-wood-soft">
-                      · {location.name} ·{" "}
+                      , {location.name},{" "}
                       {stage === "resolved"
                         ? GROUP_TEXT[r.group]
                         : "chưa có kết cục"}
@@ -271,7 +271,7 @@ export default function WarlordCodex({
                     <dd>
                       {location.name}
                       {location.modernRegion
-                        ? ` · ngày nay: ${location.modernRegion}`
+                        ? `, ngày nay: ${location.modernRegion}`
                         : ""}
                     </dd>
                     <dt className="text-on-wood-soft/80">Nhiệm vụ</dt>

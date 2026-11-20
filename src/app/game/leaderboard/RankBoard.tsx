@@ -275,7 +275,7 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-black/40" role="meter" aria-label="Tiến độ tới bậc kế" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(ratio * 100)}>
           <div className="h-full bg-frame-gold" style={{ width: `${ratio * 100}%` }} />
         </div>
-        <span className="shrink-0 tabular-nums">{next ? `${score}/${next.min} · ${next.name}` : `${score} · bậc cao nhất`}</span>
+        <span className="shrink-0 tabular-nums">{next ? `${score}/${next.min}, ${next.name}` : `${score}, bậc cao nhất`}</span>
       </div>
       <ol className="flex flex-col gap-1.5">
         {tiers.map((t, i) => {
@@ -297,7 +297,7 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false
                 {r && (
                   <p className="text-caption text-on-wood">
                     <span className="tabular-nums">{r.gold} vàng</span>
-                    {r.extra && <span className="font-semibold"> · {r.extra}</span>}
+                    {r.extra && <span className="font-semibold">, {r.extra}</span>}
                   </p>
                 )}
               </div>

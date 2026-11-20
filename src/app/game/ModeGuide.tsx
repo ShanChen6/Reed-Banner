@@ -14,8 +14,8 @@ const SECTIONS: readonly { readonly key: Exclude<keyof ModeGuideData, "goal">; r
 
 /**
  * Chế độ đã qua màn hướng dẫn trong lần vào này. Vào một chế độ từ Chiến Trường thì gặp Hướng dẫn trước (Shan chốt
- * 19/11/2026); đã bấm "Vào chơi" thì quay lại màn sau một trận vẫn ở thẻ Chơi. Về Chiến Trường thì xoá để lần vào sau
- * lại gặp Hướng dẫn. Tải lại trang cũng xoá (bộ nhớ trong phiên chạy).
+ * 19/11/2026); đã bấm "Vào chơi" thì quay lại màn sau một trận vẫn ở thẻ Chơi. Về Chiến Trường thì xóa để lần vào sau
+ * lại gặp Hướng dẫn. Tải lại trang cũng xóa (bộ nhớ trong phiên chạy).
  */
 const entered = new Set<GuideScene>();
 

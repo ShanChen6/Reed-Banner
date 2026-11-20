@@ -62,7 +62,7 @@ export default function GameFooter() {
           </nav>
           <p className="max-w-md leading-relaxed">
             Bối cảnh và tên nhân vật lịch sử là lịch sử chung; tính cách, kỹ năng và lời thoại trong game là hư cấu.
-            {build && <span className="whitespace-nowrap"> · Bản {build}</span>}
+            {build && <span className="whitespace-nowrap">, bản {build}</span>}
           </p>
         </div>
         <div className="order-1 flex justify-center lg:order-2 lg:justify-end">

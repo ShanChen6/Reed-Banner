@@ -341,7 +341,7 @@ const PACK_2_RECIPES: readonly Recipe[] = [
   r("binhLinhHoa", "know.troops", "elt.hoa", "role.binhLinhHoa", "Đội ngũ nóng như lửa"),
   // Dấu danh tính.
   r("ngoGia", "mat.bambooSlips", "mat.bridge", "know.ngoGia", "Mưu nhà Ngô ghi trên thẻ tre, giữ ở bến cầu Bình Kiều"),
-  r("tamDai", "mat.village", "mat.rampart", "know.tamDai", "Lũy đắp quanh làng thành thành vững"),
+  r("tamDai", "mat.village", "mat.rampart", "know.tamDai", "Lũy đắp quanh làng, thành vững"),
   r("phongChau", "mat.storm", "mat.village", "know.phongChau", "Giông sấm đánh xuống làng Phong Châu"),
   r("hoiHo", "mat.lake", "mat.gourd", "know.hoiHo", "Bầu nước múc ở hồ Hồi Hồ giữ sinh khí"),
   r("phaGiap", "mat.armor", "mat.forgedIron", "know.phaGiap", "Sắt rèn xuyên qua giáp"),

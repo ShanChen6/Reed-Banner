@@ -596,8 +596,8 @@ export default function ChapterOne({
               ← Về bản đồ Sử ký
             </button>
             <p className="text-sm text-on-wood-soft">
-              Chương {ROMAN[chapter.chapter]} · {chapter.title}
-              {stronghold ? ` · ${stronghold.place}` : ""}
+              Chương {ROMAN[chapter.chapter]} – {chapter.title}
+              {stronghold ? `, ${stronghold.place}` : ""}
             </p>
           </nav>
 
@@ -611,7 +611,7 @@ export default function ChapterOne({
            <div className="flex min-w-0 flex-col gap-3">
             <header>
               <p className="text-kicker text-frame-gold">
-                {node.location.name} ·{" "}
+                {node.location.name},{" "}
                 {CERTAINTY_TEXT[node.location.certainty]}
                 {node.location.modernRegion && (
                   <span className="text-on-wood-soft normal-case">

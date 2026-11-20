@@ -485,25 +485,23 @@
     },
     "dotham.trap": {
       "files": [
-        "sfx/battle/damage_a",
-        "sfx/battle/damage_b",
-        "sfx/battle/damage_c"
+        "sfx/do-tham/trap_a"
       ],
       "volume": 0.9
     },
     "dotham.win": {
       "files": [
-        "sfx/formation/win_a",
-        "sfx/formation/win_b"
+        "sfx/do-tham/win_a",
+        "sfx/do-tham/win_b"
       ],
-      "volume": 0.9
+      "volume": 0.85
     },
     "dotham.lose": {
       "files": [
-        "sfx/formation/lose_a",
-        "sfx/formation/lose_c"
+        "sfx/do-tham/lose_a",
+        "sfx/do-tham/lose_b"
       ],
-      "volume": 0.9
+      "volume": 0.85
     }
   },
   "music": {
@@ -548,7 +546,7 @@
       "volume": 0.5
     },
     "dotham": {
-      "file": "music/formation_menu",
+      "file": "music/dotham",
       "volume": 0.4
     }
   },

@@ -114,7 +114,7 @@ export default function HeroGrid({
       {shown.length === 0 ? (
         <p className="py-4 text-center text-sm text-on-wood-soft">Không có tướng khớp bộ lọc.</p>
       ) : (
-        <div className={cn("grid grid-cols-1 gap-2", gridClassName)}>
+        <div {...paged.listProps} className={cn("grid grid-cols-1 gap-2", gridClassName)}>
           {paged.pageItems.map((h) => (
             <ChoiceChip
               key={h.id}
@@ -135,7 +135,7 @@ export default function HeroGrid({
                   <span className="flex items-center gap-1 text-caption font-normal">
                     <ElementIcon element={h.element} className="size-4" />
                     <ProfessionIcon profession={h.profession} className="size-4" />
-                    <span className="sr-only">{ELEMENT_NAME[h.element]} · {PROFESSION_NAME[h.profession]}</span>
+                    <span className="sr-only">{ELEMENT_NAME[h.element]}, {PROFESSION_NAME[h.profession]}</span>
                   </span>
                 )}
                 {h.blocked && <span className="text-caption font-normal">{h.blocked}</span>}

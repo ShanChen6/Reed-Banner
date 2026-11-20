@@ -6,7 +6,7 @@
 
 import { useState } from "react";
 import { companionById, ELEMENTS, type Element, type Profession } from "@/core";
-import { choiceVariants } from "@/components/ui";
+import { choiceVariants, Select } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
@@ -124,11 +124,12 @@ export default function CompanionPicker({
             <ElementIcon element={e} className="size-4" />
           </button>
         ))}
-        <select
+        <Select
+          uiSize="sm"
+          active={profession !== ""}
           value={profession}
           onChange={(e) => filter(setProfession)(e.target.value as Profession | "")}
           aria-label="Lọc theo nghề"
-          className="min-h-9 rounded-control border border-frame-line bg-wood-inset px-2 text-caption text-on-wood pointer-coarse:min-h-11"
         >
           <option value="">Mọi nghề</option>
           {professions.map((p) => (
@@ -136,10 +137,10 @@ export default function CompanionPicker({
               {PROFESSION_NAME[p]}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
 
-      <ul className={`grid gap-1.5 ${narrow ? "grid-cols-2" : "grid-cols-[repeat(auto-fill,minmax(12.5rem,1fr))]"}`} role="group" aria-labelledby={labelId}>
+      <ul className={`grid gap-1.5 ${narrow ? "grid-cols-2" : "grid-cols-[repeat(auto-fill,minmax(12.5rem,1fr))]"}`} role="group" aria-labelledby={labelId} {...paged.listProps}>
         {shown.map((c) => {
           const on = team.includes(c.id);
           return (
@@ -164,7 +165,7 @@ export default function CompanionPicker({
                     // Cột hẹp: chỉ icon (tên hệ/nghề ở tooltip) để chữ không vỡ dòng.
                     <span
                       className="flex items-center gap-1"
-                      title={`${ELEMENT_NAME[c.element]} · ${PROFESSION_NAME[c.profession]}`}
+                      title={`${ELEMENT_NAME[c.element]}, ${PROFESSION_NAME[c.profession]}`}
                     >
                       <ElementIcon element={c.element} className="size-4 opacity-80" />
                       <ProfessionIcon profession={c.profession} className="size-4 opacity-80" />
@@ -173,7 +174,7 @@ export default function CompanionPicker({
                   ) : (
                     <span className="flex items-center gap-1 text-caption opacity-80">
                       <ElementIcon element={c.element} className="size-3.5" />
-                      {ELEMENT_NAME[c.element]} ·
+                      {ELEMENT_NAME[c.element]},
                       <ProfessionIcon profession={c.profession} className="size-3.5" />
                       {PROFESSION_NAME[c.profession]}
                       <LevelTag level={levels[c.id]} suggest={suggestLevel} plain={on} />

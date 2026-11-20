@@ -40,7 +40,7 @@ export default function FullscreenToggle({ scene }: { scene: Scene }) {
       aria-pressed={active}
       aria-label={label}
       title={label}
-      className="fullscreen-fab game-header-btn game-header-chip fixed z-40 flex size-11 items-center justify-center rounded-full opacity-85 shadow-[0_4px_12px_rgb(0_0_0/0.5)] hover:opacity-100 focus-visible:opacity-100"
+      className="fullscreen-fab game-header-btn game-header-chip fixed z-40 flex size-11 items-center justify-center rounded-full shadow-[0_4px_12px_rgb(0_0_0/0.5)]"
     >
       <svg aria-hidden viewBox="0 0 24 24" className="size-5 text-[var(--frame-gold)]" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
         {active ? (

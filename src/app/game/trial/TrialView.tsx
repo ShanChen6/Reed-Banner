@@ -45,6 +45,7 @@ import {
   type TrialOverview,
 } from "./trial-ui";
 import { ModeGuideTabs } from "../ModeGuide";
+import { ColumnFill } from "../ColumnFill";
 
 /** Số cột của lưới tầng ở mọi bề rộng (khớp class grid-cols-5 bên dưới). Dùng cho phím lên/xuống. */
 export const FLOOR_GRID_COLUMNS = 5;
@@ -123,7 +124,7 @@ function FloorNavigator({
         <p className="flex flex-wrap items-baseline justify-between gap-x-3 text-sm text-on-wood">
           <span>
             <strong className="text-title-on-wood">Chặng {stage.roman}: {stage.name}</strong>
-            <span className="text-on-wood-soft"> · tầng {stage.from} đến {stage.to}</span>
+            <span className="text-on-wood-soft">, tầng {stage.from} đến {stage.to}</span>
           </span>
           <span className={left > 0 ? "text-caption text-frame-gold" : "text-caption text-jade"}>
             {left > 0 ? `Còn ${left} đá lần đầu` : "Đã nhận hết đá lần đầu"}
@@ -230,7 +231,7 @@ function CompanionCardBody({ option: o, foes }: { option: CompanionOption; foes:
           <ElementIcon element={o.element} className="size-3.5 shrink-0" />
           <span className="truncate">
             {/* Thẻ hẹp trên điện thoại: biểu tượng đã cho biết hệ, chữ chỉ còn nghề để không bị cắt. */}
-            <span className="max-sm:sr-only">{ELEMENT_NAME[o.element]} · </span>
+            <span className="max-sm:sr-only">{ELEMENT_NAME[o.element]}, </span>
             {PROFESSION_NAME[o.profession]}
           </span>
         </span>
@@ -265,8 +266,8 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
     <OrnateFrame level="raised" aria-labelledby="trial-floor-title" className={cn("flex min-w-0 flex-col gap-4", props.className)}>
       <header>
         <p className="text-kicker text-frame-gold">
-          {FLOOR_STATE_TEXT[entry.state]} · Độ khó {DIFFICULTY_NAME[f.difficulty]}
-          {isBossFloor(entry) && " · Ải trùm"}
+          {FLOOR_STATE_TEXT[entry.state]}, độ khó {DIFFICULTY_NAME[f.difficulty]}
+          {isBossFloor(entry) && ", ải trùm"}
         </p>
         <h2 id="trial-floor-title" className="ui-title-on-wood mt-1 text-title">
           Tầng {f.floor}: {f.narrative.title}
@@ -304,13 +305,13 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
             {win.text}
             {!win.supported && " (chưa hỗ trợ, chưa vào được)"}
           </p>
-          <p className="text-on-wood-soft">Giới hạn {f.turnLimit} lượt · máu đầy, lương 60 mỗi lần thử.</p>
+          <p className="text-on-wood-soft">Giới hạn {f.turnLimit} lượt, máu đầy, lương 60 mỗi lần thử.</p>
           <p className={entry.firstClearClaimed ? "text-jade" : "font-semibold text-frame-gold"} data-testid="first-clear">
             {firstClearText(entry)}
           </p>
           {entry.record && (
             <p className="text-on-wood-soft">
-              Kỷ lục: {entry.record.bestTurns} lượt · đã qua {entry.record.clears} lần
+              Kỷ lục: {entry.record.bestTurns} lượt, đã qua {entry.record.clears} lần
             </p>
           )}
           {entry.state === "cleared" && <p className="text-on-wood-soft">Đánh lại để cải thiện kỷ lục, không có thêm đá.</p>}
@@ -330,7 +331,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
                 {foe.element && foe.profession && (
                   <span className="flex items-center gap-1">
                     <ElementIcon element={foe.element} className="size-3.5 shrink-0" />
-                    <span className="truncate">{ELEMENT_NAME[foe.element]} · {PROFESSION_NAME[foe.profession]}</span>
+                    <span className="truncate">{ELEMENT_NAME[foe.element]}, {PROFESSION_NAME[foe.profession]}</span>
                   </span>
                 )}
               </span>
@@ -374,7 +375,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
                 );
               })}
             </ul>
-            <ul aria-label="Tướng kèm có thể chọn" className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <ul aria-label="Tướng kèm có thể chọn" {...pagedOptions.listProps} className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {pagedOptions.pageItems.map((o) => (
                 <li key={o.id}>
                   <button
@@ -406,7 +407,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
                 <p className="flex items-center gap-1 text-on-wood-soft" data-testid="leader-preview">
                   <ElementIcon element={build.element} className="size-3.5" />
                   <ProfessionIcon profession={build.profession} className="size-3.5" />
-                  {ELEMENT_NAME[build.element]} · {PROFESSION_NAME[build.profession]}
+                  {ELEMENT_NAME[build.element]}, {PROFESSION_NAME[build.profession]}
                 </p>
               </div>
               {picker.suggestion && (
@@ -417,7 +418,7 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; className
                   disabled={busy}
                   onClick={() => props.onBuild(picker.suggestion!)}
                 >
-                  Đổi sang {ELEMENT_NAME[picker.suggestion.element]} · {PROFESSION_NAME[picker.suggestion.profession]}
+                  Đổi sang {ELEMENT_NAME[picker.suggestion.element]}, {PROFESSION_NAME[picker.suggestion.profession]}
                 </Button>
               )}
             </div>
@@ -610,7 +611,10 @@ export default function TrialView(props: TrialViewProps) {
               </OrnateFrame>
             )}
           </div>
-          <SweepPanel overview={overview} sweepBusy={props.sweepBusy} onSweep={props.onSweep} className="self-start lg:col-start-1 lg:row-start-2" />
+          <div className="flex min-w-0 flex-col gap-4 lg:col-start-1 lg:row-start-2">
+            <SweepPanel overview={overview} sweepBusy={props.sweepBusy} onSweep={props.onSweep} />
+            <ColumnFill mode="trial" />
+          </div>
         </div>
       )}
       </ModeGuideTabs>

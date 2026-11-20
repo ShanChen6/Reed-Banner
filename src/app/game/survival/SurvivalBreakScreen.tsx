@@ -71,8 +71,8 @@ function fighterStatus(fighter: BreakFighter, nextWave: number, paidReviveId?: s
   if (fighter.id === paidReviveId) return `Hồi sinh khi vào đợt ${nextWave}`;
   if (fighter.autoRevive) return `Sẽ tự hồi sinh khi vào đợt ${nextWave}`;
   if (fighter.roundsUntilAutoRevive !== null && fighter.roundsUntilAutoRevive > 0)
-    return `Chờ hồi sinh · còn ${fighter.roundsUntilAutoRevive} đợt`;
-  return "Đủ điều kiện · chờ lượt hồi sinh";
+    return `Chờ hồi sinh, còn ${fighter.roundsUntilAutoRevive} đợt`;
+  return "Đủ điều kiện, chờ lượt hồi sinh";
 }
 
 function HpMeter({ fighter }: { fighter: BreakFighter }) {
@@ -177,7 +177,7 @@ function SurvivalBreakReady({
     });
 
   const lineupMessage = lineupValid
-    ? "Đội hình hợp lệ · Đinh Bộ Lĩnh giữ vị trí thủ lĩnh."
+    ? "Đội hình hợp lệ, Đinh Bộ Lĩnh giữ vị trí thủ lĩnh."
     : picked < 2
       ? `Chọn thêm ${2 - picked} đồng đội ra trận.`
       : "Đội hình chưa hợp lệ: cần đủ hai đồng đội sống; tướng gục chỉ được giữ nguyên vị trí khi không còn dự bị sống.";
@@ -186,12 +186,12 @@ function SurvivalBreakReady({
     <section aria-labelledby="survival-break-title" className="flex flex-col gap-4">
       <OrnateFrame level="raised" className="flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-kicker text-jade">Nghỉ giữa các đợt · tiến độ đã lưu, rời trang lúc nào cũng được</p>
+          <p className="text-kicker text-jade">Nghỉ giữa các đợt, tiến độ đã lưu, rời trang lúc nào cũng được</p>
           <h2 id="survival-break-title" className="text-xl font-black text-title-on-wood sm:text-2xl">
-            Đã thắng đợt {survival.wave} · chuẩn bị đợt {next.wave}
+            Đã thắng đợt {survival.wave}, chuẩn bị đợt {next.wave}
           </h2>
           <p className="text-sm text-on-wood-soft">
-            Đã vượt {survival.cleared} đợt · đợt {next.wave} có {next.foes.length} đối thủ cấp {next.level}
+            Đã vượt {survival.cleared} đợt, đợt {next.wave} có {next.foes.length} đối thủ cấp {next.level}
             {next.boss && (
               <span className="ml-2 inline-flex rounded-full bg-lacquer px-2 py-0.5 text-caption font-bold uppercase text-on-wood">
                 Cảnh báo trùm
@@ -218,7 +218,7 @@ function SurvivalBreakReady({
             <OrnateFrame as="section" aria-labelledby="survival-force-title">
               <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
                 <h3 id="survival-force-title" className="font-bold text-frame-gold">
-                  Đội hình đợt {next.wave} · ra trận {picked}/2
+                  Đội hình đợt {next.wave}, ra trận {picked}/2
                 </h3>
                 <p className="text-caption text-on-wood-soft">
                   Bấm thẻ tướng để đưa ra trận hoặc về dự bị. Máu là bản xem trước sau hồi phục.
@@ -235,7 +235,7 @@ function SurvivalBreakReady({
                           <CounterStar element={draftElement} foes={next.foes} />
                         </p>
                         <p className="text-caption font-semibold text-frame-gold">
-                          Thủ lĩnh · {fighterStatus(leaderFighter, next.wave)}
+                          Thủ lĩnh, {fighterStatus(leaderFighter, next.wave)}
                         </p>
                       </div>
                     </div>
@@ -330,15 +330,15 @@ function SurvivalBreakReady({
                     Máu {preview.leaderBuildBasis.hp}/{preview.leaderBuildBasis.maxHp}
                     {" → "}
                     <strong className="text-on-wood">{leaderPreview.hp}/{leaderPreview.config.maxHp}</strong>
-                    {" · "}Công {leaderPreview.config.atk} · Thủ {leaderPreview.config.def}
-                    {" · "}Hiện tại: {PROFESSION_NAME[currentProfession]} · {ELEMENT_NAME[currentElement]}
+                    {", "}Công {leaderPreview.config.atk}, Thủ {leaderPreview.config.def}
+                    {", "}Hiện tại: {PROFESSION_NAME[currentProfession]}, {ELEMENT_NAME[currentElement]}
                   </p>
                   <p className="mt-1 text-caption text-on-wood-soft">
                     Máu giữ theo tỷ lệ {Math.round(preview.leaderBuildBasis.hpRatio * 100)}%; đổi nghề/hệ ở đây không sửa hồ sơ.
                   </p>
                   <details className="mt-2">
                     <summary className="cursor-pointer text-caption font-semibold text-on-wood">
-                      Kỹ năng dự kiến · cấp {preview.leaderBuildBasis.progress.level}
+                      Kỹ năng dự kiến, cấp {preview.leaderBuildBasis.progress.level}
                     </summary>
                     <ul className="mt-1 grid gap-1 sm:grid-cols-2">
                       {leaderSkills.map(({ skill, unlocked }) => (
@@ -347,7 +347,7 @@ function SurvivalBreakReady({
                           <span className="min-w-0">
                             <span className="block truncate text-caption font-semibold text-on-wood">{skill.name}</span>
                             <span className="block text-caption text-on-wood-soft">
-                              {unlocked ? `Đã mở · cấp kỹ năng ${leaderSkillLevel(skill.slot)}` : `Mở ở cấp ${MAIN_SLOT_UNLOCK[skill.slot ?? 0] ?? 1}`}
+                              {unlocked ? `Đã mở, cấp kỹ năng ${leaderSkillLevel(skill.slot)}` : `Mở ở cấp ${MAIN_SLOT_UNLOCK[skill.slot ?? 0] ?? 1}`}
                             </span>
                           </span>
                         </li>
@@ -372,7 +372,7 @@ function SurvivalBreakReady({
                   <p className="text-sm">
                     <strong>Dừng hẳn lượt chơi?</strong> Ghi {survival.cleared} đợt vào bảng; lượt sau phải đánh lại từ đợt 1.
                   </p>
-                  <Button disabled={pending} onClick={onEnd} className="min-h-11">Dừng · ghi {survival.cleared} đợt</Button>
+                  <Button disabled={pending} onClick={onEnd} className="min-h-11">Dừng – ghi {survival.cleared} đợt</Button>
                   <Button variant="secondary" disabled={pending} onClick={() => setConfirmEnd(false)} className="min-h-11">Giữ lượt chơi</Button>
                 </>
               ) : (
@@ -400,7 +400,7 @@ function SurvivalBreakReady({
             </OrnateFrame>
             <OrnateFrame as="section" aria-labelledby="survival-enemy-title">
               <h3 id="survival-enemy-title" className="font-bold text-frame-gold">
-                Đối thủ đợt {next.wave} · cấp {next.level}
+                Đối thủ đợt {next.wave}, cấp {next.level}
               </h3>
               {next.boss && <p className="my-1 text-sm font-bold text-danger">Đợt trùm — đội hình có sứ quân thủ lĩnh.</p>}
               <ul className="mt-2 flex flex-col gap-2">
@@ -444,8 +444,8 @@ function SurvivalBreakReady({
                       disabled={pending || !preview.canPayRevive}
                       onClick={() => setDraftReviveId((current) => (current === fighter.id ? undefined : fighter.id))}
                     >
-                      Hồi sinh {fighter.name} · {preview.reviveCost} lương
-                      {fighter.location === "reserve" ? " · dự bị" : ""}
+                      Hồi sinh {fighter.name}, {preview.reviveCost} lương
+                      {fighter.location === "reserve" ? ", dự bị" : ""}
                     </ChoiceChip>
                   ))}
                 </>

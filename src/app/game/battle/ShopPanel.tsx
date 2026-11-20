@@ -78,10 +78,10 @@ function CompanionCard({
           <ElementIcon element={c.element} className="size-3.5 shrink-0" />
         </div>
         <div className="truncate text-caption text-on-wood-soft" title={ultimate ? `${hero || warlord ? "Chiêu riêng" : "Tuyệt chiêu"}: ${ultimate.name}` : undefined}>
-          {PROFESSION_NAME[c.profession]} · {ELEMENT_NAME[c.element]}
-          {ultimate && <> · {ultimate.name}</>}
-          {hero && <> · Tướng lịch sử</>}
-          {warlord && <> · Sứ quân</>}
+          {PROFESSION_NAME[c.profession]}, {ELEMENT_NAME[c.element]}
+          {ultimate && <>, {ultimate.name}</>}
+          {hero && <>, tướng lịch sử</>}
+          {warlord && <>, sứ quân</>}
         </div>
       </div>
       {owned ? (
@@ -118,7 +118,7 @@ function PagedGrid({ items, label, className }: { items: readonly React.ReactNod
   const paged = usePagedItems(items, SHOP_PAGE_SIZE);
   return (
     <>
-      <ul className={cn("grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3", className)}>{paged.pageItems}</ul>
+      <ul {...paged.listProps} className={cn("grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3", className)}>{paged.pageItems}</ul>
       <PageControls paged={paged} label={`Phân trang ${label}`} className="mt-2" />
     </>
   );

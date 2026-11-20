@@ -53,7 +53,7 @@ function RaidPanel({
     <div className="flex flex-col gap-3">
       <div>
         <p className="text-kicker text-frame-gold">
-          Tái đấu · {boss.place}
+          Tái đấu – {boss.place}
         </p>
         <h3 className="text-lg font-bold text-frame-gold">
           {leader.name} trên sân nhà
@@ -93,7 +93,7 @@ function RaidPanel({
                 {won && <span className="text-jade">Đã thắng</span>}
               </p>
               <p className="text-on-wood-soft">
-                Đối thủ cấp {raidLevel(boss, tier)} ·{" "}
+                Đối thủ cấp {raidLevel(boss, tier)},{" "}
                 {DIFFICULTY_NAME[raidDifficulty(boss, tier)]}
               </p>
               <p
@@ -167,7 +167,7 @@ export default function RaidHall({
         </h2>
         <span className="text-on-wood-soft">0/{RAID_BOSSES.length} sứ quân đã mở</span>
         <span className="text-on-wood-soft">
-          · Sứ quân đầu tiên mở sau nhiệm vụ {gateText(RAID_BOSSES[0]!).replace("Mở sau nhiệm vụ ", "")}.
+          . Sứ quân đầu tiên mở sau nhiệm vụ {gateText(RAID_BOSSES[0]!).replace("Mở sau nhiệm vụ ", "")}.
         </span>
       </section>
     );
@@ -217,7 +217,7 @@ export default function RaidHall({
                     </span>
                     <span className="block truncate text-caption opacity-75">
                       {open
-                        ? `Tái đấu · ${best > 0 ? `đã thắng ${RAID_TIER_INFO[best as RaidTier].name}` : "chưa thắng bậc nào"}`
+                        ? `Tái đấu – ${best > 0 ? `đã thắng ${RAID_TIER_INFO[best as RaidTier].name}` : "chưa thắng bậc nào"}`
                         : gateText(b)}
                     </span>
                   </span>

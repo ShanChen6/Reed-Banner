@@ -75,7 +75,7 @@ export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankReward
         {state.items.map((i) => (
           <li key={`${i.mode}-${i.period}`} className="flex flex-wrap items-center justify-between gap-2 text-sm">
             <span>
-              Kỳ {PERIOD_NOUN[i.mode]} {i.period}: hạng {i.rank}/{i.participants} ({TIER_LABEL[i.tier]}) · <b>{i.gold} vàng</b>{i.bundles ? <> · {i.bundles} bó nguyên tố Tầm Tướng Ký</> : null}
+              Kỳ {PERIOD_NOUN[i.mode]} {i.period}: hạng {i.rank}/{i.participants} ({TIER_LABEL[i.tier]}), <b>{i.gold} vàng</b>{i.bundles ? <>, {i.bundles} bó nguyên tố Tầm Tướng Ký</> : null}
             </span>
             <button type="button" disabled={busy} onClick={() => void claim(i)} className="min-h-10 pointer-coarse:min-h-11 rounded bg-primary px-4 font-semibold text-primary-foreground disabled:opacity-60">
               Nhận

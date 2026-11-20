@@ -142,8 +142,8 @@ export function AccountScene({
             <p className="text-caption font-semibold tracking-[0.15em] text-frame-gold uppercase">Tài khoản đã ghi danh</p>
             <h1 className="ui-title-on-wood truncate font-serif text-2xl font-bold">{account.name}</h1>
             <p className="mt-1 text-sm text-on-wood-soft">
-              {account.username ? <>Danh hiệu <span className="font-semibold text-on-wood">{account.username}</span> · </> : null}
-              Ghi danh từ {dateVi(account.createdAt)} · Trình danh gần nhất {dateVi(account.lastLoginAt)}
+              {account.username ? <>Danh hiệu <span className="font-semibold text-on-wood">{account.username}</span>, </> : null}
+              Ghi danh từ {dateVi(account.createdAt)}, trình danh gần nhất {dateVi(account.lastLoginAt)}
             </p>
           </div>
           <div className="flex w-full flex-wrap gap-2 sm:w-auto">

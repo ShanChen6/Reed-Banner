@@ -65,15 +65,16 @@ export default function BoardView({
     }
   };
 
-  // Cỡ ô: tối đa theo số cột, và co lại để cả hàng luôn vừa chiều ngang màn (trừ lề trang, khung).
+  // Cỡ ô tính ở globals.css (.fm-board) theo bề rộng cột chứa bàn (đơn vị cqw), chiều cao màn và cỡ trần theo số cột;
+  // khi thẻ vùng chơi toàn màn hình thì bàn giãn ra lấp chiều cao màn.
   const maxCell = width <= 3 ? 112 : width <= 5 ? 88 : width <= 7 ? 72 : 60;
-  const cell = `min(${maxCell}px, calc((100vw - 3rem - 20px) / ${width}))`;
+  const vars = { "--fm-cols": width, "--fm-rows": height, "--fm-max": `${maxCell}px` } as React.CSSProperties;
 
   return (
     <div ref={boardRef} role="grid" aria-label={`Sa bàn ${height} hàng ${width} cột`} data-won={state.phase === "won"} className="ui-frame w-fit p-2">
       <div
         className="fm-board relative grid overflow-hidden rounded-sm"
-        style={{ gridTemplateColumns: `repeat(${width}, ${cell})`, gridAutoRows: cell, backgroundImage: `url(${map.src})` }}
+        style={{ ...vars, backgroundImage: `url(${map.src})` }}
         onMouseLeave={() => setPeek(null)}
       >
         {state.cells.map((c, i) => {

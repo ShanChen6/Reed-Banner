@@ -8,7 +8,7 @@ import { SURVIVAL_BOSS_EVERY, SURVIVAL_WAVE_GOLD } from "@/core/survival/surviva
 import { TRIAL_FLOORS } from "@/core/progress/dualTowerState";
 import { DT_ITEM_PICKS, DT_LEVELS } from "@/core/do-tham";
 import { SL_AID_USE_MAX, SL_LEVELS } from "@/core/su-lo";
-import { KL_CLEAR_BONUS_BASE, KL_CLEAR_BONUS_PER_LEVEL, KL_HEIGHT, KL_NEAR_CLEAR_BONUS, KL_NEAR_CLEAR_LEFT, KL_START_TOOLS, KL_TIMED_LEVEL_SECONDS, KL_TIMED_START_SECONDS, KL_TOOL_CHARGE, KL_WIDTH, timedGoal } from "@/core/khai-lo/engine";
+import { KL_CLEAR_BONUS_BASE, KL_CLEAR_BONUS_PER_LEVEL, KL_CLEAR_HEARTS, KL_HEIGHT, KL_NEAR_CLEAR_BONUS, KL_NEAR_CLEAR_LEFT, KL_START_HEARTS, KL_START_TOOLS, KL_TIMED_LEVEL_SECONDS, KL_TIMED_START_SECONDS, KL_TOOL_CHARGE, KL_WIDTH, timedGoal } from "@/core/khai-lo/engine";
 import type { Scene } from "./scene";
 
 /** Các chế độ có thẻ Hướng dẫn (đúng mười hai chế độ ở thẻ Chiến Trường). */
@@ -97,7 +97,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     rewards: [
       "Lần đầu qua mỗi tầng được Đá Cường Hóa. Đánh lại tầng đã qua không nhận thêm.",
-      "Đã qua tầng 1 thì mỗi ngày quét tháp được 1 đến 12 đá, tùy tầng cao nhất đã qua. Ngày đổi lúc 0 giờ giờ Việt Nam, lượt bỏ lỡ không cộng dồn.",
+      "Đã qua tầng 1 thì mỗi ngày quét tháp được 1 đến 12 đá, tùy tầng cao nhất đã qua. Ngày đổi lúc 0 giờ (giờ Việt Nam), lượt bỏ lỡ không cộng dồn.",
       "Đá Cường Hóa hiện chỉ tích trong tài khoản, chưa có chỗ dùng.",
     ],
     tips: [
@@ -119,7 +119,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Phúc giữ tới hết lượt leo. Chọn lại một Phúc thì cộng dồn.",
       "Nếu thắng tầng mà Đinh Bộ Lĩnh đã gục, bạn phải chọn Cứu viện cho ông mới lên được tầng kế. Tải lại trang không hồi miễn phí.",
       "Muốn dừng giữa chừng phải xác nhận. Kỷ lục chu kỳ và đá đã nhận vẫn giữ, bạn khóa đội hình mới để leo lại từ tầng 1.",
-      "Chu kỳ bắt đầu thứ Hai lúc 0 giờ giờ Việt Nam và kéo dài 7 ngày. Luật không đổi trong chu kỳ.",
+      "Chu kỳ bắt đầu thứ Hai lúc 0 giờ (giờ Việt Nam) và kéo dài 7 ngày. Luật không đổi trong chu kỳ.",
     ],
     rewards: [
       "Bậc Tháp Thiên Mệnh theo tầng cao nhất từng vượt: Đồng 1, Bạc 4, Vàng 8, Bạch Kim 12, Kim Cương 16, Huyền Thoại 20. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Công trạng tuần, mỗi bậc một lần.",
@@ -166,7 +166,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Xong ván, xem hạng của bạn trên bảng trong ngày.",
     ],
     rules: [
-      "Đề mới lúc 0 giờ giờ Việt Nam. Mỗi người một lượt mỗi ngày, tải lại trang vẫn tiếp tục được trận đang dở.",
+      "Đề mới lúc 0 giờ (giờ Việt Nam). Mỗi người một lượt mỗi ngày, tải lại trang vẫn tiếp tục được trận đang dở.",
       "Đội cho sẵn gồm Đinh Bộ Lĩnh theo nghề và hệ của đề, cùng hai tướng. Mọi tướng cấp 10, không trang bị, nên hồ sơ của bạn không ảnh hưởng.",
       "Đối thủ là một sứ quân dẫn hai tùy tướng, đánh trên sân nhà của sứ quân, do máy điều khiển ở mức Khó.",
       "Ai đi cùng một nước thì gặp cùng ô rơi.",
@@ -189,7 +189,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Đánh trận. Điểm hạng đổi ngay sau trận.",
     ],
     rules: [
-      `Mỗi ngày có ${ARENA_ATTACKS_PER_DAY} lượt đánh, đổi lúc 0 giờ giờ Việt Nam.`,
+      `Mỗi ngày có ${ARENA_ATTACKS_PER_DAY} lượt đánh, đổi lúc 0 giờ (giờ Việt Nam).`,
       "Nâng cấp tướng hoặc đổi đội xong thì bấm Cập nhật theo đội hiện tại để đội phòng thủ theo kịp.",
       "Đối thủ ưu tiên người có điểm và lực chiến gần bạn; thẻ đối thủ ghi mạnh hơn, ngang sức hay yếu hơn. Thiếu người thì máy tạo bóng ma luyện tập cùng cấp, 1000 điểm; càng lên cao, đánh bóng ma càng ít điểm.",
       "Trong Quần Hùng, trang bị cộng tối đa 30% Công và máu gốc theo cấp (Thủ tối đa gấp đôi), nên cấp tướng quan trọng hơn đồ.",
@@ -236,12 +236,12 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     steps: [
       "Chọn Thường (không giới hạn thời gian) hoặc Cấp tốc (chạy đua với đồng hồ để vượt mốc điểm từng bậc).",
       "Chạm vào một quân có ít nhất 1 quân cùng hệ liền cạnh. Cả khối biến mất, quân phía trên rơi xuống.",
-      "Thường: dọn sạch bàn để qua màn; hết khối mà còn quân (và không dùng đạo cụ được nữa) là thua.",
+      `Thường: hết khối thì hết màn. Quân còn sót trừ tim (ván bắt đầu với ${KL_START_HEARTS} tim); không đủ tim đỡ thì hết ván.`,
     ],
     rules: [
       `Bàn có ${KL_WIDTH} cột và ${KL_HEIGHT} hàng. Quân lẻ không xóa được; liền cạnh không tính đường chéo. Không có quân mới rơi vào, cột trống thì các cột bên phải dồn sang trái.`,
       "Màn càng sau càng nhiều hệ: 3 hệ ở màn 1–3, 4 hệ ở màn 4–7, 5 hệ ở màn 8–13, 6 hệ từ màn 14.",
-      "Thường: phải dọn sạch bàn mới qua màn. Còn quân mà hết khối và hết đạo cụ là thua, hết ván.",
+      `Thường: hết khối và hết đạo cụ thì hết màn, mỗi quân còn sót trừ 1 tim. Số quân sót nhiều hơn số tim còn lại là hết ván. Dọn sạch bàn được thêm ${KL_CLEAR_HEARTS} tim. Có thể bấm Kết thúc màn sớm (quân sót vẫn trừ tim).`,
       `7 đạo cụ theo 7 hệ: Kim Đao chém một hàng, Thủy Triều cuốn một cột, Hỏa Cầu nổ vùng 3×3, Lôi Phạt xóa mọi quân cùng hệ, Mộc Linh đổi một quân sang hệ của khối lớn nhất kề nó, Địa Chấn phá hàng dưới cùng, Lốc Phong xoay 8 ô quanh tâm. Đạo cụ không cộng điểm.`,
       `Ván bắt đầu với ${KL_START_TOOLS} đạo cụ mỗi hệ. Chạm khối hệ nào thì thanh nạp hệ đó đầy dần: đủ ${KL_TOOL_CHARGE} quân thì được thêm 1 đạo cụ của hệ ấy, tích không giới hạn. Chỉ hiện đạo cụ của các hệ có trên bàn.`,
       "Mỗi màn được hoàn tác một lần, chỉ lùi được nước vừa đi.",

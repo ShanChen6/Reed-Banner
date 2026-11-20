@@ -33,7 +33,7 @@ export default function LeaderBuildPicker({
         <div className="min-w-0 text-sm">
           <p className="font-bold text-title-on-wood">Đinh Bộ Lĩnh</p>
           <p className="text-on-wood-soft">
-            {PROFESSION_NAME[profession]} · {ELEMENT_NAME[element]}
+            {PROFESSION_NAME[profession]}, {ELEMENT_NAME[element]}
           </p>
         </div>
       </div>

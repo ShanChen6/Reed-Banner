@@ -33,11 +33,12 @@ import DailyQuestsPanel from "../quests/DailyQuestsPanel";
 import { RankBoard } from "../leaderboard/RankBoard";
 import ModeTierPanel from "../leaderboard/ModeTierPanel";
 import { useProfile } from "../profile/useProfile";
+import { ColumnFill } from "../ColumnFill";
 
 function scoreText(s: DailyScore): string {
   return s.won
-    ? `Thắng · ${s.turns} lượt · còn ${Math.round(s.permille / 10)}% máu`
-    : `Thua · gây ${Math.round(s.permille / 10)}% sát thương`;
+    ? `Thắng, ${s.turns} lượt, còn ${Math.round(s.permille / 10)}% máu`
+    : `Thua, gây ${Math.round(s.permille / 10)}% sát thương`;
 }
 
 function Fighters({ list, foes = [] }: { list: readonly FighterConfig[]; foes?: readonly CounterFoe[] }) {
@@ -61,7 +62,7 @@ function Fighters({ list, foes = [] }: { list: readonly FighterConfig[]; foes?: 
             </p>
             <p className="flex items-center gap-1 text-on-wood-soft">
               <ElementIcon element={f.element} className="size-3.5" />
-              {ELEMENT_NAME[f.element]} · {PROFESSION_NAME[f.profession]} ·{" "}
+              {ELEMENT_NAME[f.element]}, {PROFESSION_NAME[f.profession]},{" "}
               {f.maxHp} máu
             </p>
           </div>
@@ -168,7 +169,7 @@ export default function DailyScreen() {
                         rank: r.rank,
                         name: r.name,
                         mine: r.mine,
-                        score: r.score.won ? `Thắng · ${r.score.turns} lượt` : "Thua",
+                        score: r.score.won ? `Thắng, ${r.score.turns} lượt` : "Thua",
                         detail: r.score.won ? `còn ${Math.round(r.score.permille / 10)}% máu` : `gây ${Math.round(r.score.permille / 10)}% sát thương`,
                       }))}
                       mine={mine?.result ? { rank: mine.rank ?? null, score: scoreText(mine.result) } : { rank: null, score: null }}
@@ -225,7 +226,7 @@ export default function DailyScreen() {
             {mine?.result ? (
               <Alert tone="success" className="p-3 text-sm font-semibold">
                 Chúa công đã đánh hôm nay: {scoreText(mine.result)}
-                {mine.rank !== null && ` · hạng ${mine.rank}`}
+                {mine.rank !== null && `, hạng ${mine.rank}`}
               </Alert>
             ) : (
               <Button
@@ -248,8 +249,9 @@ export default function DailyScreen() {
           </div>
         </OrnateFrame>
 
-        <div className="flex min-w-0 flex-col gap-4 self-start">
-        {quests.profile && <DailyQuestsPanel profile={quests.profile} now={now} busy={quests.busy} act={quests.act} />}
+        <div className="flex min-w-0 flex-col gap-4">
+          {quests.profile && <DailyQuestsPanel profile={quests.profile} now={now} busy={quests.busy} act={quests.act} />}
+          <ColumnFill mode="daily" />
         </div>
       </div>
       </ModeGuideTabs>

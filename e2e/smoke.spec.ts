@@ -40,8 +40,8 @@ test("Viễn Chinh: sa bàn có tranh riêng, chia đạo quân có lọc và t�
   const art = await page.request.get("/art/expedition/ai-bac.webp");
   expect(art.ok()).toBe(true);
   await page.getByRole("button", { name: "Tự chia theo cấp" }).click();
-  await expect(page.getByText(/Đạo Chính · 3\/3/)).toBeVisible();
-  await expect(page.getByText(/Biệt Đạo · 3\/3/)).toBeVisible();
+  await expect(page.getByText(/Đạo Chính, 3\/3/)).toBeVisible();
+  await expect(page.getByText(/Biệt Đạo, 3\/3/)).toBeVisible();
   await page.getByRole("group", { name: "Lọc theo đạo quân" }).getByRole("button", { name: "Biệt Đạo" }).click();
   await expect(page.getByText("3/5 tướng khớp bộ lọc")).toBeVisible();
   expectClean(problems);
@@ -153,10 +153,15 @@ test.describe("tài khoản đã đăng nhập", () => {
     expectClean(problems);
   });
 
-  test("Tầm Tướng Ký: bấm ô trống mở hộp thoại chọn nguyên liệu cho đúng ô đó", async ({ page }) => {
+  test("Tầm Tướng Ký: Vạn Vật Lục chỉ xem công thức; bấm ô trống mở hộp thoại chọn nguyên liệu cho đúng ô đó", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/tam-tuong-ky");
     await playMode(page);
+    // Bấm yếu tố ở Vạn Vật Lục chỉ mở sổ công thức, không đặt vào ô (Shan 20/11/2026).
+    await page.locator("#ttk-library").getByRole("button", { name: /^Mộc/ }).click();
+    await expect(page.locator("#ttk-library").getByRole("button", { name: /^Mộc/ })).toHaveAttribute("aria-current", "true");
+    await expect(page.getByRole("button", { name: "Chọn nguyên liệu cho ô trước" })).toBeVisible();
+    await expect(page.getByRole("button", { name: /^Bỏ Mộc khỏi/ })).toHaveCount(0);
     await page.getByRole("button", { name: "Chọn nguyên liệu cho ô sau" }).click();
     const dialog = page.getByRole("dialog", { name: "Chọn nguyên liệu cho ô sau" });
     await expect(dialog).toBeVisible();
@@ -241,7 +246,7 @@ test.describe("tài khoản đã đăng nhập", () => {
     await page.getByRole("tab", { name: "Chơi" }).click();
     await page.getByRole("button", { name: "Đấu người" }).click();
     await page.getByRole("group", { name: "Hệ của Đinh Bộ Lĩnh" }).getByRole("button", { name: "Lôi" }).click();
-    await expect(page.getByText("Tướng sĩ · Lôi")).toBeVisible();
+    await expect(page.getByText("Tướng sĩ, Lôi")).toBeVisible();
     expectClean(problems);
   });
 

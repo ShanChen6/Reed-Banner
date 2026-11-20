@@ -45,7 +45,7 @@ export default function CampaignEnding({
     >
       <header>
         <p className="text-kicker text-frame-gold">
-          Bình Loạn hoàn thành · {campaign.completed.length}/{total} nhiệm vụ
+          Bình Loạn hoàn thành – {campaign.completed.length}/{total} nhiệm vụ
         </p>
         <h2
           id="campaign-ending-title"
@@ -71,7 +71,7 @@ export default function CampaignEnding({
               return (
                 <li key={c.chapter} className="text-on-wood">
                   <span className="font-semibold text-on-wood">
-                    Chương {ROMAN[c.chapter]} · {c.title}
+                    Chương {ROMAN[c.chapter]} – {c.title}
                   </span>{" "}
                   <span className="text-caption text-on-wood-soft">
                     {done}/{c.missions.length}
@@ -84,8 +84,8 @@ export default function CampaignEnding({
         <div>
           <h3 className="font-semibold text-frame-gold">Sổ thế cục 12 vùng</h3>
           <p className="mt-1 text-on-wood">
-            {ledger.resolved.alliance} liên minh · {ledger.resolved.submission}{" "}
-            theo về · {ledger.resolved.military} đánh dẹp ·{" "}
+            {ledger.resolved.alliance} liên minh, {ledger.resolved.submission}{" "}
+            theo về, {ledger.resolved.military} đánh dẹp,{" "}
             {ledger.resolved.uncertain} tan rã hoặc còn tranh luận
           </p>
           <h3 className="mt-2 font-semibold text-frame-gold">Tướng quân theo về</h3>
@@ -118,7 +118,7 @@ export default function CampaignEnding({
         <ul className="mt-1 flex flex-col gap-0.5 text-caption text-on-wood-soft">
           {sources.map(([id, title]) => (
             <li key={id}>
-              <span className="text-on-wood-soft/80">{id}</span> · {title}
+              <span className="text-on-wood-soft/80">{id}</span>, {title}
             </li>
           ))}
         </ul>

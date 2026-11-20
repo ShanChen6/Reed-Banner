@@ -75,6 +75,8 @@ const RULES: readonly Rule[] = [
   // Người chưa ghi danh là "lữ khách"; tên riêng có chữ Khách (Hàn Giang Khách, Thích khách) được giữ.
   { name: "khách (thay bằng lữ khách)", pattern: /(?<!\p{L}|[Ll]ữ |Giang |Thích )[Kk]hách(?! giang hồ)(?!\p{L})/u, wide: true },
   // Câu báo lỗi: điều xảy ra + việc nên làm, dùng "Xin…", không "hãy thử lại", không "Có lỗi xảy ra".
+  // Shan 20/11/2026: phân cách bằng dấu phẩy hoặc gạch ngang "–", không dùng dấu chấm giữa "·".
+  { name: "dấu chấm giữa phân cách", pattern: /·/u, wide: true },
   { name: "câu báo lỗi lệch giọng", pattern: /[,.] hãy thử lại\.|Có lỗi xảy ra|Mất kết nối tới máy chủ/u, wide: true },
 ];
 

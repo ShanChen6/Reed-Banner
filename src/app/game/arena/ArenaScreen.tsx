@@ -29,6 +29,7 @@ import { TierBadge, TierLadder, tierIndex } from "../leaderboard/RankBoard";
 import { TIERS, tierClaimNote, tierErrorNote, tierRewards } from "./tiers";
 import { PvpTierPanel } from "./PvpPanel";
 import { useProfile } from "../profile/useProfile";
+import { ColumnFill } from "../ColumnFill";
 
 const ATTACK_KEY = "coLau.arena.attack";
 
@@ -51,7 +52,7 @@ function Members({ list }: { list: readonly ArenaMember[] }) {
             <p className="truncate text-sm font-semibold text-on-wood">{m.name}</p>
             <p className="flex items-center gap-1 text-on-wood-soft">
               <ElementIcon element={m.element} className="size-3.5" />
-              {ELEMENT_NAME[m.element]} · {PROFESSION_NAME[m.profession]} · cấp{" "}
+              {ELEMENT_NAME[m.element]}, {PROFESSION_NAME[m.profession]}, cấp{" "}
               {m.level}
             </p>
           </div>
@@ -281,8 +282,8 @@ export default function ArenaScreen() {
                       <div className="min-w-0 flex-1 text-caption">
                         <p className="truncate text-sm font-semibold text-on-wood">{c?.name ?? "Đinh Bộ Lĩnh"}</p>
                         <p className="text-on-wood-soft">
-                          {slot === 0 ? "Thủ lĩnh · " : ""}
-                          {ELEMENT_NAME[c?.element ?? profile.element]} · {PROFESSION_NAME[c?.profession ?? profile.profession]} · cấp {progressOf(profile, id).level}
+                          {slot === 0 ? "Thủ lĩnh, " : ""}
+                          {ELEMENT_NAME[c?.element ?? profile.element]}, {PROFESSION_NAME[c?.profession ?? profile.profession]}, cấp {progressOf(profile, id).level}
                         </p>
                       </div>
                       {slot > 0 && (
@@ -297,7 +298,7 @@ export default function ArenaScreen() {
                       )}
                     </>
                   ) : (
-                    <p className="flex h-10 items-center text-caption text-on-wood-soft">Ô trống · chọn tướng bên dưới</p>
+                    <p className="flex h-10 items-center text-caption text-on-wood-soft">Ô trống, chọn tướng bên dưới</p>
                   )}
                 </li>
               );
@@ -334,11 +335,11 @@ export default function ArenaScreen() {
           <OrnateFrame className="grid grid-cols-3 gap-2 text-center">
             <Stat
               label="Đánh"
-              value={`${data.wins ?? 0} thắng · ${data.losses ?? 0} thua`}
+              value={`${data.wins ?? 0} thắng, ${data.losses ?? 0} thua`}
             />
             <Stat
               label="Bị đánh"
-              value={`${data.defenseWins ?? 0} giữ · ${data.defenseLosses ?? 0} mất`}
+              value={`${data.defenseWins ?? 0} giữ, ${data.defenseLosses ?? 0} mất`}
             />
             <Stat label="Thưởng thắng" value={`+${ARENA_WIN_GOLD} vàng`} />
           </OrnateFrame>
@@ -375,6 +376,7 @@ export default function ArenaScreen() {
               </SceneLink>
             </div>
           </OrnateFrame>
+          <ColumnFill mode="arena" />
         </div>
 
         <OrnateFrame level="raised" className="order-1 flex min-w-0 flex-col gap-3 self-start lg:order-2">
@@ -413,8 +415,8 @@ export default function ArenaScreen() {
                 <div>
                   <p className="truncate text-base font-bold text-on-wood" title={o.name}>{o.name}</p>
                   <p className="text-caption text-on-wood-soft">
-                    {o.rating} điểm · lực chiến {o.power}
-                    {o.bot && " · bóng ma luyện tập"}
+                    {o.rating} điểm, lực chiến {o.power}
+                    {o.bot && ", bóng ma luyện tập"}
                   </p>
                   {myPower > 0 && <PowerTag mine={myPower} theirs={o.power} />}
                 </div>

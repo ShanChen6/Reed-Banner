@@ -22,14 +22,14 @@ export function SurvivalWaveResult({ survival, state }: { survival: SurvivalView
     <div className="absolute inset-0 flex items-center justify-center overflow-y-auto rounded-lg bg-wood-lo/90 p-3 text-on-wood">
       <section aria-labelledby="survival-wave-title" className="ui-frame flex w-full max-w-md flex-col gap-3 border-frame-gold/70 p-4 text-center sm:p-5">
         <div>
-          <p className="text-kicker text-frame-gold">Trấn Ải · đã vượt {survival.cleared} đợt</p>
+          <p className="text-kicker text-frame-gold">Trấn Ải – đã vượt {survival.cleared} đợt</p>
           <h2 id="survival-wave-title" className="mt-1 font-serif text-2xl font-bold text-title-on-wood">
             Hạ hết đợt {survival.wave}
           </h2>
           {next && (
             <p className="mt-1 text-sm text-on-wood-soft">
               Đợt {next.wave}: {next.foes.length} đối thủ cấp {next.level}
-              {next.boss && <strong className="ml-1 text-danger">· đợt trùm</strong>}
+              {next.boss && <strong className="ml-1 text-danger">– đợt trùm</strong>}
             </p>
           )}
         </div>
