@@ -22,6 +22,10 @@ const noTools = (): Record<KlTool, number> => ({ kim: 0, moc: 0, thuy: 0, hoa: 0
 /** Đạo cụ lúc bắt đầu ván: mỗi hệ KL_START_TOOLS cái. */
 export const KL_START_TOOLS = 1;
 const startTools = (): Record<KlTool, number> => ({ kim: KL_START_TOOLS, moc: KL_START_TOOLS, thuy: KL_START_TOOLS, hoa: KL_START_TOOLS, tho: KL_START_TOOLS, loi: KL_START_TOOLS, phong: KL_START_TOOLS });
+/** Tim (Shan 20/11/2026, như 30 tim của Block'D): chế độ Thường bắt đầu với KL_START_HEARTS tim. Hết màn còn sót
+ *  bao nhiêu quân thì mất bấy nhiêu tim; không đủ tim đỡ số quân sót thì hết ván. Dọn sạch bàn được thêm KL_CLEAR_HEARTS tim. */
+export const KL_START_HEARTS = 30;
+export const KL_CLEAR_HEARTS = 3;
 /** Lượt hoàn tác mỗi màn (không cộng dồn sang màn sau). */
 export const KL_UNDO_PER_LEVEL = 1;
 export const KL_MIN_GROUP = 2;
@@ -38,7 +42,7 @@ export function clearBonus(level: number): number {
 }
 
 
-/** Thường: không giới hạn thời gian, hết khối thì hết màn và trừ quân lực.
+/** Thường: không giới hạn thời gian, hết khối thì hết màn , quân sót trừ tim.
  *  Cấp tốc (Shan 20/11/2026): mỗi bậc có một mốc điểm; đạt mốc thì lên bậc, giờ còn lại cộng dồn thêm giờ của bậc mới.
  *  Bàn dọn sạch hoặc hết đường thì chia bàn mới cùng bậc. Hết giờ là hết ván; không dùng quân lực. */
 export type KlMode = "classic" | "timed";
@@ -70,6 +74,8 @@ export interface KlLevelSummary {
   readonly cleared: boolean;
   readonly left: number;
   readonly bonus: number;
+  /** Tim mất (quân sót) hoặc được thêm (dọn sạch, số âm nghĩa là cộng). */
+  readonly hearts: number;
 }
 
 export interface KlState {
@@ -82,6 +88,8 @@ export interface KlState {
   /** Hàng trước, hàng 0 ở trên cùng; null là ô trống. */
   readonly cells: readonly (KlCell | null)[];
   readonly score: number;
+  /** Thường: tim còn lại để đỡ quân sót cuối màn. Cấp tốc không dùng. */
+  readonly hearts: number;
   readonly tools: Readonly<Record<KlTool, number>>;
   /** Điểm đã nạp vào thanh của từng đạo cụ (chưa đủ một đạo cụ). */
   readonly charge: Readonly<Record<KlTool, number>>;
@@ -192,6 +200,7 @@ export function createGame(seed: number, mode: KlMode = "classic", width = KL_WI
     height,
     cells,
     score: 0,
+    hearts: KL_START_HEARTS,
     tools: startTools(),
     charge: noTools(),
     deal: 0,
@@ -430,15 +439,17 @@ function redeal(s: KlState, events: KlEvent[]): KlState {
   return leveled !== scored ? leveled : deal(scored, s.level);
 }
 
-/** Thường: dọn sạch thì sang màn sau, còn quân nào trên bàn là thua (hết ván). */
+/** Thường: dọn sạch thì thưởng điểm và tim; còn quân sót thì mỗi quân trừ 1 tim, không đủ tim đỡ thì hết ván. */
 function finishLevel(s: KlState, events: KlEvent[]): KlState {
   const left = tilesLeft(s.cells);
   const cleared = left === 0;
   const bonus = cleared ? clearBonus(s.level) : 0;
-  const summary: KlLevelSummary = { level: s.level, cleared, left, bonus };
+  const lost = cleared ? -KL_CLEAR_HEARTS : left;
+  const dead = left > s.hearts;
+  const summary: KlLevelSummary = { level: s.level, cleared, left, bonus, hearts: lost };
   events.push({ type: "levelDone", summary });
-  if (!cleared) events.push({ type: "over" });
-  return { ...s, score: s.score + bonus, summary, phase: cleared ? "levelDone" : "over", prev: null };
+  if (dead) events.push({ type: "over" });
+  return { ...s, score: s.score + bonus, hearts: dead ? s.hearts : s.hearts - lost, summary, phase: dead ? "over" : "levelDone", prev: null };
 }
 
 const inBounds = (s: KlState, i: number) => Number.isInteger(i) && i >= 0 && i < s.width * s.height;
@@ -572,7 +583,9 @@ export function parseGame(text: string | null): KlState | null {
     const charge = noTools();
     for (const e of ELEMENTS) if (num(rawCharge[e])) charge[e] = Math.min(KL_TOOL_CHARGE, rawCharge[e] as number);
     const deal = num(v.deal) ? (v.deal as number) : 0;
-    return { ...(v as KlState), cells, mode, tools, charge, deal, summary: v.summary ?? null, prev: null };
+    // Bản lưu trước khi có tim: cho đủ tim ban đầu.
+    const hearts = num(v.hearts) ? (v.hearts as number) : KL_START_HEARTS;
+    return { ...(v as KlState), cells, mode, hearts, tools, charge, deal, summary: v.summary ?? null, prev: null };
   } catch {
     return null;
   }

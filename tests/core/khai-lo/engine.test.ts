@@ -8,6 +8,8 @@ import {
   KL_TOOL_CHARGE,
   timedGoal,
   KL_START_TOOLS,
+  KL_START_HEARTS,
+  KL_CLEAR_HEARTS,
   KL_MULT3_FROM,
   allGroups,
   createGame,
@@ -138,24 +140,52 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.deepEqual(r.state.charge, kit());
   });
 
-  it("Thường: hết khối mà còn quân, hết đạo cụ là thua ngay", () => {
+  it("Thường: ván mới có 30 tim; quân sót cuối màn trừ tim rồi sang màn", () => {
+    assert.equal(createGame(1).hearts, KL_START_HEARTS);
     const r = transition(stateOf(["aab", "aac"]), { type: "pick", index: 0 });
     assert.ok(r.ok);
-    assert.equal(r.state.phase, "over");
+    assert.equal(r.state.phase, "levelDone");
     assert.equal(r.state.summary?.left, 2);
+    assert.equal(r.state.summary?.hearts, 2);
+    assert.equal(r.state.hearts, KL_START_HEARTS - 2);
     assert.equal(r.state.summary?.bonus, 0);
-    assert.ok(r.events.some((e) => e.type === "over"));
   });
 
-  it("hết khối còn đạo cụ thì bế tắc; chịu thua là hết ván", () => {
+  it("Thường: quân sót nhiều hơn số tim còn lại thì hết ván, giữ nguyên số tim", () => {
+    const r = transition(stateOf(["aab", "aac"], { hearts: 1 }), { type: "pick", index: 0 });
+    assert.ok(r.ok);
+    assert.equal(r.state.phase, "over");
+    assert.equal(r.state.hearts, 1);
+    assert.ok(r.events.some((e) => e.type === "over"));
+    const exact = transition(stateOf(["aab", "aac"], { hearts: 2 }), { type: "pick", index: 0 });
+    assert.ok(exact.ok);
+    assert.equal(exact.state.phase, "levelDone");
+    assert.equal(exact.state.hearts, 0);
+  });
+
+  it("dọn sạch bàn được thêm tim", () => {
+    const r = transition(stateOf(["aa", "aa"], { hearts: 10 }), { type: "pick", index: 0 });
+    assert.ok(r.ok);
+    assert.equal(r.state.hearts, 10 + KL_CLEAR_HEARTS);
+  });
+
+  it("hết khối còn đạo cụ thì bế tắc; kết thúc màn thì quân sót trừ tim", () => {
     const s = stateOf(["aab", "bcd"], { tools: kit({ loi: 1 }) });
     const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
     assert.equal(r.state.phase, "stuck");
     const e = transition(r.state, { type: "endLevel" });
     assert.ok(e.ok);
-    assert.equal(e.state.phase, "over");
+    assert.equal(e.state.phase, "levelDone");
     assert.equal(e.state.summary?.cleared, false);
+    assert.equal(e.state.hearts, KL_START_HEARTS - 4);
+  });
+
+  it("bản lưu trước khi có tim được đủ tim ban đầu", () => {
+    const s = createGame(3);
+    const old = JSON.parse(serializeGame({ ...s, hearts: 5 })) as Record<string, unknown>;
+    delete old.hearts;
+    assert.equal(parseGame(JSON.stringify(old))?.hearts, KL_START_HEARTS);
   });
 
   it("Lốc Phong xoay 8 ô quanh tâm theo chiều kim đồng hồ, không dùng ở mép", () => {
