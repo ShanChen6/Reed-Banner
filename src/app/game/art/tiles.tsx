@@ -10,16 +10,6 @@ import type { SpecialGrade, TileKind } from "@/core";
 export const INK = "#2b1d14";
 const PAPER = "#f6ecd4";
 
-/** Màu chủ đạo của vật phẩm từng ô, dùng cho thanh tỉ lệ ô và chú thích. */
-export const TILE_COLOR: Record<TileKind, string> = {
-  kiem: "#b9c6d2",
-  amDuong: "#6c5bd0",
-  banhChung: "#3f9a3c",
-  tim: "#e2364f",
-  vang: "#f2c14e",
-  sach: "#2f6fd0",
-  trong: "#c2452a",
-};
 
 const url = (id: string) => `url(#tile-${id})`;
 const stroke = { stroke: INK, strokeWidth: 2, strokeLinejoin: "round", strokeLinecap: "round" } as const;

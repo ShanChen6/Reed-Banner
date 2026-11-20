@@ -36,9 +36,7 @@ Ngữ cảnh đầu vào cho các phiên chat mới làm việc với hình đ�
     - `alive(mine)`: người còn sống của phe mình hoặc phe địch.
   - **Mỗi hiệu ứng là một module riêng**, cùng mẫu: `fn(parent, color, [palette])` trả về đối tượng có `cover/fall/slash/burn/...(at, size, wait)`, `update(dt)`, `clear()`.
   - Các module hiệu ứng: `lightning`, `ward`, `bloom`, `pierce`, `drain`, `pillar`, `flame`, `slam`, `needle`, `bulwark`, `silver`, `coins`, `banner`, `sap`, `thorn`, `miasma`, `meteor`, `cleave`.
-- **Trang xem trước `src/app/demo/characters`:**
-  - `RigPreview.tsx` **phải mô phỏng lại** mọi `strikeFx` có trên sân trận.
-  - `catalog.ts` và `CharacterPreviewer.tsx` hiện 5 ảnh đối chiếu cùng ô "Phong thái" (`style.webp`).
+- **Trang xem trước `src/app/demo/characters` đã gỡ (20/11/2026, dọn code thừa):** kiểm tra rig trên sân trận thật (mục 7).
 - **Ảnh:** nằm ở `public/art/characters/<dir>/`.
   - Lớp rig: `arm`, `armR`, `body`, `head`, `sword`, thêm `ribbon` nếu có dải vải.
   - `portrait.webp` (chân dung), `standing.webp` (dáng đứng), `style.webp` (phong thái, nếu có).
@@ -98,17 +96,17 @@ Người dùng gửi 5 ảnh nền trong suốt: đứng, đánh thường, ra c
 5. **Hiệu ứng tuyệt chiêu:**
    - Ưu tiên ghép module có sẵn; có thể thêm bảng màu (ví dụ `MistPalette`/`TIDE`, `BloomGlow`/`EMBER`).
    - Thêm giá trị mới vào kiểu `strikeFx` và cập nhật chú thích của nó.
-   - Thêm nhánh trong `BattleStage.tsx` và **mô phỏng lại trong `RigPreview.tsx`**.
+   - Thêm nhánh trong `BattleStage.tsx`.
 6. **Dữ liệu và test:**
    - Thêm chân dung vào `portrait-data.ts`.
-   - Thêm id vào danh sách trong `tests/game/character-preview.test.ts`; nhân vật thiếu tranh ra chiêu thêm vào danh sách ngoại lệ ở đó.
+   - `tests/game/character-rigs.test.ts` tự kiểm mọi rig: đủ tệp lớp và tổng dung lượng.
    - Thêm test vào `tests/game/rigs.test.ts`: khớp nằm trong lớp, kích thước WebP VP8X bằng box × texScale, tổng ≤ 350 000 byte.
 7. **Kiểm tra trên sân thử:**
-   - Tạo trang tạm `src/app/demo/tmpstage/page.tsx`, chạy `next dev -p 3123`.
+   - Tạo trang tạm `src/app/tmpstage/page.tsx`, chạy `next dev -p 3123`.
    - Chụp bằng Playwright: đứng, đánh thường, ra chiêu, vài khung tuyệt chiêu.
 8. **Dọn và đẩy lên:**
    - Tắt `next dev` (`pkill -f "next dev"` luôn trả mã 144, bình thường).
-   - Xóa `.next/dev` và `src/app/demo/tmpstage`, nếu không typecheck sẽ báo lỗi.
+   - Xóa `.next/dev` và `src/app/tmpstage`, nếu không typecheck sẽ báo lỗi.
    - Commit, merge `origin/develop`, kiểm tra lại, push.
 
 ### 1.4 Công cụ và thư viện

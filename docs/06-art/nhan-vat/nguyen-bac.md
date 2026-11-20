@@ -46,7 +46,7 @@ Chân giữ liền thân; hoạt ảnh là rối cắt mảnh và đổi tranh b
 
 ## Trang xem thử
 
-Mở `/demo/characters?id=nguyenBac` để thử Đứng, Đánh thường, Ra chiêu, Tuyệt chiêu, Trúng đòn, Hồi máu và Bị hạ gục, hoặc Phát lần lượt. Có cỡ trong trận/cỡ lớn, chọn bốn nhân vật có rig, năm ảnh đối chiếu và dung lượng từng file. Trang công khai, không đọc hồ sơ, không gọi API. Dữ liệu dung lượng đọc từ file lúc dựng trang.
+Trang `/demo/characters` (đã gỡ 20/11/2026) từng dùng để thử Đứng, Đánh thường, Ra chiêu, Tuyệt chiêu, Trúng đòn, Hồi máu và Bị hạ gục, hoặc Phát lần lượt. Có cỡ trong trận/cỡ lớn, chọn bốn nhân vật có rig, năm ảnh đối chiếu và dung lượng từng file. Trang công khai, không đọc hồ sơ, không gọi API. Dữ liệu dung lượng đọc từ file lúc dựng trang.
 
 Nhân vật cũ thiếu ảnh riêng hiển thị SVG/ảnh ghép rig hoặc ghi rõ chưa có tranh; không tạo tranh thay thế. Đổi nhân vật hoặc bấm nút khác hủy chuỗi đang phát, tháo canvas cũ và trả trạng thái về đứng.
 

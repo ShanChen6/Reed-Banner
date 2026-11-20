@@ -12,7 +12,7 @@ File này có hai phần tư liệu gốc: Phần 1 ghi phong cách của bộ h
 ## 1. Bộ hình dựng bằng code
 
 - Toàn bộ ô cờ, 7 ô đặc biệt mỗi bản, biểu tượng 7 nguyên tố, cờ lau thủ lĩnh, lương thực, khiên và khung giao diện được vẽ bằng SVG trong `src/app/game/art/`.
-- Xem toàn bộ tại trang `/demo/art`.
+- Xem tranh trong game; trang xem kho `/demo/art` đã gỡ (20/11/2026, dọn code thừa).
 - **Phong cách:** lấy cảm hứng từ tranh khắc gỗ dân gian và hoa văn trống đồng Đông Sơn: nét mực đậm, mảng màu phẳng, gần như không đổ bóng (tối đa một mảng sáng nhẹ ở mép trên).
 - **Ô cờ kiểu bàn ngọc** (`tiles.tsx`): mọi ô chung nền ngọc xanh thẫm viền vàng mảnh; loại ô nhận ra nhờ màu và dáng vật phẩm (kiếm thép tua đỏ, âm dương lam tím, bánh chưng xanh, tim hồng ngọc, nén vàng, sách bìa lam hoa sen, trống sơn đỏ). Vật phẩm là ảnh vẽ tay Shan gửi, cắt nền và thu về 256×256 ở `public/art/tiles/<loại>.webp`, bản đặc biệt là `<loại>-weak.webp` (2 món: song kiếm, tim cánh vàng...) và `<loại>-strong.webp` (3 món hoặc bản cấp cao hơn); muốn thay hình chỉ cần thay file cùng tên. Ô bản yếu có hào quang vàng, bản mạnh có lửa ba lớp, cả hai khung mạ vàng. Bàn cờ trong trận có huy hiệu mặt trống giữa mép trên và nút hoa đồng ở giao điểm ô (`.board-knots`). Dải màu dùng chung nằm trong `<TileDefs />` gắn một lần ở `src/app/layout.tsx`; không dùng filter để bàn 96 ô vẫn nhẹ.
 - **Biểu tượng nguyên tố và nghề** (`icons.tsx`): ảnh vẽ tay Shan gửi, 128×128 ở `public/art/elements/<hệ>.webp` và `public/art/professions/<nghề>.webp`; `ElementIcon`/`ProfessionIcon` giữ nguyên cách gọi.

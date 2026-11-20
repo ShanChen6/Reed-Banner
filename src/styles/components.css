@@ -12,14 +12,6 @@
     transition: background-color 600000s 0s, color 600000s 0s;
   }
   .ui-control option { background: var(--control-background); color: var(--foreground); }
-  .ui-screen {
-    flex: 1;
-    background: radial-gradient(ellipse at top, var(--screen-glow), var(--background) 62%);
-    padding: 1.5rem 0.75rem;
-    color: var(--foreground);
-  }
-  .ui-screen--cool { --screen-glow: var(--screen-glow-cool); }
-  @media (min-width: 640px) { .ui-screen { padding-inline: 1.5rem; } }
   @media (prefers-reduced-motion: reduce) { .ui-button { transition: none; } }
 }
 
