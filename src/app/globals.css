@@ -1341,11 +1341,10 @@
     grid-template-areas: "head board tools";
   }
 }
-/* Tranh hệ sau bàn Khai Lộ: tối và mờ dần về mép để quân trên bàn vẫn nổi. */
+/* Tranh nền sau bàn Khai Lộ: giữa tranh đã trống và tối, chỉ mờ nhẹ mép để hòa vào khung gỗ. */
 .kl-backdrop {
-  opacity: 0.5;
-  filter: saturate(0.85);
-  mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, black 35%, transparent 100%);
+  opacity: 0.85;
+  mask-image: radial-gradient(ellipse 90% 85% at 50% 45%, black 60%, transparent 100%);
 }
 .kl-overlay {
   background: color-mix(in srgb, var(--black) 55%, transparent);
