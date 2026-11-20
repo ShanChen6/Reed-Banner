@@ -1473,6 +1473,11 @@
   scrollbar-width: thin;
   scrollbar-color: var(--sb-thumb) transparent;
 }
+/* Luôn chừa chỗ thanh cuộn của trang: trên máy tính có thanh cuộn chiếm chỗ (Windows, macOS bật "luôn hiện"), chuyển
+   giữa màn ngắn và màn dài không làm cả trang xê dịch sang ngang vì thanh cuộn hiện ra/biến mất. */
+html {
+  scrollbar-gutter: stable;
+}
 [data-scroll] {
   transition: --sb-thumb 0.6s ease;
 }

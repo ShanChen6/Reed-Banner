@@ -29,7 +29,8 @@ export default function ShopScreen() {
     return (
       <ModeScreen label="Cửa Hàng">
         <h1 className="sr-only">Cửa Hàng</h1>
-        <OrnateFrame as="div" role="status" className="py-16 text-center text-on-wood-soft">
+        {/* Cao một màn hình để footer không hiện ra rồi bị đẩy xuống khi Cửa Hàng mở xong. */}
+        <OrnateFrame as="div" role="status" className="min-h-dvh py-16 text-center text-on-wood-soft">
           {loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : "Đang mở Cửa Hàng…"}
         </OrnateFrame>
       </ModeScreen>

@@ -7,7 +7,7 @@
 import { useEffect, useState } from "react";
 import type { ArenaTier, GearItem } from "@/core";
 import { Alert, buttonVariants } from "@/components/ui";
-import { ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { ModeLoading, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { fetchProfile } from "../battle/online";
 import { TierLadder } from "../leaderboard/RankBoard";
 import { ladderOf, tierClaimNote, tierErrorNote, tierRewards } from "../arena/tiers";
@@ -70,7 +70,7 @@ export default function TiersScreen() {
   if (!ladders)
     return (
       <ModeScreen label="Ban Thưởng">
-        <p className="py-24 text-center text-on-wood-soft">{failed ? "Chưa mở được Ban Thưởng. Xin tải lại trang." : "Đang tải…"}</p>
+        <ModeLoading>{failed ? "Chưa mở được Ban Thưởng. Xin tải lại trang." : "Đang tải…"}</ModeLoading>
       </ModeScreen>
     );
 

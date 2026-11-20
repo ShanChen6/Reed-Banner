@@ -33,6 +33,18 @@ export function ModeScreen({
   );
 }
 
+/**
+ * Chỗ giữ khi màn đang tải dữ liệu. Cao ít nhất một màn hình, để phần nằm dưới (footer ở Nhiệm vụ, Cửa Hàng…) không hiện
+ * ra giữa màn rồi bị đẩy xuống khi nội dung về (layout nhảy).
+ */
+export function ModeLoading({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <div role="status" className={cn("min-h-dvh py-24 text-center text-on-wood-soft", className)}>
+      {children}
+    </div>
+  );
+}
+
 /** Đại card của màn chế độ: khung gỗ viền đồng, góc hoa văn, như khung Sử ký của Bình Loạn. */
 export function ModeCard({ children, className }: { children: ReactNode; className?: string }) {
   return (

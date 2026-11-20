@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { fetchOverview, type Overview } from "../formation/rankedClient";
 import { BoardEmpty, RankList, useJson, type DestinyBoardResponse, type SeasonBoardResponse, type TtkBoardResponse } from "./boards";
 import type { HonorItem } from "@/server/honors";
+import { RANKED_LEVELS } from "@/core/binh-phap";
 
 interface Standing {
   readonly title: string;
@@ -16,9 +17,11 @@ interface Standing {
   readonly text: string | null | undefined;
 }
 
+const levelName = (id: string) => (id === "thuong" ? "Thường" : id === "kho" ? "Khó" : id === "dai-tran" ? "Đại trận" : id);
+
 const rankText = (rank: number, detail: string) => `Hạng ${rank} · ${detail}`;
 
-function useStandings(destinyEnabled: boolean, tamTuongKyRanked: boolean): Standing[] {
+function useStandings(destinyEnabled: boolean, tamTuongKyRanked: boolean, formationRanked: boolean): Standing[] {
   const survival = useJson<SeasonBoardResponse>("/api/leaderboard?board=survival&season=current");
   const arena = useJson<SeasonBoardResponse>("/api/leaderboard?board=arena&season=current");
   const destiny = useJson<DestinyBoardResponse>(destinyEnabled ? "/api/destiny/leaderboard?cursor=0&limit=1" : null);
@@ -34,10 +37,13 @@ function useStandings(destinyEnabled: boolean, tamTuongKyRanked: boolean): Stand
   ];
   if (destinyEnabled) out.push({ title: "Tháp Thiên Mệnh · chu kỳ", text: destiny === null ? undefined : destiny.mine ? rankText(destiny.mine.rank, `tầng ${destiny.mine.clearedFloor}`) : null });
   if (tamTuongKyRanked) out.push({ title: "Tầm Tướng Ký · hạng tuần", text: ttk === null ? undefined : ttk.mine ? rankText(ttk.mine.rank, `${ttk.mine.points} điểm`) : null });
-  if (formation?.enabled) {
+  if (formation === null && formationRanked) {
+    // Đang tải: giữ chỗ cho các bậc Trận Đồ để lưới không cao thêm (và đẩy phần dưới) khi dữ liệu về.
+    for (const l of RANKED_LEVELS) out.push({ title: `Trận Đồ · ${levelName(l.id)}`, text: undefined });
+  } else if (formation?.enabled) {
     for (const l of formation.levels) {
       const won = l.mine?.status === "won" && l.mine.rank ? l.mine : null;
-      out.push({ title: `Trận Đồ · ${l.level === "thuong" ? "Thường" : l.level === "kho" ? "Khó" : l.level === "dai-tran" ? "Đại trận" : l.level}`, text: won ? rankText(won.rank!, `${won.score} điểm`) : null });
+      out.push({ title: `Trận Đồ · ${levelName(l.level)}`, text: won ? rankText(won.rank!, `${won.score} điểm`) : null });
     }
   }
   return out;
@@ -56,8 +62,16 @@ function HistoryRow({ h }: { h: HonorItem }) {
   );
 }
 
-export default function HonorsScreen({ destinyEnabled = true, tamTuongKyRanked = false }: { destinyEnabled?: boolean; tamTuongKyRanked?: boolean }) {
-  const standings = useStandings(destinyEnabled, tamTuongKyRanked);
+export default function HonorsScreen({
+  destinyEnabled = true,
+  tamTuongKyRanked = false,
+  formationRanked = false,
+}: {
+  destinyEnabled?: boolean;
+  tamTuongKyRanked?: boolean;
+  formationRanked?: boolean;
+}) {
+  const standings = useStandings(destinyEnabled, tamTuongKyRanked, formationRanked);
   const honors = useJson<{ signedIn?: boolean; items?: HonorItem[]; error?: string }>("/api/honors");
   return (
     <ModeScreen label="Công Trạng">

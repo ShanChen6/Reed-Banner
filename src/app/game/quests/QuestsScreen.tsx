@@ -1,7 +1,7 @@
 "use client";
 
 import { Alert, buttonVariants } from "@/components/ui";
-import { ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { ModeLoading, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 
 // Nhiệm vụ: nhiệm vụ tuần, thành tựu; điểm danh và nhiệm vụ ngày nằm ở Nhật Lệnh (ở đây chỉ còn thẻ dẫn sang). Tiến độ do server cộng khi trận kết thúc; bấm
 // Nhận thì server kiểm tra lại rồi cộng vàng.
@@ -44,9 +44,7 @@ export default function QuestsScreen({
   if (!profile) {
     return (
       <Shell>
-        <p className="py-24 text-center text-on-wood-soft">
-          {loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : "Đang tải…"}
-        </p>
+        <ModeLoading>{loadError ? "Chưa mở được hồ sơ. Xin tải lại trang." : "Đang tải…"}</ModeLoading>
       </Shell>
     );
   }
