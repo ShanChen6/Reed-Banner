@@ -2,7 +2,8 @@
 
 // Vàng hiện có ở thanh header, cạnh avatar. Đọc từ hồ sơ trên server (/api/profile, khách cũng có hồ sơ), tải lại
 // mỗi khi đổi phân cảnh và khi màn nào đó báo hồ sơ đổi (sự kiện PROFILE_GOLD_EVENT từ battle/online.ts), nên
-// mua bán, nhận thưởng xong là số cập nhật. Chưa tải được thì không hiện gì, không bày số giả.
+// mua bán, nhận thưởng xong là số cập nhật. Chưa tải được thì không hiện gì, không bày số giả. Điện thoại (dưới 640px)
+// không hiện vàng ở header vì thanh quá hẹp, số đè lên avatar (Shan chốt 21/11/2026).
 
 import { useEffect, useState } from "react";
 import { fetchProfile, PROFILE_GOLD_EVENT } from "../battle/online";
@@ -32,7 +33,7 @@ export default function HeaderGold({ scene }: { scene: Scene }) {
   if (gold === null) return null;
   const text = FORMAT.format(gold);
   return (
-    <p title={`Vàng: ${text}`} className="game-header-chip game-header-gold flex h-9 shrink-0 items-center gap-1 rounded-full pr-2.5 pl-1 md:pr-3 font-serif text-sm font-semibold tabular-nums md:h-10 md:gap-2 md:pr-4 md:text-base">
+    <p title={`Vàng: ${text}`} className="game-header-chip game-header-gold hidden h-9 shrink-0 items-center gap-1 rounded-full pr-2.5 pl-1 md:pr-3 font-serif text-sm font-semibold tabular-nums md:h-10 md:gap-2 md:pr-4 md:text-base sm:flex">
       <CoinGlyph />
       <span className="sr-only">Vàng: </span>
       {text}
