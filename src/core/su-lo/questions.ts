@@ -907,6 +907,15 @@ export const SL_QUESTIONS: readonly SlQuestion[] = [
     sources: [{ id: "S14", locator: "Kỷ nhà Lê, mục Tân Tỵ 981", quote: "sai quân sĩ đóng cọc ngăn sông Chi Lăng" }],
     status: V, rev: 1,
   },
+  {
+    id: "sl-tienle-027", era: "tienLe", difficulty: 2, kind: "year",
+    prompt: "Lê Hoàn (Lê Đại Hành) mất năm nào?",
+    options: ["1000", "1005", "1009", "1010"], answer: 1,
+    explanation: "Lê Hoàn mất năm Ất Tỵ 1005 ở điện Trường Xuân. Cùng năm, Lê Long Việt nối ngôi được 3 ngày thì bị Lê Long Đĩnh giết. Năm 1009 là năm Long Đĩnh mất.",
+    people: ["Lê Hoàn"], claims: ["SL32", "SL28"], basis: "recorded", confidence: "medium",
+    sources: [{ id: "S15", locator: "Đời Trung Tông, đoạn đầu" }, { id: "S16", locator: "Đời Ngọa Triều, thân bài năm 1005" }],
+    status: V, rev: 1,
+  },
 ];
 
 /** Claim có trong sổ nguồn (Campaign ledger mục 3–4, warlord matrix và sổ nguồn Sử Lộ). */
@@ -915,7 +924,7 @@ export const SL_KNOWN_CLAIMS: ReadonlySet<string> = new Set([
   "E04a",
   ...Array.from({ length: 12 }, (_, i) => `W${String(i + 1).padStart(2, "0")}`),
   ...Array.from({ length: 8 }, (_, i) => `U0${i + 1}`),
-  ...Array.from({ length: 31 }, (_, i) => `SL${String(i + 1).padStart(2, "0")}`),
+  ...Array.from({ length: 32 }, (_, i) => `SL${String(i + 1).padStart(2, "0")}`),
 ]);
 
 /** Nguồn có trong sổ: S01–S11 của Campaign, S12–S17 của sổ Sử Lộ. Nguồn mới thêm vào sổ trước rồi thêm vào đây. */

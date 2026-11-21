@@ -433,7 +433,7 @@ A. 966 · B. 968 · **C. 970** · D. 979
 
 ### 11.4 Mê cung IV: Nhà Tiền Lê
 
-Kho câu mê cung III (29 câu, 968–980) và IV (26 câu, 980–1009) nằm trong `src/core/su-lo/questions.ts`, nguồn S12–S17 và claim SL03–SL31 ở [sổ nguồn](nguon-su.md). Không soạn câu về năm mất của Lê Hoàn (nguồn ghi 1005 và 1006 khác nhau) và phần 998–1005 chưa đọc nguyên văn.
+Kho câu mê cung III (29 câu, 968–980) và IV (27 câu, 980–1009) nằm trong `src/core/su-lo/questions.ts`, nguồn S12–S17 và claim SL03–SL32 ở [sổ nguồn](nguon-su.md). Năm mất của Lê Hoàn lấy 1005 (SL32); phần 998–1005 chưa đọc nguyên văn nên chưa soạn câu.
 
 ## 12. Giao diện, kỹ thuật và các bước làm
 
@@ -463,7 +463,7 @@ Kho câu mê cung III (29 câu, 968–980) và IV (26 câu, 980–1009) nằm tr
 1. ✓ **Lõi luật, sinh mê cung, kho câu bước 1** (47 câu mê cung I, II đã duyệt lần 1, chờ Shan duyệt lần 2).
 2. ✓ **Giao tranh một chiều** và boss mê cung I, II; cân Thành lực bằng test mô phỏng.
 3. ✓ **Bản chơi thử offline** `/game/maze`, mê cung I, II, ba bậc.
-4. ✓ **Sổ nguồn S12–S17** cho nhà Đinh, Tiền Lê; mở mê cung III (29 câu), IV (26 câu) và quân giặc trấn cổng của chúng (21/11/2026, chờ Shan duyệt lần 2).
+4. ✓ **Sổ nguồn S12–S17** cho nhà Đinh, Tiền Lê; mở mê cung III (29 câu), IV (27 câu) và quân giặc trấn cổng của chúng (21/11/2026, chờ Shan duyệt lần 2).
 5. Thưởng hồ sơ, Sử ký sưu tầm.
 6. Mê cung ngày và bảng xếp hạng (Shan chốt có làm).
 
