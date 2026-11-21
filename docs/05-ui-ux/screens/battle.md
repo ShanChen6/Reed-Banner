@@ -82,6 +82,8 @@ Vùng chơi nằm trong `PlayCard` (`src/app/game/PlayCard.tsx`). Ở trang thư
 - Trận đấu toàn màn hình (từ 48rem): hàng ba cột giãn hết phần còn lại dưới sân đấu; bàn cờ lớn nhất vừa cả bề ngang lẫn bề cao hộp chứa (container query, `.battle-board-box`), không thấp hơn cột thẻ tướng; màn thấp thì chặn thêm theo chiều cao màn và cuộn như trang thường. Dòng nhắm kỹ năng có chỗ chừa sẵn để bàn cờ không co lại khi dòng đó hiện.
 - Dòng cách đổi ô và phím tắt dưới bàn cờ đã chuyển vào mục Mẹo nhỏ của thẻ Hướng dẫn (Shan 20/11/2026: gợi ý trong các trò chơi đưa hết vào Hướng dẫn); Khai Lộ, Do Thám, Sử Lộ, Tầm Tướng Ký cũng bỏ các dòng gợi ý tĩnh và lời "Bản chơi thử" khỏi màn chơi, nội dung gộp vào `modeGuides.ts`.
 - Do Thám: trang thường ô 26–38px theo bề ngang; phóng to thì ô giãn vừa cả bề ngang lẫn bề cao màn, tối đa 96px (`.dt-board` trong globals.css).
+- Có bảng tên chế độ thì lề trong phía trên dày thêm 1.25rem để nội dung không sát bảng tên, và nội dung thấp hơn màn được căn giữa theo chiều dọc (`safe center`, cao hơn màn thì vẫn bắt đầu từ trên) để đáy không trống (Shan 21/11/2026: màn chơi sát tiêu đề, đáy trống).
+- Viễn Chinh: hai đạo quân nằm dưới sa bàn (hai cột cạnh nhau), cột phải còn nhiệm vụ, ô đang chọn và nút lệnh. Phóng to trên máy tính thì khung cao đúng bằng màn: sa bàn thu bề ngang theo chiều cao màn để cột trái vừa, cột phải dài quá thì chỉ cột đó cuộn, cả màn không cuộn (Shan 21/11/2026). Chú thích ký hiệu đường, cách chọn đạo, trinh sát, nghỉ và thua trận chuyển vào thẻ Hướng dẫn.
 - Trận Đồ: ô có đường kẻ phân cách; trên máy tính ô giãn theo chiều cao màn, toàn màn hình thì bàn lấp chiều cao màn (vẫn vừa bề ngang cột).
 - Không thu phóng cỡ ô (Shan bỏ ý này 20/11/2026).
 

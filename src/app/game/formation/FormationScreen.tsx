@@ -33,7 +33,6 @@ import { mapFor, type FormationMap } from "./maps";
 import ModeScreen from "./ModeScreen";
 import { preloadPortraits } from "./preload";
 import { cuesForEvents, FORMATION_PRELOAD, isPerfectPlacement, musicFor, REJECT, tensionLayer } from "./sounds";
-import { obstacleKind, obstacleLabel } from "./pieces";
 import { fetchProfile, sendProfileAction } from "../battle/online";
 import { claimRanked, fetchOverview, moveRanked, startRanked, toPuzzleState, type FormationView, type Overview } from "./rankedClient";
 import { PlayCard } from "../PlayCard";
@@ -99,7 +98,8 @@ export default function FormationScreen({ rankedEnabled = false }: { rankedEnabl
   const [message, setMessage] = useState("");
   const [last, setLast] = useState<number | null>(null);
   const [focus, setFocus] = useState(0);
-  const [peek, setPeek] = useState<number | null>(null);
+  // Ô đang rê chuột: BoardView vẫn báo về, nhưng dòng "hàng x, cột y đặt được" đã bỏ (Shan 21/11/2026).
+  const [, setPeek] = useState<number | null>(null);
   const [sweeps, setSweeps] = useState<Sweep[]>([]);
   const [hintPref, setHintPref] = useState<boolean | null>(null);
   const [tipDone, setTipDone] = useState(true);
@@ -330,7 +330,6 @@ export default function FormationScreen({ rankedEnabled = false }: { rankedEnabl
         last={last}
         focus={focus}
         setFocus={setFocus}
-        peek={peek}
         setPeek={setPeek}
         boardRef={boardRef}
         sweeps={sweeps}
@@ -372,7 +371,6 @@ function PlayView({
   last,
   focus,
   setFocus,
-  peek,
   setPeek,
   boardRef,
   sweeps,
@@ -395,7 +393,6 @@ function PlayView({
   last: number | null;
   focus: number;
   setFocus: (i: number) => void;
-  peek: number | null;
   setPeek: (i: number | null) => void;
   boardRef: React.RefObject<HTMLDivElement | null>;
   sweeps: readonly Sweep[];
@@ -421,16 +418,6 @@ function PlayView({
   const noMove = legal.size === 0;
   const tip = tipVisible ? tutorialText(state, noMove) : null;
 
-  // Lý do ô đang rê chuột hoặc có tiêu điểm đặt được hay không (không đọc lên cho trình đọc màn hình: nhãn ô đã có).
-  const peekText = (() => {
-    if (peek === null || !playing) return "";
-    const r = Math.floor(peek / width);
-    const c = peek % width;
-    const check = checkPlacement(state, state.hand, r, c);
-    if (check.ok) return `Hàng ${r + 1}, cột ${c + 1}: đặt được.`;
-    if (check.reason === "blocked") return `Hàng ${r + 1}, cột ${c + 1}: ${obstacleLabel(obstacleKind(peek))}, không đặt được quân.`;
-    return `Hàng ${r + 1}, cột ${c + 1}: ${REASON_TEXT[check.reason]}`;
-  })();
 
   return (
     <>
@@ -466,11 +453,14 @@ function PlayView({
       </div>
 
       <PlayCard label="Sa bàn Trận Đồ">
-      <div className={`grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_364px] ${finished ? "" : "pb-28 lg:pb-0"}`}>
+      <div className={`grid items-start gap-6 lg:grid-cols-[auto_minmax(0,1fr)_364px] ${finished ? "" : "pb-28 lg:pb-0"}`}>
+        {/* Máy tính: cột hỗ trợ bên trái bàn cờ (nút gợi ý ô đặt), tách khỏi lệnh bài bên phải (Shan 21/11/2026). Điện thoại: nút nằm ở thanh đáy. */}
+        <div className="hidden flex-col items-center gap-2 lg:flex" role="toolbar" aria-label="Hỗ trợ">
+          {!finished && <HintToggle on={hintsOn} onToggle={onToggleHints} />}
+        </div>
         <div className="fm-board-col flex flex-col items-center gap-3">
           <BoardView state={state} map={map} legal={legal} showHints={hintsOn} playing={playing} last={last} focus={focus} setFocus={setFocus} setPeek={setPeek} boardRef={boardRef} sweeps={sweeps} onPlace={(row, col) => onCommand({ kind: "place", row, col })} />
           <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-title-on-wood">{message}</p>
-          <p aria-hidden className="-mt-2 min-h-5 text-center text-sm text-on-wood-soft">{peekText}</p>
           {tip && <div className="w-full max-w-xl"><TutorialTip text={tip} onDismiss={onDismissTip} /></div>}
         </div>
 
@@ -480,10 +470,7 @@ function PlayView({
             ranked ? <RankedResult state={state} rank={ranked.rank} score={ranked.score} period={ranked.period} map={map} gaveUp={gaveUp} onLeave={onLeave} /> : <Result state={state} best={best} map={map} custom={rules.id === CUSTOM_RULESET_ID} gaveUp={gaveUp} onRestart={onRestart} onLeave={onLeave} />
           ) : (
             <div className="hidden flex-col gap-4 lg:flex">
-              <div className="flex items-start gap-3">
-                <div className="min-w-0 flex-1"><CommandCard state={state} /></div>
-                <HintToggle on={hintsOn} onToggle={onToggleHints} />
-              </div>
+              <CommandCard state={state} />
               <div className="ui-frame flex flex-col gap-3 p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
