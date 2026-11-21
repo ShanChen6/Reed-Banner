@@ -41,7 +41,7 @@ const TTK_NOTE =
 
 const SEASON_NOTE = {
   survival: "Mùa theo tuần, đổi vào thứ Hai 0 giờ: số đợt cao nhất đã vượt trong một lượt chơi của tuần. Hạng cuối mùa nhận vàng.",
-  pvp: "Mùa theo tuần, đổi vào thứ Hai 0 giờ: tổng điểm hạng Đấu người bạn nhận được từ các trận được tính trong tuần (chỉ người có tổng dương mới có tên). Hạng cuối mùa nhận vàng.",
+  pvp: "Mùa theo tuần, đổi vào thứ Hai 0 giờ: tổng điểm hạng Thư Hùng bạn nhận được từ các trận được tính trong tuần (chỉ người có tổng dương mới có tên). Hạng cuối mùa nhận vàng.",
   arena:
     "Mùa theo tuần, đổi vào thứ Hai 0 giờ: tổng điểm Quần Hùng nhận được từ các trận bạn đi đánh trong tuần (chỉ người có tổng dương mới có tên). Hạng cuối mùa nhận vàng.",
 } as const;

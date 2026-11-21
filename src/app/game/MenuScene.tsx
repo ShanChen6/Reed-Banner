@@ -60,7 +60,7 @@ const MODES: readonly Mode[] = [
   { scene: "DESTINY", group: "battle", title: "Tháp Thiên Mệnh", text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp", status: "Mỗi chu kỳ một vận, tranh hạng thiên hạ", cta: "Leo tháp", lockedText: "Sắp khai mở, tiến trình vẫn được giữ" },
   { scene: "SURVIVAL", group: "battle", title: "Trấn Ải", text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Sinh tồn", status: "Ghi danh bảng công trạng mỗi tuần", cta: "Giữ ải" },
   { scene: "DAILY", group: "battle", title: "Nhật Lệnh", text: MODE_TEXT.DAILY, art: "daily", kicker: "Mỗi ngày", status: "Lệnh mới ban mỗi ngày", cta: "Nhận lệnh" },
-  { scene: "ARENA", group: "battle", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Đấu người", status: "Tranh ngôi đầu bảng mỗi tuần", cta: "Thách đấu" },
+  { scene: "ARENA", group: "battle", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Tranh hùng", status: "Tranh ngôi đầu bảng mỗi tuần", cta: "Thách đấu" },
   { scene: "FORMATION", group: "puzzle", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Vào trận ngay, không cần tài khoản", cta: "Bày trận" },
   { scene: "KHAI_LO", group: "puzzle", title: "Khai Lộ", text: MODE_TEXT.KHAI_LO, art: "khai-lo", kicker: "Giải đố", status: "Giải đố ngay, không cần tài khoản", cta: "Giải đố" },
   { scene: "DO_THAM", group: "puzzle", title: "Do Thám", text: MODE_TEXT.DO_THAM, art: "do-tham", kicker: "Giải đố", status: "Dò bẫy ngay, không cần tài khoản", cta: "Do thám" },

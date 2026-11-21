@@ -17,7 +17,7 @@ export interface ColumnFillEntry {
   readonly tips: readonly string[];
 }
 
-export type ColumnFillMode = "daily" | "arena" | "destiny" | "survival" | "trial" | "clearPath";
+export type ColumnFillMode = "daily" | "arena" | "destiny" | "survival" | "trial" | "clearPath" | "quests";
 
 const NAM_QUOC_SON_HA: ColumnPoem = {
   lines: ["Nam quốc sơn hà Nam đế cư,", "Tiệt nhiên định phận tại thiên thư.", "Như hà nghịch lỗ lai xâm phạm,", "Nhữ đẳng hành khan thủ bại hư."],
@@ -88,6 +88,17 @@ export const COLUMN_FILL: Readonly<Record<ColumnFillMode, ColumnFillEntry>> = {
     tips: [
       "Khối càng lớn điểm càng cao: gom quân cùng hệ lại rồi mới xóa.",
       "Để dành đạo cụ cho mấy quân lẻ cuối bàn.",
+    ],
+  },
+  quests: {
+    poem: {
+      lines: ["Trí chủ hữu hoài phù địa trục,", "Tẩy binh vô lộ vãn thiên hà.", "Quốc thù vị báo đầu tiên bạch,", "Kỷ độ Long Tuyền đái nguyệt ma."],
+      source: "Đặng Dung, Cảm hoài",
+    },
+    tips: [
+      "Nhiệm vụ tuần làm mới lúc 0 giờ thứ Hai, nhận thưởng trước khi qua tuần.",
+      "Nhóm thành tựu có thưởng chờ nhận tự mở sẵn.",
+      "Điểm danh và nhiệm vụ ngày nhận ở Nhật Lệnh.",
     ],
   },
 };

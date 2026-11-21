@@ -157,12 +157,12 @@ test.describe("tài khoản đã đăng nhập", () => {
     await page.goto("/game");
     await page.getByRole("link", { name: "Ban Thưởng" }).first().click();
     await expect(page).toHaveURL(/\/game\/tier-rewards$/);
-    for (const mode of ["Quần Hùng", "Đấu người", "Trấn Ải", "Trận Đồ", "Nhật Lệnh", "Tháp Thiên Mệnh", "Tầm Tướng Ký"])
+    for (const mode of ["Quần Hùng", "Quần Hùng – Thư Hùng", "Trấn Ải", "Trận Đồ", "Nhật Lệnh", "Tháp Thiên Mệnh", "Tầm Tướng Ký"])
       await expect(page.getByRole("region", { name: `Bậc ${mode}`, exact: true })).toBeVisible();
-    // Chưa vào Quần Hùng thì dải khóa; Đấu người nhận Đồng rồi khóa.
+    // Chưa vào Quần Hùng thì dải khóa; Thư Hùng nhận Đồng rồi khóa.
     await expect(page.getByRole("region", { name: "Bậc Quần Hùng", exact: true }).getByRole("button", { name: "Bậc Đồng: chưa vào chế độ" })).toBeDisabled();
     await expect(page.getByText("Vào Quần Hùng một lần để mở dải bậc này.")).toBeVisible();
-    const pvp = page.getByRole("region", { name: "Bậc Đấu người", exact: true });
+    const pvp = page.getByRole("region", { name: "Bậc Quần Hùng – Thư Hùng", exact: true });
     await pvp.getByRole("button", { name: "Nhận thưởng bậc Đồng" }).click();
     await expect(page.getByText(/Đã nhận 50 vàng thưởng bậc Đồng/)).toBeVisible();
     await expect(pvp.getByRole("button", { name: "Bậc Đồng: đã nhận thưởng" })).toBeDisabled();
@@ -260,10 +260,12 @@ test.describe("tài khoản đã đăng nhập", () => {
     expectClean(problems);
   });
 
-  test("Quần Hùng: bảng xếp hạng ở hàng thẻ, đối thủ có nhãn so lực chiến, 1vs1 chọn nghề hệ bằng chip", async ({ page }) => {
+  test("Quần Hùng: Phá Doanh, Thư Hùng, Công trạng cùng một hàng thẻ, đối thủ có nhãn so lực chiến, 1vs1 chọn nghề hệ bằng chip", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/arena");
     await playMode(page);
+    // Hai cách đấu là thẻ ngang hàng Công trạng, Hướng dẫn; không còn thẻ Chơi (Shan 21/11/2026).
+    await expect(page.getByRole("tablist", { name: "Màn chế độ" }).getByRole("tab")).toHaveText(["Phá Doanh", "Thư Hùng", "Công trạng", "Hướng dẫn"]);
     await expect(page.getByRole("heading", { name: "Đội ra trận" })).toBeVisible();
     await page.getByText(/Đổi tướng ra trận/).click();
     await page.getByRole("button", { name: "Bỏ Hà Vân khỏi đội ra trận" }).click();
@@ -272,19 +274,18 @@ test.describe("tài khoản đã đăng nhập", () => {
     await expect(page.getByRole("button", { name: "Đánh" }).first()).toBeEnabled();
     await expect(page.getByText("Ngang sức").first()).toBeVisible();
     await page.getByRole("tab", { name: "Công trạng" }).click();
-    await expect(page.getByRole("heading", { name: "Đấu bóng ma" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Phá Doanh" })).toBeVisible();
     await expect(page.getByRole("region", { name: "Bậc hạng Quần Hùng" })).toBeVisible();
     await page.getByRole("region", { name: "Bậc hạng Quần Hùng" }).getByRole("button", { name: "Nhận thưởng bậc Đồng" }).click();
     await expect(page.getByText(/Đã nhận 50 vàng thưởng bậc Đồng và .* Lương phẩm hệ .* \(đã vào kho đồ\)\./)).toBeVisible();
     // Nhận một lần rồi nút khóa; bậc chưa đạt cũng khóa.
     await expect(page.getByRole("region", { name: "Bậc hạng Quần Hùng" }).getByRole("button", { name: "Bậc Đồng: đã nhận thưởng" })).toBeDisabled();
     await expect(page.getByRole("region", { name: "Bậc hạng Quần Hùng" }).getByRole("button", { name: "Bậc Bạc: chưa đạt mốc" })).toBeDisabled();
-    // Đấu người: một dải chung 1vs1 và 3vs3, nhận Đồng rồi khóa.
-    const pvpTiers = page.getByRole("region", { name: "Bậc hạng Đấu người" });
+    // Thư Hùng: một dải chung 1vs1 và 3vs3, nhận Đồng rồi khóa.
+    const pvpTiers = page.getByRole("region", { name: "Bậc hạng Thư Hùng" });
     await pvpTiers.getByRole("button", { name: "Nhận thưởng bậc Đồng" }).click();
     await expect(pvpTiers.getByRole("button", { name: "Bậc Đồng: đã nhận thưởng" })).toBeDisabled();
-    await page.getByRole("tab", { name: "Chơi" }).click();
-    await page.getByRole("button", { name: "Đấu người" }).click();
+    await page.getByRole("tab", { name: "Thư Hùng" }).click();
     await page.getByRole("group", { name: "Hệ của Đinh Bộ Lĩnh" }).getByRole("button", { name: "Lôi" }).click();
     await expect(page.getByText("Tướng sĩ, Lôi")).toBeVisible();
     expectClean(problems);
