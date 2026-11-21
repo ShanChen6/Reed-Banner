@@ -39,7 +39,7 @@ export const RANK_REWARD_MODE_NAME: Readonly<Record<RankRewardMode, string>> = {
   survival: "Trấn Ải",
   arena: "Quần Hùng",
   tamTuongKy: "Tầm Tướng Ký",
-  pvp: "Quần Hùng – Đấu người",
+  pvp: "Quần Hùng – Thư Hùng",
 };
 
 /** Vàng theo bậc thưởng của từng chế độ chung sổ (kỳ theo ngày, theo chu kỳ hoặc theo mùa tuần). Nhật Lệnh đã có 150/50 vàng cố định mỗi ván nên thưởng hạng nhỏ hơn. */

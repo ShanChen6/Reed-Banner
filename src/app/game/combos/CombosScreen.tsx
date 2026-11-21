@@ -155,7 +155,8 @@ export default function CombosScreen() {
         </div>
       </section>
 
-      <div className="grid items-start gap-4 lg:grid-cols-2">
+      {/* Một cột (21/11/2026): chọn tướng ở trên, liên kết ở dưới; hai cột cũ lệch chiều cao khi danh sách liên kết dài. */}
+      <div className="flex flex-col gap-4">
         <OrnateFrame className="flex flex-col gap-3">
           <SectionTitle description="Tướng có nhiều liên kết với đội đang chọn xếp lên trước. Đinh Bộ Lĩnh hiện ở mọi bộ lọc; bấm ông khi đang lọc hệ, nghề thì ông mang đúng hệ, nghề đó.">Chọn tướng {slot + 1}</SectionTitle>
           <HeroGrid
@@ -163,7 +164,8 @@ export default function CombosScreen() {
             items={candidates}
             selected={picks[slot] ?? null}
             onSelect={pick}
-            pageSize={12}
+            pageSize={15}
+            gridClassName="sm:grid-cols-3 lg:grid-cols-5"
           />
         </OrnateFrame>
 
@@ -175,8 +177,14 @@ export default function CombosScreen() {
             <p className="text-sm text-on-wood-soft">Chọn ít nhất một đồng đội để xem liên kết.</p>
           ) : (
             <>
-              <PairMatrix team={team} links={links} />
-              <ChainList key={team.map((m) => m.id).join()} team={team} chains={chains} />
+              <div className="grid items-start gap-4 lg:grid-cols-2">
+                <div className="ui-frame-inset min-w-0 p-2">
+                  <PairMatrix team={team} links={links} />
+                </div>
+                <div className="min-w-0">
+                  <ChainList key={team.map((m) => m.id).join()} team={team} chains={chains} />
+                </div>
+              </div>
               <h3 className="font-serif text-lg font-bold text-title-on-wood">Liên kết theo cặp</h3>
               <PairGroups team={team} links={cross} />
               {links.length > cross.length && (

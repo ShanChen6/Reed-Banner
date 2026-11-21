@@ -7,7 +7,7 @@
 import { useEffect, useState } from "react";
 import type { ArenaTier, GearItem } from "@/core";
 import { Alert, buttonVariants } from "@/components/ui";
-import { ModeLoading, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { ModeBanner, ModeLoading, ModeScreen, OrnateFrame } from "@/components/game-ui";
 import { fetchProfile } from "../battle/online";
 import { TierLadder } from "../leaderboard/RankBoard";
 import { ladderOf, tierClaimNote, tierErrorNote, tierRewards } from "../arena/tiers";
@@ -69,28 +69,23 @@ export default function TiersScreen() {
 
   if (!ladders)
     return (
-      <ModeScreen label="Ban Thưởng">
+      <ModeScreen card label="Ban Thưởng">
         <ModeLoading error={failed ? "Chưa mở được Ban Thưởng. Xin tải lại trang." : null} label="Đang tải Ban Thưởng…" />
       </ModeScreen>
     );
 
   const ready = ladders.reduce((n, l) => n + readyCount(l), 0);
   return (
-    <ModeScreen label="Ban Thưởng">
-      <OrnateFrame>
-        <SectionTitle description="Mỗi chế độ xếp hạng có sáu bậc. Lần đầu đạt mốc nhận vàng và một món trang bị hệ của Đinh Bộ Lĩnh; mỗi bậc nhận một lần, nhận rồi nút khóa.">
-          Ban Thưởng
-        </SectionTitle>
-        <p role="status" className="text-sm text-on-wood">
-          {ready > 0 ? (
-            <>
-              <span className="font-bold text-jade">{ready}</span> bậc đang chờ nhận.
-            </>
-          ) : (
-            "Chưa có bậc mới để nhận."
-          )}
-        </p>
-      </OrnateFrame>
+    <ModeScreen card label="Ban Thưởng">
+      <ModeBanner
+        title="Ban Thưởng"
+        kicker="Thưởng bậc các chế độ xếp hạng"
+        description="Mỗi chế độ xếp hạng có sáu bậc. Lần đầu đạt mốc nhận vàng và một món trang bị hệ của Đinh Bộ Lĩnh; mỗi bậc nhận một lần, nhận rồi nút khóa."
+        stats={[
+          { label: "Chế độ", value: ladders.length },
+          { label: "Chờ nhận", value: <span role="status" className={ready > 0 ? "text-jade" : undefined}>{ready > 0 ? `${ready} bậc` : "Chưa có"}</span> },
+        ]}
+      />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {ladders.map((l) => {

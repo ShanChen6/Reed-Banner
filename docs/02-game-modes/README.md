@@ -241,7 +241,7 @@ Trang `/arena`, code ở `src/core/arena/` (đội phòng thủ, bóng ma máy t
 - **Lượt:** 10 trận mỗi ngày, đổi lúc 0 giờ giờ Việt Nam. Đánh xong thì đối thủ đã bày bị xóa, mở lại trang có đối thủ mới.
 - **Điểm (kiểu Elo):** bắt đầu 1000. Người đánh đổi 32 × (kết quả − kỳ vọng), người phòng thủ đổi ngược dấu một nửa (16 ×). Ngang điểm thì thắng +16, thua −16, người phòng thủ −8/+8. Điểm không xuống dưới 0. Bóng ma máy tạo luôn 1000 điểm, nên càng lên cao đánh bóng ma càng ít điểm.
 - **Thưởng:** thưởng trận thường (kinh nghiệm, vàng nhặt, món rơi theo độ khó Khó) và thêm 50 vàng khi thắng.
-- **Bảng xếp hạng:** bảng Quần Hùng ở Công Trạng (`/leaderboard`), theo điểm; lên bảng khi có đội phòng thủ. Ở màn Quần Hùng, thẻ Công trạng nằm cạnh Chơi và Hướng dẫn, gồm thưởng hạng và bảng mùa của Đấu bóng ma, kèm Đấu người khi cờ bật.
+- **Bảng xếp hạng:** bảng Quần Hùng ở Công Trạng (`/leaderboard`), theo điểm; lên bảng khi có đội phòng thủ. Ở màn Quần Hùng (Shan 21/11/2026), hai cách đấu là hai thẻ ngang hàng Công trạng và Hướng dẫn, không còn thẻ Chơi: **Phá Doanh** (tên cũ Đấu bóng ma, đánh đội phòng thủ do máy điều khiển) và **Thư Hùng** (tên cũ Đấu người, đấu trực tiếp, chỉ hiện khi cờ bật). Tên hiển thị đặt một chỗ ở `ARENA_MODE_NAME` (`src/core/arena/arena.ts`). Thẻ Công trạng gồm thưởng hạng và bảng mùa của Phá Doanh, kèm Thư Hùng khi cờ bật.
 - **Mùa và thưởng:** có mùa theo tuần và thưởng vàng theo hạng, xem [mục 6.3](#63-mùa-theo-tuần-của-trấn-ải-và-quần-hùng).
 - **Bậc hạng và thưởng bậc (Shan 18/11/2026, số liệu Claude đề xuất, chờ duyệt):** bậc theo điểm hạng hiện tại (`ARENA_TIERS`, `src/core/arena/arena.ts`). Lần đầu đạt mỗi bậc nhận vàng **một lần trọn đời** ở thẻ Công trạng (POST `/api/arena` `{ action: "claimTier", tier }`, server đọc điểm hạng trong kho đấu trường, ghi id bậc vào `profile.arenaTiers` cùng lần cộng vàng). Không reset theo mùa vì điểm hạng không reset; tụt bậc không mất thưởng đã nhận; bậc thấp hơn bậc đang đứng vẫn nhận được.
 
@@ -269,8 +269,8 @@ Mỗi chế độ **có xếp hạng** có một dải sáu bậc Đồng, Bạc
 
 | Chế độ | Thước đo | Mốc (Đồng → Huyền Thoại) | Code |
 |---|---|---|---|
-| Quần Hùng bóng ma | điểm hạng | 0 · 1 050 · 1 150 · 1 300 · 1 500 · 1 750 | `ARENA_TIERS`, mục 5.3 |
-| Đấu người | điểm hạng cao hơn của 1vs1, 3vs3 | như Quần Hùng | `claimPvpTier`, [PvP](future/quan-hung-pvp-truc-tiep.md) |
+| Quần Hùng Phá Doanh | điểm hạng | 0 · 1 050 · 1 150 · 1 300 · 1 500 · 1 750 | `ARENA_TIERS`, mục 5.3 |
+| Quần Hùng Thư Hùng (Đấu người) | điểm hạng cao hơn của 1vs1, 3vs3 | như Quần Hùng | `claimPvpTier`, [PvP](future/quan-hung-pvp-truc-tiep.md) |
 | Trấn Ải | kỷ lục số đợt | 1 · 5 · 10 · 15 · 20 · 25 | `SURVIVAL_TIERS`, mục 4 |
 | Trận Đồ | số ván xếp hạng đã thắng | 1 · 5 · 15 · 30 · 60 · 100 | `FORMATION_TIERS`, [GDD mục 12](tran-do/gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt) |
 | Nhật Lệnh | số ngày đã đánh (`quests.totals.daily`) | 1 · 7 · 20 · 50 · 100 · 200 | `MODE_TIERS.daily` |

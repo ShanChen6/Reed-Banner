@@ -6,6 +6,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { REWARD_TIERS, type RankRewardMode } from "@/core";
+import { OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { buttonVariants } from "@/components/ui";
 import { SceneLink } from "../SceneContext";
 
 interface Item {
@@ -73,22 +75,25 @@ export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankReward
       </p>
     );
   if (state.items.length === 0 && !note) return null;
+  // Card lớn như các khung khác trong màn (góc hoa văn tự có trong ModeScreen card, 21/11/2026); mỗi kỳ chờ nhận là một ô lõm.
   return (
-    <section aria-label="Thưởng hạng chờ nhận" className="rounded border border-frame-gold-hi/30 bg-black/25 p-3">
-      <h2 className="mb-1 text-sm font-bold text-title-on-wood">Thưởng hạng chờ nhận</h2>
-      {note && <p role="status" aria-live="polite" className="mb-1 text-sm text-title-on-wood">{note}</p>}
-      <ul className="flex flex-col gap-1.5">
-        {state.items.map((i) => (
-          <li key={`${i.mode}-${i.period}`} className="flex flex-wrap items-center justify-between gap-2 text-sm">
-            <span>
-              Kỳ {PERIOD_NOUN[i.mode]} {i.period}: hạng {i.rank}/{i.participants} ({TIER_LABEL[i.tier]}), <b>{i.gold} vàng</b>{extras(i)}
-            </span>
-            <button type="button" disabled={busy} onClick={() => void claim(i)} className="min-h-10 pointer-coarse:min-h-11 rounded bg-primary px-4 font-semibold text-primary-foreground disabled:opacity-60">
-              Nhận
-            </button>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <OrnateFrame aria-label="Thưởng hạng chờ nhận" className="flex min-w-0 flex-col gap-2">
+      <SectionTitle description="Thưởng theo hạng cuối kỳ đã khép. Mỗi kỳ nhận một lần.">Thưởng hạng chờ nhận</SectionTitle>
+      {note && <p role="status" aria-live="polite" className="text-sm text-title-on-wood">{note}</p>}
+      {state.items.length > 0 && (
+        <ul className="flex flex-col gap-2">
+          {state.items.map((i) => (
+            <li key={`${i.mode}-${i.period}`} className="ui-frame-inset flex flex-wrap items-center justify-between gap-2 px-3 py-2 text-sm text-on-wood">
+              <span>
+                Kỳ {PERIOD_NOUN[i.mode]} {i.period}: hạng {i.rank}/{i.participants} ({TIER_LABEL[i.tier]}), <b className="text-frame-gold">{i.gold} vàng</b>{extras(i)}
+              </span>
+              <button type="button" disabled={busy} onClick={() => void claim(i)} className={buttonVariants({ size: "sm", className: "min-h-10 px-4 pointer-coarse:min-h-11" })}>
+                Nhận
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </OrnateFrame>
   );
 }

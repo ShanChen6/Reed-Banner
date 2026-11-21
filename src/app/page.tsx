@@ -75,7 +75,7 @@ const MODE_GROUPS: readonly { readonly title: string; readonly sub: string; read
       { slug: "destiny", name: "Tháp Thiên Mệnh", kicker: "Leo tháp", art: "/art/home/destiny.webp", flag: "destiny", body: "Khóa đội hình theo chu kỳ, giữ máu và lương xuyên tầng." },
       { slug: "survival", name: "Trấn Ải", kicker: "Sinh tồn", art: "/art/home/survival.webp", body: "Một bàn cờ, đối thủ kéo đến theo đợt, nghỉ giữa đợt để tính tiếp." },
       { slug: "daily", name: "Nhật Lệnh", kicker: "Mỗi ngày", art: "/art/home/daily.webp", body: "Một đề chung cho mọi người, mỗi ngày một lần, có bảng công trạng." },
-      { slug: "arena", name: "Quần Hùng", kicker: "Đấu người", art: "/art/home/arena.webp", body: "Đánh đội phòng thủ của hào kiệt khác, leo điểm mỗi ngày." },
+      { slug: "arena", name: "Quần Hùng", kicker: "Tranh hùng", art: "/art/home/arena.webp", body: "Đánh đội phòng thủ của hào kiệt khác, leo điểm mỗi ngày." },
       { slug: "expedition", name: "Viễn Chinh", kicker: "Hành quân", art: "/art/home/vien-chinh.webp", flag: "expedition", body: "Chia quân hai đạo trên sa bàn, hành quân qua từng chặng rồi giáp công phá thành." },
     ],
   },

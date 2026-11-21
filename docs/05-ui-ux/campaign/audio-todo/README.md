@@ -39,7 +39,7 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 | Màn | Có tiếng | Thiếu tệp |
 |---|---|---|
 | Trận Đồ | `formation_menu` và 17/17 cue `formation.*` | Nhạc `formation_play`, `formation_play_layer2`, `formation_result_win`, `formation_result_lose` |
-| Trận đánh (Giao Tranh, Thao Luyện, Bình Loạn, Viễn Chinh…) | `battle_normal`, `battle_boss`; `swap`, `invalid`, `match3`, `match4`, `match5`, `combo1..4`, `ultimate`, `heal`, `shield`, `buff`, `hit.*`, `skill.*`, `damage`, `ko`, `win`, `lose` | `debuff`, `burn`, `freeze`, `poison`. `hit.<nghề>` dùng chung một bộ, `skill.<hệ>` dùng chung một bộ |
+| Trận đánh (Giao Tranh, Thao Luyện, Bình Loạn, Viễn Chinh…) | `battle_normal`, `battle_boss`; `swap`, `invalid`, `match3`, `match4`, `match5`, `combo1..4`, `ultimate`, `heal`, `shield`, `buff`, `debuff`, `burn`, `freeze`, `poison`, `hit.*`, `skill.*`, `damage`, `ko`, `win`, `lose` | Mọi cue đã có tệp (21/11/2026). `hit.<nghề>` dùng chung một bộ, `skill.<hệ>` dùng chung một bộ |
 | Bình Loạn (ngoài trận) | `atlas`, `dialogue` | Nhạc `ending`; âm nền `amb/atlas`; cue `atlas.select`, `dialogue.next` |
 | Tháp Thí Luyện | — | Nhạc `tower_trial` (màn Tháp im lặng; trận trong Tháp dùng `battle_normal`) |
 | Tháp Thiên Mệnh | — | Nhạc `tower_destiny` (cả màn Tháp lẫn trận trong Tháp đều im nhạc) |
