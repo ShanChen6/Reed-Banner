@@ -265,7 +265,7 @@ Có thể giao bước 2–5 cho Claude: gửi tệp gốc kèm prompt:
 
 ### D2. Tệp trận đánh còn thiếu
 
-- **Shan tạo tệp:** B6 dòng `battle.debuff`, `burn`, `freeze`, `poison` (`match4`, `match5`, `combo1..4`, `ultimate`, `heal`, `shield`, `buff` đã có từ 20/11/2026). Nếu muốn tách tiếng theo nghề/hệ: B4 dòng `battle.hit.<nghe>` và `battle.skill.<he>` (hiện 8 nghề và 7 hệ dùng chung một bộ).
+- **Shan tạo tệp:** mọi cue `battle.*` đã có tệp (21/11/2026). Nếu muốn tách tiếng theo nghề/hệ: B4 dòng `battle.hit.<nghe>` và `battle.skill.<he>` (hiện 8 nghề và 7 hệ dùng chung một bộ).
 - **Giao Claude:** prompt D0 với các cue trên; tệp ở `sfx/battle/`.
 - **Xong khi:** mọi cue trong `BATTLE_CUES` có dòng manifest; chơi một trận Giao Tranh nghe đủ combo, tuyệt chiêu, hồi máu, khiên, hiệu ứng trạng thái.
 

@@ -389,6 +389,38 @@
       ],
       "volume": 0.75
     },
+    "battle.debuff": {
+      "files": [
+        "sfx/battle/debuff_a",
+        "sfx/battle/debuff_b",
+        "sfx/battle/debuff_c"
+      ],
+      "volume": 0.75
+    },
+    "battle.burn": {
+      "files": [
+        "sfx/battle/burn_a",
+        "sfx/battle/burn_b",
+        "sfx/battle/burn_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.freeze": {
+      "files": [
+        "sfx/battle/freeze_a",
+        "sfx/battle/freeze_b",
+        "sfx/battle/freeze_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.poison": {
+      "files": [
+        "sfx/battle/poison_a",
+        "sfx/battle/poison_b",
+        "sfx/battle/poison_c"
+      ],
+      "volume": 0.75
+    },
     "sulo.roll": {
       "files": [
         "sfx/su-lo/roll_a",

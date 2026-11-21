@@ -29,9 +29,10 @@
 | `music/dotham`, `sfx/do-tham/trap_a`, `win_a..b`, `lose_a..b` | Bốn tệp Shan gửi (20/11/2026: `music_dotham`, `dotham_trap`, `dotham_win`, `dotham_lose`, Gemini tạo). Nhạc: lấy giây 0–98,2 (đoạn lặp lại khớp nhất ở giây 95,2), làm vòng lặp bằng `scripts/make-music-loop.py` (trộn 3 giây), 95,2 giây. Trap: tiếng sập ở giây 5,45–7,4 (đoạn sau là nhạc trống). Win: phần mở đầu giây 0,82–4,8 và phần kết giây 57,92–60,1. Lose: phần mở đầu giây 0,07–3,3 và câu kết giây 48,98–53,6. Hiệu ứng đơn âm, đỉnh -3 dBFS, làm mờ đuôi | Như trên |
 | `sfx/battle/match4_a..b`, `match5_a..b`, `combo1_a..b`, `combo2_a..b`, `combo3_a..b` | Năm tệp Shan gửi (20/11/2026: `battle_match4`, `battle_match5`, `battle_combo1..3`, Gemini tạo), cắt tay tiếng đơn sạch: match4 ở giây 34,21 và 18,53 (0,45 s; đoạn là nhạc liền nên tiếng còn nền nhẹ); match5 ở 11,45 và 13,59 (0,55 s); combo1 ở 37,40 và 66,97; combo2 ở 0,07 và 0,97 (0,5 s); combo3 là tiếng mở đầu ở 0,04 (0,9 s) và 1,91 (0,6 s). Đơn âm, đỉnh -3 dBFS, làm mờ đuôi | Như trên |
 | `sfx/battle/combo4_a..c`, `ultimate_a`, `heal_a..c`, `shield_a..c`, `buff_a..b` | Năm tệp Shan gửi (20/11/2026: `battle_combo4`, `battle_ultimate`, `battle_heal`, `battle_shield`, `battle_buff`, Gemini tạo), cắt tay: combo4 ở giây 59,14, 32,30 và 97,87 (0,7 s, tiếng chiêng trầm); ultimate là phần mở đầu giây 0,93–3,43 (trống, dồn lên, tiếng nổ ở giây 2,8); heal ở 8,06, 65,56, 37,56 (0,6 s); shield là hai tiếng rời ở 2,18 và 3,28 (0,45 s) cùng 48,02 (0,5 s); buff ở 4,58 và 27,69 (0,6 s). Đơn âm, đỉnh -3 dBFS, làm mờ đuôi | Như trên |
+| `sfx/battle/debuff_a..c`, `burn_a..c`, `freeze_a..c`, `poison_a..c` | Bốn tệp Shan gửi (21/11/2026: `battle_debuff`, `battle_burn`, `battle_freeze`, `battle_poison`, Gemini tạo), cắt tay 0,6 s mỗi tiếng: debuff là ba tiếng rời ở giây 1,88, 3,68 và 5,58; burn ở 7,32, 27,51 và 49,32; freeze ở 27,53, 91,91 và 71,28; poison ở 8,04, 21,54 và 53,54. Đơn âm, đỉnh -3 dBFS, làm mờ đuôi | Như trên |
 
 Sử Lộ đã có tệp riêng cho mọi cue `sulo.*` và hai bản nhạc (20/11/2026).
 
 Do Thám đã có tệp riêng cho mọi cue `dotham.*` và nhạc `dotham` (20/11/2026).
 
-Trận đánh đã có tệp riêng cho `match4`, `match5`, `combo1..4`, `ultimate`, `heal`, `shield`, `buff` (20/11/2026); còn thiếu `debuff`, `burn`, `freeze`, `poison`.
+Trận đánh đã có tệp riêng cho mọi cue `battle.*` (21/11/2026).
