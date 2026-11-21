@@ -30,6 +30,7 @@ import TrialScreen from "./trial/TrialScreen";
 import DestinyScreen from "./destiny/DestinyScreen";
 import ExpeditionScreen from "./expedition/ExpeditionScreen";
 import FullscreenToggle from "./FullscreenToggle";
+import MobileTabBar from "./MobileTabBar";
 import GameHeader from "./header/GameHeader";
 import GameFooter, { FOOTER_SCENES } from "./GameFooter";
 import LoginGate from "./LoginGate";
@@ -110,6 +111,7 @@ export default function GameShell({
         </div>
         {FOOTER_SCENES.has(currentScene) && <GameFooter compact={currentScene !== "MENU"} />}
         <FullscreenToggle scene={currentScene} />
+        <MobileTabBar scene={currentScene} />
       </div>
       </AudioProvider>
     </SceneContext.Provider>
