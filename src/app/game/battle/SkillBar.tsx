@@ -59,11 +59,11 @@ export function SkillBar({
       className={
         stacked
           ? "hidden grid-cols-3 gap-1.5 lg:grid"
-          : "grid grid-cols-3 gap-1 sm:flex sm:flex-wrap sm:items-stretch sm:gap-1.5 lg:hidden"
+          : "grid grid-cols-3 gap-1 sm:flex sm:flex-wrap sm:items-stretch sm:gap-1.5 lg:hidden landscape-short:grid landscape-short:grid-cols-6 landscape-short:gap-1"
       }
       aria-label="Kỹ năng"
     >
-      <span className="col-span-3 w-full text-caption text-on-wood-soft">
+      <span className={`col-span-3 w-full text-caption text-on-wood-soft ${stacked ? "" : "landscape-short:sr-only"}`}>
         Kỹ năng của {actor.name}:
       </span>
       {skills.map((def, i) => {
@@ -81,20 +81,20 @@ export function SkillBar({
               setWhirlAim(null);
               setPendingWhirl(null);
             }}
-            className={`relative flex w-full items-center rounded-lg p-1 text-caption leading-tight ${stacked ? "flex-col gap-0.5" : "min-h-11 gap-1.5 text-left max-sm:pl-1 sm:w-[4.5rem] sm:flex-col sm:gap-0.5 sm:text-center"} border ${aiming ? "border-stat-hp bg-stat-hp text-white" : "border-frame-line-soft bg-wood-panel hover:border-frame-gold"} ${
+            className={`relative flex w-full items-center rounded-lg p-1 text-caption leading-tight ${stacked ? "flex-col gap-0.5" : "min-h-11 gap-1.5 text-left max-sm:pl-1 sm:w-[4.5rem] sm:flex-col sm:gap-0.5 sm:text-center landscape-short:w-auto landscape-short:flex-col landscape-short:gap-0 landscape-short:p-0.5 landscape-short:text-center"} border ${aiming ? "border-stat-hp bg-stat-hp text-white" : "border-frame-line-soft bg-wood-panel hover:border-frame-gold"} ${
               disabled && !aiming ? "opacity-40 grayscale" : ""
             }`}
             title={`${skillText(def)}, phím ${i + 1}`}
           >
             {/* Điện thoại: biểu tượng nhỏ bên trái, tên bên phải để hai hàng kỹ năng vừa màn cùng bàn cờ. */}
-            <SkillIcon def={def} className={stacked ? "size-10" : "size-8 shrink-0 sm:size-10"} />
+            <SkillIcon def={def} className={stacked ? "size-10" : "size-8 shrink-0 sm:size-10 landscape-short:size-6"} />
             <span className="absolute left-1 top-1 rounded-br bg-black/60 px-1 text-[11px] font-bold text-white">
               {i + 1}
             </span>
             <span className="absolute right-1 top-1 rounded-bl bg-stat-energy/90 px-1 text-[11px] tabular-nums text-white">
               {comboSkillCost(actor,def)}
             </span>
-            <span className={stacked ? "text-center" : "line-clamp-2 min-w-0 pr-5 sm:pr-0 sm:text-center"}>{def.name}</span>
+            <span className={stacked ? "text-center" : "line-clamp-2 min-w-0 pr-5 sm:pr-0 sm:text-center landscape-short:w-full landscape-short:truncate landscape-short:pr-0"}>{def.name}</span>
           </button>
         );
       })}

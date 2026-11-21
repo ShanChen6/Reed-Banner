@@ -39,6 +39,22 @@ test("Thao Luyện: điện thoại dọc thấy trọn bàn cờ và hàng kỹ
   expect(skillsBox.y + skillsBox.height, "Hàng kỹ năng nằm trong màn đầu").toBeLessThanOrEqual(height);
 });
 
+test("Thao Luyện: điện thoại xoay ngang có bố cục riêng, thấy trọn bàn cờ và kỹ năng", async ({ page }) => {
+  test.skip(!isPhone(), "Chỉ kiểm khổ điện thoại (Shan chọn 2A, 21/11/2026)");
+  const portrait = page.viewportSize()!;
+  await page.setViewportSize({ width: portrait.height, height: portrait.width });
+  await page.goto("/game/practice");
+  const board = page.getByRole("grid", { name: "Bàn cờ" });
+  await expect(board).toBeVisible();
+  // Header chung ẩn để bàn cờ vừa chiều cao.
+  await expect(page.getByRole("banner").filter({ hasText: "Thao Luyện" })).toBeHidden();
+  const height = portrait.width;
+  const boardBox = (await board.boundingBox())!;
+  const skillsBox = (await page.locator('[aria-label="Kỹ năng"]:visible').boundingBox())!;
+  expect(boardBox.y + boardBox.height, "Bàn cờ nằm trọn trong màn").toBeLessThanOrEqual(height);
+  expect(skillsBox.y + skillsBox.height, "Dải kỹ năng nằm trọn trong màn").toBeLessThanOrEqual(height);
+});
+
 test("Thao Luyện: Đầu hàng hỏi lại trước khi chốt thua", async ({ page }) => {
   const problems = watchProblems(page);
   await page.goto("/game/practice");

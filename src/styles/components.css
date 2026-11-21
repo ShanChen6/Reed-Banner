@@ -449,6 +449,16 @@
     .ui-frame--phone-flat::after,
     .ui-frame--phone-flat > .ui-frame-corner { display: none; }
   }
+  /* Màn trận khi xoay ngang (Shan chọn 2A, 21/11/2026): ẩn header chung (cả lúc hiện kết quả, hộp kết quả có
+     nút đi tiếp), khung ngoài phẳng, lề mỏng; bàn cờ giữa vừa chiều cao (DemoGame), hai phe hai bên, kỹ năng một dải dưới bàn cờ. */
+  @media (orientation: landscape) and (max-height: 499px) {
+    body:has(.battle-live) .game-header { display: none; }
+    .battle-live.ui-mode-screen { padding: 0.375rem 0.75rem; }
+    .battle-live .ui-frame--phone-flat { border: 0; background: none; box-shadow: none; padding: 0; gap: 0.375rem; }
+    .battle-live .ui-frame--phone-flat::after,
+    .battle-live .ui-frame--phone-flat > .ui-frame-corner { display: none; }
+    .battle-live .play-card-toggle { display: none; }
+  }
   /* Bảng trượt đáy (BottomSheet.tsx). Điện thoại: dính đáy, bo hai góc trên, cao tối đa 85% màn; từ 640px là hộp giữa màn. */
   .ui-sheet {
     margin: auto auto 0;
