@@ -8,7 +8,7 @@ import { SURVIVAL_BOSS_EVERY, SURVIVAL_WAVE_GOLD } from "@/core/survival/surviva
 import { TRIAL_FLOORS } from "@/core/progress/dualTowerState";
 import { DT_ITEM_PICKS, DT_LEVELS } from "@/core/do-tham";
 import { SL_AID_USE_MAX, SL_LEVELS, SL_START_AIDS, type SlAid } from "@/core/su-lo";
-import { KL_CLEAR_BONUS_BASE, KL_CLEAR_BONUS_PER_LEVEL, KL_CLEAR_HEARTS, KL_HEIGHT, KL_NEAR_CLEAR_BONUS, KL_NEAR_CLEAR_LEFT, KL_START_HEARTS, KL_START_TOOLS, KL_TIMED_LEVEL_SECONDS, KL_TIMED_START_SECONDS, KL_TOOL_CHARGE, KL_WIDTH, timedGoal } from "@/core/khai-lo/engine";
+import { KL_CLASSIC_TOOL_CHARGE, KL_CLEAR_BONUS_BASE, KL_CLEAR_BONUS_PER_LEVEL, KL_CLEAR_HEARTS, KL_HEIGHT, KL_NEAR_CLEAR_BONUS, KL_NEAR_CLEAR_LEFT, KL_START_HEARTS, KL_START_TOOLS, KL_TIMED_LEVEL_SECONDS, KL_TIMED_START_SECONDS, KL_TOOL_CHARGE, KL_WIDTH, timedGoal } from "@/core/khai-lo/engine";
 import { ELEMENTS, type Element } from "@/core/battle/elements";
 import { ELEMENT_NAME } from "./battle/labels";
 import { DT_ITEM_INFO } from "./do-tham/items";
@@ -287,7 +287,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
     rules: [
       `Bàn có ${KL_WIDTH} cột và ${KL_HEIGHT} hàng. Quân lẻ không xóa được; liền cạnh không tính đường chéo. Không có quân mới rơi vào, cột trống thì các cột bên phải dồn sang trái.`,
-      "Màn càng sau càng nhiều hệ: 3 hệ ở màn 1–3, 4 hệ ở màn 4–7, 5 hệ ở màn 8–13, 6 hệ từ màn 14.",
+      "Thường: mỗi màn chỉ 3 hệ (đổi theo màn); màn càng sau quân càng vụn, ít khối lớn sẵn. Cấp tốc: 3 hệ ở bậc 1–3, 4 hệ ở bậc 4–7, 5 hệ ở bậc 8–13, 6 hệ từ bậc 14.",
       `Thường: hết khối và hết đạo cụ thì hết màn, mỗi quân còn sót trừ 1 tim. Số quân sót nhiều hơn số tim còn lại là hết ván. Dọn sạch bàn được thêm ${KL_CLEAR_HEARTS} tim. Có thể bấm Kết thúc màn sớm (quân sót vẫn trừ tim).`,
       "Mỗi màn được hoàn tác một lần, chỉ lùi được nước vừa đi.",
       `Cấp tốc: ván bắt đầu với ${KL_TIMED_START_SECONDS} giây. Đạt mốc điểm (bậc 1 là ${timedGoal(1)}, bậc 2 là ${timedGoal(2)}…) thì lên bậc, bàn mới và cộng thêm ${KL_TIMED_LEVEL_SECONDS} giây vào giờ còn lại. Bàn hết đường thì chia bàn mới cùng bậc; hết giờ là hết ván. Đồng hồ dừng khi bạn rời trang.`,
@@ -305,7 +305,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     items: {
       title: "Đạo cụ",
       notes: [
-        `Ván bắt đầu với ${KL_START_TOOLS} đạo cụ mỗi hệ. Chạm khối hệ nào thì thanh nạp hệ đó đầy dần: đủ ${KL_TOOL_CHARGE} quân thì được thêm 1 đạo cụ của hệ ấy, tích không giới hạn.`,
+        `Ván bắt đầu với ${KL_START_TOOLS} đạo cụ mỗi hệ. Chạm khối hệ nào thì thanh nạp hệ đó đầy dần: đủ ${KL_CLASSIC_TOOL_CHARGE} quân (Thường) hoặc ${KL_TOOL_CHARGE} quân (Cấp tốc) thì được thêm 1 đạo cụ của hệ ấy, tích không giới hạn.`,
         "Chỉ hiện đạo cụ của các hệ có trên bàn. Đạo cụ không cộng điểm.",
         "Bấm đạo cụ rồi chọn ô trên bàn. Phím 1–7 chọn nhanh, Esc để bỏ chọn.",
       ],

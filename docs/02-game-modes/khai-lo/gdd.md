@@ -1,7 +1,7 @@
 # 24 — Khai Lộ: giải đố xóa khối ô ngọc
 
 > Cập nhật: 20/11/2026 (cân bằng lại độ khó, đạo cụ, thưởng; tối ưu bố cục máy tính/điện thoại)
-> Trạng thái: **DRAFT** — Shan duyệt ý tưởng và chốt tên **Khai Lộ** ngày 05/11/2026; có bản chơi thử offline (không thưởng, không xếp hạng) với hai chế độ Thường và Cấp tốc, quân là 7 nguyên tố. Ngày 20/11/2026 Shan duyệt bộ số cân bằng lại ở [mục 4](#4-số-liệu-bản-đầu); cùng ngày chốt bàn 10 × 12 và 30 tim đỡ quân sót (chế độ Thường).
+> Trạng thái: **DRAFT** — Shan duyệt ý tưởng và chốt tên **Khai Lộ** ngày 05/11/2026; có bản chơi thử offline (không thưởng, không xếp hạng) với hai chế độ Thường và Cấp tốc, quân là 7 nguyên tố. Ngày 20/11/2026 Shan duyệt bộ số cân bằng lại ở [mục 4](#4-số-liệu-bản-đầu); cùng ngày chốt bàn 10 × 12 và tim đỡ quân sót (chế độ Thường). Ngày 21/11/2026 Thường chỉ còn 3 hệ mỗi màn, tim ban đầu giảm còn 15.
 
 ## 1. Định vị
 
@@ -17,7 +17,8 @@ Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người ch�
 ### 2.1. Bàn cờ
 
 - Bàn 10 cột × 12 hàng (từ 20/11/2026, trước đó 10 × 8), đầy ô khi bắt đầu màn.
-- Màn 1–3 có 3 hệ, màn 4–7 có 4, màn 8–13 có 5, từ màn 14 có 6. Hệ của mỗi màn được xáo theo seed.
+- Thường (Shan 21/11/2026): mỗi màn chỉ 3 hệ, xáo theo seed. Độ khó tăng bằng cách bẻ vụn khối khi sinh bàn: quân trùng hệ với ô trái hoặc trên bị đổi hệ với xác suất 10% × (màn − 1), tối đa 100% từ màn 11. Thanh nạp đạo cụ cần 180 quân (gấp đôi Cấp tốc) vì mỗi hệ có nhiều quân hơn. Mô phỏng bot tham lam (15 tim): trung vị màn ~12, như trước.
+- Cấp tốc: bậc 1–3 có 3 hệ, bậc 4–7 có 4, bậc 8–13 có 5, từ bậc 14 có 6. Thanh nạp 90 quân.
 - Từ màn 2 có **ô số ×2, ×3** (Shan 20/11/2026, theo ô số 2, 3 của Block'D; thay ô hào quang cũ): quân thường có viền vàng và nhãn ×2 hoặc ×3. 1 ô ở màn 2–4, thêm 1 mỗi 3 màn, tối đa 5. Ô ×3 có từ màn 6 (`KL_MULT3_FROM`). Bản lưu cũ có ô hào quang đọc thành ô ×2.
 - Bàn sinh ra luôn có ít nhất một khối xóa được.
 
@@ -32,12 +33,12 @@ Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người ch�
 
 Shan chốt 20/11/2026: ban đầu không dọn sạch là thua; cùng ngày thêm **tim** như 30 tim của Block'D vì những màn đầu chưa tích đủ đạo cụ nên rất dễ thua.
 
-- Ván bắt đầu với **30 tim** (`KL_START_HEARTS`).
+- Ván bắt đầu với **15 tim** (`KL_START_HEARTS`; 30 tim trước 21/11/2026, giảm khi Thường chỉ còn 3 hệ vì Shan thấy dễ hơn).
 - Hết khối để xóa và hết đạo cụ dùng được thì hết màn: mỗi quân còn sót trừ 1 tim rồi sang màn sau.
 - Số quân sót **nhiều hơn** số tim còn lại thì hết ván (số tim giữ nguyên để báo cho người chơi). Sót đúng bằng số tim thì vẫn qua, còn 0 tim.
 - **Dọn sạch bàn**: cộng 300 + 50 × số màn điểm (`clearBonus`) và **+3 tim** (`KL_CLEAR_HEARTS`).
 - Hết khối nhưng còn đạo cụ thì màn ở trạng thái **bế tắc**: người chơi dùng đạo cụ hoặc bấm *Kết thúc màn*. Bấm *Kết thúc màn* lúc nào cũng phải bấm hai lần; lần đầu báo số tim sẽ mất và nói rõ nếu không đủ tim.
-- Ô *Tim* thay ô *Cao nhất* trong số liệu chế độ Thường. Bản lưu cũ chưa có tim được đủ 30 tim.
+- Ô *Tim* thay ô *Cao nhất* trong số liệu chế độ Thường. Bản lưu cũ chưa có tim được đủ số tim ban đầu.
 
 ### 2.4. Đạo cụ và hoàn tác
 
@@ -53,7 +54,7 @@ Mỗi hệ một đạo cụ (Shan duyệt 20/11/2026, thay Lốc/Sấm cũ). Đ
 | Lôi | **Lôi Phạt** | Xóa mọi quân cùng hệ với quân được chọn. |
 | Phong | **Lốc Phong** | Chọn tâm không sát mép: 8 ô quanh xoay một nấc theo chiều kim đồng hồ (giống lốc xoáy hệ Phong trong trận). |
 
-- **Thanh nạp theo hệ** (cả hai chế độ): chạm khối hệ nào thì mỗi quân trong khối nạp 1 vào thanh của hệ đó; đủ **90 quân** (`KL_TOOL_CHARGE`) thì +1 đạo cụ hệ ấy, phần dư giữ lại. Quân bị đạo cụ phá không nạp. Thanh có màu của hệ, nằm dưới nút đạo cụ.
+- **Thanh nạp theo hệ** (cả hai chế độ): chạm khối hệ nào thì mỗi quân trong khối nạp 1 vào thanh của hệ đó; đủ **180 quân** ở Thường (`KL_CLASSIC_TOOL_CHARGE`) hoặc **90 quân** ở Cấp tốc (`KL_TOOL_CHARGE`) thì +1 đạo cụ hệ ấy, phần dư giữ lại. Quân bị đạo cụ phá không nạp. Thanh có màu của hệ, nằm dưới nút đạo cụ.
 - Giao diện chỉ hiện đạo cụ của các hệ có trên bàn, cộng các hệ đang còn đạo cụ trong kho. Phím 1–7 chọn nhanh theo thứ tự Kim, Mộc, Thủy, Hỏa, Thổ, Lôi, Phong.
 - Bản lưu cũ có Lốc/Sấm: Lốc thành Lốc Phong, Sấm thành Hỏa Cầu (cùng vùng 3×3).
 - **Hoàn tác**: mỗi màn 1 lần, chỉ lùi được nước vừa đi (trả lại cả đạo cụ và thanh nạp). Không lùi qua khi màn đã kết thúc.
@@ -134,6 +135,18 @@ Thêm tim (80 ván, bàn 10 × 12, nạp 90, bắt đầu 1 đạo cụ mỗi h�
 | 40, +3 | 17 / 21 / 24 |
 
 Với tim, 10% ván kém nhất vẫn tới màn 14–16 nên không còn thua sớm ở những màn đầu. Cấp tốc không dùng tim.
+
+Thường chỉ 3 hệ (21/11/2026, 100 ván, bot tham lam dùng đạo cụ khi bế tắc; mốc so sánh bản 30 tim 3→6 hệ cùng bot: 10 / 12 / 14):
+
+| Cấu hình | Thường (p10 / trung vị / p90) |
+|---|---|
+| 3 hệ, nạp 90, 30 tim, không bẻ vụn | gần như không thua (bot qua màn 60) |
+| 3 hệ, nạp 180, 30 tim, không bẻ vụn | gần như không thua |
+| 3 hệ, nạp 180, 30 tim, bẻ vụn 10%/màn | 11 / 14 / 18 |
+| 3 hệ, nạp 180, 20 tim, bẻ vụn 10%/màn | 9 / 13 / 17 |
+| **3 hệ, nạp 180, 15 tim, bẻ vụn 10%/màn (đang dùng)** | 9 / 12 / 16 |
+
+Chỉ giảm tim thì không đủ: với 3 hệ bot gần như dọn sạch mọi bàn nên không mất tim; phải bẻ vụn khối để màn sau còn quân sót.
 
 Luật thua làm đạo cụ thành "mạng" của người chơi, nên mỗi hệ được 1 đạo cụ lúc đầu để màn đầu không chết oan.
 

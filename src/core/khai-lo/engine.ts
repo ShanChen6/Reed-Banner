@@ -18,13 +18,18 @@ export const KL_NEAR_CLEAR_BONUS = 100;
 /** 7 đạo cụ theo 7 hệ (Shan 20/11/2026): xóa quân hệ nào bằng cách chạm khối thì thanh nạp của hệ đó đầy dần; đủ số quân
  *  thì được 1 đạo cụ của hệ ấy. Quân bị đạo cụ phá không nạp, để đạo cụ đến từ việc gom khối. */
 export const KL_TOOL_CHARGE = 90;
+/** Thường chỉ 3 hệ nên mỗi hệ nạp nhanh gấp đôi; cần gấp đôi số quân để giữ nhịp đạo cụ như cũ (Shan 21/11/2026). */
+export const KL_CLASSIC_TOOL_CHARGE = 180;
+export function toolCharge(mode: KlMode): number {
+  return mode === "classic" ? KL_CLASSIC_TOOL_CHARGE : KL_TOOL_CHARGE;
+}
 const noTools = (): Record<KlTool, number> => ({ kim: 0, moc: 0, thuy: 0, hoa: 0, tho: 0, loi: 0, phong: 0 });
 /** Đạo cụ lúc bắt đầu ván: mỗi hệ KL_START_TOOLS cái. */
 export const KL_START_TOOLS = 1;
 const startTools = (): Record<KlTool, number> => ({ kim: KL_START_TOOLS, moc: KL_START_TOOLS, thuy: KL_START_TOOLS, hoa: KL_START_TOOLS, tho: KL_START_TOOLS, loi: KL_START_TOOLS, phong: KL_START_TOOLS });
-/** Tim (Shan 20/11/2026, như 30 tim của Block'D): chế độ Thường bắt đầu với KL_START_HEARTS tim. Hết màn còn sót
+/** Tim (Shan 20/11/2026, như 30 tim của Block'D; 21/11 giảm còn 15 khi Thường chỉ 3 hệ): chế độ Thường bắt đầu với KL_START_HEARTS tim. Hết màn còn sót
  *  bao nhiêu quân thì mất bấy nhiêu tim; không đủ tim đỡ số quân sót thì hết ván. Dọn sạch bàn được thêm KL_CLEAR_HEARTS tim. */
-export const KL_START_HEARTS = 30;
+export const KL_START_HEARTS = 15;
 export const KL_CLEAR_HEARTS = 3;
 /** Lượt hoàn tác mỗi màn (không cộng dồn sang màn sau). */
 export const KL_UNDO_PER_LEVEL = 1;
@@ -145,13 +150,22 @@ export interface KlLevelConfig {
   /** Số ô số trên bàn; từ màn KL_MULT3_FROM có thể ra ô ×3. */
   readonly mults: number;
   readonly maxMult: 2 | 3;
+  /** Xác suất bẻ vụn khối khi sinh bàn (0–1): quân trùng hệ với ô trái hoặc trên bị đổi sang hệ khác. */
+  readonly scatter: number;
 }
 
-export function levelConfig(level: number): KlLevelConfig {
-  const kinds = level <= 3 ? 3 : level <= 7 ? 4 : level <= 13 ? 5 : 6;
+/** Thường (Shan 21/11/2026): mỗi bàn chỉ KL_CLASSIC_KINDS hệ; độ khó tăng bằng cách bẻ vụn khối theo màn. */
+export const KL_CLASSIC_KINDS = 3;
+export const KL_SCATTER_PER_LEVEL = 0.1;
+export const KL_SCATTER_MAX = 1;
+
+export function levelConfig(level: number, mode: KlMode = "classic"): KlLevelConfig {
+  const classic = mode === "classic";
+  const kinds = classic ? KL_CLASSIC_KINDS : level <= 3 ? 3 : level <= 7 ? 4 : level <= 13 ? 5 : 6;
+  const scatter = classic ? Math.min(KL_SCATTER_MAX, KL_SCATTER_PER_LEVEL * (level - 1)) : 0;
   const mults = level < 2 ? 0 : Math.min(5, 1 + Math.floor((level - 2) / 3));
   const maxMult = level < KL_MULT3_FROM ? 2 : 3;
-  return { kinds, mults, maxMult };
+  return { kinds, mults, maxMult, scatter };
 }
 
 /** Điểm một khối n quân: n² nhân với tích các ô số trong khối (×2 và ×3 cùng khối là ×6). */
@@ -175,13 +189,34 @@ const shuffled = <T>(xs: readonly T[], rng: Rng): T[] => {
 };
 
 /** Sinh bàn cho một màn: loại ô xáo theo seed, ô số ×2, ×3 rải ngẫu nhiên. Luôn có ít nhất một nhóm chạm được. */
-export function generateBoard(seed: number, level: number, firstId: number, width = KL_WIDTH, height = KL_HEIGHT, deal = 0): { cells: (KlCell | null)[]; nextId: number } {
+export function generateBoard(
+  seed: number,
+  level: number,
+  firstId: number,
+  width = KL_WIDTH,
+  height = KL_HEIGHT,
+  deal = 0,
+  mode: KlMode = "classic",
+): { cells: (KlCell | null)[]; nextId: number } {
   const rng = createRng(levelSeed(seed, level, deal));
-  const { kinds, mults, maxMult } = levelConfig(level);
+  const { kinds, mults, maxMult, scatter } = levelConfig(level, mode);
   const pool = shuffled(ELEMENTS, rng).slice(0, kinds);
+  const pick = (avoid?: Element) => {
+    const from = avoid ? pool.filter((k) => k !== avoid) : pool;
+    return from[rng.int(0, from.length - 1)] as Element;
+  };
   for (;;) {
     let id = firstId;
-    const cells: (KlCell | null)[] = Array.from({ length: width * height }, () => ({ id: id++, kind: pool[rng.int(0, pool.length - 1)] as Element }));
+    const cells: (KlCell | null)[] = [];
+    for (let i = 0; i < width * height; i++) {
+      let kind = pick();
+      if (scatter > 0) {
+        const left = i % width > 0 ? cells[i - 1]?.kind : undefined;
+        const up = i >= width ? cells[i - width]?.kind : undefined;
+        if ((kind === left || kind === up) && rng.next() < scatter) kind = pick(kind);
+      }
+      cells.push({ id: id++, kind });
+    }
     const order = shuffled(
       cells.map((_, i) => i),
       rng,
@@ -193,7 +228,7 @@ export function generateBoard(seed: number, level: number, firstId: number, widt
 
 export function createGame(seed: number, mode: KlMode = "classic", width = KL_WIDTH, height = KL_HEIGHT): KlState {
   const s = seed >>> 0;
-  const { cells, nextId } = generateBoard(s, 1, 1, width, height);
+  const { cells, nextId } = generateBoard(s, 1, 1, width, height, 0, mode);
   return {
     version: 1,
     mode,
@@ -321,8 +356,9 @@ function addCharge(s: KlState, kind: Element, count: number, events: KlEvent[]):
   const tools = { ...s.tools };
   const charge = { ...s.charge };
   let c = charge[kind] + count;
-  while (c >= KL_TOOL_CHARGE) {
-    c -= KL_TOOL_CHARGE;
+  const full = toolCharge(s.mode);
+  while (c >= full) {
+    c -= full;
     tools[kind] += 1;
     events.push({ type: "toolCharged", tool: kind });
   }
@@ -405,7 +441,7 @@ const levelBonus = (level: number, left: number) => (left === 0 ? clearBonus(lev
 /** Cấp tốc: chia bàn mới; level khác bậc hiện tại nghĩa là vừa lên bậc. */
 function deal(s: KlState, level: number): KlState {
   const n = level === s.level ? s.deal + 1 : 0;
-  const { cells, nextId } = generateBoard(s.seed, level, s.nextId, s.width, s.height, n);
+  const { cells, nextId } = generateBoard(s.seed, level, s.nextId, s.width, s.height, n, s.mode);
   return { ...s, level, cells, nextId, deal: n, undo: level === s.level ? s.undo : KL_UNDO_PER_LEVEL, phase: "playing", prev: null };
 }
 
@@ -534,7 +570,7 @@ export function transition(state: KlState, action: KlAction): KlResult {
     case "nextLevel": {
       if (state.phase !== "levelDone" || state.mode === "timed") return { ok: false, reason: "notPlaying" };
       const level = state.level + 1;
-      const { cells, nextId } = generateBoard(state.seed, level, state.nextId, state.width, state.height);
+      const { cells, nextId } = generateBoard(state.seed, level, state.nextId, state.width, state.height, 0, state.mode);
       events.push({ type: "newLevel", level });
       return {
         ok: true,
@@ -589,7 +625,7 @@ export function parseGame(text: string | null): KlState | null {
     const mode: KlMode = v.mode === "timed" ? "timed" : "classic";
     const rawCharge = (v.charge ?? {}) as Record<string, unknown>;
     const charge = noTools();
-    for (const e of ELEMENTS) if (num(rawCharge[e])) charge[e] = Math.min(KL_TOOL_CHARGE, rawCharge[e] as number);
+    for (const e of ELEMENTS) if (num(rawCharge[e])) charge[e] = Math.min(toolCharge(mode), rawCharge[e] as number);
     const deal = num(v.deal) ? (v.deal as number) : 0;
     // Bản lưu trước khi có tim: cho đủ tim ban đầu.
     const hearts = num(v.hearts) ? (v.hearts as number) : KL_START_HEARTS;
