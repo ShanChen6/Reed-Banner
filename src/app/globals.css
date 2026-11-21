@@ -5,6 +5,9 @@
 @import "../styles/base.css";
 @import "../styles/components.css";
 
+/* Màn ngang thấp (điện thoại xoay ngang, quy tắc 21/11/2026): bố cục trận riêng. Dùng `landscape-short:` trong lớp Tailwind. */
+@custom-variant landscape-short (@media (orientation: landscape) and (max-height: 499px));
+
 /* Hoạt ảnh bàn cờ trang /demo (src/app/demo/animation.ts). --dx/--dy tính bằng số ô; 2px là khe giữa các ô. */
 .tile-anim {
   --step-x: calc(var(--dx, 0) * (100% + 2px));

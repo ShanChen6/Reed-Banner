@@ -1209,13 +1209,23 @@ export default function DemoGame({
     );
   };
 
+  const turnClock = started && state.winner === null && !atBreak && (
+    <TurnClock
+      seconds={playerTurn && !replaying ? secondsLeft : null}
+      mine={playerTurn && !replaying}
+      extra={state.turn.extra && !replaying}
+      waiting={pending}
+    />
+  );
+
   return (
     <div
       ref={rootRef}
-      className={`${palette} ui-mode-screen`}
+      // battle-live: đang ở màn trận (cả lúc hiện kết quả); màn ngang thấp ẩn header chung và dồn bàn cờ vừa chiều cao (components.css).
+      className={`${palette} ui-mode-screen ${started ? "battle-live" : ""}`}
     >
       {/* Điện thoại: khung ngoài phẳng (.ui-frame--phone-flat) để bàn cờ lấp ngang (Shan chọn 1A, 21/11/2026). */}
-      <OrnateFrame level="raised" flush className={`ui-frame--phone-flat mx-auto flex w-full flex-col gap-2 p-0 sm:gap-3 sm:p-6 ${MODE_CONTENT_WIDTH}`}>
+      <OrnateFrame level="raised" flush className={`ui-frame--phone-flat mx-auto flex w-full flex-col gap-2 p-0 sm:gap-3 sm:p-6 ${started ? "landscape-short:gap-1.5 landscape-short:p-0" : ""} ${MODE_CONTENT_WIDTH}`}>
         <BattleHeader
           atBreak={atBreak}
           difficulty={difficulty}
@@ -1232,6 +1242,7 @@ export default function DemoGame({
           state={state}
           survival={survival}
           surrender={canSurrender ? { consequence: surrenderText, onConfirm: surrender, disabled: pending } : null}
+          clock={turnClock}
         />
         {scenario && live && !scenarioOver && (phaseTurns || labels.length > 1) && (
           <p className="rounded-md border border-frame-line bg-frame-gold/10 px-3 py-1 text-sm text-title-on-wood">
@@ -1268,7 +1279,7 @@ export default function DemoGame({
               : `${expeditionObjective.type === "hold" ? "Giữ vị trí" : "Hộ tống đoàn dân"}: đã giữ ${Math.min(completedPlayerTurns(live), expeditionObjective.turns)}/${expeditionObjective.turns} lượt của bạn, hoặc hạ hết đối thủ.`}
           </p>
         )}
-        {started && <DongSonBand className="-mt-1 w-full opacity-70 max-sm:hidden" />}
+        {started && <DongSonBand className="-mt-1 w-full opacity-70 max-sm:hidden landscape-short:hidden" />}
         {survival && started && (
           <WaveBanner survival={survival} resting={atBreak} />
         )}
@@ -1320,24 +1331,17 @@ export default function DemoGame({
         )}
 
         <div
-          className={`battle-fill flex flex-col gap-3 md:flex-row md:items-start ${started ? "" : "hidden"}`}
+          className={`battle-fill flex flex-col gap-3 md:flex-row md:items-start landscape-short:flex-row landscape-short:items-start landscape-short:gap-2 ${started ? "" : "hidden"}`}
         >
           {side(PLAYER)}
 
-          <div className="battle-center order-2 mx-auto flex w-full min-w-0 flex-1 flex-col gap-2 md:order-none xl:max-w-[46rem] 3xl:max-w-[56rem]">
-            {started && state.winner === null && !atBreak && (
-              <TurnClock
-                seconds={playerTurn && !replaying ? secondsLeft : null}
-                mine={playerTurn && !replaying}
-                extra={state.turn.extra && !replaying}
-                waiting={pending}
-              />
-            )}
+          <div className="battle-center order-2 mx-auto flex w-full min-w-0 flex-1 flex-col gap-2 md:order-none landscape-short:order-none landscape-short:gap-1.5 xl:max-w-[46rem] 3xl:max-w-[56rem]">
+            {turnClock && <div className="landscape-short:hidden">{turnClock}</div>}
             {/* lg+: bàn cờ cố gắng vừa phần màn hình còn lại dưới sân đấu nhưng không nhỏ hơn 34rem; màn thấp thì cuộn, sân đấu dính trên đầu nên vẫn thấy hoạt ảnh.
                 Toàn màn hình: hộp .battle-board-box giãn hết chiều cao còn lại, bàn cờ vừa hộp (globals.css). */}
             <div className="battle-board-box">
             <div
-              className="battle-board relative mx-auto mt-3 w-full rounded-xl border border-[var(--primary)] bg-[var(--decorative-frame)] p-1 shadow-lg max-sm:-mx-1 max-sm:w-[calc(100%+0.5rem)] sm:border-2 sm:p-1.5 lg:max-w-[max(34rem,calc((100dvh-21rem)*var(--board-ratio)))]"
+              className="battle-board relative mx-auto mt-3 w-full landscape-short:mt-2 landscape-short:max-w-[calc((100dvh-8rem)*var(--board-ratio))] rounded-xl border border-[var(--primary)] bg-[var(--decorative-frame)] p-1 shadow-lg max-sm:-mx-1 max-sm:w-[calc(100%+0.5rem)] sm:border-2 sm:p-1.5 lg:max-w-[max(34rem,calc((100dvh-21rem)*var(--board-ratio)))]"
               style={{ "--board-ratio": board.cols / board.rows } as React.CSSProperties}
             >
               <BoardCrest className="pointer-events-none absolute -top-4 left-1/2 z-10 h-8 w-40 -translate-x-1/2 md:-top-5 md:h-10 md:w-52" />
