@@ -50,35 +50,44 @@ export function ProgressMeter({ covered, total }: { covered: number; total: numb
   );
 }
 
-/** Nội dung mô tả quân đang cầm (tên, nghề, hệ hoặc công dụng quân đặc biệt). */
+const PIECE_NAME = "font-serif text-xl leading-tight font-bold 2xl:text-2xl";
+const PIECE_PILL = "inline-flex items-center gap-1 rounded-full border border-frame-bronze/60 bg-wood/10 px-2 py-0.5 text-sm font-semibold";
+const PIECE_RULE = "mt-1 border-t border-frame-bronze/40 pt-2 text-sm text-wood/80";
+
+/** Nội dung mô tả quân đang cầm: tên, nghề và hệ (nhãn tròn), rồi một dòng luật đặt quân ngăn bằng vạch đồng. */
 function PieceText({ hand }: { hand: PuzzleState["hand"] }) {
   if (hand.kind === "normal")
     return (
       <>
-        <p className="font-serif text-lg leading-tight font-bold">{nameOf(hand.characterId)}</p>
-        <p className="flex items-center gap-1.5"><ProfessionIcon profession={hand.profession} className="size-5" /> {PROFESSION_NAME[hand.profession]}</p>
-        <p className="flex items-center gap-1.5"><ElementIcon element={hand.element} className="size-5" /> Hệ {ELEMENT_NAME[hand.element]}</p>
+        <p className={PIECE_NAME}>{nameOf(hand.characterId)}</p>
+        <p className="flex flex-wrap gap-1.5">
+          <span className={PIECE_PILL}><ProfessionIcon profession={hand.profession} className="size-4" /> {PROFESSION_NAME[hand.profession]}</span>
+          <span className={PIECE_PILL}><ElementIcon element={hand.element} className="size-4" /> Hệ {ELEMENT_NAME[hand.element]}</span>
+        </p>
+        <p className={PIECE_RULE}>Đặt sát quân đã có; khớp từng quân kề: cùng nghề {PROFESSION_NAME[hand.profession]} hoặc cùng hệ {ELEMENT_NAME[hand.element]}.</p>
       </>
     );
   if (hand.kind === "fusion")
     return (
       <>
-        <p className="font-serif text-lg leading-tight font-bold">{nameOf(hand.characterId)}</p>
-        <p>Dung hợp mọi nghề và mọi hệ: khớp mọi quân kề.</p>
-        <p className="text-sm opacity-75">Vẫn phải đặt sát một quân.</p>
+        <p className={PIECE_NAME}>{nameOf(hand.characterId)}</p>
+        <p><span className={PIECE_PILL}>Dung hợp mọi nghề, mọi hệ</span></p>
+        <p className={PIECE_RULE}>Khớp mọi quân kề, nhưng vẫn phải đặt sát một quân.</p>
       </>
     );
   if (hand.kind === "wild")
     return (
       <>
-        <p className="font-serif text-lg leading-tight font-bold">Quân Lệnh</p>
-        <p>Đặt ở ô trống bất kỳ; khớp mọi quân kề.</p>
+        <p className={PIECE_NAME}>Quân Lệnh</p>
+        <p><span className={PIECE_PILL}>Quân đặc biệt</span></p>
+        <p className={PIECE_RULE}>Đặt ở ô trống bất kỳ; khớp mọi quân kề.</p>
       </>
     );
   return (
     <>
-      <p className="font-serif text-lg leading-tight font-bold">Thu Hồi</p>
-      <p>Chạm vào một quân trên bàn để xóa; ô vẫn giữ vệt khai thông.</p>
+      <p className={PIECE_NAME}>Thu Hồi</p>
+      <p><span className={PIECE_PILL}>Quân đặc biệt</span></p>
+      <p className={PIECE_RULE}>Chạm vào một quân trên bàn để xóa; ô vẫn giữ vệt khai thông.</p>
     </>
   );
 }
@@ -102,7 +111,7 @@ export function CommandCard({ state }: { state: PuzzleState }) {
             <PieceFace piece={state.hand} large />
           </div>
         </div>
-        <div className="flex min-w-0 flex-col gap-1 text-[15px] leading-snug">
+        <div className="flex min-w-0 flex-1 flex-col gap-2 text-[15px] leading-snug">
           <p className="flex items-center gap-1.5 font-serif text-caption font-bold tracking-[0.2em] text-lacquer uppercase">
             {/* eslint-disable-next-line @next/next/no-img-element -- biểu tượng tĩnh */}
             <img src="/art/formation/lenh-bai-icon.webp" alt="" aria-hidden className="size-6" draggable={false} />
