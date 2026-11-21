@@ -101,15 +101,15 @@ Nhạc Trận Đồ: `music/formation_menu` (màn chế độ: sáo + đàn tran
 | `battle.hit.<nghe>` | Đòn đánh thường | Theo nghề: kiếm (tướng sĩ), giáo/khiên (binh lính), pháp lực (pháp sư), thuốc (y sĩ), quạt/sách (mưu sĩ), kỳ (quân sư), tên (xạ thủ), dao (sát thủ) | 0,3–0,5 s | P1 |
 | `battle.skill.<he>` | Kỹ năng theo hệ | Kim: va kim loại; Mộc: gỗ nứt, lá; Thủy: sóng; Hỏa: lửa; Thổ: đất rung; Lôi: sét; Phong: gió rít | 0,6–1,0 s | P1 |
 | `battle.ultimate` | Tuyệt chiêu ô 5 | Trống đồng + vút nghịch rồi nổ | 1,5 s | P2 |
-| `battle.damage` / `crit` | Nhận sát thương, chí mạng | Va nặng; chí mạng thêm chiêng gắt | 0,3 s | P1 |
+| `battle.damage` / `crit` | Nhận sát thương; `crit` cho đòn khắc hệ (game không có chí mạng) | Va nặng; đòn khắc hệ thêm chiêng gắt | 0,3 s | P1 |
 | `battle.heal` / `shield` / `buff` / `debuff` | Hồi, khiên, tăng, giảm | Chuông nhỏ, kim loại ngân, nốt lên, nốt xuống | 0,4–0,6 s | P2 |
 | `battle.burn` / `freeze` / `poison` | Trạng thái | Lách tách, đóng băng, sủi | 0,5 s | P2 |
 | `battle.ko` | Một nhân vật gục | Thịch nặng + tiếng thở ra | 0,8 s | P1 |
-| `battle.turn` | Đổi lượt | Mõ một tiếng | 0,2 s | P2 |
-| `battle.timer` | Đồng hồ 30 giây còn 5 giây | Mõ nhịp nhanh | 0,25 s | P2 |
+| `battle.turn` | Đổi phe (thêm lượt cùng phe thì không) | Mõ một tiếng | 0,2 s | P2 |
+| `battle.timer` | Lượt người chơi còn 5 giây: mỗi giây một tiếng, hai giây cuối cao hơn | Mõ nhịp nhanh | 0,25 s | P2 |
 | `battle.win` / `lose` | Kết thúc trận | Khải hoàn bằng trống đồng + sáo; thua: trống trầm + đàn bầu | 3–4 s | P1 |
 
-Đã nối (02/11/2026): tiếng ghép ô theo từng khung hoạt ảnh (`Frame.sound`), cue theo sự kiện ở hai thời điểm `start`/`end` của đạo diễn trận, nhạc `battle_normal`/`battle_boss` (chiến dịch có pha trùm)/`survival` khi đang trong trận. Chưa nối: `battle.crit`, `battle.turn`, `battle.timer`.
+Đã nối (02/11/2026): tiếng ghép ô theo từng khung hoạt ảnh (`Frame.sound`), cue theo sự kiện ở hai thời điểm `start`/`end` của đạo diễn trận, nhạc `battle_normal`/`battle_boss` (chiến dịch có pha trùm)/`survival` khi đang trong trận. Nối thêm 21/11/2026: `battle.crit` (đòn kiếm hoặc kỹ năng của người đang hành động đánh vào hệ mình khắc, thay tiếng `battle.damage`), `battle.turn` (sự kiện `turnStart` đổi phe, sau tiếng gục), `battle.timer` (`timerCue` trong `battle/sounds.ts`, gọi từ `DemoGame`).
 
 Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến), `music/battle_tower` (u tối, vang), `music/survival` (nhịp tăng theo đợt). Ambience theo địa hình nhiệm vụ.
 

@@ -52,7 +52,7 @@ import {
 import { useAudio } from "../audio/AudioProvider";
 import type { MusicId } from "../audio/cues";
 import { bounceFrames, eventFrames, type Frame } from "./animation";
-import { BATTLE_PRELOAD, frameCue, soundsForEvents, type CuePlay } from "./sounds";
+import { BATTLE_PRELOAD, frameCue, soundsForEvents, timerCue, type CuePlay } from "./sounds";
 import { sidesAfterEvents } from "./heldSides";
 import { COMBAT_PACING } from "./pacing";
 import {
@@ -768,6 +768,12 @@ export default function DemoGame({
           TURN_MS / 1000,
           Math.max(0, Math.ceil((deadline - clock) / 1000)),
         );
+  // Còn 5 giây ở lượt của người chơi thì gõ mõ mỗi giây.
+  const timerSeconds = playerTurn && !replaying && anim === null ? secondsLeft : null;
+  useEffect(() => {
+    const c = timerCue(timerSeconds);
+    if (c) playSound(c.id, { rate: c.rate });
+  }, [timerSeconds, playSound]);
 
   // Báo chiều cao cho trang cha khi được nhúng bằng iframe (ShanVerse).
   useEffect(() => {

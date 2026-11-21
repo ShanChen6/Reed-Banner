@@ -5,7 +5,7 @@
 // số sát thương bay lên (đòn trúng, hồi, hiệu ứng, gục, kết thúc). Tiếng ghép ô theo từng khung hoạt ảnh (`frameCue`).
 
 import { isUltimate, HIT_DELAY_MS, AFTER_HIT_MS } from "../stage/director";
-import { NEGATIVE_EFFECTS, POSITIVE_EFFECTS, type BattleEvent, type BattleState } from "@/core";
+import { elementRelation, NEGATIVE_EFFECTS, POSITIVE_EFFECTS, type BattleEvent, type BattleState } from "@/core";
 import { BATTLE_CUES, type CueId } from "../audio/cues";
 import type { FrameSound } from "./animation";
 
@@ -14,6 +14,15 @@ export interface CuePlay {
   /** Chờ bao lâu (ms) sau khi lô bắt đầu. */
   readonly delay?: number;
   readonly rate?: number;
+}
+
+/** Mõ đổi lượt đi sau tiếng gục (HIT_DELAY_MS + 200) để không đè lên tiếng trúng đòn. */
+export const TURN_DELAY_MS = HIT_DELAY_MS + 450;
+
+/** Đồng hồ 30 giây: còn 5 giây trở xuống thì mỗi giây gõ một tiếng, hai giây cuối gõ cao hơn. */
+export function timerCue(seconds: number | null): CuePlay | null {
+  if (seconds === null || seconds < 1 || seconds > 5) return null;
+  return seconds <= 2 ? { id: "battle.timer", rate: 1.12 } : { id: "battle.timer" };
 }
 
 export interface BattleSounds {
@@ -52,10 +61,19 @@ export function soundsForEvents(before: BattleState, events: readonly BattleEven
   let side = before.turn.side;
   let actor = before.turn.actor;
   const fighterAt = (s: 0 | 1, i: number) => before.sides[s]?.fighters[i];
+  // Game không có chí mạng: tiếng "crit" dành cho đòn khắc hệ (kiếm hoặc kỹ năng của người đang hành động đánh vào hệ mình khắc, sát thương x1,25).
+  const isCounterHit = (e: Extract<BattleEvent, { type: "damage" }>) => {
+    if (e.side === side || (e.source !== "sword" && e.source !== "skill")) return false;
+    const atk = fighterAt(side, actor);
+    const def = fighterAt(e.side, e.fighter);
+    return !!atk && !!def && elementRelation(atk.element, def.element) === "counter";
+  };
 
   for (const e of events) {
     switch (e.type) {
       case "turnStart":
+        // Đổi phe thì gõ mõ sau khi các đòn của lượt trước đã nổ xong; thêm lượt cùng phe thì không.
+        if (e.side !== side) add(end, { id: "battle.turn", delay: TURN_DELAY_MS });
         side = e.side;
         actor = e.actor;
         break;
@@ -76,7 +94,7 @@ export function soundsForEvents(before: BattleState, events: readonly BattleEven
         }
         const delay = e.source === "sword" ? HIT_DELAY_MS : 0;
         if (e.amount === 0 && e.absorbed > 0) add(end, { id: "battle.shield", delay: delay + 60 });
-        else if (e.amount > 0) add(end, { id: "battle.damage", delay });
+        else if (e.amount > 0) add(end, { id: isCounterHit(e) ? "battle.crit" : "battle.damage", delay });
         break;
       }
       case "heal":

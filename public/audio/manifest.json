@@ -304,6 +304,28 @@
       ],
       "volume": 0.85
     },
+    "battle.crit": {
+      "files": [
+        "sfx/battle/crit_a",
+        "sfx/battle/crit_b",
+        "sfx/battle/crit_c"
+      ],
+      "volume": 0.85
+    },
+    "battle.turn": {
+      "files": [
+        "sfx/battle/turn_a"
+      ],
+      "volume": 0.6
+    },
+    "battle.timer": {
+      "files": [
+        "sfx/battle/timer_a",
+        "sfx/battle/timer_b",
+        "sfx/battle/timer_c"
+      ],
+      "volume": 0.7
+    },
     "battle.skill.kim": {
       "files": [
         "sfx/battle/skill_a",
@@ -595,6 +617,10 @@
   "music": {
     "formation_menu": {
       "file": "music/formation_menu",
+      "volume": 0.5
+    },
+    "formation_play": {
+      "file": "music/formation_play",
       "volume": 0.5
     },
     "atlas": {

@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { createBattle, mainCharacter, playAiTurn, STARTER_COMPANIONS, type BattleEvent, type BattleState } from "../../src/core";
+import { createBattle, elementRelation, mainCharacter, playAiTurn, STARTER_COMPANIONS, type BattleEvent, type BattleState } from "../../src/core";
 import { CUE_IDS } from "../../src/app/game/audio/cues";
 import { eventFrames, bounceFrames } from "../../src/app/game/battle/animation";
-import { BATTLE_PRELOAD, frameCue, soundsForEvents } from "../../src/app/game/battle/sounds";
+import { BATTLE_PRELOAD, frameCue, soundsForEvents, timerCue, TURN_DELAY_MS } from "../../src/app/game/battle/sounds";
 import { AFTER_HIT_MS, HIT_DELAY_MS } from "../../src/app/game/stage/director";
 
 const byId = (id: string) => STARTER_COMPANIONS.find((c) => c.id === id)!;
@@ -100,6 +100,49 @@ describe("âm thanh trận đánh", () => {
         s = r.state;
       }
     }
+  });
+
+  it("đòn khắc hệ ra tiếng chí mạng thay cho tiếng trúng thường", () => {
+    // Thủy (nhân vật chính, đi trước) khắc Hỏa; đội địch có một Hỏa để chắc chắn có ca khắc hệ.
+    const s = createBattle({
+      sides: [
+        { fighters: [mainCharacter("thuy"), byId("haVan"), byId("maiThanh")], leader: 0 },
+        { fighters: [mainCharacter("hoa"), byId("toKim"), byId("phungPhong")], leader: 0 },
+      ],
+      seed: 1,
+      timer: false,
+    }).state;
+    const actor = s.sides[s.turn.side].fighters[s.turn.actor]!;
+    const foes = s.sides[1 - s.turn.side]!.fighters;
+    assert.ok(foes.some((f) => elementRelation(actor.element, f.element) === "counter"));
+    const hitOn = (i: number) => soundsForEvents(s, [{ type: "damage", side: (1 - s.turn.side) as 0 | 1, fighter: i, amount: 20, absorbed: 0, source: "skill" }]).end.map((c) => c.id);
+    for (let i = 0; i < foes.length; i++) {
+      const counter = elementRelation(actor.element, foes[i]!.element) === "counter";
+      assert.deepEqual(hitOn(i), [counter ? "battle.crit" : "battle.damage"], foes[i]!.element);
+    }
+    // Sát thương theo lượt (độc, bỏng) không bao giờ là chí mạng.
+    const dot = foes.findIndex((f) => elementRelation(actor.element, f.element) === "counter");
+    assert.deepEqual(soundsForEvents(s, [{ type: "damage", side: (1 - s.turn.side) as 0 | 1, fighter: dot, amount: 5, absorbed: 0, source: "poison" }]).end.map((c) => c.id), ["battle.damage"]);
+  });
+
+  it("đổi phe thì có tiếng đổi lượt sau tiếng trúng đòn; thêm lượt cùng phe thì không", () => {
+    const s = battle(1);
+    const other = (1 - s.turn.side) as 0 | 1;
+    const turn = soundsForEvents(s, [{ type: "turnStart", side: other, actor: 0, extra: false }]).end;
+    assert.deepEqual(turn.map((c) => c.id), ["battle.turn"]);
+    assert.ok(turn[0]!.delay! > HIT_DELAY_MS + 200);
+    assert.equal(turn[0]!.delay, TURN_DELAY_MS);
+    assert.deepEqual(soundsForEvents(s, [{ type: "turnStart", side: s.turn.side, actor: s.turn.actor, extra: true }]).end, []);
+  });
+
+  it("đồng hồ: chỉ gõ khi còn 5 giây trở xuống, hai giây cuối cao hơn", () => {
+    assert.equal(timerCue(null), null);
+    assert.equal(timerCue(30), null);
+    assert.equal(timerCue(6), null);
+    assert.equal(timerCue(0), null);
+    assert.equal(timerCue(5)!.id, "battle.timer");
+    assert.equal(timerCue(5)!.rate, undefined);
+    assert.ok(timerCue(1)!.rate! > 1);
   });
 
   it("sinh tồn: đợt mới vào sân có tiếng riêng", () => {
