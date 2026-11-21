@@ -459,6 +459,15 @@
     .battle-live .ui-frame--phone-flat > .ui-frame-corner { display: none; }
     .battle-live .play-card-toggle { display: none; }
   }
+  /* Thanh tab dưới trên điện thoại (MobileTabBar.tsx, Shan chọn 3C): nền gỗ, chỉ đồng trên; mục đang ở chữ vàng sáng. */
+  .ui-tab-bar {
+    border-top: 1px solid var(--frame-line);
+    background: linear-gradient(180deg, var(--wood), var(--wood-lo));
+    box-shadow: 0 -6px 18px color-mix(in srgb, var(--black) 45%, transparent);
+    color: var(--on-wood-soft);
+  }
+  .ui-tab-bar [aria-current="page"] { color: var(--title-on-wood); }
+  .ui-tab-bar [aria-current="page"] svg { color: var(--frame-gold-hi); }
   /* Bảng trượt đáy (BottomSheet.tsx). Điện thoại: dính đáy, bo hai góc trên, cao tối đa 85% màn; từ 640px là hộp giữa màn. */
   .ui-sheet {
     margin: auto auto 0;
