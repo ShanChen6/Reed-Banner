@@ -32,9 +32,8 @@ describe("âm thanh trận đánh", () => {
     assert.equal(frameCue({ kind: "clear", size: 4, chain: 1 })!.rate, undefined);
     assert.equal(frameCue({ kind: "clear", size: 5, chain: 1 })!.rate, undefined);
     assert.deepEqual([2, 3, 4, 5, 9].map((c) => frameCue({ kind: "clear", size: 3, chain: c })!.id), ["battle.combo1", "battle.combo2", "battle.combo3", "battle.combo4", "battle.combo4"]);
-    // Tầng 4 dùng lại tệp tầng 3 nên phát cao hơn.
-    assert.equal(frameCue({ kind: "clear", size: 3, chain: 4 })!.rate, undefined);
-    assert.ok(frameCue({ kind: "clear", size: 3, chain: 5 })!.rate! > 1);
+    // Mỗi tầng có tệp riêng nên không đổi tốc độ phát.
+    assert.ok([2, 3, 4, 5, 9].every((c) => frameCue({ kind: "clear", size: 3, chain: c })!.rate === undefined));
   });
 
   it("khung hoạt ảnh mang âm thanh: đổi ô rồi xóa, và đổi sai thì bật lại", () => {

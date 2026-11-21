@@ -28,8 +28,7 @@ export function frameCue(sound: FrameSound | undefined): CuePlay | null {
   if (sound.kind === "bounce") return { id: "battle.invalid" };
   if (sound.chain >= 2) {
     const tier = Math.min(4, sound.chain - 1) as 1 | 2 | 3 | 4;
-    // Tầng 4 trở lên chưa có tiếng riêng: manifest trỏ về tệp tầng 3, phát cao hơn một chút để vẫn nghe tăng dần.
-    return tier === 4 ? { id: "battle.combo4", rate: 1.12 } : { id: `battle.combo${tier}` };
+    return { id: `battle.combo${tier}` };
   }
   if (sound.size >= 5) return { id: "battle.match5" };
   if (sound.size === 4) return { id: "battle.match4" };
