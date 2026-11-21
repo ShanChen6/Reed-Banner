@@ -83,17 +83,33 @@ function PieceText({ hand }: { hand: PuzzleState["hand"] }) {
   );
 }
 
-/** "Lệnh bài": tấm bài giấy dó có dấu son, hiện quân đang cầm. */
+/**
+ * "Lệnh bài": thẻ giấy dó viền card, bên trái là tấm lệnh bài gỗ sơn son chữ 令 Shan vẽ (21/11/2026,
+ * `public/art/formation/lenh-bai.webp`), chân dung quân đang cầm lồng vào ô tròn giữa tấm; bên phải là tên, nghề, hệ.
+ * Ô tròn trong ảnh: tâm 50,4% bề ngang và 57,8% bề cao, đường kính 50,2% bề ngang (ảnh 660 × 1480 đã cắt sát).
+ */
 export function CommandCard({ state }: { state: PuzzleState }) {
   return (
-    <section aria-label="Quân đang cầm" className="relative overflow-hidden rounded-lg border-2 border-frame-bronze bg-gradient-to-br from-paper-hi to-paper-deep p-4 text-wood shadow-[0_4px_14px_rgb(0_0_0/0.55)]">
-      {/* Viền card như các card lớn khác (Shan 21/11/2026): vạch đồng bên trong và bốn góc hoa văn, màu đồng sẫm trên giấy. */}
+    <section aria-label="Quân đang cầm" className="relative overflow-hidden rounded-lg border-2 border-frame-bronze bg-gradient-to-br from-paper-hi to-paper-deep px-4 py-3 text-wood shadow-[0_4px_14px_rgb(0_0_0/0.55)]">
+      {/* Viền card như các card lớn khác (Shan 21/11/2026): vạch đồng bên trong và bốn góc hoa văn, màu gỗ sẫm trên giấy. */}
       <span aria-hidden className="pointer-events-none absolute inset-1 rounded-md border border-frame-bronze/70" />
       <FrameCorners size="size-6" cornerClass="text-wood/70" />
-      <span aria-hidden className="absolute top-0 right-8 z-[2] rounded-b bg-lacquer px-2 pt-0.5 pb-1 font-serif text-[11px] font-bold uppercase tracking-[0.2em] text-title-on-wood">Lệnh bài</span>
-      <div className="flex items-center gap-3 pt-3">
-        <div className="size-24 shrink-0 rounded-md bg-wood/10 p-1"><PieceFace piece={state.hand} large /></div>
-        <div className="min-w-0 text-[15px] leading-snug"><PieceText hand={state.hand} /></div>
+      <div className="relative flex items-center gap-4">
+        <div className="relative w-[6.5rem] shrink-0 2xl:w-28">
+          {/* eslint-disable-next-line @next/next/no-img-element -- ảnh lệnh bài tĩnh làm khung chân dung */}
+          <img src="/art/formation/lenh-bai.webp" alt="" aria-hidden draggable={false} className="block h-auto w-full drop-shadow-[0_4px_6px_rgb(0_0_0/0.45)]" />
+          <div className="absolute top-[46.6%] left-[25.3%] aspect-square w-[50.2%]">
+            <PieceFace piece={state.hand} large />
+          </div>
+        </div>
+        <div className="flex min-w-0 flex-col gap-1 text-[15px] leading-snug">
+          <p className="flex items-center gap-1.5 font-serif text-caption font-bold tracking-[0.2em] text-lacquer uppercase">
+            {/* eslint-disable-next-line @next/next/no-img-element -- biểu tượng tĩnh */}
+            <img src="/art/formation/lenh-bai-icon.webp" alt="" aria-hidden className="size-6" draggable={false} />
+            Lệnh bài
+          </p>
+          <PieceText hand={state.hand} />
+        </div>
       </div>
     </section>
   );
