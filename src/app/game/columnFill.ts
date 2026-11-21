@@ -12,12 +12,14 @@ export interface ColumnPoem {
 export interface ColumnFillEntry {
   /** Đường dẫn tranh trong public/, để trống khi chưa vẽ. */
   readonly art?: string;
+  /** Vị trí cắt tranh (CSS object-position), mặc định "50% 30%"; dùng khi tranh ngang đặt vào khung dọc. */
+  readonly artPosition?: string;
   readonly poem: ColumnPoem;
   /** Mẹo chơi ngắn, chỉ hiện khi chưa có tranh. */
   readonly tips: readonly string[];
 }
 
-export type ColumnFillMode = "daily" | "arena" | "destiny" | "survival" | "trial" | "clearPath";
+export type ColumnFillMode = "daily" | "arena" | "destiny" | "survival" | "trial" | "clearPath" | "formation";
 
 const NAM_QUOC_SON_HA: ColumnPoem = {
   lines: ["Nam quốc sơn hà Nam đế cư,", "Tiệt nhiên định phận tại thiên thư.", "Như hà nghịch lỗ lai xâm phạm,", "Nhữ đẳng hành khan thủ bại hư."],
@@ -88,6 +90,20 @@ export const COLUMN_FILL: Readonly<Record<ColumnFillMode, ColumnFillEntry>> = {
     tips: [
       "Khối càng lớn điểm càng cao: gom quân cùng hệ lại rồi mới xóa.",
       "Để dành đạo cụ cho mấy quân lẻ cuối bàn.",
+    ],
+  },
+  // Trận Đồ (Shan 21/11/2026, hai cột): tạm dùng tranh thẻ chế độ (tay bày quân bên sa bàn) tới khi Shan vẽ tranh dọc riêng
+  // `public/art/column-fill/formation.webp`, prompt ở /mnt/project-files/art/prompts/tranh-lap-cot.md.
+  formation: {
+    art: "/art/home/tran-do.webp",
+    artPosition: "38% 50%",
+    poem: {
+      lines: ["Trí chủ hữu hoài phù địa trục,", "Tẩy binh vô lộ vãn thiên hà."],
+      source: "Đặng Dung, Cảm hoài",
+    },
+    tips: [
+      "Đặt quân nối dài theo một nghề hoặc một hệ để luôn còn chỗ đặt.",
+      "Bỏ Lệnh khi hết nước; dọn được hàng hoặc cột thì lửa tắt hết.",
     ],
   },
 };

@@ -47,6 +47,18 @@
   /* Chỗ trống quá thấp (ColumnFill tự đặt data-collapsed): bỏ khối lấp, khung ngay trên giãn tới đáy cột. */
   :has(+ .ui-column-fill[data-collapsed]) { flex-grow: 1; }
 
+  /* Hộp kết quả cuối ván (ResultModal): hiện giữa màn, dải nhỏ trên tiêu đề đổi màu theo thắng/thua. */
+  .ui-result-modal[open] { animation: ui-result-in 0.22s ease-out; }
+  .ui-result-modal[open]::backdrop { animation: ui-result-fade 0.22s ease-out; }
+  .ui-result-modal > .ui-frame { background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--frame-gold) 14%, transparent) 0%, transparent 60%), var(--wood); }
+  .ui-result-modal__kicker { color: var(--frame-gold); }
+  .ui-result-modal[data-tone="win"] .ui-result-modal__kicker { color: var(--frame-gold-hi); }
+  .ui-result-modal[data-tone="lose"] .ui-result-modal__kicker { color: var(--danger); }
+  @media (prefers-reduced-motion: reduce) {
+    .ui-result-modal[open],
+    .ui-result-modal[open]::backdrop { animation: none; }
+  }
+
   @supports (appearance: base-select) {
     .ui-select,
     .ui-select::picker(select) { appearance: base-select; }
@@ -453,4 +465,13 @@
     .ui-choice, .ui-button--primary, .ui-button--secondary { transition: none; }
     .ui-skeleton { animation: none; }
   }
+}
+
+@keyframes ui-result-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes ui-result-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

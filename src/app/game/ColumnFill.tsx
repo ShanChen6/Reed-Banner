@@ -24,7 +24,7 @@ const MIN_FILL_PX = 80;
  * (`data-collapsed`) và khung đứng ngay trên giãn tới đáy cột, để đáy hai cột vẫn thẳng hàng.
  */
 export function ColumnFill({ mode, className }: { mode: ColumnFillMode; className?: string }) {
-  const { art, poem, tips } = COLUMN_FILL[mode];
+  const { art, artPosition, poem, tips } = COLUMN_FILL[mode];
   const ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -49,7 +49,7 @@ export function ColumnFill({ mode, className }: { mode: ColumnFillMode; classNam
       {art ? (
         <figure className="ui-column-fill__card ui-column-fill__card--art ui-frame relative overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element -- tranh trang trí co giãn theo chỗ trống */}
-          <img src={art} alt="" className="absolute inset-0 size-full object-cover object-[50%_30%]" />
+          <img src={art} alt="" className="absolute inset-0 size-full object-cover object-[50%_30%]" style={artPosition ? { objectPosition: artPosition } : undefined} />
           <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-transparent from-30% to-[var(--wood-inset)]" />
           <figcaption className="relative mt-auto p-5 text-title-on-wood">
             <Poem poem={poem} className="text-base" />
