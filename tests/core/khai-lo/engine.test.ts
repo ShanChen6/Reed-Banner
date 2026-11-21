@@ -5,7 +5,10 @@ import {
   KL_NEAR_CLEAR_BONUS,
   clearBonus,
   KL_TIMED_START_SECONDS,
+  KL_CLASSIC_KINDS,
+  KL_CLASSIC_TOOL_CHARGE,
   KL_TOOL_CHARGE,
+  toolCharge,
   timedGoal,
   KL_START_TOOLS,
   KL_START_HEARTS,
@@ -116,14 +119,14 @@ describe("Khai Lộ: luật nước đi", () => {
   });
 
   it("chạm khối nạp thanh của hệ đó, đủ quân thì +1 đạo cụ hệ ấy, tích không giới hạn", () => {
-    const s = stateOf(["aab", "bcd"], { charge: kit({ kim: KL_TOOL_CHARGE - 1 }) });
+    const s = stateOf(["aab", "bcd"], { charge: kit({ kim: KL_CLASSIC_TOOL_CHARGE - 1 }) });
     const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
     assert.deepEqual(r.state.tools, kit({ kim: 1 }));
     assert.deepEqual(r.state.charge, kit({ kim: 1 }));
     assert.ok(r.events.some((e) => e.type === "toolCharged" && e.tool === "kim"));
     assert.equal(r.state.phase, "stuck");
-    const many = transition(stateOf(["aab", "bcd"], { tools: kit({ kim: 20 }), charge: kit({ kim: KL_TOOL_CHARGE - 1 }) }), { type: "pick", index: 0 });
+    const many = transition(stateOf(["aab", "bcd"], { tools: kit({ kim: 20 }), charge: kit({ kim: KL_CLASSIC_TOOL_CHARGE - 1 }) }), { type: "pick", index: 0 });
     assert.ok(many.ok);
     assert.equal(many.state.tools.kim, 21);
     assert.equal(many.state.charge.kim, 1);
@@ -140,7 +143,7 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.deepEqual(r.state.charge, kit());
   });
 
-  it("Thường: ván mới có 30 tim; quân sót cuối màn trừ tim rồi sang màn", () => {
+  it("Thường: ván mới có KL_START_HEARTS tim; quân sót cuối màn trừ tim rồi sang màn", () => {
     assert.equal(createGame(1).hearts, KL_START_HEARTS);
     const r = transition(stateOf(["aab", "aac"]), { type: "pick", index: 0 });
     assert.ok(r.ok);
@@ -263,20 +266,40 @@ describe("Khai Lộ: luật nước đi", () => {
 });
 
 describe("Khai Lộ: sinh bàn và lưu ván", () => {
-  it("cùng seed cùng bàn, luôn có nhóm, số loại ô tăng theo màn", () => {
+  it("cùng seed cùng bàn, luôn có nhóm; Thường luôn 3 hệ và vụn dần, Cấp tốc tăng số hệ theo bậc", () => {
     assert.deepEqual(generateBoard(42, 3, 1), generateBoard(42, 3, 1));
-    for (let level = 1; level <= 20; level++) {
-      const { cells } = generateBoard(7, level, 1);
-      assert.ok(hasGroup(cells, 10, 8));
-      assert.equal(new Set(cells.map((c) => c?.kind)).size <= levelConfig(level).kinds, true);
-      assert.equal(cells.filter((c) => c?.mult).length, levelConfig(level).mults);
-      if (level < KL_MULT3_FROM) assert.equal(cells.some((c) => c?.mult === 3), false);
+    for (const mode of ["classic", "timed"] as const) {
+      for (let level = 1; level <= 20; level++) {
+        const { cells } = generateBoard(7, level, 1, 10, 8, 0, mode);
+        assert.ok(hasGroup(cells, 10, 8));
+        const kinds = new Set(cells.map((c) => c?.kind)).size;
+        assert.equal(kinds <= levelConfig(level, mode).kinds, true);
+        if (mode === "classic") assert.equal(kinds, KL_CLASSIC_KINDS);
+        assert.equal(cells.filter((c) => c?.mult).length, levelConfig(level, mode).mults);
+        if (level < KL_MULT3_FROM) assert.equal(cells.some((c) => c?.mult === 3), false);
+      }
     }
-    assert.equal(levelConfig(3).kinds, 3);
-    assert.equal(levelConfig(4).kinds, 4);
-    assert.equal(levelConfig(8).kinds, 5);
-    assert.equal(levelConfig(13).kinds, 5);
-    assert.equal(levelConfig(14).kinds, 6);
+    assert.equal(levelConfig(14).kinds, KL_CLASSIC_KINDS);
+    assert.equal(levelConfig(1).scatter, 0);
+    assert.equal(levelConfig(30).scatter, 1);
+    assert.equal(levelConfig(3, "timed").kinds, 3);
+    assert.equal(levelConfig(4, "timed").kinds, 4);
+    assert.equal(levelConfig(8, "timed").kinds, 5);
+    assert.equal(levelConfig(14, "timed").kinds, 6);
+    assert.equal(levelConfig(14, "timed").scatter, 0);
+    // màn sau ít cặp kề cùng hệ hơn màn đầu
+    const pairs = (level: number) => {
+      const { cells } = generateBoard(99, level, 1, 10, 12, 0, "classic");
+      let n = 0;
+      cells.forEach((c, i) => {
+        if (i % 10 > 0 && cells[i - 1]?.kind === c?.kind) n++;
+        if (i >= 10 && cells[i - 10]?.kind === c?.kind) n++;
+      });
+      return n;
+    };
+    assert.ok(pairs(12) < pairs(1));
+    assert.equal(toolCharge("classic"), KL_CLASSIC_TOOL_CHARGE);
+    assert.equal(toolCharge("timed"), KL_TOOL_CHARGE);
   });
 
   it("chơi tham lam tới hết ván luôn kết thúc, không kẹt", () => {

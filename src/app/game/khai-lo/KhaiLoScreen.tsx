@@ -17,10 +17,10 @@ import {
   groupAt,
   KL_TIMED_LEVEL_SECONDS,
   KL_TIMED_START_SECONDS,
-  KL_TOOL_CHARGE,
   parseGame,
   serializeGame,
   toolTargets,
+  allGroups,
   tilesLeft,
   transition,
   type KlAction,
@@ -31,6 +31,7 @@ import {
   type KlState,
   type KlTool,
   timedGoal,
+  toolCharge,
 } from "@/core/khai-lo";
 import { ELEMENT_COLOR } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
@@ -404,6 +405,7 @@ export default function KhaiLoScreen() {
   };
 
   const summary = state.phase === "levelDone" ? state.summary : null;
+  const charge = toolCharge(state.mode);
   // Đạo cụ hiện theo hệ có trên bàn (và hệ đã có sẵn đạo cụ/thanh nạp dở dù bàn này không còn).
   const onBoard = new Set(state.cells.map((c) => c?.kind));
   const shownTools = ELEMENTS.filter((e) => onBoard.has(e) || state.tools[e] > 0);
@@ -564,7 +566,7 @@ export default function KhaiLoScreen() {
           </p>
         </OrnateFrame>
 
-        <aside className="flex flex-col gap-3 [grid-area:tools] lg:gap-4" aria-label="Bảng điều khiển">
+        <aside className="flex flex-col gap-3 [grid-area:tools] lg:gap-4 xl:self-stretch" aria-label="Bảng điều khiển">
           {active && (
             <div className="ui-frame flex flex-col gap-2 p-2 sm:gap-3 sm:p-4">
               <p className="ui-title-on-wood hidden font-bold lg:block">Đạo cụ</p>
@@ -574,9 +576,9 @@ export default function KhaiLoScreen() {
                     key={t}
                     type="button"
                     aria-pressed={tool === t}
-                    aria-label={`${TOOL_NAME[t]} (hệ ${ELEMENT_NAME[t]}), còn ${state.tools[t]}, nạp ${state.charge[t]}/${KL_TOOL_CHARGE} quân`}
+                    aria-label={`${TOOL_NAME[t]} (hệ ${ELEMENT_NAME[t]}), còn ${state.tools[t]}, nạp ${state.charge[t]}/${charge} quân`}
                     disabled={state.tools[t] <= 0}
-                    title={`${TOOL_NAME[t]}: ${TOOL_HINT[t]} Xóa ${KL_TOOL_CHARGE} quân hệ ${ELEMENT_NAME[t]} để được thêm 1 (đang ${state.charge[t]}). Phím ${ELEMENTS.indexOf(t) + 1}.`}
+                    title={`${TOOL_NAME[t]}: ${TOOL_HINT[t]} Xóa ${charge} quân hệ ${ELEMENT_NAME[t]} để được thêm 1 (đang ${state.charge[t]}). Phím ${ELEMENTS.indexOf(t) + 1}.`}
                     onClick={() => setTool((cur) => (cur === t ? null : t))}
                     className={choiceVariants({ size: "sm", className: "kl-tool flex-col gap-0.5 px-1 py-1 leading-tight disabled:opacity-60" })}
                     style={{ ["--el" as string]: ELEMENT_COLOR[t] }}
@@ -587,7 +589,7 @@ export default function KhaiLoScreen() {
                       <span className="tabular-nums">×{state.tools[t]}</span>
                     </span>
                     <span className="hidden text-caption sm:block">{TOOL_NAME[t]}</span>
-                    <ChargeBar value={state.charge[t]} max={KL_TOOL_CHARGE} />
+                    <ChargeBar value={state.charge[t]} max={charge} />
                   </button>
                 ))}
               </div>
@@ -619,6 +621,14 @@ export default function KhaiLoScreen() {
               )}
             </div>
           )}
+          {/* Shan 21/11/2026: cột phải còn trống → bảng quân trên bàn và tranh rừng tre (nửa phải tranh nền) lấp phần dưới. */}
+          <BoardTally state={state} best={best} />
+          <div className="ui-column-fill hidden xl:block">
+            <figure className="ui-column-fill__card ui-column-fill__card--art ui-frame relative overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element -- tranh trang trí co giãn theo chỗ trống */}
+              <img src="/art/column-fill/clear-path-right.webp" alt="" className="absolute inset-0 size-full object-cover object-[50%_30%]" />
+            </figure>
+          </div>
         </aside>
       </div>
       </PlayCard>
@@ -677,6 +687,47 @@ function Stats({ state, best, left, msLeft }: { state: KlState; best: number; le
         </div>
       ))}
     </dl>
+  );
+}
+
+/** Số quân từng hệ còn trên bàn và khối lớn nhất của hệ đó, để tính nước gom khối; kèm điểm cao nhất ở Thường. */
+function BoardTally({ state, best }: { state: KlState; best: number }) {
+  const count = new Map<Element, number>();
+  for (const c of state.cells) if (c) count.set(c.kind, (count.get(c.kind) ?? 0) + 1);
+  const biggest = new Map<Element, number>();
+  for (const g of allGroups(state.cells, state.width, state.height)) {
+    const k = state.cells[g[0] as number]!.kind;
+    biggest.set(k, Math.max(biggest.get(k) ?? 0, g.length));
+  }
+  const total = Math.max(1, state.width * state.height);
+  const rows = ELEMENTS.filter((e) => count.has(e));
+  return (
+    <section className="ui-frame hidden flex-col gap-2 p-4 lg:flex" aria-label="Quân trên bàn">
+      <p className="ui-title-on-wood font-bold">Quân trên bàn</p>
+      {rows.length === 0 ? (
+        <p className="text-sm text-on-wood-soft">Bàn đã sạch.</p>
+      ) : (
+        <ul className="flex flex-col gap-2">
+          {rows.map((e) => (
+            <li key={e} className="flex items-center gap-2 text-sm">
+              {/* eslint-disable-next-line @next/next/no-img-element -- biểu tượng hệ tĩnh dùng lại */}
+              <img src={`/art/elements/${e}.webp`} alt="" className="size-6" draggable={false} />
+              <span className="w-12 text-on-wood">{ELEMENT_NAME[e]}</span>
+              <span className="kl-charge h-1.5 flex-1 overflow-hidden rounded-full" aria-hidden style={{ ["--el" as string]: ELEMENT_COLOR[e] }}>
+                <span className="block h-full rounded-full" style={{ width: `${(100 * (count.get(e) ?? 0)) / total}%` }} />
+              </span>
+              <span className="w-8 text-right font-bold tabular-nums text-title-on-wood">{count.get(e)}</span>
+              <span className="w-12 text-right text-caption tabular-nums text-on-wood-soft" title="Khối lớn nhất">{biggest.get(e) ? `khối ${biggest.get(e)}` : "lẻ"}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {state.mode === "classic" && (
+        <p className="flex justify-between border-t border-frame-line-soft pt-2 text-sm text-on-wood-soft">
+          Điểm cao nhất <b className="tabular-nums text-title-on-wood">{Math.max(best, state.score)}</b>
+        </p>
+      )}
+    </section>
   );
 }
 
