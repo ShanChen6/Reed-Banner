@@ -7,6 +7,7 @@ import { Alert, Button, buttonVariants, choiceVariants } from "@/components/ui";
 // thưởng đã xem để tải lại trang không phải xem lại từ đầu.
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import StartBar from "./StartBar";
 import BattlePrep, { type BattleChoice } from "./BattlePrep";
 import { nextMissionAfter, startTarget } from "./startMission";
@@ -283,6 +284,9 @@ export default function ChapterOne({
     setAtlas(next);
     writeJson(ATLAS_KEY, next);
   };
+  // Điện thoại: Hướng dẫn là bảng trượt mở từ nút "?" trên thanh Sử ký (Shan chọn 5B, 21/11/2026), không còn là một màn.
+  const phone = useMediaQuery(PHONE_QUERY);
+  const view = phone && atlas.view === "guide" ? "atlas" : atlas.view;
   const strongholdId = atlas.stronghold;
   const stronghold = strongholdId ? strongholdById(strongholdId) : undefined;
   const setStronghold = (id: StrongholdId | null) =>
@@ -470,7 +474,7 @@ export default function ChapterOne({
     <section
       ref={sectionRef}
       aria-labelledby={
-        atlas.view === "atlas" ? "chapter-one-title" : atlas.view === "guide" ? "mode-guide-title" : "mission-title"
+        view === "atlas" ? "chapter-one-title" : view === "guide" ? "mode-guide-title" : "mission-title"
       }
       className="flex scroll-mt-4 flex-col gap-4"
     >
@@ -490,13 +494,13 @@ export default function ChapterOne({
         <div className="atlas-frame atlas-frame-wood atlas-shell flex flex-col gap-3 p-2 sm:p-3">
           <AtlasCorners />
           <AtlasHeader
-            view={atlas.view}
+            view={view}
             level={profile.main.level}
             gold={profile.gold}
             supply={campaign.supply}
             onView={(view) => updateAtlas({ ...atlas, view })}
           />
-          {atlas.view === "atlas" && (
+          {view === "atlas" && (
             <div ref={mapRef} className="flex flex-col gap-3">
               {(() => {
                 const target = startTarget(campaign);
@@ -571,18 +575,18 @@ export default function ChapterOne({
               )}
             </div>
           )}
-      {atlas.view === "guide" ? (
+      {view === "guide" ? (
         <div className="px-1 sm:px-2">
           <ModeGuidePanel scene="CAMPAIGN" headingId="mode-guide-title" onPlay={() => updateAtlas({ ...atlas, view: "atlas" })} />
         </div>
-      ) : atlas.view === "codex" ? (
+      ) : view === "codex" ? (
         <>
           <WorldLedger campaign={profile.campaign} />
           <WarlordCodex campaign={campaign} />
         </>
-      ) : atlas.view === "raid" ? (
+      ) : view === "raid" ? (
         <div className="px-1 sm:px-2">{footer}</div>
-      ) : atlas.view === "atlas" ? null : (
+      ) : view === "atlas" ? null : (
         <>
           <nav
             aria-label="Đường dẫn"

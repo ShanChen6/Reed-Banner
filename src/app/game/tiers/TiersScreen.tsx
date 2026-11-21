@@ -118,6 +118,7 @@ export default function TiersScreen() {
                   onClaim={(i) => void claim(l, l.tiers[i]!.id)}
                   busy={busy !== null}
                   locked={l.locked === true}
+                  collapsible
                 />
                 {note?.id === l.id && <Alert tone={note.ok ? "success" : "error"}>{note.text}</Alert>}
               </section>
