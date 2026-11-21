@@ -8,7 +8,7 @@
 
 ## 1. Product decisions và ranh giới
 
-- Không tự thiết kế lại Global Game Header; dùng `GameShell` và hệ scene/navigation sẵn có. Không lặp header trong màn. Từ 04/11/2026 (Shan duyệt) header có ba cột: trái là nút nhà **Chiến trường** (về màn chính); giữa là bảng tên màn, hai bên có mây; phải là vàng hiện có và avatar + tên. Doanh Trại, Tài khoản, Cài đặt âm thanh và đăng nhập/đăng xuất nằm trong menu tài khoản. Tranh banner trải hết chiều dài thanh. Code ở `src/app/game/header/`.
+- Không tự thiết kế lại Global Game Header; dùng `GameShell` và hệ scene/navigation sẵn có. Không lặp header trong màn. Từ 04/11/2026 (Shan duyệt) header có ba cột: trái là nút nhà **Chiến trường** (về màn chính); giữa là bảng tên màn, hai bên có mây; phải là vàng hiện có và avatar + tên (điện thoại dưới 640px ẩn vàng, chỉ còn avatar; Shan chốt 21/11/2026). Doanh Trại, Tài khoản, Cài đặt âm thanh và đăng nhập/đăng xuất nằm trong menu tài khoản. Tranh banner trải hết chiều dài thanh. Code ở `src/app/game/header/`.
 - Giữ hình ảnh **gỗ tối / đồng cổ / giấy dó / vàng kim / đỏ son**, hoa văn Đông Sơn Việt Nam; không đưa mỹ thuật Á Đông chung chung (cung điện Trung Hoa, torii, giáp samurai) vào key art.
 - Campaign hiện có Sử Ký, atlas ba cột và chi tiết nhiệm vụ: **reference về độ hoàn thiện và chất liệu**, không áp 3 cột máy móc lên mọi mode.
 - `TRIAL`, `DESTINY` chỉ hiện click được khi server feature flag cho phép; không giả tạo trạng thái tiến độ hoặc phần thưởng ở client.
@@ -326,7 +326,7 @@ Shan yêu cầu chia chế độ của màn Chiến trường (`MenuScene.tsx`) 
 
 - **Chiến đấu** (trận ghép ô, dẫn đội tướng đánh nhau): Bình Loạn (thẻ to), Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh, Quần Hùng, Viễn Chinh.
 - **Giải đố** (một người, không đọ sức đội hình): Trận Đồ (xếp quân, không đánh nhau), Khai Lộ, Do Thám, Sử Lộ (có trận ghép ô một chiều với quân giặc trấn cổng nhưng trục chính là đáp câu sử và mọi người như nhau), Tầm Tướng Ký (ghép yếu tố, không đánh nhau).
-- **Sắp ra mắt**: chỉ chế độ mới đang thiết kế, chưa phát hành (`UPCOMING`, theo hàng "Chế độ mới" của [lộ trình](../../09-roadmap/lo-trinh.md)); hiện có Quần Hùng đấu trực tiếp. Chế độ đã phát hành nhưng tắt cờ ở một môi trường (ví dụ máy dev) vẫn nằm ở nhóm của nó với thẻ khóa, không chuyển sang mục này (Shan 14/11). Không còn chế độ nào thì hiện dòng báo trống.
+- **Sắp ra mắt**: chỉ chế độ mới đang thiết kế, chưa phát hành (`UPCOMING`, theo hàng "Chế độ mới" của [lộ trình](../../09-roadmap/lo-trinh.md)); hiện có thẻ Long Hổ Hội (chỉ là tên hiển thị, chưa có thiết kế, dùng tạm tranh Quần Hùng). Chế độ đã phát hành nhưng tắt cờ ở một môi trường (ví dụ máy dev) vẫn nằm ở nhóm của nó với thẻ khóa, không chuyển sang mục này (Shan 14/11). Không còn chế độ nào thì hiện dòng báo trống.
 - Mỗi chế độ khai báo `group` trong `MODES`; thêm chế độ mới phải chọn nhóm. Thanh dẫn là `nav` với liên kết neo `#home-battle`, `#home-puzzle`, `#home-soon` (kiểu `.ui-choice`, nút đang đọc mang `aria-current`), có số chế độ trên mỗi nút; mỗi mục có tiêu đề và một câu dẫn. Người dùng tắt chuyển động thì nhảy thẳng, không cuộn mượt.
 
 ## 17. Đại card cho mọi màn chế độ (16/11/2026)
