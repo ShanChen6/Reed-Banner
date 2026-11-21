@@ -156,13 +156,13 @@ export function FighterCard({
       style={{ borderLeftColor: ELEMENT_COLOR[fighter.element] }}
       title={cardTitle}
     >
-      <div className="mb-1 flex flex-col items-start gap-1 md:flex-row md:items-center md:gap-2">
+      <div className="mb-1 flex flex-row items-center gap-1.5 sm:flex-col sm:items-start sm:gap-1 md:flex-row md:items-center md:gap-2">
         <Portrait
           id={fighter.id}
           element={fighter.element}
           profession={fighter.profession}
           level={fighter.level}
-          className="size-8 shrink-0 md:size-7 lg:size-11"
+          className="size-7 shrink-0 sm:size-8 md:size-7 lg:size-11"
         />
         <div className="w-full min-w-0 md:flex-1">
           <span className="flex min-w-0 items-center gap-1 text-caption font-semibold leading-tight md:text-sm">

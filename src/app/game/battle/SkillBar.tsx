@@ -59,7 +59,7 @@ export function SkillBar({
       className={
         stacked
           ? "hidden grid-cols-3 gap-1.5 lg:grid"
-          : "grid grid-cols-3 gap-1.5 sm:flex sm:flex-wrap sm:items-stretch lg:hidden"
+          : "grid grid-cols-3 gap-1 sm:flex sm:flex-wrap sm:items-stretch sm:gap-1.5 lg:hidden"
       }
       aria-label="Kỹ năng"
     >
@@ -81,19 +81,20 @@ export function SkillBar({
               setWhirlAim(null);
               setPendingWhirl(null);
             }}
-            className={`relative flex w-full flex-col items-center gap-0.5 rounded-lg p-1 text-caption leading-tight ${stacked ? "" : "sm:w-[4.5rem]"} border ${aiming ? "border-stat-hp bg-stat-hp text-white" : "border-frame-line-soft bg-wood-panel hover:border-frame-gold"} ${
+            className={`relative flex w-full items-center rounded-lg p-1 text-caption leading-tight ${stacked ? "flex-col gap-0.5" : "min-h-11 gap-1.5 text-left max-sm:pl-1 sm:w-[4.5rem] sm:flex-col sm:gap-0.5 sm:text-center"} border ${aiming ? "border-stat-hp bg-stat-hp text-white" : "border-frame-line-soft bg-wood-panel hover:border-frame-gold"} ${
               disabled && !aiming ? "opacity-40 grayscale" : ""
             }`}
             title={`${skillText(def)}, phím ${i + 1}`}
           >
-            <SkillIcon def={def} className="size-10" />
+            {/* Điện thoại: biểu tượng nhỏ bên trái, tên bên phải để hai hàng kỹ năng vừa màn cùng bàn cờ. */}
+            <SkillIcon def={def} className={stacked ? "size-10" : "size-8 shrink-0 sm:size-10"} />
             <span className="absolute left-1 top-1 rounded-br bg-black/60 px-1 text-[11px] font-bold text-white">
               {i + 1}
             </span>
             <span className="absolute right-1 top-1 rounded-bl bg-stat-energy/90 px-1 text-[11px] tabular-nums text-white">
               {comboSkillCost(actor,def)}
             </span>
-            <span className="text-center">{def.name}</span>
+            <span className={stacked ? "text-center" : "line-clamp-2 min-w-0 pr-5 sm:pr-0 sm:text-center"}>{def.name}</span>
           </button>
         );
       })}

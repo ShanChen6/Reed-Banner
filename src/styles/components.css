@@ -444,6 +444,10 @@
     .ui-mode-card { border: 0; background: none; }
     .ui-mode-card::after,
     .ui-mode-card > .ui-frame-corner { display: none; }
+    /* Khung đứng riêng cần phẳng trên điện thoại (màn trận: bàn cờ lấp ngang). */
+    .ui-frame--phone-flat { border: 0; background: none; box-shadow: none; }
+    .ui-frame--phone-flat::after,
+    .ui-frame--phone-flat > .ui-frame-corner { display: none; }
   }
   /* Bảng trượt đáy (BottomSheet.tsx). Điện thoại: dính đáy, bo hai góc trên, cao tối đa 85% màn; từ 640px là hộp giữa màn. */
   .ui-sheet {
