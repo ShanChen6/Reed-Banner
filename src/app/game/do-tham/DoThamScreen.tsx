@@ -26,7 +26,7 @@ import {
   type DtState,
 } from "@/core/do-tham";
 import { Button, ChoiceChip } from "@/components/ui";
-import { BottomSheet, ModeBanner, ModeScreen, OrnateFrame, SurrenderButton } from "@/components/game-ui";
+import { BottomSheet, ModeBanner, ModeScreen, OrnateFrame, ResultModal, SurrenderButton } from "@/components/game-ui";
 import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { ElementIcon } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
@@ -175,6 +175,8 @@ export default function DoThamScreen() {
   const [flagMode, setFlagMode] = useState(false);
   const [armed, setArmed] = useState<Element | null>(null);
   const [axis, setAxis] = useState<"row" | "col">("row");
+  /** Ván đã kết thúc mà người chơi đóng hộp kết quả để xem bàn (ván mới là đối tượng khác nên hộp tự mở lại). */
+  const [dismissed, setDismissed] = useState<DtState | null>(null);
   const [message, setMessage] = useState("");
   const [focus, setFocus] = useState(0);
   const boardRef = useRef<HTMLDivElement>(null);
@@ -581,21 +583,26 @@ export default function DoThamScreen() {
             <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-title-on-wood">
               {message || infoText(game.info, game.width, turned)}
             </p>
-            {over && (
-              <div role="status" className="ui-frame flex w-full max-w-md flex-col items-center gap-2 p-4 text-center">
-                <h2 className="ui-title-on-wood text-2xl font-bold">{game.phase === "won" ? "Gỡ xong mọi bẫy!" : gaveUp ? "Đã đầu hàng" : "Sa bẫy"}</h2>
-                <p className="text-[15px]">
-                  {game.phase === "won"
-                    ? `Bạn xong bậc ${LEVEL_NAME[level]} trong ${clock(secs)}.${best[level] === secs ? " Đây là thời gian tốt nhất của bạn." : ""}`
-                    : gaveUp
-                      ? "Các bẫy đã lộ ra. Vào ván mới để thử lại."
-                      : "Ô đỏ là bẫy bạn chạm phải. Các bẫy còn lại đã lộ ra."}
-                </p>
+            <ResultModal
+              open={over && dismissed !== game}
+              tone={game.phase === "won" ? "win" : "lose"}
+              kicker={game.phase === "won" ? "Do thám thành công" : undefined}
+              title={game.phase === "won" ? "Gỡ xong mọi bẫy!" : gaveUp ? "Đã đầu hàng" : "Sa bẫy"}
+              onDismiss={() => setDismissed(game)}
+              actions={
                 <Button size="lg" autoFocus onClick={() => startGame(level, picks)}>
                   Ván mới
                 </Button>
-              </div>
-            )}
+              }
+            >
+              <p>
+                {game.phase === "won"
+                  ? `Bạn xong bậc ${LEVEL_NAME[level]} trong ${clock(secs)}.${best[level] === secs ? " Đây là thời gian tốt nhất của bạn." : ""}`
+                  : gaveUp
+                    ? "Các bẫy đã lộ ra. Vào ván mới để thử lại."
+                    : "Ô đỏ là bẫy bạn chạm phải. Các bẫy còn lại đã lộ ra."}
+              </p>
+            </ResultModal>
           </OrnateFrame>
         </PlayCard>
       </ModeGuideTabs>

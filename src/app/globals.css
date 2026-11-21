@@ -955,6 +955,16 @@
 .fm-board-col {
   container-type: inline-size;
 }
+/* Khung sa bàn (Shan 21/11/2026): tranh bậc phủ mờ sau bàn, tối dần ra mép để bàn nổi lên; dòng thông báo có nền tối
+   để đọc rõ trên tranh. */
+.fm-backdrop {
+  opacity: 0.4;
+  filter: saturate(0.85);
+  mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, black 45%, transparent 100%);
+}
+.fm-message:not(:empty) {
+  background: color-mix(in srgb, var(--wood-lo) 80%, transparent);
+}
 .fm-board {
   --fm-cell: min(var(--fm-max), calc((100cqw - 20px) / var(--fm-cols)));
   grid-template-columns: repeat(var(--fm-cols), var(--fm-cell));
@@ -1349,11 +1359,6 @@
   opacity: 0.85;
   mask-image: radial-gradient(ellipse 90% 85% at 50% 45%, black 60%, transparent 100%);
 }
-.kl-overlay {
-  background: color-mix(in srgb, var(--black) 55%, transparent);
-  backdrop-filter: blur(1.5px);
-  animation: barracks-fade 0.25s ease-out;
-}
 /* Khai Lộ: ô ngọc đặt tuyệt đối, đổi vị trí bằng transform để ô rơi/dồn cột có hoạt ảnh. */
 .kl-board {
   background: radial-gradient(ellipse at 50% 40%, var(--tone-233042) 0%, var(--tone-141c27) 80%);
@@ -1688,6 +1693,11 @@ html {
   .fm-board {
     --fm-cell: min(max(var(--fm-max), calc((100dvh - 20rem) / var(--fm-rows))), calc((100cqw - 20px) / var(--fm-cols)), 128px);
   }
+}
+/* Phóng to: hai cột Trận Đồ giãn hết chiều cao khung, cột hỗ trợ có tranh kèm thơ lấp phần dưới. */
+.play-card:fullscreen .fm-play,
+.play-card--overlay .fm-play {
+  flex: 1 1 auto;
 }
 .play-card:fullscreen .fm-board,
 .play-card--overlay .fm-board {

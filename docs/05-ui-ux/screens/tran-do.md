@@ -1,6 +1,6 @@
 # Giao diện Trận Đồ
 
-> Cập nhật: 18/11/2026
+> Cập nhật: 21/11/2026
 > Trạng thái: **DRAFT** — sa bàn là bản đồ, màn chế độ và màn chơi chi tiết đã có code; ô che, 4 icon chướng ngại v1 và đủ 30 ảnh bản đồ thật (Shan tạo) đã tích hợp; Shan test lần 1 rồi góp ý.
 
 Luật chơi ở [GDD Binh Pháp](../../02-game-modes/tran-do/gdd.md); tài liệu này chỉ nói về giao diện. Màn chơi nằm ở `src/app/game/formation/`.
@@ -21,7 +21,7 @@ Luật chơi ở [GDD Binh Pháp](../../02-game-modes/tran-do/gdd.md); tài li�
 - **Kho bản đồ** (`maps.ts`): 13 địa danh lấy từ danh mục sứ quân của Campaign V2 (`WARLORD_ENCOUNTERS`) cộng Hoa Lư. Bản đồ của một ván chọn bằng `mapFor(bậc, theme)`; `theme` suy từ seed (chơi thường) hoặc từ muối bí mật (xếp hạng) và như nhau với mọi người trong cùng kỳ, mỗi bậc lệch một khoảng nên cùng kỳ các bậc không trùng bản đồ. Thường/Khó đổi bản đồ mỗi ngày, Đại trận mỗi tuần (theo kỳ xếp hạng).
 - **Ô che đặc kín** (`public/art/formation/fog.webp`, ảnh Shan tạo, đã duyệt 02/11/2026): nền sơn mài nâu với vân mây cuộn, đè hoàn toàn lên bản đồ. Ô mở thì ô che mờ dần (0,45 giây, tắt khi giảm chuyển động), ô trong suốt lộ bản đồ và viền sáng nhẹ. Ô vẫn sáng sau khi quân bị dọn (vệt khai thông).
 - **Chướng ngại** (4 icon webp trong suốt ở `public/art/formation/obstacles/`, Shan tạo, "tạm được" ở v1): núi (đỉnh nhọn có tuyết), rừng (cụm cây tán tròn), đầm lầy (mặt nước gợn và cỏ lau), thành lũy (tường có lỗ châu mai và cổng). Mỗi ô một kiểu theo vị trí (như nhau cho mọi người chơi cùng bàn). Ô chướng ngại có nền đá tối riêng, không lấy ảnh bản đồ.
-- **Quân**: chân dung tròn có bóng như con cờ đặt lên bản đồ, kèm **hai huy hiệu tròn nhỏ**: hệ (nền theo màu hệ) ở đáy trái, nghề (nền tối) ở đáy phải; kích thước theo ô, không nhỏ hơn 11px. Quân dung hợp dùng một huy hiệu sao đỏ ở giữa đáy.
+- **Quân**: chân dung tròn có bóng như con cờ đặt lên bản đồ, kèm **hai huy hiệu tròn nhỏ**: hệ (nền theo màu hệ) ở đáy trái, nghề (nền tối) ở đáy phải; kích thước theo ô, không nhỏ hơn 11px. Quân dung hợp dùng một huy hiệu sao đỏ ở giữa đáy. Quân Lệnh là con cờ sơn son chữ 令 có hai cờ lệnh bắt chéo (`public/art/formation/quan-lenh.webp`, Shan vẽ 21/11/2026); Thu Hồi là con cờ gỗ mun có bàn tay đồng nhấc quân chữ 收 (`thu-hoi.webp`); prompt ở /mnt/project-files/art/prompts/lenh-bai.md mục 3.
 - **Hoàn thành**: quân và chướng ngại mờ đi (0,8 giây) để cả bản đồ hiện ra trên sa bàn, và khung kết quả hiện ảnh bản đồ đầy đủ kèm địa danh, một dòng giới thiệu và chú thích "tranh minh họa tái dựng, không phải bản đồ lịch sử chính xác" (theo [sổ nguồn sử](../../02-game-modes/campaign/history-sources.md): vị trí một số địa danh còn tranh luận, ví dụ Bình Kiều).
 - **Tùy chỉnh** (`CustomForm.tsx`, trong Chơi thường): cột và hàng 3–10, chướng ngại 0–30%, Quân Lệnh 0–15%, Thu Hồi 0–10%, nhân vật dung hợp 0–10% (khóa tới khi có nhân vật được duyệt), chọn từng nghề (≥2) và từng hệ (≥2). Lựa chọn lưu ở máy; ván tùy chỉnh không ghi điểm cao nhất, không thưởng, không xếp hạng; engine kiểm lại giới hạn khi tạo và khi nạp ván.
 - Ảnh giữ chỗ: tranh nền chiến dịch có sẵn (8 ảnh cho 30 bản đồ nên có lặp). Chúng cùng phong cách với ảnh thật sắp tới và cho thấy đúng hiệu ứng lộ dần.
@@ -52,13 +52,14 @@ Cấu trúc `ModeScreen.tsx` (Shan 18/11/2026): hàng thẻ **Chơi thường** 
 ## 6. Màn chơi chi tiết (đã code, chờ Shan test lần 1)
 
 - **Bản đồ là trung tâm**, vệt sáng quét qua hàng hoặc cột vừa dọn (0,7 giây; giảm chuyển động thì chỉ nháy sáng). Dòng dưới sa bàn nói ô đang rê "hàng x, cột y đặt được" đã bỏ (Shan 21/11/2026: không cần ghi rõ).
-- **Lệnh bài** (`Hud.tsx`, `CommandCard`): tấm bài giấy dó có dấu son "LỆNH BÀI", chân dung lớn, tên, nghề, hệ hoặc công dụng quân đặc biệt.
+- **Lệnh bài** (`Hud.tsx`, `CommandCard`): thẻ giấy dó viền card (vạch đồng trong, bốn góc hoa văn); bên trái là tấm lệnh bài gỗ sơn son chữ 令 Shan vẽ (`public/art/formation/lenh-bai.webp`, 21/11/2026) có chân dung quân đang cầm lồng vào ô tròn giữa tấm; bên phải là biểu tượng lệnh bài nhỏ (`lenh-bai-icon.webp`) kèm chữ "Lệnh bài", tên lớn, nghề và hệ dạng nhãn tròn, rồi một dòng luật đặt quân của quân đó (quân đặc biệt: công dụng). Prompt ở /mnt/project-files/art/prompts/lenh-bai.md.
 - **Thanh Bỏ Lệnh là ba ngọn lửa**: mỗi lần bỏ một ngọn bùng lên, ngọn cuối đổi màu đỏ khi bỏ nữa là thua; đặt quân thì dịu đi.
-- **Tiến độ** là thanh đầy dần kèm phần trăm; thống kê khô (điểm, quân đã đặt, hàng đã dọn, điểm cao nhất) gập vào "Thống kê ván". Khối "Luật chơi" trong ván đã bỏ (Shan 20/11/2026): luật nằm ở thẻ Hướng dẫn. Máy tính có vạch dọc ngăn bàn cờ với cột điều khiển bên phải.
+- **Bố cục hai cột** (Shan 21/11/2026, thay bố cục ba cột có vạch dọc): máy tính chia **cột màn chơi** và **cột hỗ trợ**, đều là card có góc hoa văn như các chế độ khác và cao bằng nhau. Cột màn chơi là khung sa bàn, phía sau phủ mờ tranh thẻ bậc (`public/art/formation/levels/<bậc>.webp`, tối dần ra mép; bậc tùy chỉnh dùng tranh Đại trận), dòng thông báo có nền tối ngay dưới bàn. Cột hỗ trợ: lệnh bài, card Bỏ Lệnh (ngọn lửa, tiến độ, nút gợi ý ô đặt kèm chữ), "Thống kê ván", rồi tranh kèm thơ lấp phần còn lại (`ColumnFill` mục `formation`: tranh `public/art/column-fill/formation.webp` Shan vẽ (sa bàn trong trướng tướng), thơ Nguyễn Trãi "Bình Ngô đại cáo" (Sơn xuyên chi phong vực ký thù…)). Phóng to màn chơi thì hai cột giãn hết chiều cao khung. Điện thoại xếp dọc, điều khiển ở thanh đáy.
+- **Tiến độ** là thanh đầy dần kèm phần trăm; thống kê khô (điểm, quân đã đặt, hàng đã dọn, điểm cao nhất) gập vào "Thống kê ván". Khối "Luật chơi" trong ván đã bỏ (Shan 20/11/2026): luật nằm ở thẻ Hướng dẫn.
 - **Điện thoại**: thanh cố định ở đáy màn hình (`MobileBar`) có quân đang cầm thu nhỏ, ba ngọn lửa, nút Bỏ Lệnh và phần trăm khai thông, để ngón cái chạm tới; ẩn ở màn rộng.
-- **Gợi ý ô đặt được** là nút biểu tượng tròn (sa bàn có chấm sáng) nằm trong cột hỗ trợ riêng bên trái bàn cờ trên máy tính, tách khỏi lệnh bài (Shan 21/11/2026), và trong thanh đáy trên điện thoại, thay nút chữ dưới bàn (Shan 20/11/2026); bật tắt, nhớ lựa chọn ở máy; **mặc định bật ở bậc Hướng dẫn, tắt ở các bậc khác** (đề xuất, chờ góp ý).
+- **Gợi ý ô đặt được** là nút biểu tượng tròn (sa bàn có chấm sáng) kèm chữ trong card Bỏ Lệnh ở cột hỗ trợ trên máy tính (21/11/2026), và trong thanh đáy trên điện thoại, thay nút chữ dưới bàn (Shan 20/11/2026); bật tắt, nhớ lựa chọn ở máy; **mặc định bật ở bậc Hướng dẫn, tắt ở các bậc khác** (đề xuất, chờ góp ý).
 - **Hướng dẫn từng bước** ở Hướng dẫn (`TutorialTip`): bước 1 chạm ô đầu tiên, bước 2 luật kề và khớp, nhắc Bỏ Lệnh khi hết nước, nhắc dọn hàng; bấm "Đã hiểu" thì không hiện lại.
-- **Kết quả**: sa bàn mờ quân và chướng ngại để hiện cả bản đồ, khung kết quả có bản đồ đầy đủ kèm địa danh; thắng thì thêm vào bộ sưu tập.
+- **Kết quả**: sa bàn mờ quân và chướng ngại để hiện cả bản đồ; kết quả hiện thành hộp giữa màn (`ResultModal`, Shan 21/11/2026) có bản đồ đầy đủ kèm địa danh, nút Chơi lại / Đổi bậc (xếp hạng: Về danh sách) và "Ngắm bản đồ" để đóng hộp; cột hỗ trợ còn card kết quả gọn có nút "Xem kết quả" mở lại hộp. Thắng thì thêm vào bộ sưu tập.
 
 ## 7. Câu hỏi còn mở
 

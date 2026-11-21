@@ -17,7 +17,7 @@ export interface ColumnFillEntry {
   readonly tips: readonly string[];
 }
 
-export type ColumnFillMode = "daily" | "arena" | "destiny" | "survival" | "trial" | "clearPath" | "quests";
+export type ColumnFillMode = "daily" | "arena" | "destiny" | "survival" | "trial" | "clearPath" | "quests" | "formation";
 
 const NAM_QUOC_SON_HA: ColumnPoem = {
   lines: ["Nam quốc sơn hà Nam đế cư,", "Tiệt nhiên định phận tại thiên thư.", "Như hà nghịch lỗ lai xâm phạm,", "Nhữ đẳng hành khan thủ bại hư."],
@@ -99,6 +99,19 @@ export const COLUMN_FILL: Readonly<Record<ColumnFillMode, ColumnFillEntry>> = {
       "Nhiệm vụ tuần làm mới lúc 0 giờ thứ Hai, nhận thưởng trước khi qua tuần.",
       "Nhóm thành tựu có thưởng chờ nhận tự mở sẵn.",
       "Điểm danh và nhiệm vụ ngày nhận ở Nhật Lệnh.",
+    ],
+  },
+  // Trận Đồ (Shan 21/11/2026, hai cột): tranh sa bàn trong trướng tướng Shan vẽ, prompt ở
+  // /mnt/project-files/art/prompts/tranh-lap-cot.md.
+  formation: {
+    art: "/art/column-fill/formation.webp",
+    poem: {
+      lines: ["Sơn xuyên chi phong vực ký thù,", "Nam bắc chi phong tục diệc dị."],
+      source: "Nguyễn Trãi, Bình Ngô đại cáo",
+    },
+    tips: [
+      "Đặt quân nối dài theo một nghề hoặc một hệ để luôn còn chỗ đặt.",
+      "Bỏ Lệnh khi hết nước; dọn được hàng hoặc cột thì lửa tắt hết.",
     ],
   },
 };

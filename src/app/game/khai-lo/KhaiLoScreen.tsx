@@ -36,7 +36,7 @@ import { ELEMENT_COLOR } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
 import { Button, buttonVariants, choiceVariants } from "@/components/ui";
-import { ModeScreen, OrnateFrame, SurrenderButton } from "@/components/game-ui";
+import { ModeScreen, OrnateFrame, ResultModal, SurrenderButton } from "@/components/game-ui";
 import { ModeGuideTabs } from "../ModeGuide";
 import { PlayCard } from "../PlayCard";
 import { ColumnFill } from "../ColumnFill";
@@ -124,6 +124,8 @@ function ElementGem({ element, mult }: { element: Element; mult?: 2 | 3 }) {
 export default function KhaiLoScreen() {
   const [mode, setMode] = useState<KlMode>("classic");
   const [state, setState] = useState<KlState | null>(null);
+  /** Ván đã hết mà người chơi đóng hộp kết quả để xem bàn; ván mới là đối tượng khác nên hộp tự mở lại. */
+  const [dismissed, setDismissed] = useState<KlState | null>(null);
   const [best, setBest] = useState(0);
   const [peek, setPeek] = useState<number | null>(null);
   const [armed, setArmed] = useState<number | null>(null);
@@ -525,37 +527,42 @@ export default function KhaiLoScreen() {
                   ))}
                 </div>
               </div>
-              {/* Kết màn và hết ván hiện ngay trên bàn: điện thoại không phải cuộn xuống tìm nút sang màn. */}
-              {summary && (
-                <div className="kl-overlay absolute inset-0 flex items-center justify-center p-3">
-                  <section role="status" className="ui-frame flex w-full max-w-sm flex-col items-center gap-2 p-4 text-center sm:gap-3 sm:p-5">
-                    <h2 className="ui-title-on-wood text-xl font-bold sm:text-2xl">
-                      {summary.cleared ? "Khai thông!" : `Hết màn ${summary.level}`}
-                    </h2>
-                    <p className="text-[15px] text-on-wood">
-                      {summary.cleared
-                        ? `Dọn sạch bàn: +${summary.bonus} điểm, +${-summary.hearts} tim.`
-                        : `Còn ${summary.left} quân chưa dọn: mất ${summary.hearts} tim, còn ${state.hearts} tim.`}
-                    </p>
-                    <button type="button" autoFocus onClick={() => act({ type: "nextLevel" })} className={buttonVariants({ size: "lg" })}>
-                      Sang màn {state.level + 1}
-                    </button>
-                  </section>
-                </div>
-              )}
-              {state.phase === "over" && (
-                <div className="kl-overlay absolute inset-0 flex items-center justify-center p-3">
-                  <section role="status" className="ui-frame flex w-full max-w-sm flex-col items-center gap-2 p-4 text-center sm:gap-3 sm:p-5">
-                    <h2 className="ui-title-on-wood text-xl font-bold sm:text-2xl">{gaveUp ? "Đã đầu hàng" : timed ? "Hết giờ" : "Thất thủ"}</h2>
-                    <p className="text-[15px] text-on-wood">
-                      {!timed && state.summary ? `Còn ${state.summary.left} quân mà chỉ còn ${state.hearts} tim. ` : ""}
-                      {MODE_NAME[state.mode]}: tướng quân đi tới màn {state.level}, đạt <b>{state.score} điểm</b>
-                      {state.score >= best && state.score > 0 ? " (cao nhất từ trước tới nay)" : ""}.
-                    </p>
-                    <button type="button" autoFocus onClick={newGame} className={buttonVariants({ size: "lg" })}>Chơi lại</button>
-                  </section>
-                </div>
-              )}
+              {/* Kết màn và hết ván hiện thành hộp giữa màn (ResultModal), không đẩy bố cục; hết màn phải bấm sang màn. */}
+              <ResultModal
+                open={summary !== null}
+                tone={summary?.cleared ? "win" : "neutral"}
+                kicker={summary ? `Màn ${summary.level}` : undefined}
+                title={summary?.cleared ? "Khai thông!" : `Hết màn ${summary?.level ?? state.level}`}
+                actions={
+                  <button type="button" autoFocus onClick={() => act({ type: "nextLevel" })} className={buttonVariants({ size: "lg" })}>
+                    Sang màn {state.level + 1}
+                  </button>
+                }
+              >
+                {summary && (
+                  <p>
+                    {summary.cleared
+                      ? `Dọn sạch bàn: +${summary.bonus} điểm, +${-summary.hearts} tim.`
+                      : `Còn ${summary.left} quân chưa dọn: mất ${summary.hearts} tim, còn ${state.hearts} tim.`}
+                  </p>
+                )}
+              </ResultModal>
+              <ResultModal
+                open={state.phase === "over" && dismissed !== state}
+                tone="lose"
+                kicker={MODE_NAME[state.mode]}
+                title={gaveUp ? "Đã đầu hàng" : timed ? "Hết giờ" : "Thất thủ"}
+                onDismiss={() => setDismissed(state)}
+                actions={
+                  <button type="button" autoFocus onClick={newGame} className={buttonVariants({ size: "lg" })}>Chơi lại</button>
+                }
+              >
+                <p>
+                  {!timed && state.summary ? `Còn ${state.summary.left} quân mà chỉ còn ${state.hearts} tim. ` : ""}
+                  Tướng quân đi tới màn {state.level}, đạt <b>{state.score} điểm</b>
+                  {state.score >= best && state.score > 0 ? " (cao nhất từ trước tới nay)" : ""}.
+                </p>
+              </ResultModal>
             </div>
           </div>
           {/* Shan 20/11/2026: bỏ dòng thông báo dưới bàn để bố cục không nhảy; chỉ giữ cho trình đọc màn hình. */}
