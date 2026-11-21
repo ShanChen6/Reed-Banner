@@ -2,9 +2,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { newProfile, seasonKey } from "../../src/core";
-import { PACK_1, TTK_HERO_POINTS, buildCatalog, featuredFor, newTtkAccount } from "../../src/core/tam-tuong-ky";
+import { PACK_1, TTK_HERO_POINTS, TTK_MAX_TICKETS, TTK_START_TICKETS, buildCatalog, featuredFor, newTtkAccount } from "../../src/core/tam-tuong-ky";
 import { MemoryProfileStore, loadProfile, type ProfileStore } from "../../src/server/profiles";
-import { MemoryRankRewardStore, bundlesFor, claimRankReward, pendingRankRewards, seasonSource, withTtkBundles } from "../../src/server/rankRewards";
+import { MemoryRankRewardStore, bundlesFor, claimRankReward, pendingRankRewards, seasonSource, ticketsFor, withTtkBundles } from "../../src/server/rankRewards";
 import { MemorySeasonStore } from "../../src/server/seasons";
 import { buyTamTuongKyBundle, combineTamTuongKyRanked, getTamTuongKyRanked, type TamTuongKyDeps } from "../../src/server/tamTuongKy";
 
@@ -134,10 +134,15 @@ describe("bó nguyên tố trong thưởng hạng", () => {
     assert.equal(on.pending.items[0]?.bundles, 5);
     assert.ok(on.claim.ok && on.claim.bundles === 5);
     assert.equal(on.profile.tamTuongKy?.units, 35);
+    assert.equal(on.pending.items[0]?.tickets, 3);
+    assert.ok(on.claim.ok && on.claim.tickets === 3);
+    assert.equal(on.profile.tamTuongKy?.tickets, TTK_START_TICKETS + 3);
     const off = await run(false);
     assert.equal(off.pending.items[0]?.bundles, undefined);
     assert.ok(off.claim.ok && off.claim.bundles === undefined);
     assert.equal(off.profile.tamTuongKy?.units, 0);
+    assert.ok(off.claim.ok && off.claim.tickets === undefined);
+    assert.equal(off.profile.tamTuongKy?.tickets, TTK_START_TICKETS);
   });
 
   it("bảng tuần Tầm Tướng Ký là nguồn thưởng hạng: kỳ tuần trước khép thì có thưởng", async () => {
@@ -188,5 +193,24 @@ describe("Gói 2 trên server", () => {
     // Tắt Gói 2: Lúa vẫn trong sổ, nhưng ghép Thổ + Mộc không còn công thức.
     const back = await getTamTuongKy(deps({ profiles: d.profiles }), OWNER);
     assert.ok(back.ok && back.view.discovery.discoveredNodeIds.includes("mat.grain"));
+  });
+});
+
+describe("phiếu Tầm Tướng Ký trong thưởng hạng", () => {
+  it("chế độ theo tuần có tên trên bảng là có phiếu; Nhật Lệnh chỉ Top 10", () => {
+    const tiers = ["top1", "top3", "top10", "half", "win"] as const;
+    assert.deepEqual(tiers.map((t) => ticketsFor("survival", t)), [3, 2, 2, 1, 1]);
+    assert.deepEqual(tiers.map((t) => ticketsFor("pvp", t)), [3, 2, 2, 1, 1]);
+    assert.deepEqual(tiers.map((t) => ticketsFor("daily", t)), [1, 1, 1, 0, 0]);
+  });
+
+  it("chỉ cộng cho người đã vào Tầm Tướng Ký, chặn ở trần phiếu", () => {
+    const p = newProfile();
+    assert.equal(withTtkBundles(p, 0, 2), p);
+    const q = { ...p, tamTuongKy: newTtkAccount(catalog) };
+    assert.equal(withTtkBundles(q, 0, 2).tamTuongKy?.tickets, TTK_START_TICKETS + 2);
+    assert.equal(withTtkBundles(q, 0, 2).tamTuongKy?.units, 0);
+    assert.equal(withTtkBundles(q, 0, 99).tamTuongKy?.tickets, TTK_MAX_TICKETS);
+    assert.equal(TTK_MAX_TICKETS, 20);
   });
 });

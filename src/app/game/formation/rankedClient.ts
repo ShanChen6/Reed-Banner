@@ -46,7 +46,7 @@ export const moveRanked = (level: string, seq: number, command: unknown) =>
   call<{ view: FormationView; events: readonly PuzzleEvent[] }>("/api/formation/move", { level, seq, command });
 
 export const claimRanked = (level: string, period: string) =>
-  call<{ gold: number; tier: string; rank: number; winners: number }>("/api/formation/claim", { level, period });
+  call<{ gold: number; tier: string; rank: number; winners: number; tickets?: number }>("/api/formation/claim", { level, period });
 
 /** Bản công khai của server thành PuzzleState để dùng lại luật hiển thị (chỉ đọc cells, hand, thanh Bỏ Lệnh). */
 export function toPuzzleState(view: FormationView): PuzzleState {

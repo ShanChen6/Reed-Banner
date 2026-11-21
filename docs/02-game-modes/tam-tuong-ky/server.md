@@ -12,7 +12,7 @@ Lưu trong hồ sơ tài khoản (`Profile.tamTuongKy`, bảng hồ sơ có sẵ
 | Trường | Nội dung |
 |---|---|
 | `discovery` | Sổ khám phá (engine LT-02): node và công thức đã tìm, theo gói và `contentVersion` |
-| `tickets` | 0–10 phiếu |
+| `tickets` | 0–20 phiếu |
 | `session` | Lượt đang mở: `combinesLeft` (15 khi mở), `startedAt`; hết hạn sau 24 giờ |
 | `hints` | Ngày (giờ Việt Nam) và số gợi ý đã dùng trong ngày đó |
 | `receipts` | 16 phản hồi gần nhất theo `requestId` |
@@ -41,8 +41,12 @@ Cộng trong `applyProfileAction` khi nhận thưởng, cho người đã vào T
 | Nhận nốt nhiệm vụ ngày cuối cùng trong ngày | +1 |
 | Nhiệm vụ tuần “Thắng 15 trận” | +2 |
 | Điểm danh ngày thứ 7 của chuỗi | +1 |
+| Thưởng hạng chế độ theo tuần (P-10b): hạng 1 / 2–3 / 4–10 / nửa trên / có tên | +3 / +2 / +2 / +1 / +1 |
+| Thưởng hạng chế độ theo ngày (Nhật Lệnh, Trận Đồ Thường/Khó): Top 10 | +1 |
 
-Trần 10 phiếu. Vàng của nhiệm vụ và điểm danh giữ nguyên. Không bán phiếu.
+Phiếu thưởng hạng cộng lúc nhận thưởng (`withTtkBundles` ở `src/server/rankRewards.ts`, Trận Đồ ở `claimFormation`), cùng lúc với vàng và bó; danh sách chờ nhận và phản hồi nhận có trường `tickets`.
+
+Trần 20 phiếu (nâng từ 10 ngày 21/11/2026). Vàng của nhiệm vụ và điểm danh giữ nguyên. Không bán phiếu.
 
 ## 4. Thành tựu bộ (A-13, P-20)
 
