@@ -1644,6 +1644,13 @@ html {
 .play-card--overlay:has(.play-card-title) {
   padding-top: max(clamp(1.1rem, 1.6vw, 1.4rem), env(safe-area-inset-top));
 }
+/* Có bảng tên: lề trong phía trên rộng thêm để nội dung không sát bảng tên; nội dung ngắn hơn khung thì nằm giữa theo chiều
+   dọc (safe: dài hơn khung thì vẫn bắt đầu từ trên, không bị cắt), tránh đáy trống mà đầu sát tiêu đề (Shan 21/11/2026). */
+.play-card:fullscreen .play-card-body:has(> .play-card-title),
+.play-card--overlay .play-card-body:has(> .play-card-title) {
+  padding-top: calc(clamp(0.75rem, 1.6vw, 1.5rem) + 1.25rem);
+  justify-content: safe center;
+}
 /* Màn có thanh dính đáy (Trận Đồ, Tầm Tướng Ký trên điện thoại): chừa thêm chỗ để cuộn được nội dung lên trên thanh. */
 @media (width < 64rem) {
   .play-card:fullscreen:has(.mobile-dock),
@@ -1716,13 +1723,13 @@ html {
   }
 }
 /* Do Thám: trang thường ô 26–38px theo bề ngang màn. Phóng to màn chơi thì ô giãn lấp cả bề ngang lẫn bề cao màn (trừ lề,
-   hàng nút đạo cụ, dòng thông báo), tối đa 96px (Shan 20/11/2026: phóng to còn rất nhiều chỗ trống). */
+   bảng tên chế độ, hàng nút đạo cụ, dòng thông báo), tối đa 96px (Shan 20/11/2026: phóng to còn rất nhiều chỗ trống). */
 .dt-board {
   --dt-cell: max(26px, min(38px, calc((100vw - 3.5rem) / var(--dt-cols))));
 }
 .play-card:fullscreen .dt-board,
 .play-card--overlay .dt-board {
-  --dt-cell: max(26px, min(calc((100vw - 6rem) / var(--dt-cols)), calc((100dvh - 14rem) / var(--dt-rows)), 96px));
+  --dt-cell: max(26px, min(calc((100vw - 6rem) / var(--dt-cols)), calc((100dvh - 16rem) / var(--dt-rows)), 96px));
 }
 /* Tầm Tướng Ký phóng to (máy tính): ba cột lấp hết chiều cao khung; màn từ 1600px thì Đài Hợp Nguyên rộng tối đa 40rem,
    hai sổ hai bên nhận phần còn lại. Lưới Vạn Vật Lục, Tướng Lục đo hộp `.ttk-fit` để tính số cột × hàng mỗi trang (Shan 20/11/2026).
@@ -1743,6 +1750,37 @@ html {
   .play-card:fullscreen .ttk-board,
   .play-card--overlay .ttk-board {
     grid-template-columns: minmax(16rem, 1fr) minmax(26rem, 40rem) minmax(16rem, 1fr);
+  }
+}
+/* Viễn Chinh toàn màn hình (máy tính): khung cao bằng màn, sa bàn và hai đạo quân bên trái, ô đang chọn bên phải;
+   cột nào quá dài thì cuộn riêng trong cột nên cả màn không cuộn
+   (Shan 21/11/2026). */
+@media (width >= 64rem) {
+  .play-card:fullscreen .play-card-body:has(.exp-run),
+  .play-card--overlay .play-card-body:has(.exp-run) {
+    height: 100%;
+  }
+  .play-card:fullscreen .exp-run,
+  .play-card--overlay .exp-run {
+    flex: 1 1 0;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  /* Sa bàn tỉ lệ 5:3: màn thấp thì thu bề ngang để sa bàn và hai đạo quân vừa một màn. */
+  .play-card:fullscreen .exp-sand,
+  .play-card--overlay .exp-sand {
+    display: block;
+    width: min(100%, calc((100dvh - 24rem) * 5 / 3));
+    margin-inline: auto;
+  }
+  .play-card:fullscreen .exp-main,
+  .play-card--overlay .exp-main,
+  .play-card:fullscreen .exp-side,
+  .play-card--overlay .exp-side {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 0.25rem;
   }
 }
 /* Sân đấu dính dưới thanh đầu trang; khi thẻ toàn màn hình thì không còn thanh đầu trang nên dính sát mép trên. */

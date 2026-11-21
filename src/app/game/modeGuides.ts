@@ -13,6 +13,7 @@ import { ELEMENTS, type Element } from "@/core/battle/elements";
 import { ELEMENT_NAME } from "./battle/labels";
 import { DT_ITEM_INFO } from "./do-tham/items";
 import { KL_TOOL_HINT, KL_TOOL_NAME } from "./khai-lo/tools";
+import { EXPEDITION_REST_HEAL, EXPEDITION_SCOUT_SIGHT } from "@/core";
 import type { Scene } from "./scene";
 
 /** Các chế độ có thẻ Hướng dẫn (đúng mười hai chế độ ở thẻ Chiến Trường). */
@@ -412,11 +413,14 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Chiếm được thành đích là thắng.",
     ],
     rules: [
-      "Đạo không đi trong ngày thì nghỉ và hồi 15% máu.",
+      `Đạo không đi trong ngày thì nghỉ và hồi ${Math.round(EXPEDITION_REST_HEAL * 100)}% máu.`,
       "Giặc mạnh thêm 5% mỗi ngày. Hết ngày mà chưa chiếm được thành là thua.",
       "Sa bàn có sương mù: bạn chỉ thấy ô đi được, chòi canh giúp nhìn xa. Đường vượt nước mất 2 ngày.",
       "Đạo kia đứng kề ô đang đánh thì hai đạo giáp công, giặc yếu đi.",
-      "Thua trận thì đạo đó rút về và gục. Mỗi ngày có 3 lượt xuất quân.",
+      "Thua trận thì đạo đó rút về ô cũ, cả ba gục, phải nghỉ để hồi. Không mất lượt viễn chinh. Mỗi ngày có 3 lượt xuất quân.",
+      "Chạm cờ để chọn đạo quân, chạm ô kề (viền màu đạo) để xem rồi tiến quân. Người gục cũng hồi máu khi đạo nghỉ.",
+      "Ký hiệu đường: xanh đứt nét là vượt nước (2 ngày); xanh lá đứt nét là lội đầm (2 ngày); chấm xanh ≈ là cửa nước, chỉ qua lúc nước rút; đỏ ✕ là đường đã biết bị phá. Chấm đỏ trên đồn: đồn đánh dở, địch giữ thương vong.",
+      `Trinh sát: đạo đang chọn đứng yên 1 ngày (không hồi sức), vén sương mọi ô trong ${EXPEDITION_SCOUT_SIGHT} bước và phát hiện đường bị phá quanh đó. Đường bị phá trông như đường thường; đi trúng thì mất ngày.`,
     ],
     rewards: [
       "Thưởng trận như trận thường, lần đầu thắng mỗi bậc có thưởng lớn.",
