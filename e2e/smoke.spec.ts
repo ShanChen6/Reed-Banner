@@ -55,6 +55,29 @@ test("Thao Luyện: điện thoại xoay ngang có bố cục riêng, thấy tr�
   expect(skillsBox.y + skillsBox.height, "Dải kỹ năng nằm trọn trong màn").toBeLessThanOrEqual(height);
 });
 
+test("Do Thám: điện thoại thấy trọn sa bàn, bàn Khó xoay dọc và phóng to được", async ({ page }) => {
+  test.skip(!isPhone(), "Chỉ kiểm khổ điện thoại (Shan chọn 4A, 21/11/2026)");
+  const problems = watchProblems(page);
+  await page.goto("/game/scout");
+  await playMode(page);
+  const width = page.viewportSize()!.width;
+  // Chọn bậc và đạo cụ nằm trong bảng trượt mở từ hàng thao tác.
+  await page.getByRole("toolbar", { name: "Thao tác và đạo cụ" }).getByRole("button", { name: /đạo cụ$/ }).click();
+  const setup = page.getByRole("dialog", { name: "Chuẩn bị ván" });
+  await setup.getByRole("button", { name: /^Khó, 30×16/ }).click();
+  await setup.getByRole("button", { name: "Đóng" }).click();
+  const board = page.getByRole("grid", { name: /Sa bàn Do Thám 30 hàng 16 cột, đã xoay dọc/ });
+  await expect(board).toBeVisible();
+  const box = (await board.boundingBox())!;
+  expect(box.x + box.width, "Sa bàn không tràn mép phải").toBeLessThanOrEqual(width);
+  await expectNoHorizontalOverflow(page);
+  await page.getByRole("button", { name: "Phóng to sa bàn" }).click();
+  await expect.poll(async () => (await board.boundingBox())!.width).toBeGreaterThan(box.width * 1.4);
+  // Phóng to chỉ cuộn trong khung sa bàn, trang vẫn không tràn ngang.
+  await expectNoHorizontalOverflow(page);
+  expectClean(problems);
+});
+
 test("Thao Luyện: Đầu hàng hỏi lại trước khi chốt thua", async ({ page }) => {
   const problems = watchProblems(page);
   await page.goto("/game/practice");
