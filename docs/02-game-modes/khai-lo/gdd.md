@@ -1,7 +1,7 @@
 # 24 — Khai Lộ: giải đố xóa khối ô ngọc
 
 > Cập nhật: 20/11/2026 (cân bằng lại độ khó, đạo cụ, thưởng; tối ưu bố cục máy tính/điện thoại)
-> Trạng thái: **DRAFT** — Shan duyệt ý tưởng và chốt tên **Khai Lộ** ngày 05/11/2026; có bản chơi thử offline (không thưởng, không xếp hạng) với hai chế độ Thường và Cấp tốc, quân là 7 nguyên tố. Ngày 20/11/2026 Shan duyệt bộ số cân bằng lại ở [mục 4](#4-số-liệu-bản-đầu); cùng ngày chốt bàn 10 × 12 và tim đỡ quân sót (chế độ Thường). Ngày 21/11/2026 Thường chỉ còn 3 hệ mỗi màn, tim ban đầu giảm còn 15.
+> Trạng thái: **DRAFT** — Shan duyệt ý tưởng và chốt tên **Khai Lộ** ngày 05/11/2026; có bản chơi thử offline (không thưởng, không xếp hạng) với hai chế độ Thường và Cấp tốc, quân là 7 nguyên tố. Ngày 20/11/2026 Shan duyệt bộ số cân bằng lại ở [mục 4](#4-số-liệu-bản-đầu); cùng ngày chốt bàn 10 × 12 và tim đỡ quân sót (chế độ Thường). Ngày 21/11/2026 mỗi màn chỉ còn 3 hệ, tim ban đầu giảm còn 15, Cấp tốc đổi sang hết bàn là qua màn (giờ thay tim).
 
 ## 1. Định vị
 
@@ -17,8 +17,8 @@ Mini game giải đố một chạm trên bàn cờ của Cờ Lau. Người ch�
 ### 2.1. Bàn cờ
 
 - Bàn 10 cột × 12 hàng (từ 20/11/2026, trước đó 10 × 8), đầy ô khi bắt đầu màn.
-- Thường (Shan 21/11/2026): mỗi màn chỉ 3 hệ, xáo theo seed. Độ khó tăng bằng cách bẻ vụn khối khi sinh bàn: quân trùng hệ với ô trái hoặc trên bị đổi hệ với xác suất 10% × (màn − 1), tối đa 100% từ màn 11. Thanh nạp đạo cụ cần 180 quân (gấp đôi Cấp tốc) vì mỗi hệ có nhiều quân hơn. Mô phỏng bot tham lam (15 tim): trung vị màn ~12, như trước.
-- Cấp tốc: bậc 1–3 có 3 hệ, bậc 4–7 có 4, bậc 8–13 có 5, từ bậc 14 có 6. Thanh nạp 90 quân.
+- Mỗi màn chỉ 3 hệ ở cả hai chế độ (Shan 21/11/2026), xáo theo seed (`KL_KINDS`). Độ khó tăng bằng cách bẻ vụn khối khi sinh bàn: quân trùng hệ với ô trái hoặc trên bị đổi hệ với xác suất 10% × (màn − 1), tối đa 100% từ màn 11. Thanh nạp đạo cụ cần 180 quân vì mỗi hệ có nhiều quân hơn. Mô phỏng bot tham lam (Thường, 15 tim): trung vị màn ~12, như trước.
+- Thường: dọn sạch bàn thì tự sang màn sau, không hiện bảng hỏi (Shan 21/11/2026); còn quân sót mới hiện bảng kết màn báo số tim mất.
 - Từ màn 2 có **ô số ×2, ×3** (Shan 20/11/2026, theo ô số 2, 3 của Block'D; thay ô hào quang cũ): quân thường có viền vàng và nhãn ×2 hoặc ×3. 1 ô ở màn 2–4, thêm 1 mỗi 3 màn, tối đa 5. Ô ×3 có từ màn 6 (`KL_MULT3_FROM`). Bản lưu cũ có ô hào quang đọc thành ô ×2.
 - Bàn sinh ra luôn có ít nhất một khối xóa được.
 
@@ -54,7 +54,7 @@ Mỗi hệ một đạo cụ (Shan duyệt 20/11/2026, thay Lốc/Sấm cũ). Đ
 | Lôi | **Lôi Phạt** | Xóa mọi quân cùng hệ với quân được chọn. |
 | Phong | **Lốc Phong** | Chọn tâm không sát mép: 8 ô quanh xoay một nấc theo chiều kim đồng hồ (giống lốc xoáy hệ Phong trong trận). |
 
-- **Thanh nạp theo hệ** (cả hai chế độ): chạm khối hệ nào thì mỗi quân trong khối nạp 1 vào thanh của hệ đó; đủ **180 quân** ở Thường (`KL_CLASSIC_TOOL_CHARGE`) hoặc **90 quân** ở Cấp tốc (`KL_TOOL_CHARGE`) thì +1 đạo cụ hệ ấy, phần dư giữ lại. Quân bị đạo cụ phá không nạp. Thanh có màu của hệ, nằm dưới nút đạo cụ.
+- **Thanh nạp theo hệ** (cả hai chế độ): chạm khối hệ nào thì mỗi quân trong khối nạp 1 vào thanh của hệ đó; đủ **180 quân** (`KL_TOOL_CHARGE`, 90 trước 21/11/2026) thì +1 đạo cụ hệ ấy, phần dư giữ lại. Quân bị đạo cụ phá không nạp. Thanh có màu của hệ, nằm dưới nút đạo cụ.
 - Giao diện chỉ hiện đạo cụ của các hệ có trên bàn, cộng các hệ đang còn đạo cụ trong kho. Phím 1–7 chọn nhanh theo thứ tự Kim, Mộc, Thủy, Hỏa, Thổ, Lôi, Phong.
 - Bản lưu cũ có Lốc/Sấm: Lốc thành Lốc Phong, Sấm thành Hỏa Cầu (cùng vùng 3×3).
 - **Hoàn tác**: mỗi màn 1 lần, chỉ lùi được nước vừa đi (trả lại cả đạo cụ và thanh nạp). Không lùi qua khi màn đã kết thúc.
@@ -64,9 +64,9 @@ Mỗi hệ một đạo cụ (Shan duyệt 20/11/2026, thay Lốc/Sấm cũ). Đ
 | Chế độ | Luật riêng |
 |---|---|
 | **Thường** | Không giới hạn thời gian. |
-| **Cấp tốc** | Chạy đua mốc điểm (Shan 20/11/2026). Ván bắt đầu với **90 giây**. Mỗi bậc có mốc điểm cộng dồn: qua bậc n cần thêm 400 + 50 × (n − 1) điểm (`timedGoal`: 400, 850, 1350, 1900…). Đạt mốc thì lên bậc ngay, chia bàn mới của bậc đó và **cộng thêm 40 giây vào giờ còn lại** (giờ dư cộng dồn). Bàn dọn sạch hoặc hết đường thì tính thưởng dọn sạch/gần sạch rồi chia bàn mới cùng bậc; bàn bế tắc mà còn đạo cụ thì người chơi dùng đạo cụ hoặc bấm *Đổi bàn*. Không dùng quân lực; hết giờ là hết ván. Số hệ theo bậc như số hệ theo màn. Đồng hồ chỉ chạy khi tab đang mở; giờ còn lại lưu cùng ván dở. |
+| **Cấp tốc** | Hết bàn là qua màn, giờ thay tim (Shan chọn 21/11/2026, thay luật mốc điểm). Ván bắt đầu với **90 giây**. Hết khối và hết đạo cụ (hoặc bấm *Kết thúc màn*, hỏi lại một lần) thì sang màn sau ngay, không dừng: dọn sạch được thưởng điểm như Thường và **+40 giây** (`KL_TIMED_CLEAR_SECONDS`), còn sót bao nhiêu quân thì **trừ bấy nhiêu giây** (`KL_TIMED_LEFT_SECONDS` = 1, `timedSeconds`). Hết giờ là hết ván; không dùng tim. Đồng hồ chỉ chạy khi tab đang mở; giờ còn lại lưu cùng ván dở. Mô phỏng bot 2 giây một nước: trung vị màn 6 (p10 5, p90 8); 3 giây một nước: trung vị màn 3. |
 
-Hai chế độ có ván dở và điểm cao nhất riêng (Cấp tốc dùng khóa lưu v2 từ 20/11/2026, ván dở của luật cũ bỏ đi). Lõi không đọc giờ: giao diện đếm giờ, cộng `KL_TIMED_LEVEL_SECONDS` khi có sự kiện `goalReached` và gửi `timeUp` khi hết giờ.
+Hai chế độ có ván dở và điểm cao nhất riêng (Cấp tốc dùng khóa lưu v3 từ 21/11/2026, ván dở của luật cũ bỏ đi). Lõi không đọc giờ: giao diện đếm giờ, cộng/trừ `seconds` của sự kiện `levelPassed` và gửi `timeUp` khi hết giờ.
 
 ## 3. Điều khiển
 
@@ -99,7 +99,7 @@ Bộ số mới (dùng tới khi đổi sang luật thua ở mục 4.3): số h�
 | Tỉ lệ dọn sạch màn 4 / 7 / 10 | 98% / 81% / 47% | 64% / 18% / 2% |
 | Điểm từ gom khối / tổng điểm | 16% | 69% |
 
-Người chơi thật tính sâu hơn bot nên kỳ vọng đi xa hơn vài màn. Các hằng số nằm đầu `src/core/khai-lo/engine.ts` (`KL_CLEAR_*`, `KL_NEAR_CLEAR_*`, `KL_TOOL_CHARGE`, `KL_START_TOOLS`, `levelConfig`). Chưa làm: Lốc Phong mạnh hơn (để sau).
+Người chơi thật tính sâu hơn bot nên kỳ vọng đi xa hơn vài màn. Các hằng số nằm đầu `src/core/khai-lo/engine.ts` (`KL_CLEAR_*`, `KL_TOOL_CHARGE`, `KL_TIMED_*`, `KL_START_TOOLS`, `levelConfig`). Chưa làm: Lốc Phong mạnh hơn (để sau).
 
 ### 4.2. Đạo cụ theo hệ và Cấp tốc theo mốc (20/11/2026)
 
