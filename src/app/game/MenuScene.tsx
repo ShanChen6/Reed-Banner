@@ -76,9 +76,9 @@ const MODES: readonly Mode[] = [
  */
 const UPCOMING: readonly { id: string; title: string; text: string; art?: string; scene?: Scene; note?: string }[] = [
   {
-    id: "pvp-live",
-    title: "Quần Hùng đấu trực tiếp",
-    text: "Đối mặt hào kiệt khắp nơi trên cùng một bàn cờ, một chọi một hay ba chọi ba, từng lượt định thắng thua.",
+    id: "long-ho-hoi",
+    title: "Long Hổ Hội",
+    text: "Long hổ bốn phương tụ về một hội, mỗi mùa một lần so tài, ai trụ đến cuối cùng được thiên hạ nể vì.",
     art: "arena",
   },
 ];
