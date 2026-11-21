@@ -32,11 +32,11 @@ export interface SlAdvisor {
 
 export const SL_ADVISORS: readonly SlAdvisor[] = [
   { id: "dinhBoLinh", name: "Đinh Bộ Lĩnh", tags: ["Đinh Bộ Lĩnh", "Hoa Lư", "Trần Lãm", "Đinh Liễn"] },
-  { id: "nguyenBac", name: "Nguyễn Bặc", tags: ["Hoa Lư", "Đinh Bộ Lĩnh"] },
-  { id: "dinhDien", name: "Đinh Điền", tags: ["Hoa Lư", "Đinh Bộ Lĩnh"] },
-  { id: "leHoan", name: "Lê Hoàn", tags: ["Lê Hoàn"] },
+  { id: "nguyenBac", name: "Nguyễn Bặc", tags: ["Nguyễn Bặc", "Hoa Lư", "Đinh Bộ Lĩnh"] },
+  { id: "dinhDien", name: "Đinh Điền", tags: ["Đinh Điền", "Hoa Lư", "Đinh Bộ Lĩnh"] },
+  { id: "leHoan", name: "Lê Hoàn", tags: ["Lê Hoàn", "Ái Châu", "Chi Lăng"] },
   { id: "trinhTu", name: "Trịnh Tú", tags: ["Bố Hải", "Trần Lãm"] },
-  { id: "luuCo", name: "Lưu Cơ", tags: ["Hoa Lư"] },
+  { id: "luuCo", name: "Lưu Cơ", tags: ["Lưu Cơ", "Hoa Lư"] },
   { id: "dinhLien", name: "Đinh Liễn", tags: ["Đinh Liễn", "Trần Lãm", "Bố Hải"] },
   { id: "tranLam", name: "Trần Lãm", tags: ["Trần Lãm", "Bố Hải"] },
   { id: "phamBachHo", name: "Phạm Bạch Hổ", tags: ["Phạm Bạch Hổ", "Đằng Châu"] },

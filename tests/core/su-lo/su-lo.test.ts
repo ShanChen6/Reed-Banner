@@ -45,8 +45,8 @@ function answerFor(s: SlState, good: boolean): number | number[] {
   return [...q.answer].reverse();
 }
 
-function play(seed: number, level: (typeof SL_LEVEL_ORDER)[number], pCorrect: number, maxSteps = 4000): SlState {
-  let s = newRun(level, "loanSuQuan", seed);
+function play(seed: number, level: (typeof SL_LEVEL_ORDER)[number], pCorrect: number, maxSteps = 4000, era: SlState["era"] = "loanSuQuan"): SlState {
+  let s = newRun(level, era, seed);
   let r = seed * 9301 + 49297;
   const rand = () => ((r = (r * 9301 + 49297) % 233280) / 233280);
   for (let step = 0; step < maxSteps && s.phase !== "won"; step++) {
@@ -87,11 +87,17 @@ describe("Sử Lộ · kho câu hỏi", () => {
     }
   });
 
-  it("mê cung I, II chơi được; III, IV chưa mở vì thiếu nguồn", () => {
-    assert.ok(eraPlayable("ngo"));
-    assert.ok(eraPlayable("loanSuQuan"));
-    assert.ok(!eraPlayable("dinh"));
-    assert.ok(!eraPlayable("tienLe"));
+  it("cả bốn mê cung chơi được", () => {
+    for (const era of ["ngo", "loanSuQuan", "dinh", "tienLe"] as const) assert.ok(eraPlayable(era), era);
+  });
+
+  it("mê cung III, IV đủ câu cho cả ba màu ô và có câu đọc bia", () => {
+    for (const era of ["dinh", "tienLe"] as const) {
+      const qs = SL_QUESTIONS.filter((q) => q.era === era);
+      assert.ok(qs.length >= 20, `${era}: ${qs.length} câu`);
+      for (const d of [1, 2, 3] as const) assert.ok(qs.filter((q) => q.difficulty === d).length >= 4, `${era} độ khó ${d}`);
+      assert.ok(qs.some((q) => q.kind === "reading" && q.difficulty === 2), `${era} thiếu câu đọc bia`);
+    }
   });
 });
 
@@ -185,6 +191,10 @@ describe("Sử Lộ · luật lượt", () => {
 
   it("người trả lời đúng 50% vẫn thoát được (không giới hạn lượt)", () => {
     for (let seed = 1; seed <= 6; seed++) assert.equal(play(seed, "thuong", 0.5).phase, "won", `seed ${seed}`);
+  });
+
+  it("mê cung nhà Đinh, Tiền Lê chơi tới cổng được", () => {
+    for (const era of ["dinh", "tienLe"] as const) for (let seed = 1; seed <= 3; seed++) assert.equal(play(seed, "thuong", 0.7, 4000, era).phase, "won", `${era} seed ${seed}`);
   });
 });
 
