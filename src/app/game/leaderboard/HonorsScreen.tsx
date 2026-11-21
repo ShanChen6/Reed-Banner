@@ -4,7 +4,7 @@
 // tại của mình; phần "Các mùa trước" liệt kê các kỳ đã nhận thưởng (hạng, vàng). Bảng xếp hạng đầy đủ của mùa hiện tại
 // nằm trong màn từng chế độ và không dẫn sang trang này.
 
-import { ModeScreen, OrnateFrame, SectionTitle, SkeletonText } from "@/components/game-ui";
+import { ModeBanner, ModeScreen, OrnateFrame, SectionTitle, SkeletonText } from "@/components/game-ui";
 import { useEffect, useState } from "react";
 import { fetchOverview, type Overview } from "../formation/rankedClient";
 import { BoardEmpty, BoardLoading, RankList, useJson, type DestinyBoardResponse, type SeasonBoardResponse, type TtkBoardResponse } from "./boards";
@@ -74,7 +74,16 @@ export default function HonorsScreen({
   const standings = useStandings(destinyEnabled, tamTuongKyRanked, formationRanked);
   const honors = useJson<{ signedIn?: boolean; items?: HonorItem[]; error?: string }>("/api/honors");
   return (
-    <ModeScreen label="Công Trạng">
+    <ModeScreen card label="Công Trạng">
+      <ModeBanner
+        title="Công Trạng"
+        kicker="Bảng vàng chiến công"
+        description="Hạng của bạn ở mọi chế độ xếp hạng mùa này và các kỳ đã nhận thưởng hạng."
+        stats={honors?.items ? [
+          { label: "Kỳ đã nhận", value: honors.items.length },
+          { label: "Vàng thưởng", value: honors.items.reduce((n, h) => n + h.gold, 0).toLocaleString("vi-VN") },
+        ] : undefined}
+      />
       <div className="flex w-full flex-col gap-4">
         <OrnateFrame className="flex flex-col gap-3">
           <SectionTitle description="Hạng hiện tại của bạn ở từng chế độ có xếp hạng. Bảng đầy đủ xem ngay trong màn của chế độ đó.">Mùa này</SectionTitle>

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { FrameInset, OrnateFrame } from "@/components/game-ui";
-import { Button, Tabs } from "@/components/ui";
+import { useEffect, useState, type ReactNode } from "react";
+import { BottomSheet, FrameInset, OrnateFrame } from "@/components/game-ui";
+import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
+import { Button, choiceVariants, Tabs } from "@/components/ui";
 import { ElementIcon, SuLoAidIcon } from "./art/icons";
 import { Glyph } from "./formation/pieces";
 import { MODE_GUIDES, type GuideIcon, type GuideItems, type GuideScene, type ModeGuide as ModeGuideData } from "./modeGuides";
@@ -53,6 +54,18 @@ function GuideItemsSection({ items }: { items: GuideItems }) {
   );
 }
 
+/** Một dòng hướng dẫn; phần phím tắt ("Bàn phím: …") ẩn trên màn cảm ứng (quy tắc điện thoại 21/11/2026). */
+function GuideText({ text }: { text: string }) {
+  const at = text.indexOf("Bàn phím:");
+  if (at < 0) return text;
+  return (
+    <>
+      {text.slice(0, at)}
+      <span className="pointer-coarse:hidden">{text.slice(at)}</span>
+    </>
+  );
+}
+
 /**
  * Chế độ đã qua màn hướng dẫn trong lần vào này. Vào một chế độ từ Chiến Trường thì gặp Hướng dẫn trước (Shan chốt
  * 19/11/2026); đã bấm "Vào chơi" thì quay lại màn sau một trận vẫn ở thẻ Chơi. Về Chiến Trường thì xóa để lần vào sau
@@ -76,10 +89,17 @@ export function markGuideSeen(scene: GuideScene): void {
 }
 
 /** Nội dung Hướng dẫn của một chế độ: mục tiêu, các bước, luật, thưởng, mẹo. Dùng cả ở màn có thẻ riêng (Bình Loạn, Trận Đồ). */
-export function ModeGuidePanel({ scene, headingId, onPlay }: { scene: GuideScene; headingId?: string; onPlay?: () => void }) {
+export function ModeGuidePanel({ scene, headingId, onPlay, bare }: {
+  scene: GuideScene;
+  headingId?: string;
+  onPlay?: () => void;
+  /** Không bọc khung (trong bảng trượt đáy đã có khung). */
+  bare?: boolean;
+}) {
   const guide = MODE_GUIDES[scene];
+  const Frame = bare ? "div" : OrnateFrame;
   return (
-    <OrnateFrame className="flex flex-col gap-4" aria-labelledby={headingId}>
+    <Frame className="flex flex-col gap-4" aria-labelledby={headingId}>
       <section className="flex flex-col gap-1">
         <h2 id={headingId} className="text-lg font-bold text-title-on-wood">
           Mục tiêu
@@ -97,7 +117,7 @@ export function ModeGuidePanel({ scene, headingId, onPlay }: { scene: GuideScene
             <h3 className="text-base font-bold text-frame-gold">{title}</h3>
             <List className={`flex flex-col gap-1.5 pl-5 text-on-wood ${key === "steps" ? "list-decimal" : "list-disc"}`}>
               {items.map((text) => (
-                <li key={text}>{text}</li>
+                <li key={text}><GuideText text={text} /></li>
               ))}
             </List>
           </FrameInset>,
@@ -109,7 +129,55 @@ export function ModeGuidePanel({ scene, headingId, onPlay }: { scene: GuideScene
           Vào chơi
         </Button>
       )}
-    </OrnateFrame>
+    </Frame>
+  );
+}
+
+/** Khóa localStorage: chế độ đã tự mở bảng Hướng dẫn trên điện thoại một lần. */
+const SHEET_SEEN_KEY = "co-lau:guide-sheet-seen";
+
+/** Đọc danh sách chế độ đã xem bảng Hướng dẫn; không đọc được bộ nhớ thì coi như đã xem (không tự mở). */
+function sheetSeen(scene: GuideScene): boolean {
+  try {
+    return (JSON.parse(localStorage.getItem(SHEET_SEEN_KEY) ?? "[]") as string[]).includes(scene);
+  } catch {
+    return true;
+  }
+}
+
+function markSheetSeen(scene: GuideScene): void {
+  try {
+    const seen = new Set<string>(JSON.parse(localStorage.getItem(SHEET_SEEN_KEY) ?? "[]") as string[]);
+    seen.add(scene);
+    localStorage.setItem(SHEET_SEEN_KEY, JSON.stringify([...seen]));
+  } catch {
+    // Bộ nhớ bị chặn: lần sau lại tự mở, không sao.
+  }
+}
+
+/** Nút "?" mở Hướng dẫn dạng bảng trượt đáy trên điện thoại (Shan chọn 5B, 21/11/2026). */
+export function GuideSheetButton({ scene }: { scene: GuideScene }) {
+  const [open, setOpen] = useState(false);
+  // Lần đầu vào chế độ trên trình duyệt này thì tự mở; chỉ ghi nhớ khi người chơi đóng bảng, để màn dựng lại (đang
+  // tải xong) vẫn mở tiếp chứ không chớp rồi mất.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- đồng bộ với localStorage sau khi gắn vào trang
+    if (!sheetSeen(scene)) setOpen(true);
+  }, [scene]);
+  const close = () => {
+    markSheetSeen(scene);
+    setOpen(false);
+  };
+  return (
+    <>
+      <button type="button" aria-label="Hướng dẫn" aria-haspopup="dialog" onClick={() => setOpen(true)}
+        className={choiceVariants({ className: "size-11 shrink-0 px-0 font-bold" })}>
+        ?
+      </button>
+      <BottomSheet open={open} onClose={close} title="Hướng dẫn">
+        <ModeGuidePanel scene={scene} bare onPlay={close} />
+      </BottomSheet>
+    </>
   );
 }
 
@@ -143,12 +211,15 @@ export function ModeGuideTabs({ scene, extraTabs = [], playTabs, children }: {
   playTabs?: ModePlayTabs;
   children: ReactNode;
 }) {
+  // Điện thoại: không có thẻ Hướng dẫn, thay bằng nút "?" mở bảng trượt đáy (Shan chọn 5B, 21/11/2026).
+  const phone = useMediaQuery(PHONE_QUERY);
   const [view, setViewState] = useState<string>(() => (guideFirst(scene) ? "guide" : "play"));
   const setView = (next: string) => {
     if (next !== "guide") markGuideSeen(scene);
     setViewState(next);
   };
-  const extra = extraTabs.find((tab) => tab.value === view);
+  const shown = phone && view === "guide" ? "play" : view;
+  const extra = extraTabs.find((tab) => tab.value === shown);
   const plays = playTabs?.items ?? [{ value: "play", label: "Chơi" }];
   const pick = (next: string) => {
     if (playTabs?.items.some((tab) => tab.value === next)) {
@@ -158,17 +229,21 @@ export function ModeGuideTabs({ scene, extraTabs = [], playTabs, children }: {
   };
   return (
     <>
-      <Tabs<string>
-        label="Màn chế độ"
-        value={view === "play" ? (playTabs?.value ?? "play") : view}
-        onChange={pick}
-        items={[
-          ...plays,
-          ...extraTabs.map(({ value, label }) => ({ value, label })),
-          { value: "guide", label: "Hướng dẫn" },
-        ]}
-      />
-      {view === "guide" ? <ModeGuidePanel scene={scene} onPlay={() => setView("play")} /> : extra ? extra.content : children}
+      <div className="flex items-center gap-2">
+        <Tabs<string>
+          label="Màn chế độ"
+          className="flex-1 max-sm:min-w-0"
+          value={shown === "play" ? (playTabs?.value ?? "play") : shown}
+          onChange={pick}
+          items={[
+            ...plays,
+            ...extraTabs.map(({ value, label }) => ({ value, label })),
+            ...(phone ? [] : [{ value: "guide", label: "Hướng dẫn" }]),
+          ]}
+        />
+        {phone && <GuideSheetButton scene={scene} />}
+      </div>
+      {shown === "guide" ? <ModeGuidePanel scene={scene} onPlay={() => setView("play")} /> : extra ? extra.content : children}
     </>
   );
 }

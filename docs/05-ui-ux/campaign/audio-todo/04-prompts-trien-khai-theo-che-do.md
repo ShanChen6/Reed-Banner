@@ -265,13 +265,13 @@ Có thể giao bước 2–5 cho Claude: gửi tệp gốc kèm prompt:
 
 ### D2. Tệp trận đánh còn thiếu
 
-- **Shan tạo tệp:** B6 dòng `battle.debuff`, `burn`, `freeze`, `poison` (`match4`, `match5`, `combo1..4`, `ultimate`, `heal`, `shield`, `buff` đã có từ 20/11/2026). Nếu muốn tách tiếng theo nghề/hệ: B4 dòng `battle.hit.<nghe>` và `battle.skill.<he>` (hiện 8 nghề và 7 hệ dùng chung một bộ).
+- **Shan tạo tệp:** mọi cue `battle.*` đã có tệp (21/11/2026). Nếu muốn tách tiếng theo nghề/hệ: B4 dòng `battle.hit.<nghe>` và `battle.skill.<he>` (hiện 8 nghề và 7 hệ dùng chung một bộ).
 - **Giao Claude:** prompt D0 với các cue trên; tệp ở `sfx/battle/`.
 - **Xong khi:** mọi cue trong `BATTLE_CUES` có dòng manifest; chơi một trận Giao Tranh nghe đủ combo, tuyệt chiêu, hồi máu, khiên, hiệu ứng trạng thái.
 
 ### D3. Nhạc đã nối mà chưa có tệp (song song D2)
 
-- **Shan tạo tệp:** B3 (`formation_play`, `formation_play_layer2`, `formation_result_win`, `formation_result_lose`), B5 (`tower_trial`, `tower_destiny`), B9 (`ending`, `amb/atlas`).
+- **Shan tạo tệp:** B3 (`formation_play_layer2`, `formation_result_win`, `formation_result_lose`), B5 (`tower_trial`, `tower_destiny`), B9 (`ending`, `amb/atlas`).
 - **Giao Claude:** prompt D0. Thêm: `formation_play_layer2` khai báo là trường `layer` của mục `formation_play` trong manifest (không phải mục riêng); `formation_result_*` và `ending` đặt `"loop": false` nếu bản nhạc có kết thúc; âm nền `atlas` thêm vào mục `ambience` của manifest.
 - **Xong khi:** Trận Đồ đổi nhạc giữa chọn bậc, đang chơi, kết quả; lớp căng thẳng to dần theo mức Bỏ Lệnh; Tháp có nhạc; bản đồ Bình Loạn có gió và chim.
 

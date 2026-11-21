@@ -4,7 +4,7 @@
 // giữa, cao nhất), từ hạng 4 là các dòng có huy hiệu số và ảnh đại diện, thanh "hạng của bạn" dính đáy khung khi cuộn.
 // Dải bậc hạng (Đồng → Huyền Thoại) dùng cho chế độ có điểm hạng lâu dài như Quần Hùng.
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { buttonVariants } from "@/components/ui";
 import { cn } from "@/lib/cn";
 
@@ -252,7 +252,7 @@ export interface TierReward {
  * bên phải), bậc đang đứng sáng viền. Có `rewards` thì nút: đạt mốc mà chưa nhận thì Nhận thưởng; đã nhận thì khóa
  * "Đã nhận"; chưa đạt thì khóa, ghi điểm còn thiếu.
  */
-export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false, unit = "điểm", locked = false }: {
+export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false, unit = "điểm", locked = false, collapsible = false }: {
   tiers: readonly Tier[];
   score: number;
   label: string;
@@ -263,11 +263,26 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false
   busy?: boolean;
   /** Chưa vào chế độ lần nào: mọi nút nhận khóa, kể cả bậc đã đạt mốc. */
   locked?: boolean;
+  /**
+   * Điện thoại gọn lại: chỉ hiện bậc đang đứng, bậc chờ nhận và bậc kế, các bậc khác mở bằng nút "Xem cả N bậc" (rà soát điện thoại
+   * 21/11/2026: Ban Thưởng bảy dải sáu bậc dài gần 4.700px).
+   */
+  collapsible?: boolean;
 }) {
+  const [expanded, setExpanded] = useState(false);
   const at = tierIndex(tiers, score);
   const next = tiers[at + 1];
   const from = tiers[at]!.min;
   const ratio = next ? Math.max(0, Math.min(1, (score - from) / (next.min - from))) : 1;
+  // Gọn lại thì giữ: bậc đang đứng (đã đạt), bậc đạt mốc chưa nhận, và bậc đầu tiên chưa đạt.
+  const firstOpen = tiers.findIndex((t) => score < t.min);
+  const keep = (i: number) => {
+    const reached = score >= tiers[i]!.min;
+    if (reached && (i === at || (rewards?.[i] && !rewards[i]!.claimed))) return true;
+    return i === firstOpen;
+  };
+  const folded = collapsible && !expanded;
+  const hidden = collapsible ? tiers.filter((_, i) => !keep(i)).length : 0;
   return (
     <section aria-label={label} className="flex flex-col gap-2">
       <div className="flex items-center gap-2 text-caption text-on-wood-soft">
@@ -286,6 +301,7 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false
             <li key={t.name} aria-current={current ? "step" : undefined}
               className={cn(
                 "flex items-center gap-3 rounded-lg border px-3 py-2",
+                folded && !keep(i) && "max-sm:hidden",
                 current ? "border-frame-gold bg-frame-gold/15" : "border-frame-line-soft bg-wood-inset",
               )}>
               <TierBadge tier={t} index={i} size="sm" dim={!reached} />
@@ -323,6 +339,12 @@ export function TierLadder({ tiers, score, label, rewards, onClaim, busy = false
           );
         })}
       </ol>
+      {collapsible && hidden > 0 && (
+        <button type="button" aria-expanded={expanded} onClick={() => setExpanded((v) => !v)}
+          className="min-h-11 self-start text-sm font-semibold text-frame-gold underline-offset-4 hover:underline sm:hidden">
+          {expanded ? "Thu gọn" : `Xem cả ${tiers.length} bậc`}
+        </button>
+      )}
     </section>
   );
 }

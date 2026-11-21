@@ -152,17 +152,17 @@ export function FighterCard({
       type="button"
       onClick={onClick}
       disabled={!onClick || !alive}
-      className={`relative w-full min-w-0 rounded-lg border border-l-4 border-frame-line-soft bg-wood-panel p-1.5 text-left md:p-2 ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
+      className={`relative w-full min-w-0 rounded-lg border border-l-4 border-frame-line-soft bg-wood-panel p-1.5 text-left md:p-2 landscape-short:p-1.5 ${ring} ${alive ? "" : "opacity-40 grayscale"} disabled:cursor-default`}
       style={{ borderLeftColor: ELEMENT_COLOR[fighter.element] }}
       title={cardTitle}
     >
-      <div className="mb-1 flex flex-col items-start gap-1 md:flex-row md:items-center md:gap-2">
+      <div className="mb-1 flex flex-row items-center gap-1.5 sm:flex-col sm:items-start sm:gap-1 md:flex-row md:items-center md:gap-2 landscape-short:flex-row landscape-short:items-center landscape-short:gap-1.5">
         <Portrait
           id={fighter.id}
           element={fighter.element}
           profession={fighter.profession}
           level={fighter.level}
-          className="size-8 shrink-0 md:size-7 lg:size-11"
+          className="size-7 shrink-0 sm:size-8 md:size-7 lg:size-11 landscape-short:size-7"
         />
         <div className="w-full min-w-0 md:flex-1">
           <span className="flex min-w-0 items-center gap-1 text-caption font-semibold leading-tight md:text-sm">
@@ -171,9 +171,9 @@ export function FighterCard({
                 <LeaderFlag className="size-3 md:size-4" />
               </span>
             )}
-            <span className="line-clamp-2 break-words md:truncate">{fighter.name}</span>
+            <span className="line-clamp-2 break-words md:truncate landscape-short:truncate">{fighter.name}</span>
           </span>
-          <span className="hidden items-center gap-1 text-caption opacity-75 md:flex">
+          <span className="hidden items-center gap-1 text-caption opacity-75 md:flex landscape-short:hidden">
             <FighterKindIcons fighter={fighter} showName />
           </span>
         </div>
@@ -190,7 +190,7 @@ export function FighterCard({
         {!fighter.structure && (
           <>
             <Bar label="NL" value={fighter.energy} max={100} color="bg-stat-energy" />
-            <div className="hidden md:block">
+            <div className="hidden md:block landscape-short:hidden">
               <Bar
                 label="TT"
                 value={fighter.spirit}

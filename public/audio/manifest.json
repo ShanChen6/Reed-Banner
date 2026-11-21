@@ -304,6 +304,28 @@
       ],
       "volume": 0.85
     },
+    "battle.crit": {
+      "files": [
+        "sfx/battle/crit_a",
+        "sfx/battle/crit_b",
+        "sfx/battle/crit_c"
+      ],
+      "volume": 0.85
+    },
+    "battle.turn": {
+      "files": [
+        "sfx/battle/turn_a"
+      ],
+      "volume": 0.6
+    },
+    "battle.timer": {
+      "files": [
+        "sfx/battle/timer_a",
+        "sfx/battle/timer_b",
+        "sfx/battle/timer_c"
+      ],
+      "volume": 0.7
+    },
     "battle.skill.kim": {
       "files": [
         "sfx/battle/skill_a",
@@ -386,6 +408,38 @@
       "files": [
         "sfx/battle/buff_a",
         "sfx/battle/buff_b"
+      ],
+      "volume": 0.75
+    },
+    "battle.debuff": {
+      "files": [
+        "sfx/battle/debuff_a",
+        "sfx/battle/debuff_b",
+        "sfx/battle/debuff_c"
+      ],
+      "volume": 0.75
+    },
+    "battle.burn": {
+      "files": [
+        "sfx/battle/burn_a",
+        "sfx/battle/burn_b",
+        "sfx/battle/burn_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.freeze": {
+      "files": [
+        "sfx/battle/freeze_a",
+        "sfx/battle/freeze_b",
+        "sfx/battle/freeze_c"
+      ],
+      "volume": 0.8
+    },
+    "battle.poison": {
+      "files": [
+        "sfx/battle/poison_a",
+        "sfx/battle/poison_b",
+        "sfx/battle/poison_c"
       ],
       "volume": 0.75
     },
@@ -563,6 +617,10 @@
   "music": {
     "formation_menu": {
       "file": "music/formation_menu",
+      "volume": 0.5
+    },
+    "formation_play": {
+      "file": "music/formation_play",
       "volume": 0.5
     },
     "atlas": {

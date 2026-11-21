@@ -436,7 +436,8 @@ function SetupView(props: {
     <>
       <section className="ui-frame p-4 sm:p-5">
         <h2 className="font-serif text-xl font-bold">1. Chọn sa bàn</h2>
-        <div className="mt-3 grid gap-3 md:grid-cols-3">
+        {/* Điện thoại: sa bàn là một dải vuốt ngang, mỗi thẻ gần hết bề ngang, để phần chia đạo quân lên gần (21/11/2026). */}
+        <div className="relative mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 [scrollbar-width:thin] md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
           {maps.map((m) => {
             const best = Math.max(0, ...m.tiers.filter((t) => t.stars > 0).map((t) => t.tier));
             return (
@@ -445,7 +446,7 @@ function SetupView(props: {
                 type="button"
                 aria-pressed={m.id === map.id}
                 onClick={() => props.setMapId(m.id)}
-                className={choiceVariants({ className: "flex-col items-stretch justify-start overflow-hidden p-0 text-left font-normal" })}
+                className={choiceVariants({ className: "w-[78%] shrink-0 snap-start flex-col items-stretch justify-start overflow-hidden p-0 text-left font-normal md:w-auto" })}
               >
                 <span aria-hidden className="block aspect-[5/2] w-full bg-no-repeat opacity-90" style={mapArtStyle(m)} />
                 <span className="block p-3">
@@ -569,7 +570,7 @@ function SetupView(props: {
           />
         </div>
         {owned.length < 5 && <p className="mt-2 text-sm text-danger">Cần ít nhất 5 tướng ngoài Đinh Bộ Lĩnh.</p>}
-        <div className="mt-4 flex flex-wrap items-center gap-3">
+        <div className="ui-action-bar mt-4 flex flex-wrap items-center gap-3 max-sm:!-mx-4 max-sm:!px-4">
           <Button variant="primary" disabled={props.busy || !ready} onClick={props.onStart}>
             {props.busy ? "Đang xuất quân…" : `Xuất quân: ${map.name}, ${info.name}`}
           </Button>

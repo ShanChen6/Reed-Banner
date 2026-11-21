@@ -8,6 +8,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { ShellAccount } from "../GameShell";
 import { scenePath, type Scene } from "../scene";
 import { SceneLink } from "../SceneContext";
+import { useFullscreen } from "../FullscreenToggle";
 import AudioSettings from "./AudioSettings";
 
 export default function HeaderAccountMenu({ scene, account }: { scene: Scene; account: ShellAccount | null }) {
@@ -18,6 +19,7 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
   const trigger = useRef<HTMLButtonElement>(null);
   const panelId = useId();
   const name = account?.name ?? "Lữ khách";
+  const fullscreen = useFullscreen();
 
   // Đổi phân cảnh thì đóng menu (bấm một mục trong menu cũng đổi phân cảnh).
   if (openedAt !== scene) {
@@ -117,6 +119,17 @@ export default function HeaderAccountMenu({ scene, account }: { scene: Scene; ac
             </button>
             {settings && <AudioSettings />}
           </li>
+          {/* Điện thoại không có nút nổi toàn màn hình (quy tắc 21/11/2026), bật/tắt ở đây. */}
+          {fullscreen.supported && (
+            <li className="sm:hidden">
+              <button type="button" aria-pressed={fullscreen.active} onClick={() => { fullscreen.toggle(); setOpen(false); }} className={item}>
+                <svg aria-hidden viewBox="0 0 24 24" className="size-[18px] shrink-0 text-[var(--frame-bronze-hi)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+                  <path d={fullscreen.active ? "M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" : "M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"} />
+                </svg>
+                {fullscreen.active ? "Thoát toàn màn hình" : "Toàn màn hình"}
+              </button>
+            </li>
+          )}
           {account ? (
             <>
               <li className="mt-1 border-t border-[var(--frame-bronze)]/40 pt-1">

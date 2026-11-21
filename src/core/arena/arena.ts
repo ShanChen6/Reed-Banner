@@ -29,6 +29,12 @@ import { GEAR_SETS, GEAR_SLOTS, type GearItem, type Tier } from "../gear";
 import { vnDay } from "../vnTime";
 import { SHOP_COMPANIONS, STARTER_COMPANIONS } from "../roster";
 
+/**
+ * Tên hiển thị hai cách đấu của Quần Hùng (21/11/2026, thay "Đấu bóng ma" và "Đấu người"). Phá Doanh: đánh đội phòng thủ
+ * (bản chụp do máy điều khiển) của hào kiệt khác. Thư Hùng: đấu trực tiếp với người khác. Đổi tên chỉ cần sửa ở đây.
+ */
+export const ARENA_MODE_NAME = { ghost: "Phá Doanh", pvp: "Thư Hùng" } as const;
+
 /** Điểm khởi đầu, cũng là điểm của bóng ma do máy tạo. */
 export const ARENA_START = 1000;
 /** Hệ số Elo của người đánh; người phòng thủ đổi một nửa. */

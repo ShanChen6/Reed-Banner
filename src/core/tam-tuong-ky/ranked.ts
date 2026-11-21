@@ -21,6 +21,16 @@ export const TTK_HERO_POINTS: Readonly<Record<HeroTier, number>> = { thuong: 100
 /** Bó thưởng theo bậc hạng ở các chế độ theo tuần (P-11). Bậc giống `RewardTier` của thưởng hạng. */
 export type TtkRewardTier = "top1" | "top3" | "top10" | "half" | "win";
 export const TTK_RANK_BUNDLES: Readonly<Record<TtkRewardTier, number>> = { top1: 5, top3: 4, top10: 3, half: 2, win: 1 };
+/**
+ * Phiếu Tầm Tướng Ký kèm thưởng hạng (P-10b, Shan 21/11/2026): chế độ theo tuần có tên trên bảng là có phiếu, chế độ
+ * theo ngày chỉ Top 10. Để người mới có thêm lượt dò công thức. Chỉ cộng cho người đã vào Tầm Tướng Ký, chặn ở trần phiếu.
+ */
+export const TTK_RANK_TICKETS_WEEKLY: Readonly<Record<TtkRewardTier, number>> = { top1: 3, top3: 2, top10: 2, half: 1, win: 1 };
+export const TTK_RANK_TICKETS_DAILY: Readonly<Record<TtkRewardTier, number>> = { top1: 1, top3: 1, top10: 1, half: 0, win: 0 };
+
+export function ttkRankTickets(weekly: boolean, tier: TtkRewardTier): number {
+  return (weekly ? TTK_RANK_TICKETS_WEEKLY : TTK_RANK_TICKETS_DAILY)[tier];
+}
 
 export interface TtkRankedWeek {
   readonly week: string;

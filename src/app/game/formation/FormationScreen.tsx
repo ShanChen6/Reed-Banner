@@ -260,7 +260,7 @@ export default function FormationScreen({ rankedEnabled = false }: { rankedEnabl
     async (level: string, period: string) => {
       const r = await claimRanked(level, period);
       if (r.ok) audio.play("formation.rank");
-      setClaimNote(r.ok ? `Đã nhận ${r.data.gold} vàng (hạng ${r.data.rank}/${r.data.winners}).` : "Chưa nhận được thưởng. Xin thử lại sau.");
+      setClaimNote(r.ok ? `Đã nhận ${r.data.gold} vàng${r.data.tickets ? `, ${r.data.tickets} phiếu Tầm Tướng Ký` : ""} (hạng ${r.data.rank}/${r.data.winners}).` : "Chưa nhận được thưởng. Xin thử lại sau.");
       refreshOverview();
     },
     [refreshOverview, audio],

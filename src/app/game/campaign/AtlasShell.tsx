@@ -5,6 +5,8 @@
 // hồ sơ server qua chapterStatus.
 
 import { buttonVariants } from "@/components/ui";
+import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
+import { GuideSheetButton } from "../ModeGuide";
 import Image from "next/image";
 import {
   CAMPAIGN_CHAPTERS,
@@ -704,15 +706,17 @@ export function AtlasHeader({
   supply: number;
   onView: (v: AtlasView) => void;
 }) {
+  const phone = useMediaQuery(PHONE_QUERY);
   const tabs: readonly { v: AtlasView; label: string }[] = [
     { v: "atlas", label: "Bản đồ" },
     { v: "mission", label: "Nhiệm vụ" },
     { v: "codex", label: "Sử ký" },
     { v: "raid", label: "Tái đấu" },
-    { v: "guide", label: "Hướng dẫn" },
+    // Điện thoại: thẻ Hướng dẫn thành nút "?" mở bảng trượt (Shan chọn 5B, 21/11/2026).
+    ...(phone ? [] : [{ v: "guide" as const, label: "Hướng dẫn" }]),
   ];
   const tabClass = (active: boolean) =>
-    `atlas-tab flex h-[52px] min-w-0 flex-col items-center justify-center gap-0.5 rounded-md border px-1 text-caption leading-none font-bold tracking-wide whitespace-nowrap uppercase sm:h-12 sm:flex-row sm:gap-1.5 sm:px-2 sm:text-sm ${
+    `atlas-tab flex h-[52px] min-w-0 flex-col items-center justify-center gap-0.5 rounded-md border px-0.5 text-caption leading-none font-bold tracking-wide whitespace-nowrap uppercase max-sm:tracking-normal max-sm:normal-case sm:h-12 sm:flex-row sm:gap-1.5 sm:px-2 sm:text-sm ${
       active ? "atlas-tab-active" : ""
     }`;
   return (
@@ -728,7 +732,7 @@ export function AtlasHeader({
       </div>
       <nav
         aria-label="Màn Sử ký"
-        className="grid grid-cols-3 gap-1.5 sm:grid-cols-5 md:order-3 md:basis-full"
+        className="grid grid-cols-[repeat(4,minmax(0,1fr))_auto] gap-1.5 sm:grid-cols-5 md:order-3 md:basis-full"
       >
         {tabs.map((t) => (
           <button
@@ -742,6 +746,7 @@ export function AtlasHeader({
             {t.label}
           </button>
         ))}
+        {phone && <GuideSheetButton scene="CAMPAIGN" />}
       </nav>
       <div className="flex flex-wrap items-center justify-end gap-1.5 px-1 md:order-2">
         <dl className="flex flex-wrap items-center justify-end gap-1.5 text-sm">

@@ -4,3 +4,4 @@ export * from "./ResultModal";
 export * from "./ModeScreen";
 export * from "./Skeleton";
 export * from "./SurrenderButton";
+export * from "./BottomSheet";

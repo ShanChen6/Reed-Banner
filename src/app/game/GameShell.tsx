@@ -30,6 +30,7 @@ import TrialScreen from "./trial/TrialScreen";
 import DestinyScreen from "./destiny/DestinyScreen";
 import ExpeditionScreen from "./expedition/ExpeditionScreen";
 import FullscreenToggle from "./FullscreenToggle";
+import MobileTabBar from "./MobileTabBar";
 import GameHeader from "./header/GameHeader";
 import GameFooter, { FOOTER_SCENES } from "./GameFooter";
 import LoginGate from "./LoginGate";
@@ -108,8 +109,9 @@ export default function GameShell({
         <div key={currentScene} className="scene-enter flex flex-1 flex-col">
           <SceneView scene={currentScene} account={account} auth={auth} resume={api.params.get("resume") === "1"} towerFeatures={towerFeatures} />
         </div>
-        {FOOTER_SCENES.has(currentScene) && <GameFooter />}
+        {FOOTER_SCENES.has(currentScene) && <GameFooter compact={currentScene !== "MENU"} />}
         <FullscreenToggle scene={currentScene} />
+        <MobileTabBar scene={currentScene} />
       </div>
       </AudioProvider>
     </SceneContext.Provider>

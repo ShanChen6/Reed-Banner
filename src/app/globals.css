@@ -5,6 +5,9 @@
 @import "../styles/base.css";
 @import "../styles/components.css";
 
+/* Màn ngang thấp (điện thoại xoay ngang, quy tắc 21/11/2026): bố cục trận riêng. Dùng `landscape-short:` trong lớp Tailwind. */
+@custom-variant landscape-short (@media (orientation: landscape) and (max-height: 499px));
+
 /* Hoạt ảnh bàn cờ trang /demo (src/app/demo/animation.ts). --dx/--dy tính bằng số ô; 2px là khe giữa các ô. */
 .tile-anim {
   --step-x: calc(var(--dx, 0) * (100% + 2px));
@@ -1676,6 +1679,14 @@ html {
     bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 5.5rem);
   }
 }
+/* Trang thường có thanh dưới cố định (Trận Đồ): nút phóng to lên góc trên phải của thẻ để khỏi che nút Bỏ Lệnh và
+   tim khí lực trên thanh (rà soát điện thoại 21/11/2026). */
+@media (width < 64rem) {
+  .play-card:not(:fullscreen):not(.play-card--overlay):has(.mobile-dock) .play-card-toggle {
+    top: 0;
+    bottom: auto;
+  }
+}
 /* Trận Đồ: máy tính cho ô giãn theo chiều cao màn; thẻ toàn màn hình thì bàn lấp chiều cao (trừ lề, hai dòng thông báo)
    và vẫn vừa bề ngang cột. */
 @media (width >= 64rem) {
@@ -1736,6 +1747,13 @@ html {
    bảng tên chế độ, hàng nút đạo cụ, dòng thông báo), tối đa 96px (Shan 20/11/2026: phóng to còn rất nhiều chỗ trống). */
 .dt-board {
   --dt-cell: max(26px, min(38px, calc((100vw - 3.5rem) / var(--dt-cols))));
+}
+/* Điện thoại: bàn luôn vừa bề ngang (bỏ mức tối thiểu 26px), ô nhỏ thì phóng bằng hai ngón hoặc nút +/−, `--dt-zoom` do
+   DoThamScreen đặt (Shan chọn 4A, 21/11/2026). 3.5rem khớp PHONE_GUTTER trong DoThamScreen. */
+@media (width < 40rem) {
+  .dt-board {
+    --dt-cell: calc(min(38px, (100vw - 3.5rem) / var(--dt-cols)) * var(--dt-zoom, 1));
+  }
 }
 .play-card:fullscreen .dt-board,
 .play-card--overlay .dt-board {
