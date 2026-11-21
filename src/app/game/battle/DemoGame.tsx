@@ -1214,7 +1214,8 @@ export default function DemoGame({
       ref={rootRef}
       className={`${palette} ui-mode-screen`}
     >
-      <OrnateFrame level="raised" flush className={`mx-auto flex w-full flex-col gap-3 p-4 sm:p-6 ${MODE_CONTENT_WIDTH}`}>
+      {/* Điện thoại: khung ngoài phẳng (.ui-frame--phone-flat) để bàn cờ lấp ngang (Shan chọn 1A, 21/11/2026). */}
+      <OrnateFrame level="raised" flush className={`ui-frame--phone-flat mx-auto flex w-full flex-col gap-2 p-0 sm:gap-3 sm:p-6 ${MODE_CONTENT_WIDTH}`}>
         <BattleHeader
           atBreak={atBreak}
           difficulty={difficulty}
@@ -1267,7 +1268,7 @@ export default function DemoGame({
               : `${expeditionObjective.type === "hold" ? "Giữ vị trí" : "Hộ tống đoàn dân"}: đã giữ ${Math.min(completedPlayerTurns(live), expeditionObjective.turns)}/${expeditionObjective.turns} lượt của bạn, hoặc hạ hết đối thủ.`}
           </p>
         )}
-        {started && <DongSonBand className="-mt-1 w-full opacity-70" />}
+        {started && <DongSonBand className="-mt-1 w-full opacity-70 max-sm:hidden" />}
         {survival && started && (
           <WaveBanner survival={survival} resting={atBreak} />
         )}
@@ -1336,7 +1337,7 @@ export default function DemoGame({
                 Toàn màn hình: hộp .battle-board-box giãn hết chiều cao còn lại, bàn cờ vừa hộp (globals.css). */}
             <div className="battle-board-box">
             <div
-              className="battle-board relative mx-auto mt-3 w-full rounded-xl border-2 border-[var(--primary)] bg-[var(--decorative-frame)] p-1.5 shadow-lg lg:max-w-[max(34rem,calc((100dvh-21rem)*var(--board-ratio)))]"
+              className="battle-board relative mx-auto mt-3 w-full rounded-xl border border-[var(--primary)] bg-[var(--decorative-frame)] p-1 shadow-lg max-sm:-mx-1 max-sm:w-[calc(100%+0.5rem)] sm:border-2 sm:p-1.5 lg:max-w-[max(34rem,calc((100dvh-21rem)*var(--board-ratio)))]"
               style={{ "--board-ratio": board.cols / board.rows } as React.CSSProperties}
             >
               <BoardCrest className="pointer-events-none absolute -top-4 left-1/2 z-10 h-8 w-40 -translate-x-1/2 md:-top-5 md:h-10 md:w-52" />
@@ -1347,7 +1348,7 @@ export default function DemoGame({
                 />
               ))}
               <div
-                className="relative grid touch-none select-none gap-0.5 overflow-hidden rounded-md bg-black/25 p-0.5"
+                className="relative grid touch-none select-none gap-px overflow-hidden rounded-md bg-black/25 p-0.5 sm:gap-0.5"
                 style={{
                   gridTemplateColumns: `repeat(${board.cols}, minmax(0, 1fr))`,
                 }}

@@ -100,13 +100,14 @@ export function BattleHeader({
   // Sảnh chờ trước trận đã có banner, độ khó và nút riêng: thanh này chỉ còn tiêu đề cho trình đọc màn hình.
   if (!started) return <h1 className="sr-only">{online ? "Cờ Lau – Giao Tranh" : "Cờ Lau – Thao Luyện"}</h1>;
   return (
-    <header className="flex flex-wrap items-center justify-between gap-2 border-b border-frame-line-soft pb-2">
+    <header className="flex flex-wrap items-center justify-between gap-2 border-b border-frame-line-soft pb-2 max-sm:flex-nowrap max-sm:pb-1.5">
       {/* Tên chế độ đã ở header chung; giữ h1 cho trình đọc màn hình. */}
       <h1 className="sr-only">
         {online ? "Cờ Lau – Giao Tranh" : "Cờ Lau – Thao Luyện"}
       </h1>
       {/* Chiếm phần trống còn lại: chữ trạng thái dài ngắn theo lượt không làm nút bên cạnh nhích qua lại. */}
-      <div className="min-w-0 flex-1 text-sm font-semibold text-title-on-wood" aria-live="polite">
+      {/* Điện thoại: lúc đang đánh, thanh giờ ngay trên bàn cờ đã nói lượt của ai; chữ ở đây chỉ còn cho trình đọc màn hình. */}
+      <div className={`min-w-0 flex-1 text-sm font-semibold text-title-on-wood ${state.winner === null && !atBreak && !scenarioOver ? "max-sm:sr-only" : ""}`} aria-live="polite">
         {!started
           ? ""
           : atBreak
@@ -134,14 +135,14 @@ export function BattleHeader({
           consequence={surrender.consequence}
           onConfirm={surrender.onConfirm}
           disabled={surrender.disabled}
-          className="min-h-9 pointer-coarse:min-h-11 text-caption"
+          className="min-h-9 pointer-coarse:min-h-11 whitespace-nowrap text-caption max-sm:px-2.5"
         />
       )}
       {!online && started && (
         <button
           type="button"
           onClick={() => { setProfile(loadProfile()); setStarted(false); }}
-          className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-9 pointer-coarse:min-h-11 gap-1.5 text-caption" })}
+          className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-9 pointer-coarse:min-h-11 gap-1.5 whitespace-nowrap text-caption max-sm:px-2.5" })}
         >
           <ProfessionIcon profession={profession} className="size-4" />
           Đổi đội hình
@@ -149,8 +150,8 @@ export function BattleHeader({
       )}
       {/* Trận online: máy chủ đã chốt độ khó lúc dựng trận nên đổi ở đây không có tác dụng; chỉ trận offline đổi được. */}
       {!online && (
-        <label className="flex items-center gap-2 text-caption text-on-wood-soft">
-          Độ khó
+        <label className="flex items-center gap-2 text-caption text-on-wood-soft max-sm:ml-auto">
+          <span className="max-sm:sr-only">Độ khó</span>
           <Select uiSize="sm" value={difficulty} onChange={(e) => setDifficulty(e.target.value as Difficulty)}>
             {DIFFICULTIES.map((d) => (
               <option key={d} value={d}>

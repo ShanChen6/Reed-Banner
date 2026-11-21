@@ -2,7 +2,7 @@
 // Không kiểm luật chơi (việc của test đơn vị trong tests/), chỉ kiểm game còn chạy được trên trình duyệt thật.
 import { expect, test } from "@playwright/test";
 import { SCENES, SCENE_SLUG, SCENE_TITLE, type Scene } from "../src/app/game/scene";
-import { expectClean, expectNoHorizontalOverflow, modeTabs, playMode, registerAccount, watchProblems } from "./helpers";
+import { expectClean, expectNoHorizontalOverflow, isPhone, modeTabs, playMode, registerAccount, watchProblems } from "./helpers";
 
 /** Màn tài khoản và màn trận có test riêng; mọi màn còn lại lấy thẳng từ danh sách phân cảnh nên màn mới tự được kiểm. */
 const SKIPPED: readonly Scene[] = ["PLAYING", "LOGIN", "REGISTER", "FORGOT_PASSWORD", "RESET_PASSWORD"];
@@ -24,6 +24,19 @@ test("khách chơi được trận Thao Luyện", async ({ page }) => {
   await expect(page.getByRole("grid", { name: "Bàn cờ" })).toBeVisible();
   await expectNoHorizontalOverflow(page);
   expectClean(problems);
+});
+
+test("Thao Luyện: điện thoại dọc thấy trọn bàn cờ và hàng kỹ năng, không phải cuộn", async ({ page }) => {
+  test.skip(!isPhone(), "Chỉ kiểm khổ điện thoại (quy tắc 21/11/2026)");
+  await page.goto("/game/practice");
+  const board = page.getByRole("grid", { name: "Bàn cờ" });
+  await expect(board).toBeVisible();
+  const height = page.viewportSize()!.height;
+  const width = page.viewportSize()!.width;
+  const boardBox = (await board.boundingBox())!;
+  const skillsBox = (await page.locator('[aria-label="Kỹ năng"]:visible').boundingBox())!;
+  expect(boardBox.width, "Bàn cờ lấp gần hết bề ngang").toBeGreaterThan(width - 40);
+  expect(skillsBox.y + skillsBox.height, "Hàng kỹ năng nằm trong màn đầu").toBeLessThanOrEqual(height);
 });
 
 test("Thao Luyện: Đầu hàng hỏi lại trước khi chốt thua", async ({ page }) => {
