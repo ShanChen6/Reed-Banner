@@ -8,11 +8,12 @@ import { SURVIVAL_BOSS_EVERY, SURVIVAL_WAVE_GOLD } from "@/core/survival/surviva
 import { TRIAL_FLOORS } from "@/core/progress/dualTowerState";
 import { DT_ITEM_PICKS, DT_LEVELS } from "@/core/do-tham";
 import { SL_AID_USE_MAX, SL_LEVELS, SL_START_AIDS, type SlAid } from "@/core/su-lo";
-import { KL_CLEAR_BONUS_BASE, KL_CLEAR_BONUS_PER_LEVEL, KL_CLEAR_HEARTS, KL_HEIGHT, KL_NEAR_CLEAR_BONUS, KL_NEAR_CLEAR_LEFT, KL_START_HEARTS, KL_START_TOOLS, KL_TIMED_LEVEL_SECONDS, KL_TIMED_START_SECONDS, KL_TOOL_CHARGE, KL_WIDTH, timedGoal } from "@/core/khai-lo/engine";
+import { KL_CLEAR_BONUS_BASE, KL_CLEAR_BONUS_PER_LEVEL, KL_CLEAR_HEARTS, KL_HEIGHT, KL_KINDS, KL_START_HEARTS, KL_START_TOOLS, KL_TIMED_CLEAR_SECONDS, KL_TIMED_LEFT_SECONDS, KL_TIMED_START_SECONDS, KL_TOOL_CHARGE, KL_WIDTH } from "@/core/khai-lo/engine";
 import { ELEMENTS, type Element } from "@/core/battle/elements";
 import { ELEMENT_NAME } from "./battle/labels";
 import { DT_ITEM_INFO } from "./do-tham/items";
 import { KL_TOOL_HINT, KL_TOOL_NAME } from "./khai-lo/tools";
+import { EXPEDITION_REST_HEAL, EXPEDITION_SCOUT_SIGHT } from "@/core";
 import type { Scene } from "./scene";
 
 /** Các chế độ có thẻ Hướng dẫn (đúng mười hai chế độ ở thẻ Chiến Trường). */
@@ -281,21 +282,20 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
   KHAI_LO: {
     goal: "Giải đố trên bàn cờ quân nguyên tố. Chạm một quân để xóa cả khối cùng hệ, gom khối to để được nhiều điểm và mở đường xuyên bàn cờ.",
     steps: [
-      "Chọn Thường (không giới hạn thời gian) hoặc Cấp tốc (chạy đua với đồng hồ để vượt mốc điểm từng bậc).",
+      "Chọn Thường (không giới hạn thời gian, quân sót trừ tim) hoặc Cấp tốc (chạy đua với đồng hồ, quân sót trừ giây).",
       "Chạm vào một quân có ít nhất 1 quân cùng hệ liền cạnh. Cả khối biến mất, quân phía trên rơi xuống.",
       `Thường: hết khối thì hết màn. Quân còn sót trừ tim (ván bắt đầu với ${KL_START_HEARTS} tim); không đủ tim đỡ thì hết ván.`,
     ],
     rules: [
       `Bàn có ${KL_WIDTH} cột và ${KL_HEIGHT} hàng. Quân lẻ không xóa được; liền cạnh không tính đường chéo. Không có quân mới rơi vào, cột trống thì các cột bên phải dồn sang trái.`,
-      "Màn càng sau càng nhiều hệ: 3 hệ ở màn 1–3, 4 hệ ở màn 4–7, 5 hệ ở màn 8–13, 6 hệ từ màn 14.",
+      `Mỗi màn chỉ ${KL_KINDS} hệ (đổi theo màn); màn càng sau quân càng vụn, ít khối lớn sẵn.`,
       `Thường: hết khối và hết đạo cụ thì hết màn, mỗi quân còn sót trừ 1 tim. Số quân sót nhiều hơn số tim còn lại là hết ván. Dọn sạch bàn được thêm ${KL_CLEAR_HEARTS} tim. Có thể bấm Kết thúc màn sớm (quân sót vẫn trừ tim).`,
       "Mỗi màn được hoàn tác một lần, chỉ lùi được nước vừa đi.",
-      `Cấp tốc: ván bắt đầu với ${KL_TIMED_START_SECONDS} giây. Đạt mốc điểm (bậc 1 là ${timedGoal(1)}, bậc 2 là ${timedGoal(2)}…) thì lên bậc, bàn mới và cộng thêm ${KL_TIMED_LEVEL_SECONDS} giây vào giờ còn lại. Bàn hết đường thì chia bàn mới cùng bậc; hết giờ là hết ván. Đồng hồ dừng khi bạn rời trang.`,
+      `Cấp tốc: ván bắt đầu với ${KL_TIMED_START_SECONDS} giây. Hết bàn thì sang màn mới ngay: dọn sạch được thêm ${KL_TIMED_CLEAR_SECONDS} giây, mỗi quân còn sót trừ ${KL_TIMED_LEFT_SECONDS} giây. Hết giờ là hết ván. Đồng hồ dừng khi bạn rời trang.`,
     ],
     rewards: [
       "Khối n quân được n² điểm. Ô số (viền vàng, nhãn ×2 hoặc ×3, từ màn 2) nhân điểm cả khối chứa nó; khối có nhiều ô số thì nhân dồn, ví dụ ×2 và ×3 thành ×6.",
-      `Dọn sạch bàn: thưởng ${KL_CLEAR_BONUS_BASE} điểm cộng ${KL_CLEAR_BONUS_PER_LEVEL} điểm × số màn (Cấp tốc: × số bậc).`,
-      `Cấp tốc: bàn hết đường mà chỉ còn tối đa ${KL_NEAR_CLEAR_LEFT} quân vẫn được ${KL_NEAR_CLEAR_BONUS} điểm.`,
+      `Dọn sạch bàn: thưởng ${KL_CLEAR_BONUS_BASE} điểm cộng ${KL_CLEAR_BONUS_PER_LEVEL} điểm × số màn (cả hai chế độ). Thường: dọn sạch tự sang màn sau.`,
       "Chơi ngay trên máy bạn, không thưởng và không xếp hạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.",
     ],
     tips: [
@@ -412,11 +412,14 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Chiếm được thành đích là thắng.",
     ],
     rules: [
-      "Đạo không đi trong ngày thì nghỉ và hồi 15% máu.",
+      `Đạo không đi trong ngày thì nghỉ và hồi ${Math.round(EXPEDITION_REST_HEAL * 100)}% máu.`,
       "Giặc mạnh thêm 5% mỗi ngày. Hết ngày mà chưa chiếm được thành là thua.",
       "Sa bàn có sương mù: bạn chỉ thấy ô đi được, chòi canh giúp nhìn xa. Đường vượt nước mất 2 ngày.",
       "Đạo kia đứng kề ô đang đánh thì hai đạo giáp công, giặc yếu đi.",
-      "Thua trận thì đạo đó rút về và gục. Mỗi ngày có 3 lượt xuất quân.",
+      "Thua trận thì đạo đó rút về ô cũ, cả ba gục, phải nghỉ để hồi. Không mất lượt viễn chinh. Mỗi ngày có 3 lượt xuất quân.",
+      "Chạm cờ để chọn đạo quân, chạm ô kề (viền màu đạo) để xem rồi tiến quân. Người gục cũng hồi máu khi đạo nghỉ.",
+      "Ký hiệu đường: xanh đứt nét là vượt nước (2 ngày); xanh lá đứt nét là lội đầm (2 ngày); chấm xanh ≈ là cửa nước, chỉ qua lúc nước rút; đỏ ✕ là đường đã biết bị phá. Chấm đỏ trên đồn: đồn đánh dở, địch giữ thương vong.",
+      `Trinh sát: đạo đang chọn đứng yên 1 ngày (không hồi sức), vén sương mọi ô trong ${EXPEDITION_SCOUT_SIGHT} bước và phát hiện đường bị phá quanh đó. Đường bị phá trông như đường thường; đi trúng thì mất ngày.`,
     ],
     rewards: [
       "Thưởng trận như trận thường, lần đầu thắng mỗi bậc có thưởng lớn.",

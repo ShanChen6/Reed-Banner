@@ -10,13 +10,11 @@ import { Alert, Button, ChoiceChip, choiceVariants } from "@/components/ui";
 import {
   EXPEDITION_PINCER_HP,
   EXPEDITION_REINFORCE_PER_DAY,
-  EXPEDITION_REST_HEAL,
   EXPEDITION_VILLAGE_HEAL,
   EXPEDITION_GRANARY_FOOD,
   MAIN_ID,
   companionById,
   EXPEDITION_WATCHTOWER_SIGHT,
-  EXPEDITION_SCOUT_SIGHT,
   expeditionEdgeDays,
   expeditionEdgeKey,
   expeditionEdgeKind,
@@ -688,7 +686,7 @@ function SandTable(props: {
   const citadel = byId(map.citadel);
   const fogId = `exp-fog-${map.id}`;
   return (
-    <svg viewBox="0 0 100 60" className="mt-3 w-full overflow-hidden rounded-lg border border-frame-line bg-wood-lo" role="group" aria-label={`Sa bàn ${map.name}`}>
+    <svg viewBox="0 0 100 60" className="exp-sand mt-3 w-full overflow-hidden rounded-lg border border-frame-line bg-wood-lo" role="group" aria-label={`Sa bàn ${map.name}`}>
       <defs>
         <radialGradient id={`${fogId}-hole`}>
           <stop offset="45%" stopColor="#000" />
@@ -829,34 +827,70 @@ function RunView(props: {
   const tierInfo = map.tiers.find((t) => t.tier === run.tier)!;
 
   return (
-    <section className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
-      <div className="ui-frame p-4 sm:p-5">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="font-serif text-xl font-bold">{map.name}, {tierInfo.name}</h2>
-          <p className="text-sm">
-            Ngày <strong className="text-frame-gold">{run.day}</strong>/{map.days}, chuẩn {map.parDays} ngày
-            {reinforce > 0 && <>, giặc tăng viện <strong className="text-danger">+{reinforce}%</strong></>}
-          </p>
+    <section className="exp-run grid gap-5 lg:grid-cols-[1.6fr_1fr]">
+      <div className="exp-main space-y-4">
+        <div className="ui-frame p-4 sm:p-5">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="font-serif text-xl font-bold">{map.name}, {tierInfo.name}</h2>
+            <p className="text-sm">
+              Ngày <strong className="text-frame-gold">{run.day}</strong>/{map.days}, chuẩn {map.parDays} ngày
+              {reinforce > 0 && <>, giặc tăng viện <strong className="text-danger">+{reinforce}%</strong></>}
+            </p>
+          </div>
+          <SandTable
+            run={run}
+            map={map}
+            seen={seen}
+            army={army}
+            target={target}
+            reachable={reachable}
+            setArmy={props.setArmy}
+            setTarget={props.setTarget}
+          />
+          {/* Cách chọn đạo, ký hiệu đường và trinh sát nằm ở thẻ Hướng dẫn (Shan 20/11/2026: gợi ý đưa vào Hướng dẫn). */}
         </div>
-        <SandTable
-          run={run}
-          map={map}
-          seen={seen}
-          army={army}
-          target={target}
-          reachable={reachable}
-          setArmy={props.setArmy}
-          setTarget={props.setTarget}
-        />
-        <p className="mt-2 text-caption text-on-wood-soft">
-          Chạm cờ để chọn đạo quân, chạm ô kề (viền màu đạo) để xem rồi tiến quân. Đạo không tiến được nghỉ, hồi
-          {` ${Math.round(EXPEDITION_REST_HEAL * 100)}% `}máu mỗi ngày (kể cả người gục). Đường xanh đứt nét là vượt nước, mất
-          2 ngày; xanh lá đứt nét là lội đầm (2 ngày); chấm xanh ≈ là cửa nước, chỉ qua lúc nước rút; đỏ ✕ là đường đã biết bị
-          phá. Sương mù che các ô chưa trinh sát; chiếm chòi canh để nhìn xa. Chấm đỏ: đồn đánh dở, địch giữ thương vong.
-        </p>
+        {/* Hai đạo quân nằm dưới sa bàn để lấp chỗ trống và cột phải đỡ dài (Shan 21/11/2026). */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          {run.armies.map((a, i) => {
+            const at = map.nodes.find((n) => n.id === a.at);
+            // Đối thủ đạo này sẽ gặp ở ô đang chọn (đạo đang chọn có thể gặp truy binh), để gắn ★ khắc hệ.
+            const armyFoes = (i === army ? preview : target ? encounters[target]?.[i as ArmyIndex] : undefined)?.foes ?? [];
+            return (
+              <button
+                key={i}
+                type="button"
+                aria-pressed={army === i}
+                onClick={() => props.setArmy(i as ArmyIndex)}
+                className="ui-frame p-4 sm:p-5 block w-full text-left"
+                style={{ borderColor: army === i ? ARMY_COLOR[i] : undefined }}
+              >
+                <div className="flex items-baseline justify-between">
+                  <strong style={{ color: ARMY_COLOR[i] }}>{ARMY_NAME[i]}</strong>
+                  <span className="flex items-center gap-1 text-caption text-on-wood-soft"><FoodIcon className="size-3.5" />{a.food}, tại {at?.name}</span>
+                </div>
+                <div className="mt-2 space-y-1.5">
+                  {a.ids.map((id) => {
+                    const f = a.fighters[id]!;
+                    return (
+                      <div key={id} className="flex items-center gap-2">
+                        <Portrait id={id} element={f.config.element} profession={f.config.profession} className="size-7" />
+                        <div className="flex-1">
+                          <div className="flex justify-between text-caption"><span className="flex items-center gap-1">{f.config.name}<CounterStar element={f.config.element} foes={armyFoes} /></span><span className={f.hp <= 0 ? "text-danger" : "text-on-wood-soft"}>{f.hp <= 0 ? "Gục" : `${f.hp}/${f.config.maxHp}`}</span></div>
+                          <HpBar ratio={f.hp / f.config.maxHp} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {!canFight(i as ArmyIndex) && <p className="mt-2 text-caption text-danger">Cả đạo đang gục, cần nghỉ để hồi sức.</p>}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="space-y-4">
+      {/* Cột phải: thông tin ô đang chọn và lệnh; toàn màn hình mà quá dài thì chỉ cột này cuộn (Shan 21/11/2026). */}
+      <div className="exp-side space-y-4">
         {counter && run.phase === "march" && (
           <div className="ui-frame p-4 sm:p-5 border-danger/60">
             <h3 className="font-serif text-lg font-bold text-danger">Giặc phản công {nameOf(scenario?.market ?? "")}</h3>
@@ -957,42 +991,6 @@ function RunView(props: {
           </div>
         )}
 
-        {run.armies.map((a, i) => {
-          const at = map.nodes.find((n) => n.id === a.at);
-          // Đối thủ đạo này sẽ gặp ở ô đang chọn (đạo đang chọn có thể gặp truy binh), để gắn ★ khắc hệ.
-          const armyFoes = (i === army ? preview : target ? encounters[target]?.[i as ArmyIndex] : undefined)?.foes ?? [];
-          return (
-            <button
-              key={i}
-              type="button"
-              aria-pressed={army === i}
-              onClick={() => props.setArmy(i as ArmyIndex)}
-              className="ui-frame p-4 sm:p-5 block w-full text-left"
-              style={{ borderColor: army === i ? ARMY_COLOR[i] : undefined }}
-            >
-              <div className="flex items-baseline justify-between">
-                <strong style={{ color: ARMY_COLOR[i] }}>{ARMY_NAME[i]}</strong>
-                <span className="flex items-center gap-1 text-caption text-on-wood-soft"><FoodIcon className="size-3.5" />{a.food}, tại {at?.name}</span>
-              </div>
-              <div className="mt-2 space-y-1.5">
-                {a.ids.map((id) => {
-                  const f = a.fighters[id]!;
-                  return (
-                    <div key={id} className="flex items-center gap-2">
-                      <Portrait id={id} element={f.config.element} profession={f.config.profession} className="size-7" />
-                      <div className="flex-1">
-                        <div className="flex justify-between text-caption"><span className="flex items-center gap-1">{f.config.name}<CounterStar element={f.config.element} foes={armyFoes} /></span><span className={f.hp <= 0 ? "text-danger" : "text-on-wood-soft"}>{f.hp <= 0 ? "Gục" : `${f.hp}/${f.config.maxHp}`}</span></div>
-                        <HpBar ratio={f.hp / f.config.maxHp} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              {!canFight(i as ArmyIndex) && <p className="mt-2 text-caption text-danger">Cả đạo đang gục, cần nghỉ để hồi sức.</p>}
-            </button>
-          );
-        })}
-
         {run.phase === "march" && (
           <div className="ui-frame p-4 sm:p-5 flex flex-wrap gap-2">
             <Button variant="secondary" disabled={props.busy || !!counter} onClick={props.onScout}>
@@ -1000,13 +998,6 @@ function RunView(props: {
             </Button>
             <Button variant="secondary" disabled={props.busy || !!counter} onClick={props.onCamp}>Đóng quân (cả hai đạo nghỉ 1 ngày)</Button>
             <SurrenderButton size="md" label="Rút khỏi viễn chinh" disabled={props.busy} consequence={ABANDON_TEXT} onConfirm={props.onAbandon} />
-            <p className="w-full text-caption text-on-wood-soft">Thua một trận: đạo đó rút về ô cũ, cả ba gục, phải nghỉ để hồi. Không mất lượt viễn chinh.</p>
-            <p className="w-full text-caption text-on-wood-soft">
-              Trinh sát: đạo đang chọn đứng yên 1 ngày (không hồi sức), vén sương mọi ô trong {EXPEDITION_SCOUT_SIGHT} bước
-              {scenario?.brokenRoads
-                ? " và phát hiện đường bị phá quanh đó. Đường bị phá trông như đường thường; đi trúng thì mất ngày."
-                : "."}
-            </p>
           </div>
         )}
       </div>

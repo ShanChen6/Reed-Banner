@@ -2,11 +2,13 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { Element } from "../../../src/core/battle/elements";
 import {
-  KL_NEAR_CLEAR_BONUS,
   clearBonus,
   KL_TIMED_START_SECONDS,
+  KL_TIMED_CLEAR_SECONDS,
+  KL_TIMED_LEFT_SECONDS,
+  KL_KINDS,
   KL_TOOL_CHARGE,
-  timedGoal,
+  timedSeconds,
   KL_START_TOOLS,
   KL_START_HEARTS,
   KL_CLEAR_HEARTS,
@@ -101,18 +103,19 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.deepEqual(createGame(1).tools, kit({ kim: KL_START_TOOLS, moc: KL_START_TOOLS, thuy: KL_START_TOOLS, hoa: KL_START_TOOLS, tho: KL_START_TOOLS, loi: KL_START_TOOLS, phong: KL_START_TOOLS }));
   });
 
-  it("dọn sạch bàn: thưởng 300 + 50 × màn, không tự cộng đạo cụ", () => {
+  it("dọn sạch bàn: thưởng 300 + 50 × màn, tự sang màn sau không hỏi, không tự cộng đạo cụ", () => {
     const s = stateOf(["aa", "aa"]);
     const r = transition(s, { type: "pick", index: 0 });
     assert.ok(r.ok);
-    assert.equal(r.state.phase, "levelDone");
+    assert.equal(r.state.phase, "playing");
+    assert.equal(r.state.level, 2);
+    assert.equal(r.state.summary, null);
+    assert.ok(r.events.some((e) => e.type === "levelDone" && e.summary.cleared));
+    assert.ok(r.events.some((e) => e.type === "newLevel" && e.level === 2));
     assert.equal(clearBonus(1), 350);
     assert.equal(r.state.score, 16 + clearBonus(1));
     assert.deepEqual(r.state.tools, kit());
-    const n = transition(r.state, { type: "nextLevel" });
-    assert.ok(n.ok);
-    assert.equal(n.state.level, 2);
-    assert.equal(n.state.phase, "playing");
+    assert.deepEqual(transition(r.state, { type: "nextLevel" }), { ok: false, reason: "notPlaying" });
   });
 
   it("chạm khối nạp thanh của hệ đó, đủ quân thì +1 đạo cụ hệ ấy, tích không giới hạn", () => {
@@ -140,7 +143,7 @@ describe("Khai Lộ: luật nước đi", () => {
     assert.deepEqual(r.state.charge, kit());
   });
 
-  it("Thường: ván mới có 30 tim; quân sót cuối màn trừ tim rồi sang màn", () => {
+  it("Thường: ván mới có KL_START_HEARTS tim; quân sót cuối màn trừ tim rồi sang màn", () => {
     assert.equal(createGame(1).hearts, KL_START_HEARTS);
     const r = transition(stateOf(["aab", "aac"]), { type: "pick", index: 0 });
     assert.ok(r.ok);
@@ -263,20 +266,29 @@ describe("Khai Lộ: luật nước đi", () => {
 });
 
 describe("Khai Lộ: sinh bàn và lưu ván", () => {
-  it("cùng seed cùng bàn, luôn có nhóm, số loại ô tăng theo màn", () => {
+  it("cùng seed cùng bàn, luôn có nhóm, mỗi bàn đúng 3 hệ và vụn dần theo màn", () => {
     assert.deepEqual(generateBoard(42, 3, 1), generateBoard(42, 3, 1));
     for (let level = 1; level <= 20; level++) {
-      const { cells } = generateBoard(7, level, 1);
+      const { cells } = generateBoard(7, level, 1, 10, 8);
       assert.ok(hasGroup(cells, 10, 8));
-      assert.equal(new Set(cells.map((c) => c?.kind)).size <= levelConfig(level).kinds, true);
+      assert.equal(new Set(cells.map((c) => c?.kind)).size, KL_KINDS);
       assert.equal(cells.filter((c) => c?.mult).length, levelConfig(level).mults);
       if (level < KL_MULT3_FROM) assert.equal(cells.some((c) => c?.mult === 3), false);
     }
-    assert.equal(levelConfig(3).kinds, 3);
-    assert.equal(levelConfig(4).kinds, 4);
-    assert.equal(levelConfig(8).kinds, 5);
-    assert.equal(levelConfig(13).kinds, 5);
-    assert.equal(levelConfig(14).kinds, 6);
+    assert.equal(levelConfig(14).kinds, KL_KINDS);
+    assert.equal(levelConfig(1).scatter, 0);
+    assert.equal(levelConfig(30).scatter, 1);
+    // màn sau ít cặp kề cùng hệ hơn màn đầu
+    const pairs = (level: number) => {
+      const { cells } = generateBoard(99, level, 1, 10, 12);
+      let n = 0;
+      cells.forEach((c, i) => {
+        if (i % 10 > 0 && cells[i - 1]?.kind === c?.kind) n++;
+        if (i >= 10 && cells[i - 10]?.kind === c?.kind) n++;
+      });
+      return n;
+    };
+    assert.ok(pairs(12) < pairs(1));
   });
 
   it("chơi tham lam tới hết ván luôn kết thúc, không kẹt", () => {
@@ -326,60 +338,36 @@ describe("Khai Lộ: Đầu hàng", () => {
 });
 
 describe("Khai Lộ: Cấp tốc", () => {
-  it("mốc điểm cộng dồn theo bậc: 400 + 50 × (bậc − 1)", () => {
-    assert.equal(timedGoal(1), 400);
-    assert.equal(timedGoal(2), 850);
-    assert.equal(timedGoal(3), 1350);
+  it("giờ thay tim: dọn sạch cộng giây, mỗi quân sót trừ giây", () => {
+    assert.equal(timedSeconds(0), KL_TIMED_CLEAR_SECONDS);
+    assert.equal(timedSeconds(5), -5 * KL_TIMED_LEFT_SECONDS);
   });
 
-  it("đạt mốc thì lên bậc ngay, chia bàn mới", () => {
-    const s = stateOf(["aab", "bcd"], { mode: "timed", score: timedGoal(1) - 4 });
-    const r = transition(s, { type: "pick", index: 0 });
+  it("dọn sạch bàn: thưởng, +giây, sang màn sau ngay", () => {
+    const r = transition(stateOf(["aa", "aa"], { mode: "timed" }), { type: "pick", index: 0 });
     assert.ok(r.ok);
     assert.equal(r.state.level, 2);
-    assert.equal(r.state.phase, "playing");
-    assert.equal(r.state.deal, 0);
-    assert.ok(r.events.some((e) => e.type === "goalReached" && e.level === 2));
-    assert.equal(tilesLeft(r.state.cells), 6);
-    assert.equal(r.state.prev, null);
-  });
-
-  it("bàn dọn sạch thì thưởng rồi chia bàn mới cùng bậc", () => {
-    const s = stateOf(["aa", "aa"], { mode: "timed" });
-    const r = transition(s, { type: "pick", index: 0 });
-    assert.ok(r.ok);
-    assert.equal(r.state.level, 1);
-    assert.equal(r.state.deal, 1);
     assert.equal(r.state.phase, "playing");
     assert.equal(r.state.score, 16 + clearBonus(1));
     assert.equal(tilesLeft(r.state.cells), 4);
-    assert.ok(r.events.some((e) => e.type === "redeal" && e.cleared));
+    assert.ok(r.events.some((e) => e.type === "levelPassed" && e.cleared && e.level === 2 && e.seconds === KL_TIMED_CLEAR_SECONDS));
+    assert.equal(r.state.prev, null);
   });
 
-  it("bàn hết đường còn tối đa 3 quân: thưởng gần sạch rồi chia bàn mới", () => {
+  it("hết đường còn quân sót: trừ giây theo số quân, vẫn sang màn sau", () => {
     const r = transition(stateOf(["aab", "aac"], { mode: "timed" }), { type: "pick", index: 0 });
     assert.ok(r.ok);
-    assert.equal(r.state.phase, "playing");
-    assert.equal(r.state.score, 16 + KL_NEAR_CLEAR_BONUS);
-    assert.equal(r.state.deal, 1);
-  });
-
-  it("thưởng dọn sạch đủ mốc thì lên bậc luôn", () => {
-    const r = transition(stateOf(["aa", "aa"], { mode: "timed", score: timedGoal(1) - 100 }), { type: "pick", index: 0 });
-    assert.ok(r.ok);
     assert.equal(r.state.level, 2);
+    assert.equal(r.state.score, 16);
+    assert.ok(r.events.some((e) => e.type === "levelPassed" && !e.cleared && e.left === 2 && e.seconds === -2 * KL_TIMED_LEFT_SECONDS));
   });
 
-  it("bế tắc chỉ đổi bàn khi đã hết khối; Thường không có timeUp", () => {
-    const playing = stateOf(["aab", "bcd"], { mode: "timed", tools: kit({ hoa: 1 }) });
-    assert.deepEqual(transition(playing, { type: "endLevel" }), { ok: false, reason: "notStuck" });
-    const stuck = transition(playing, { type: "pick", index: 0 });
-    assert.ok(stuck.ok);
-    assert.equal(stuck.state.phase, "stuck");
-    const d = transition(stuck.state, { type: "endLevel" });
+  it("kết thúc màn lúc nào cũng được, quân sót trừ giây; Thường không có timeUp", () => {
+    const playing = stateOf(["aab", "bcd"], { mode: "timed" });
+    const d = transition(playing, { type: "endLevel" });
     assert.ok(d.ok);
-    assert.equal(d.state.deal, 1);
-    assert.equal(d.state.phase, "playing");
+    assert.equal(d.state.level, 2);
+    assert.ok(d.events.some((e) => e.type === "levelPassed" && e.left === 6));
     assert.deepEqual(transition(stateOf(["aa", "bb"]), { type: "timeUp" }), { ok: false, reason: "notPlaying" });
   });
 

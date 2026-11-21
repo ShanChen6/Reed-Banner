@@ -12,19 +12,17 @@ export const KL_HEIGHT = 12;
  *  thứ hạng, trước đây thưởng dọn sạch chiếm 84% tổng điểm. Chế độ Thường (Shan 20/11/2026): không dọn sạch là thua. */
 export const KL_CLEAR_BONUS_BASE = 300;
 export const KL_CLEAR_BONUS_PER_LEVEL = 50;
-/** Cấp tốc: bàn hết đường mà chỉ còn tối đa 3 quân vẫn được thưởng nhỏ trước khi chia bàn mới. */
-export const KL_NEAR_CLEAR_LEFT = 3;
-export const KL_NEAR_CLEAR_BONUS = 100;
 /** 7 đạo cụ theo 7 hệ (Shan 20/11/2026): xóa quân hệ nào bằng cách chạm khối thì thanh nạp của hệ đó đầy dần; đủ số quân
- *  thì được 1 đạo cụ của hệ ấy. Quân bị đạo cụ phá không nạp, để đạo cụ đến từ việc gom khối. */
-export const KL_TOOL_CHARGE = 90;
+ *  thì được 1 đạo cụ của hệ ấy. Quân bị đạo cụ phá không nạp, để đạo cụ đến từ việc gom khối.
+ *  21/11/2026: 90 → 180 vì mỗi bàn chỉ còn 3 hệ nên mỗi hệ nhiều quân gấp đôi. */
+export const KL_TOOL_CHARGE = 180;
 const noTools = (): Record<KlTool, number> => ({ kim: 0, moc: 0, thuy: 0, hoa: 0, tho: 0, loi: 0, phong: 0 });
 /** Đạo cụ lúc bắt đầu ván: mỗi hệ KL_START_TOOLS cái. */
 export const KL_START_TOOLS = 1;
 const startTools = (): Record<KlTool, number> => ({ kim: KL_START_TOOLS, moc: KL_START_TOOLS, thuy: KL_START_TOOLS, hoa: KL_START_TOOLS, tho: KL_START_TOOLS, loi: KL_START_TOOLS, phong: KL_START_TOOLS });
-/** Tim (Shan 20/11/2026, như 30 tim của Block'D): chế độ Thường bắt đầu với KL_START_HEARTS tim. Hết màn còn sót
+/** Tim (Shan 20/11/2026, như 30 tim của Block'D; 21/11 giảm còn 15 khi Thường chỉ 3 hệ): chế độ Thường bắt đầu với KL_START_HEARTS tim. Hết màn còn sót
  *  bao nhiêu quân thì mất bấy nhiêu tim; không đủ tim đỡ số quân sót thì hết ván. Dọn sạch bàn được thêm KL_CLEAR_HEARTS tim. */
-export const KL_START_HEARTS = 30;
+export const KL_START_HEARTS = 15;
 export const KL_CLEAR_HEARTS = 3;
 /** Lượt hoàn tác mỗi màn (không cộng dồn sang màn sau). */
 export const KL_UNDO_PER_LEVEL = 1;
@@ -42,20 +40,18 @@ export function clearBonus(level: number): number {
 }
 
 
-/** Thường: không giới hạn thời gian, hết khối thì hết màn , quân sót trừ tim.
- *  Cấp tốc (Shan 20/11/2026): mỗi bậc có một mốc điểm; đạt mốc thì lên bậc, giờ còn lại cộng dồn thêm giờ của bậc mới.
- *  Bàn dọn sạch hoặc hết đường thì chia bàn mới cùng bậc. Hết giờ là hết ván; không dùng quân lực. */
+/** Thường: không giới hạn thời gian, hết khối thì hết màn, quân sót trừ tim.
+ *  Cấp tốc (Shan 21/11/2026): cùng luật hết bàn là qua màn, nhưng giờ thay tim: dọn sạch cộng giây, mỗi quân sót trừ
+ *  giây, sang màn mới ngay không dừng. Hết giờ là hết ván. Lõi không đọc giờ: giao diện cộng/trừ theo sự kiện levelPassed. */
 export type KlMode = "classic" | "timed";
-/** Cấp tốc: giờ lúc bắt đầu ván và giờ cộng thêm mỗi lần lên bậc (giây). */
+/** Cấp tốc: giờ lúc bắt đầu ván, giây cộng khi dọn sạch bàn, giây trừ cho mỗi quân sót. */
 export const KL_TIMED_START_SECONDS = 90;
-export const KL_TIMED_LEVEL_SECONDS = 40;
-/** Cấp tốc: điểm cần thêm để qua bậc n là 400 + 50 × (n − 1). */
-export const KL_TIMED_GOAL_BASE = 400;
-export const KL_TIMED_GOAL_STEP = 50;
+export const KL_TIMED_CLEAR_SECONDS = 40;
+export const KL_TIMED_LEFT_SECONDS = 1;
 
-/** Cấp tốc: tổng điểm cần đạt để qua bậc này (mốc cộng dồn từ đầu ván). */
-export function timedGoal(level: number): number {
-  return KL_TIMED_GOAL_BASE * level + (KL_TIMED_GOAL_STEP * level * (level - 1)) / 2;
+/** Cấp tốc: số giây cộng (dương) hoặc trừ (âm) khi hết một bàn còn `left` quân. */
+export function timedSeconds(left: number): number {
+  return left === 0 ? KL_TIMED_CLEAR_SECONDS : -KL_TIMED_LEFT_SECONDS * left;
 }
 
 export interface KlCell {
@@ -126,10 +122,8 @@ export type KlEvent =
   | { readonly type: "newLevel"; readonly level: number }
   /** Đầy thanh nạp: +1 đạo cụ. */
   | { readonly type: "toolCharged"; readonly tool: KlTool }
-  /** Cấp tốc: đạt mốc, lên bậc mới (giao diện cộng thêm KL_TIMED_LEVEL_SECONDS). */
-  | { readonly type: "goalReached"; readonly level: number }
-  /** Cấp tốc: chia bàn mới cùng bậc (bàn dọn sạch hoặc hết đường); cleared/left/bonus như kết màn. */
-  | { readonly type: "redeal"; readonly cleared: boolean; readonly left: number; readonly bonus: number }
+  /** Cấp tốc: hết bàn, sang màn `level` ngay; giao diện cộng `seconds` (âm là trừ) vào giờ còn lại. */
+  | { readonly type: "levelPassed"; readonly level: number; readonly cleared: boolean; readonly left: number; readonly bonus: number; readonly seconds: number }
   | { readonly type: "timeUp" }
   | { readonly type: "surrender" };
 
@@ -145,13 +139,21 @@ export interface KlLevelConfig {
   /** Số ô số trên bàn; từ màn KL_MULT3_FROM có thể ra ô ×3. */
   readonly mults: number;
   readonly maxMult: 2 | 3;
+  /** Xác suất bẻ vụn khối khi sinh bàn (0–1): quân trùng hệ với ô trái hoặc trên bị đổi sang hệ khác. */
+  readonly scatter: number;
 }
 
+/** Shan 21/11/2026: mỗi bàn (cả hai chế độ) chỉ KL_KINDS hệ; độ khó tăng bằng cách bẻ vụn khối theo màn. */
+export const KL_KINDS = 3;
+export const KL_SCATTER_PER_LEVEL = 0.1;
+export const KL_SCATTER_MAX = 1;
+
 export function levelConfig(level: number): KlLevelConfig {
-  const kinds = level <= 3 ? 3 : level <= 7 ? 4 : level <= 13 ? 5 : 6;
+  const kinds = KL_KINDS;
+  const scatter = Math.min(KL_SCATTER_MAX, KL_SCATTER_PER_LEVEL * (level - 1));
   const mults = level < 2 ? 0 : Math.min(5, 1 + Math.floor((level - 2) / 3));
   const maxMult = level < KL_MULT3_FROM ? 2 : 3;
-  return { kinds, mults, maxMult };
+  return { kinds, mults, maxMult, scatter };
 }
 
 /** Điểm một khối n quân: n² nhân với tích các ô số trong khối (×2 và ×3 cùng khối là ×6). */
@@ -175,13 +177,33 @@ const shuffled = <T>(xs: readonly T[], rng: Rng): T[] => {
 };
 
 /** Sinh bàn cho một màn: loại ô xáo theo seed, ô số ×2, ×3 rải ngẫu nhiên. Luôn có ít nhất một nhóm chạm được. */
-export function generateBoard(seed: number, level: number, firstId: number, width = KL_WIDTH, height = KL_HEIGHT, deal = 0): { cells: (KlCell | null)[]; nextId: number } {
+export function generateBoard(
+  seed: number,
+  level: number,
+  firstId: number,
+  width = KL_WIDTH,
+  height = KL_HEIGHT,
+  deal = 0,
+): { cells: (KlCell | null)[]; nextId: number } {
   const rng = createRng(levelSeed(seed, level, deal));
-  const { kinds, mults, maxMult } = levelConfig(level);
+  const { kinds, mults, maxMult, scatter } = levelConfig(level);
   const pool = shuffled(ELEMENTS, rng).slice(0, kinds);
+  const pick = (avoid?: Element) => {
+    const from = avoid ? pool.filter((k) => k !== avoid) : pool;
+    return from[rng.int(0, from.length - 1)] as Element;
+  };
   for (;;) {
     let id = firstId;
-    const cells: (KlCell | null)[] = Array.from({ length: width * height }, () => ({ id: id++, kind: pool[rng.int(0, pool.length - 1)] as Element }));
+    const cells: (KlCell | null)[] = [];
+    for (let i = 0; i < width * height; i++) {
+      let kind = pick();
+      if (scatter > 0) {
+        const left = i % width > 0 ? cells[i - 1]?.kind : undefined;
+        const up = i >= width ? cells[i - width]?.kind : undefined;
+        if ((kind === left || kind === up) && rng.next() < scatter) kind = pick(kind);
+      }
+      cells.push({ id: id++, kind });
+    }
     const order = shuffled(
       cells.map((_, i) => i),
       rng,
@@ -400,46 +422,22 @@ export function groupMult(cells: readonly (KlCell | null)[], group: readonly num
   return group.reduce((m, i) => m * (cells[i]?.mult ?? 1), 1);
 }
 
-const levelBonus = (level: number, left: number) => (left === 0 ? clearBonus(level) : left <= KL_NEAR_CLEAR_LEFT ? KL_NEAR_CLEAR_BONUS : 0);
-
-/** Cấp tốc: chia bàn mới; level khác bậc hiện tại nghĩa là vừa lên bậc. */
-function deal(s: KlState, level: number): KlState {
-  const n = level === s.level ? s.deal + 1 : 0;
-  const { cells, nextId } = generateBoard(s.seed, level, s.nextId, s.width, s.height, n);
-  return { ...s, level, cells, nextId, deal: n, undo: level === s.level ? s.undo : KL_UNDO_PER_LEVEL, phase: "playing", prev: null };
-}
-
-/** Cấp tốc: đủ mốc thì lên bậc (có thể lên nhiều bậc một lúc), mỗi bậc một bàn mới. */
-function checkGoal(s: KlState, events: KlEvent[]): KlState {
-  let level = s.level;
-  while (s.score >= timedGoal(level)) {
-    level += 1;
-    events.push({ type: "goalReached", level });
-  }
-  return level === s.level ? s : deal(s, level);
-}
-
-/** Sau mỗi nước: bàn sạch hoặc hết nhóm mà cũng hết đạo cụ thì tự kết thúc màn (Cấp tốc: chia bàn mới);
- *  hết nhóm còn đạo cụ thì "bế tắc". */
+/** Sau mỗi nước: bàn sạch hoặc hết nhóm mà cũng hết đạo cụ thì tự kết thúc màn; hết nhóm còn đạo cụ thì "bế tắc". */
 function afterMove(s: KlState, events: KlEvent[]): KlState {
-  if (s.mode === "timed") {
-    const leveled = checkGoal(s, events);
-    if (leveled !== s) return leveled;
-  }
   const left = tilesLeft(s.cells);
   if (left > 0 && hasGroup(s.cells, s.width, s.height)) return { ...s, phase: "playing" };
   if (left > 0 && hasTools(s)) return { ...s, phase: "stuck" };
-  return s.mode === "timed" ? redeal(s, events) : finishLevel(s, events);
+  return s.mode === "timed" ? passTimed(s, events) : finishLevel(s, events);
 }
 
-/** Cấp tốc: bàn hết đường (hoặc người chơi bỏ bàn bế tắc) thì tính thưởng dọn sạch/gần sạch rồi chia bàn mới cùng bậc. */
-function redeal(s: KlState, events: KlEvent[]): KlState {
+/** Cấp tốc: hết bàn (hoặc người chơi kết thúc màn) thì tính thưởng dọn sạch, báo số giây cộng/trừ, chia ngay bàn màn sau. */
+function passTimed(s: KlState, events: KlEvent[]): KlState {
   const left = tilesLeft(s.cells);
-  const bonus = levelBonus(s.level, left);
-  events.push({ type: "redeal", cleared: left === 0, left, bonus });
-  const scored = { ...s, score: s.score + bonus };
-  const leveled = checkGoal(scored, events);
-  return leveled !== scored ? leveled : deal(scored, s.level);
+  const bonus = left === 0 ? clearBonus(s.level) : 0;
+  const level = s.level + 1;
+  events.push({ type: "levelPassed", level, cleared: left === 0, left, bonus, seconds: timedSeconds(left) });
+  const { cells, nextId } = generateBoard(s.seed, level, s.nextId, s.width, s.height);
+  return { ...s, score: s.score + bonus, level, cells, nextId, deal: 0, undo: KL_UNDO_PER_LEVEL, phase: "playing", summary: null, prev: null };
 }
 
 /** Thường: dọn sạch thì thưởng điểm và tim; còn quân sót thì mỗi quân trừ 1 tim, không đủ tim đỡ thì hết ván. */
@@ -452,7 +450,16 @@ function finishLevel(s: KlState, events: KlEvent[]): KlState {
   const summary: KlLevelSummary = { level: s.level, cleared, left, bonus, hearts: lost };
   events.push({ type: "levelDone", summary });
   if (dead) events.push({ type: "over" });
-  return { ...s, score: s.score + bonus, hearts: dead ? s.hearts : s.hearts - lost, summary, phase: dead ? "over" : "levelDone", prev: null };
+  const done: KlState = { ...s, score: s.score + bonus, hearts: dead ? s.hearts : s.hearts - lost, summary, phase: dead ? "over" : "levelDone", prev: null };
+  // Shan 21/11/2026: dọn sạch thì tự sang màn sau, không hiện bảng hỏi; còn quân sót mới hiện bảng kết màn (báo tim mất).
+  return cleared ? nextLevel(done, events) : done;
+}
+
+function nextLevel(s: KlState, events: KlEvent[]): KlState {
+  const level = s.level + 1;
+  const { cells, nextId } = generateBoard(s.seed, level, s.nextId, s.width, s.height);
+  events.push({ type: "newLevel", level });
+  return { ...s, level, cells, nextId, deal: 0, undo: KL_UNDO_PER_LEVEL, phase: "playing", summary: null, prev: null };
 }
 
 const inBounds = (s: KlState, i: number) => Number.isInteger(i) && i >= 0 && i < s.width * s.height;
@@ -514,12 +521,7 @@ export function transition(state: KlState, action: KlAction): KlResult {
     }
     case "endLevel": {
       if (!active) return { ok: false, reason: "notPlaying" };
-      if (state.mode === "timed") {
-        // Cấp tốc chỉ bỏ bàn khi đã bế tắc, tránh chia lại liên tục để tìm bàn dễ.
-        if (state.phase !== "stuck") return { ok: false, reason: "notStuck" };
-        return { ok: true, state: redeal(state, events), events };
-      }
-      return { ok: true, state: finishLevel(state, events), events };
+      return { ok: true, state: state.mode === "timed" ? passTimed(state, events) : finishLevel(state, events), events };
     }
     case "timeUp": {
       if (state.mode !== "timed" || state.phase === "over") return { ok: false, reason: "notPlaying" };
@@ -533,14 +535,7 @@ export function transition(state: KlState, action: KlAction): KlResult {
     }
     case "nextLevel": {
       if (state.phase !== "levelDone" || state.mode === "timed") return { ok: false, reason: "notPlaying" };
-      const level = state.level + 1;
-      const { cells, nextId } = generateBoard(state.seed, level, state.nextId, state.width, state.height);
-      events.push({ type: "newLevel", level });
-      return {
-        ok: true,
-        state: { ...state, level, cells, nextId, deal: 0, undo: KL_UNDO_PER_LEVEL, phase: "playing", summary: null, prev: null },
-        events,
-      };
+      return { ok: true, state: nextLevel(state, events), events };
     }
   }
 }
