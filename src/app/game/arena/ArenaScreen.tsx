@@ -34,13 +34,14 @@ import { ColumnFill } from "../ColumnFill";
 const ATTACK_KEY = "coLau.arena.attack";
 
 
-function Members({ list }: { list: readonly ArenaMember[] }) {
+/** `compact`: điện thoại chỉ hiện hàng chân dung, tên và hệ nghề còn cho trình đọc màn hình (thẻ đối thủ, 21/11/2026). */
+function Members({ list, compact = false }: { list: readonly ArenaMember[]; compact?: boolean }) {
   return (
-    <ul className="flex flex-col gap-1.5">
+    <ul className={compact ? "flex flex-col gap-1.5 max-sm:flex-row max-sm:gap-2" : "flex flex-col gap-1.5"}>
       {list.map((m, i) => (
         <li
           key={`${m.id}-${i}`}
-          className="ui-frame-inset flex items-center gap-2 p-1.5"
+          className={compact ? "ui-frame-inset flex items-center gap-2 p-1.5 max-sm:border-0 max-sm:bg-transparent max-sm:p-0 max-sm:shadow-none" : "ui-frame-inset flex items-center gap-2 p-1.5"}
         >
           <Portrait
             id={m.id}
@@ -48,7 +49,7 @@ function Members({ list }: { list: readonly ArenaMember[] }) {
             profession={m.profession}
             className="size-9 shrink-0"
           />
-          <div className="min-w-0 text-caption">
+          <div className={compact ? "min-w-0 text-caption max-sm:sr-only" : "min-w-0 text-caption"}>
             <p className="truncate text-sm font-semibold text-on-wood">{m.name}</p>
             <p className="flex items-center gap-1 text-on-wood-soft">
               <ElementIcon element={m.element} className="size-3.5" />
@@ -431,7 +432,7 @@ export default function ArenaScreen() {
                   </p>
                   {myPower > 0 && <PowerTag mine={myPower} theirs={o.power} />}
                 </div>
-                <Members list={o.members} />
+                <Members list={o.members} compact />
                 <Button
                   type="button"
                   disabled={busy !== null || left <= 0 || lineup.length < 2}

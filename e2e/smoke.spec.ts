@@ -294,17 +294,24 @@ test.describe("tài khoản đã đăng nhập", () => {
     const problems = watchProblems(page);
     await page.goto("/game/combos");
     const grid = page.getByRole("group", { name: "Chọn tướng phối hợp" });
+    // Điện thoại: lưới chọn nằm trong bảng trượt, bấm ô tướng mới mở.
+    const openSlot = async (slot: number) => {
+      if (isPhone()) await page.getByRole("button", { name: `Ô tướng ${slot}`, exact: true }).click();
+    };
     // Lưới luôn có đủ mọi tướng (nhiều trang): tìm theo tên rồi chọn.
     const choose = async (name: string) => {
       await grid.getByRole("searchbox").fill(name);
       await grid.getByRole("button").filter({ hasText: name }).first().click();
     };
+    await openSlot(1);
     await choose("Hà Vân");
     await expect(page.getByRole("button", { name: "Ô tướng 1: Hà Vân" })).toBeVisible();
     // Đinh Bộ Lĩnh khớp mọi bộ lọc; bấm ông khi đang lọc hệ Hỏa thì ông mang hệ Hỏa.
+    await openSlot(2);
     await grid.getByRole("button", { name: "Hệ Hỏa" }).click();
     await choose("Đinh Bộ Lĩnh");
     await expect(page.getByRole("button", { name: "Ô tướng 2: Đinh Bộ Lĩnh" })).toContainText("Hỏa");
+    await openSlot(3);
     await grid.getByRole("button", { name: "Mọi hệ" }).click();
     await choose("Mai Thanh");
     await expect(page.getByRole("table", { name: /Số liên kết theo người phát tín hiệu/ })).toBeVisible();
