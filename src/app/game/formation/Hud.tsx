@@ -3,6 +3,7 @@
 // Các mảnh giao diện quanh sa bàn Trận Đồ: lệnh bài (quân đang cầm), ngọn lửa Bỏ Lệnh, thanh tiến độ, thanh dưới màn hình
 // cho điện thoại, nút gợi ý và hướng dẫn từng bước.
 
+import { FrameCorners } from "@/components/game-ui/FrameCorners";
 import { buttonVariants } from "@/components/ui";
 import type { PuzzleState, Ruleset } from "@/core/binh-phap";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
@@ -85,8 +86,11 @@ function PieceText({ hand }: { hand: PuzzleState["hand"] }) {
 /** "Lệnh bài": tấm bài giấy dó có dấu son, hiện quân đang cầm. */
 export function CommandCard({ state }: { state: PuzzleState }) {
   return (
-    <section aria-label="Quân đang cầm" className="relative overflow-hidden rounded-lg border-2 border-frame-bronze bg-gradient-to-br from-paper-hi to-paper-deep p-3 text-wood shadow-[0_4px_14px_rgb(0_0_0/0.55)]">
-      <span aria-hidden className="absolute top-0 right-3 rounded-b bg-lacquer px-2 pt-0.5 pb-1 font-serif text-[11px] font-bold uppercase tracking-[0.2em] text-title-on-wood">Lệnh bài</span>
+    <section aria-label="Quân đang cầm" className="relative overflow-hidden rounded-lg border-2 border-frame-bronze bg-gradient-to-br from-paper-hi to-paper-deep p-4 text-wood shadow-[0_4px_14px_rgb(0_0_0/0.55)]">
+      {/* Viền card như các card lớn khác (Shan 21/11/2026): vạch đồng bên trong và bốn góc hoa văn, màu đồng sẫm trên giấy. */}
+      <span aria-hidden className="pointer-events-none absolute inset-1 rounded-md border border-frame-bronze/70" />
+      <FrameCorners size="size-6" cornerClass="text-wood/70" />
+      <span aria-hidden className="absolute top-0 right-8 z-[2] rounded-b bg-lacquer px-2 pt-0.5 pb-1 font-serif text-[11px] font-bold uppercase tracking-[0.2em] text-title-on-wood">Lệnh bài</span>
       <div className="flex items-center gap-3 pt-3">
         <div className="size-24 shrink-0 rounded-md bg-wood/10 p-1"><PieceFace piece={state.hand} large /></div>
         <div className="min-w-0 text-[15px] leading-snug"><PieceText hand={state.hand} /></div>
