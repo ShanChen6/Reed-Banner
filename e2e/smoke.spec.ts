@@ -2,7 +2,7 @@
 // Không kiểm luật chơi (việc của test đơn vị trong tests/), chỉ kiểm game còn chạy được trên trình duyệt thật.
 import { expect, test } from "@playwright/test";
 import { SCENES, SCENE_SLUG, SCENE_TITLE, type Scene } from "../src/app/game/scene";
-import { expectClean, expectNoHorizontalOverflow, playMode, registerAccount, watchProblems } from "./helpers";
+import { expectClean, expectNoHorizontalOverflow, modeTabs, playMode, registerAccount, watchProblems } from "./helpers";
 
 /** Màn tài khoản và màn trận có test riêng; mọi màn còn lại lấy thẳng từ danh sách phân cảnh nên màn mới tự được kiểm. */
 const SKIPPED: readonly Scene[] = ["PLAYING", "LOGIN", "REGISTER", "FORGOT_PASSWORD", "RESET_PASSWORD"];
@@ -111,6 +111,7 @@ test.describe("tài khoản đã đăng nhập", () => {
   test("Trấn Ải: chọn đội, vào đợt 1, quay lại thấy lượt chơi đang dở", async ({ page }) => {
     const problems = watchProblems(page);
     await page.goto("/game/survival");
+    await playMode(page);
     await page.getByRole("tab", { name: "Công trạng" }).click();
     await expect(page.getByRole("heading", { name: "Công trạng mùa này" })).toBeVisible();
     // Bậc Trấn Ải: tài khoản mới chưa vượt đợt nào nên bậc Đồng còn khóa.
@@ -265,7 +266,7 @@ test.describe("tài khoản đã đăng nhập", () => {
     await page.goto("/game/arena");
     await playMode(page);
     // Hai cách đấu là thẻ ngang hàng Công trạng, Hướng dẫn; không còn thẻ Chơi (Shan 21/11/2026).
-    await expect(page.getByRole("tablist", { name: "Màn chế độ" }).getByRole("tab")).toHaveText(["Phá Doanh", "Thư Hùng", "Công trạng", "Hướng dẫn"]);
+    await expect(page.getByRole("tablist", { name: "Màn chế độ" }).getByRole("tab")).toHaveText(modeTabs("Phá Doanh", "Thư Hùng", "Công trạng"));
     await expect(page.getByRole("heading", { name: "Đội ra trận" })).toBeVisible();
     await page.getByText(/Đổi tướng ra trận/).click();
     await page.getByRole("button", { name: "Bỏ Hà Vân khỏi đội ra trận" }).click();
@@ -296,7 +297,7 @@ test.describe("tài khoản đã đăng nhập", () => {
     await page.goto("/game/formation");
     await playMode(page);
     const tabs = page.getByRole("tablist", { name: "Chế độ" }).getByRole("tab");
-    await expect(tabs).toHaveText(["Chơi thường", "Xếp hạng", "Chiến tích", "Hướng dẫn"]);
+    await expect(tabs).toHaveText(modeTabs("Chơi thường", "Xếp hạng", "Chiến tích"));
     await expect(page.getByRole("tab", { name: "Chơi thường" })).toHaveAttribute("aria-selected", "true");
     await page.getByRole("tab", { name: "Xếp hạng" }).click();
     await expect(page.getByRole("button", { name: "Chơi", exact: true }).first()).toBeVisible();

@@ -436,6 +436,57 @@
   @media (min-width: 640px) {
     .ui-action-bar { position: static; margin-inline: 0; padding: 0; background: none; }
   }
+  /* Điện thoại (quy tắc 21/11/2026): một lớp khung có góc. Khung màn bỏ viền, nền và góc; card lớn bên trong giữ góc
+     hoa văn. Lề trang 12px để nội dung rộng từ 340px trên màn 390px. */
+  @media (max-width: 639.98px) {
+    .ui-mode-screen { padding: 0.75rem 0.75rem 1.5rem; }
+    .ui-action-bar { margin-inline: -0.75rem; padding-inline: 0.75rem; }
+    .ui-mode-card { border: 0; background: none; }
+    .ui-mode-card::after,
+    .ui-mode-card > .ui-frame-corner { display: none; }
+  }
+  /* Bảng trượt đáy (BottomSheet.tsx). Điện thoại: dính đáy, bo hai góc trên, cao tối đa 85% màn; từ 640px là hộp giữa màn. */
+  .ui-sheet {
+    margin: auto auto 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: 85dvh;
+    padding: 0;
+    border: 1px solid var(--frame-gold);
+    border-bottom: 0;
+    border-radius: 1rem 1rem 0 0;
+    background: linear-gradient(180deg, var(--wood), var(--wood-panel) 30%, var(--wood-lo));
+    color: var(--on-wood);
+    overflow: hidden;
+  }
+  .ui-sheet::backdrop { background: color-mix(in srgb, var(--black) 60%, transparent); }
+  .ui-sheet[open] { animation: ui-sheet-up 0.22s ease-out; }
+  .ui-sheet-handle {
+    position: absolute;
+    top: 0.35rem;
+    left: 50%;
+    width: 2.5rem;
+    height: 0.25rem;
+    margin-left: -1.25rem;
+    border-radius: 9999px;
+    background: var(--frame-line);
+  }
+  @media (min-width: 640px) {
+    .ui-sheet {
+      margin: auto;
+      width: min(40rem, calc(100vw - 3rem));
+      max-height: min(85dvh, 48rem);
+      border-bottom: 1px solid var(--frame-gold);
+      border-radius: 0.75rem;
+    }
+    .ui-sheet[open] { animation-name: ui-sheet-fade; }
+    .ui-sheet-handle { display: none; }
+  }
+  @keyframes ui-sheet-up { from { transform: translateY(100%); } }
+  @keyframes ui-sheet-fade { from { opacity: 0; transform: translateY(0.5rem); } }
+  @media (prefers-reduced-motion: reduce) { .ui-sheet[open] { animation: none; } }
+  /* Thanh tab một hàng trên điện thoại: thiếu chỗ thì cuộn ngang, ẩn thanh cuộn. */
+  .ui-tabs-row::-webkit-scrollbar { display: none; }
   /* Khung xương khi tải (Skeleton.tsx): khối gỗ lõm, một vệt sáng đồng lướt qua. Giảm chuyển động thì đứng yên. */
   .ui-skeleton {
     display: block;

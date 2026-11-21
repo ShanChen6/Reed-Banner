@@ -108,7 +108,7 @@ export default function GameShell({
         <div key={currentScene} className="scene-enter flex flex-1 flex-col">
           <SceneView scene={currentScene} account={account} auth={auth} resume={api.params.get("resume") === "1"} towerFeatures={towerFeatures} />
         </div>
-        {FOOTER_SCENES.has(currentScene) && <GameFooter />}
+        {FOOTER_SCENES.has(currentScene) && <GameFooter compact={currentScene !== "MENU"} />}
         <FullscreenToggle scene={currentScene} />
       </div>
       </AudioProvider>
