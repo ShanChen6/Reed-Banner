@@ -66,6 +66,26 @@ Khung màn chế độ: `ModeScreen` bọc cả màn, `ModeBanner` là banner tr
 
 Không tự khai màu nút, tab, khung trong component màn; không thêm `bg-amber-*`, `bg-stone-*`, `#hex` mới. Các token riêng từng màn (`--atlas-*` Bình Loạn, `--bk-*` Doanh Trại, `--hdr-*` header) và các bí danh cũ (`--bg`, `--panel`, `--fg`, `--gold`, `--frame`, `--cell`) đã gộp hết vào token chung (07/11/2026); màn mới không được khai token riêng, chỉ thêm vào `theme.css` khi cần màu mới. CSS không viết mã `#hex` (test `ui-tokens` chặn): màu có độ trong suốt viết `color-mix(in srgb, var(--token) 40%, transparent)`; màu hiệu ứng/minh họa chưa có vai nằm ở nhóm `--tone-*`, `--black`, `--white` trong `theme.css`. **Ngoại lệ có chủ đích: mã màu của tranh vẽ bằng mã (`src/app/game/art/*.tsx` và các SVG minh họa như biểu tượng xu ở header, ornament, quân cờ Trận Đồ, bản đồ viễn chinh, thành và cờ trên bản đồ Bình Loạn) giữ nguyên hex, không gộp vào token** để màu tranh không bị lệch (Shan chốt 07/11/2026); chỉ màu giao diện (chữ, nền, viền, bóng đổ) dùng token.
 
+## Điện thoại (chốt 21/11/2026)
+
+Shan duyệt sau đợt chụp 31 màn ở 390×844, 360×740 và 844×390 (ảnh ở thư mục dự án `demo/mobile-audit/`). Điện thoại là dưới 640px (`sm`); **màn ngang khi chơi** là chiều cao dưới 500px kèm hướng ngang (`@media (orientation: landscape) and (max-height: 499px)`, biến thể Tailwind `landscape-short:`). Phong cách giữ nguyên (card lớn góc hoa văn, ô con phẳng); chỉ đổi bố cục và độ dày khung. Máy tính không đổi. Các dòng ghi "lộ trình" chưa có code, làm theo thứ tự ở cột cuối.
+
+| Quy tắc | Nội dung | Lộ trình |
+| --- | --- | --- |
+| Một lớp khung có góc | Trên điện thoại khung màn `ModeScreen card` bỏ viền ngoài và đệm, chỉ còn lề trang 12px; card lớn giữ góc hoa văn, đệm 14px; ô lõm đệm 10px. Nội dung rộng từ 340px trên màn 390px | PR nền tảng |
+| Nút chính trong tầm ngón cái | Nút hành động của màn (Xuất quân, Vào trận, Mở lượt mới, Hợp Nguyên) nằm trong `.ui-action-bar` dính đáy, kèm một dòng tóm tắt lựa chọn. Một màn tối đa một thanh dính đáy | PR nền tảng, áp ở từng màn |
+| Chơi trước, đọc sau | Shan chọn 5B: trên điện thoại bỏ tab Hướng dẫn, thay bằng nút "?" trên thanh tab mở `BottomSheet` hướng dẫn; lần đầu vào chế độ tự mở bảng này một lần (nhớ bằng localStorage). Mẹo bàn phím ẩn khi `pointer: coarse`. Máy tính giữ tab Hướng dẫn | PR điều hướng |
+| Tab một hàng | Thanh tab chế độ luôn một hàng, thiếu chỗ thì cuộn ngang; không lồng hai hàng tab, tab con đổi thành nút chuyển nhỏ trong card | PR nền tảng |
+| Danh sách dài thu gọn | Card lặp (sa bàn, đối thủ, bậc thưởng) có dạng gọn một dòng 56–72px, ảnh nhỏ bên trái; bấm thì mở rộng. Chỉ mục đang chọn hiện ảnh lớn | PR màn danh sách |
+| Chọn từ danh sách lớn | Chọn tướng, nguyên liệu, đạo cụ mở `BottomSheet` cao 85% màn, lưới ảnh 4 cột, bộ lọc dính trên đầu; chọn xong đóng lại, kết quả hiện ngay cạnh ô vừa chọn | PR nền tảng, áp ở từng màn |
+| Bàn cờ lấp ngang | Mọi bàn (trận, Khai Lộ, Do Thám, Sử Lộ, Trận Đồ) rộng bằng màn trừ lề 8px, khung bàn viền mỏng. Shan chọn 1A: bàn trận giữ 12×8 (ô khoảng 31px ở 390px). Shan chọn 4A: bàn giải đố luôn vừa ngang, bàn dài hơn rộng (30×16) tự xoay khi màn dọc, ô dưới 24px thì cho chụm hai ngón để phóng to | PR trận dọc, PR bàn giải đố |
+| Màn chơi vừa một màn hình | Màn trận và màn giải đố dùng `100dvh`, không cuộn trang khi đang chơi; ở 390×844 bàn cờ và hàng kỹ năng nằm trọn trong màn | PR trận dọc |
+| Màn trận ngang | Shan chọn 2A: bố cục riêng, ẩn header và sân khấu tướng; bàn cờ giữa cao gần hết màn, phe ta cột trái, đối thủ cột phải (thẻ mỏng), kỹ năng thành dải dọc, thanh lượt và Đầu hàng một hàng trên cùng | PR trận ngang |
+| Điều hướng | Shan chọn 3C: thanh tab dưới 5 mục (Chiến trường, Nhiệm vụ, Doanh Trại, Cửa Hàng, Thêm) và Chiến trường lưới 2 cột card nhỏ, chỉ Bình Loạn giữ card lớn. Thanh tab dưới ẩn trong màn trận và màn giải đố | PR điều hướng |
+| Nút nổi tối đa một | Nút toàn màn hình vào header trên điện thoại; không nút nổi nào đè thanh dính đáy | PR nền tảng |
+| Footer gọn | Thư cuộn và bảng liên kết chỉ ở Chiến trường; màn khác chỉ một dòng liên kết nhỏ | PR nền tảng |
+| Kiểm bằng test | e2e `mobile`: ở 390×844 bàn cờ và hàng kỹ năng nằm trọn trong màn; ở 844×390 bàn cờ nằm trọn trong màn; nút chính mỗi chế độ trong màn đầu | Mỗi PR thêm phần kiểm của mình |
+
 ## Component dùng chung
 
 ```tsx
