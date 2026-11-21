@@ -39,11 +39,26 @@ function item(l: FooterLink) {
   );
 }
 
-export default function GameFooter() {
+/**
+ * `compact`: màn thông tin (không phải Chiến trường). Trên điện thoại chỉ hiện một dòng liên kết nhỏ, thư cuộn và bảng
+ * liên kết đầy đủ chỉ ở Chiến trường (quy tắc điện thoại 21/11/2026). Từ 640px vẫn hiện footer đầy đủ.
+ */
+export default function GameFooter({ compact = false }: { compact?: boolean }) {
   const links = footerLinks();
   const build = buildLabel();
   return (
-    <footer className="border-t border-frame-line-soft bg-wood-lo px-4 py-6 text-caption text-on-wood-soft sm:px-6">
+    <>
+    {compact && (
+      <footer className="border-t border-frame-line-soft bg-wood-lo px-3 py-2 text-caption text-on-wood-soft sm:hidden">
+        <nav aria-label="Liên kết" className="flex flex-wrap items-center justify-center gap-x-3">
+          <span className="font-semibold text-on-wood">Cờ Lau</span>
+          {links.slice(0, 3).map((l) => (
+            <span key={l.label}>{item(l)}</span>
+          ))}
+        </nav>
+      </footer>
+    )}
+    <footer className={`${compact ? "max-sm:hidden " : ""}border-t border-frame-line-soft bg-wood-lo px-4 py-6 text-caption text-on-wood-soft sm:px-6`}>
       <div className={`mx-auto grid w-full gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-start lg:gap-12 ${MODE_CONTENT_WIDTH}`}>
         <div className="order-2 flex flex-col gap-4 lg:order-1 lg:pt-6">
           <div className="flex items-center gap-4">
@@ -70,5 +85,6 @@ export default function GameFooter() {
         </div>
       </div>
     </footer>
+    </>
   );
 }

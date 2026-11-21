@@ -57,7 +57,10 @@ function onTabKey(e: KeyboardEvent<HTMLDivElement>) {
 export function Tabs<T extends string>({ items, value, onChange, label, size = "md", fullWidth, className, panelId }: TabsProps<T>) {
   return (
     <div role="tablist" aria-label={label} onKeyDown={onTabKey}
-      className={cn("flex flex-wrap gap-2", fullWidth && "[&>*]:flex-1", className)}>
+      className={cn(
+        // Điện thoại: luôn một hàng, thiếu chỗ thì cuộn ngang (quy tắc 21/11/2026); đệm 2px để vòng focus không bị cắt; w-0 + min-w-full để hàng tab không kéo giãn khung cha; relative để phần tử định vị bên trong (chữ sr-only) cũng bị cắt theo.
+        "ui-tabs-row flex gap-2 max-sm:relative max-sm:-m-0.5 max-sm:w-0 max-sm:min-w-full max-sm:overflow-x-auto max-sm:p-0.5 max-sm:[scrollbar-width:none] max-sm:[&>*]:shrink-0 max-sm:[&>*]:whitespace-nowrap sm:flex-wrap",
+        fullWidth && "[&>*]:flex-1", className)}>
       {items.map((t) => {
         const on = t.value === value;
         return (

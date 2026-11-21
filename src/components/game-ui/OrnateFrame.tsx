@@ -19,14 +19,14 @@ export type OrnateFrameProps = Omit<ComponentProps<"section">, "ref"> & {
   level?: FrameLevel;
   /** Nền giấy dó chữ mực (nội dung đọc dài). */
   paper?: boolean;
-  /** Bỏ đệm mặc định (p-4 sm:p-5). */
+  /** Bỏ đệm mặc định (p-3.5 sm:p-5). */
   flush?: boolean;
 };
 
 export function OrnateFrame({ as: Tag = "section", level = "panel", paper, flush, className, children, ...props }: OrnateFrameProps) {
   return (
     <Tag data-slot="frame" data-level={level}
-      className={cn(LEVEL[level], paper && "ui-frame--paper", !flush && "p-4 sm:p-5", className)} {...props}>
+      className={cn(LEVEL[level], paper && "ui-frame--paper", !flush && "p-3.5 sm:p-5", className)} {...props}>
       {level !== "panel" && <FrameCorners size={level === "hero" ? "size-7" : "size-5"} />}
       {children}
     </Tag>

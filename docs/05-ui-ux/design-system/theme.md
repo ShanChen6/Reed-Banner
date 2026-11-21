@@ -72,19 +72,19 @@ Shan duyệt sau đợt chụp 31 màn ở 390×844, 360×740 và 844×390 (ản
 
 | Quy tắc | Nội dung | Lộ trình |
 | --- | --- | --- |
-| Một lớp khung có góc | Trên điện thoại khung màn `ModeScreen card` bỏ viền ngoài và đệm, chỉ còn lề trang 12px; card lớn giữ góc hoa văn, đệm 14px; ô lõm đệm 10px. Nội dung rộng từ 340px trên màn 390px | PR nền tảng |
+| Một lớp khung có góc | Trên điện thoại khung màn `ModeScreen card` bỏ viền ngoài và đệm, chỉ còn lề trang 12px; card lớn giữ góc hoa văn, đệm 14px; ô lõm đệm 10px. Nội dung rộng từ 340px trên màn 390px | Đã làm (`.ui-mode-card` trong `components.css`, `OrnateFrame` đệm `p-3.5 sm:p-5`) |
 | Nút chính trong tầm ngón cái | Nút hành động của màn (Xuất quân, Vào trận, Mở lượt mới, Hợp Nguyên) nằm trong `.ui-action-bar` dính đáy, kèm một dòng tóm tắt lựa chọn. Một màn tối đa một thanh dính đáy | PR nền tảng, áp ở từng màn |
-| Chơi trước, đọc sau | Shan chọn 5B: trên điện thoại bỏ tab Hướng dẫn, thay bằng nút "?" trên thanh tab mở `BottomSheet` hướng dẫn; lần đầu vào chế độ tự mở bảng này một lần (nhớ bằng localStorage). Mẹo bàn phím ẩn khi `pointer: coarse`. Máy tính giữ tab Hướng dẫn | PR điều hướng |
-| Tab một hàng | Thanh tab chế độ luôn một hàng, thiếu chỗ thì cuộn ngang; không lồng hai hàng tab, tab con đổi thành nút chuyển nhỏ trong card | PR nền tảng |
+| Chơi trước, đọc sau | Shan chọn 5B: trên điện thoại bỏ tab Hướng dẫn, thay bằng nút "?" trên thanh tab mở `BottomSheet` hướng dẫn; lần đầu vào chế độ tự mở bảng này một lần (nhớ bằng localStorage). Phần "Bàn phím: …" trong Hướng dẫn ẩn khi `pointer: coarse`. Máy tính giữ tab Hướng dẫn | Đã làm ở `ModeGuideTabs` và Trận Đồ (`GuideSheetButton`); Bình Loạn theo PR màn danh sách |
+| Tab một hàng | Thanh tab chế độ luôn một hàng, thiếu chỗ thì cuộn ngang; không lồng hai hàng tab, tab con đổi thành nút chuyển nhỏ trong card | Một hàng đã làm (`Tabs`); tab con theo PR màn danh sách |
 | Danh sách dài thu gọn | Card lặp (sa bàn, đối thủ, bậc thưởng) có dạng gọn một dòng 56–72px, ảnh nhỏ bên trái; bấm thì mở rộng. Chỉ mục đang chọn hiện ảnh lớn | PR màn danh sách |
-| Chọn từ danh sách lớn | Chọn tướng, nguyên liệu, đạo cụ mở `BottomSheet` cao 85% màn, lưới ảnh 4 cột, bộ lọc dính trên đầu; chọn xong đóng lại, kết quả hiện ngay cạnh ô vừa chọn | PR nền tảng, áp ở từng màn |
+| Chọn từ danh sách lớn | Chọn tướng, nguyên liệu, đạo cụ mở `BottomSheet` cao 85% màn, lưới ảnh 4 cột, bộ lọc dính trên đầu; chọn xong đóng lại, kết quả hiện ngay cạnh ô vừa chọn | `BottomSheet` đã có; áp ở từng màn theo PR màn danh sách |
 | Bàn cờ lấp ngang | Mọi bàn (trận, Khai Lộ, Do Thám, Sử Lộ, Trận Đồ) rộng bằng màn trừ lề 8px, khung bàn viền mỏng. Shan chọn 1A: bàn trận giữ 12×8 (ô khoảng 31px ở 390px). Shan chọn 4A: bàn giải đố luôn vừa ngang, bàn dài hơn rộng (30×16) tự xoay khi màn dọc, ô dưới 24px thì cho chụm hai ngón để phóng to | PR trận dọc, PR bàn giải đố |
 | Màn chơi vừa một màn hình | Màn trận và màn giải đố dùng `100dvh`, không cuộn trang khi đang chơi; ở 390×844 bàn cờ và hàng kỹ năng nằm trọn trong màn | PR trận dọc |
 | Màn trận ngang | Shan chọn 2A: bố cục riêng, ẩn header và sân khấu tướng; bàn cờ giữa cao gần hết màn, phe ta cột trái, đối thủ cột phải (thẻ mỏng), kỹ năng thành dải dọc, thanh lượt và Đầu hàng một hàng trên cùng | PR trận ngang |
 | Điều hướng | Shan chọn 3C: thanh tab dưới 5 mục (Chiến trường, Nhiệm vụ, Doanh Trại, Cửa Hàng, Thêm) và Chiến trường lưới 2 cột card nhỏ, chỉ Bình Loạn giữ card lớn. Thanh tab dưới ẩn trong màn trận và màn giải đố | PR điều hướng |
-| Nút nổi tối đa một | Nút toàn màn hình vào header trên điện thoại; không nút nổi nào đè thanh dính đáy | PR nền tảng |
-| Footer gọn | Thư cuộn và bảng liên kết chỉ ở Chiến trường; màn khác chỉ một dòng liên kết nhỏ | PR nền tảng |
-| Kiểm bằng test | e2e `mobile`: ở 390×844 bàn cờ và hàng kỹ năng nằm trọn trong màn; ở 844×390 bàn cờ nằm trọn trong màn; nút chính mỗi chế độ trong màn đầu | Mỗi PR thêm phần kiểm của mình |
+| Nút nổi tối đa một | Nút toàn màn hình vào header trên điện thoại; không nút nổi nào đè thanh dính đáy | Đã làm (mục trong `HeaderAccountMenu`) |
+| Footer gọn | Thư cuộn và bảng liên kết chỉ ở Chiến trường; màn khác chỉ một dòng liên kết nhỏ | Đã làm (`GameFooter compact`) |
+| Kiểm bằng test | `expectNoHorizontalOverflow` so với bề rộng máy (điện thoại tự nới `innerWidth` khi nội dung tràn nên so với `innerWidth` không bắt được); e2e `mobile`: ở 390×844 bàn cờ và hàng kỹ năng nằm trọn trong màn; ở 844×390 bàn cờ nằm trọn trong màn; nút chính mỗi chế độ trong màn đầu | Mỗi PR thêm phần kiểm của mình |
 
 ## Component dùng chung
 

@@ -14,7 +14,8 @@ import CustomForm from "./CustomForm";
 import LevelCard from "./LevelCard";
 import { MAP_POOL } from "./maps";
 import type { LevelOverview, Overview } from "./rankedClient";
-import { guideFirst, markGuideSeen, ModeGuidePanel } from "../ModeGuide";
+import { GuideSheetButton, guideFirst, markGuideSeen, ModeGuidePanel } from "../ModeGuide";
+import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { formatRemaining } from "./time";
 import { RankBoard } from "../leaderboard/RankBoard";
 import FormationTierPanel from "./FormationTierPanel";
@@ -177,7 +178,9 @@ export default function ModeScreen({
   };
   const [boardLevel, setBoardLevel] = useState<string | null>(null);
   // Vào Trận Đồ mặc định ở Chơi thường; xếp hạng tắt thì chỉ còn Chơi thường, Chiến tích (bộ sưu tập) và Hướng dẫn.
-  const active: Tab = !rankedOn && tab === "ranked" ? "practice" : tab;
+  // Điện thoại: Hướng dẫn là bảng trượt đáy mở từ nút "?" (Shan chọn 5B, 21/11/2026), không có thẻ.
+  const phone = useMediaQuery(PHONE_QUERY);
+  const active: Tab = (!rankedOn && tab === "ranked") || (phone && tab === "guide") ? "practice" : tab;
   const now = useServerNow(overview, onExpire);
   const pending = (overview?.levels ?? []).flatMap((l) => l.claimable);
   // Năm giây cuối của một kỳ: mõ điểm từng giây (`now` cập nhật mỗi 20 giây nên hẹn giờ theo phần còn lại tại thời điểm đó).
@@ -222,8 +225,10 @@ export default function ModeScreen({
         description="Bày quân tướng theo nghề và hệ để khai thông toàn bộ sa bàn. Mỗi ô khai thông lộ một mảnh bản đồ thời Loạn 12 sứ quân."
       />
 
+      <div className="flex items-center gap-2">
       <Tabs
         label="Chế độ"
+        className="flex-1 max-sm:min-w-0"
         value={active}
         onChange={setTab}
         items={[
@@ -239,9 +244,11 @@ export default function ModeScreen({
               </>
             ),
           },
-          { value: "guide" as const, label: "Hướng dẫn" },
+          ...(phone ? [] : [{ value: "guide" as const, label: "Hướng dẫn" }]),
         ]}
       />
+      {phone && <GuideSheetButton scene="FORMATION" />}
+      </div>
 
       {active === "guide" && <ModeGuidePanel scene="FORMATION" onPlay={() => setTab("practice")} />}
 
