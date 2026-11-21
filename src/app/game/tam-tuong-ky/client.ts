@@ -43,7 +43,7 @@ export const rankedCombineApi = (requestId: string, first: NodeId, second: NodeI
 export const buyBundleApi = (requestId: string) => call<TtkRankedView>("/ranked/buy", { requestId });
 
 export const ERROR_TEXT: Readonly<Record<string, string>> = {
-  noTicket: "Hết phiếu. Nhận thêm phiếu từ nhiệm vụ ngày, nhiệm vụ tuần “Thắng 15 trận” và điểm danh ngày thứ 7.",
+  noTicket: "Hết phiếu. Nhận thêm phiếu từ nhiệm vụ ngày, nhiệm vụ tuần “Thắng 15 trận”, điểm danh ngày thứ 7 và thưởng hạng các chế độ.",
   noSession: "Lượt đã hết hoặc hết hạn. Mở lượt mới để ghép tiếp.",
   noHint: "Hôm nay đã dùng hết gợi ý.",
   loginRequired: "Cần trình danh để chơi.",

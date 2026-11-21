@@ -5,7 +5,7 @@
 // server, client chỉ giữ bản công khai). Luật ở src/core/binh-phap, spec ở docs/02-game-modes/tran-do/gdd.md,
 // giao diện ở docs/05-ui-ux/screens/tran-do.md.
 
-import { ModeScreen as GameModeScreen, SurrenderButton } from "@/components/game-ui";
+import { ModeScreen as GameModeScreen, OrnateFrame, ResultModal, SurrenderButton } from "@/components/game-ui";
 import { buttonVariants } from "@/components/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -36,6 +36,7 @@ import { cuesForEvents, FORMATION_PRELOAD, isPerfectPlacement, musicFor, REJECT,
 import { fetchProfile, sendProfileAction } from "../battle/online";
 import { claimRanked, fetchOverview, moveRanked, startRanked, toPuzzleState, type FormationView, type Overview } from "./rankedClient";
 import { PlayCard } from "../PlayCard";
+import { ColumnFill } from "../ColumnFill";
 import {
   BEST_KEY,
   SAVE_KEY,
@@ -259,7 +260,7 @@ export default function FormationScreen({ rankedEnabled = false }: { rankedEnabl
     async (level: string, period: string) => {
       const r = await claimRanked(level, period);
       if (r.ok) audio.play("formation.rank");
-      setClaimNote(r.ok ? `Đã nhận ${r.data.gold} vàng (hạng ${r.data.rank}/${r.data.winners}).` : "Chưa nhận được thưởng. Xin thử lại sau.");
+      setClaimNote(r.ok ? `Đã nhận ${r.data.gold} vàng${r.data.tickets ? `, ${r.data.tickets} phiếu Tầm Tướng Ký` : ""} (hạng ${r.data.rank}/${r.data.winners}).` : "Chưa nhận được thưởng. Xin thử lại sau.");
       refreshOverview();
     },
     [refreshOverview, audio],
@@ -417,6 +418,14 @@ function PlayView({
   const map = mapFor(rules.id, theme);
   const noMove = legal.size === 0;
   const tip = tipVisible ? tutorialText(state, noMove) : null;
+  const won = state.phase === "won";
+  // Hộp kết quả tự mở mỗi khi ván vừa kết thúc; đóng để ngắm bản đồ, mở lại bằng nút ở cột hỗ trợ.
+  const [resultOpen, setResultOpen] = useState(true);
+  const [seenFinished, setSeenFinished] = useState(finished);
+  if (seenFinished !== finished) {
+    setSeenFinished(finished);
+    setResultOpen(true);
+  }
 
 
   return (
@@ -453,21 +462,26 @@ function PlayView({
       </div>
 
       <PlayCard label="Sa bàn Trận Đồ">
-      <div className={`grid items-start gap-6 lg:grid-cols-[auto_minmax(0,1fr)_364px] ${finished ? "" : "pb-28 lg:pb-0"}`}>
-        {/* Máy tính: cột hỗ trợ bên trái bàn cờ (nút gợi ý ô đặt), tách khỏi lệnh bài bên phải (Shan 21/11/2026). Điện thoại: nút nằm ở thanh đáy. */}
-        <div className="hidden flex-col items-center gap-2 lg:flex" role="toolbar" aria-label="Hỗ trợ">
-          {!finished && <HintToggle on={hintsOn} onToggle={onToggleHints} />}
-        </div>
-        <div className="fm-board-col flex flex-col items-center gap-3">
-          <BoardView state={state} map={map} legal={legal} showHints={hintsOn} playing={playing} last={last} focus={focus} setFocus={setFocus} setPeek={setPeek} boardRef={boardRef} sweeps={sweeps} onPlace={(row, col) => onCommand({ kind: "place", row, col })} />
-          <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-title-on-wood">{message}</p>
-          {tip && <div className="w-full max-w-xl"><TutorialTip text={tip} onDismiss={onDismissTip} /></div>}
-        </div>
+      {/* Hai cột bọc thẻ như các chế độ khác (Shan 21/11/2026): cột màn chơi (sa bàn trên nền tranh bậc) và cột hỗ trợ
+          (lệnh bài, Bỏ Lệnh, gợi ý, thống kê, tranh kèm thơ lấp chỗ trống). Điện thoại xếp dọc, điều khiển ở thanh đáy. */}
+      <div className={`fm-play grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-5 2xl:grid-cols-[minmax(0,1fr)_25rem] ${finished ? "" : "pb-28 lg:pb-0"}`}>
+        <OrnateFrame aria-label="Sa bàn" flush className="fm-stage relative isolate flex min-w-0 flex-col items-center justify-center gap-3 overflow-hidden p-2 sm:p-5 lg:self-stretch">
+          {/* eslint-disable-next-line @next/next/no-img-element -- tranh nền trang trí co giãn theo khung */}
+          <img src={`/art/formation/levels/${levelArt(rules.id)}.webp`} alt="" aria-hidden draggable={false} className="fm-backdrop pointer-events-none absolute inset-0 -z-10 hidden size-full object-cover sm:block" />
+          <div className="fm-board-col flex w-full flex-col items-center gap-3">
+            <BoardView state={state} map={map} legal={legal} showHints={hintsOn} playing={playing} last={last} focus={focus} setFocus={setFocus} setPeek={setPeek} boardRef={boardRef} sweeps={sweeps} onPlace={(row, col) => onCommand({ kind: "place", row, col })} />
+            <p role="status" aria-live="polite" className="fm-message min-h-6 rounded-full px-3 text-center text-[15px] text-title-on-wood">{message}</p>
+            {tip && <div className="w-full max-w-xl"><TutorialTip text={tip} onDismiss={onDismissTip} /></div>}
+          </div>
+        </OrnateFrame>
 
-        {/* Máy tính: vạch dọc ngăn bàn cờ với cột điều khiển bên phải. */}
-        <aside className="flex flex-col gap-4 lg:self-stretch lg:border-l lg:border-frame-bronze/50 lg:pl-6" aria-label="Bảng điều khiển">
+        <aside className="flex min-w-0 flex-col gap-4 lg:self-stretch" aria-label="Hỗ trợ">
           {finished ? (
-            ranked ? <RankedResult state={state} rank={ranked.rank} score={ranked.score} period={ranked.period} map={map} gaveUp={gaveUp} onLeave={onLeave} /> : <Result state={state} best={best} map={map} custom={rules.id === CUSTOM_RULESET_ID} gaveUp={gaveUp} onRestart={onRestart} onLeave={onLeave} />
+            <div className="ui-frame flex flex-col gap-3 p-4">
+              <p className="font-serif text-lg font-bold text-title-on-wood">{won ? "Khai thông sa bàn!" : gaveUp ? "Đã đầu hàng" : "Trận đồ vỡ"}</p>
+              <ProgressMeter covered={state.coveredCount} total={total} />
+              <button type="button" onClick={() => setResultOpen(true)} className={buttonVariants({ className: "min-h-12 px-6" })}>Xem kết quả</button>
+            </div>
           ) : (
             <div className="hidden flex-col gap-4 lg:flex">
               <CommandCard state={state} />
@@ -482,10 +496,17 @@ function PlayView({
                   </button>
                 </div>
                 <ProgressMeter covered={state.coveredCount} total={total} />
+                {/* Gợi ý ô đặt được: trước nằm trong cột riêng bên trái bàn, nay gộp vào cột hỗ trợ (Shan 21/11/2026). */}
+                <div className="flex items-center gap-3 border-t border-frame-line-soft pt-3">
+                  <HintToggle on={hintsOn} onToggle={onToggleHints} />
+                  <p className="text-sm leading-snug">
+                    <span className="block font-semibold text-title-on-wood">Gợi ý ô đặt được</span>
+                    <span className="text-on-wood-soft">{hintsOn ? "Đang bật: chấm sáng ở ô đặt được." : "Đang tắt."}</span>
+                  </p>
+                </div>
               </div>
             </div>
           )}
-          {finished && <div className="ui-frame p-4"><ProgressMeter covered={state.coveredCount} total={total} /></div>}
           <details className="ui-frame p-4">
             <summary className="cursor-pointer font-serif font-bold text-title-on-wood">Thống kê ván</summary>
             <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-[15px]">
@@ -498,16 +519,28 @@ function PlayView({
               {best > 0 && !ranked && (<><dt className="text-on-wood-soft">Điểm cao nhất</dt><dd className="text-right font-semibold">{best}</dd></>)}
             </dl>
           </details>
+          <ColumnFill mode="formation" />
         </aside>
       </div>
 
       {!finished && (
         <MobileBar state={state} rules={rules} noMove={noMove} disabled={busy} covered={state.coveredCount} total={total} onDiscard={() => onCommand({ kind: "discard" })} hintsOn={hintsOn} onToggleHints={onToggleHints} />
       )}
+
+      {/* Kết quả hiện thành hộp giữa màn, không đẩy cột hỗ trợ (Shan 21/11/2026); đóng để xem cả bản đồ, mở lại ở cột hỗ trợ. */}
+      {ranked ? (
+        <RankedResult open={finished && resultOpen} onDismiss={() => setResultOpen(false)} state={state} rank={ranked.rank} score={ranked.score} period={ranked.period} map={map} gaveUp={gaveUp} onLeave={onLeave} />
+      ) : (
+        <Result open={finished && resultOpen} onDismiss={() => setResultOpen(false)} state={state} best={best} map={map} custom={rules.id === CUSTOM_RULESET_ID} gaveUp={gaveUp} onRestart={onRestart} onLeave={onLeave} />
+      )}
       </PlayCard>
     </>
   );
 }
+
+/** Tranh nền khung sa bàn theo bậc (ảnh thẻ bậc); bậc tùy chỉnh dùng tranh Đại trận. */
+const LEVEL_ART = new Set(["huong-dan", "thuong", "kho", "dai-tran"]);
+const levelArt = (id: string) => (LEVEL_ART.has(id) ? id : "dai-tran");
 
 /** Bản đồ đầy đủ của màn vừa hoàn thành, kèm địa danh. Ảnh tái dựng/minh họa, không phải tư liệu địa lý. */
 function CompletedMap({ map }: { map: FormationMap }) {
@@ -526,30 +559,49 @@ function CompletedMap({ map }: { map: FormationMap }) {
   );
 }
 
-function RankedResult({ state, rank, score, period, map, gaveUp, onLeave }: { state: PuzzleState; rank: number | null; score: number | null; period: string; map: FormationMap; gaveUp: boolean; onLeave: () => void }) {
+function RankedResult({ open, onDismiss, state, rank, score, period, map, gaveUp, onLeave }: { open: boolean; onDismiss: () => void; state: PuzzleState; rank: number | null; score: number | null; period: string; map: FormationMap; gaveUp: boolean; onLeave: () => void }) {
   const won = state.phase === "won";
   return (
-    <section role="status" aria-label="Kết quả xếp hạng" className="ui-frame flex flex-col gap-3 p-4">
-      <h2 className="font-serif text-2xl font-bold text-title-on-wood">{won ? "Khai thông sa bàn!" : gaveUp ? "Đã đầu hàng" : "Trận đồ vỡ"}</h2>
+    <ResultModal
+      open={open}
+      size={won ? "md" : "sm"}
+      tone={won ? "win" : "lose"}
+      kicker={`Xếp hạng kỳ ${period}`}
+      title={won ? "Khai thông sa bàn!" : gaveUp ? "Đã đầu hàng" : "Trận đồ vỡ"}
+      onDismiss={onDismiss}
+      dismissLabel={won ? "Ngắm bản đồ" : "Xem lại bàn"}
+      actions={<button type="button" autoFocus onClick={onLeave} className={buttonVariants({ className: "min-h-12 px-6" })}>Về danh sách</button>}
+    >
       {won ? (
-        <p className="text-[15px]">
+        <p>
           Bạn đạt <b>{score ?? state.score} điểm</b>{rank ? `, hạng tạm thời ${rank}` : ""}. Hạng chốt và thưởng nhận được sau khi kỳ {period} khép lại.
         </p>
       ) : (
-        <p className="text-[15px]">Ván thua không vào bảng công trạng và không có thưởng. Mỗi kỳ chỉ có một ván tính hạng; hãy thử lại ở kỳ sau, hoặc luyện ở mục Chơi thường.</p>
+        <p>Ván thua không vào bảng công trạng và không có thưởng. Mỗi kỳ chỉ có một ván tính hạng; hãy thử lại ở kỳ sau, hoặc luyện ở mục Chơi thường.</p>
       )}
       {won && <CompletedMap map={map} />}
-      <button type="button" onClick={onLeave} className={buttonVariants({ className: "min-h-12 w-fit px-6" })}>Về danh sách</button>
-    </section>
+    </ResultModal>
   );
 }
 
-function Result({ state, best, map, custom, gaveUp, onRestart, onLeave }: { state: PuzzleState; best: number; map: FormationMap; custom: boolean; gaveUp: boolean; onRestart: () => void; onLeave: () => void }) {
+function Result({ open, onDismiss, state, best, map, custom, gaveUp, onRestart, onLeave }: { open: boolean; onDismiss: () => void; state: PuzzleState; best: number; map: FormationMap; custom: boolean; gaveUp: boolean; onRestart: () => void; onLeave: () => void }) {
   const won = state.phase === "won";
   return (
-    <section role="status" aria-label="Kết quả" className="ui-frame flex flex-col gap-3 p-4">
-      <h2 className="font-serif text-2xl font-bold text-title-on-wood">{won ? "Khai thông sa bàn!" : gaveUp ? "Đã đầu hàng" : "Trận đồ vỡ"}</h2>
-      <p className="text-[15px]">
+    <ResultModal
+      open={open}
+      size={won ? "md" : "sm"}
+      tone={won ? "win" : "lose"}
+      title={won ? "Khai thông sa bàn!" : gaveUp ? "Đã đầu hàng" : "Trận đồ vỡ"}
+      onDismiss={onDismiss}
+      dismissLabel={won ? "Ngắm bản đồ" : "Xem lại bàn"}
+      actions={
+        <>
+          <button type="button" autoFocus onClick={onRestart} className={buttonVariants({ className: "min-h-12 px-6" })}>Chơi lại</button>
+          <button type="button" onClick={onLeave} className={buttonVariants({ variant: "secondary", className: "min-h-12 px-4" })}>Đổi bậc</button>
+        </>
+      }
+    >
+      <p>
         {won
           ? `Bạn đạt ${state.score} điểm${!custom && state.score >= best ? " (cao nhất từ trước tới nay)" : ""}.`
           : gaveUp
@@ -558,10 +610,6 @@ function Result({ state, best, map, custom, gaveUp, onRestart, onLeave }: { stat
       </p>
       <p className="text-sm text-on-wood-soft">Chế độ chơi thường: không có thưởng và không lên bảng công trạng.</p>
       {won && <CompletedMap map={map} />}
-      <div className="flex flex-wrap gap-2">
-        <button type="button" onClick={onRestart} className={buttonVariants({ className: "min-h-12 px-6" })}>Chơi lại</button>
-        <button type="button" onClick={onLeave} className={buttonVariants({ variant: "secondary", className: "min-h-12 px-4" })}>Đổi bậc</button>
-      </div>
-    </section>
+    </ResultModal>
   );
 }

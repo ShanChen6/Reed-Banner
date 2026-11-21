@@ -2,7 +2,8 @@
 
 // Nút nổi bật/tắt toàn màn hình cả trang web ở góc dưới bên phải cửa sổ, hiện ở mọi màn (FULLSCREEN_SCENES), không tự
 // bật. Khác nút ở góc dưới thẻ vùng chơi (PlayCard), nút đó chỉ phóng riêng màn chơi; hai nút dùng song song.
-// Trên điện thoại, màn nào có thanh dính đáy (lớp .mobile-dock) thì nút nhích lên trên thanh đó (globals.css). Toàn màn
+// Điện thoại (dưới 640px) không có nút nổi (quy tắc 21/11/2026: tối đa một nút nổi, không đè thanh dính đáy): bật/tắt
+// nằm trong menu tài khoản ở header (useFullscreen). Từ 640px, màn nào có thanh dính đáy (lớp .mobile-dock) thì nút nhích lên trên thanh đó (globals.css). Toàn màn
 // hình áp cho cả trang nên đổi phân cảnh vẫn giữ; đang toàn màn hình mà sang màn khác thì nút vẫn hiện để thoát.
 // Trình duyệt không cho (iPhone Safari chỉ cho video toàn màn hình) thì ẩn nút; ở đó "Thêm vào màn hình chính" là
 // cách duy nhất bỏ được thanh địa chỉ.
@@ -20,7 +21,8 @@ const isFullscreen = () => document.fullscreenElement !== null && !document.full
 const isSupported = () => document.fullscreenEnabled === true && typeof document.documentElement.requestFullscreen === "function";
 const noop = () => () => {};
 
-export default function FullscreenToggle({ scene }: { scene: Scene }) {
+/** Trạng thái và thao tác toàn màn hình cả trang, dùng chung cho nút nổi và mục trong menu tài khoản. */
+export function useFullscreen() {
   // Server render coi như không hỗ trợ, chỉ biết sau khi chạy ở trình duyệt.
   const supported = useSyncExternalStore(noop, isSupported, () => false);
   const active = useSyncExternalStore(subscribe, isFullscreen, () => false);
@@ -30,6 +32,11 @@ export default function FullscreenToggle({ scene }: { scene: Scene }) {
     if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
     else void document.documentElement.requestFullscreen({ navigationUI: "hide" }).catch(() => {});
   }, []);
+  return { supported, active, toggle };
+}
+
+export default function FullscreenToggle({ scene }: { scene: Scene }) {
+  const { supported, active, toggle } = useFullscreen();
 
   if (!supported || (!active && !FULLSCREEN_SCENES.has(scene))) return null;
   const label = active ? "Thoát toàn màn hình trang web" : "Toàn màn hình trang web";
@@ -40,7 +47,7 @@ export default function FullscreenToggle({ scene }: { scene: Scene }) {
       aria-pressed={active}
       aria-label={label}
       title={label}
-      className="fullscreen-fab game-header-btn game-header-chip fixed z-40 flex size-11 items-center justify-center rounded-full shadow-[0_4px_12px_rgb(0_0_0/0.5)]"
+      className="fullscreen-fab game-header-btn max-sm:hidden game-header-chip fixed z-40 flex size-11 items-center justify-center rounded-full shadow-[0_4px_12px_rgb(0_0_0/0.5)]"
     >
       <svg aria-hidden viewBox="0 0 24 24" className="size-5 text-[var(--frame-gold)]" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
         {active ? (

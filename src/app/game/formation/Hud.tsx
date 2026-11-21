@@ -3,6 +3,7 @@
 // Các mảnh giao diện quanh sa bàn Trận Đồ: lệnh bài (quân đang cầm), ngọn lửa Bỏ Lệnh, thanh tiến độ, thanh dưới màn hình
 // cho điện thoại, nút gợi ý và hướng dẫn từng bước.
 
+import { FrameCorners } from "@/components/game-ui/FrameCorners";
 import { buttonVariants } from "@/components/ui";
 import type { PuzzleState, Ruleset } from "@/core/binh-phap";
 import { ElementIcon, ProfessionIcon } from "../art/icons";
@@ -49,47 +50,75 @@ export function ProgressMeter({ covered, total }: { covered: number; total: numb
   );
 }
 
-/** Nội dung mô tả quân đang cầm (tên, nghề, hệ hoặc công dụng quân đặc biệt). */
+const PIECE_NAME = "font-serif text-xl leading-tight font-bold 2xl:text-2xl";
+const PIECE_PILL = "inline-flex items-center gap-1 rounded-full border border-frame-bronze/60 bg-wood/10 px-2 py-0.5 text-sm font-semibold";
+const PIECE_RULE = "mt-1 border-t border-frame-bronze/40 pt-2 text-sm text-wood/80";
+
+/** Nội dung mô tả quân đang cầm: tên, nghề và hệ (nhãn tròn), rồi một dòng luật đặt quân ngăn bằng vạch đồng. */
 function PieceText({ hand }: { hand: PuzzleState["hand"] }) {
   if (hand.kind === "normal")
     return (
       <>
-        <p className="font-serif text-lg leading-tight font-bold">{nameOf(hand.characterId)}</p>
-        <p className="flex items-center gap-1.5"><ProfessionIcon profession={hand.profession} className="size-5" /> {PROFESSION_NAME[hand.profession]}</p>
-        <p className="flex items-center gap-1.5"><ElementIcon element={hand.element} className="size-5" /> Hệ {ELEMENT_NAME[hand.element]}</p>
+        <p className={PIECE_NAME}>{nameOf(hand.characterId)}</p>
+        <p className="flex flex-wrap gap-1.5">
+          <span className={PIECE_PILL}><ProfessionIcon profession={hand.profession} className="size-4" /> {PROFESSION_NAME[hand.profession]}</span>
+          <span className={PIECE_PILL}><ElementIcon element={hand.element} className="size-4" /> Hệ {ELEMENT_NAME[hand.element]}</span>
+        </p>
+        <p className={PIECE_RULE}>Đặt sát quân đã có; khớp từng quân kề: cùng nghề {PROFESSION_NAME[hand.profession]} hoặc cùng hệ {ELEMENT_NAME[hand.element]}.</p>
       </>
     );
   if (hand.kind === "fusion")
     return (
       <>
-        <p className="font-serif text-lg leading-tight font-bold">{nameOf(hand.characterId)}</p>
-        <p>Dung hợp mọi nghề và mọi hệ: khớp mọi quân kề.</p>
-        <p className="text-sm opacity-75">Vẫn phải đặt sát một quân.</p>
+        <p className={PIECE_NAME}>{nameOf(hand.characterId)}</p>
+        <p><span className={PIECE_PILL}>Dung hợp mọi nghề, mọi hệ</span></p>
+        <p className={PIECE_RULE}>Khớp mọi quân kề, nhưng vẫn phải đặt sát một quân.</p>
       </>
     );
   if (hand.kind === "wild")
     return (
       <>
-        <p className="font-serif text-lg leading-tight font-bold">Quân Lệnh</p>
-        <p>Đặt ở ô trống bất kỳ; khớp mọi quân kề.</p>
+        <p className={PIECE_NAME}>Quân Lệnh</p>
+        <p><span className={PIECE_PILL}>Quân đặc biệt</span></p>
+        <p className={PIECE_RULE}>Đặt ở ô trống bất kỳ; khớp mọi quân kề.</p>
       </>
     );
   return (
     <>
-      <p className="font-serif text-lg leading-tight font-bold">Thu Hồi</p>
-      <p>Chạm vào một quân trên bàn để xóa; ô vẫn giữ vệt khai thông.</p>
+      <p className={PIECE_NAME}>Thu Hồi</p>
+      <p><span className={PIECE_PILL}>Quân đặc biệt</span></p>
+      <p className={PIECE_RULE}>Chạm vào một quân trên bàn để xóa; ô vẫn giữ vệt khai thông.</p>
     </>
   );
 }
 
-/** "Lệnh bài": tấm bài giấy dó có dấu son, hiện quân đang cầm. */
+/**
+ * "Lệnh bài": thẻ giấy dó viền card, bên trái là tấm lệnh bài gỗ sơn son chữ 令 Shan vẽ (21/11/2026,
+ * `public/art/formation/lenh-bai.webp`), chân dung quân đang cầm lồng vào ô tròn giữa tấm; bên phải là tên, nghề, hệ.
+ * Ô tròn trong ảnh: tâm 50,4% bề ngang và 57,8% bề cao, đường kính 50,2% bề ngang (ảnh 660 × 1480 đã cắt sát).
+ */
 export function CommandCard({ state }: { state: PuzzleState }) {
   return (
-    <section aria-label="Quân đang cầm" className="relative overflow-hidden rounded-lg border-2 border-frame-bronze bg-gradient-to-br from-paper-hi to-paper-deep p-3 text-wood shadow-[0_4px_14px_rgb(0_0_0/0.55)]">
-      <span aria-hidden className="absolute top-0 right-3 rounded-b bg-lacquer px-2 pt-0.5 pb-1 font-serif text-[11px] font-bold uppercase tracking-[0.2em] text-title-on-wood">Lệnh bài</span>
-      <div className="flex items-center gap-3 pt-3">
-        <div className="size-24 shrink-0 rounded-md bg-wood/10 p-1"><PieceFace piece={state.hand} large /></div>
-        <div className="min-w-0 text-[15px] leading-snug"><PieceText hand={state.hand} /></div>
+    <section aria-label="Quân đang cầm" className="relative overflow-hidden rounded-lg border-2 border-frame-bronze bg-gradient-to-br from-paper-hi to-paper-deep px-4 py-3 text-wood shadow-[0_4px_14px_rgb(0_0_0/0.55)]">
+      {/* Viền card như các card lớn khác (Shan 21/11/2026): vạch đồng bên trong và bốn góc hoa văn, màu gỗ sẫm trên giấy. */}
+      <span aria-hidden className="pointer-events-none absolute inset-1 rounded-md border border-frame-bronze/70" />
+      <FrameCorners size="size-6" cornerClass="text-wood/70" />
+      <div className="relative flex items-center gap-4">
+        <div className="relative w-[6.5rem] shrink-0 2xl:w-28">
+          {/* eslint-disable-next-line @next/next/no-img-element -- ảnh lệnh bài tĩnh làm khung chân dung */}
+          <img src="/art/formation/lenh-bai.webp" alt="" aria-hidden draggable={false} className="block h-auto w-full drop-shadow-[0_4px_6px_rgb(0_0_0/0.45)]" />
+          <div className="absolute top-[46.6%] left-[25.3%] aspect-square w-[50.2%]">
+            <PieceFace piece={state.hand} large />
+          </div>
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col gap-2 text-[15px] leading-snug">
+          <p className="flex items-center gap-1.5 font-serif text-caption font-bold tracking-[0.2em] text-lacquer uppercase">
+            {/* eslint-disable-next-line @next/next/no-img-element -- biểu tượng tĩnh */}
+            <img src="/art/formation/lenh-bai-icon.webp" alt="" aria-hidden className="size-6" draggable={false} />
+            Lệnh bài
+          </p>
+          <PieceText hand={state.hand} />
+        </div>
       </div>
     </section>
   );

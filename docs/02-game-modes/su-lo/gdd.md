@@ -1,7 +1,7 @@
 # Sử Lộ (Mê cung lịch sử): đổ xúc xắc, trả lời sử, tìm đường thoát
 
 > Cập nhật: 14/11/2026 (Shan chốt luật và đồng ý triển khai; bản chơi thử offline đã code)
-> Trạng thái: **IMPLEMENTED (bản chơi thử)** — ý tưởng gốc của Shan, Claude viết thiết kế, Shan chốt luật (14/11/2026, [mục 13](#13-điểm-cần-shan-quyết)) và đồng ý triển khai. Bản chơi thử offline đã có code cho mê cung I, II (mục [12.4](#124-bản-chơi-thử-đã-code)); mê cung III, IV chờ nguồn, thưởng hồ sơ và mê cung ngày chưa làm. Mọi con số là **điểm xuất phát**, chốt sau chơi thử.
+> Trạng thái: **IMPLEMENTED (bản chơi thử)** — ý tưởng gốc của Shan, Claude viết thiết kế, Shan chốt luật (14/11/2026, [mục 13](#13-điểm-cần-shan-quyết)) và đồng ý triển khai. Bản chơi thử offline đã có code cho cả bốn mê cung (mục [12.4](#124-bản-chơi-thử-đã-code)); mê cung III, IV mở ngày 21/11/2026 sau khi có nguồn S12–S17 trong [sổ nguồn](nguon-su.md). Thưởng hồ sơ và mê cung ngày chưa làm. Mọi con số là **điểm xuất phát**, chốt sau chơi thử.
 
 ## 1. Định vị
 
@@ -180,8 +180,8 @@ Boss lấy từ sự kiện **có nguồn**. Khi nguồn chưa đủ thì chưa 
 |---|---|---|---|
 | I. Ngô Quyền dựng nước | Thủy quân Nam Hán của Lưu Hoằng Tháo | S03, lời bàn Lê Văn Hưu: Tiền Ngô vương "phá trăm vạn binh của Lưu Hoằng Tháo" | Đã đọc (14/11/2026); chi tiết cọc gỗ, năm 938 **chưa** có trong nguồn đã mở |
 | II. Loạn sứ quân | Vòng vây Hoa Lư năm 951 (quân hai vua Ngô) | E04, S02 mục Tân Hợi 951: đánh không hạ được, rút quân | Đã có trong sổ nguồn |
-| III. Nhà Đinh | Thủy quân Chiêm Thành theo đường biển đánh vào năm 979 (Claude chọn; pha bàn cờ là sóng lớn, bão biển) | Kỷ nhà Đinh trong Toàn thư, năm 979 | **Chưa mở được nguồn**; phải xác minh trước khi dùng. Không có nguồn thì đổi sang phương án dự phòng: truy bắt Đỗ Thích (979) |
-| IV. Nhà Tiền Lê | Quân Tống năm 981 do Hầu Nhân Bảo cầm đầu (Claude chọn; pha bàn cờ là cọc, ải núi) | Kỷ nhà Lê trong Toàn thư, năm 981 | **Chưa mở được nguồn**; phải xác minh trước khi dùng |
+| III. Nhà Đinh | Chiến thuyền Chiêm Thành do Ngô Nhật Khánh dẫn (pha bàn cờ là sóng lớn, bão biển) | SL19, S13 đời Phế Đế mục Canh Thìn 980: hơn nghìn thuyền, theo cửa Đại Ác và Tiểu Khang, gặp bão lật đắm | Đã đọc (21/11/2026). Toàn thư chép ở năm **980**, không phải 979 như bản đề xuất |
+| IV. Nhà Tiền Lê | Quân Tống năm 981 do Hầu Nhân Bảo cầm đầu (pha bàn cờ là cọc, ải núi) | SL20, SL23; S13 mục Canh Thìn 980, S14 mục Tân Tỵ 981: đóng cọc ngăn sông Chi Lăng, trá hàng dụ chém Hầu Nhân Bảo | Đã đọc (21/11/2026) |
 
 Không biến người không có ghi chép giao tranh (ví dụ các sứ quân quy phục hay liên minh) thành boss; quy tắc này giữ đúng [sổ nguồn mục 2](../campaign/history-sources.md#2-nhãn-confidence-và-quy-tắc-freeze).
 
@@ -431,9 +431,9 @@ Niên hiệu Thái Bình của nhà Đinh bắt đầu năm nào?
 A. 966 · B. 968 · **C. 970** · D. 979
 *Sử chép:* Đinh Bộ Lĩnh lên ngôi năm 968, tới năm 970 mới đặt niên hiệu Thái Bình. Hai mốc này hay bị nhầm.
 
-### 11.4 Mê cung IV: Nhà Tiền Lê (chưa có nguồn trong sổ)
+### 11.4 Mê cung IV: Nhà Tiền Lê
 
-Các câu mê cung IV và phần sau năm 970 của mê cung III **chưa soạn mẫu**, vì kỷ nhà Đinh và nhà Lê chưa có trong sổ nguồn. Chủ đề dự kiến (cần nguồn trước khi viết): Lê Hoàn lên ngôi, niên hiệu Thiên Phúc; chống quân Tống; Đinh Toàn; biến cố năm 979; các đời vua cuối Tiền Lê. Không viết câu từ trí nhớ.
+Kho câu mê cung III (29 câu, 968–980) và IV (27 câu, 980–1009) nằm trong `src/core/su-lo/questions.ts`, nguồn S12–S17 và claim SL03–SL32 ở [sổ nguồn](nguon-su.md). Năm mất của Lê Hoàn lấy 1005 (SL32); phần 998–1005 chưa đọc nguyên văn nên chưa soạn câu.
 
 ## 12. Giao diện, kỹ thuật và các bước làm
 
@@ -463,7 +463,7 @@ Các câu mê cung IV và phần sau năm 970 của mê cung III **chưa soạn 
 1. ✓ **Lõi luật, sinh mê cung, kho câu bước 1** (47 câu mê cung I, II đã duyệt lần 1, chờ Shan duyệt lần 2).
 2. ✓ **Giao tranh một chiều** và boss mê cung I, II; cân Thành lực bằng test mô phỏng.
 3. ✓ **Bản chơi thử offline** `/game/maze`, mê cung I, II, ba bậc.
-4. Mở rộng sổ nguồn (S12 trở đi) cho nhà Đinh, Tiền Lê; mở mê cung III, IV và boss của chúng.
+4. ✓ **Sổ nguồn S12–S17** cho nhà Đinh, Tiền Lê; mở mê cung III (29 câu), IV (27 câu) và quân giặc trấn cổng của chúng (21/11/2026, chờ Shan duyệt lần 2).
 5. Thưởng hồ sơ, Sử ký sưu tầm.
 6. Mê cung ngày và bảng xếp hạng (Shan chốt có làm).
 
@@ -476,6 +476,7 @@ Khác bản thiết kế ở trên:
 - Ô **tim** trong giao tranh cũng nạp Sĩ khí như trống (lõi bàn cờ không có ô riêng cho hồi máu ở chế độ này).
 - Thành lực boss: Dễ 920 / 15 nước, Thường 880 / 12 nước, Khó 820 / 10 nước; test mô phỏng (đánh tham lam, đáp đúng câu hiến kế) cho thắng lần đầu 35–85% ở bậc Thường, trong hai lần ≥ 85%.
 - Trợ giúp có trong ván nhưng chưa mua thêm được; cả mê cung dùng tối đa 6 lần.
+- Mê cung III, IV mở ngày 21/11/2026: nguồn đọc qua bản sao Toàn thư ở Người Kể Sử và Hội Bảo tồn Di sản Chữ Nôm vì Wikisource vẫn không mở được; câu đặt `confidence: "medium"` trừ chỗ hai nơi lưu khớp nhau.
 - Duyệt lần 1 của Claude: mỗi câu đối chiếu với sổ nguồn ([nguon-su.md](nguon-su.md) và [sổ nguồn Campaign](../campaign/history-sources.md)), câu nào có trích dẫn thì test kiểm nguyên văn có trong sổ.
 
 ## 13. Điểm cần Shan quyết

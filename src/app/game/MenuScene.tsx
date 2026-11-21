@@ -60,7 +60,7 @@ const MODES: readonly Mode[] = [
   { scene: "DESTINY", group: "battle", title: "Tháp Thiên Mệnh", text: MODE_TEXT.DESTINY, art: "destiny", kicker: "Leo tháp", status: "Mỗi chu kỳ một vận, tranh hạng thiên hạ", cta: "Leo tháp", lockedText: "Sắp khai mở, tiến trình vẫn được giữ" },
   { scene: "SURVIVAL", group: "battle", title: "Trấn Ải", text: MODE_TEXT.SURVIVAL, art: "survival", kicker: "Sinh tồn", status: "Ghi danh bảng công trạng mỗi tuần", cta: "Giữ ải" },
   { scene: "DAILY", group: "battle", title: "Nhật Lệnh", text: MODE_TEXT.DAILY, art: "daily", kicker: "Mỗi ngày", status: "Lệnh mới ban mỗi ngày", cta: "Nhận lệnh" },
-  { scene: "ARENA", group: "battle", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Đấu người", status: "Tranh ngôi đầu bảng mỗi tuần", cta: "Thách đấu" },
+  { scene: "ARENA", group: "battle", title: "Quần Hùng", text: MODE_TEXT.ARENA, art: "arena", kicker: "Tranh hùng", status: "Tranh ngôi đầu bảng mỗi tuần", cta: "Thách đấu" },
   { scene: "FORMATION", group: "puzzle", title: "Trận Đồ", text: MODE_TEXT.FORMATION, art: "tran-do", kicker: "Binh pháp", status: "Vào trận ngay, không cần tài khoản", cta: "Bày trận" },
   { scene: "KHAI_LO", group: "puzzle", title: "Khai Lộ", text: MODE_TEXT.KHAI_LO, art: "khai-lo", kicker: "Giải đố", status: "Giải đố ngay, không cần tài khoản", cta: "Giải đố" },
   { scene: "DO_THAM", group: "puzzle", title: "Do Thám", text: MODE_TEXT.DO_THAM, art: "do-tham", kicker: "Giải đố", status: "Dò bẫy ngay, không cần tài khoản", cta: "Do thám" },
@@ -97,7 +97,7 @@ const UTILITIES: readonly { scene: Scene; title: string; icon: UtilityIcon }[] =
   { scene: "PRACTICE", title: "Thao Luyện", icon: "swords" },
 ];
 
-type UtilityIcon = "scroll" | "rank" | "swords" | "shop" | "tier" | "link";
+export type UtilityIcon = "scroll" | "rank" | "swords" | "shop" | "tier" | "link" | "home" | "camp" | "more";
 
 const TABS: readonly { value: ModeTab; label: string; text: string }[] = [
   { value: "battle", label: "Chiến đấu", text: "Ghép ô ra đòn, dẫn đội tướng dẹp loạn, leo tháp, giữ ải, so tài cùng quần hùng." },
@@ -205,25 +205,26 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
           </div>
         </section>
 
+        {/* Điện thoại: lưới 2 cột thẻ nhỏ (Shan chọn 3C, 21/11/2026), chỉ thẻ nổi bật (Bình Loạn) giữ thẻ lớn. */}
         <div className="flex flex-col gap-6">
           {TABS.map((t) => (
             <section key={t.value} id={sectionId(t.value)} data-mode-group={t.value} aria-labelledby={`${sectionId(t.value)}-title`}>
               <SectionHeading id={`${sectionId(t.value)}-title`} kicker="Chế độ chơi" title={t.label} />
-              <p className="mt-2 text-[15px] leading-snug text-[var(--on-wood)]/85">{t.text}</p>
+              <p className="mt-2 text-[15px] leading-snug text-[var(--on-wood)]/85 max-sm:hidden">{t.text}</p>
               {count(t.value) === 0 ? (
                 <p className="home-mode-soon atlas-frame mt-5 px-5 py-8 text-center font-serif text-[var(--ash)]">
                   Chưa có chế độ mới đang dựng. Khi có, chế độ sẽ hiện ở đây.
                 </p>
               ) : (
-                <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+                <ul className="mt-4 grid grid-cols-2 gap-3 sm:mt-5 sm:gap-4 lg:grid-cols-3 lg:gap-5">
                   {byTab[t.value].map((m) => (
-                    <li key={m.scene} className={m.featured ? "sm:col-span-2 lg:col-span-3" : undefined}>
+                    <li key={m.scene} className={m.featured ? "col-span-2 lg:col-span-3" : undefined}>
                       <ModeCard mode={m} locked={locked(m.scene)} needsLogin={!account && ONLINE_RANKED.includes(m.scene)} />
                     </li>
                   ))}
                   {t.value === "soon" &&
                     UPCOMING.map((u) => (
-                      <li key={u.id}>
+                      <li key={u.id} className="col-span-2 sm:col-span-1">
                         <UpcomingCard mode={u} />
                       </li>
                     ))}
@@ -235,10 +236,10 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
 
         <section aria-labelledby="home-more">
           <SectionHeading id="home-more" kicker="Tiện ích" title="Quân vụ" />
-          <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-4 grid grid-cols-2 gap-2 sm:mt-5 sm:gap-3 lg:grid-cols-3">
             {UTILITIES.map((u) => (
               <li key={u.scene}>
-                <SceneLink scene={u.scene} className="home-utility atlas-frame flex min-h-14 items-center gap-3 px-4 font-serif font-semibold">
+                <SceneLink scene={u.scene} className="home-utility atlas-frame flex min-h-12 items-center gap-2 px-3 font-serif font-semibold sm:min-h-14 sm:gap-3 sm:px-4">
                   <UtilityGlyph kind={u.icon} />
                   {u.title}
                   <span aria-hidden className="ml-auto text-[var(--frame-gold)]">›</span>
@@ -279,9 +280,11 @@ function SectionHeading({ id, kicker, title }: { id: string; kicker: string; tit
 
 /** Thẻ chế độ: tranh là phần chính, tên đặt trên mép dưới tranh, một câu mô tả và trạng thái thật (mở/chưa mở). */
 function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; needsLogin: boolean }) {
+  // Điện thoại: thẻ thường gọn (tranh vuông vức, tên, một dòng trạng thái), bỏ câu mô tả và nút vào; thẻ nổi bật giữ đủ.
+  const compact = mode.featured ? "" : "max-sm:hidden";
   const body = (
     <>
-      <div className={`relative aspect-[5/2] overflow-hidden rounded-t-[0.65rem] sm:aspect-[16/9] ${mode.featured ? "lg:aspect-[5/1]" : "lg:aspect-[2/1]"}`}>
+      <div className={`relative overflow-hidden rounded-t-[0.65rem] sm:aspect-[16/9] ${mode.featured ? "aspect-[5/2] lg:aspect-[5/1]" : "aspect-[4/3] lg:aspect-[2/1]"}`}>
         <Image
           src={mode.art ? `/art/home/${mode.art}.webp` : "/art/campaign/rail-ink.webp"}
           alt=""
@@ -291,15 +294,21 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
         />
         <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-wood-lo via-wood-lo/25 to-transparent" />
         {mode.kicker && (
-          <span className="home-kicker absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase">
+          <span className={`home-kicker absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase ${compact}`}>
             {mode.kicker}
           </span>
         )}
-        <h3 className="absolute right-4 bottom-2.5 left-4 font-serif text-xl font-bold text-[var(--title-on-wood)] [text-shadow:0_2px_4px_var(--black)] sm:text-2xl">
+        <h3 className={`absolute bottom-2.5 font-serif font-bold text-[var(--title-on-wood)] [text-shadow:0_2px_4px_var(--black)] sm:right-4 sm:left-4 sm:text-2xl ${mode.featured ? "right-4 left-4 text-xl" : "right-2.5 left-2.5 text-lg leading-tight"}`}>
           {mode.title}
         </h3>
       </div>
-      <div className="flex flex-1 flex-col gap-3 px-4 pt-2.5 pb-4">
+      {!mode.featured && (
+        <p className="flex items-center gap-1 px-3.5 pt-1.5 pb-4 text-caption leading-tight text-[var(--ash)] sm:hidden">
+          {(locked || needsLogin) && <LockGlyph />}
+          <span className="line-clamp-2">{locked ? "Sắp khai mở" : needsLogin ? "Trình danh để có tên trên bảng" : mode.status}</span>
+        </p>
+      )}
+      <div className={`flex flex-1 flex-col gap-3 px-4 pt-2.5 pb-4 ${compact}`}>
         <p className="text-[15px] leading-snug text-[var(--on-wood)]/90">{mode.text}</p>
         <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-2 text-sm">
           {locked ? (
@@ -393,7 +402,7 @@ function LockGlyph() {
   );
 }
 
-function UtilityGlyph({ kind }: { kind: UtilityIcon }) {
+export function UtilityGlyph({ kind }: { kind: UtilityIcon }) {
   return (
     <svg aria-hidden viewBox="0 0 24 24" className="size-5 shrink-0 text-[var(--frame-gold)]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
       {kind === "scroll" && <path d="M7 4h11a2 2 0 0 1 0 4H7M7 4a2 2 0 0 0 0 4v10a2 2 0 0 0 2 2h9V8M10 12h5M10 15.5h5" />}
@@ -402,6 +411,9 @@ function UtilityGlyph({ kind }: { kind: UtilityIcon }) {
       {kind === "tier" && <path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8-4.3-4.1 5.9-.9L12 3Z" />}
       {kind === "link" && <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" />}
       {kind === "swords" && <path d="M4 4l10.5 10.5M12.5 16.5l4-4M16 16l4 4M20 4L9.5 14.5M11.5 16.5l-4-4M8 16l-4 4" />}
+      {kind === "home" && <path d="M3.5 11.5 12 4l8.5 7.5M5.5 10v9.5h4.5v-5.5h4v5.5h4.5V10" />}
+      {kind === "camp" && <path d="M3.5 20.5h17M5 20.5V12l7-6 7 6v8.5M10 20.5v-5h4v5M12 6V2.5l3.5 1.2L12 5" />}
+      {kind === "more" && <path d="M5 12h.01M12 12h.01M19 12h.01" strokeWidth={3} />}
     </svg>
   );
 }

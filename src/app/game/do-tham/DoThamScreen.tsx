@@ -6,7 +6,7 @@
 // Điều khiển: chuột trái mở ô (bấm vào ô số đã đủ cờ thì mở nhanh), chuột phải cắm cờ; điện thoại chạm mở, chạm giữ cắm cờ
 // hoặc bật nút Cắm cờ; bàn phím: mũi tên di chuyển, Enter hoặc Space mở, F cắm cờ.
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { Element } from "@/core/battle/elements";
 import { ELEMENTS } from "@/core/battle/elements";
 import {
@@ -26,7 +26,8 @@ import {
   type DtState,
 } from "@/core/do-tham";
 import { Button, ChoiceChip } from "@/components/ui";
-import { ModeBanner, ModeScreen, OrnateFrame, SurrenderButton } from "@/components/game-ui";
+import { BottomSheet, ModeBanner, ModeScreen, OrnateFrame, ResultModal, SurrenderButton } from "@/components/game-ui";
+import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { ElementIcon } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
 import { readStorage, writeStorage } from "../formation/storage";
@@ -106,11 +107,43 @@ function readSaved(level: DtLevel): Saved | null {
 
 const clock = (secs: number) => `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`;
 
-function infoText(info: DtInfo | null, width: number): string {
+/** Ô thứ `i` của ván nằm ở hàng, cột nào trên bàn đang hiện (tính từ 0). Bàn xoay thì hàng của ván thành cột và ngược lại. */
+function displayPos(i: number, width: number, turned: boolean): [row: number, col: number] {
+  const x = i % width;
+  const y = Math.floor(i / width);
+  return turned ? [x, y] : [y, x];
+}
+
+function infoText(info: DtInfo | null, width: number, turned: boolean): string {
   if (!info) return "";
-  if (info.kind === "area") return `Vùng 3×3 quanh hàng ${Math.floor(info.index / width) + 1}, cột ${(info.index % width) + 1} có ${info.count} bẫy.`;
-  if (info.kind === "line") return `${info.axis === "row" ? "Hàng" : "Cột"} ${info.at + 1} có ${info.count} bẫy.`;
-  return `Gió mách: hàng ${Math.floor(info.index / width) + 1}, cột ${(info.index % width) + 1} ${info.certain === "safe" ? "chắc chắn an toàn" : "chắc chắn có bẫy"}.`;
+  const where = (i: number) => {
+    const [r, c] = displayPos(i, width, turned);
+    return `hàng ${r + 1}, cột ${c + 1}`;
+  };
+  if (info.kind === "area") return `Vùng 3×3 quanh ${where(info.index)} có ${info.count} bẫy.`;
+  if (info.kind === "line") return `${(info.axis === "row") !== turned ? "Hàng" : "Cột"} ${info.at + 1} có ${info.count} bẫy.`;
+  return `Gió mách: ${where(info.index)} ${info.certain === "safe" ? "chắc chắn an toàn" : "chắc chắn có bẫy"}.`;
+}
+
+/** Ô nhỏ hơn mức này (px) thì điện thoại cho phóng to bàn bằng hai ngón hoặc nút +/− (Shan chọn 4A, 21/11/2026). */
+const ZOOM_BELOW = 24;
+const ZOOM_MAX = 2.5;
+/** Phần bề ngang màn không dành cho bàn trên điện thoại: lề màn, khung vùng chơi, viền sa bàn (khớp .dt-board trong globals.css). */
+const PHONE_GUTTER = 56;
+
+function touchDist(t: React.TouchList): number {
+  const a = t[0];
+  const b = t[1];
+  return a && b ? Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY) : 0;
+}
+
+function subscribeResize(notify: () => void) {
+  window.addEventListener("resize", notify);
+  return () => window.removeEventListener("resize", notify);
+}
+
+function useViewportWidth(): number {
+  return useSyncExternalStore(subscribeResize, () => window.innerWidth, () => 1024);
 }
 
 function FlagGlyph() {
@@ -142,10 +175,18 @@ export default function DoThamScreen() {
   const [flagMode, setFlagMode] = useState(false);
   const [armed, setArmed] = useState<Element | null>(null);
   const [axis, setAxis] = useState<"row" | "col">("row");
+  /** Ván đã kết thúc mà người chơi đóng hộp kết quả để xem bàn (ván mới là đối tượng khác nên hộp tự mở lại). */
+  const [dismissed, setDismissed] = useState<DtState | null>(null);
   const [message, setMessage] = useState("");
   const [focus, setFocus] = useState(0);
   const boardRef = useRef<HTMLDivElement>(null);
   const pressRef = useRef<{ timer: number; fired: boolean } | null>(null);
+  const pinchRef = useRef<{ dist: number; zoom: number } | null>(null);
+  const [zoom, setZoom] = useState(1);
+  const [setupOpen, setSetupOpen] = useState(false);
+  const phone = useMediaQuery(PHONE_QUERY);
+  const portrait = useMediaQuery("(orientation: portrait)");
+  const viewportWidth = useViewportWidth();
   const { play: playSound, preload, playMusic, stopMusic } = useAudio();
 
   useEffect(() => preload(DOTHAM_PRELOAD), [preload]);
@@ -260,7 +301,7 @@ export default function DoThamScreen() {
 
   const press = (i: number) => {
     if (armed) {
-      const ok = act(armed === "loi" ? { type: "item", element: armed, index: i, axis } : { type: "item", element: armed, index: i });
+      const ok = act(armed === "loi" ? { type: "item", element: armed, index: i, axis: engineAxis } : { type: "item", element: armed, index: i });
       if (ok) setArmed(null);
       return;
     }
@@ -269,7 +310,9 @@ export default function DoThamScreen() {
     else act({ type: "open", index: i });
   };
 
-  const moveFocus = (i: number, dx: number, dy: number) => {
+  const moveFocus = (i: number, sx: number, sy: number) => {
+    // Bàn xoay: mũi tên đi theo bàn đang hiện, nên trái/phải trên màn là lên/xuống của ván.
+    const [dx, dy] = turned ? [sy, sx] : [sx, sy];
     const x = Math.min(game.width - 1, Math.max(0, (i % game.width) + dx));
     const y = Math.min(game.height - 1, Math.max(0, Math.floor(i / game.width) + dy));
     const next = y * game.width + x;
@@ -296,6 +339,34 @@ export default function DoThamScreen() {
   const left = game.mines - flags;
   // Cỡ ô tính trong globals.css (.dt-board) theo số hàng, cột; phóng to màn chơi thì ô giãn lấp màn.
   const cell = "var(--dt-cell)";
+  // Điện thoại dọc: bàn ngang dài (Khó 30×16) xoay thành 16×30 để ô không quá nhỏ. Xoay bằng cách đổi hàng thành cột: ô kề
+  // vẫn là ô kề nên số bẫy quanh ô giữ nguyên nghĩa.
+  const turned = phone && portrait && game.width > game.height;
+  const cols = turned ? game.height : game.width;
+  const rows = turned ? game.width : game.height;
+  const zoomable = phone && (viewportWidth - PHONE_GUTTER) / cols < ZOOM_BELOW;
+  const scale = zoomable ? zoom : 1;
+  const setScale = (z: number) => setZoom(Math.min(ZOOM_MAX, Math.max(1, Math.round(z * 100) / 100)));
+  // Lôi chọn hàng hay cột theo bàn đang hiện; bàn xoay thì hàng trên màn là cột của ván.
+  const engineAxis = turned ? (axis === "row" ? "col" : "row") : axis;
+
+  const onPinchStart = (e: React.TouchEvent) => {
+    if (!zoomable || e.touches.length !== 2) return;
+    pinchRef.current = { dist: touchDist(e.touches), zoom: scale };
+    // Ngón thứ hai chạm xuống: bỏ lần chạm giữ cắm cờ và lần mở ô của ngón đầu.
+    if (pressRef.current) {
+      window.clearTimeout(pressRef.current.timer);
+      pressRef.current.fired = true;
+    }
+  };
+  const onPinchMove = (e: React.TouchEvent) => {
+    const start = pinchRef.current;
+    if (!start || e.touches.length !== 2) return;
+    setScale((start.zoom * touchDist(e.touches)) / Math.max(1, start.dist));
+  };
+  const onPinchEnd = (e: React.TouchEvent) => {
+    if (e.touches.length < 2) pinchRef.current = null;
+  };
 
   const lit = useMemo(() => {
     const set = new Set<number>();
@@ -309,7 +380,8 @@ export default function DoThamScreen() {
   }, [game.info, game.width, game.height]);
 
   const cellLabel = (i: number) => {
-    const where = `Hàng ${Math.floor(i / game.width) + 1}, cột ${(i % game.width) + 1}`;
+    const [row, col] = displayPos(i, game.width, turned);
+    const where = `Hàng ${row + 1}, cột ${col + 1}`;
     const c = game.cells[i];
     if (c === "flag") return `${where}: cờ lau`;
     if (c === "open") return `${where}: ${(game.counts?.[i] ?? 0) === 0 ? "trống" : `${game.counts?.[i]} bẫy kề`}`;
@@ -317,21 +389,8 @@ export default function DoThamScreen() {
     return `${where}: chưa mở`;
   };
 
-  return (
-    <ModeScreen card label="Do Thám">
-      <ModeBanner
-        title="Do Thám"
-        art="/art/home/do-tham.webp"
-        kicker={`Giải đố – ${LEVEL_NAME[level]}`}
-        description="Mở từng ô, suy ra chỗ giấu bẫy từ các con số rồi cắm cờ lau. Bàn nào cũng suy luận được, không cần đoán."
-        stats={[
-          { label: "Bẫy còn lại", value: left },
-          { label: "Thời gian", value: clock(secs) },
-          { label: "Kỷ lục bậc này", value: best[level] === undefined ? "–" : clock(best[level] as number) },
-        ]}
-      />
-      <ModeGuideTabs scene="DO_THAM">
-        <section className="ui-frame flex flex-col gap-4 p-4 lg:flex-row lg:items-start lg:gap-10" aria-label="Chuẩn bị ván">
+  const setup = (
+    <>
           <div className="flex flex-col gap-2">
             <h2 className="ui-title-on-wood font-bold">Bậc độ khó</h2>
             <div className="flex flex-wrap gap-2" role="group" aria-label="Bậc độ khó">
@@ -355,10 +414,38 @@ export default function DoThamScreen() {
               ))}
             </div>
           </div>
+    </>
+  );
+
+  return (
+    <ModeScreen card label="Do Thám">
+      <ModeBanner
+        title="Do Thám"
+        art="/art/home/do-tham.webp"
+        kicker={`Giải đố – ${LEVEL_NAME[level]}`}
+        description="Mở từng ô, suy ra chỗ giấu bẫy từ các con số rồi cắm cờ lau. Bàn nào cũng suy luận được, không cần đoán."
+        stats={[
+          { label: "Bẫy còn lại", value: left },
+          { label: "Thời gian", value: clock(secs) },
+          { label: "Kỷ lục bậc này", value: best[level] === undefined ? "–" : clock(best[level] as number) },
+        ]}
+      />
+      <ModeGuideTabs scene="DO_THAM">
+        {/* Điện thoại: phần chuẩn bị nằm trong bảng trượt mở từ nút trên hàng thao tác, để sa bàn lên đầu màn (21/11/2026). */}
+        <section className="ui-frame flex flex-col gap-4 p-4 max-sm:hidden lg:flex-row lg:items-start lg:gap-10" aria-label="Chuẩn bị ván">
+          {setup}
         </section>
-        <PlayCard className="mt-5">
+        {phone && (
+          <BottomSheet open={setupOpen} onClose={() => setSetupOpen(false)} title="Chuẩn bị ván">
+            <div className="flex flex-col gap-4">{setup}</div>
+          </BottomSheet>
+        )}
+        <PlayCard className="sm:mt-5">
           <OrnateFrame aria-label="Vùng chơi" flush className="flex min-w-0 flex-col items-center gap-3 p-2 sm:p-5">
             <div className="flex w-full flex-wrap items-center justify-center gap-2" role="toolbar" aria-label="Thao tác và đạo cụ">
+              <Button variant="secondary" aria-haspopup="dialog" onClick={() => setSetupOpen(true)} className="sm:hidden">
+                {LEVEL_NAME[level]}, {picks.length} đạo cụ
+              </Button>
               <ChoiceChip selected={flagMode} onClick={() => setFlagMode((v) => !v)} size="md">
                 <span aria-hidden className="grid size-6 place-items-center text-on-wood [&>svg]:size-full">
                   <FlagGlyph />
@@ -377,7 +464,7 @@ export default function DoThamScreen() {
               )}
               <span aria-hidden className="mx-1 hidden h-8 w-px bg-frame-line-soft sm:block" />
               {game.items.length === 0 ? (
-                <span className="text-caption text-on-wood-soft">Chưa mang đạo cụ nào</span>
+                <span className="text-caption text-on-wood-soft max-sm:hidden">Chưa mang đạo cụ nào</span>
               ) : (
                 game.items.map((it) => (
                   <Button
@@ -407,16 +494,38 @@ export default function DoThamScreen() {
                 {armed ? `${ITEM_INFO[armed].name}: ${ITEM_INFO[armed].text}` : "Khiên đất đang giữ: lần sa bẫy kế tiếp được đỡ."}
               </p>
             )}
-            <div className="w-full overflow-x-auto pb-1">
+            {zoomable && (
+              <div className="flex items-center gap-2" role="group" aria-label="Cỡ sa bàn">
+                <Button variant="secondary" size="sm" aria-label="Thu nhỏ sa bàn" disabled={scale <= 1} onClick={() => setScale(scale - 0.5)} className="min-w-11">
+                  −
+                </Button>
+                <span className="min-w-24 text-center text-caption text-on-wood-soft" aria-live="polite">
+                  {scale <= 1 ? "Chụm hai ngón để phóng" : `Phóng ${Math.round(scale * 100)}%`}
+                </span>
+                <Button variant="secondary" size="sm" aria-label="Phóng to sa bàn" disabled={scale >= ZOOM_MAX} onClick={() => setScale(scale + 0.5)} className="min-w-11">
+                  +
+                </Button>
+              </div>
+            )}
+            <div
+              className={`w-full overflow-x-auto pb-1 ${scale > 1 ? "max-h-[70dvh] overflow-y-auto overscroll-contain" : ""} ${zoomable ? "touch-pan-x touch-pan-y" : ""}`}
+              onTouchStart={onPinchStart}
+              onTouchMove={onPinchMove}
+              onTouchEnd={onPinchEnd}
+              onTouchCancel={onPinchEnd}
+            >
               <div className="ui-frame-inset mx-auto w-fit p-1 sm:p-2">
                 <div
                   ref={boardRef}
                   role="grid"
-                  aria-label={`Sa bàn Do Thám ${game.height} hàng ${game.width} cột`}
+                  aria-label={`Sa bàn Do Thám ${rows} hàng ${cols} cột${turned ? ", đã xoay dọc" : ""}`}
                   className="dt-board grid"
-                  style={{ gridTemplateColumns: `repeat(${game.width}, ${cell})`, gridAutoRows: cell, ["--dt-cols" as string]: game.width, ["--dt-rows" as string]: game.height }}
+                  style={{ gridTemplateColumns: `repeat(${cols}, ${cell})`, gridAutoRows: cell, ["--dt-cols" as string]: cols, ["--dt-rows" as string]: rows, ["--dt-zoom" as string]: scale }}
                 >
-                  {game.cells.map((c, i) => {
+                  {game.cells.map((_, d) => {
+                    // d: thứ tự ô trên bàn đang hiện; i: ô của ván. Bàn xoay thì hàng hiện là cột của ván.
+                    const i = turned ? (d % cols) * game.width + Math.floor(d / cols) : d;
+                    const c = game.cells[i];
                     const trap = game.trap?.[i] === true;
                     const hit = game.hit === i;
                     const open = c === "open";
@@ -472,23 +581,28 @@ export default function DoThamScreen() {
               </div>
             </div>
             <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-title-on-wood">
-              {message || infoText(game.info, game.width)}
+              {message || infoText(game.info, game.width, turned)}
             </p>
-            {over && (
-              <div role="status" className="ui-frame flex w-full max-w-md flex-col items-center gap-2 p-4 text-center">
-                <h2 className="ui-title-on-wood text-2xl font-bold">{game.phase === "won" ? "Gỡ xong mọi bẫy!" : gaveUp ? "Đã đầu hàng" : "Sa bẫy"}</h2>
-                <p className="text-[15px]">
-                  {game.phase === "won"
-                    ? `Bạn xong bậc ${LEVEL_NAME[level]} trong ${clock(secs)}.${best[level] === secs ? " Đây là thời gian tốt nhất của bạn." : ""}`
-                    : gaveUp
-                      ? "Các bẫy đã lộ ra. Vào ván mới để thử lại."
-                      : "Ô đỏ là bẫy bạn chạm phải. Các bẫy còn lại đã lộ ra."}
-                </p>
+            <ResultModal
+              open={over && dismissed !== game}
+              tone={game.phase === "won" ? "win" : "lose"}
+              kicker={game.phase === "won" ? "Do thám thành công" : undefined}
+              title={game.phase === "won" ? "Gỡ xong mọi bẫy!" : gaveUp ? "Đã đầu hàng" : "Sa bẫy"}
+              onDismiss={() => setDismissed(game)}
+              actions={
                 <Button size="lg" autoFocus onClick={() => startGame(level, picks)}>
                   Ván mới
                 </Button>
-              </div>
-            )}
+              }
+            >
+              <p>
+                {game.phase === "won"
+                  ? `Bạn xong bậc ${LEVEL_NAME[level]} trong ${clock(secs)}.${best[level] === secs ? " Đây là thời gian tốt nhất của bạn." : ""}`
+                  : gaveUp
+                    ? "Các bẫy đã lộ ra. Vào ván mới để thử lại."
+                    : "Ô đỏ là bẫy bạn chạm phải. Các bẫy còn lại đã lộ ra."}
+              </p>
+            </ResultModal>
           </OrnateFrame>
         </PlayCard>
       </ModeGuideTabs>

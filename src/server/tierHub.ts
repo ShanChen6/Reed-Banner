@@ -61,10 +61,10 @@ export async function tierOverview(ownerId: string, deps: TierHubDeps): Promise<
   const out: TierLadderView[] = [];
   if (deps.arena) {
     const row = await deps.arena.get(ownerId);
-    out.push({ id: "arena", mode: "Quần Hùng", scene: "ARENA", measure: "Điểm hạng đấu bóng ma.", unit: "điểm", score: row?.rating ?? ARENA_START, tiers: ARENA_TIERS, claimed: profile.arenaTiers ?? [], ...(row ? {} : { locked: true }) });
+    out.push({ id: "arena", mode: "Quần Hùng", scene: "ARENA", measure: "Điểm hạng Phá Doanh.", unit: "điểm", score: row?.rating ?? ARENA_START, tiers: ARENA_TIERS, claimed: profile.arenaTiers ?? [], ...(row ? {} : { locked: true }) });
   }
   if (deps.pvp)
-    out.push({ id: "pvp", mode: "Đấu người", scene: "ARENA", measure: "Điểm hạng cao hơn giữa 1vs1 và 3vs3 xếp hạng.", unit: "điểm", score: await pvpTierRating(ownerId, { pvp: deps.pvp }), tiers: ARENA_TIERS, claimed: pvpTierClaims(profile) });
+    out.push({ id: "pvp", mode: "Quần Hùng – Thư Hùng", scene: "ARENA", measure: "Điểm hạng cao hơn giữa 1vs1 và 3vs3 xếp hạng.", unit: "điểm", score: await pvpTierRating(ownerId, { pvp: deps.pvp }), tiers: ARENA_TIERS, claimed: pvpTierClaims(profile) });
   out.push({ id: "survival", mode: "Trấn Ải", scene: "SURVIVAL", measure: "Kỷ lục số đợt vượt trong một lượt chơi.", unit: "đợt", score: profile.survival.best, tiers: SURVIVAL_TIERS, claimed: profile.survivalTiers ?? [] });
   if (deps.enabled.formation)
     out.push({ id: "formation", mode: "Trận Đồ", scene: "FORMATION", measure: "Số ván xếp hạng đã thắng (cả ba bậc).", unit: "ván", score: profile.formationWins ?? 0, tiers: FORMATION_TIERS, claimed: profile.formationTiers ?? [] });

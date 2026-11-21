@@ -16,7 +16,8 @@ import {
   type Profession,
   type SkillDef,
 } from "@/core";
-import { ModeBanner, ModeLoading, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { BottomSheet, ModeBanner, ModeLoading, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { buttonVariants } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { cn } from "@/lib/cn";
@@ -40,6 +41,9 @@ export default function CombosScreen() {
   const { profile, loadError } = useProfile();
   const [picks, setPicks] = useState<readonly (string | null)[]>([null, null, null]);
   const [slot, setSlot] = useState<0 | 1 | 2>(0);
+  // Điện thoại: lưới chọn tướng là bảng trượt mở khi bấm ô, để phần liên kết nằm ngay dưới ba ô (21/11/2026).
+  const phone = useMediaQuery(PHONE_QUERY);
+  const [sheet, setSheet] = useState(false);
   /** Hệ, nghề Đinh Bộ Lĩnh dùng để tính trên trang; mặc định theo hồ sơ. */
   const [build, setBuild] = useState<{ element: Element; profession: Profession } | null>(null);
   const leader = build ?? (profile ? { element: profile.element, profession: profile.profession } : null);
@@ -94,7 +98,20 @@ export default function CombosScreen() {
     });
     const empty = [0, 1, 2].find((i) => i !== slot && picks[i] === null);
     if (empty !== undefined) setSlot(empty as 0 | 1 | 2);
+    setSheet(false);
   };
+  const where = phone ? "trong bảng chọn" : "ở lưới bên dưới";
+  const picker = (
+    <HeroGrid
+      label="Chọn tướng phối hợp"
+      items={candidates}
+      selected={picks[slot] ?? null}
+      onSelect={pick}
+      pageSize={15}
+      gridClassName="sm:grid-cols-3 lg:grid-cols-5"
+    />
+  );
+  const pickerHint = "Tướng có nhiều liên kết với đội đang chọn xếp lên trước. Đinh Bộ Lĩnh hiện ở mọi bộ lọc; bấm ông khi đang lọc hệ, nghề thì ông mang đúng hệ, nghề đó.";
   // Chọn nhanh ba tướng ngẫu nhiên trong mọi tướng.
   const randomTeam = () => {
     const pool = [MAIN_ID, ...PLAYABLE_COMPANIONS.map((c) => c.id)];
@@ -121,7 +138,7 @@ export default function CombosScreen() {
 
       <section aria-label="Đội phối hợp" className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-sm text-on-wood-soft">Bấm một ô rồi chọn tướng ở lưới bên dưới. Đội 3vs3 không bắt buộc có Đinh Bộ Lĩnh.</p>
+          <p className="text-sm text-on-wood-soft">Bấm một ô rồi chọn tướng {where}. Đội 3vs3 không bắt buộc có Đinh Bộ Lĩnh.</p>
           <div className="flex gap-2">
             <button type="button" onClick={randomTeam} className={buttonVariants({ variant: "secondary", size: "sm" })}>Ngẫu nhiên</button>
             <button type="button" onClick={() => { setPicks([null, null, null]); setSlot(0); }} className={buttonVariants({ variant: "ghost", size: "sm" })}>Xóa đội</button>
@@ -133,7 +150,7 @@ export default function CombosScreen() {
             const active = slot === i;
             return (
               <div key={i} className={cn("ui-frame-inset flex flex-col gap-2 rounded-xl p-3", active && "ring-2 ring-frame-gold")}>
-                <button type="button" aria-pressed={active} aria-label={`Ô tướng ${i + 1}${m ? `: ${m.name}` : ""}`} onClick={() => setSlot(i as 0 | 1 | 2)} className="flex min-h-14 items-center gap-3 text-left">
+                <button type="button" aria-pressed={active} aria-label={`Ô tướng ${i + 1}${m ? `: ${m.name}` : ""}`} onClick={() => { setSlot(i as 0 | 1 | 2); if (phone) setSheet(true); }} className="flex min-h-14 items-center gap-3 text-left">
                   {m ? (
                     <>
                       <Portrait id={m.id} element={m.fighter.element} profession={m.fighter.profession} className="size-14 shrink-0" />
@@ -146,7 +163,7 @@ export default function CombosScreen() {
                       </span>
                     </>
                   ) : (
-                    <span className="w-full text-center text-on-wood-soft">{active ? `Tướng ${i + 1}: chọn ở lưới bên dưới` : `Tướng ${i + 1}: bấm để chọn`}</span>
+                    <span className="w-full text-center text-on-wood-soft">{active && !phone ? `Tướng ${i + 1}: chọn ở lưới bên dưới` : `Tướng ${i + 1}: bấm để chọn`}</span>
                   )}
                 </button>
               </div>
@@ -155,17 +172,19 @@ export default function CombosScreen() {
         </div>
       </section>
 
-      <div className="grid items-start gap-4 lg:grid-cols-2">
-        <OrnateFrame className="flex flex-col gap-3">
-          <SectionTitle description="Tướng có nhiều liên kết với đội đang chọn xếp lên trước. Đinh Bộ Lĩnh hiện ở mọi bộ lọc; bấm ông khi đang lọc hệ, nghề thì ông mang đúng hệ, nghề đó.">Chọn tướng {slot + 1}</SectionTitle>
-          <HeroGrid
-            label="Chọn tướng phối hợp"
-            items={candidates}
-            selected={picks[slot] ?? null}
-            onSelect={pick}
-            pageSize={12}
-          />
-        </OrnateFrame>
+      {/* Một cột (21/11/2026): chọn tướng ở trên, liên kết ở dưới; hai cột cũ lệch chiều cao khi danh sách liên kết dài. */}
+      <div className="flex flex-col gap-4">
+        {phone ? (
+          <BottomSheet open={sheet} onClose={() => setSheet(false)} title={`Chọn tướng ${slot + 1}`}>
+            <p className="mb-3 text-caption text-on-wood-soft">{pickerHint}</p>
+            {picker}
+          </BottomSheet>
+        ) : (
+          <OrnateFrame className="flex flex-col gap-3">
+            <SectionTitle description={pickerHint}>Chọn tướng {slot + 1}</SectionTitle>
+            {picker}
+          </OrnateFrame>
+        )}
 
         <OrnateFrame className="flex flex-col gap-3">
           <SectionTitle description="Chiêu phát tín hiệu khi có tác dụng thực (phá giáp, khống chế, hồi máu…); bị động của đồng đội bắt tín hiệu để truy kích.">
@@ -175,8 +194,14 @@ export default function CombosScreen() {
             <p className="text-sm text-on-wood-soft">Chọn ít nhất một đồng đội để xem liên kết.</p>
           ) : (
             <>
-              <PairMatrix team={team} links={links} />
-              <ChainList key={team.map((m) => m.id).join()} team={team} chains={chains} />
+              <div className="grid items-start gap-4 lg:grid-cols-2">
+                <div className="ui-frame-inset min-w-0 p-2">
+                  <PairMatrix team={team} links={links} />
+                </div>
+                <div className="min-w-0">
+                  <ChainList key={team.map((m) => m.id).join()} team={team} chains={chains} />
+                </div>
+              </div>
               <h3 className="font-serif text-lg font-bold text-title-on-wood">Liên kết theo cặp</h3>
               <PairGroups team={team} links={cross} />
               {links.length > cross.length && (

@@ -9,7 +9,8 @@ import type { NodeId, RecipeId } from "./types";
 import type { TtkRankedWeek } from "./ranked";
 
 export const TTK_START_TICKETS = 3;
-export const TTK_MAX_TICKETS = 10;
+/** Trần phiếu (P-10; nâng từ 10 lên 20 ngày 21/11/2026 khi thưởng hạng có thêm phiếu). */
+export const TTK_MAX_TICKETS = 20;
 export const TTK_COMBINES_PER_SESSION = 15;
 export const TTK_HINTS_PER_DAY = 2;
 /** Lượt dở hết hạn sau 24 giờ (P-9). */

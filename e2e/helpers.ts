@@ -21,7 +21,10 @@ export function expectClean(problems: readonly string[]): void {
 
 /** Không có thanh cuộn ngang (lỗi bố cục hay gặp nhất trên điện thoại). */
 export async function expectNoHorizontalOverflow(page: Page): Promise<void> {
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  // Trên điện thoại, nội dung tràn làm trình duyệt nới khung nhìn (innerWidth lớn hơn bề rộng máy) nên so với bề rộng
+  // khung nhìn đã đặt, không so với innerWidth.
+  const width = page.viewportSize()?.width ?? 0;
+  const overflow = await page.evaluate((w) => Math.max(document.documentElement.scrollWidth, window.innerWidth) - (w || window.innerWidth), width);
   expect(overflow, "Trang không tràn ngang").toBeLessThanOrEqual(1);
 }
 
@@ -40,7 +43,29 @@ export async function registerAccount(page: Page): Promise<string> {
   return username;
 }
 
-/** Vào chế độ nào cũng gặp Hướng dẫn trước (19/11/2026): bấm "Vào chơi" để sang thẻ Chơi. */
+/** Điện thoại (dự án Playwright "mobile"): Hướng dẫn là bảng trượt đáy mở từ nút "?", không phải thẻ. */
+export function isPhone(): boolean {
+  return test.info().project.name === "mobile";
+}
+
+/**
+ * Vào chế độ nào cũng gặp Hướng dẫn trước (19/11/2026): bấm "Vào chơi" để sang thẻ Chơi. Trên điện thoại Hướng dẫn tự
+ * mở thành bảng trượt đáy ở lần đầu vào chế độ (21/11/2026): bấm "Vào chơi" trong bảng để đóng; đã đóng một lần thì thôi.
+ */
 export async function playMode(page: Page): Promise<void> {
+  if (isPhone()) {
+    const sheet = page.getByRole("dialog", { name: "Hướng dẫn" });
+    // Đã đóng bảng ở lần vào trước (cùng trình duyệt) thì bảng không tự mở nữa.
+    const shown = await sheet.waitFor({ state: "visible", timeout: 5_000 }).then(() => true, () => false);
+    if (!shown) return;
+    await sheet.getByRole("button", { name: "Vào chơi" }).click();
+    await expect(sheet).toBeHidden();
+    return;
+  }
   await page.getByRole("button", { name: "Vào chơi" }).click();
+}
+
+/** Tên các thẻ chế độ như người chơi thấy: điện thoại không có thẻ Hướng dẫn. */
+export function modeTabs(...tabs: string[]): string[] {
+  return isPhone() ? tabs : [...tabs, "Hướng dẫn"];
 }

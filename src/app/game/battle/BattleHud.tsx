@@ -144,10 +144,11 @@ export const inRing = (c: Pos, p: Pos) =>
   Math.max(Math.abs(c.row - p.row), Math.abs(c.col - p.col)) === 1;
 
 /**
+ * Màn ngang thấp (điện thoại xoay ngang) cũng bỏ để bàn cờ vừa chiều cao (Shan chọn 2A, 21/11/2026).
  * Sân khấu hình tướng chỉ hiện từ 640px (sm) trở lên: trên điện thoại nhỏ nó chiếm cả màn hình đầu mà thẻ tướng bên dưới
  * đã đủ thông tin, nên bỏ hẳn (không dựng) để bàn cờ lên trước. Không dùng CSS ẩn để khỏi tải tranh vô ích.
  */
-export const STAGE_QUERY = "(min-width: 640px)";
+export const STAGE_QUERY = "(min-width: 640px) and (not ((orientation: landscape) and (max-height: 499px)))";
 
 export function useStageVisible(): boolean {
   return useSyncExternalStore(

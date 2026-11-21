@@ -36,7 +36,7 @@ export function ModeScreen({
 /** Đại card của màn chế độ: khung gỗ viền đồng, góc hoa văn, như khung Sử ký của Bình Loạn. */
 export function ModeCard({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div data-slot="mode-card" className={cn("ui-mode-card flex min-w-0 flex-col gap-4 p-4 sm:gap-5 sm:p-7", className)}>
+    <div data-slot="mode-card" className={cn("ui-mode-card flex min-w-0 flex-col gap-4 p-0 sm:gap-5 sm:p-7", className)}>
       <FrameCorners size="size-6" />
       {children}
     </div>

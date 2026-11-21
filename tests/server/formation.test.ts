@@ -20,7 +20,8 @@ import {
   type FormationDeps,
   type FormationView,
 } from "../../src/server/formation";
-import { MemoryProfileStore, loadProfile, type ProfileStore } from "../../src/server/profiles";
+import { MemoryProfileStore, loadProfile, updateProfile, type ProfileStore } from "../../src/server/profiles";
+import { PACK_1, TTK_START_TICKETS, buildCatalog, newTtkAccount, ttkRankTickets } from "../../src/core/tam-tuong-ky";
 
 const DAY = 24 * 3600_000;
 const T0 = Date.parse("2026-11-04T05:00:00Z"); // thứ Tư, 12 giờ trưa giờ Việt Nam
@@ -313,6 +314,20 @@ describe("Trận Đồ xếp hạng: bảng và thưởng", () => {
     assert.equal((await loadProfile(d.profiles, w.owner)).profile.gold - (await loadProfile(new MemoryProfileStore(), "x")).profile.gold, r.gold);
     assert.deepEqual(await claimFormation(next, w.owner, "thuong", period), { ok: false, error: "alreadyClaimed" });
     assert.equal((await formationOverview(next, w.owner)).levels.find((l) => l.level === "thuong")!.claimable.length, 0);
+  });
+
+  it("bật Tầm Tướng Ký: thưởng kèm phiếu theo bậc ngày, người đã vào chế độ mới được cộng", async () => {
+    const d = deps({ ttkBundles: true });
+    const w = (await winners(d, "thuong", ["a", "b", "c"]))[0]!;
+    await updateProfile(d.profiles, w.owner, (p) => ({ ok: true as const, profile: { ...p, tamTuongKy: newTtkAccount(buildCatalog(PACK_1)) } }), T0);
+    const next = at(d, T0 + DAY);
+    const period = periodKey("thuong", d.now)!;
+    const listed = (await formationOverview(next, w.owner)).levels.find((l) => l.level === "thuong")!.claimable[0];
+    const r = await claimFormation(next, w.owner, "thuong", period);
+    assert.ok(r.ok);
+    assert.equal(r.tickets, ttkRankTickets(false, r.tier) || undefined);
+    assert.equal(listed?.tickets, r.tickets);
+    assert.equal((await loadProfile(d.profiles, w.owner)).profile.tamTuongKy?.tickets, TTK_START_TICKETS + (r.tickets ?? 0));
   });
 
   it("nhận song song chỉ cộng vàng một lần", async () => {
