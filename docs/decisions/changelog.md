@@ -6,6 +6,7 @@
 
 **Sử Lộ: mở sa bàn Nhà Đinh và Nhà Tiền Lê (Shan yêu cầu)**
 - Sổ nguồn thêm S12–S17 (bản sao Toàn thư kỷ nhà Đinh, kỷ nhà Lê) và claim SL03–SL32 ([sổ nguồn Sử Lộ](../02-game-modes/su-lo/nguon-su.md)). Kho câu thêm 23 câu nhà Đinh (tới năm 980) và 27 câu nhà Tiền Lê (980–1009), Claude duyệt lần 1, chờ Shan duyệt lần 2.
+- Shan gửi bản PDF Toàn thư (Viện KHXH, NXB KHXH 1993), ghi là nguồn S18: mọi câu trích nhà Đinh, Tiền Lê khớp nguyên văn; năm mất Lê Hoàn lấy 1005 theo chính văn. Kiểm lại 47 câu mê cung I, II: sửa cách viết Lữ Đường, câu "lập ai làm hậu", rút câu Bình Kiều vì lời chú S18 định vị ở Thanh Hóa.
 - Quân giặc trấn cổng: chiến thuyền Chiêm Thành của Ngô Nhật Khánh (Toàn thư chép năm 980) và quân Tống năm 981; hai sa bàn hết khóa "Chờ nguồn sử".
 
 ## 20/11/2026
