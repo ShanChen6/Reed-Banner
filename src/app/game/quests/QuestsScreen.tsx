@@ -1,7 +1,7 @@
 "use client";
 
 import { Alert, buttonVariants } from "@/components/ui";
-import { ModeLoading, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { ModeBanner, ModeLoading, ModeScreen, OrnateFrame, SectionTitle } from "@/components/game-ui";
 
 // Nhiệm vụ: nhiệm vụ tuần, thành tựu; điểm danh và nhiệm vụ ngày nằm ở Nhật Lệnh (ở đây chỉ còn thẻ dẫn sang). Tiến độ do server cộng khi trận kết thúc; bấm
 // Nhận thì server kiểm tra lại rồi cộng vàng.
@@ -20,6 +20,7 @@ import { QuestItem, claimable, questRow, type Row } from "./QuestItem";
 import SpecialQuestsPanel from "./SpecialQuestsPanel";
 import { useProfile } from "../profile/useProfile";
 import { SceneLink } from "../SceneContext";
+import { ColumnFill } from "../ColumnFill";
 
 /** Thành tựu Tầm Tướng Ký (`ttk.*`) chỉ hiện khi chế độ đã bật, để không lộ chế độ chưa phát hành. */
 export const isTamTuongKyAchievement = (id: string) => id.startsWith("ttk.");
@@ -83,20 +84,27 @@ export default function QuestsScreen({
     },
   ];
 
+  const readyTotal = dailyReady + sections.reduce((n, sec) => n + sec.rows.filter(claimable).length, 0);
+
   return (
     <Shell>
-      {ttk && (
-        <p className="text-right text-caption text-on-wood-soft">
-          <span className="font-bold text-title-on-wood">{ttk.tickets}</span> phiếu Tầm Tướng Ký
-        </p>
-      )}
+      <ModeBanner
+        title="Nhiệm vụ"
+        kicker="Quân lệnh trong doanh"
+        description="Nhiệm vụ tuần, thành tựu và nhiệm vụ phụ mở tướng quân đặc biệt. Tiến độ tự cộng khi trận kết thúc, bấm Nhận để lấy thưởng."
+        stats={[
+          { label: "Chờ nhận", value: readyTotal > 0 ? <span className="text-jade">{readyTotal}</span> : "0" },
+          ...(ttk ? [{ label: "Phiếu Tầm Tướng Ký", value: ttk.tickets }] : []),
+        ]}
+      />
       {message && <Alert>{message}</Alert>}
-
 
       <SpecialQuestsPanel profile={profile} />
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <OrnateFrame className="flex flex-col gap-3 self-start">
+        {/* Cột ngắn: khung lấp (mẹo, thơ) giãn tới đáy để ba cột bằng nhau (quy tắc card 20/11/2026). */}
+        <div className="flex min-w-0 flex-col gap-4">
+        <OrnateFrame className="flex flex-col gap-3">
           <SectionTitle description="Điểm danh và nhiệm vụ ngày đã chuyển sang Nhật Lệnh, làm và nhận thưởng ngay cạnh đề hôm nay.">
             Điểm danh – nhiệm vụ ngày
           </SectionTitle>
@@ -117,6 +125,8 @@ export default function QuestsScreen({
             </SceneLink>
           </div>
         </OrnateFrame>
+        <ColumnFill mode="quests" />
+        </div>
         {sections.map((sec) => (
           <OrnateFrame key={sec.title} className="flex flex-col">
             <SectionTitle description={sec.note}>{sec.title}</SectionTitle>
@@ -186,5 +196,5 @@ function QuestGroup({ title, rows, busy, onClaim }: { title: string; rows: Row[]
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
-  return <ModeScreen label="Nhiệm vụ">{children}</ModeScreen>;
+  return <ModeScreen card label="Nhiệm vụ">{children}</ModeScreen>;
 }

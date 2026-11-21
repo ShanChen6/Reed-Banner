@@ -1,13 +1,13 @@
 "use client";
 
 import { ModeBanner, ModeScreen, ModeSkeleton, OrnateFrame, SectionTitle } from "@/components/game-ui";
-import { Alert, Button, ChoiceChip, buttonVariants } from "@/components/ui";
+import { Alert, Button, buttonVariants } from "@/components/ui";
 
 // Quần Hùng: điểm và thành tích, đội phòng thủ (bản chụp đội 3vs3 đang chọn), 3 đối thủ đang bày.
 // Đánh dùng đội 3vs3 đang chọn ở hồ sơ; đối thủ do AI điều khiển.
 
 import { useEffect, useMemo, useState } from "react";
-import { ARENA_DIFFICULTY, ARENA_TIERS as CORE_ARENA_TIERS, ARENA_WIN_GOLD, MAIN_ID, arenaTeam, companionById, ownsCompanion, progressOf, teamPower, type ArenaMember } from "@/core";
+import { ARENA_DIFFICULTY, ARENA_MODE_NAME, ARENA_TIERS as CORE_ARENA_TIERS, ARENA_WIN_GOLD, MAIN_ID, arenaTeam, companionById, ownsCompanion, progressOf, teamPower, type ArenaMember } from "@/core";
 import { ElementIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { DIFFICULTY_NAME, ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
@@ -22,7 +22,7 @@ import {
 import RankRewardsPanel from "../rankRewards/RankRewardsPanel";
 import { SeasonBoardPanel } from "../leaderboard/boards";
 import { SceneLink, useScene } from "../SceneContext";
-import { ModeGuideTabs } from "../ModeGuide";
+import { ModeGuideTabs, type ModePlayTabs } from "../ModeGuide";
 import PvpPanel, { probePvp } from "./PvpPanel";
 import HeroGrid from "./HeroGrid";
 import { TierBadge, TierLadder, tierIndex } from "../leaderboard/RankBoard";
@@ -70,7 +70,7 @@ export default function ArenaScreen() {
   const [notice, setNotice] = useState<string | null>(null);
   const [tierNote, setTierNote] = useState<string | null>(null);
 
-  /** Đấu người (PvP) chỉ hiện khi máy chủ bật cờ; đang có trận dở hoặc đang chờ ghép thì mở sẵn. */
+  /** Thư Hùng (PvP) chỉ hiện khi máy chủ bật cờ; đang có trận dở hoặc đang chờ ghép thì mở sẵn. */
   const [pvpOpen, setPvpOpen] = useState(false);
   const [mode, setMode] = useState<"ghost" | "pvp">("ghost");
   const [pvpBusy, setPvpBusy] = useState(false);
@@ -190,13 +190,32 @@ export default function ArenaScreen() {
     go("PLAYING", { resume: "1" });
   };
 
+  // Hai cách đấu là hai thẻ ngang hàng Công trạng, Hướng dẫn (thay thẻ "Chơi", 21/11/2026). Đang có trận Thư Hùng dở thì
+  // giữ ở thẻ đó. Chưa bật Thư Hùng thì chỉ còn thẻ Phá Doanh.
+  const shown = pvpOpen ? mode : "ghost";
+  const playTabs: ModePlayTabs = {
+    items: [
+      { value: "ghost", label: ARENA_MODE_NAME.ghost },
+      ...(pvpOpen ? [{ value: "pvp", label: ARENA_MODE_NAME.pvp }] : []),
+    ],
+    value: shown,
+    onChange: (next) => {
+      if (next === "pvp") setMode("pvp");
+      else if (!pvpBusy) setMode("ghost");
+    },
+  };
+
   return (
     <ModeScreen card label="Quần Hùng">
       <ModeBanner
         title="Quần Hùng"
-        kicker="Đấu người"
+        kicker={ARENA_MODE_NAME[shown]}
         art="/art/home/arena.webp"
-        description={`Đánh với đội phòng thủ của hào kiệt khác, do máy điều khiển ở mức ${DIFFICULTY_NAME[ARENA_DIFFICULTY]}. Thắng cộng điểm, thua trừ điểm.`}
+        description={
+          shown === "pvp"
+            ? "Đấu trực tiếp với hào kiệt khác, mỗi lượt 30 giây. Thắng cộng điểm hạng Thư Hùng, thua trừ điểm."
+            : `Phá doanh trại của hào kiệt khác: đánh đội phòng thủ do máy điều khiển ở mức ${DIFFICULTY_NAME[ARENA_DIFFICULTY]}. Thắng cộng điểm, thua trừ điểm.`
+        }
         stats={[
           { label: "Điểm", value: data.rating },
           { label: "Hạng", value: data.rank != null ? `#${data.rank}` : "–" },
@@ -206,6 +225,7 @@ export default function ArenaScreen() {
       />
       <ModeGuideTabs
         scene="ARENA"
+        playTabs={playTabs}
         extraTabs={[
           {
             value: "board",
@@ -213,7 +233,7 @@ export default function ArenaScreen() {
             content: (
               <>
                 <section aria-labelledby="arena-board-ghost" className="flex flex-col gap-4">
-                  <h2 id="arena-board-ghost" className="ui-title-on-wood text-title">Đấu bóng ma</h2>
+                  <h2 id="arena-board-ghost" className="ui-title-on-wood text-title">{ARENA_MODE_NAME.ghost}</h2>
                   <OrnateFrame>
                     <TierLadder
                       tiers={TIERS}
@@ -234,7 +254,7 @@ export default function ArenaScreen() {
                 </section>
                 {pvpOpen && (
                   <section aria-labelledby="arena-board-pvp" className="flex flex-col gap-4">
-                    <h2 id="arena-board-pvp" className="ui-title-on-wood text-title">Đấu người</h2>
+                    <h2 id="arena-board-pvp" className="ui-title-on-wood text-title">{ARENA_MODE_NAME.pvp}</h2>
                     <PvpTierPanel />
                     <RankRewardsPanel mode="pvp" />
                     <SeasonBoardPanel board="pvp" />
@@ -245,23 +265,14 @@ export default function ArenaScreen() {
           },
         ]}
       >
-        {pvpOpen && (
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Cách đấu">
-            <ChoiceChip selected={mode === "ghost"} size="md" disabled={pvpBusy} onClick={() => setMode("ghost")}>
-              Đấu bóng ma
-            </ChoiceChip>
-            <ChoiceChip selected={mode === "pvp"} size="md" onClick={() => setMode("pvp")}>
-              Đấu người
-            </ChoiceChip>
-          </div>
-        )}
-        {pvpOpen && mode === "pvp" ? <PvpPanel onBusyChange={setPvpBusy} /> : (
+        {pvpBusy && shown === "pvp" && <p role="note" className="text-caption text-on-wood-soft">Đang có trận {ARENA_MODE_NAME.pvp} dở, đánh xong mới sang được {ARENA_MODE_NAME.ghost}.</p>}
+        {shown === "pvp" ? <PvpPanel onBusyChange={setPvpBusy} /> : (
           <>
 
       {profile && (
         <OrnateFrame className="flex flex-col gap-3">
           <SectionTitle
-            description="Đinh Bộ Lĩnh và hai tướng bạn chọn ra trận đánh bóng ma. Đội phòng thủ là bản chụp riêng, đổi ở khung Đội phòng thủ."
+            description="Đinh Bộ Lĩnh và hai tướng bạn chọn ra trận Phá Doanh. Đội phòng thủ là bản chụp riêng, đổi ở khung Đội phòng thủ."
             action={<span className="text-sm text-on-wood-soft">Lực chiến <strong className="text-title-on-wood">{attackPower || "–"}</strong></span>}
           >
             Đội ra trận

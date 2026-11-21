@@ -30,6 +30,7 @@ import {
   type Pos,
   type SkillDef,
   type Whirl,
+  ARENA_MODE_NAME,
 } from "@/core";
 import type { PvpMatchView, PvpOverview } from "@/server/pvp";
 import type { PvpRoomView } from "@/server/pvpRooms";
@@ -196,11 +197,11 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
   return (
     <div className="flex flex-col gap-4">
     <OrnateFrame className="flex flex-col gap-4">
-      <SectionTitle description="Đấu 1vs1 với người khác, mỗi bên chỉ có Đinh Bộ Lĩnh. Điểm hạng riêng cho Đấu người, thắng tăng, thua giảm. Số trận không giới hạn, vàng thưởng có trần mỗi ngày.">
-        Đấu người
+      <SectionTitle description="Đấu 1vs1 với người khác, mỗi bên chỉ có Đinh Bộ Lĩnh. Điểm hạng riêng cho Thư Hùng, thắng tăng, thua giảm. Số trận không giới hạn, vàng thưởng có trần mỗi ngày.">
+        {ARENA_MODE_NAME.pvp}
       </SectionTitle>
       {message && <Alert role="alert">{message}</Alert>}
-      <div className="grid grid-cols-2 gap-2 text-center sm:grid-cols-4" aria-label="Thành tích Đấu người">
+      <div className="grid grid-cols-2 gap-2 text-center sm:grid-cols-4" aria-label={`Thành tích ${ARENA_MODE_NAME.pvp}`}>
         <FrameInset>
           <p className="text-caption text-on-wood-soft">Điểm</p>
           <p className="text-xl font-bold text-title-on-wood">{o?.ratings.duel.rating ?? "–"}</p>
@@ -330,7 +331,7 @@ export function PvpTierPanel() {
   return (
     <OrnateFrame className="flex flex-col gap-3">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h3 className="font-bold text-frame-gold">Bậc hạng Đấu người</h3>
+        <h3 className="font-bold text-frame-gold">Bậc hạng {ARENA_MODE_NAME.pvp}</h3>
         <p className="text-caption text-on-wood-soft">
           Điểm xét bậc <strong className="text-title-on-wood">{score}</strong>, 1vs1 {duel.rating}, 3vs3 {team.rating}
         </p>
@@ -338,7 +339,7 @@ export function PvpTierPanel() {
       <TierLadder
         tiers={TIERS}
         score={score}
-        label="Bậc hạng Đấu người"
+        label={`Bậc hạng ${ARENA_MODE_NAME.pvp}`}
         rewards={tierRewards((id) => claims.includes(id))}
         onClaim={(i) => void claim(ARENA_TIERS[i]!.id)}
         busy={busy}
