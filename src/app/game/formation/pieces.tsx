@@ -81,17 +81,9 @@ export function Obstacle({ kind }: { kind: ObstacleKind }) {
   );
 }
 
-/** Quân đặc biệt. Quân Lệnh: con cờ sơn son chữ 令 và hai cờ lệnh bắt chéo, Shan vẽ 21/11/2026 (prompt ở
- * /mnt/project-files/art/prompts/lenh-bai.md mục 3). Thu Hồi: nét vẽ tạm, chờ ảnh. */
+/** Quân đặc biệt, ảnh Shan vẽ 21/11/2026 (prompt ở /mnt/project-files/art/prompts/lenh-bai.md mục 3). Quân Lệnh: con cờ
+ * sơn son chữ 令 và hai cờ lệnh bắt chéo. Thu Hồi: con cờ gỗ mun, bàn tay đồng nhấc quân chữ 收. */
 export function Glyph({ kind }: { kind: "wild" | "eraser" }) {
-  if (kind === "wild")
-    // eslint-disable-next-line @next/next/no-img-element -- ảnh quân tĩnh co theo ô
-    return <img src="/art/formation/quan-lenh.webp" alt="" aria-hidden draggable={false} className="block size-full object-contain p-[4%]" />;
-  return (
-    <svg viewBox="0 0 48 48" className="size-full p-1" aria-hidden focusable="false" fill="none" stroke="#8F241D" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M14 30 L28 12 L38 20 L26 36 H16 Z" fill="#E4CC99" stroke="#2B1F15" />
-      <path d="M20 30 L32 16" />
-      <path d="M10 40 H38" stroke="#2B1F15" />
-    </svg>
-  );
+  // eslint-disable-next-line @next/next/no-img-element -- ảnh quân tĩnh co theo ô
+  return <img src={`/art/formation/${kind === "wild" ? "quan-lenh" : "thu-hoi"}.webp`} alt="" aria-hidden draggable={false} className="block size-full object-contain p-[4%]" />;
 }
