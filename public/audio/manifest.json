@@ -621,7 +621,18 @@
     },
     "formation_play": {
       "file": "music/formation_play",
+      "layer": "music/formation_play_layer2",
       "volume": 0.5
+    },
+    "formation_result_win": {
+      "file": "music/formation_result_win",
+      "volume": 0.6,
+      "loop": false
+    },
+    "formation_result_lose": {
+      "file": "music/formation_result_lose",
+      "volume": 0.6,
+      "loop": false
     },
     "atlas": {
       "file": "music/atlas",
@@ -662,6 +673,10 @@
     "dotham": {
       "file": "music/dotham",
       "volume": 0.4
+    },
+    "tower_trial": {
+      "file": "music/tower_trial",
+      "volume": 0.5
     }
   },
   "ambience": {}

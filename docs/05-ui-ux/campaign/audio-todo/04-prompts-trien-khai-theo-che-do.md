@@ -271,7 +271,7 @@ Có thể giao bước 2–5 cho Claude: gửi tệp gốc kèm prompt:
 
 ### D3. Nhạc đã nối mà chưa có tệp (song song D2)
 
-- **Shan tạo tệp:** B3 (`formation_play_layer2`, `formation_result_win`, `formation_result_lose`), B5 (`tower_trial`, `tower_destiny`), B9 (`ending`, `amb/atlas`).
+- **Shan tạo tệp:** B5 (`tower_destiny`), B9 (`ending`, `amb/atlas`).
 - **Giao Claude:** prompt D0. Thêm: `formation_play_layer2` khai báo là trường `layer` của mục `formation_play` trong manifest (không phải mục riêng); `formation_result_*` và `ending` đặt `"loop": false` nếu bản nhạc có kết thúc; âm nền `atlas` thêm vào mục `ambience` của manifest.
 - **Xong khi:** Trận Đồ đổi nhạc giữa chọn bậc, đang chơi, kết quả; lớp căng thẳng to dần theo mức Bỏ Lệnh; Tháp có nhạc; bản đồ Bình Loạn có gió và chim.
 

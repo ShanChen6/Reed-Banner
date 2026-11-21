@@ -38,10 +38,10 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 
 | Màn | Có tiếng | Thiếu tệp |
 |---|---|---|
-| Trận Đồ | `formation_menu`, `formation_play` và 17/17 cue `formation.*` | Nhạc `formation_play_layer2`, `formation_result_win`, `formation_result_lose` |
+| Trận Đồ | `formation_menu`, `formation_play` (kèm lớp căng thẳng `formation_play_layer2`), `formation_result_win`, `formation_result_lose` và 17/17 cue `formation.*` | — |
 | Trận đánh (Giao Tranh, Thao Luyện, Bình Loạn, Viễn Chinh…) | `battle_normal`, `battle_boss`; `swap`, `invalid`, `match3`, `match4`, `match5`, `combo1..4`, `ultimate`, `heal`, `shield`, `buff`, `debuff`, `burn`, `freeze`, `poison`, `hit.*`, `skill.*`, `damage`, `ko`, `win`, `lose` | Mọi cue đã có tệp (21/11/2026). `hit.<nghề>` dùng chung một bộ, `skill.<hệ>` dùng chung một bộ |
 | Bình Loạn (ngoài trận) | `atlas`, `dialogue` | Nhạc `ending`; âm nền `amb/atlas`; cue `atlas.select`, `dialogue.next` |
-| Tháp Thí Luyện | — | Nhạc `tower_trial` (màn Tháp im lặng; trận trong Tháp dùng `battle_normal`) |
+| Tháp Thí Luyện | Nhạc `tower_trial` ở màn Tháp (21/11/2026); trận trong Tháp dùng `battle_normal` | — |
 | Tháp Thiên Mệnh | — | Nhạc `tower_destiny` (cả màn Tháp lẫn trận trong Tháp đều im nhạc) |
 | Trấn Ải (Sinh tồn) | `survival` | Cue `survival.wave`, `survival.warn` |
 | Sử Lộ | Đã nối 19/11/2026: 16 cue `sulo.*`, tiếng ghép ô trận trùm, nhạc `sulo_maze`/`sulo_boss` ([bảng 5.6](02-architecture-and-assets.md#56-sử-lộ-sulo-đã-nối-19112026)) | Đủ tệp riêng cho 16 cue và hai bản nhạc (20/11/2026) |
