@@ -2,6 +2,12 @@
 
 > Trạng thái: **REFERENCE** — nhật ký quyết định theo ngày.
 
+## 21/11/2026
+
+**Sử Lộ: mở sa bàn Nhà Đinh và Nhà Tiền Lê (Shan yêu cầu)**
+- Sổ nguồn thêm S12–S17 (bản sao Toàn thư kỷ nhà Đinh, kỷ nhà Lê) và claim SL03–SL31 ([sổ nguồn Sử Lộ](../02-game-modes/su-lo/nguon-su.md)). Kho câu thêm 23 câu nhà Đinh (tới năm 980) và 26 câu nhà Tiền Lê (980–1009), Claude duyệt lần 1, chờ Shan duyệt lần 2.
+- Quân giặc trấn cổng: chiến thuyền Chiêm Thành của Ngô Nhật Khánh (Toàn thư chép năm 980) và quân Tống năm 981; hai sa bàn hết khóa "Chờ nguồn sử".
+
 ## 20/11/2026
 
 **Hợp Kích: chuỗi phản ứng gọn khi nhiều combo (Shan yêu cầu)**
