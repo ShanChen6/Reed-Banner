@@ -108,7 +108,8 @@ Shan duyệt toàn bộ ngày 03/11/2026; riêng P-5 Shan đổi thành số c�
 |---|---|
 | P-8 | **Gợi ý: 2 lượt miễn phí mỗi ngày** (đổi lúc 0 giờ giờ Việt Nam, không cộng dồn, không mua thêm). Gợi ý **nhắm tướng** (Shan duyệt L5-5, 04/11/2026): chọn công thức ghép được ngay trên đường tới tướng chưa tìm gần xong nhất. Mức 1: nhóm của kết quả công thức đó. Mức 2: một nguyên liệu của nó, không nói ở ô trước hay ô sau. Không có mức 3 |
 | P-9 | Lượt có **15 lần ghép** (Shan chốt L5-1, 04/11/2026). Chỉ `created` và `noRecipe` trừ lần ghép; `alreadyKnown` và `invalid` không trừ. Lượt dở giữ khi rời màn, hết hạn sau 24 giờ. Vạn Vật Lục có **dấu “còn công thức chưa tìm”** trên yếu tố còn là nguyên liệu của công thức chưa tìm (L5-4), chỉ ở chế độ Thường |
-| P-10 | Nguồn phiếu: tài khoản mới 3 phiếu; xong đủ nhiệm vụ ngày +1; xong nhiệm vụ tuần “Thắng trận 15” +2; điểm danh ngày 7 +1. Giữ tối đa 10. Không bán phiếu |
+| P-10 | Nguồn phiếu: tài khoản mới 3 phiếu; xong đủ nhiệm vụ ngày +1; xong nhiệm vụ tuần “Thắng trận 15” +2; điểm danh ngày 7 +1; thưởng hạng theo P-10b. Giữ tối đa **20** (nâng từ 10, Shan 21/11/2026). Không bán phiếu |
+| P-10b | Phiếu trong thưởng hạng (Shan 21/11/2026, để người mới có thêm lượt dò công thức): chế độ theo tuần (Trận Đồ Đại trận, Tháp Thiên Mệnh, Trấn Ải, Quần Hùng cả đấu bóng và đấu người, Tầm Tướng Ký) hạng 1 → 3 phiếu; 2–3 → 2; 4–10 → 2; nửa trên → 1; có tên → 1. Chế độ theo ngày (Nhật Lệnh, Trận Đồ Thường/Khó) chỉ Top 10 → 1 phiếu. Chỉ cộng cho người đã vào Tầm Tướng Ký và khi chế độ đã bật (`TTK_RANK_TICKETS_*`) |
 
 **Chế độ Hạng tuần**
 

@@ -1,7 +1,7 @@
 "use client";
 
 // Thưởng vàng theo hạng cuối kỳ của một chế độ (Nhật Lệnh, Tháp Thiên Mệnh, Tầm Tướng Ký…); chế độ theo tuần kèm bó
-// nguyên tố Tầm Tướng Ký. Lấy từ GET /api/rank-rewards, nhận bằng
+// nguyên tố Tầm Tướng Ký, và các bậc có phiếu kèm phiếu Tầm Tướng Ký. Lấy từ GET /api/rank-rewards, nhận bằng
 // POST /api/rank-rewards/claim. Khách chỉ thấy lời nhắc đăng nhập; chỉ tài khoản đã đăng nhập nhận được.
 
 import { useCallback, useEffect, useState } from "react";
@@ -17,9 +17,15 @@ interface Item {
   readonly gold: number;
   /** Bó nguyên tố Tầm Tướng Ký kèm thưởng (chế độ theo tuần). */
   readonly bundles?: number;
+  /** Phiếu Tầm Tướng Ký kèm thưởng. */
+  readonly tickets?: number;
 }
 
 const TIER_LABEL = Object.fromEntries(REWARD_TIERS.map((t) => [t.tier, t.label])) as Record<string, string>;
+/** Phần thưởng kèm vàng, nối sau “N vàng”: phiếu và bó Tầm Tướng Ký. */
+const extras = (i: { readonly tickets?: number; readonly bundles?: number }) =>
+  [i.tickets ? `${i.tickets} phiếu Tầm Tướng Ký` : "", i.bundles ? `${i.bundles} bó nguyên tố Tầm Tướng Ký` : ""].filter(Boolean).map((t) => `, ${t}`).join("");
+
 const PERIOD_NOUN: Record<RankRewardMode, string> = { daily: "ngày", destiny: "chu kỳ", survival: "mùa", arena: "mùa", tamTuongKy: "tuần", pvp: "mùa" };
 
 export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankRewardMode; onClaimed?: () => void }) {
@@ -48,8 +54,8 @@ export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankReward
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ mode: item.mode, period: item.period }),
       });
-      const body = (await res.json()) as { gold?: number; rank?: number; participants?: number };
-      setNote(res.ok ? `Đã nhận ${body.gold} vàng (hạng ${body.rank}/${body.participants}).` : "Chưa nhận được thưởng. Xin thử lại sau.");
+      const body = (await res.json()) as { gold?: number; rank?: number; participants?: number; tickets?: number; bundles?: number };
+      setNote(res.ok ? `Đã nhận ${body.gold} vàng${extras(body)} (hạng ${body.rank}/${body.participants}).` : "Chưa nhận được thưởng. Xin thử lại sau.");
       if (res.ok) onClaimed?.();
     } catch {
       setNote("Chưa nhận được thưởng. Xin thử lại sau.");
@@ -75,7 +81,7 @@ export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankReward
         {state.items.map((i) => (
           <li key={`${i.mode}-${i.period}`} className="flex flex-wrap items-center justify-between gap-2 text-sm">
             <span>
-              Kỳ {PERIOD_NOUN[i.mode]} {i.period}: hạng {i.rank}/{i.participants} ({TIER_LABEL[i.tier]}), <b>{i.gold} vàng</b>{i.bundles ? <>, {i.bundles} bó nguyên tố Tầm Tướng Ký</> : null}
+              Kỳ {PERIOD_NOUN[i.mode]} {i.period}: hạng {i.rank}/{i.participants} ({TIER_LABEL[i.tier]}), <b>{i.gold} vàng</b>{extras(i)}
             </span>
             <button type="button" disabled={busy} onClick={() => void claim(i)} className="min-h-10 pointer-coarse:min-h-11 rounded bg-primary px-4 font-semibold text-primary-foreground disabled:opacity-60">
               Nhận

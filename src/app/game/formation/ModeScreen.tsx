@@ -285,7 +285,7 @@ export default function ModeScreen({
                 {pending.map((c) => (
                   <li key={`${c.level}-${c.period}`} className="flex flex-wrap items-center justify-between gap-2 text-[15px]">
                     <span>
-                      {RULESETS.find((r) => r.id === c.level)?.name}, kỳ {c.period}: hạng {c.rank}/{c.winners} ({TIER_LABEL[c.tier]}), <b>{c.gold} vàng</b>
+                      {RULESETS.find((r) => r.id === c.level)?.name}, kỳ {c.period}: hạng {c.rank}/{c.winners} ({TIER_LABEL[c.tier]}), <b>{c.gold} vàng</b>{c.tickets ? <>, {c.tickets} phiếu Tầm Tướng Ký</> : null}
                     </span>
                     <button type="button" onClick={() => onClaim(c.level, c.period)} className={buttonVariants({ className: "min-h-11 px-5" })}>Nhận</button>
                   </li>

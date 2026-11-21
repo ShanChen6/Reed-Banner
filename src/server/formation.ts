@@ -26,7 +26,7 @@ import {
 } from "@/core/binh-phap";
 import { claimFormationTier, createRng, type GearItem } from "@/core";
 import { updateProfile, type ProfileStore } from "./profiles";
-import { TTK_RANK_BUNDLES } from "@/core/tam-tuong-ky";
+import { TTK_RANK_BUNDLES, ttkRankTickets } from "@/core/tam-tuong-ky";
 import { withTtkBundles } from "./rankRewards";
 
 export type FormationStatus = "playing" | "won" | "lost";
@@ -339,6 +339,8 @@ export interface Claimable {
   readonly winners: number;
   readonly tier: RewardTier;
   readonly gold: number;
+  /** Phiếu Tầm Tướng Ký kèm thưởng (P-10b); không có khi 0. */
+  readonly tickets?: number;
 }
 
 export interface LevelOverview {
@@ -377,7 +379,7 @@ export async function formationOverview(deps: FormationDeps, ownerId: string | n
       for (const e of pending) {
         const [rank, n] = await Promise.all([deps.store.rankOf(e), deps.store.countWinners(e.level, e.period)]);
         const r = rank === null ? null : rewardGold(e.level, rank, n);
-        if (r && rank !== null) claimable.push({ level: e.level, period: e.period, rank, winners: n, tier: r.tier, gold: r.gold });
+        if (r && rank !== null) claimable.push({ level: e.level, period: e.period, rank, winners: n, tier: r.tier, gold: r.gold, ...withTickets(ticketsOf(deps, e.level, r.tier)) });
       }
       return {
         level: l.id,
@@ -403,7 +405,7 @@ export async function formationOverview(deps: FormationDeps, ownerId: string | n
 }
 
 export type ClaimResult =
-  | { readonly ok: true; readonly gold: number; readonly tier: RewardTier; readonly rank: number; readonly winners: number }
+  | { readonly ok: true; readonly gold: number; readonly tier: RewardTier; readonly rank: number; readonly winners: number; readonly tickets?: number }
   | { readonly ok: false; readonly error: FormationError };
 
 /** Nhận thưởng của một kỳ đã khép lại. Đúng một lần mỗi ván: cờ nhận đặt trước khi cộng vàng, hỏng thì hoàn lại. */
@@ -422,14 +424,22 @@ export async function claimFormation(deps: FormationDeps, ownerId: string, level
   if (!(await deps.store.claim(entry.id, reward.gold, deps.now))) return { ok: false, error: "alreadyClaimed" };
   // Đại trận là chế độ theo tuần: kèm bó Tầm Tướng Ký (Design Freeze P-11).
   const bundles = deps.ttkBundles && levelId === "dai-tran" ? TTK_RANK_BUNDLES[reward.tier] : 0;
-  const updated = await updateProfile(deps.profiles, ownerId, (p) => ({ ok: true as const, profile: withTtkBundles({ ...p, gold: p.gold + reward.gold }, bundles) }), deps.now);
+  const tickets = ticketsOf(deps, levelId, reward.tier);
+  const updated = await updateProfile(deps.profiles, ownerId, (p) => ({ ok: true as const, profile: withTtkBundles({ ...p, gold: p.gold + reward.gold }, bundles, tickets) }), deps.now);
   if (!updated.ok) {
     await deps.store.release(entry.id);
     console.error("Không cộng được thưởng Trận Đồ", entry.id);
     return { ok: false, error: "conflict" };
   }
-  return { ok: true, gold: reward.gold, tier: reward.tier, rank, winners };
+  return { ok: true, gold: reward.gold, tier: reward.tier, rank, winners, ...withTickets(tickets) };
 }
+
+/** Phiếu Tầm Tướng Ký kèm thưởng Trận Đồ (P-10b): Đại trận theo tuần, hai bậc còn lại theo ngày. */
+function ticketsOf(deps: FormationDeps, levelId: string, tier: RewardTier): number {
+  return deps.ttkBundles ? ttkRankTickets(rankedLevel(levelId)?.cadence === "week", tier) : 0;
+}
+
+const withTickets = (tickets: number) => (tickets > 0 ? { tickets } : {});
 
 /** Mã HTTP của từng lỗi, dùng chung cho các route. */
 export function formationHttpStatus(error: FormationError): number {

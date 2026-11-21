@@ -40,6 +40,7 @@ import {
   pickerGrid,
   type PickerGrid,
   recipeBook,
+  type RecipeBook,
   swapSlots,
   tutorialTip,
   type AltarResult,
@@ -1225,13 +1226,20 @@ function MiniGlyph({ id }: { id: NodeId }) {
 /** Sổ công thức của yếu tố vừa bấm: tạo từ đâu, dùng để ghép gì (chỉ công thức đã biết), còn công thức chưa tìm không. */
 function InfoCard({ id, state }: { id: NodeId; state: DiscoveryState }) {
   const catalog = useCatalog();
+  const [full, setFull] = useState(false);
   const node = catalog.nodes.get(id);
   if (!node) return null;
   const book = recipeBook(catalog, state, id);
   const name = (x: NodeId) => nameOf(catalog, x);
   const USED_MAX = 4;
+  const more = (count: number) => (
+    <button type="button" onClick={() => setFull(true)} aria-haspopup="dialog" aria-label={`Xem đủ công thức đã biết của ${node.nameVi}`} title="Xem đủ công thức đã biết" className="shrink-0 rounded border border-[var(--frame-gold)] px-1.5 font-bold text-[var(--frame-gold-hi)] hover:bg-[var(--wood-hi)]">
+      +{count}
+    </button>
+  );
   return (
     <div className={`${CARD_BOX} border-[var(--frame-line-mid)] motion-safe:animate-[ttk-reveal_0.25s_ease-out]`}>
+      <RecipeBookDialog id={id} book={book} open={full} onClose={() => setFull(false)} />
       <NodeGlyph node={node} className="size-12" />
       <div className="flex min-w-0 flex-1 flex-col gap-1 text-caption">
         <p className="flex items-baseline gap-2">
@@ -1249,7 +1257,7 @@ function InfoCard({ id, state }: { id: NodeId; state: DiscoveryState }) {
               </span>
             ))
           )}
-          {!node.element && book.madeFrom.length > 2 && <span aria-hidden className="text-[var(--ash)]">+{book.madeFrom.length - 2}</span>}
+          {!node.element && book.madeFrom.length > 2 && more(book.madeFrom.length - 2)}
         </p>
         <p className="flex items-center gap-1.5" aria-label={`Dùng để ghép: ${book.usedIn.map((r) => `${name(r.first)} + ${name(r.second)} ra ${name(r.result)}`).join("; ") || "chưa có công thức đã biết"}`}>
           <span className="shrink-0 text-[var(--ash)]">Dùng ghép</span>
@@ -1259,10 +1267,85 @@ function InfoCard({ id, state }: { id: NodeId; state: DiscoveryState }) {
               <MiniGlyph id={r.first === id ? r.second : r.first} />→<MiniGlyph id={r.result} />
             </span>
           ))}
-          {book.usedIn.length > USED_MAX && <span aria-hidden className="text-[var(--ash)]">+{book.usedIn.length - USED_MAX}</span>}
+          {book.usedIn.length > USED_MAX && more(book.usedIn.length - USED_MAX)}
         </p>
       </div>
     </div>
+  );
+}
+
+/** Một ô yếu tố trong dòng công thức đầy đủ: icon kèm tên. */
+function NamedGlyph({ id }: { id: NodeId }) {
+  const node = useCatalog().nodes.get(id);
+  if (!node) return null;
+  return (
+    <span className="inline-flex min-w-0 items-center gap-1">
+      <NodeGlyph node={node} className="size-6 shrink-0" />
+      <span className="truncate">{node.nameVi}</span>
+    </span>
+  );
+}
+
+/**
+ * Sổ công thức đầy đủ của một yếu tố (Shan 21/11/2026): mọi công thức đã ghép thành công, không cắt “+n” như thẻ dưới
+ * hai ô. Công thức chưa tìm vẫn giấu. Hộp thoại gốc của trình duyệt: Esc hoặc bấm nền để đóng.
+ */
+function RecipeBookDialog({ id, book, open, onClose }: { id: NodeId; book: RecipeBook; open: boolean; onClose: () => void }) {
+  const ref = useRef<HTMLDialogElement>(null);
+  const node = useCatalog().nodes.get(id);
+  useEffect(() => {
+    const d = ref.current;
+    if (!d) return;
+    if (open && !d.open) d.showModal();
+    if (!open && d.open) d.close();
+  }, [open]);
+  const row = "flex flex-wrap items-center gap-x-2 gap-y-1 rounded-md border border-[var(--frame-line-mid)] px-2 py-1.5 text-sm";
+  return (
+    <dialog
+      ref={ref}
+      onClose={onClose}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+      aria-label={`Công thức đã biết của ${node?.nameVi ?? ""}`}
+      className="campaign-atlas m-auto max-h-[calc(100dvh-2rem)] w-[min(32rem,calc(100vw-2rem))] rounded-xl border border-[var(--frame-gold)] bg-[var(--wood)] p-0 text-[var(--on-wood)] backdrop:bg-black/60"
+    >
+      {open && node && (
+        <div className="flex flex-col gap-3 p-4">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="ui-title-on-wood flex min-w-0 items-center gap-2 font-serif text-lg font-bold">
+              <NodeGlyph node={node} className="size-8 shrink-0" />
+              <span className="truncate">{node.nameVi}</span>
+            </h2>
+            <button type="button" onClick={onClose} aria-label="Đóng" className="grid size-11 shrink-0 place-items-center rounded-full border border-[var(--frame-line-mid)] text-lg hover:border-[var(--frame-gold)]">
+              ✕
+            </button>
+          </div>
+          {!node.element && (
+            <section aria-label="Tạo từ" className="flex flex-col gap-1.5">
+              <h3 className="text-caption text-[var(--ash)]">Tạo từ ({book.madeFrom.length})</h3>
+              <ul className="flex flex-col gap-1.5">
+                {book.madeFrom.map(([a, b], i) => (
+                  <li key={i} className={row}>
+                    <NamedGlyph id={a} /> <span aria-hidden>+</span> <NamedGlyph id={b} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+          <section aria-label="Dùng ghép" className="flex flex-col gap-1.5">
+            <h3 className="text-caption text-[var(--ash)]">Dùng ghép ({book.usedIn.length})</h3>
+            <ul className="flex flex-col gap-1.5">
+              {book.usedIn.map((r, i) => (
+                <li key={i} className={row}>
+                  <NamedGlyph id={id} /> <span aria-hidden>+</span> <NamedGlyph id={r.first === id ? r.second : r.first} />
+                  <span aria-hidden>→</span> <span className="sr-only">ra</span> <strong><NamedGlyph id={r.result} /></strong>
+                </li>
+              ))}
+            </ul>
+          </section>
+          {book.open && <p className="text-caption text-[var(--frame-gold-hi)]">Còn công thức chưa tìm có dùng {node.nameVi}.</p>}
+        </div>
+      )}
+    </dialog>
   );
 }
 
