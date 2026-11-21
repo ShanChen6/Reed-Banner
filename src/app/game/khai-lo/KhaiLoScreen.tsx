@@ -6,7 +6,7 @@
 //
 // Điều khiển: rê chuột để xem trước khối (máy tính), chạm lần đầu để xem trước rồi chạm lại để xóa (điện thoại),
 // bàn phím: mũi tên di chuyển, Enter/Space chọn, Z hoàn tác, 1 Lốc, 2 Sấm, Esc bỏ chọn đạo cụ.
-// Cấp tốc: mỗi bậc một mốc điểm, đạt mốc thì lên bậc và cộng thêm giờ vào giờ còn lại; đồng hồ chỉ chạy khi tab đang mở,
+// Cấp tốc: hết bàn là sang màn ngay, dọn sạch cộng giây, mỗi quân sót trừ giây; đồng hồ chỉ chạy khi tab đang mở,
 // giờ còn lại lưu cùng ván dở. Đạo cụ nạp theo điểm gom khối (thanh nạp dưới mỗi nút).
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -15,7 +15,7 @@ import {
   KL_MIN_GROUP,
   createGame,
   groupAt,
-  KL_TIMED_LEVEL_SECONDS,
+  KL_TIMED_LEFT_SECONDS,
   KL_TIMED_START_SECONDS,
   parseGame,
   serializeGame,
@@ -30,8 +30,7 @@ import {
   type KlReason,
   type KlState,
   type KlTool,
-  timedGoal,
-  toolCharge,
+  KL_TOOL_CHARGE,
 } from "@/core/khai-lo";
 import { ELEMENT_COLOR } from "../art/icons";
 import { ELEMENT_NAME } from "../battle/labels";
@@ -46,15 +45,15 @@ import { KL_TOOL_HINT as TOOL_HINT, KL_TOOL_NAME as TOOL_NAME } from "./tools";
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
   classic: { save: "reed-banner:khai-lo:save:v1", best: "reed-banner:khai-lo:best:v1" },
-  // v2 (20/11/2026): Cấp tốc đổi sang mốc điểm theo bậc, ván dở và điểm cao nhất của luật cũ không dùng lại.
-  timed: { save: "reed-banner:khai-lo:timed:save:v2", best: "reed-banner:khai-lo:timed:best:v2", clock: "reed-banner:khai-lo:timed:clock:v2" },
+  // v3 (21/11/2026): Cấp tốc đổi sang hết bàn là qua màn, giờ thay tim; ván dở và điểm cao nhất của luật cũ không dùng lại.
+  timed: { save: "reed-banner:khai-lo:timed:save:v3", best: "reed-banner:khai-lo:timed:best:v3", clock: "reed-banner:khai-lo:timed:clock:v3" },
 };
 const MODE_KEY = "reed-banner:khai-lo:mode:v1";
 
 const MODE_NAME: Record<KlMode, string> = { classic: "Thường", timed: "Cấp tốc" };
 const MODE_HINT: Record<KlMode, string> = {
   classic: "Không giới hạn thời gian, tính kỹ từng nước.",
-  timed: "Đạt mốc điểm trước khi hết giờ để lên bậc; giờ dư cộng dồn.",
+  timed: "Hết bàn là qua màn: dọn sạch cộng giờ, quân sót trừ giờ.",
 };
 
 const freshSeed = () => (Math.random() * 0x100000000) >>> 0;
@@ -238,17 +237,16 @@ export default function KhaiLoScreen() {
         if (e.type === "levelDone")
           parts.push(e.summary.cleared ? `Dọn sạch bàn! +${-e.summary.hearts} tim.` : `Còn ${e.summary.left} quân, mất ${e.summary.hearts} tim.`);
         if (e.type === "toolCharged") parts.push(`Nạp đầy: +1 ${TOOL_NAME[e.tool]}.`);
-        if (e.type === "redeal")
-          parts.push(e.cleared ? `Dọn sạch bàn, +${e.bonus} điểm. Bàn mới.` : `Bàn mới${e.bonus ? ` (gần sạch +${e.bonus} điểm)` : ""}.`);
-        if (e.type === "goalReached") parts.push(`Đạt mốc! Lên bậc ${e.level}, +${KL_TIMED_LEVEL_SECONDS} giây.`);
+        if (e.type === "levelPassed")
+          parts.push(e.cleared ? `Dọn sạch bàn, +${e.bonus} điểm, +${e.seconds} giây. Màn ${e.level}.` : `Còn ${e.left} quân, ${e.seconds} giây. Màn ${e.level}.`);
         if (e.type === "timeUp") parts.push("Hết giờ!");
         if (e.type === "surrender") parts.push("Đã đầu hàng.");
       }
-      if (next.phase === "stuck") parts.push(`Hết khối để xóa: dùng đạo cụ hoặc ${next.mode === "timed" ? "đổi bàn" : "kết thúc màn"}.`);
+      if (next.phase === "stuck") parts.push("Hết khối để xóa: dùng đạo cụ hoặc kết thúc màn.");
       if (next.mode === "timed") {
-        // Lên bậc: giờ còn lại cộng dồn thêm giờ của bậc mới.
-        const ups = events.filter((e) => e.type === "goalReached").length;
-        if (ups) setClock(msRef.current + ups * KL_TIMED_LEVEL_SECONDS * 1000);
+        // Hết bàn: dọn sạch cộng giây, quân sót trừ giây (về 0 thì đồng hồ báo hết giờ ở nhịp sau).
+        const delta = events.reduce((n, e) => n + (e.type === "levelPassed" ? e.seconds : 0), 0);
+        if (delta) setClock(Math.max(0, msRef.current + delta * 1000));
         writeClock(next, msRef.current);
       }
       setGhosts(gone);
@@ -405,13 +403,13 @@ export default function KhaiLoScreen() {
   };
 
   const summary = state.phase === "levelDone" ? state.summary : null;
-  const charge = toolCharge(state.mode);
+  const charge = KL_TOOL_CHARGE;
   // Đạo cụ hiện theo hệ có trên bàn (và hệ đã có sẵn đạo cụ/thanh nạp dở dù bàn này không còn).
   const onBoard = new Set(state.cells.map((c) => c?.kind));
   const shownTools = ELEMENTS.filter((e) => onBoard.has(e) || state.tools[e] > 0);
   const endLevel = () => {
-    // Thường: kết thúc màn khi còn khối thì quân sót trừ tim, nên hỏi lại một lần; bế tắc thì vẫn còn đạo cụ để thử nên cũng hỏi.
-    if (state.mode === "classic" && !confirmEnd) {
+    // Kết thúc màn thì quân sót trừ tim (Thường) hoặc trừ giây (Cấp tốc), nên luôn hỏi lại một lần.
+    if (!confirmEnd) {
       setConfirmEnd(true);
       return;
     }
@@ -424,13 +422,13 @@ export default function KhaiLoScreen() {
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <h1 className="sr-only">Khai Lộ</h1>
-          <p className="text-kicker text-frame-gold">Giải đố – {MODE_NAME[state.mode]}, {timed ? "Bậc" : "Màn"} {state.level}</p>
+          <p className="text-kicker text-frame-gold">Giải đố – {MODE_NAME[state.mode]}, Màn {state.level}</p>
           <p className="hidden text-caption text-on-wood-soft sm:block">Chạm để xóa cả khối quân cùng hệ. Dọn sạch bàn để qua màn.</p>
         </div>
         <div className="flex shrink-0 flex-wrap justify-end gap-2">
           {state.phase !== "over" && (
             <SurrenderButton
-              consequence={`Lượt ${MODE_NAME[state.mode]} kết thúc ngay ở ${timed ? "bậc" : "màn"} ${state.level} với ${state.score} điểm; điểm vẫn tính vào kỷ lục.`}
+              consequence={`Lượt ${MODE_NAME[state.mode]} kết thúc ngay ở màn ${state.level} với ${state.score} điểm; điểm vẫn tính vào kỷ lục.`}
               onConfirm={() => act({ type: "surrender" })}
             />
           )}
@@ -460,7 +458,7 @@ export default function KhaiLoScreen() {
             ))}
           </div>
           <Stats state={state} best={best} left={left} msLeft={timed ? msLeft : null} />
-          {timed && <GoalBar state={state} paused={active && hidden} />}
+          {timed && active && hidden && <p className="text-center text-caption text-on-wood-soft">Tạm dừng</p>}
           {/* Ba cột (từ 1280px): tranh kèm thơ lấp phần trống dưới số liệu. */}
           <ColumnFill mode="clearPath" className="lg:hidden xl:block" />
         </div>
@@ -551,7 +549,7 @@ export default function KhaiLoScreen() {
                     <h2 className="ui-title-on-wood text-xl font-bold sm:text-2xl">{gaveUp ? "Đã đầu hàng" : timed ? "Hết giờ" : "Thất thủ"}</h2>
                     <p className="text-[15px] text-on-wood">
                       {!timed && state.summary ? `Còn ${state.summary.left} quân mà chỉ còn ${state.hearts} tim. ` : ""}
-                      {MODE_NAME[state.mode]}: tướng quân đi tới {timed ? "bậc" : "màn"} {state.level}, đạt <b>{state.score} điểm</b>
+                      {MODE_NAME[state.mode]}: tướng quân đi tới màn {state.level}, đạt <b>{state.score} điểm</b>
                       {state.score >= best && state.score > 0 ? " (cao nhất từ trước tới nay)" : ""}.
                     </p>
                     <button type="button" autoFocus onClick={newGame} className={buttonVariants({ size: "lg" })}>Chơi lại</button>
@@ -600,11 +598,10 @@ export default function KhaiLoScreen() {
                 <button
                   type="button"
                   onClick={endLevel}
-                  disabled={timed && state.phase !== "stuck"}
                   onBlur={() => setConfirmEnd(false)}
                   className={buttonVariants({ variant: state.phase === "stuck" || confirmEnd ? "primary" : "secondary", size: "sm", className: "px-1" })}
                 >
-                  {confirmEnd ? "Bấm lần nữa" : timed ? "Đổi bàn" : "Kết thúc màn"}
+                  {confirmEnd ? "Bấm lần nữa" : "Kết thúc màn"}
                 </button>
               </div>
               {/* Cách nạp đạo cụ và phím tắt nằm ở thẻ Hướng dẫn; chỉ còn mô tả đạo cụ đang chọn. */}
@@ -612,11 +609,14 @@ export default function KhaiLoScreen() {
                 <p className="text-sm text-on-wood-soft"><b className="text-title-on-wood">{TOOL_NAME[tool]}</b>: {TOOL_HINT[tool]}</p>
               )}
               {state.phase === "stuck" && !confirmEnd && (
-                <p className="text-sm text-warning">Hết khối để xóa: dùng đạo cụ hoặc {timed ? "đổi bàn" : "kết thúc màn"}.</p>
+                <p className="text-sm text-warning">Hết khối để xóa: dùng đạo cụ hoặc kết thúc màn.</p>
               )}
               {confirmEnd && (
                 <p className="text-sm text-warning">
-                  Còn {left} quân: mỗi quân trừ 1 tim{left > state.hearts ? ", không đủ tim nên sẽ hết ván" : ""}. Bấm lần nữa nếu chắc chắn.
+                  {timed
+                    ? `Còn ${left} quân: mỗi quân trừ ${KL_TIMED_LEFT_SECONDS} giây.`
+                    : `Còn ${left} quân: mỗi quân trừ 1 tim${left > state.hearts ? ", không đủ tim nên sẽ hết ván" : ""}.`}{" "}
+                  Bấm lần nữa nếu chắc chắn.
                 </p>
               )}
             </div>
@@ -642,25 +642,6 @@ function formatClock(ms: number): string {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
 
-/** Cấp tốc: thanh tiến tới mốc điểm của bậc hiện tại. */
-function GoalBar({ state, paused }: { state: KlState; paused: boolean }) {
-  const from = state.level > 1 ? timedGoal(state.level - 1) : 0;
-  const to = timedGoal(state.level);
-  const pct = Math.max(0, Math.min(100, (100 * (state.score - from)) / (to - from)));
-  return (
-    <div className="w-full">
-      <div className="flex justify-between text-caption text-on-wood-soft">
-        <span>Mốc bậc {state.level}</span>
-        <span className="tabular-nums">còn {Math.max(0, to - state.score)} điểm</span>
-      </div>
-      <div className="kl-timebar mt-1 h-2.5 overflow-hidden rounded-full" aria-hidden>
-        <div className="h-full rounded-full" style={{ width: `${pct}%` }} />
-      </div>
-      {paused && <p className="mt-1 text-center text-caption text-on-wood-soft">Tạm dừng</p>}
-    </div>
-  );
-}
-
 /** Thanh nạp đạo cụ dưới nút: đầy thì được thêm 1. */
 function ChargeBar({ value, max }: { value: number; max: number }) {
   return (
@@ -673,7 +654,7 @@ function ChargeBar({ value, max }: { value: number; max: number }) {
 function Stats({ state, best, left, msLeft }: { state: KlState; best: number; left: number; msLeft: number | null }) {
   const items: [string, string, boolean?][] = [
     ["Điểm", String(state.score)],
-    msLeft === null ? ["Màn", String(state.level)] : ["Mốc", String(timedGoal(state.level))],
+    ["Màn", String(state.level)],
     msLeft === null ? ["Quân còn", String(left)] : ["Thời gian", formatClock(msLeft), msLeft <= 10_000],
     // Thường: tim đỡ quân sót cuối màn; Cấp tốc không dùng tim.
     msLeft === null ? ["Tim", `♥ ${state.hearts}`] : ["Cao nhất", String(Math.max(best, state.score))],
