@@ -102,6 +102,7 @@ Cờ Lau viết mới hoàn toàn bằng **TypeScript**. Không dùng Java và k
 - Trận Đồ xếp hạng (`FORMATION_RANKED_ENABLED`, mặc định tắt, chỉ `true` mới bật) cần `SESSION_SECRET` để HMAC seed theo bậc và kỳ. Server giữ trạng thái ván trong bảng `formation_entries` và không gửi seed cho client; xem [GDD Binh Pháp mục 12](../02-game-modes/tran-do/gdd.md#12-xếp-hạng-và-thưởng-đã-code-mặc-định-tắt).
 
 - Quần Hùng online (PvP, `PVP_ENABLED`, mặc định tắt, chỉ `true` mới bật, chỉ tài khoản đăng nhập): bảng `pvp_matches` (trạng thái cả trận, ghi kèm điều kiện `seq`), `pvp_queue` (hàng đợi ghép trận) và `pvp_ratings` (Elo từng người, số lần tha mất kết nối trong ngày). Không có tiến trình nền: mỗi lần client hỏi (`GET /api/pvp`, `GET /api/pvp/:id`, polling 1–2 giây) server thử ghép trận, chạy bù lượt hết giờ và AI tiếp quản tới thời điểm hiện tại. Ghép trận và tính điểm đều là một câu lệnh có điều kiện (Neon HTTP không có transaction). Luật ở [Quần Hùng PvP](../02-game-modes/future/quan-hung-pvp-truc-tiep.md).
+- Tam Quân Kỳ do server làm trọng tài (`TAM_QUAN_KY_SERVER_ENABLED`, mặc định bật, `false` để tắt; chỉ tài khoản đăng nhập): bảng `tqk_matches` lưu danh sách nước đi và đồng hồ (ghi kèm điều kiện `seq`). Đấu sứ quân có thưởng tính nước máy ngay trong request; đấu online polling 1,5 giây, hết giờ xử khi có request tới. Luật ở [GDD Tam Quân Kỳ](../02-game-modes/tam-quan-ky/gdd.md).
 
 Nghiệm thu hiện tại:
 [T06.04](../02-game-modes/dual-tower/06-04-final-acceptance.md).

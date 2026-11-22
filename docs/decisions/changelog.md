@@ -2,6 +2,11 @@
 
 > Trạng thái: **REFERENCE** — nhật ký quyết định theo ngày.
 
+## 23/11/2026
+
+**Tam Quân Kỳ: đấu sứ quân có thưởng và đấu online 1vs1 (Shan yêu cầu, chốt "server làm trọng tài")**
+- Hai cách chơi mới chạy trên server: server kiểm lượt, luật và đồng hồ cho từng nước đi (bảng `tqk_matches`, migration 0016). Đấu sứ quân có thưởng: thắng được 20, 40, 80 vàng theo độ khó, tối đa 3 ván có vàng mỗi ngày (Claude đặt mức, chờ Shan duyệt). Đấu online: mở phòng nhận mã, người kia nhập mã; bắt buộc đồng hồ; giao hữu, không vàng ([GDD Tam Quân Kỳ mục 6](../02-game-modes/tam-quan-ky/gdd.md)).
+
 ## 21/11/2026
 
 **Sử Lộ: mở sa bàn Nhà Đinh và Nhà Tiền Lê (Shan yêu cầu)**

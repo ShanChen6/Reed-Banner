@@ -89,3 +89,11 @@ export const expeditionEnabled = (deps: { readonly expeditionEnabled?: boolean }
 export function pvpEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
   return env.PVP_ENABLED === "true";
 }
+
+/**
+ * Tam Quân Kỳ trên server (đấu sứ quân có thưởng, online 1vs1). Mặc định bật vì ván chơi ở trình duyệt vẫn chạy khi tắt;
+ * đặt `TAM_QUAN_KY_SERVER_ENABLED=false` để khóa nhanh khi cần (ví dụ thấy dấu hiệu lạm dụng thưởng).
+ */
+export function tamQuanKyServerEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+  return env.TAM_QUAN_KY_SERVER_ENABLED?.trim().toLowerCase() !== "false";
+}

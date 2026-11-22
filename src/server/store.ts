@@ -17,6 +17,8 @@ import { DrizzleLeaderboardStore } from "./db/leaderboard";
 import { DrizzleArenaStore } from "./db/arena";
 import { DrizzlePvpStore } from "./db/pvp";
 import { MemoryPvpStore, type PvpStore } from "./pvp";
+import { DrizzleTqkStore } from "./db/tamQuanKy";
+import { MemoryTqkStore, type TqkStore } from "./tamQuanKy";
 import { MemoryArenaStore, type ArenaStore } from "./arena";
 import { MemoryLeaderboardStore, type LeaderboardStore } from "./leaderboard";
 import { DrizzleProfileStore } from "./db/profiles";
@@ -80,7 +82,7 @@ export class MemoryMatchStore implements MatchStore {
   }
 }
 
-const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauPvpStore?: PvpStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore; coLauFormationStore?: FormationStore; coLauRankRewardStore?: RankRewardStore; coLauSeasonStore?: SeasonStore };
+const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauPvpStore?: PvpStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore; coLauFormationStore?: FormationStore; coLauRankRewardStore?: RankRewardStore; coLauSeasonStore?: SeasonStore; coLauTqkStore?: TqkStore };
 
 /**
  * Kho dùng chung của server: Postgres (Neon) khi có DATABASE_URL, ngược lại lưu trong bộ nhớ (dev).
@@ -189,4 +191,11 @@ export function pvpStore(): PvpStore {
   const url = process.env.DATABASE_URL;
   globalStore.coLauPvpStore ??= url ? new DrizzlePvpStore(neonDb(url)) : new MemoryPvpStore();
   return globalStore.coLauPvpStore;
+}
+
+/** Kho ván Tam Quân Kỳ (đấu sứ quân có thưởng, online 1vs1), cùng nguồn với kho trận. */
+export function tqkStore(): TqkStore {
+  const url = process.env.DATABASE_URL;
+  globalStore.coLauTqkStore ??= url ? new DrizzleTqkStore(neonDb(url)) : new MemoryTqkStore();
+  return globalStore.coLauTqkStore;
 }
