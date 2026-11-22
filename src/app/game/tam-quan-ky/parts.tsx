@@ -326,17 +326,16 @@ export function Board({ map, position, flipped, selected, targets, lastMove, onS
 
 export const pieceArt = (type: PieceType) => `/art/tam-quan-ky/quan/${type}.webp`;
 
-/** Quân: tranh tròn (một hình cho cả hai phe) trong viền màu phe. Chồng quân hiện các quân được chở ở thẻ nhỏ phía dưới. */
+/** Quân: một bộ tranh chung cho hai phe (Shan 23/11/2026), nguyên viền đồng của tranh; viền được ngả màu phe (đỏ quân Bộ Lĩnh, chàm quân sứ quân). Chồng quân hiện các quân được chở ở thẻ nhỏ phía dưới. */
 export function Token({ stack, cx, cy, selected }: { stack: Stack; cx: number; cy: number; selected: boolean }) {
   const piece = stack.carrier;
   const side = piece.color === RED ? "var(--tqk-red)" : "var(--tqk-blue)";
-  const r = 0.36;
+  const r = 0.46;
   return (
     <g>
-      <circle cx={cx + 0.03} cy={cy + 0.05} r={0.44} fill="var(--black)" opacity={0.25} />
-      <circle cx={cx} cy={cy} r={0.44} fill={side} />
+      <circle cx={cx + 0.03} cy={cy + 0.05} r={r} fill="var(--black)" opacity={0.25} />
       <image href={pieceArt(piece.type)} x={cx - r} y={cy - r} width={r * 2} height={r * 2} />
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--tqk-token)" strokeWidth={0.02} opacity={0.6} />
+      <circle cx={cx} cy={cy} r={r * 0.91} fill="none" stroke={side} strokeWidth={r * 0.16} style={{ mixBlendMode: "color" }} />
       {selected && <circle cx={cx} cy={cy} r={0.5} fill="none" stroke="var(--frame-gold)" strokeWidth={0.06} />}
       {piece.hero && <circle cx={cx + 0.31} cy={cy - 0.31} r={0.11} fill="var(--frame-gold)" stroke="var(--tqk-line)" strokeWidth={0.03} />}
       {stack.riders.map((rider, i) => {
@@ -344,8 +343,8 @@ export function Token({ stack, cx, cy, selected }: { stack: Stack; cx: number; c
         const ry = cy + 0.34;
         return (
           <g key={i}>
-            <circle cx={rx} cy={ry} r={0.19} fill={side} />
-            <image href={pieceArt(rider.type)} x={rx - 0.15} y={ry - 0.15} width={0.3} height={0.3} />
+            <image href={pieceArt(rider.type)} x={rx - 0.19} y={ry - 0.19} width={0.38} height={0.38} />
+            <circle cx={rx} cy={ry} r={0.19 * 0.91} fill="none" stroke={side} strokeWidth={0.19 * 0.16} style={{ mixBlendMode: "color" }} />
             {rider.hero && <circle cx={rx + 0.13} cy={ry - 0.13} r={0.06} fill="var(--frame-gold)" />}
           </g>
         );
