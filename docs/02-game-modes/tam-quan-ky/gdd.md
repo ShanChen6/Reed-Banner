@@ -57,10 +57,11 @@ Quân: `public/art/tam-quan-ky/quan/<mã>.webp` (256 × 256, cắt tròn từ b�
 - Cách chơi: đấu sứ quân (máy, ba độ khó, nghĩ trong web worker) hoặc hai người cùng máy.
 - Đối thủ: chọn 1 trong 12 sứ quân (`WARLORD_ENCOUNTERS`), chỉ đổi tên và chân dung. Đỏ luôn là quân Bộ Lĩnh, đi trước; đấu máy thì bạn chọn cầm phe nào.
 - Đồng hồ mỗi bên: không giới hạn, 10, 15 hoặc 30 phút.
-- Đi lại, xoay sa bàn, ván mới, đầu hàng; nhật ký trận; ván dở lưu ở trình duyệt (`reed-banner:tam-quan-ky:save:v1`).
+- Đi lại, xoay sa bàn, ván mới, đầu hàng; nhật ký trận; ván dở lưu ở trình duyệt (`reed-banner:tam-quan-ky:save:v1`). Không có dòng mô tả nước đi dưới sa bàn vì nhật ký đã ghi (Shan 23/11/2026); dòng đó chỉ còn cho trình đọc màn hình.
+- Bản đồ: chọn ở phần chuẩn bị, nhớ theo trình duyệt. Mọi bản đồ cùng bố cục địa hình, chỉ khác cảnh: Đầm Hoa Lư (tranh Shan), Hoa Lư thu muộn và Đêm trăng tập trận (bản chỉnh màu tạm, chờ tranh; prompt mục 5 của `art/prompts/tam-quan-ky.md`).
+- Thoại: Đinh Bộ Lĩnh nói một câu ngắn khi vào trận, khi chiếu tướng, khi bị chiếu, khi có anh hùng mới bên Đỏ, khi thắng, thua, hòa (`src/app/game/tam-quan-ky/lines.ts`). Lời game sáng tác, không phải lời nhân vật lịch sử.
 
 ## 6. Chưa làm
 
 - Dấu anh hùng bằng tranh (đang là chấm vàng; prompt đã có).
-- Thoại ngắn của Bộ Lĩnh khi chiếu tướng, khi có anh hùng.
-- Thưởng vàng hoặc kinh nghiệm: Shan chốt chưa làm ở bản đầu (23/11/2026).
+- Thưởng khi thắng sứ quân: Shan chốt server làm trọng tài (23/11/2026), làm cùng đấu online 1vs1 giữa hai tài khoản, PR sau.

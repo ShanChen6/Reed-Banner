@@ -39,10 +39,24 @@ import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
 import { MODE_TEXT } from "../modeInfo";
 import { PlayCard } from "../PlayCard";
+import { lineAfterMove, pickLine, type LineKind } from "./lines";
 import { KIND_NAME, PIECE_MOVE, PIECE_NAME } from "./pieces";
 import { useTqkEngine } from "./useEngine";
 
 const SAVE_KEY = "reed-banner:tam-quan-ky:save:v1";
+const MAP_KEY = "reed-banner:tam-quan-ky:map:v1";
+
+/**
+ * Bản đồ sa bàn: cùng bố cục địa hình (luật không đổi), khác cảnh. Thu muộn và Đêm trăng là bản chỉnh màu tạm từ tranh Đầm Hoa Lư,
+ * chờ tranh vẽ (prompt ở art/prompts/tam-quan-ky.md mục 5). `light` là kẻ lưới màu sáng cho tranh tối.
+ */
+const MAPS = [
+  { id: "hoa-lu", name: "Đầm Hoa Lư", art: "/art/tam-quan-ky/sa-ban.webp", light: false },
+  { id: "thu", name: "Hoa Lư thu muộn", art: "/art/tam-quan-ky/sa-ban-thu.webp", light: false },
+  { id: "dem", name: "Đêm trăng tập trận", art: "/art/tam-quan-ky/sa-ban-dem.webp", light: true },
+] as const;
+type BoardMap = (typeof MAPS)[number];
+const mapById = (id: string | null | undefined): BoardMap => MAPS.find((m) => m.id === id) ?? MAPS[0];
 const CLOCKS = [0, 10, 15, 30] as const;
 type Clock = (typeof CLOCKS)[number];
 type Mode = "ai" | "two";
@@ -121,6 +135,11 @@ export default function TamQuanKyScreen() {
   const [unit, setUnit] = useState<Move["unit"]>("stack");
   const [choice, setChoice] = useState<Move[] | null>(null);
   const [announce, setAnnounce] = useState("");
+  /** Câu thoại đang hiện của Bộ Lĩnh. */
+  const [speech, setSpeechState] = useState<{ kind: LineKind; n: number } | null>(null);
+  const speechCount = useRef(0);
+  const setSpeech = useCallback((kind: LineKind | null) => setSpeechState(kind ? { kind, n: speechCount.current++ } : null), []);
+  const [mapId, setMapId] = useState<string>(MAPS[0].id);
   const [dismissed, setDismissed] = useState(false);
   const [setupOpen, setSetupOpen] = useState(false);
   const phone = useMediaQuery(PHONE_QUERY);
@@ -161,6 +180,8 @@ export default function TamQuanKyScreen() {
       setBegun(true);
       /* eslint-enable react-hooks/set-state-in-effect */
     }
+    // Bản đồ đã chọn lần trước, đọc một lần khi mở màn.
+    setMapId(mapById(readStorage(MAP_KEY)).id);
     loaded.current = true;
   }, []);
 
@@ -182,12 +203,15 @@ export default function TamQuanKyScreen() {
       last = now;
       setTimeLeft((t) => {
         const left = t[side] - spent;
-        if (left <= 0) setEnded({ loser: side, reason: "timeout" });
+        if (left <= 0) {
+          setEnded({ loser: side, reason: "timeout" });
+          setSpeech(side === RED ? "lose" : "win");
+        }
         return { ...t, [side]: Math.max(0, left) };
       });
     }, 200);
     return () => window.clearInterval(id);
-  }, [ticking, position.toMove]);
+  }, [ticking, position.toMove, setSpeech]);
 
   const clearSelection = () => {
     setSelected(null);
@@ -205,8 +229,10 @@ export default function TamQuanKyScreen() {
       setChoice(null);
       const check = !next.result && inCheck(next, next.toMove) ? " Chiếu tướng!" : "";
       setAnnounce(`${playerName(from.toMove)}: ${moveText(from, move)}.${check}`);
+      const line = lineAfterMove(from, next) ?? (from.moveNumber === 1 ? "start" : null);
+      if (line) setSpeech(line);
     },
-    [playerName],
+    [playerName, setSpeech],
   );
 
   // ---- lượt máy ----
@@ -277,12 +303,15 @@ export default function TamQuanKyScreen() {
     setTimeLeft({ r: clock * 60_000, b: clock * 60_000 });
     clearSelection();
     setAnnounce("");
+    setSpeech(null);
   };
 
   const resign = () => {
     gameToken.current++;
     setThinking(false);
-    setEnded({ loser: machine ? human : position.toMove, reason: "resign" });
+    const loser = machine ? human : position.toMove;
+    setEnded({ loser, reason: "resign" });
+    setSpeech(loser === RED ? "lose" : "win");
     clearSelection();
   };
 
@@ -333,6 +362,8 @@ export default function TamQuanKyScreen() {
           <Options label="Độ khó" value={level} onChange={setLevel} options={LEVELS.map((v) => ({ value: v, label: LEVEL_NAME[v] }))} />
         </>
       )}
+      <Options label="Bản đồ" value={mapId} onChange={(id) => { setMapId(id); writeStorage(MAP_KEY, id); }}
+        options={MAPS.map((m) => ({ value: m.id, label: m.name }))} />
       <Options label="Đồng hồ mỗi bên" value={clock} onChange={pickClock}
         options={CLOCKS.map((m) => ({ value: m, label: m ? `${m} phút` : "Không giới hạn" }))} />
       {mode === "ai" && human === BLUE ? (
@@ -377,6 +408,7 @@ export default function TamQuanKyScreen() {
                 </Button>
               )}
               <Board
+                map={mapById(mapId)}
                 position={position}
                 flipped={flipped}
                 selected={selected}
@@ -399,12 +431,22 @@ export default function TamQuanKyScreen() {
                   ))}
                 </div>
               )}
-              <p role="status" aria-live="polite" className="min-h-6 text-center text-[15px] text-title-on-wood">
+              {/* Nước vừa đi đã có ở Nhật ký trận (Shan 23/11/2026); dòng này chỉ để trình đọc màn hình đọc nước mới. */}
+              <p role="status" aria-live="polite" className="sr-only">
                 {announce}
               </p>
             </div>
 
             <aside className="flex flex-col gap-3">
+              {speech && (
+                <figure className="ui-frame-inset flex items-start gap-3 p-3" aria-live="polite">
+                  <Portrait id={MAIN_ID} element="hoa" profession="tuongSi" className="size-11 shrink-0" />
+                  <div className="min-w-0">
+                    <figcaption className="text-caption font-semibold text-frame-gold">{BO_LINH}</figcaption>
+                    <blockquote className="font-serif text-[15px] leading-snug text-on-wood italic">{pickLine(speech.kind, speech.n)}</blockquote>
+                  </div>
+                </figure>
+              )}
               <div className="ui-frame-inset flex flex-col gap-2 p-3">
                 {([RED, BLUE] as const).map((c) => (
                   <div key={c} className={`flex items-center justify-between gap-2 rounded-control border px-2 py-1.5 ${position.toMove === c && !result ? "border-frame-gold" : "border-transparent"}`}>
@@ -548,6 +590,7 @@ function MoveList({ positions, moves }: { positions: readonly Position[]; moves:
 // Sa bàn vẽ bằng SVG trên tranh nền: mỗi khoảng giữa hai giao điểm là một đơn vị, chừa lề một đơn vị quanh bàn.
 
 interface BoardProps {
+  readonly map: BoardMap;
   readonly position: Position;
   readonly flipped: boolean;
   readonly selected: number | null;
@@ -557,10 +600,9 @@ interface BoardProps {
   readonly pieceLabel: (stack: Stack) => string;
 }
 
-const BOARD_ART = "/art/tam-quan-ky/sa-ban.webp";
 const ATTACKS: readonly MoveKind[] = ["capture", "fire", "strike"];
 
-function Board({ position, flipped, selected, targets, lastMove, onSquare, pieceLabel }: BoardProps) {
+function Board({ map, position, flipped, selected, targets, lastMove, onSquare, pieceLabel }: BoardProps) {
   const [cursor, setCursor] = useState<number | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const W = FILES + 1;
@@ -623,9 +665,9 @@ function Board({ position, flipped, selected, targets, lastMove, onSquare, piece
           }}
           aria-hidden
         >
-          {/* Tranh sa bàn vẽ đúng tỉ lệ bàn (art/prompts/tam-quan-ky.md): đầm cột a, b; bãi lau cột c; sông giữa hàng 6 và 7; cầu tre cột f, h. Xoay sa bàn thì xoay tranh nửa vòng. */}
-          <image href={BOARD_ART} x={0} y={0} width={W} height={H} preserveAspectRatio="none" transform={flipped ? `rotate(180 ${W / 2} ${H / 2})` : undefined} />
-          <g stroke="var(--tqk-line)" strokeWidth={0.03}>
+          {/* Tranh sa bàn (bản đồ đang chọn) vẽ đúng tỉ lệ bàn (art/prompts/tam-quan-ky.md): đầm cột a, b; bãi lau cột c; sông giữa hàng 6 và 7; cầu tre cột f, h. Xoay sa bàn thì xoay tranh nửa vòng. */}
+          <image href={map.art} x={0} y={0} width={W} height={H} preserveAspectRatio="none" transform={flipped ? `rotate(180 ${W / 2} ${H / 2})` : undefined} />
+          <g stroke={map.light ? "var(--tqk-token)" : "var(--tqk-line)"} strokeWidth={0.03} opacity={map.light ? 0.6 : 1}>
             {Array.from({ length: RANKS }, (_, r) => <line key={`r${r}`} x1={1} y1={y(r)} x2={FILES} y2={y(r)} />)}
             {Array.from({ length: FILES }, (_, f) =>
               f <= 2 || BRIDGE_FILES.includes(f) ? (

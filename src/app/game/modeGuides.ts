@@ -98,13 +98,13 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
   TAM_QUAN_KY: {
     goal: "Cờ tư lệnh trên sa bàn tập trận của Đinh Bộ Lĩnh: ba quân bộ, thủy và thiên mã cùng ra trận. Vây Chủ tướng bên kia hoặc chiếm giữ Soái trướng của họ để thắng.",
     steps: [
-      "Chọn đấu sứ quân (máy) hay hai người cùng máy, chọn sứ quân đối địch, độ khó và đồng hồ.",
+      "Chọn đấu sứ quân (máy) hay hai người cùng máy, chọn sứ quân đối địch, độ khó, bản đồ và đồng hồ.",
       "Bấm một quân của mình để xem chỗ đi được: chấm xanh là ô trống, vòng xanh là lên chung, vòng đỏ là ô ăn được.",
       "Bấm ô đích để đi. Quân bắn xa có hai cách thì chọn tiến vào ăn hay bắn tại chỗ.",
       "Quân đang chở quân khác thì chọn đi cả chồng hay chỉ một quân rời chồng.",
     ],
     rules: [
-      "Bàn có 11 cột, 12 hàng, mỗi bên 19 quân. Quân Đỏ của Bộ Lĩnh đi trước.",
+      "Bàn có 11 cột, 12 hàng, mỗi bên 19 quân. Quân Đỏ của Bộ Lĩnh đi trước. Bản đồ chỉ đổi cảnh, đầm, sông và cầu luôn ở cùng chỗ.",
       "Đầm và bãi lau ở mép trái là đất của Chiến thuyền. Quân bộ không xuống đầm, Chiến thuyền chỉ đi trên nước và bến thuyền.",
       "Máy bắn đá, Nỏ thủ và Hỏa tiễn chỉ qua sông trên hai cầu tre, trừ khi Phu cầu kết bè chở qua.",
       "Nỏ thủ, Hỏa tiễn và Chiến thuyền tạo vùng cấm bay. Thiên mã không bay qua vùng ấy; lao vào để đánh thì mất cả hai quân.",
