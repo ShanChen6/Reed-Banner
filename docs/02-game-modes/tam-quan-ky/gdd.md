@@ -58,7 +58,7 @@ Quân: `public/art/tam-quan-ky/quan/<mã>.webp` (256 × 256, cắt tròn từ b�
 - Đối thủ: chọn 1 trong 12 sứ quân (`WARLORD_ENCOUNTERS`), chỉ đổi tên và chân dung. Đỏ luôn là quân Bộ Lĩnh, đi trước; đấu máy thì bạn chọn cầm phe nào.
 - Đồng hồ mỗi bên: không giới hạn, 10, 15 hoặc 30 phút.
 - Đi lại, xoay sa bàn, ván mới, đầu hàng; nhật ký trận; ván dở lưu ở trình duyệt (`reed-banner:tam-quan-ky:save:v1`). Không có dòng mô tả nước đi dưới sa bàn vì nhật ký đã ghi (Shan 23/11/2026); dòng đó chỉ còn cho trình đọc màn hình.
-- Bản đồ: chọn ở phần chuẩn bị, nhớ theo trình duyệt. Mọi bản đồ cùng bố cục địa hình, chỉ khác cảnh: Đầm Hoa Lư (tranh Shan), Hoa Lư thu muộn và Đêm trăng tập trận (bản chỉnh màu tạm, chờ tranh; prompt mục 5 của `art/prompts/tam-quan-ky.md`).
+- Bản đồ: chọn ở phần chuẩn bị, nhớ theo trình duyệt. Mọi bản đồ cùng bố cục địa hình, chỉ khác cảnh. Sáu bản, tranh Shan vẽ (23/11/2026), Claude căn về lưới (dời đầm, sông, cầu về đúng cột, hàng): Đầm Hoa Lư, Đồng xuân tháng giêng, Hoa Lư thu muộn, Đêm trăng tập trận, Thung Tràng An, Cửa Bố Hải. Gốc và bản đã căn ở `art/tam-quan-ky/ban-do/` trong thư mục dự án.
 - Thoại: Đinh Bộ Lĩnh nói một câu ngắn khi vào trận, khi chiếu tướng, khi bị chiếu, khi có anh hùng mới bên Đỏ, khi thắng, thua, hòa (`src/app/game/tam-quan-ky/lines.ts`). Lời game sáng tác, không phải lời nhân vật lịch sử.
 
 ## 6. Chưa làm
