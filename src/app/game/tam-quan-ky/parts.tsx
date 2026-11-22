@@ -31,13 +31,16 @@ import { pickLine, type LineKind } from "./lines";
 import { KIND_NAME, PIECE_MOVE, PIECE_NAME } from "./pieces";
 
 /**
- * Bản đồ sa bàn: cùng bố cục địa hình (luật không đổi), khác cảnh. Thu muộn và Đêm trăng là bản chỉnh màu tạm từ tranh Đầm Hoa Lư,
- * chờ tranh vẽ (prompt ở art/prompts/tam-quan-ky.md mục 5). `light` là kẻ lưới màu sáng cho tranh tối.
+ * Bản đồ sa bàn: cùng bố cục địa hình (luật không đổi), khác cảnh. Mọi tranh do Shan vẽ (23/11/2026), Claude căn về lưới
+ * (art/prompts/tam-quan-ky.md mục 5). `light` là kẻ lưới màu sáng cho tranh tối.
  */
 export const MAPS = [
   { id: "hoa-lu", name: "Đầm Hoa Lư", art: "/art/tam-quan-ky/sa-ban.webp", light: false },
+  { id: "xuan", name: "Đồng xuân tháng giêng", art: "/art/tam-quan-ky/sa-ban-xuan.webp", light: false },
   { id: "thu", name: "Hoa Lư thu muộn", art: "/art/tam-quan-ky/sa-ban-thu.webp", light: false },
   { id: "dem", name: "Đêm trăng tập trận", art: "/art/tam-quan-ky/sa-ban-dem.webp", light: true },
+  { id: "trang-an", name: "Thung Tràng An", art: "/art/tam-quan-ky/sa-ban-trang-an.webp", light: false },
+  { id: "bo-hai", name: "Cửa Bố Hải", art: "/art/tam-quan-ky/sa-ban-bo-hai.webp", light: false },
 ] as const;
 export type BoardMap = (typeof MAPS)[number];
 export const mapById = (id: string | null | undefined): BoardMap => MAPS.find((m) => m.id === id) ?? MAPS[0];
