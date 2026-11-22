@@ -677,6 +677,10 @@
     "tower_trial": {
       "file": "music/tower_trial",
       "volume": 0.5
+    },
+    "tower_destiny": {
+      "file": "music/tower_destiny",
+      "volume": 0.5
     }
   },
   "ambience": {}
