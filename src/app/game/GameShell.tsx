@@ -17,6 +17,7 @@ import FormationScreen from "./formation/FormationScreen";
 import KhaiLoScreen from "./khai-lo/KhaiLoScreen";
 import DoThamScreen from "./do-tham/DoThamScreen";
 import SuLoScreen from "./su-lo/SuLoScreen";
+import TamQuanKyScreen from "./tam-quan-ky/TamQuanKyScreen";
 import TamTuongKyScreen from "./tam-tuong-ky/TamTuongKyScreen";
 import HonorsScreen from "./leaderboard/HonorsScreen";
 import MenuScene from "./MenuScene";
@@ -163,6 +164,8 @@ function SceneView({
       return <DoThamScreen />;
     case "SU_LO":
       return <SuLoScreen />;
+    case "TAM_QUAN_KY":
+      return <TamQuanKyScreen />;
     case "QUESTS":
       return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} tamTuongKyPack2={towerFeatures.tamTuongKyPack2 === true} tamTuongKyPack3={towerFeatures.tamTuongKyPack3 === true} />;
     case "TIERS":

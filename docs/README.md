@@ -38,6 +38,7 @@ Bản đồ duy nhất dẫn vào tài liệu. Mỗi khái niệm có **một** 
 | ★ [tran-do/](02-game-modes/tran-do/gdd.md) | Trận Đồ (tên mã Binh Pháp): [GDD](02-game-modes/tran-do/gdd.md), luật chơi thử và xếp hạng; giao diện ở [màn Trận Đồ](05-ui-ux/screens/tran-do.md) |
 | ★ [khai-lo/](02-game-modes/khai-lo/gdd.md) | Khai Lộ: [GDD](02-game-modes/khai-lo/gdd.md), giải đố xóa khối, có bản chơi thử |
 | ★ [do-tham/](02-game-modes/do-tham/gdd.md) | Do Thám: [GDD](02-game-modes/do-tham/gdd.md), giải đố dò bẫy, bàn suy luận được, đạo cụ nguyên tố; có bản chơi thử |
+| ★ [tam-quan-ky/](02-game-modes/tam-quan-ky/gdd.md) | Tam Quân Kỳ: [GDD](02-game-modes/tam-quan-ky/gdd.md), cờ tư lệnh cổ trang dùng nguyên luật Cờ Việt Nam của Shanverse, đấu sứ quân hoặc hai người cùng máy; có bản thử |
 | [future/](02-game-modes/future/quan-hung-pvp-truc-tiep.md) | Đề xuất đang làm dần (lõi PvP đã có code): [Quần Hùng PvP trực tiếp](02-game-modes/future/quan-hung-pvp-truc-tiep.md) (**DRAFT**) |
 | ★ [su-lo/](02-game-modes/su-lo/gdd.md) | Sử Lộ, tức Mê cung lịch sử: [GDD](02-game-modes/su-lo/gdd.md) và [sổ nguồn riêng](02-game-modes/su-lo/nguon-su.md); đổ xúc xắc qua mê cung, dừng ô nào trả lời câu sử ô đó, sai về ô bắt đầu lượt; bẫy, ô may mắn, trợ giúp có hạn, boss trấn cổng đánh bằng match-3 một chiều; có bản chơi thử mê cung I, II |
 

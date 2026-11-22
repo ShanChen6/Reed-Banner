@@ -84,6 +84,11 @@
     /* Màu hiệu ứng, bản đồ, minh họa chưa gán vai (gom từ mã hex rải trong CSS, 07/11/2026). Màu mới thêm ở đây, không viết hex ở nơi khác. */
     --black: #000000;
     --white: #ffffff;
+    /* Tam Quân Kỳ (src/app/game/tam-quan-ky): đường kẻ sa bàn, thẻ quân tạm, màu hai phe. */
+    --tqk-line: #3c2819;
+    --tqk-token: #f4e6c4;
+    --tqk-red: #a3261c;
+    --tqk-blue: #24406a;
     --tone-140d09: #140d09;
     --tone-1b110c: #1b110c;
     --tone-22150f: #22150f;

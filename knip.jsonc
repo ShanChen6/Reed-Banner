@@ -10,7 +10,9 @@
   // Hai bí danh có chủ ý: thủ lĩnh dùng mọi nghề đang bật; gói Tầm Tướng Ký đang chạy là Gói 1.
   // Bản chụp code AI ngày 22/10 để test so sánh trước/sau; đóng băng, không sửa.
   "ignore": ["tests/helpers/fixtures/**"],
+  // Luật Tam Quân Kỳ chép nguyên từ Shanverse để dễ đồng bộ, giữ cả vài export bản này chưa dùng.
   "ignoreIssues": {
+    "src/core/tam-quan-ky/logic.ts": ["exports"],
     "src/core/battle/rules.ts": ["duplicates"],
     "src/core/tam-tuong-ky/catalog.ts": ["duplicates"]
   }
