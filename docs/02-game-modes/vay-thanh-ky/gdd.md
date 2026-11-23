@@ -1,0 +1,45 @@
+# Vây Thành Kỳ: cờ vây bảy nguyên tố
+
+> Cập nhật: 23/11/2026 (bản thử đầu tiên)
+> Trạng thái: **IMPLEMENTED (bản thử)** — Shan đề xuất và chốt tên 23/11/2026; luật lấy nguyên từ cờ vây của Shanverse. Đấu sứ quân và hai người cùng máy chạy trên trình duyệt; đấu người bằng mã phòng do server làm trọng tài. Chưa có thưởng.
+
+## 1. Định vị
+
+Chế độ đấu trí hai phe theo lượt, không dùng bàn match-3. Mỗi bên chọn một trong 7 nguyên tố của game (Kim, Mộc, Thủy, Hỏa, Thổ, Lôi, Phong): quân thành quả cầu nguyên tố, đất quanh quân đổi nền theo hệ (Hỏa nham thạch nứt, Mộc cỏ, Thủy băng...). Ý tưởng tham khảo các bàn cờ vây đổi theo hệ; hình và mã tự làm.
+
+Thẻ chế độ nằm ở mục **Sắp ra mắt** trên màn Chiến Trường (bấm được, ghi "Bản thử, cờ vây bảy nguyên tố"). Đường dẫn `/game/go`, scene `VAY_THANH_KY`.
+
+## 2. Luật
+
+Giữ **nguyên** luật cờ vây của Shanverse: bàn 9, 13 hoặc 19; bắt quân khi hết khí; cấm tự sát; luật cướp đơn (ko); đếm đất kiểu Trung Quốc (quân + đất vây), komi 7,5 cho bên đi sau. Có thêm luật nhập môn "Bắt quân trước": bắt đầu từ thế chéo giữa bàn, ai bắt được quân trước thắng.
+
+- Engine chép từ repo `ShanChen6/shanverse`, `src/features/games/go/logic.ts` và `mcts.ts` (commit `bf8666b`), vào `src/core/co-vay/`, ghi nguồn đầu file. **Sửa luật thì sửa cả hai repo.**
+- Khác bản gốc: `search` nhận đồng hồ `now` từ nơi gọi (src/core không đọc giờ hệ thống); thêm `!` cho chế độ `noUncheckedIndexedAccess`. Bản Shanverse còn dùng mạng KataGo 27 MB cho máy tính bàn, ở đây chưa đem sang: máy chỉ dùng MCTS.
+- `src/core/co-vay/ai.ts`: `chooseMove` (độ khó Dễ, Thường, Khó; tự bỏ lượt theo khi đang dẫn; xin thua khi hết hy vọng) và `guessDead` (đoán quân chết để đếm điểm).
+- Test luật và máy chép theo vào `tests/core/co-vay/`.
+- Luật cho người chơi nằm ở thẻ Hướng dẫn (`MODE_GUIDES.VAY_THANH_KY` trong `src/app/game/modeGuides.ts`).
+
+## 3. Nguyên tố
+
+Chỉ là lớp giao diện, không đổi luật (`src/app/game/vay-thanh-ky/theme.tsx`, `Board.tsx`).
+
+- Quân: quả cầu tô màu hệ, giữa là biểu tượng hệ Shan vẽ (`public/art/elements/<hệ>.webp`).
+- Nền đất: mẫu SVG lặp cho mỗi hệ (Claude dựng, chưa có tranh riêng). Trong ván, mỗi giao điểm tô theo vùng ảnh hưởng của quân trong bán kính 3; lúc đếm điểm tô theo chủ đất thật (`scoreArea`).
+- Hai bên không chọn trùng hệ. Đấu sứ quân: hệ đối thủ mặc định là hệ của sứ quân, đổi được.
+- Khung người chơi hai bên nền theo hệ.
+
+## 4. Cách chơi
+
+| Cách | Nơi chạy | Ghi chú |
+|---|---|---|
+| Đấu sứ quân | Trình duyệt (web worker) | Chọn 1 trong 12 sứ quân, ba độ khó, đi trước hay sau. Có đi lại. Ván dở lưu ở trình duyệt |
+| Hai người cùng máy | Trình duyệt | Chọn hệ cho bên đi trước và đi sau |
+| Đấu người bằng mã phòng | Server (`src/server/coVay.ts`, `/api/go`, bảng `go_matches`) | Người mở phòng đi trước, chọn luật, cỡ bàn, đồng hồ 10/20/30 phút. Người vào bằng mã đi sau; chọn trùng hệ thì server đổi sang hệ khác. Hai bên cùng bỏ lượt thì server tự đoán quân chết và đếm điểm (seed cố định theo ván), không có bước thỏa thuận. Giao hữu, cần trình danh. Tắt nhanh bằng `VAY_THANH_KY_SERVER_ENABLED=false` |
+
+Ván ở trình duyệt: hai bên cùng bỏ lượt thì máy đoán quân chết, người chơi bấm nhóm quân để sửa rồi Chốt điểm, hoặc Đánh tiếp.
+
+## 5. Còn mở
+
+- Thưởng vàng khi thắng sứ quân (cần server trọng tài như Tam Quân Kỳ).
+- Tranh thẻ chế độ, banner và nền đất vẽ tay cho từng hệ.
+- Mạng KataGo cho máy tính bàn như Shanverse.

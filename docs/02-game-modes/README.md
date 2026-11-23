@@ -22,6 +22,7 @@
 | **Do Thám** | Giải đố dò bẫy trên sa bàn, cờ lau đánh dấu; 3 bậc (9×9, 16×16, 30×16), bàn suy luận được, đạo cụ nguyên tố. Bản chơi thử offline, khách chơi được, chưa thưởng và chưa xếp hạng. Luật ở [GDD](do-tham/gdd.md) | Một người, 3 bậc | Sau Khai Lộ |
 | **Sử Lộ** (Mê cung lịch sử) | Đổ xúc xắc dẫn tướng qua mê cung, mỗi ô dừng chân là một câu hỏi sử (Ngô Quyền, loạn sứ quân; nhà Đinh, Tiền Lê chờ nguồn), sai về ô bắt đầu lượt, không giới hạn lượt; boss trấn cổng đánh bằng match-3 một chiều, mọi người như nhau. Bản chơi thử offline, khách chơi được, chưa thưởng và chưa xếp hạng. Luật ở [GDD](su-lo/gdd.md) | Một người, 3 bậc | Sau Do Thám |
 | **Tam Quân Kỳ** | Cờ tư lệnh trên sa bàn tập trận: nguyên luật Cờ Việt Nam của Shanverse, quân mang tên cổ trang (Voi chiến, Thiên mã, Chiến thuyền...). Đấu một trong 12 sứ quân (máy, ba độ khó) hoặc hai người cùng máy. Bản thử ở mục Sắp ra mắt, chưa thưởng. Luật ở [GDD](tam-quan-ky/gdd.md) | Hai phe, 3 bậc | Sau Sử Lộ |
+| **Vây Thành Kỳ** | Cờ vây bảy nguyên tố: nguyên luật cờ vây của Shanverse, mỗi bên chọn một hệ, quân và nền đất đổi theo hệ. Đấu sứ quân (máy, ba độ khó), hai người cùng máy hoặc đấu người bằng mã phòng. Bản thử ở mục Sắp ra mắt, chưa thưởng. Luật ở [GDD](vay-thanh-ky/gdd.md) | Hai phe, 3 bậc | Sau Tam Quân Kỳ |
 
 <a id="2-chiến-dịch"></a>
 

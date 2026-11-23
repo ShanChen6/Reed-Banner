@@ -18,6 +18,8 @@ import { DrizzleArenaStore } from "./db/arena";
 import { DrizzlePvpStore } from "./db/pvp";
 import { MemoryPvpStore, type PvpStore } from "./pvp";
 import { DrizzleTqkStore } from "./db/tamQuanKy";
+import { DrizzleGoStore } from "./db/coVay";
+import { MemoryGoStore, type GoStore } from "./coVay";
 import { MemoryTqkStore, type TqkStore } from "./tamQuanKy";
 import { MemoryArenaStore, type ArenaStore } from "./arena";
 import { MemoryLeaderboardStore, type LeaderboardStore } from "./leaderboard";
@@ -82,7 +84,7 @@ export class MemoryMatchStore implements MatchStore {
   }
 }
 
-const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauPvpStore?: PvpStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore; coLauFormationStore?: FormationStore; coLauRankRewardStore?: RankRewardStore; coLauSeasonStore?: SeasonStore; coLauTqkStore?: TqkStore };
+const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauPvpStore?: PvpStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore; coLauFormationStore?: FormationStore; coLauRankRewardStore?: RankRewardStore; coLauSeasonStore?: SeasonStore; coLauTqkStore?: TqkStore; coLauGoStore?: GoStore };
 
 /**
  * Kho dùng chung của server: Postgres (Neon) khi có DATABASE_URL, ngược lại lưu trong bộ nhớ (dev).
@@ -198,4 +200,11 @@ export function tqkStore(): TqkStore {
   const url = process.env.DATABASE_URL;
   globalStore.coLauTqkStore ??= url ? new DrizzleTqkStore(neonDb(url)) : new MemoryTqkStore();
   return globalStore.coLauTqkStore;
+}
+
+/** Kho ván Vây Thành Kỳ đấu người bằng mã phòng, cùng nguồn với kho trận. */
+export function goStore(): GoStore {
+  const url = process.env.DATABASE_URL;
+  globalStore.coLauGoStore ??= url ? new DrizzleGoStore(neonDb(url)) : new MemoryGoStore();
+  return globalStore.coLauGoStore;
 }
