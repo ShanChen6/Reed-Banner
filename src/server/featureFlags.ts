@@ -97,3 +97,8 @@ export function pvpEnabled(env: Readonly<Record<string, string | undefined>> = p
 export function tamQuanKyServerEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
   return env.TAM_QUAN_KY_SERVER_ENABLED?.trim().toLowerCase() !== "false";
 }
+
+/** Vây Thành Kỳ đấu người (server trọng tài). Mặc định bật; đặt `VAY_THANH_KY_SERVER_ENABLED=false` để khóa nhanh. */
+export function vayThanhKyServerEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+  return env.VAY_THANH_KY_SERVER_ENABLED?.trim().toLowerCase() !== "false";
+}

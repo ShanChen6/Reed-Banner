@@ -6,7 +6,7 @@
 // Tranh nền của Shan (không chữ, không cờ) nằm dưới cùng khung tọa độ; chữ, cờ và vùng bấm luôn là SVG động.
 // Tranh lỗi thì còn nền giấy dó vẽ bằng code và thành trì SVG (MAP-ART-02).
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAudio } from "../audio/AudioProvider";
 import {
   CAMPAIGN_CHAPTERS,
@@ -70,6 +70,16 @@ const WORLD_ART = "/art/campaign/world-map.webp";
 
 const usable = (s: ChapterMissionStatus | undefined) =>
   s !== undefined && s !== "locked" && s !== "comingSoon";
+
+/** Số nhiệm vụ đã mở (không khóa, không "sắp có"); tăng lên là có khu vực mới để báo tiếng `atlas.unlock`. */
+function unlockedMissionCount(status: ReadonlyMap<CampaignMissionId, ChapterMissionStatus>): number {
+  let n = 0;
+  for (const s of status.values()) if (usable(s)) n++;
+  return n;
+}
+
+/** Lần trước người chơi thấy bản đồ có bao nhiêu nhiệm vụ mở (chỉ để biết có nên báo tiếng mở khu vực). */
+const UNLOCK_SEEN_KEY = "co-lau:atlas-unlocked";
 
 /** Điểm có nhiệm vụ đang mở mà chưa xong: vòng nhấp nháy. */
 export function strongholdHasOpenMission(
@@ -325,6 +335,19 @@ export default function WorldMap({
     onSelect(id);
   };
   const status = missionStatusMap(campaign);
+  // Mở thêm nhiệm vụ so với lần xem bản đồ trước (kể cả sau khi đánh xong quay lại) thì báo tiếng; lần đầu chỉ ghi nhớ.
+  const unlocked = unlockedMissionCount(status);
+  useEffect(() => {
+    let seen: number | null = null;
+    try {
+      const raw = window.localStorage.getItem(UNLOCK_SEEN_KEY);
+      seen = raw === null ? null : Number(raw);
+      window.localStorage.setItem(UNLOCK_SEEN_KEY, String(unlocked));
+    } catch {
+      return;
+    }
+    if (seen !== null && Number.isFinite(seen) && unlocked > seen) playSound("atlas.unlock");
+  }, [unlocked, playSound]);
   const inChapter = new Set(chapterStrongholds(chapter.missions));
 
   // Đổi chương thì kéo khung nhìn tới các điểm của chương (đặt trạng thái ngay lúc dựng, không cần effect).

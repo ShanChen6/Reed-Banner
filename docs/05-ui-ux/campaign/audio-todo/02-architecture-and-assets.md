@@ -126,7 +126,7 @@ Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến)
 | `music/ending_*` | Kết cục (theo cấp độ lịch sử) | Sáo + đàn, mỗi kết cục một hướng | P2 |
 | Giọng đọc | Sau này, xem AUD-05/06 | Thoại nhân vật theo hồ sơ giọng | P3 |
 
-Đã nối (02/11/2026): `music/atlas` + `amb/atlas` khi ở màn Bình Loạn; `music/dialogue` khi mở bộ phát thoại (trả nhạc bản đồ khi đóng); `music/ending` ở màn kết cục; cue `atlas.select` khi chọn điểm trên bản đồ, `dialogue.next` khi sang câu thoại kế. Chưa nối: `music/prep`, `atlas.unlock`, `music/ending_*` theo cấp độ lịch sử.
+Đã nối (02/11/2026): `music/atlas` + `amb/atlas` khi ở màn Bình Loạn; `music/dialogue` khi mở bộ phát thoại (trả nhạc bản đồ khi đóng); `music/ending` ở màn kết cục; cue `atlas.select` khi chọn điểm trên bản đồ, `dialogue.next` khi sang câu thoại kế. Nối thêm 23/11/2026: `music/prep` ở màn chuẩn bị trận (`DemoGame` trước khi vào trận, mọi chế độ dùng `DemoGame`). Nối thêm 23/11/2026: `atlas.unlock` khi số nhiệm vụ mở trên bản đồ tăng so với lần xem trước (nhớ trong `localStorage`, lần đầu chỉ ghi nhớ, không phát). Chưa nối: `music/ending_*` theo cấp độ lịch sử.
 
 ### 5.5 Tháp, Sinh tồn, Thử thách, Đấu trường, Quần Hùng
 
@@ -136,7 +136,7 @@ Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến)
 | Tháp Vận Mệnh | `music/tower_destiny` | `destiny.choose` (chọn thẻ/roster), `destiny.fail` | P2 |
 | Sinh tồn | `music/survival` + lớp tăng theo đợt | `survival.wave` (đợt mới), `survival.warn` (báo trước đợt kế) | P2 |
 | Thử thách hằng ngày | dùng nhạc trận | `daily.complete` | P2 |
-| Đấu trường bóng ma | `music/arena` | `arena.rank`, `arena.ghost` (gặp bóng ma) | P2 |
+| Đấu trường bóng ma | `music/arena` | `arena.rank`, `arena.ghost` (đổi đối thủ, hiện các đội bóng ma; nối 23/11/2026) | P2 |
 | Quần Hùng online (sau này) | `music/pvp` | `pvp.found`, `pvp.turn`, `pvp.win`, `pvp.lose` | P3 |
 
 ### 5.6 Sử Lộ (`sulo.*`, đã nối 19/11/2026)
@@ -185,4 +185,4 @@ Nhạc: `dotham` (một bài cho cả màn, tệp riêng `music/dotham`). Phân 
 
 ## 7. Nhạc theo phân cảnh và theo loại trận (đã nối)
 
-`audio/sceneMusic.ts` ánh xạ phân cảnh sang nhạc/âm nền; `SceneAudio` áp khi đổi phân cảnh. Trận Đồ và trận đánh (`SELF`) tự chọn nhạc ở màn của mình. Trong trận đánh (`DemoGame`): Sinh tồn → `survival`; Thiên Mệnh → `tower_destiny`; Đấu trường → `arena`; đánh trùm hoặc nhiệm vụ có pha trùm → `battle_boss`; còn lại `battle_normal`. Cue đã nối thêm: `survival.wave` (đợt mới), `survival.warn` (màn nghỉ giữa đợt), `daily.complete` (có điểm Nhật Lệnh), `arena.rank` (có kết quả Đấu trường). Manifest có thêm mục `ambience` (cùng dạng `music`, bus `ambience`).
+`audio/sceneMusic.ts` ánh xạ phân cảnh sang nhạc/âm nền; `SceneAudio` áp khi đổi phân cảnh. Trận Đồ và trận đánh (`SELF`) tự chọn nhạc ở màn của mình. Trong trận đánh (`DemoGame`): Sinh tồn → `survival`; Thiên Mệnh → `tower_destiny`; Đấu trường → `arena`; đánh trùm hoặc nhiệm vụ có pha trùm → `battle_boss`; còn lại `battle_normal`. Cue đã nối thêm: `survival.wave` (đợt mới), `survival.warn` (màn nghỉ giữa đợt), `daily.complete` (có điểm Nhật Lệnh), `arena.rank` (có kết quả Đấu trường). Nối 23/11/2026: `tower.firstclear` (vượt tầng Thí Luyện lần đầu), `tower.floor` (vượt tầng đã từng vượt, hoặc vượt tầng Thiên Mệnh), `destiny.fail` (gục ở Thiên Mệnh); `destiny.choose` ở màn Thiên Mệnh khi lập đội đầu lượt leo hoặc nhận ban thưởng. Manifest có thêm mục `ambience` (cùng dạng `music`, bus `ambience`).

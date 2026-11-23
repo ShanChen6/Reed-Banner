@@ -612,6 +612,90 @@
         "sfx/do-tham/lose_b"
       ],
       "volume": 0.85
+    },
+    "atlas.select": {
+      "files": [
+        "sfx/atlas/select_a",
+        "sfx/atlas/select_b"
+      ],
+      "volume": 0.7
+    },
+    "atlas.unlock": {
+      "files": [
+        "sfx/atlas/unlock_a",
+        "sfx/atlas/unlock_b"
+      ],
+      "volume": 0.8
+    },
+    "dialogue.next": {
+      "files": [
+        "sfx/dialogue/next_a",
+        "sfx/dialogue/next_b"
+      ],
+      "volume": 0.5
+    },
+    "survival.wave": {
+      "files": [
+        "sfx/survival/wave_a",
+        "sfx/survival/wave_b"
+      ],
+      "volume": 0.85
+    },
+    "survival.warn": {
+      "files": [
+        "sfx/survival/warn_a",
+        "sfx/survival/warn_b"
+      ],
+      "volume": 0.85
+    },
+    "arena.rank": {
+      "files": [
+        "sfx/arena/rank_a",
+        "sfx/arena/rank_b"
+      ],
+      "volume": 0.8
+    },
+    "arena.ghost": {
+      "files": [
+        "sfx/arena/ghost_a",
+        "sfx/arena/ghost_b"
+      ],
+      "volume": 0.75
+    },
+    "daily.complete": {
+      "files": [
+        "sfx/daily/complete_a",
+        "sfx/daily/complete_b"
+      ],
+      "volume": 0.8
+    },
+    "destiny.choose": {
+      "files": [
+        "sfx/destiny/choose_a",
+        "sfx/destiny/choose_b"
+      ],
+      "volume": 0.7
+    },
+    "destiny.fail": {
+      "files": [
+        "sfx/destiny/fail_a",
+        "sfx/destiny/fail_b"
+      ],
+      "volume": 0.8
+    },
+    "tower.floor": {
+      "files": [
+        "sfx/tower/floor_a",
+        "sfx/tower/floor_b"
+      ],
+      "volume": 0.8
+    },
+    "tower.firstclear": {
+      "files": [
+        "sfx/tower/firstclear_a",
+        "sfx/tower/firstclear_b"
+      ],
+      "volume": 0.85
     }
   },
   "music": {
@@ -681,7 +765,21 @@
     "tower_destiny": {
       "file": "music/tower_destiny",
       "volume": 0.5
+    },
+    "prep": {
+      "file": "music/prep",
+      "volume": 0.5
+    },
+    "ending": {
+      "file": "music/ending",
+      "volume": 0.6,
+      "loop": false
     }
   },
-  "ambience": {}
+  "ambience": {
+    "atlas": {
+      "file": "amb/atlas",
+      "volume": 0.35
+    }
+  }
 }

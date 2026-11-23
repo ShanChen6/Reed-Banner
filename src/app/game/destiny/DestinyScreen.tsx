@@ -61,6 +61,7 @@ import {
 import { ModeGuideTabs } from "../ModeGuide";
 import ModeTierPanel from "../leaderboard/ModeTierPanel";
 import { ColumnFill } from "../ColumnFill";
+import { useAudio } from "../audio/AudioProvider";
 
 interface DestinyMilestoneView {
   readonly id: string;
@@ -331,6 +332,7 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
 
 export default function DestinyScreen() {
   const { go } = useScene();
+  const { play: playSound } = useAudio();
   const [overview, setOverview] = useState<DestinyOverview | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [roster, setRoster] = useState<readonly string[]>([]);
@@ -427,6 +429,7 @@ export default function DestinyScreen() {
     setBusy(true); setMessage(null);
     const result = await postJson<ApiResult>("/api/destiny/run", { rosterIds: roster });
     if (!result?.ok) { setBusy(false); fail(result?.error); return; }
+    playSound("destiny.choose");
     await refreshAfter();
   };
 
@@ -455,6 +458,7 @@ export default function DestinyScreen() {
     setBusy(true); setMessage(null);
     const result = await postJson<ApiResult>("/api/destiny/reward", { floor: run.floor, index: offerIndex, targetIds: targets });
     if (!result?.ok) { setBusy(false); fail(result?.error); return; }
+    playSound("destiny.choose");
     await refreshAfter();
   };
 
