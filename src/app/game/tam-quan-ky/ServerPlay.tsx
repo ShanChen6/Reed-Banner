@@ -240,7 +240,7 @@ export function ServerPlay({ kind, modePicker, mapPicker, map, rivalId, onRival,
             {waiting && (
               <div className="ui-frame-inset flex flex-col gap-2 p-3" role="status">
                 <p className="font-semibold text-on-wood">Mã phòng</p>
-                <p className="font-mono text-3xl font-bold tracking-[0.3em] text-frame-gold">{view.code}</p>
+                <p data-testid="tqk-room-code" className="font-mono text-3xl font-bold tracking-[0.3em] text-frame-gold">{view.code}</p>
                 <p className="text-caption text-on-wood-soft">Gửi mã này cho bạn bè. Khi họ vào phòng, đồng hồ quân Đỏ bắt đầu chạy. Mã hết hạn sau 30 phút.</p>
               </div>
             )}
