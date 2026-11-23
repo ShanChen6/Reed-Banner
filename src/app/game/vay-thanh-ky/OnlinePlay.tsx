@@ -11,7 +11,7 @@ import { BottomSheet, OrnateFrame, ResultModal, SurrenderButton } from "@/compon
 import { PlayCard } from "../PlayCard";
 import { Options } from "../tam-quan-ky/parts";
 import { Board } from "./Board";
-import { ElementPicker, PlayerCard, RULE_HINT, RULE_NAME, SIZES, ScoreLines } from "./parts";
+import { Arena, ElementPicker, PlayerCard, RULE_HINT, RULE_NAME, SIZES, ScoreLines } from "./parts";
 import { SERVER_ERROR, useOnlineMatch } from "./useOnlineMatch";
 
 interface Props {
@@ -127,60 +127,66 @@ export function OnlinePlay({ modePicker, phone, onMoves }: Props) {
     );
   }
 
+  const side = (c: Color, tall: boolean) => (
+    <PlayerCard
+      key={c}
+      tall={tall}
+      element={view.elements[c]}
+      color={c}
+      name={names(c)}
+      captures={shown.captures[c]}
+      active={!result && !waiting && shown.toPlay === c}
+      status={!result && !waiting && shown.toPlay === c ? "tới lượt" : undefined}
+      clock={s.timeLeft(c)}
+    />
+  );
+
   const nameMap = { [BLACK]: names(BLACK), [WHITE]: names(WHITE) } as Record<Color, string>;
 
   return (
     <PlayCard className="sm:mt-5">
-      <OrnateFrame aria-label="Vùng chơi" flush className="grid min-w-0 items-start gap-4 p-2 sm:p-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
-        <div className="flex min-w-0 flex-col gap-3">
-          <Board
-            size={view.size}
-            board={shown.board}
-            elements={view.elements}
-            toPlay={view.you}
-            lastMove={shown.lastMove}
-            interactive={canMove}
-            onPlay={(p) => void send(p)}
-            onPass={view.mode === "full" ? () => void send(PASS) : undefined}
-            dead={result?.score?.dead ?? []}
-            label={`Bàn cờ vây ${view.size} nhân ${view.size}, đấu người.`}
-          />
-          <p role="status" aria-live="polite" className="min-h-5 text-center text-caption text-on-wood-soft">{notice ?? ""}</p>
-        </div>
-
-        <aside className="flex flex-col gap-3">
-          {waiting && (
-            <div className="ui-frame-inset flex flex-col gap-2 p-3" role="status">
-              <p className="font-semibold text-on-wood">Mã phòng</p>
-              <p className="font-mono text-3xl font-bold tracking-[0.3em] text-frame-gold" data-testid="vtk-room-code">{view.code}</p>
-              <p className="text-caption text-on-wood-soft">Gửi mã này cho bạn bè. Khi họ vào phòng, đồng hồ của bạn bắt đầu chạy. Mã hết hạn sau 30 phút.</p>
-            </div>
-          )}
-          {([BLACK, WHITE] as const).map((c) => (
-            <PlayerCard
-              key={c}
-              element={view.elements[c]}
-              color={c}
-              name={names(c)}
-              captures={shown.captures[c]}
-              active={!result && !waiting && shown.toPlay === c}
-              status={!result && !waiting && shown.toPlay === c ? "tới lượt" : undefined}
-              clock={s.timeLeft(c)}
+      <OrnateFrame aria-label="Vùng chơi" flush className="p-2 sm:p-4">
+        <Arena
+          left={(tall) => side(BLACK, tall)}
+          right={(tall) => side(WHITE, tall)}
+          board={
+            <Board
+              size={view.size}
+              board={shown.board}
+              elements={view.elements}
+              toPlay={view.you}
+              lastMove={shown.lastMove}
+              interactive={canMove}
+              onPlay={(p) => void send(p)}
+              onPass={view.mode === "full" ? () => void send(PASS) : undefined}
+              dead={result?.score?.dead ?? []}
+              label={`Bàn cờ vây ${view.size} nhân ${view.size}, đấu người.`}
             />
-          ))}
-          <p className="text-caption text-on-wood-soft">Đấu người, giao hữu. {RULE_NAME[view.mode]}, bàn {view.size}×{view.size}.</p>
-          {result?.score && <ScoreLines score={result.score} names={nameMap} />}
-          {s.error && <p role="alert" className="text-caption font-semibold text-[var(--lacquer-hi)]">{SERVER_ERROR[s.error] ?? SERVER_ERROR.network}</p>}
-
-          <div className="flex flex-wrap gap-2" role="toolbar" aria-label="Thao tác">
-            {!waiting && !result && view.mode === "full" && (
-              <Button variant="secondary" size="sm" disabled={!canMove} onClick={() => void send(PASS)}>Bỏ lượt</Button>
-            )}
-            {waiting && <Button variant="secondary" size="sm" disabled={s.busy} onClick={() => void s.resign().then((ok) => ok && s.leave())}>Hủy phòng</Button>}
-            {!waiting && !result && <SurrenderButton consequence="Ván này tính là thua, người kia thắng." onConfirm={() => void s.resign()} />}
-            {result && <Button variant="secondary" size="sm" onClick={s.leave}>Ván mới</Button>}
-          </div>
-        </aside>
+          }
+          below={
+            <>
+              <p role="status" aria-live="polite" className="min-h-5 text-center text-caption text-on-wood-soft">{notice ?? ""}</p>
+              {waiting && (
+                <div className="ui-frame-inset flex w-full flex-col items-center gap-2 p-3 text-center" role="status">
+                  <p className="font-semibold text-on-wood">Mã phòng</p>
+                  <p className="font-mono text-3xl font-bold tracking-[0.3em] text-frame-gold" data-testid="vtk-room-code">{view.code}</p>
+                  <p className="text-caption text-on-wood-soft">Gửi mã này cho bạn bè. Khi họ vào phòng, đồng hồ của bạn bắt đầu chạy. Mã hết hạn sau 30 phút.</p>
+                </div>
+              )}
+              {result?.score && <ScoreLines score={result.score} names={nameMap} />}
+              {s.error && <p role="alert" className="text-caption font-semibold text-[var(--lacquer-hi)]">{SERVER_ERROR[s.error] ?? SERVER_ERROR.network}</p>}
+              <div className="flex flex-wrap justify-center gap-2" role="toolbar" aria-label="Thao tác">
+                {!waiting && !result && view.mode === "full" && (
+                  <Button variant="secondary" size="sm" disabled={!canMove} onClick={() => void send(PASS)}>Bỏ lượt</Button>
+                )}
+                {waiting && <Button variant="secondary" size="sm" disabled={s.busy} onClick={() => void s.resign().then((ok) => ok && s.leave())}>Hủy phòng</Button>}
+                {!waiting && !result && <SurrenderButton consequence="Ván này tính là thua, người kia thắng." onConfirm={() => void s.resign()} />}
+                {result && <Button variant="secondary" size="sm" onClick={s.leave}>Ván mới</Button>}
+              </div>
+              <p className="text-center text-caption text-on-wood-soft">Đấu người, giao hữu. {RULE_NAME[view.mode]}, bàn {view.size}×{view.size}.</p>
+            </>
+          }
+        />
 
         {outcome && (
           <ResultModal open={!dismissed} tone={outcome.tone} kicker="Vây Thành Kỳ, đấu người" title={outcome.title} onDismiss={() => setDismissed(true)}
