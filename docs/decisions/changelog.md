@@ -9,7 +9,7 @@
 - Nhiệm vụ ngày mới "Đánh xong một ván Tam Quân Kỳ hoặc Vây Thành Kỳ", 40 vàng ([mục 5.2](../02-game-modes/README.md)).
 
 **Đưa Tam Quân Kỳ và Vây Thành Kỳ vào chế độ chơi; thưởng hạng Tháp Thiên Mệnh sang tab Công trạng (Shan yêu cầu)**
-- Hai chế độ cờ rời mục Sắp ra mắt, vào mục Giải đố của Chiến trường (nhãn "Đánh cờ") và nhóm "Binh pháp, đánh cờ và giải đố" ở trang giới thiệu. Vây Thành Kỳ chưa có tranh thẻ và biểu tượng, tạm dùng tranh mực.
+- Hai chế độ cờ rời mục Sắp ra mắt, vào mục Giải đố của Chiến trường (nhãn "Đánh cờ") và nhóm "Binh pháp, đánh cờ và giải đố" ở trang giới thiệu. Vây Thành Kỳ dùng tranh thẻ Shan vẽ; chưa có biểu tượng chế độ.
 - Khối "Thưởng hạng chờ nhận" của Tháp Thiên Mệnh chuyển từ tab Chơi sang tab Công trạng tuần, như Trấn Ải.
 - Bấm logo hoặc chữ "Cờ Lau" ở footer về trang chủ.
 

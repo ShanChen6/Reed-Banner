@@ -215,3 +215,9 @@ export function OrbDefs({ id, element }: { id: string; element: Element }) {
     </>
   );
 }
+
+/** Tranh nền đất của hệ (Shan vẽ), phủ vùng đất trên bàn. */
+export const groundArt = (e: Element) => `/art/vay-thanh-ky/ground/${e}.webp`;
+
+/** Tranh dọc của hệ cho khung người chơi. */
+export const panelArt = (e: Element) => `/art/vay-thanh-ky/panel/${e}.webp`;

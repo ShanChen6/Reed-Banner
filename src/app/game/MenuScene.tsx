@@ -67,8 +67,7 @@ const MODES: readonly Mode[] = [
   { scene: "SU_LO", group: "puzzle", title: "Sử Lộ", text: MODE_TEXT.SU_LO, art: "su-lo", kicker: "Học sử", status: "Chơi thử ngay, không cần tài khoản", cta: "Lên đường" },
   { scene: "TAM_TUONG_KY", group: "puzzle", title: "Tầm Tướng Ký", text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Một phiếu, một lượt tìm tướng", cta: "Ghép tướng", lockedText: "Sắp khai mở" },
   { scene: "TAM_QUAN_KY", group: "puzzle", title: "Tam Quân Kỳ", text: MODE_TEXT.TAM_QUAN_KY, art: "tam-quan-ky", kicker: "Đánh cờ", status: "Thắng sứ quân có vàng, đấu người bằng mã phòng", cta: "Bày cờ" },
-  // TODO tranh: chưa có public/art/home/vay-thanh-ky.webp, thẻ dùng tranh mực tạm.
-  { scene: "VAY_THANH_KY", group: "puzzle", title: "Vây Thành Kỳ", text: MODE_TEXT.VAY_THANH_KY, kicker: "Đánh cờ", status: "Đấu sứ quân hoặc đấu người bằng mã phòng", cta: "Vây thành" },
+  { scene: "VAY_THANH_KY", group: "puzzle", title: "Vây Thành Kỳ", text: MODE_TEXT.VAY_THANH_KY, art: "vay-thanh-ky", kicker: "Đánh cờ", status: "Đấu sứ quân hoặc đấu người bằng mã phòng", cta: "Vây thành" },
   { scene: "EXPEDITION", group: "battle", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, art: "vien-chinh", kicker: "Hành quân", status: "Bày mưu tính kế trên sa bàn", cta: "Hành quân", lockedText: "Sắp khai mở" },
 ];
 
