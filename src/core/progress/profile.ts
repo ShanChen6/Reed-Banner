@@ -567,7 +567,8 @@ export const TTK_TICKETS_CHECKIN7 = 1;
 function ttkTicketsFor(action: { readonly type: "checkIn" } | { readonly type: "claimQuest"; readonly id: string }, quests: QuestState): number {
   if (action.type === "checkIn") return quests.checkIn.streak === 7 ? TTK_TICKETS_CHECKIN7 : 0;
   if (action.id === "w.win15") return TTK_TICKETS_WEEKLY_WIN15;
-  const daily = DAILY_QUESTS.map((q) => q.id);
+  // Nhiệm vụ đánh cờ (d.board, 23/11/2026) không nằm trong điều kiện "nhận đủ": giữ nguyên mức phiếu cũ cho người không chơi cờ.
+  const daily = DAILY_QUESTS.filter((q) => q.stat !== "board").map((q) => q.id);
   return daily.includes(action.id) && daily.every((id) => quests.claimed.includes(id)) ? TTK_TICKETS_DAILY_ALL : 0;
 }
 

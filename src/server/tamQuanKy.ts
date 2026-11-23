@@ -26,6 +26,7 @@ import {
   type TqkMatchMode,
 } from "@/core/tam-quan-ky";
 import { vnDay } from "@/core/vnTime";
+import { creditBoardGame } from "./boardQuests";
 import { updateProfile, type ProfileStore } from "./profiles";
 
 export type TqkStatus = "waiting" | "playing" | "ended";
@@ -201,6 +202,8 @@ async function commit(prev: TqkRecord, match: TqkMatch, deps: TqkDeps): Promise<
   }
   const record: TqkRecord = { ...prev, match, status: result ? "ended" : prev.status, reward, rewardDay, seq: prev.seq + 1, updatedAt: deps.now };
   if (!(await deps.store.save(record, prev.seq))) return null;
+  // Ván vừa xong (ván chưa ai vào rồi hủy phòng không đi qua đây): cộng nhiệm vụ ngày đánh cờ cho người chơi thật.
+  if (result && prev.status !== "ended") await creditBoardGame(deps.profiles, [prev.red, prev.blue], match.moves.length, deps.now);
   const gold = reward ?? 0;
   if (gold > 0 && prev.reward === null) {
     const paid = await updateProfile(deps.profiles, prev.ownerId, (p) => ({ ok: true, profile: { ...p, gold: p.gold + gold } }), deps.now);

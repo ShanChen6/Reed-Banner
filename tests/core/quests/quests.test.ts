@@ -8,6 +8,7 @@ import {
   newProfile,
   parseProfile,
   questProgress,
+  recordBoardGame,
   recordMatch,
   STORY_NODES,
   vnDay,
@@ -130,3 +131,17 @@ describe("nhiệm vụ, thành tựu, điểm danh", () => {
     assert.equal(parseProfile(bad)!.quests.checkIn.streak, 0);
   });
 });
+
+describe("nhiệm vụ ngày đánh cờ (d.board)", () => {
+  const T = Date.UTC(2026, 10, 23, 5);
+  it("ván cờ chỉ cộng stat board, không tính trận ghép ô; nhận được 40 vàng", () => {
+    const p = newProfile();
+    const q = recordBoardGame(p.quests, T);
+    assert.deepEqual(q.dayStats, { board: 1 });
+    assert.deepEqual(q.totals, {});
+    const r = applyProfileAction({ ...p, quests: q }, { type: "claimQuest", id: "d.board" }, T);
+    assert.ok(r.ok);
+    if (r.ok) assert.equal(r.profile.gold, p.gold + DAILY_QUESTS.find((d) => d.id === "d.board")!.gold);
+  });
+});
+

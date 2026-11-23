@@ -65,3 +65,22 @@ test("Vây Thành Kỳ: hai tài khoản đấu người bằng mã phòng", asy
   await expect(host.getByRole("dialog").getByText("Thắng trận!")).toBeVisible({ timeout: 10_000 });
   expectClean(problems);
 });
+
+test("Vây Thành Kỳ: đấu sứ quân có thưởng, máy chủ đáp nước rồi đầu hàng thì thua", async ({ page }) => {
+  test.skip(isPhone(), "Luồng giống máy tính, chỉ khác bảng trượt.");
+  test.setTimeout(90_000);
+  const problems = watchProblems(page);
+  await registerAccount(page);
+  await page.goto("/game/go");
+  await playMode(page);
+  await page.getByRole("group", { name: "Cách chơi" }).getByRole("button", { name: "Đấu sứ quân có thưởng" }).click();
+  await page.getByRole("group", { name: "Độ khó" }).getByRole("button", { name: /^Dễ/ }).click();
+  await page.getByRole("button", { name: /^Vào trận đấu/ }).click();
+  await expect(page.getByText(/Có thưởng, độ khó Dễ/)).toBeVisible({ timeout: 10_000 });
+  await clickPoint(page, 9, 4, 4);
+  await expect(stones(page)).toHaveCount(2, { timeout: 15_000 });
+  await page.getByRole("button", { name: "Đầu hàng" }).click();
+  await page.getByRole("dialog").getByRole("button", { name: /Đầu hàng/ }).click();
+  await expect(page.getByRole("dialog").getByText("Bạn đã đầu hàng.")).toBeVisible({ timeout: 10_000 });
+  expectClean(problems);
+});

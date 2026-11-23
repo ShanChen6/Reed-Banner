@@ -2,7 +2,7 @@
 
 // Vây Thành Kỳ: cờ vây nguyên tố. Luật chép nguyên từ cờ vây của Shanverse (src/core/co-vay), mỗi bên chọn một trong 7 hệ:
 // quân thành quả cầu nguyên tố, đất quanh quân đổi nền theo hệ (theme.tsx). Đấu máy (một trong 12 sứ quân) hoặc hai người cùng
-// máy; ván dở lưu ở trình duyệt. Đấu người bằng mã phòng do server làm trọng tài nằm ở OnlinePlay.tsx.
+// máy; ván dở lưu ở trình duyệt. Đấu sứ quân có thưởng và đấu người bằng mã phòng do server làm trọng tài nằm ở OnlinePlay.tsx.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Element } from "@/core";
@@ -26,7 +26,7 @@ import { savedOnline } from "./useOnlineMatch";
 const SAVE_KEY = "reed-banner:vay-thanh-ky:save:v1";
 const MIN_THINK_MS = 450;
 
-type PlayMode = "ai" | "two" | "online";
+type PlayMode = "ai" | "two" | "reward" | "online";
 type Phase = "setup" | "playing" | "scoring" | "over";
 type Result = { winner: Color; reason: "score" | "capture" | "resign"; black?: number; white?: number };
 
@@ -106,12 +106,15 @@ export default function VayThanhKyScreen() {
       setDeadReady(s.phase !== "scoring");
       setResult(s.result);
       /* eslint-enable react-hooks/set-state-in-effect */
-    } else if (savedOnline()) setMode("online");
+    } else {
+      const server = savedOnline();
+      if (server) setMode(server);
+    }
     loaded.current = true;
   }, []);
 
   useEffect(() => {
-    if (!loaded.current || mode === "online") return;
+    if (!loaded.current || mode === "online" || mode === "reward") return;
     const value: Saved | null = phase === "setup" ? null : { v: 1, mode, rule, size, human, level, rival: rivalId, elements, moves, phase, dead, result };
     writeStorage(SAVE_KEY, value ? JSON.stringify(value) : null);
   }, [mode, rule, size, human, level, rivalId, elements, moves, phase, dead, result]);
@@ -263,7 +266,8 @@ export default function VayThanhKyScreen() {
   const modePicker = (
     <Options label="Cách chơi" value={mode} onChange={(v) => { if (phase === "setup") setMode(v); }}
       options={[
-        { value: "ai", label: "Đấu sứ quân" },
+        { value: "ai", label: "Luyện với sứ quân" },
+        { value: "reward", label: "Đấu sứ quân có thưởng" },
         { value: "two", label: "Hai người cùng máy" },
         { value: "online", label: "Đấu người bằng mã phòng" },
       ]} />
@@ -320,13 +324,13 @@ export default function VayThanhKyScreen() {
         kicker="Binh pháp, bản thử"
         description={MODE_TEXT.VAY_THANH_KY}
         stats={[
-          { label: "Đối thủ", value: mode === "online" ? "Người khác" : mode === "two" ? "Hai người" : rival.name },
-          { label: "Nước", value: (mode === "online" ? onlineMoves : moves.length) || "–" },
+          { label: "Đối thủ", value: mode === "online" ? "Người khác" : mode === "two" ? "Hai người" : mode === "reward" ? "Sứ quân" : rival.name },
+          { label: "Nước", value: (mode === "online" || mode === "reward" ? onlineMoves : moves.length) || "–" },
         ]}
       />
       <ModeGuideTabs scene="VAY_THANH_KY">
-        {mode === "online" ? (
-          <OnlinePlay modePicker={modePicker} phone={phone} onMoves={setOnlineMoves} />
+        {mode === "online" || mode === "reward" ? (
+          <OnlinePlay key={mode} kind={mode} modePicker={modePicker} phone={phone} onMoves={setOnlineMoves} />
         ) : phase === "setup" ? (
           <>
             <section className="ui-frame p-4 max-sm:hidden" aria-label="Chuẩn bị ván">{setup}</section>

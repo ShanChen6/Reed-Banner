@@ -33,7 +33,8 @@ function isAhead(pos: Position, color: Color, dead: number[]): boolean {
   return color === WHITE ? score.white > score.black : score.black > score.white;
 }
 
-export function chooseMove(pos: Position, level: Level, seed: number, now?: () => number): AiMove {
+/** `maxMs`: trần thời gian nghĩ (server đặt để mỗi request đấu sứ quân không kéo quá lâu); không truyền thì theo limitsFor. */
+export function chooseMove(pos: Position, level: Level, seed: number, now?: () => number, maxMs?: number): AiMove {
   if (isOver(pos)) return { move: PASS, resign: false, winrate: 0.5 };
   const rng = createRng(seed);
   const me = pos.toPlay;
@@ -42,7 +43,8 @@ export function chooseMove(pos: Position, level: Level, seed: number, now?: () =
     const dead = estimateDead(pos, rng, 120);
     if (isAhead(pos, me, dead)) return { move: PASS, resign: false, winrate: 0.9 };
   }
-  const limits = limitsFor(level, pos.size, pos.mode);
+  const base = limitsFor(level, pos.size, pos.mode);
+  const limits = maxMs !== undefined && base.ms !== undefined ? { ...base, ms: Math.min(base.ms, maxMs) } : base;
   const result = now ? search(pos, limits, rng, now) : search(pos, { playouts: limits.playouts }, rng, () => 0);
   const area = pos.size * pos.size;
   const resign = pos.mode === "full" && result.winrate < 0.04 && result.playouts >= 2000 && pos.moveNumber > area / 2;

@@ -1,22 +1,25 @@
 "use client";
 
-// Ván Vây Thành Kỳ đấu người (server làm trọng tài, src/server/coVay.ts), phía trình duyệt: gọi /api/go, nhớ ván đang chơi để
+// Ván Vây Thành Kỳ do server làm trọng tài (src/server/coVay.ts): đấu sứ quân có thưởng và đấu người. Phía trình duyệt: gọi /api/go, nhớ ván đang chơi để
 // tải lại trang vẫn về đúng ván, hỏi lại server mỗi POLL_MS và đếm lùi đồng hồ giữa hai lần hỏi. Chép khung từ Tam Quân Kỳ.
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Element } from "@/core";
-import { BLACK, WHITE, type BoardSize, type Color, type Mode } from "@/core/co-vay";
+import { BLACK, WHITE, type BoardSize, type Color, type Level, type Mode } from "@/core/co-vay";
 import type { GoView } from "@/server/coVay";
+import { PROFILE_GOLD_EVENT } from "../battle/online";
 import { readStorage, writeStorage } from "../formation/storage";
 
 export type { GoView };
+/** Ván do server làm trọng tài: đấu sứ quân có thưởng hoặc đấu người bằng mã phòng. */
+export type ServerKind = "reward" | "online";
 
 const ONLINE_KEY = "reed-banner:vay-thanh-ky:online:v1";
 const POLL_MS = 1500;
 
 export const SERVER_ERROR: Readonly<Record<string, string>> = {
-  loginRequired: "Cần trình danh để đấu người.",
-  featureDisabled: "Đấu người đang tạm đóng.",
+  loginRequired: "Cần trình danh để chơi ván có thưởng hoặc đấu người.",
+  featureDisabled: "Ván trên máy chủ đang tạm đóng.",
   notFound: "Không thấy phòng với mã này, hoặc mã đã hết hạn.",
   ownRoom: "Đây là phòng của bạn. Gửi mã cho người khác để họ vào.",
   started: "Phòng này đã có người vào.",
@@ -47,17 +50,18 @@ async function api(body?: Record<string, unknown>, id?: string): Promise<ApiResu
   }
 }
 
-function readSavedId(): string | null {
+function readSaved(): { id: string; kind: ServerKind } | null {
   try {
-    const v = JSON.parse(readStorage(ONLINE_KEY) ?? "null") as { id?: unknown } | null;
-    return v && typeof v.id === "string" ? v.id : null;
+    const v = JSON.parse(readStorage(ONLINE_KEY) ?? "null") as { id?: unknown; kind?: unknown } | null;
+    return v && typeof v.id === "string" ? { id: v.id, kind: v.kind === "reward" ? "reward" : "online" } : null;
   } catch {
     return null;
   }
 }
+const readSavedId = (): string | null => readSaved()?.id ?? null;
 
-/** Còn ván đấu người dở (để màn mở đúng chế độ khi tải lại trang). */
-export const savedOnline = (): boolean => readSavedId() !== null;
+/** Ván dở trên máy chủ (để màn mở đúng chế độ khi tải lại trang); null khi không có. */
+export const savedOnline = (): ServerKind | null => readSaved()?.kind ?? null;
 
 export function useOnlineMatch() {
   const [view, setView] = useState<GoView | null>(null);
@@ -78,7 +82,8 @@ export function useOnlineMatch() {
     setView(v);
     setReceivedAt(Date.now());
     setError(null);
-    writeStorage(ONLINE_KEY, JSON.stringify({ id: v.id }));
+    writeStorage(ONLINE_KEY, JSON.stringify({ id: v.id, kind: v.ai ? "reward" : "online" }));
+    if (v.gold !== undefined) window.dispatchEvent(new CustomEvent(PROFILE_GOLD_EVENT, { detail: v.gold }));
     return true;
   }, []);
 
@@ -96,11 +101,13 @@ export function useOnlineMatch() {
   const myTurn = !!view && view.status === "playing" && !view.result && toMove === view.you;
 
   const viewId = view?.id ?? null;
+  // Đấu sứ quân: máy đáp ngay trong request, không có đồng hồ nên không cần hỏi lại server.
+  const polled = live && !view?.ai;
   useEffect(() => {
-    if (!live || !viewId) return;
+    if (!polled || !viewId) return;
     const timer = window.setInterval(() => void api(undefined, viewId).then((r) => r.ok && accept(r)), POLL_MS);
     return () => window.clearInterval(timer);
-  }, [live, viewId, accept]);
+  }, [polled, viewId, accept]);
 
   const ticking = !!view && view.status === "playing" && !view.result && view.clockMs > 0;
   useEffect(() => {
@@ -136,6 +143,7 @@ export function useOnlineMatch() {
     busy,
     myTurn,
     timeLeft,
+    startAi: (opts: { level: Level; rival: string; human: Color; size: BoardSize; mode: Mode; element: Element; rivalElement: Element }) => run({ action: "ai", ...opts }),
     host: (opts: { size: BoardSize; mode: Mode; clock: number; element: Element }) => run({ action: "host", ...opts }),
     join: (code: string, element: Element) => run({ action: "join", code, element }),
     move: async (point: number) => {
