@@ -89,6 +89,8 @@ for (const [label, make] of stores) {
       const again = view(await tqkGet("u1", start.id, h.deps()));
       assert.equal(again.reward, TQK_GOLD.hard);
       assert.equal((await loadProfile(h.profiles, "u1")).profile.gold, p.profile.gold);
+      // Ván đủ dài thì cộng nhiệm vụ ngày đánh cờ, một lần mỗi ván.
+      if (end.moves.length >= 10) assert.equal(p.profile.quests.dayStats.board, 1);
     });
 
     it("cầm Xanh thì máy đi trước; đi sai lượt hay sai luật bị từ chối", async () => {

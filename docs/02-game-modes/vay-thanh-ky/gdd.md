@@ -1,7 +1,7 @@
 # Vây Thành Kỳ: cờ vây bảy nguyên tố
 
 > Cập nhật: 23/11/2026 (bản thử đầu tiên)
-> Trạng thái: **IMPLEMENTED (bản thử)** — Shan đề xuất và chốt tên 23/11/2026; luật lấy nguyên từ cờ vây của Shanverse. Đấu sứ quân và hai người cùng máy chạy trên trình duyệt; đấu người bằng mã phòng do server làm trọng tài. Chưa có thưởng.
+> Trạng thái: **IMPLEMENTED (bản thử)** — Shan đề xuất và chốt tên 23/11/2026; luật lấy nguyên từ cờ vây của Shanverse. Đấu sứ quân và hai người cùng máy chạy trên trình duyệt; đấu người bằng mã phòng do server làm trọng tài. Đấu sứ quân có thưởng (23/11/2026) chạy trên server.
 
 ## 1. Định vị
 
@@ -32,7 +32,8 @@ Chỉ là lớp giao diện, không đổi luật (`src/app/game/vay-thanh-ky/th
 
 | Cách | Nơi chạy | Ghi chú |
 |---|---|---|
-| Đấu sứ quân | Trình duyệt (web worker) | Chọn 1 trong 12 sứ quân, ba độ khó, đi trước hay sau. Có đi lại. Ván dở lưu ở trình duyệt |
+| Luyện với sứ quân | Trình duyệt (web worker) | Chọn 1 trong 12 sứ quân, ba độ khó, đi trước hay sau. Có đi lại. Ván dở lưu ở trình duyệt. Không vàng |
+| Đấu sứ quân có thưởng (23/11/2026) | Server (`goStartAi` trong `src/server/coVay.ts`, `/api/go` action `ai`, cột `ai`, `reward`, `reward_day` của `go_matches`, migration 0018) | Chọn như ván luyện. Máy tính nước ngay trong request (MCTS, trần 2,5 giây mỗi nước), không đồng hồ, không đi lại. Thắng được 20, 40, 80 vàng theo độ khó, tối đa 3 ván có vàng mỗi ngày, cùng mức Tam Quân Kỳ (Claude đặt, chờ Shan duyệt). Cần trình danh |
 | Hai người cùng máy | Trình duyệt | Chọn hệ cho bên đi trước và đi sau |
 | Đấu người bằng mã phòng | Server (`src/server/coVay.ts`, `/api/go`, bảng `go_matches`) | Người mở phòng đi trước, chọn luật, cỡ bàn, đồng hồ 10/20/30 phút. Người vào bằng mã đi sau; chọn trùng hệ thì server đổi sang hệ khác. Hai bên cùng bỏ lượt thì server tự đoán quân chết và đếm điểm (seed cố định theo ván), không có bước thỏa thuận. Giao hữu, cần trình danh. Tắt nhanh bằng `VAY_THANH_KY_SERVER_ENABLED=false` |
 
@@ -40,6 +41,5 @@ Ván ở trình duyệt: hai bên cùng bỏ lượt thì máy đoán quân ch�
 
 ## 5. Còn mở
 
-- Thưởng vàng khi thắng sứ quân (cần server trọng tài như Tam Quân Kỳ).
 - Tranh thẻ chế độ, banner và nền đất vẽ tay cho từng hệ.
 - Mạng KataGo cho máy tính bàn như Shanverse.

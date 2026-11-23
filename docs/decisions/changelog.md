@@ -4,6 +4,10 @@
 
 ## 23/11/2026
 
+**Vây Thành Kỳ có thưởng và nhiệm vụ ngày đánh cờ (Shan chọn "Thêm thưởng và nhiệm vụ")**
+- Vây Thành Kỳ thêm cách chơi "Đấu sứ quân có thưởng" chạy trên server, cùng mức vàng và giới hạn ngày với Tam Quân Kỳ ([GDD mục 4](../02-game-modes/vay-thanh-ky/gdd.md)). Ván luyện trên trình duyệt giữ nguyên, không vàng.
+- Nhiệm vụ ngày mới "Đánh xong một ván Tam Quân Kỳ hoặc Vây Thành Kỳ", 40 vàng ([mục 5.2](../02-game-modes/README.md)).
+
 **Đưa Tam Quân Kỳ và Vây Thành Kỳ vào chế độ chơi; thưởng hạng Tháp Thiên Mệnh sang tab Công trạng (Shan yêu cầu)**
 - Hai chế độ cờ rời mục Sắp ra mắt, vào mục Giải đố của Chiến trường (nhãn "Đánh cờ") và nhóm "Binh pháp, đánh cờ và giải đố" ở trang giới thiệu. Vây Thành Kỳ chưa có tranh thẻ và biểu tượng, tạm dùng tranh mực.
 - Khối "Thưởng hạng chờ nhận" của Tháp Thiên Mệnh chuyển từ tab Chơi sang tab Công trạng tuần, như Trấn Ải.

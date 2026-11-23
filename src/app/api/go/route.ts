@@ -1,22 +1,26 @@
-// Vây Thành Kỳ đấu người, server làm trọng tài (src/server/coVay.ts).
+// Vây Thành Kỳ do server làm trọng tài (src/server/coVay.ts): đấu sứ quân có thưởng và đấu người bằng mã phòng.
 // GET /api/go?id=...: xem ván (xử hết giờ).
-// POST /api/go `{ action: "host" | "join" | "move" | "resign", ... }`.
+// POST /api/go `{ action: "ai" | "host" | "join" | "move" | "resign", ... }`.
 // Chỉ tài khoản đã trình danh. Tắt nhanh bằng VAY_THANH_KY_SERVER_ENABLED=false.
 
 import { randomInt, randomUUID } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
-import { parseGoPoint } from "@/core/co-vay";
+import { chooseMove, parseGoPoint } from "@/core/co-vay";
 import { vayThanhKyServerEnabled } from "@/server/featureFlags";
-import { goGet, goHost, goJoin, goMove, goResignMatch, type GoApiResult, type GoDeps } from "@/server/coVay";
+import { goGet, goHost, goJoin, goMove, goResignMatch, goStartAi, type GoApiResult, type GoDeps } from "@/server/coVay";
 import { guestOf, isSignedInAccount, loginRequiredResponse, readJson, sameOrigin } from "@/server/http";
 import { makeRoomCode, normalizeRoomCode } from "@/server/pvpRooms";
-import { accountStore, goStore } from "@/server/store";
+import { accountStore, goStore, profileStore } from "@/server/store";
 
 const noStore = { "cache-control": "no-store" };
+/** Trần thời gian máy nghĩ mỗi nước trên server (ms): bàn lớn độ khó cao không kéo request quá lâu. */
+const SERVER_THINK_MS = 2500;
 
 function deps(): GoDeps {
   return {
     store: goStore(),
+    profiles: profileStore(),
+    think: (pos, level) => chooseMove(pos, level, randomInt(0, 2 ** 31), () => performance.now(), SERVER_THINK_MS),
     now: Date.now(),
     newId: () => randomUUID(),
     newCode: () => makeRoomCode(() => randomInt(0, 2 ** 31) / 2 ** 31),
@@ -50,6 +54,14 @@ export async function POST(request: NextRequest) {
   const body = (await readJson(request)) as Record<string, unknown> | null;
   const d = deps();
   switch (body?.action) {
+    case "ai":
+      return reply(
+        await goStartAi(
+          who,
+          { level: body.level, rival: body.rival, human: body.human, size: body.size, mode: body.mode, element: body.element, rivalElement: body.rivalElement },
+          d,
+        ),
+      );
     case "host":
       return reply(await goHost(who, { size: body.size, mode: body.mode, clock: body.clock, element: body.element }, d));
     case "join": {

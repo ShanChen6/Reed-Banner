@@ -223,11 +223,12 @@ describe("phiếu từ nhiệm vụ và điểm danh", () => {
     const q = rollQuests(NEW_QUESTS, T0);
     return {
       ...newProfile(),
-      quests: { ...q, dayStats: { play: 99, win: 99, coins: 999, daily: 9 }, weekStats: { win: 99 }, claimed },
+      quests: { ...q, dayStats: { play: 99, win: 99, coins: 999, daily: 9, board: 9 }, weekStats: { win: 99 }, claimed },
       ...(ttk ? { tamTuongKy: newTtkAccount(catalog) } : {}),
     };
   };
-  const daily = DAILY_QUESTS.map((d) => d.id);
+  // Nhiệm vụ đánh cờ (d.board) không nằm trong điều kiện "nhận đủ".
+  const daily = DAILY_QUESTS.filter((d) => d.stat !== "board").map((d) => d.id);
 
   it("nhận nốt nhiệm vụ ngày cuối cùng: +1 phiếu; các nhiệm vụ trước đó không cộng", () => {
     const early = applyProfileAction(withQuests([]), { type: "claimQuest", id: daily[0]! }, T0);
@@ -236,6 +237,9 @@ describe("phiếu từ nhiệm vụ và điểm danh", () => {
     const last = applyProfileAction(withQuests(daily.slice(0, -1)), { type: "claimQuest", id: daily.at(-1)! }, T0);
     assert.ok(last.ok);
     assert.equal(last.profile.tamTuongKy?.tickets, TTK_START_TICKETS + 1);
+    const board = applyProfileAction(withQuests(daily), { type: "claimQuest", id: "d.board" }, T0);
+    assert.ok(board.ok);
+    assert.equal(board.profile.tamTuongKy?.tickets, TTK_START_TICKETS, "nhiệm vụ đánh cờ không cộng phiếu");
   });
 
   it("nhiệm vụ tuần Thắng 15 trận: +2 phiếu", () => {
