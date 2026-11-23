@@ -364,7 +364,7 @@ Nối âm thanh màn Nhật Lệnh (src/app/game/daily/DailyScreen.tsx) và bả
 
 ### D8. Tiếng giao diện chung (`ui.*`)
 
-- **Shan tạo tệp:** B6 dòng `ui.click`, `ui.back`, `ui.open`, `ui.close`, `ui.error`, `ui.reward`, `ui.levelup`.
+- **Shan tạo tệp:** B6 dòng `ui.levelup` (các dòng `ui.*` khác có tệp 23–24/11/2026).
 - **Prompt code:**
 
 ```

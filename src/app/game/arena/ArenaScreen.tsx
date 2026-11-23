@@ -149,6 +149,7 @@ export default function ArenaScreen() {
     setData(next);
     if (next.claimed) {
       setTierNote(tierClaimNote(next.claimed));
+      playSound("ui.reward");
       void fetchProfile();
     } else setTierNote(tierErrorNote(next.claimError));
   };

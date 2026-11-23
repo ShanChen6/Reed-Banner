@@ -16,6 +16,34 @@
       ],
       "volume": 0.5
     },
+    "ui.open": {
+      "files": [
+        "sfx/ui/open_a",
+        "sfx/ui/open_b"
+      ],
+      "volume": 0.5
+    },
+    "ui.close": {
+      "files": [
+        "sfx/ui/close_a",
+        "sfx/ui/close_b"
+      ],
+      "volume": 0.5
+    },
+    "ui.error": {
+      "files": [
+        "sfx/ui/error_a",
+        "sfx/ui/error_b"
+      ],
+      "volume": 0.6
+    },
+    "ui.reward": {
+      "files": [
+        "sfx/ui/reward_a",
+        "sfx/ui/reward_b"
+      ],
+      "volume": 0.75
+    },
     "formation.place": {
       "files": [
         "sfx/formation/place_a",

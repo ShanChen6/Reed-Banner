@@ -10,7 +10,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import ArenaScreen from "./arena/ArenaScreen";
 import AudioProvider from "./audio/AudioProvider";
 import SceneAudio from "./audio/SceneAudio";
-import UiClickSounds from "./audio/UiClickSounds";
+import UiSounds from "./audio/UiSounds";
 import DemoGame from "./battle/DemoGame";
 import CampaignScreen from "./campaign/CampaignScreen";
 import DailyScreen from "./daily/DailyScreen";
@@ -102,7 +102,7 @@ export default function GameShell({
     <SceneContext.Provider value={api}>
       <AudioProvider>
       <SceneAudio scene={currentScene} />
-      <UiClickSounds />
+      <UiSounds />
       <div className="flex min-h-dvh flex-col">
         <GameHeader scene={currentScene} account={account} />
         {arrived && api.params.get("login") === "error" && !(currentScene in auth) && (

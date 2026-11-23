@@ -6,8 +6,13 @@ import { useCallback, useEffect, useState } from "react";
 import type { Profile, ProfileAction } from "@/core";
 import { fetchProfile, sendProfileAction } from "../battle/online";
 import { PROFILE_ERROR } from "../battle/ProgressPanel";
+import { useAudio } from "../audio/AudioProvider";
+
+/** Hành động nhận thưởng: thành công thì phát `ui.reward`. */
+const REWARD_ACTIONS: ReadonlySet<ProfileAction["type"]> = new Set(["claimQuest", "claimAchievement"]);
 
 export function useProfile() {
+  const { play: playSound } = useAudio();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -27,8 +32,9 @@ export function useProfile() {
     if (r.profile) setProfile(r.profile);
     const error = r.error ?? null;
     setMessage(error ? (PROFILE_ERROR[error as keyof typeof PROFILE_ERROR] ?? error) : null);
+    if (!error && REWARD_ACTIONS.has(a.type)) playSound("ui.reward");
     return error;
-  }, []);
+  }, [playSound]);
 
   return { profile, setProfile, loadError, busy, setBusy, message, setMessage, act };
 }

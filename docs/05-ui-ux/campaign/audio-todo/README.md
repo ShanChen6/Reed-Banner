@@ -50,7 +50,7 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 
 ### Cue đã khai báo nhưng chưa nối code
 
-- `ui.error`, `ui.reward`: có trong `cues.ts`, chưa nơi nào gọi, chưa có tệp. `ui.click`, `ui.back` nối 23/11/2026 qua `UiClickSounds`.
+- `ui.click`, `ui.back`, `ui.open`, `ui.close`, `ui.error` nối 23–24/11/2026 qua `UiSounds`; `ui.reward` phát khi nhận thưởng (nhiệm vụ, thành tựu, bậc thưởng, thưởng hạng cuối kỳ).
 - `music/ending_*`, `pvp.*`: chưa có trong `cues.ts`.
 
 ## Không nằm trong bản UI hiện tại

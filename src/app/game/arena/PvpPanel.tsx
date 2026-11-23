@@ -46,6 +46,7 @@ import { TIERS, tierClaimNote, tierErrorNote, tierRewards } from "./tiers";
 import { fetchProfile } from "../battle/online";
 import { describe } from "../battle/battleLog";
 import { ELEMENT_NAME, ERROR_TEXT, PROFESSION_NAME, skillText } from "../battle/labels";
+import { useAudio } from "../audio/AudioProvider";
 
 const POLL_MS = 1500;
 const OVERVIEW_POLL_MS = 2000;
@@ -294,6 +295,7 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
  * thể thức. Cùng mốc và thưởng với Quần Hùng; mỗi bậc nhận một lần, nhận rồi nút khóa.
  */
 export function PvpTierPanel() {
+  const { play: playSound } = useAudio();
   const [overview, setOverview] = useState<PvpOverview | null>(null);
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<string | null>(null);
@@ -324,6 +326,7 @@ export function PvpTierPanel() {
     setOverview(next);
     if (next.claimed) {
       setNote(tierClaimNote(next.claimed));
+      playSound("ui.reward");
       void fetchProfile();
     } else setNote(tierErrorNote(next.claimError));
   };

@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { clickCue } from "../../src/app/game/audio/uiClick";
+import { clickCue, overlayCue } from "../../src/app/game/audio/uiSounds";
 
 const t = (label: string, extra: { sfx?: string; inBoard?: boolean } = {}) => ({ sfx: extra.sfx ?? null, inBoard: extra.inBoard ?? false, label });
 
@@ -18,5 +18,13 @@ describe("tiếng bấm giao diện", () => {
     assert.equal(clickCue(t("Ô 3, 4", { inBoard: true, sfx: "click" })), "ui.click");
     assert.equal(clickCue(t("Điểm danh", { sfx: "none" })), null);
     assert.equal(clickCue(t("Tiếp", { sfx: "back" })), "ui.back");
+  });
+
+  it("hộp thoại mở/đóng và lỗi mới", () => {
+    assert.equal(overlayCue(0, 1, false), "ui.open");
+    assert.equal(overlayCue(1, 0, false), "ui.close");
+    assert.equal(overlayCue(1, 1, false), null);
+    assert.equal(overlayCue(0, 1, true), "ui.error");
+    assert.equal(overlayCue(0, 0, true), "ui.error");
   });
 });

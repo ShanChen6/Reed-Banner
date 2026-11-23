@@ -86,7 +86,7 @@ export const DOTHAM_CUES = ["dotham.open", "dotham.cascade", "dotham.flag", "dot
 
 export const MODE_CUES = ["atlas.select", "atlas.unlock", "arena.ghost", "dialogue.next", "survival.wave", "survival.warn", "daily.complete", "daily.checkin", "arena.rank", "tower.floor", "tower.firstclear", "destiny.choose", "destiny.fail"] as const;
 
-export const UI_CUES = ["ui.click", "ui.back", "ui.error", "ui.reward"] as const;
+export const UI_CUES = ["ui.click", "ui.back", "ui.open", "ui.close", "ui.error", "ui.reward"] as const;
 
 export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...SULO_CUES, ...DOTHAM_CUES, ...MODE_CUES] as const;
 export type CueId = (typeof CUE_IDS)[number];

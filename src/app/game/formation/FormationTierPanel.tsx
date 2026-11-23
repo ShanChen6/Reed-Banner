@@ -7,8 +7,10 @@ import { FORMATION_TIERS, type GearItem, type Profile } from "@/core";
 import { fetchProfile } from "../battle/online";
 import { TierLadder } from "../leaderboard/RankBoard";
 import { FORMATION_LADDER, tierClaimNote, tierErrorNote, tierRewards } from "../arena/tiers";
+import { useAudio } from "../audio/AudioProvider";
 
 export default function FormationTierPanel() {
+  const { play: playSound } = useAudio();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<string | null>(null);
@@ -32,6 +34,7 @@ export default function FormationTierPanel() {
       const body = (await res.json()) as { claimed?: { tier: string; gold: number; item: GearItem | null; soldFor: number }; error?: string; profile?: Profile };
       if (body.profile) setProfile(body.profile);
       setNote(body.claimed ? tierClaimNote(body.claimed) : tierErrorNote(body.error, "số ván thắng"));
+      if (body.claimed) playSound("ui.reward");
       // Cập nhật số vàng trên thanh đầu trang.
       if (body.claimed) void fetchProfile();
     } catch {
