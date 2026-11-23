@@ -30,7 +30,7 @@ test("Tam Quân Kỳ: hai tài khoản đấu online bằng mã phòng", async (
 
   await openOnline(host);
   await host.getByRole("button", { name: "Mở phòng" }).click();
-  const codeText = host.locator("p.font-mono");
+  const codeText = host.getByTestId("tqk-room-code");
   await expect(codeText).toHaveText(/^[A-Z2-9]{6}$/);
   const code = (await codeText.textContent())!.trim();
 

@@ -5,12 +5,11 @@
 // Ván dở lưu ở trình duyệt. Ván có thưởng và ván online do server làm trọng tài nằm ở ServerPlay.tsx. Tranh quân, sa bàn và thẻ do Shan vẽ (23/11/2026).
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { MAIN_ID } from "@/core";
 import { BLUE, RED, endGame, inCheck, legalMovesFrom, play, type Color, type Level, type Move, type Position } from "@/core/tam-quan-ky";
 import { Button } from "@/components/ui";
-import { BottomSheet, ModeBanner, ModeScreen, OrnateFrame, ResultModal, SurrenderButton } from "@/components/game-ui";
+import { BottomSheet, ModeBanner, ModeScreen, ResultModal, SurrenderButton } from "@/components/game-ui";
 import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
-import { Portrait } from "../art/portraits";
+import { DuelLayout } from "../DuelLayout";
 import { readStorage, writeStorage } from "../formation/storage";
 import { ModeGuideTabs } from "../ModeGuide";
 import { MODE_TEXT } from "../modeInfo";
@@ -26,9 +25,11 @@ import {
   MoveList,
   Options,
   RIVALS,
+  BOARD_ASPECT,
   RivalPicker,
   SelectedPanel,
   Speech,
+  TqkSide,
   formatClock,
   freshSeed,
   mapById,
@@ -235,24 +236,6 @@ export default function TamQuanKyScreen() {
     clearSelection();
   };
 
-  const undo = () => {
-    if (!moves.length) return;
-    gameToken.current++;
-    setThinking(false);
-    setEnded(undefined);
-    setDismissed(false);
-    // Đấu máy: lùi về thế gần nhất tới lượt bạn.
-    let back = 1;
-    if (machine) {
-      while (back < moves.length && positions[moves.length - back]!.toMove !== human) back++;
-      if (positions[moves.length - back]!.toMove !== human) back = moves.length;
-    }
-    setMoves((list) => list.slice(0, list.length - back));
-    if (back >= moves.length) setBegun(false);
-    clearSelection();
-    setAnnounce("Đã đi lại.");
-  };
-
   const restart = () => {
     gameToken.current++;
     setThinking(false);
@@ -282,6 +265,23 @@ export default function TamQuanKyScreen() {
 
   const selectedStack = selected !== null ? position.board[selected] : null;
   const checkNow = !result && inCheck(position, position.toMove);
+
+  /** Phe ở mép dưới sa bàn nằm bên trái (thường là bạn), phe ở mép trên nằm bên phải. */
+  const bottom: Color = flipped ? BLUE : RED;
+  const top: Color = bottom === RED ? BLUE : RED;
+  const side = (c: Color) => (
+    <TqkSide
+      color={c}
+      name={playerName(c)}
+      sub={machine === c ? `${c === RED ? "Quân Đỏ" : "Quân Xanh"}, độ khó ${LEVEL_NAME[level]}` : undefined}
+      rival={rival}
+      clock={clock > 0 ? formatClock(timeLeft[c]) : null}
+      active={position.toMove === c && !result}
+      status={machine === c && thinking ? "Đang tính nước…" : "Tới lượt"}
+      check={checkNow && position.toMove === c}
+      hqHold={position.hqHold[c]}
+    />
+  );
 
   const outcome = (() => {
     if (!result) return null;
@@ -372,100 +372,77 @@ export default function TamQuanKyScreen() {
           </BottomSheet>
         )}
         <PlayCard className="sm:mt-5">
-          <OrnateFrame aria-label="Vùng chơi" flush className="grid min-w-0 items-start gap-4 p-2 sm:p-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
-            <div className="flex min-w-0 flex-col gap-3">
-              {!started && (
-                <Button variant="secondary" aria-haspopup="dialog" onClick={() => setSetupOpen(true)} className="sm:hidden">
-                  Chuẩn bị ván: {machine ? `đấu ${rival.name}, ${LEVEL_NAME[level]}` : "hai người"}
-                </Button>
-              )}
-              <Board
-                map={mapById(mapId)}
-                position={position}
-                flipped={flipped}
-                selected={selected}
-                targets={targets}
-                lastMove={moves.length ? moves[moves.length - 1]! : null}
-                onSquare={onSquare}
-                pieceLabel={pieceLabel}
-              />
-              {choice && (
-                <div className="flex flex-wrap items-center justify-center gap-2" role="group" aria-label="Chọn cách đánh">
-                  <span className="text-on-wood">Chọn cách đánh:</span>
-                  {choice.map((m) => (
-                    <Button key={m.kind} size="sm" variant={m.kind === "capture" ? "primary" : "secondary"} onClick={() => commit(m, current)}>
-                      {KIND_NAME[m.kind]}
-                    </Button>
-                  ))}
+          <DuelLayout
+            aspect={BOARD_ASPECT}
+            leftCard={side(bottom)}
+            rightCard={side(top)}
+            leftExtra={
+              <>
+                {!started && (
+                  <Button variant="secondary" aria-haspopup="dialog" onClick={() => setSetupOpen(true)} className="sm:hidden">
+                    Chuẩn bị ván: {machine ? `đấu ${rival.name}, ${LEVEL_NAME[level]}` : "hai người"}
+                  </Button>
+                )}
+                {bottom === RED && <Speech speech={speech} />}
+                {selectedStack && <SelectedPanel stack={selectedStack} unit={unit} onUnit={(u) => { setUnit(u); setChoice(null); }} />}
+                <div className="flex flex-wrap gap-2" role="toolbar" aria-label="Thao tác">
+                  <Button variant="secondary" size="sm" onClick={() => setFlipped((f) => !f)} aria-pressed={flipped}>Xoay sa bàn</Button>
+                  <Button variant="secondary" size="sm" onClick={restart}>Ván mới</Button>
+                  {started && !result && (
+                    <SurrenderButton consequence={machine ? `Ván này tính là thua, ${rival.name} thắng.` : `${sideName(position.toMove)} đầu hàng, bên kia thắng.`} onConfirm={resign} />
+                  )}
                 </div>
-              )}
-              {/* Nước vừa đi đã có ở Nhật ký trận (Shan 23/11/2026); dòng này chỉ để trình đọc màn hình đọc nước mới. */}
-              <p role="status" aria-live="polite" className="sr-only">
-                {announce}
-              </p>
-            </div>
-
-            <aside className="flex flex-col gap-3">
-              <Speech speech={speech} />
-              <div className="ui-frame-inset flex flex-col gap-2 p-3">
-                {([RED, BLUE] as const).map((c) => (
-                  <div key={c} className={`flex items-center justify-between gap-2 rounded-control border px-2 py-1.5 ${position.toMove === c && !result ? "border-frame-gold" : "border-transparent"}`}>
-                    <span className="flex min-w-0 items-center gap-2 font-semibold text-on-wood">
-                      <span aria-hidden className={`size-3 shrink-0 rounded-full ${c === RED ? "bg-[var(--tqk-red)]" : "bg-[var(--tqk-blue)]"}`} />
-                      {c === RED ? (
-                        <Portrait id={MAIN_ID} element="hoa" profession="tuongSi" className="size-8 shrink-0" />
-                      ) : (
-                        <Portrait id={rival.id} element={rival.element} profession={rival.profession} className="size-8 shrink-0" />
-                      )}
-                      <span className="truncate">{playerName(c)}</span>
-                      {position.toMove === c && !result && (
-                        <span className="text-caption font-normal text-on-wood-soft">{machine === c && thinking ? "đang tính" : "tới lượt"}</span>
-                      )}
-                    </span>
-                    {clock > 0 && <span className="font-mono text-lg tabular-nums text-on-wood">{formatClock(timeLeft[c])}</span>}
+              </>
+            }
+            rightExtra={
+              <>
+                {top === RED && <Speech speech={speech} />}
+                <MoveList positions={positions} moves={moves} />
+              </>
+            }
+            below={
+              <>
+                {choice && (
+                  <div className="flex flex-wrap items-center justify-center gap-2" role="group" aria-label="Chọn cách đánh">
+                    <span className="text-on-wood">Chọn cách đánh:</span>
+                    {choice.map((m) => (
+                      <Button key={m.kind} size="sm" variant={m.kind === "capture" ? "primary" : "secondary"} onClick={() => commit(m, current)}>
+                        {KIND_NAME[m.kind]}
+                      </Button>
+                    ))}
                   </div>
-                ))}
-                {machine && <p className="text-caption text-on-wood-soft">Độ khó: {LEVEL_NAME[level]}</p>}
-                {checkNow && <p className="font-semibold text-[var(--lacquer-hi)]">{playerName(position.toMove)} đang bị chiếu tướng.</p>}
-                {(position.hqHold.r > 0 || position.hqHold.b > 0) && (
-                  <p className="text-caption text-on-wood-soft">
-                    {playerName(position.hqHold.r ? RED : BLUE)} đang giữ Soái trướng bên kia: {position.hqHold.r || position.hqHold.b}/3 lượt.
-                  </p>
                 )}
-              </div>
+                {/* Nước vừa đi đã có ở Nhật ký trận (Shan 23/11/2026); dòng này chỉ để trình đọc màn hình đọc nước mới. */}
+                <p role="status" aria-live="polite" className="sr-only">
+                  {announce}
+                </p>
+              </>
+            }
+          >
+            <Board
+              map={mapById(mapId)}
+              position={position}
+              flipped={flipped}
+              selected={selected}
+              targets={targets}
+              lastMove={moves.length ? moves[moves.length - 1]! : null}
+              onSquare={onSquare}
+              pieceLabel={pieceLabel}
+            />
+          </DuelLayout>
 
-              {selectedStack && <SelectedPanel stack={selectedStack} unit={unit} onUnit={(u) => { setUnit(u); setChoice(null); }} />}
-
-              <div className="flex flex-wrap gap-2" role="toolbar" aria-label="Thao tác">
-                <Button variant="secondary" size="sm" onClick={undo} disabled={!moves.length}>Đi lại</Button>
-                <Button variant="secondary" size="sm" onClick={() => setFlipped((f) => !f)} aria-pressed={flipped}>Xoay sa bàn</Button>
-                <Button variant="secondary" size="sm" onClick={restart}>Ván mới</Button>
-                {started && !result && (
-                  <SurrenderButton consequence={machine ? `Ván này tính là thua, ${rival.name} thắng.` : `${sideName(position.toMove)} đầu hàng, bên kia thắng.`} onConfirm={resign} />
-                )}
-              </div>
-
-              <MoveList positions={positions} moves={moves} />
-            </aside>
-
-            {outcome && (
-              <ResultModal
-                open={!dismissed}
-                tone={outcome.tone}
-                kicker="Tam Quân Kỳ"
-                title={outcome.title}
-                onDismiss={() => setDismissed(true)}
-                actions={
-                  <>
-                    <Button size="lg" autoFocus onClick={restart}>Ván mới</Button>
-                    {ended?.reason !== "timeout" && <Button size="lg" variant="secondary" onClick={undo}>Đi lại</Button>}
-                  </>
-                }
-              >
-                <p>{outcome.text}</p>
-              </ResultModal>
-            )}
-          </OrnateFrame>
+          {outcome && (
+            <ResultModal
+              open={!dismissed}
+              tone={outcome.tone}
+              kicker="Tam Quân Kỳ"
+              title={outcome.title}
+              onDismiss={() => setDismissed(true)}
+              actions={<Button size="lg" autoFocus onClick={restart}>Ván mới</Button>}
+            >
+              <p>{outcome.text}</p>
+            </ResultModal>
+          )}
         </PlayCard>
           </>
         )}
