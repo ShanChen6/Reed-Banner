@@ -6,7 +6,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Element } from "@/core";
-import { BLACK, PASS, WHITE, groupAt, isLegal, opponent, play, replay, scoreArea, type BoardSize, type Color, type Level, type Mode, type Position } from "@/core/co-vay";
+import { BLACK, KOMI, PASS, WHITE, groupAt, isLegal, opponent, play, replay, scoreArea, type BoardSize, type Color, type Level, type Mode, type Position } from "@/core/co-vay";
 import { Button } from "@/components/ui";
 import { BottomSheet, ModeBanner, ModeScreen, OrnateFrame, ResultModal, SurrenderButton } from "@/components/game-ui";
 import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
@@ -19,7 +19,7 @@ import { PlayCard } from "../PlayCard";
 import { LEVEL_NAME, LEVELS, Options, RivalPicker, freshSeed, rivalById, RIVALS } from "../tam-quan-ky/parts";
 import { Board } from "./Board";
 import { OnlinePlay } from "./OnlinePlay";
-import { ElementPicker, PlayerCard, RULE_HINT, RULE_NAME, SIZES, ScoreLines, sideOrder } from "./parts";
+import { Arena, ElementPicker, PlayerCard, RULE_HINT, RULE_NAME, SIZES, ScoreLines, sideOrder } from "./parts";
 import { useVtkEngine } from "./useEngine";
 import { savedOnline } from "./useOnlineMatch";
 
@@ -294,6 +294,20 @@ export default function VayThanhKyScreen() {
     </div>
   );
 
+  const side = (c: Color, tall: boolean) => (
+    <PlayerCard
+      key={c}
+      tall={tall}
+      element={elements[c]}
+      color={c}
+      name={names[c]}
+      portrait={portrait(c)}
+      captures={position.captures[c]}
+      active={phase === "playing" && position.toPlay === c}
+      status={phase === "playing" && position.toPlay === c ? (machine === c && thinking ? "đang tính" : "tới lượt") : undefined}
+    />
+  );
+
   const portrait = (c: Color) =>
     machine === c ? <Portrait id={rival.id} element={rival.element} profession={rival.profession} className="size-7 shrink-0" /> : undefined;
 
@@ -325,67 +339,58 @@ export default function VayThanhKyScreen() {
           </>
         ) : (
           <PlayCard className="sm:mt-5">
-            <OrnateFrame aria-label="Vùng chơi" flush className="grid min-w-0 items-start gap-4 p-2 sm:p-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
-              <div className="flex min-w-0 flex-col gap-3">
-                <Board
-                  size={size}
-                  board={position.board}
-                  elements={elements}
-                  toPlay={position.toPlay}
-                  lastMove={position.lastMove}
-                  interactive={myTurn}
-                  onPlay={playHere}
-                  onPass={rule === "full" ? () => playHere(PASS) : undefined}
-                  dead={scoring ? dead : []}
-                  owner={score?.owner ?? null}
-                  onToggleDead={phase === "scoring" && deadReady ? toggleDead : undefined}
-                  label={`Bàn cờ vây ${size} nhân ${size}. Mũi tên để di chuyển, Enter đặt quân${rule === "full" ? ", P bỏ lượt" : ""}.`}
-                />
-                <p role="status" aria-live="polite" className="min-h-5 text-center text-caption text-on-wood-soft">{notice ?? announce}</p>
-              </div>
-
-              <aside className="flex flex-col gap-3">
-                {([BLACK, WHITE] as const).map((c) => (
-                  <PlayerCard
-                    key={c}
-                    element={elements[c]}
-                    color={c}
-                    name={names[c]}
-                    portrait={portrait(c)}
-                    captures={position.captures[c]}
-                    active={phase === "playing" && position.toPlay === c}
-                    status={phase === "playing" && position.toPlay === c ? (machine === c && thinking ? "đang tính" : "tới lượt") : undefined}
+            <OrnateFrame aria-label="Vùng chơi" flush className="p-2 sm:p-4">
+              <Arena
+                left={(tall) => side(BLACK, tall)}
+                right={(tall) => side(WHITE, tall)}
+                board={
+                  <Board
+                    size={size}
+                    board={position.board}
+                    elements={elements}
+                    toPlay={position.toPlay}
+                    lastMove={position.lastMove}
+                    interactive={myTurn}
+                    onPlay={playHere}
+                    onPass={rule === "full" ? () => playHere(PASS) : undefined}
+                    dead={scoring ? dead : []}
+                    owner={score?.owner ?? null}
+                    onToggleDead={phase === "scoring" && deadReady ? toggleDead : undefined}
+                    label={`Bàn cờ vây ${size} nhân ${size}. Mũi tên để di chuyển, Enter đặt quân${rule === "full" ? ", P bỏ lượt" : ""}.`}
                   />
-                ))}
-                <p className="text-caption text-on-wood-soft">
-                  {RULE_NAME[rule]}, bàn {size}×{size}{machine ? `, độ khó ${LEVEL_NAME[level]}` : ""}. Bên {sideOrder(WHITE)} được cộng điểm bù.
-                </p>
-
-                {phase === "scoring" && (
-                  <div className="ui-frame-inset flex flex-col gap-2 p-3">
-                    <p className="font-semibold text-on-wood">Đếm điểm</p>
-                    <p className="text-caption text-on-wood-soft">
-                      {deadReady ? "Quân gạch chéo là quân chết, tính cho bên kia. Bấm vào một nhóm quân để đổi sống hay chết." : "Đang xem quân nào đã chết…"}
-                    </p>
-                    {score && <ScoreLines score={score} names={names} />}
-                    <div className="flex flex-wrap gap-2">
-                      <Button size="sm" disabled={!deadReady} onClick={confirmScore}>Chốt điểm</Button>
-                      <Button size="sm" variant="secondary" onClick={resume}>Đánh tiếp</Button>
+                }
+                below={
+                  <>
+                    <p role="status" aria-live="polite" className="min-h-5 text-center text-caption text-on-wood-soft">{notice ?? announce}</p>
+                    {phase === "scoring" && (
+                      <div className="ui-frame-inset flex w-full flex-col gap-2 p-3">
+                        <p className="font-semibold text-on-wood">Đếm điểm</p>
+                        <p className="text-caption text-on-wood-soft">
+                          {deadReady ? "Quân gạch chéo là quân chết, tính cho bên kia. Bấm vào một nhóm quân để đổi sống hay chết." : "Đang xem quân nào đã chết…"}
+                        </p>
+                        {score && <ScoreLines score={score} names={names} />}
+                        <div className="flex flex-wrap gap-2">
+                          <Button size="sm" disabled={!deadReady} onClick={confirmScore}>Chốt điểm</Button>
+                          <Button size="sm" variant="secondary" onClick={resume}>Đánh tiếp</Button>
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex flex-wrap justify-center gap-2" role="toolbar" aria-label="Thao tác">
+                      {phase === "playing" && rule === "full" && (
+                        <Button variant="secondary" size="sm" disabled={!myTurn} onClick={() => playHere(PASS)} aria-keyshortcuts="P">Bỏ lượt</Button>
+                      )}
+                      <Button variant="secondary" size="sm" onClick={undo} disabled={!moves.length || phase === "scoring"}>Đi lại</Button>
+                      <Button variant="secondary" size="sm" onClick={newGame}>Ván mới</Button>
+                      {phase === "playing" && (
+                        <SurrenderButton consequence={machine ? `Ván này tính là thua, ${rival.name} thắng.` : `${names[position.toPlay]} đầu hàng, bên kia thắng.`} onConfirm={resign} />
+                      )}
                     </div>
-                  </div>
-                )}
-
-                <div className="flex flex-wrap gap-2" role="toolbar" aria-label="Thao tác">
-                  {phase === "playing" && rule === "full" && (
-                    <Button variant="secondary" size="sm" disabled={!myTurn} onClick={() => playHere(PASS)} aria-keyshortcuts="P">Bỏ lượt</Button>
-                  )}
-                  <Button variant="secondary" size="sm" onClick={undo} disabled={!moves.length || phase === "scoring"}>Đi lại</Button>
-                  <Button variant="secondary" size="sm" onClick={newGame}>Ván mới</Button>
-                  {phase === "playing" && (
-                    <SurrenderButton consequence={machine ? `Ván này tính là thua, ${rival.name} thắng.` : `${names[position.toPlay]} đầu hàng, bên kia thắng.`} onConfirm={resign} />
-                  )}
-                </div>
-              </aside>
+                    <p className="text-center text-caption text-on-wood-soft">
+                      {RULE_NAME[rule]}, bàn {size}×{size}{machine ? `, độ khó ${LEVEL_NAME[level]}` : ""}. Bên {sideOrder(WHITE)} được cộng {KOMI} điểm bù.
+                    </p>
+                  </>
+                }
+              />
 
               {outcome && (
                 <ResultModal
