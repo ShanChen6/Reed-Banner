@@ -398,7 +398,7 @@ Thêm ba cue trận đánh còn thiếu vào src/app/game/battle/sounds.ts và D
 
 ### D10. Cue ngoài trận còn thiếu
 
-- **Shan tạo tệp:** B6 dòng `atlas.unlock`, `tower.*`, `destiny.*`, `arena.ghost`; nhạc kết cục theo cấp nếu muốn (mỗi cấp một bản theo prompt `ending`, đổi tâm trạng).
+- **Shan tạo tệp:** B6 dòng `tower.*`, `destiny.*` (`atlas.unlock`, `arena.ghost` đã có tệp 23/11/2026); nhạc kết cục theo cấp nếu muốn (mỗi cấp một bản theo prompt `ending`, đổi tâm trạng).
 - **Prompt code:**
 
 ```

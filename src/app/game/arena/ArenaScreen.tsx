@@ -30,6 +30,7 @@ import { TIERS, tierClaimNote, tierErrorNote, tierRewards } from "./tiers";
 import { PvpTierPanel } from "./PvpPanel";
 import { useProfile } from "../profile/useProfile";
 import { ColumnFill } from "../ColumnFill";
+import { useAudio } from "../audio/AudioProvider";
 
 const ATTACK_KEY = "coLau.arena.attack";
 
@@ -65,6 +66,7 @@ function Members({ list, compact = false }: { list: readonly ArenaMember[]; comp
 
 export default function ArenaScreen() {
   const { go } = useScene();
+  const { play: playSound } = useAudio();
   const [data, setData] = useState<ArenaResponse | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -161,6 +163,8 @@ export default function ArenaScreen() {
       return setMessage(ONLINE_ERROR_TEXT[next.error ?? "network"] ?? "Có trục trặc chưa rõ. Xin thử lại.");
     setData(next);
     if (action === "defend") setNotice("Đã cập nhật đội phòng thủ.");
+    // Đổi đối thủ: các đội phòng thủ (bóng của người chơi khác) hiện ra.
+    else if ((next.offers ?? []).length > 0) playSound("arena.ghost");
   };
 
   const attack = async (index: number) => {

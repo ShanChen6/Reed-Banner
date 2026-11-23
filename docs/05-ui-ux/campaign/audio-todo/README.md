@@ -16,7 +16,7 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 | AUD-02 | Global Audio Engine, Music/Ambience/SFX/Voice buses, mute/save | AUD-01 | DONE (02/11/2026): `src/app/game/audio/`, nút tắt tiếng và âm lượng ở thanh trên; chưa có tệp âm thanh nên chạy im lặng |
 | AUD-03a | Nối Trận Đồ (prompt A2) | AUD-02 | DONE (02/11/2026): `formation/sounds.ts`, nhạc theo màn và lớp căng thẳng theo thanh Bỏ Lệnh; chờ tệp |
 | AUD-03 | SFX match-3, combo, kỹ năng, chuyển lượt đúng animation cue | AUD-02 | DONE (02/11/2026): `battle/sounds.ts` nối vào `DemoGame` (trận thường, luyện tập, chiến dịch, sinh tồn); chờ tệp. Thêm tiếng khắc hệ (`battle.crit`), đổi lượt, đồng hồ 5 giây cuối (21/11/2026) |
-| AUD-04 | BGM + ambience theo atlas, hội thoại, chuẩn bị, battle, ending | AUD-02 | DONE (02/11/2026): `audio/sceneMusic.ts` + `SceneAudio` (nhạc và âm nền theo phân cảnh), nhạc thoại/kết cục, nhạc trận theo loại trận; chờ tệp. Nhạc `prep` nối 23/11/2026. Chưa có cue `unlock`, `tower.*`, `destiny.*`, `arena.ghost`, `pvp.*` |
+| AUD-04 | BGM + ambience theo atlas, hội thoại, chuẩn bị, battle, ending | AUD-02 | DONE (02/11/2026): `audio/sceneMusic.ts` + `SceneAudio` (nhạc và âm nền theo phân cảnh), nhạc thoại/kết cục, nhạc trận theo loại trận; chờ tệp. Nhạc `prep` nối 23/11/2026. `atlas.unlock`, `arena.ghost` nối 23/11/2026. Chưa có cue `tower.*`, `destiny.*`, `pvp.*` |
 | AUD-05 | Voice Bible, TTS test, voice casting + transcript manifest | UI dialogue frozen | TODO — DEFERRED |
 | AUD-06 | Voice Player đồng bộ câu thoại, ducking BGM, skip/pause/replay | AUD-02, AUD-05 | TODO — DEFERRED |
 | AUD-07 | Audio export/normalization/compression và QA/license | AUD-03…06 | TODO — DEFERRED |
@@ -51,7 +51,7 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 ### Cue đã khai báo nhưng chưa nối code
 
 - `ui.click`, `ui.back`, `ui.error`, `ui.reward`: có trong `cues.ts`, chưa nơi nào gọi, chưa có tệp.
-- `atlas.unlock`, `music/ending_*`, `tower.*`, `destiny.*`, `arena.ghost`, `pvp.*`: chưa có trong `cues.ts`.
+- `music/ending_*`, `tower.*`, `destiny.*`, `pvp.*`: chưa có trong `cues.ts`.
 
 ## Không nằm trong bản UI hiện tại
 

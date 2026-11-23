@@ -619,6 +619,48 @@
         "sfx/atlas/select_b"
       ],
       "volume": 0.7
+    },
+    "atlas.unlock": {
+      "files": [
+        "sfx/atlas/unlock_a",
+        "sfx/atlas/unlock_b"
+      ],
+      "volume": 0.8
+    },
+    "dialogue.next": {
+      "files": [
+        "sfx/dialogue/next_a",
+        "sfx/dialogue/next_b"
+      ],
+      "volume": 0.5
+    },
+    "survival.wave": {
+      "files": [
+        "sfx/survival/wave_a",
+        "sfx/survival/wave_b"
+      ],
+      "volume": 0.85
+    },
+    "survival.warn": {
+      "files": [
+        "sfx/survival/warn_a",
+        "sfx/survival/warn_b"
+      ],
+      "volume": 0.85
+    },
+    "arena.rank": {
+      "files": [
+        "sfx/arena/rank_a",
+        "sfx/arena/rank_b"
+      ],
+      "volume": 0.8
+    },
+    "arena.ghost": {
+      "files": [
+        "sfx/arena/ghost_a",
+        "sfx/arena/ghost_b"
+      ],
+      "volume": 0.75
     }
   },
   "music": {

@@ -84,7 +84,7 @@ export const SULO_CUES = [
 
 export const DOTHAM_CUES = ["dotham.open", "dotham.cascade", "dotham.flag", "dotham.shield", "dotham.reject", "dotham.trap", "dotham.win", "dotham.lose"] as const;
 
-export const MODE_CUES = ["atlas.select", "dialogue.next", "survival.wave", "survival.warn", "daily.complete", "arena.rank"] as const;
+export const MODE_CUES = ["atlas.select", "atlas.unlock", "arena.ghost", "dialogue.next", "survival.wave", "survival.warn", "daily.complete", "arena.rank"] as const;
 
 export const UI_CUES = ["ui.click", "ui.back", "ui.error", "ui.reward"] as const;
 
