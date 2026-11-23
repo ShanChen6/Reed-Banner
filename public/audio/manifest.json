@@ -612,6 +612,13 @@
         "sfx/do-tham/lose_b"
       ],
       "volume": 0.85
+    },
+    "atlas.select": {
+      "files": [
+        "sfx/atlas/select_a",
+        "sfx/atlas/select_b"
+      ],
+      "volume": 0.7
     }
   },
   "music": {
@@ -681,7 +688,21 @@
     "tower_destiny": {
       "file": "music/tower_destiny",
       "volume": 0.5
+    },
+    "prep": {
+      "file": "music/prep",
+      "volume": 0.5
+    },
+    "ending": {
+      "file": "music/ending",
+      "volume": 0.6,
+      "loop": false
     }
   },
-  "ambience": {}
+  "ambience": {
+    "atlas": {
+      "file": "amb/atlas",
+      "volume": 0.35
+    }
+  }
 }

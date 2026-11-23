@@ -126,7 +126,7 @@ Nhạc: `music/battle_normal`, `music/battle_boss` (căng hơn, trống chiến)
 | `music/ending_*` | Kết cục (theo cấp độ lịch sử) | Sáo + đàn, mỗi kết cục một hướng | P2 |
 | Giọng đọc | Sau này, xem AUD-05/06 | Thoại nhân vật theo hồ sơ giọng | P3 |
 
-Đã nối (02/11/2026): `music/atlas` + `amb/atlas` khi ở màn Bình Loạn; `music/dialogue` khi mở bộ phát thoại (trả nhạc bản đồ khi đóng); `music/ending` ở màn kết cục; cue `atlas.select` khi chọn điểm trên bản đồ, `dialogue.next` khi sang câu thoại kế. Chưa nối: `music/prep`, `atlas.unlock`, `music/ending_*` theo cấp độ lịch sử.
+Đã nối (02/11/2026): `music/atlas` + `amb/atlas` khi ở màn Bình Loạn; `music/dialogue` khi mở bộ phát thoại (trả nhạc bản đồ khi đóng); `music/ending` ở màn kết cục; cue `atlas.select` khi chọn điểm trên bản đồ, `dialogue.next` khi sang câu thoại kế. Nối thêm 23/11/2026: `music/prep` ở màn chuẩn bị trận (`DemoGame` trước khi vào trận, mọi chế độ dùng `DemoGame`). Chưa nối: `atlas.unlock`, `music/ending_*` theo cấp độ lịch sử.
 
 ### 5.5 Tháp, Sinh tồn, Thử thách, Đấu trường, Quần Hùng
 
