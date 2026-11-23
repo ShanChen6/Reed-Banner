@@ -661,6 +661,41 @@
         "sfx/arena/ghost_b"
       ],
       "volume": 0.75
+    },
+    "daily.complete": {
+      "files": [
+        "sfx/daily/complete_a",
+        "sfx/daily/complete_b"
+      ],
+      "volume": 0.8
+    },
+    "destiny.choose": {
+      "files": [
+        "sfx/destiny/choose_a",
+        "sfx/destiny/choose_b"
+      ],
+      "volume": 0.7
+    },
+    "destiny.fail": {
+      "files": [
+        "sfx/destiny/fail_a",
+        "sfx/destiny/fail_b"
+      ],
+      "volume": 0.8
+    },
+    "tower.floor": {
+      "files": [
+        "sfx/tower/floor_a",
+        "sfx/tower/floor_b"
+      ],
+      "volume": 0.8
+    },
+    "tower.firstclear": {
+      "files": [
+        "sfx/tower/firstclear_a",
+        "sfx/tower/firstclear_b"
+      ],
+      "volume": 0.85
     }
   },
   "music": {

@@ -311,6 +311,15 @@ export default function DemoGame({
   useEffect(() => {
     if (arenaDone) playSound("arena.rank");
   }, [arenaDone, playSound]);
+  // Hai tháp: vượt tầng lần đầu (Thí Luyện) báo `tower.firstclear`, vượt tầng khác báo `tower.floor`; gục ở Thiên Mệnh báo `destiny.fail`.
+  const towerCue = outcome?.trial?.won
+    ? outcome.trial.newlyCleared ? "tower.firstclear" : "tower.floor"
+    : outcome?.destiny
+      ? outcome.destiny.won ? "tower.floor" : "destiny.fail"
+      : null;
+  useEffect(() => {
+    if (towerCue) playSound(towerCue);
+  }, [towerCue, playSound]);
   /** Đang chạy hoạt ảnh thì chưa nhận thao tác mới. */
   const myTurn = playerTurn && anim === null && !pending && !pacing;
   const actor = state.sides[PLAYER].fighters[state.turn.actor]!;
