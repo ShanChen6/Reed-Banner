@@ -3,7 +3,7 @@
 // Phần dùng chung của Tam Quân Kỳ: bản đồ, sứ quân, sa bàn SVG, quân, nhật ký trận, ô chọn. Dùng cho ván ở trình duyệt
 // (TamQuanKyScreen) và ván do server làm trọng tài (ServerPlay).
 
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { WARLORD_ENCOUNTERS, MAIN_ID } from "@/core";
 import {
   BRIDGE_FILES,
@@ -18,6 +18,7 @@ import {
   squareName,
   stackPieces,
   unitPiece,
+  type Color,
   type Level,
   type Move,
   type MoveKind,
@@ -27,6 +28,7 @@ import {
 } from "@/core/tam-quan-ky";
 import { ChoiceChip } from "@/components/ui";
 import { Portrait } from "../art/portraits";
+import { DuelSideCard } from "../DuelLayout";
 import { pickLine, type LineKind } from "./lines";
 import { KIND_NAME, PIECE_MOVE, PIECE_NAME } from "./pieces";
 
@@ -54,7 +56,7 @@ export type Rival = (typeof RIVALS)[number];
 export const rivalById = (id: string | undefined): Rival => RIVALS.find((r) => r.id === id) ?? RIVALS[0]!;
 export const BO_LINH = "Đinh Bộ Lĩnh";
 
-/** Đi lại các nước đã lưu, giữ từng thế cờ cho nhật ký và đi lại. */
+/** Dựng lại từng thế cờ từ các nước đã lưu, cho nhật ký trận. */
 export function positionsFor(moves: readonly Move[]): Position[] {
   const list = [newGame()];
   for (const m of moves) {
@@ -114,6 +116,43 @@ export function Speech({ speech }: { speech: { kind: LineKind; n: number } | nul
         <blockquote className="font-serif text-[15px] leading-snug text-on-wood italic">{pickLine(speech.kind, speech.n)}</blockquote>
       </div>
     </figure>
+  );
+}
+
+/** Thẻ một phe cạnh sa bàn: chân dung (Bộ Lĩnh cho Đỏ, sứ quân cho Xanh), tên, đồng hồ, dấu bị chiếu và giữ Soái trướng. */
+export function TqkSide({ color, name, sub, rival, clock, active, status, check, hqHold, children }: {
+  color: Color;
+  name: string;
+  sub?: ReactNode;
+  rival: Rival;
+  clock: string | null;
+  active: boolean;
+  status: string;
+  check: boolean;
+  /** Số lượt phe này đã giữ Soái trướng bên kia (0 là không giữ). */
+  hqHold: number;
+  children?: ReactNode;
+}) {
+  return (
+    <DuelSideCard
+      accent={color === RED ? "var(--tqk-red)" : "var(--tqk-blue)"}
+      portrait={
+        color === RED ? (
+          <Portrait id={MAIN_ID} element="hoa" profession="tuongSi" className="size-14 lg:size-20" />
+        ) : (
+          <Portrait id={rival.id} element={rival.element} profession={rival.profession} className="size-14 lg:size-20" />
+        )
+      }
+      name={name}
+      sub={sub ?? (color === RED ? `Quân Đỏ, ${BO_LINH}` : `Quân Xanh, ${rival.name}`)}
+      clock={clock}
+      active={active}
+      status={status}
+    >
+      {check && <p className="font-semibold text-[var(--lacquer-hi)]" role="alert">Đang bị chiếu tướng!</p>}
+      {hqHold > 0 && <p className="text-caption font-semibold text-frame-gold">Đang giữ Soái trướng bên kia: {hqHold}/3 lượt.</p>}
+      {children}
+    </DuelSideCard>
   );
 }
 
@@ -181,7 +220,7 @@ export function MoveList({ positions, moves }: { positions: readonly Position[];
     <div className="ui-frame-inset p-3">
       <p className="mb-1.5 font-semibold text-on-wood">Nhật ký trận</p>
       {moves.length ? (
-        <ol ref={ref} className="flex max-h-56 flex-col gap-0.5 overflow-y-auto text-caption text-on-wood-soft">
+        <ol ref={ref} className="flex max-h-56 flex-col lg:max-h-[45dvh] gap-0.5 overflow-y-auto text-caption text-on-wood-soft">
           {moves.map((m, i) => (
             <li key={i} className="flex gap-2">
               <span className="w-8 shrink-0 tabular-nums">{Math.floor(i / 2) + 1}{i % 2 ? "b" : "a"}.</span>
@@ -210,6 +249,9 @@ export interface BoardProps {
   readonly onSquare: (s: number) => void;
   readonly pieceLabel: (stack: Stack) => string;
 }
+
+/** Tỉ lệ rộng/cao của sa bàn (lưới 11×12 cộng lề một ô mỗi phía), để bố cục co bàn theo chiều cao màn. */
+export const BOARD_ASPECT = (FILES + 1) / (RANKS + 1);
 
 export const ATTACKS: readonly MoveKind[] = ["capture", "fire", "strike"];
 
@@ -255,7 +297,7 @@ export function Board({ map, position, flipped, selected, targets, lastMove, onS
   const cursorText = cursor !== null ? `${squareName(cursor)}${cursorStack ? `: ${pieceLabel(cursorStack)}` : ""}` : "";
 
   return (
-    <div className="ui-frame-inset mx-auto w-full max-w-[40rem] p-1">
+    <div className="ui-frame-inset w-full p-1">
       <div
         role="application"
         tabIndex={0}

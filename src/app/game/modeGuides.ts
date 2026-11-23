@@ -14,6 +14,7 @@ import { ELEMENT_NAME } from "./battle/labels";
 import { DT_ITEM_INFO } from "./do-tham/items";
 import { KL_TOOL_HINT, KL_TOOL_NAME } from "./khai-lo/tools";
 import { EXPEDITION_REST_HEAL, EXPEDITION_SCOUT_SIGHT } from "@/core";
+import type { PieceType } from "@/core/tam-quan-ky";
 import type { Scene } from "./scene";
 
 /** Các chế độ có thẻ Hướng dẫn (mười hai chế độ ở thẻ Chiến Trường và Tam Quân Kỳ ở mục Sắp ra mắt). */
@@ -54,7 +55,8 @@ export interface ModeGuide {
 export type GuideIcon =
   | { readonly kind: "element"; readonly element: Element }
   | { readonly kind: "suLoAid"; readonly aid: SlAid }
-  | { readonly kind: "formation"; readonly piece: "wild" | "eraser" };
+  | { readonly kind: "formation"; readonly piece: "wild" | "eraser" }
+  | { readonly kind: "tqkPiece"; readonly piece: PieceType };
 
 export interface GuideItem {
   readonly icon: GuideIcon;
@@ -125,25 +127,51 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
   },
   TAM_QUAN_KY: {
-    goal: "Cờ tư lệnh trên sa bàn tập trận của Đinh Bộ Lĩnh: ba quân bộ, thủy và thiên mã cùng ra trận. Vây Chủ tướng bên kia hoặc chiếm giữ Soái trướng của họ để thắng.",
+    goal: "Cờ tư lệnh trên sa bàn tập trận của Đinh Bộ Lĩnh: ba quân bộ, thủy và thiên mã cùng ra trận. Vây Chủ tướng bên kia đến hết đường thoát, hoặc chiếm giữ Soái trướng của họ, là thắng.",
     steps: [
       "Chọn cách chơi: luyện với sứ quân, đấu sứ quân có thưởng, hai người cùng máy hoặc đấu người 1vs1. Chọn sứ quân, độ khó, bản đồ và đồng hồ.",
       "Đấu người: một người bấm Mở phòng rồi gửi mã 6 ký tự, người kia nhập mã và bấm Vào phòng.",
-      "Bấm một quân của mình để xem chỗ đi được: chấm xanh là ô trống, vòng xanh là lên chung, vòng đỏ là ô ăn được.",
-      "Bấm ô đích để đi. Quân bắn xa có hai cách thì chọn tiến vào ăn hay bắn tại chỗ.",
-      "Quân đang chở quân khác thì chọn đi cả chồng hay chỉ một quân rời chồng.",
+      "Quân của bạn ở mép dưới sa bàn, thẻ của bạn bên trái, thẻ đối thủ bên phải (điện thoại: đối thủ trên sa bàn, bạn dưới sa bàn). Thẻ có viền vàng là bên đang tới lượt.",
+      "Bấm một quân của mình. Sa bàn hiện chỗ đi được: chấm xanh là ô trống đi tới, vòng xanh là lên chung với quân mình, vòng đỏ là quân địch ăn hoặc bắn được, vòng vàng đứt nét là Thiên mã lao vào vùng cấm bay (mất cả hai quân).",
+      "Bấm ô đích để đi. Ô nào có hai cách đánh (tiến vào ăn hoặc bắn tại chỗ) thì hàng nút dưới sa bàn hỏi bạn chọn.",
+      "Bấm vào một chồng quân thì bảng bên trái hỏi đi quân nào: cả chồng theo luật của quân chở, hay một quân rời chồng đi riêng theo luật của nó.",
+      "Bấm quân khác để đổi quân, bấm ô trống không đi được để bỏ chọn. Bàn phím: mũi tên dò ô, Enter chọn.",
+      "Mỗi nước đi ra là chốt, không có đi lại. Nhật ký trận bên phải ghi đủ mọi nước của hai bên.",
     ],
     rules: [
-      "Bàn có 11 cột, 12 hàng, mỗi bên 19 quân. Quân Đỏ của Bộ Lĩnh đi trước. Bản đồ chỉ đổi cảnh, đầm, sông và cầu luôn ở cùng chỗ.",
-      "Đầm và bãi lau ở mép trái là đất của Chiến thuyền. Quân bộ không xuống đầm, Chiến thuyền chỉ đi trên nước và bến thuyền.",
-      "Máy bắn đá, Nỏ thủ và Hỏa tiễn chỉ qua sông trên hai cầu tre, trừ khi Phu cầu kết bè chở qua.",
-      "Nỏ thủ, Hỏa tiễn và Chiến thuyền tạo vùng cấm bay. Thiên mã không bay qua vùng ấy; lao vào để đánh thì mất cả hai quân.",
-      "Quân chiếu được Chủ tướng bên kia thành anh hùng: đi xa thêm một ô và đi được đường chéo. Quân cuối cùng còn lại cũng thành anh hùng.",
-      "Không được để Chủ tướng mình bị ăn ở nước sau, cũng không để hai Chủ tướng đối mặt trên một đường trống.",
-      "Thắng khi Chủ tướng bên kia hết đường thoát, khi giữ Soái trướng bên kia đủ ba lượt, hoặc khi bên kia hết giờ hay đầu hàng.",
+      "Bàn có 11 cột (a đến k) và 12 hàng, quân đứng trên giao điểm. Mỗi bên 19 quân. Quân Đỏ của Bộ Lĩnh đi trước. Bản đồ chỉ đổi cảnh, đầm, sông và cầu luôn ở cùng chỗ.",
+      "Địa hình: cột a và b là đầm, chỉ Chiến thuyền xuống được. Cột c là bãi lau, cả thuyền lẫn quân bộ đều đứng được. Cửa sông d6, e6, d7, e7 thuyền vào được. Quân bộ không lội qua đầm.",
+      "Sông chảy giữa hàng 6 và hàng 7, có hai cầu tre ở cột f và h. Máy bắn đá, Nỏ thủ và Hỏa tiễn là quân nặng: chỉ qua sông khi đi thẳng dọc cột f hoặc h trên cầu, hoặc khi Phu cầu chở. Các quân khác qua sông chỗ nào cũng được.",
+      "Ăn quân: quân thường tiến vào ô quân địch, không vượt quân cản. Quân bắn xa (Máy bắn đá, Hỏa tiễn, Thiên mã, Chiến thuyền) bắn vượt quân cản và được chọn bắn tại chỗ: quân địch mất, quân mình đứng yên. Quân không đứng được ở ô địch (như quân bộ đánh thuyền dưới đầm) thì chỉ bắn tại chỗ.",
+      "Chồng quân: đi vào ô có quân mình thì lên chung nếu quân ở đó chở được. Cả chồng đi theo luật của quân chở. Quân chở bị ăn thì mất cả chồng. Soái trướng cho Chủ tướng vào trú.",
+      "Vùng cấm bay: Nỏ thủ và Chiến thuyền phủ một vòng tám ô quanh mình, Hỏa tiễn phủ hai ô thẳng và một ô chéo. Thiên mã địch không bay vào hay bay qua vùng ấy; lao vào để đánh một quân trong vùng thì mất cả hai.",
+      "Anh hùng: quân nào chiếu được Chủ tướng bên kia thì thành anh hùng (chấm vàng ở góc quân), quân cuối cùng còn lại ngoài Chủ tướng cũng thành anh hùng. Anh hùng đi và ăn xa thêm một ô, quân chưa đi chéo được thì nay đi chéo được, Thiên mã anh hùng bay qua vùng cấm bay không mất.",
+      "Chiếu tướng: không được đi nước để Chủ tướng mình bị ăn ở nước sau. Hai Chủ tướng không được đứng đối mặt trên cùng một hàng hay một cột trống; Chủ tướng đang được chở hoặc trú trong Soái trướng thì không tính.",
+      "Thắng khi Chủ tướng bên kia bị chiếu mà hết đường thoát, khi giữ ô Soái trướng bên kia đủ ba lượt của mình liên tiếp, hoặc khi bên kia hết giờ hay đầu hàng. Bên tới lượt không bị chiếu mà hết nước đi thì hòa.",
+      "Không có đi lại ở mọi cách chơi: nước nào đã đi là chốt.",
     ],
+    items: {
+      title: "Quân và cách đi",
+      notes: [
+        "Hình bên cạnh mỗi quân vẽ quân thường đứng giữa sa bàn trống: chấm xanh là chỗ đi tới khi đường trống, vòng đỏ là chỗ ăn hoặc bắn được, ô xanh lam là vùng cấm bay quân ấy tạo ra. Mũi tên là đi tiếp tới khi gặp quân cản.",
+        "Số trong ngoặc là số quân mỗi bên lúc khai cuộc. Đi thẳng là theo hàng hoặc cột; tám hướng là cả bốn đường chéo.",
+      ],
+      list: [
+        { icon: { kind: "tqkPiece", piece: "c" }, name: "Chủ tướng (1)", text: "Đi thẳng bao xa cũng được khi đường trống, nhưng chỉ ăn quân ngay sát bên. Mất Chủ tướng là thua, nên mọi nước đều phải giữ Chủ tướng khỏi bị ăn. Lên được Voi chiến, Thiên mã, Chiến thuyền hoặc vào trú trong Soái trướng." },
+        { icon: { kind: "tqkPiece", piece: "h" }, name: "Soái trướng (2)", text: "Đứng yên cả ván, không đi, không ăn. Chủ tướng vào trú được. Bên kia chiếm một trong hai ô Soái trướng của bạn và giữ đủ ba lượt là thắng." },
+        { icon: { kind: "tqkPiece", piece: "i" }, name: "Bộ binh (2)", text: "Đi và ăn một ô thẳng. Lên được Voi chiến, Thiên mã hoặc Chiến thuyền để đi nhanh." },
+        { icon: { kind: "tqkPiece", piece: "m" }, name: "Hương binh (1)", text: "Dân quen địa hình: đi và ăn một ô theo cả tám hướng. Lên được Voi chiến, Thiên mã hoặc Chiến thuyền." },
+        { icon: { kind: "tqkPiece", piece: "e" }, name: "Phu cầu (2)", text: "Đi và ăn một ô thẳng. Kết bè chở một Máy bắn đá, Nỏ thủ hoặc Hỏa tiễn: cả chồng đi theo luật Phu cầu nên qua sông ở bất kỳ đâu." },
+        { icon: { kind: "tqkPiece", piece: "t" }, name: "Voi chiến (2)", text: "Đi và ăn hai ô thẳng, không vượt quân cản. Trên bành chở được một Chủ tướng, Bộ binh hoặc Hương binh." },
+        { icon: { kind: "tqkPiece", piece: "a" }, name: "Máy bắn đá (2)", text: "Đi ba ô theo tám hướng. Bắn xa ba ô, bắn vượt quân cản, được chọn tiến vào ăn hay bắn tại chỗ. Quân nặng: qua sông phải đi thẳng trên cầu tre hoặc nhờ Phu cầu chở." },
+        { icon: { kind: "tqkPiece", piece: "g" }, name: "Nỏ thủ (2)", text: "Đi và ăn một ô thẳng. Tám ô quanh mình là vùng cấm bay, che quân mình khỏi Thiên mã địch. Quân nặng: qua sông phải đi trên cầu tre hoặc nhờ Phu cầu chở." },
+        { icon: { kind: "tqkPiece", piece: "s" }, name: "Hỏa tiễn (1)", text: "Đi hai ô thẳng hoặc một ô chéo, bắn xa trong tầm ấy và bắn vượt quân cản. Vùng cấm bay rộng hai ô thẳng, một ô chéo. Quân nặng: qua sông phải đi trên cầu tre hoặc nhờ Phu cầu chở." },
+        { icon: { kind: "tqkPiece", piece: "f" }, name: "Thiên mã (2)", text: "Bay bốn ô theo tám hướng, vượt qua mọi quân cản nhưng không bay vào hay qua vùng cấm bay. Ăn hoặc bắn tại chỗ trong tầm bốn ô. Lao vào đánh quân nằm trong vùng cấm bay thì mất cả hai. Chở được một Voi chiến và một Chủ tướng, Bộ binh hoặc Hương binh." },
+        { icon: { kind: "tqkPiece", piece: "n" }, name: "Chiến thuyền (2)", text: "Chỉ đi trên nước (đầm, bãi lau, cửa sông), bốn ô theo tám hướng. Bắn vượt quân cản: thuyền và quân trên nước xa bốn ô, quân trên bờ xa ba ô. Tạo vùng cấm bay tám ô quanh mình. Chở một Thiên mã và một Chủ tướng, Bộ binh, Hương binh hoặc Voi chiến." },
+      ],
+    },
     rewards: [
-      "Đấu sứ quân có thưởng: thắng được 20, 40 hoặc 80 vàng theo độ khó, tối đa 3 ván có vàng mỗi ngày. Ván chạy trên máy chủ, cần trình danh, không đi lại.",
+      `Đấu sứ quân có thưởng: thắng được 20, 40 hoặc 80 vàng theo độ khó, tối đa 3 ván có vàng mỗi ngày. Ván chạy trên máy chủ, cần trình danh.`,
       "Luyện với sứ quân, hai người cùng máy và đấu người là giao hữu, không có vàng.",
       "Viền đỏ là quân Bộ Lĩnh, viền xanh là quân sứ quân. Chấm vàng ở góc quân là dấu anh hùng.",
     ],
@@ -151,6 +179,8 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Đưa Nỏ thủ lên sớm để che Thiên mã bên kia.",
       "Giữ quân che quanh Chủ tướng: Chủ tướng đi xa được nhưng chỉ ăn quân sát bên.",
       "Chiến thuyền chở Thiên mã và Voi chiến đi dọc đầm là đường vòng nhanh nhất sang đất bên kia.",
+      "Quân nặng muốn qua sông nhanh thì cho lên bè Phu cầu, khỏi chen nhau ở hai cầu tre.",
+      "Chiếu được Chủ tướng là quân thành anh hùng mạnh hơn hẳn, kể cả khi chưa chiếu bí.",
     ],
   },
   CAMPAIGN: {

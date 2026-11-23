@@ -43,7 +43,7 @@ interface Mode {
   readonly lockedText?: string;
 }
 
-// Giọng văn thẻ chế độ: câu mô tả lấy từ MODE_TEXT (modeInfo.ts), hào sảng, nhịp hai vế; tránh thuật ngữ nội bộ. Nhãn kicker theo bộ cố định: Cốt truyện, Leo tháp, Sinh tồn, Mỗi ngày, Đấu người, Binh pháp, Giải đố, Ghép tướng, Hành quân.
+// Giọng văn thẻ chế độ: câu mô tả lấy từ MODE_TEXT (modeInfo.ts), hào sảng, nhịp hai vế; tránh thuật ngữ nội bộ. Nhãn kicker theo bộ cố định: Cốt truyện, Leo tháp, Sinh tồn, Mỗi ngày, Đấu người, Binh pháp, Giải đố, Ghép tướng, Hành quân, Đánh cờ.
 const MODES: readonly Mode[] = [
   {
     scene: "CAMPAIGN",
@@ -66,6 +66,9 @@ const MODES: readonly Mode[] = [
   { scene: "DO_THAM", group: "puzzle", title: "Do Thám", text: MODE_TEXT.DO_THAM, art: "do-tham", kicker: "Giải đố", status: "Dò bẫy ngay, không cần tài khoản", cta: "Do thám" },
   { scene: "SU_LO", group: "puzzle", title: "Sử Lộ", text: MODE_TEXT.SU_LO, art: "su-lo", kicker: "Học sử", status: "Chơi thử ngay, không cần tài khoản", cta: "Lên đường" },
   { scene: "TAM_TUONG_KY", group: "puzzle", title: "Tầm Tướng Ký", text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Một phiếu, một lượt tìm tướng", cta: "Ghép tướng", lockedText: "Sắp khai mở" },
+  { scene: "TAM_QUAN_KY", group: "puzzle", title: "Tam Quân Kỳ", text: MODE_TEXT.TAM_QUAN_KY, art: "tam-quan-ky", kicker: "Đánh cờ", status: "Thắng sứ quân có vàng, đấu người bằng mã phòng", cta: "Bày cờ" },
+  // TODO tranh: chưa có public/art/home/vay-thanh-ky.webp, thẻ dùng tranh mực tạm.
+  { scene: "VAY_THANH_KY", group: "puzzle", title: "Vây Thành Kỳ", text: MODE_TEXT.VAY_THANH_KY, art: "vay-thanh-ky", kicker: "Đánh cờ", status: "Đấu sứ quân hoặc đấu người bằng mã phòng", cta: "Vây thành" },
   { scene: "EXPEDITION", group: "battle", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, art: "vien-chinh", kicker: "Hành quân", status: "Bày mưu tính kế trên sa bàn", cta: "Hành quân", lockedText: "Sắp khai mở" },
 ];
 
@@ -80,22 +83,6 @@ const UPCOMING: readonly { id: string; title: string; text: string; art?: string
     title: "Long Hổ Hội",
     text: "Long hổ bốn phương tụ về một hội, mỗi mùa một lần so tài, ai trụ đến cuối cùng được thiên hạ nể vì.",
     art: "arena",
-  },
-  {
-    id: "tam-quan-ky",
-    title: "Tam Quân Kỳ",
-    text: MODE_TEXT.TAM_QUAN_KY,
-    art: "tam-quan-ky",
-    scene: "TAM_QUAN_KY",
-    note: "Bản thử, có thưởng khi thắng sứ quân",
-  },
-  {
-    id: "vay-thanh-ky",
-    title: "Vây Thành Kỳ",
-    text: MODE_TEXT.VAY_THANH_KY,
-    art: "vay-thanh-ky",
-    scene: "VAY_THANH_KY",
-    note: "Bản thử, cờ vây bảy nguyên tố",
   },
 ];
 
@@ -117,7 +104,7 @@ export type UtilityIcon = "scroll" | "rank" | "swords" | "shop" | "tier" | "link
 
 const TABS: readonly { value: ModeTab; label: string; text: string }[] = [
   { value: "battle", label: "Chiến đấu", text: "Ghép ô ra đòn, dẫn đội tướng dẹp loạn, leo tháp, giữ ải, so tài cùng quần hùng." },
-  { value: "puzzle", label: "Giải đố", text: "Không cần đội hình mạnh: tính từng nước, dò từng bẫy, đáp đúng sử xưa." },
+  { value: "puzzle", label: "Giải đố", text: "Không cần đội hình mạnh: tính từng nước cờ, dò từng bẫy, đáp đúng sử xưa." },
   { value: "soon", label: "Sắp ra mắt", text: "Những chế độ mới đang dựng, khai mở dần qua từng bản cập nhật." },
 ];
 

@@ -6,6 +6,8 @@ import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { Button, choiceVariants, Tabs } from "@/components/ui";
 import { ElementIcon, SuLoAidIcon } from "./art/icons";
 import { Glyph } from "./formation/pieces";
+import { pieceArt } from "./tam-quan-ky/parts";
+import { ReachDiagram } from "./tam-quan-ky/ReachDiagram";
 import { MODE_GUIDES, type GuideIcon, type GuideItems, type GuideScene, type ModeGuide as ModeGuideData } from "./modeGuides";
 
 const SECTIONS: readonly { readonly key: Exclude<keyof ModeGuideData, "goal" | "items">; readonly title: string }[] = [
@@ -20,6 +22,8 @@ function GuideItemIcon({ icon }: { icon: GuideIcon }) {
   const box = "size-10 shrink-0";
   if (icon.kind === "element") return <ElementIcon element={icon.element} className={box} />;
   if (icon.kind === "suLoAid") return <SuLoAidIcon aid={icon.aid} className={box} />;
+  // eslint-disable-next-line @next/next/no-img-element -- tranh quân nhỏ, cùng ảnh với sa bàn
+  if (icon.kind === "tqkPiece") return <img src={pieceArt(icon.piece)} alt="" className={`${box} rounded-full`} />;
   return (
     <span className={`${box} block`}>
       <Glyph kind={icon.piece} />
@@ -43,10 +47,11 @@ function GuideItemsSection({ items }: { items: GuideItems }) {
         {items.list.map((item) => (
           <li key={item.name} className="flex items-start gap-3 rounded-md border border-frame-bronze/40 bg-black/15 p-2">
             <GuideItemIcon icon={item.icon} />
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="font-bold text-title-on-wood">{item.name}</p>
               <p className="text-sm text-on-wood">{item.text}</p>
             </div>
+            {item.icon.kind === "tqkPiece" && <ReachDiagram type={item.icon.piece} className="size-28 shrink-0 sm:size-32" />}
           </li>
         ))}
       </ul>
