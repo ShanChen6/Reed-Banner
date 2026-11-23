@@ -89,6 +89,13 @@ const UPCOMING: readonly { id: string; title: string; text: string; art?: string
     scene: "TAM_QUAN_KY",
     note: "Bản thử, có thưởng khi thắng sứ quân",
   },
+  {
+    id: "vay-thanh-ky",
+    title: "Vây Thành Kỳ",
+    text: MODE_TEXT.VAY_THANH_KY,
+    scene: "VAY_THANH_KY",
+    note: "Bản thử, cờ vây bảy nguyên tố",
+  },
 ];
 
 

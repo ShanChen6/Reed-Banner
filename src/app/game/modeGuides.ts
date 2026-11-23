@@ -32,6 +32,7 @@ export type GuideScene = Extract<
   | "TAM_TUONG_KY"
   | "EXPEDITION"
   | "TAM_QUAN_KY"
+  | "VAY_THANH_KY"
 >;
 
 export interface ModeGuide {
@@ -88,6 +89,7 @@ export const GUIDE_SCENES: readonly GuideScene[] = [
   "TAM_TUONG_KY",
   "EXPEDITION",
   "TAM_QUAN_KY",
+  "VAY_THANH_KY",
 ];
 
 /** Cách đổi ô và phím tắt trên bàn cờ trận đấu; trước đây là dòng chữ dưới bàn cờ (Shan 20/11/2026: gợi ý đưa vào Hướng dẫn). */
@@ -95,6 +97,33 @@ const BATTLE_CONTROLS =
   "Vuốt, kéo hoặc bấm hai ô kề nhau để đổi chỗ. Bàn phím: mũi tên hoặc WASD di chuyển, Enter chọn ô, 1–6 dùng kỹ năng, Tab đổi người hành động, Esc hủy.";
 
 export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
+  VAY_THANH_KY: {
+    goal: "Cờ vây trên bàn đất của bảy hệ: mỗi bên chọn một nguyên tố, quân thành quả cầu của hệ ấy, đất quanh quân đổi sắc theo hệ. Vây được nhiều đất hơn, hoặc bắt quân trước ở ván nhập môn, là thắng.",
+    steps: [
+      "Chọn cách chơi: đấu sứ quân, hai người cùng máy hoặc đấu người bằng mã phòng. Chọn luật, cỡ bàn 9, 13 hoặc 19 và nguyên tố mỗi bên.",
+      "Đấu người: một người bấm Mở phòng rồi gửi mã 6 ký tự, người kia nhập mã và bấm Vào phòng.",
+      "Bấm một giao điểm trống để đặt quân. Trên điện thoại chạm một lần để xem trước, chạm lần nữa để đặt.",
+      "Không còn chỗ đáng đi thì bấm Bỏ lượt. Hai bên cùng bỏ lượt thì ván dừng để đếm điểm.",
+      "Khi đếm điểm, máy đánh dấu quân chết bằng gạch chéo. Bấm vào nhóm quân để sửa, rồi bấm Chốt điểm.",
+    ],
+    rules: [
+      "Mỗi nhóm quân liền nhau cần ít nhất một khí (giao điểm trống kề bên). Hết khí thì cả nhóm bị bắt khỏi bàn.",
+      "Không được đặt quân vào chỗ hết khí, trừ khi nước ấy bắt được quân bên kia.",
+      "Luật cướp (ko): vừa bị bắt một quân thì chưa được bắt lại ngay ở đúng chỗ ấy, phải đi nơi khác một nước.",
+      "Vây đất: điểm là số quân trên bàn cộng đất trống chỉ quân mình bao quanh. Bên đi sau được cộng 7,5 điểm bù.",
+      "Bắt quân trước: ván nhập môn bắt đầu từ thế chéo giữa bàn, ai bắt được quân trước là thắng.",
+      "Nguyên tố chỉ đổi hình quân và nền đất, không đổi luật. Đất tô màu trong ván là ước lượng vùng ảnh hưởng, điểm thật chỉ tính lúc đếm.",
+    ],
+    rewards: [
+      "Bản thử: mọi ván là giao hữu, chưa có vàng.",
+      "Đấu người cần trình danh; máy chủ làm trọng tài, có đồng hồ, hai bên cùng bỏ lượt thì máy chủ tự đếm điểm.",
+    ],
+    tips: [
+      "Góc dễ giữ đất nhất, rồi tới cạnh, giữa bàn khó nhất.",
+      "Nhóm có hai mắt (hai khoảng trống tách rời bên trong) thì không bao giờ bị bắt.",
+      "Bàn 9×9 hợp để làm quen; bàn 19×19 ván dài, máy nghĩ lâu hơn.",
+    ],
+  },
   TAM_QUAN_KY: {
     goal: "Cờ tư lệnh trên sa bàn tập trận của Đinh Bộ Lĩnh: ba quân bộ, thủy và thiên mã cùng ra trận. Vây Chủ tướng bên kia hoặc chiếm giữ Soái trướng của họ để thắng.",
     steps: [

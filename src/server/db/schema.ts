@@ -374,3 +374,26 @@ export const tqkMatches = pgTable(
   },
   (t) => [index("tqk_matches_code_idx").on(t.code, t.status), index("tqk_matches_reward_idx").on(t.ownerId, t.rewardDay)],
 );
+
+/**
+ * Ván Vây Thành Kỳ (cờ vây nguyên tố) đấu người bằng mã phòng, server làm trọng tài (src/server/coVay.ts).
+ * `state` là GoMatch (cỡ bàn, nguyên tố hai bên, danh sách nước, đồng hồ, kết quả); `code` là mã phòng.
+ */
+export const goMatches = pgTable(
+  "go_matches",
+  {
+    id: text("id").primaryKey(),
+    ownerId: text("owner_id").notNull(),
+    code: text("code").notNull(),
+    black: text("black").notNull(),
+    white: text("white"),
+    blackName: text("black_name").notNull(),
+    whiteName: text("white_name").notNull(),
+    status: text("status").notNull(),
+    state: jsonb("state").notNull(),
+    seq: integer("seq").notNull(),
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [index("go_matches_code_idx").on(t.code, t.status)],
+);
