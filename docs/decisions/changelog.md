@@ -4,6 +4,11 @@
 
 ## 23/11/2026
 
+**Đưa Tam Quân Kỳ và Vây Thành Kỳ vào chế độ chơi; thưởng hạng Tháp Thiên Mệnh sang tab Công trạng (Shan yêu cầu)**
+- Hai chế độ cờ rời mục Sắp ra mắt, vào mục Giải đố của Chiến trường (nhãn "Đánh cờ") và nhóm "Binh pháp, đánh cờ và giải đố" ở trang giới thiệu. Vây Thành Kỳ chưa có tranh thẻ và biểu tượng, tạm dùng tranh mực.
+- Khối "Thưởng hạng chờ nhận" của Tháp Thiên Mệnh chuyển từ tab Chơi sang tab Công trạng tuần, như Trấn Ải.
+- Bấm logo hoặc chữ "Cờ Lau" ở footer về trang chủ.
+
 **Tam Quân Kỳ: đấu sứ quân có thưởng và đấu online 1vs1 (Shan yêu cầu, chốt "server làm trọng tài")**
 - Hai cách chơi mới chạy trên server: server kiểm lượt, luật và đồng hồ cho từng nước đi (bảng `tqk_matches`, migration 0016). Đấu sứ quân có thưởng: thắng được 20, 40, 80 vàng theo độ khó, tối đa 3 ván có vàng mỗi ngày (Claude đặt mức, chờ Shan duyệt). Đấu online: mở phòng nhận mã, người kia nhập mã; bắt buộc đồng hồ; giao hữu, không vàng ([GDD Tam Quân Kỳ mục 6](../02-game-modes/tam-quan-ky/gdd.md)).
 

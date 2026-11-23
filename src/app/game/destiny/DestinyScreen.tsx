@@ -542,7 +542,7 @@ export default function DestinyScreen() {
           { label: "Đá Cường Hóa", value: overview.stones },
         ]}
       />
-      <ModeGuideTabs scene="DESTINY" extraTabs={[{ value: "board", label: "Công trạng tuần", content: <><ModeTierPanel mode="destiny" /><DestinyBoardPanel /></> }]}>
+      <ModeGuideTabs scene="DESTINY" extraTabs={[{ value: "board", label: "Công trạng tuần", content: <><ModeTierPanel mode="destiny" /><RankRewardsPanel mode="destiny" /><DestinyBoardPanel /></> }]}>
 
       {message && <Alert className="p-3 text-sm" role="alert">{message}</Alert>}
 
@@ -932,7 +932,6 @@ export default function DestinyScreen() {
         </section>
       )}
 
-      <RankRewardsPanel mode="destiny" />
       </ModeGuideTabs>
     </ModeScreen>
   );

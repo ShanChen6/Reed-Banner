@@ -51,7 +51,7 @@ export default function GameFooter({ compact = false }: { compact?: boolean }) {
     {compact && (
       <footer className="border-t border-frame-line-soft bg-wood-lo px-3 py-2 text-caption text-on-wood-soft sm:hidden">
         <nav aria-label="Liên kết" className="flex flex-wrap items-center justify-center gap-x-3">
-          <span className="font-semibold text-on-wood">Cờ Lau</span>
+          <Link href="/" className="inline-flex min-h-11 items-center font-semibold text-on-wood hover:text-title-on-wood">Cờ Lau</Link>
           {links.slice(0, 3).map((l) => (
             <span key={l.label}>{item(l)}</span>
           ))}
@@ -61,13 +61,14 @@ export default function GameFooter({ compact = false }: { compact?: boolean }) {
     <footer className={`${compact ? "max-sm:hidden " : ""}border-t border-frame-line-soft bg-wood-lo px-4 py-6 text-caption text-on-wood-soft sm:px-6`}>
       <div className={`mx-auto grid w-full gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-start lg:gap-12 ${MODE_CONTENT_WIDTH}`}>
         <div className="order-2 flex flex-col gap-4 lg:order-1 lg:pt-6">
-          <div className="flex items-center gap-4">
+          {/* Bấm logo hoặc tên về trang chủ (/). */}
+          <Link href="/" title="Về trang chủ" className="flex w-fit items-center gap-4 rounded hover:[&_p:first-child]:text-title-on-wood focus-visible:outline-2 focus-visible:outline-frame-gold-hi">
             <LogoMark className="size-14" />
             <div>
               <p className="font-serif text-2xl font-bold text-on-wood">Cờ Lau</p>
               <p className="mt-0.5 text-base">Trò chơi nhỏ thuộc ShanVerse</p>
             </div>
-          </div>
+          </Link>
           <nav aria-label="Liên kết" className="border-y border-frame-line-soft py-3">
             <ul className="-mx-1 grid grid-cols-2 gap-x-4 text-base sm:grid-cols-3">
               {links.map((l) => (
