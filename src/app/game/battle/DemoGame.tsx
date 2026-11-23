@@ -284,9 +284,9 @@ export default function DemoGame({
   /** Sinh tồn: vừa hạ hết một đợt, chờ người chơi vào đợt kế (hoặc dừng). */
   const atBreak =
     survival !== null && !survival.done && state.winner === PLAYER;
-  // Nhạc nền theo loại trận (chỉ khi đang trong trận, không phải màn chuẩn bị): Sinh tồn, trùm chiến dịch, trận thường; rời trận thì tắt dần.
+  // Nhạc nền: màn chuẩn bị phát `prep`; trong trận theo loại trận (Sinh tồn, trùm chiến dịch, trận thường); rời trận thì tắt dần.
   const battleMusic: MusicId | null = !started
-    ? null
+    ? "prep"
     : survival
       ? "survival"
       : destinyFloorNo !== null

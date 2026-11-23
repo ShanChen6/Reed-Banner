@@ -16,7 +16,7 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 | AUD-02 | Global Audio Engine, Music/Ambience/SFX/Voice buses, mute/save | AUD-01 | DONE (02/11/2026): `src/app/game/audio/`, nút tắt tiếng và âm lượng ở thanh trên; chưa có tệp âm thanh nên chạy im lặng |
 | AUD-03a | Nối Trận Đồ (prompt A2) | AUD-02 | DONE (02/11/2026): `formation/sounds.ts`, nhạc theo màn và lớp căng thẳng theo thanh Bỏ Lệnh; chờ tệp |
 | AUD-03 | SFX match-3, combo, kỹ năng, chuyển lượt đúng animation cue | AUD-02 | DONE (02/11/2026): `battle/sounds.ts` nối vào `DemoGame` (trận thường, luyện tập, chiến dịch, sinh tồn); chờ tệp. Thêm tiếng khắc hệ (`battle.crit`), đổi lượt, đồng hồ 5 giây cuối (21/11/2026) |
-| AUD-04 | BGM + ambience theo atlas, hội thoại, chuẩn bị, battle, ending | AUD-02 | DONE (02/11/2026): `audio/sceneMusic.ts` + `SceneAudio` (nhạc và âm nền theo phân cảnh), nhạc thoại/kết cục, nhạc trận theo loại trận; chờ tệp. Chưa có nhạc `prep` và cue `unlock`, `tower.*`, `destiny.*`, `arena.ghost`, `pvp.*` |
+| AUD-04 | BGM + ambience theo atlas, hội thoại, chuẩn bị, battle, ending | AUD-02 | DONE (02/11/2026): `audio/sceneMusic.ts` + `SceneAudio` (nhạc và âm nền theo phân cảnh), nhạc thoại/kết cục, nhạc trận theo loại trận; chờ tệp. Nhạc `prep` nối 23/11/2026. Chưa có cue `unlock`, `tower.*`, `destiny.*`, `arena.ghost`, `pvp.*` |
 | AUD-05 | Voice Bible, TTS test, voice casting + transcript manifest | UI dialogue frozen | TODO — DEFERRED |
 | AUD-06 | Voice Player đồng bộ câu thoại, ducking BGM, skip/pause/replay | AUD-02, AUD-05 | TODO — DEFERRED |
 | AUD-07 | Audio export/normalization/compression và QA/license | AUD-03…06 | TODO — DEFERRED |
@@ -40,7 +40,7 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 |---|---|---|
 | Trận Đồ | `formation_menu`, `formation_play` (kèm lớp căng thẳng `formation_play_layer2`), `formation_result_win`, `formation_result_lose` và 17/17 cue `formation.*` | — |
 | Trận đánh (Giao Tranh, Thao Luyện, Bình Loạn, Viễn Chinh…) | `battle_normal`, `battle_boss`; `swap`, `invalid`, `match3`, `match4`, `match5`, `combo1..4`, `ultimate`, `heal`, `shield`, `buff`, `debuff`, `burn`, `freeze`, `poison`, `hit.*`, `skill.*`, `damage`, `ko`, `win`, `lose` | Mọi cue đã có tệp (21/11/2026). `hit.<nghề>` dùng chung một bộ, `skill.<hệ>` dùng chung một bộ |
-| Bình Loạn (ngoài trận) | `atlas`, `dialogue` | Nhạc `ending`; âm nền `amb/atlas`; cue `atlas.select`, `dialogue.next` |
+| Bình Loạn (ngoài trận) | `atlas`, `dialogue`, `ending`, âm nền `amb/atlas`, cue `atlas.select` (23/11/2026) | Cue `dialogue.next` |
 | Tháp Thí Luyện | Nhạc `tower_trial` ở màn Tháp (21/11/2026); trận trong Tháp dùng `battle_normal` | — |
 | Tháp Thiên Mệnh | Nhạc `tower_destiny` cho cả màn Tháp lẫn trận trong Tháp (22/11/2026) | — |
 | Trấn Ải (Sinh tồn) | `survival` | Cue `survival.wave`, `survival.warn` |
@@ -51,7 +51,7 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 ### Cue đã khai báo nhưng chưa nối code
 
 - `ui.click`, `ui.back`, `ui.error`, `ui.reward`: có trong `cues.ts`, chưa nơi nào gọi, chưa có tệp.
-- `battle.crit`, `battle.turn`, `battle.timer`, `music/prep`, `atlas.unlock`, `music/ending_*`, `tower.*`, `destiny.*`, `arena.ghost`, `pvp.*`: chưa có trong `cues.ts`.
+- `atlas.unlock`, `music/ending_*`, `tower.*`, `destiny.*`, `arena.ghost`, `pvp.*`: chưa có trong `cues.ts`.
 
 ## Không nằm trong bản UI hiện tại
 

@@ -271,7 +271,7 @@ Có thể giao bước 2–5 cho Claude: gửi tệp gốc kèm prompt:
 
 ### D3. Nhạc đã nối mà chưa có tệp (song song D2)
 
-- **Shan tạo tệp:** B9 (`ending`, `amb/atlas`).
+- **Shan tạo tệp:** đã đủ (`ending`, `amb/atlas` có từ 23/11/2026).
 - **Giao Claude:** prompt D0. Thêm: `formation_play_layer2` khai báo là trường `layer` của mục `formation_play` trong manifest (không phải mục riêng); `formation_result_*` và `ending` đặt `"loop": false` nếu bản nhạc có kết thúc; âm nền `atlas` thêm vào mục `ambience` của manifest.
 - **Xong khi:** Trận Đồ đổi nhạc giữa chọn bậc, đang chơi, kết quả; lớp căng thẳng to dần theo mức Bỏ Lệnh; Tháp có nhạc; bản đồ Bình Loạn có gió và chim.
 
@@ -398,7 +398,7 @@ Thêm ba cue trận đánh còn thiếu vào src/app/game/battle/sounds.ts và D
 
 ### D10. Cue ngoài trận còn thiếu
 
-- **Shan tạo tệp:** B6 dòng `atlas.unlock`, `tower.*`, `destiny.*`, `arena.ghost`; B9 dòng `prep`; nhạc kết cục theo cấp nếu muốn (mỗi cấp một bản theo prompt `ending`, đổi tâm trạng).
+- **Shan tạo tệp:** B6 dòng `atlas.unlock`, `tower.*`, `destiny.*`, `arena.ghost`; nhạc kết cục theo cấp nếu muốn (mỗi cấp một bản theo prompt `ending`, đổi tâm trạng).
 - **Prompt code:**
 
 ```
