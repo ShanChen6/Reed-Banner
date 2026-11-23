@@ -55,13 +55,15 @@ Quân: `public/art/tam-quan-ky/quan/<mã>.webp` (256 × 256, cắt tròn từ b�
 ## 5. Màn chơi
 
 - Cách chơi (bốn lựa chọn):
-  - **Luyện với sứ quân**: máy ba độ khó, nghĩ trong web worker, chạy trên trình duyệt, đi lại được, không thưởng.
+  - **Luyện với sứ quân**: máy ba độ khó, nghĩ trong web worker, chạy trên trình duyệt, không thưởng.
   - **Đấu sứ quân có thưởng**: server làm trọng tài (mục 6).
   - **Hai người cùng máy**: trên trình duyệt, không thưởng.
   - **Đấu người 1vs1** (online): hai tài khoản trên hai máy, server làm trọng tài (mục 6).
 - Đối thủ: chọn 1 trong 12 sứ quân (`WARLORD_ENCOUNTERS`), chỉ đổi tên và chân dung. Đỏ luôn là quân Bộ Lĩnh, đi trước; đấu máy thì bạn chọn cầm phe nào.
 - Đồng hồ mỗi bên: không giới hạn, 10, 15 hoặc 30 phút.
-- Đi lại, xoay sa bàn, ván mới, đầu hàng; nhật ký trận; ván dở lưu ở trình duyệt (`reed-banner:tam-quan-ky:save:v1`). Không có dòng mô tả nước đi dưới sa bàn vì nhật ký đã ghi (Shan 23/11/2026); dòng đó chỉ còn cho trình đọc màn hình.
+- Không có đi lại ở mọi cách chơi (Shan 23/11/2026). Xoay sa bàn, ván mới, đầu hàng; nhật ký trận; ván dở lưu ở trình duyệt (`reed-banner:tam-quan-ky:save:v1`). Không có dòng mô tả nước đi dưới sa bàn vì nhật ký đã ghi (Shan 23/11/2026); dòng đó chỉ còn cho trình đọc màn hình.
+- Bố cục (Shan 23/11/2026, theo kiểu bàn cờ vây): sa bàn ở giữa, co theo chiều cao màn cả ở trang thường lẫn khi phóng to; bên trái là thẻ phe ở mép dưới sa bàn (thường là bạn) kèm thoại Bộ Lĩnh, quân đang chọn và nút thao tác; bên phải là thẻ phe kia và nhật ký trận. Màn hẹp xếp dọc: thẻ đối thủ, sa bàn, thẻ của bạn. Thành phần dùng chung với Vây Thành Kỳ: `src/app/game/DuelLayout.tsx`.
+- Hướng dẫn: thẻ Hướng dẫn có mục "Quân và cách đi", mỗi quân kèm hình tầm đi vẽ thẳng từ luật (`ReachDiagram.tsx`).
 - Bản đồ: chọn ở phần chuẩn bị, nhớ theo trình duyệt. Mọi bản đồ cùng bố cục địa hình, chỉ khác cảnh. Sáu bản, tranh Shan vẽ (23/11/2026), Claude căn về lưới (dời đầm, sông, cầu về đúng cột, hàng): Đầm Hoa Lư, Đồng xuân tháng giêng, Hoa Lư thu muộn, Đêm trăng tập trận, Thung Tràng An, Cửa Bố Hải. Gốc và bản đã căn ở `art/tam-quan-ky/ban-do/` trong thư mục dự án.
 - Thoại: Đinh Bộ Lĩnh nói một câu ngắn khi vào trận, khi chiếu tướng, khi bị chiếu, khi có anh hùng mới bên Đỏ, khi thắng, thua, hòa (`src/app/game/tam-quan-ky/lines.ts`). Lời game sáng tác, không phải lời nhân vật lịch sử.
 

@@ -9,8 +9,10 @@ import { OrnateFrame } from "@/components/game-ui";
 import { fetchProfile } from "../battle/online";
 import { TierLadder } from "./RankBoard";
 import { ladderOf, tierClaimNote, tierErrorNote, tierRewards } from "../arena/tiers";
+import { useAudio } from "../audio/AudioProvider";
 
 export default function ModeTierPanel({ mode }: { mode: ModeTierId }) {
+  const { play: playSound } = useAudio();
   const ladder = MODE_TIERS[mode];
   const [profile, setProfile] = useState<Profile | null>(null);
   const [busy, setBusy] = useState(false);
@@ -43,7 +45,10 @@ export default function ModeTierPanel({ mode }: { mode: ModeTierId }) {
             : tierErrorNote(body.error, ladder.unit === "tầng" ? "số tầng" : `số ${ladder.unit}`),
       );
       // Cập nhật số vàng trên thanh đầu trang.
-      if (body.claimed) void fetchProfile();
+      if (body.claimed) {
+        playSound("ui.reward");
+        void fetchProfile();
+      }
     } catch {
       setNote("Tin báo đứt quãng, chưa liên lạc được máy chủ. Xin thử lại.");
     }

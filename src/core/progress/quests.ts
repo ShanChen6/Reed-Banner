@@ -33,7 +33,9 @@ export type QuestStat =
    */
   | "campaign"
   | "waves"
-  | "daily";
+  | "daily"
+  /** Ván cờ (Tam Quân Kỳ, Vây Thành Kỳ) do server làm trọng tài, đánh xong đủ số nước (xem recordBoardGame). */
+  | "board";
 
 export interface QuestDef {
   readonly id: string;
@@ -59,6 +61,13 @@ export const DAILY_QUESTS: readonly QuestDef[] = [
     stat: "daily",
     target: 1,
     gold: 50,
+  },
+  {
+    id: "d.board",
+    title: "Đánh xong một ván Tam Quân Kỳ hoặc Vây Thành Kỳ",
+    stat: "board",
+    target: 1,
+    gold: 40,
   },
 ];
 
@@ -176,6 +185,21 @@ export function recordMatch(
       daily: (t.daily ?? 0) + (m.mode === "daily" ? 1 : 0),
     },
   };
+}
+
+/**
+ * Số nước tối thiểu của người chơi trong ván cờ để tính nhiệm vụ: đầu hàng ngay từ đầu không được tính.
+ * Đếm nước của riêng người chơi (nửa số nước cả ván).
+ */
+export const BOARD_GAME_MIN_MOVES = 5;
+
+/**
+ * Cộng một ván cờ (Tam Quân Kỳ, Vây Thành Kỳ) vừa xong vào nhiệm vụ. Chỉ đếm stat "board": ván cờ không phải trận ghép ô nên
+ * không tính "Đánh N trận", "Thắng N trận" hay số trận trọn đời.
+ */
+export function recordBoardGame(q: QuestState, now: number): QuestState {
+  const r = rollQuests(q, now);
+  return { ...r, dayStats: bump(r.dayStats, { board: 1 }), weekStats: bump(r.weekStats, { board: 1 }) };
 }
 
 /** Tiến độ hiện tại của một nhiệm vụ (đã tính sang ngày/tuần mới). */

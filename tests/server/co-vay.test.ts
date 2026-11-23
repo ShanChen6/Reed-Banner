@@ -3,10 +3,11 @@ import { describe, it } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
-import { BLACK, PASS, WHITE } from "../../src/core/co-vay";
+import { BLACK, PASS, WHITE, isLegal } from "../../src/core/co-vay";
+import { MemoryProfileStore, loadProfile } from "../../src/server/profiles";
 import { DrizzleGoStore } from "../../src/server/db/coVay";
 import type { Db } from "../../src/server/db/store";
-import { GO_ROOM_TTL_MS, MemoryGoStore, goGet, goHost, goJoin, goMove, goResignMatch, type GoApiResult, type GoDeps, type GoStore, type GoView } from "../../src/server/coVay";
+import { GO_GOLD, GO_REWARDS_PER_DAY, GO_ROOM_TTL_MS, MemoryGoStore, goGet, goStartAi, goHost, goJoin, goMove, goResignMatch, type GoApiResult, type GoDeps, type GoStore, type GoView } from "../../src/server/coVay";
 
 const T0 = 1_700_000_000_000;
 
@@ -21,11 +22,37 @@ const stores: readonly [string, () => Promise<GoStore>][] = [
   ["Postgres (PGlite, cùng migration với Neon)", makeDb],
 ];
 
-function harness(store: GoStore) {
+/**
+ * Máy giả cho test: đặt quân vào điểm hợp lệ đầu tiên, và xin thua khi bàn đã có từ `resignAt` nước trở lên.
+ */
+function harness(store: GoStore, resignAt = Infinity) {
   let now = T0;
   let n = 0;
-  const deps = (): GoDeps => ({ store, now, newId: () => `go-${++n}`, newCode: () => `CODE${n}A`.slice(0, 6), nameOf: async (id) => `Tên ${id}` });
-  return { deps, tick: (ms: number) => (now += ms) };
+  const profiles = new MemoryProfileStore();
+  const deps = (): GoDeps => ({
+    store,
+    profiles,
+    think: (pos) => {
+      if (pos.moveNumber >= resignAt) return { move: PASS, resign: true };
+      for (let p = 0; p < pos.size * pos.size; p++) if (isLegal(pos, p)) return { move: p, resign: false };
+      return { move: PASS, resign: false };
+    },
+    now,
+    newId: () => `go-${++n}`,
+    newCode: () => `CODE${n}A`.slice(0, 6),
+    nameOf: async (id) => `Tên ${id}`,
+  });
+  return { deps, profiles, tick: (ms: number) => (now += ms) };
+}
+
+/** Người chơi đặt quân từ cuối bàn ngược lên (máy giả đi từ đầu bàn) cho tới khi ván xong. */
+async function playOut(h: ReturnType<typeof harness>, owner: string, id: string): Promise<GoView> {
+  let v = ok(await goGet(owner, id, h.deps()));
+  for (let p = v.size * v.size - 1; p >= 0 && v.status !== "ended"; p--) {
+    const r = await goMove(owner, id, p, h.deps());
+    if (r.ok) v = r.view;
+  }
+  return v;
 }
 
 function ok(r: GoApiResult): GoView {
@@ -90,6 +117,55 @@ for (const [label, make] of stores) {
       assert.deepEqual(await goHost("an", { size: 10, mode: "full", clock: 10, element: "hoa" }, h.deps()), { ok: false, error: "badRequest" });
       assert.deepEqual(await goHost("an", { size: 9, mode: "full", clock: 5, element: "hoa" }, h.deps()), { ok: false, error: "badRequest" });
       assert.deepEqual(await goHost("an", { size: 9, mode: "full", clock: 10, element: "lua" }, h.deps()), { ok: false, error: "badRequest" });
+    });
+  });
+}
+
+for (const [label, make] of stores) {
+  describe(`Vây Thành Kỳ đấu sứ quân có thưởng (${label})`, () => {
+    const opts = { level: "easy", rival: "luDuong", human: BLACK, size: 9, mode: "full", element: "hoa", rivalElement: "hoa" };
+
+    it("máy đáp trong cùng request; thắng được vàng, tối đa GO_REWARDS_PER_DAY ván mỗi ngày; cộng nhiệm vụ đánh cờ", async () => {
+      const h = harness(await make(), 12);
+      for (let i = 0; i < GO_REWARDS_PER_DAY + 1; i++) {
+        const start = ok(await goStartAi("u1", opts, h.deps()));
+        assert.equal(start.you, BLACK);
+        assert.notEqual(start.elements[WHITE], "hoa", "trùng hệ thì máy đổi hệ khác");
+        const first = ok(await goMove("u1", start.id, 80, h.deps()));
+        assert.equal(first.moves.length, 2, "máy đáp ngay");
+        const end = await playOut(h, "u1", start.id);
+        assert.equal(end.status, "ended");
+        assert.deepEqual(end.result, { winner: BLACK, reason: "resign" });
+        if (i < GO_REWARDS_PER_DAY) assert.equal(end.reward, GO_GOLD.easy);
+        else {
+          assert.equal(end.reward, null);
+          assert.equal(end.rewardCapped, true);
+        }
+      }
+      const p = await loadProfile(h.profiles, "u1");
+      assert.equal(p.profile.quests.dayStats.board, GO_REWARDS_PER_DAY + 1);
+      assert.equal(p.profile.quests.dayStats.play, undefined, "ván cờ không tính là trận ghép ô");
+    });
+
+    it("cầm Trắng thì máy đi trước; thua hoặc đầu hàng sớm thì không vàng, không nhiệm vụ", async () => {
+      const h = harness(await make());
+      const start = ok(await goStartAi("u1", { ...opts, human: WHITE }, h.deps()));
+      assert.equal(start.moves.length, 1);
+      const gave = ok(await goResignMatch("u1", start.id, h.deps()));
+      assert.equal(gave.result?.winner, BLACK);
+      assert.equal(gave.reward, null);
+      assert.equal(gave.rewardCapped, false);
+      const p = await loadProfile(h.profiles, "u1");
+      assert.equal(p.profile.quests.dayStats.board, undefined);
+      assert.deepEqual(await goGet("", start.id, h.deps()), { ok: false, error: "notMember" });
+    });
+
+    it("lệnh sai", async () => {
+      const h = harness(await make());
+      assert.deepEqual(await goStartAi("u1", { ...opts, level: "expert" }, h.deps()), { ok: false, error: "badRequest" });
+      assert.deepEqual(await goStartAi("u1", { ...opts, human: "x" }, h.deps()), { ok: false, error: "badRequest" });
+      assert.deepEqual(await goStartAi("u1", { ...opts, rival: "" }, h.deps()), { ok: false, error: "badRequest" });
+      assert.deepEqual(await goStartAi("u1", { ...opts, rivalElement: "lua" }, h.deps()), { ok: false, error: "badRequest" });
     });
   });
 }

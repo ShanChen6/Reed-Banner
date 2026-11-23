@@ -1,15 +1,22 @@
-// Vây Thành Kỳ (cờ vây nguyên tố) đấu người bằng mã phòng: server làm trọng tài như Tam Quân Kỳ (src/server/tamQuanKy.ts).
-// Mọi nước đi qua src/core/co-vay/match.ts để kiểm luật và đồng hồ rồi mới lưu. Giao hữu, không có vàng.
+// Vây Thành Kỳ (cờ vây nguyên tố) do server làm trọng tài như Tam Quân Kỳ (src/server/tamQuanKy.ts). Mọi nước đi qua
+// src/core/co-vay/match.ts để kiểm luật và đồng hồ rồi mới lưu.
+// - Đấu sứ quân có thưởng (Shan chọn 23/11/2026): máy tính nước ngay trong request của người chơi. Thắng được vàng theo độ khó,
+//   tối đa GO_REWARDS_PER_DAY ván có vàng mỗi ngày (giờ Việt Nam), cùng mức với Tam Quân Kỳ. Không đồng hồ, không đi lại.
+// - Đấu người bằng mã phòng: giao hữu, không có vàng.
+// Ván xong đủ dài thì cộng nhiệm vụ ngày đánh cờ (src/server/boardQuests.ts).
 // - Chủ phòng cầm Đen (đi trước), chọn cỡ bàn, luật (đếm điểm hay bắt quân trước), đồng hồ và nguyên tố của mình.
 // - Người vào bằng mã cầm Trắng, chọn nguyên tố; trùng hệ chủ phòng thì server đổi sang hệ khác để hai bên phân biệt được.
 // Mọi lần ghi kèm điều kiện seq: hai request cùng lúc thì một bên báo `conflict`.
 
 import { ELEMENTS, type Element } from "@/core/battle/elements";
+import { vnDay } from "@/core/vnTime";
 import {
   BLACK,
+  PASS,
   GO_ONLINE_CLOCKS,
   WHITE,
   goPlay,
+  goPosition,
   goResign,
   goSettle,
   goTimeLeft,
@@ -20,16 +27,28 @@ import {
   type Color,
   type GoMatch,
   type GoResult,
+  type Level,
   type Mode,
+  type Position,
 } from "@/core/co-vay";
+import { creditBoardGame } from "./boardQuests";
+import { updateProfile, type ProfileStore } from "./profiles";
 
 export type GoStatus = "waiting" | "playing" | "ended";
+
+/** Ván đấu sứ quân: độ khó, sứ quân (id trong danh sách 12 sứ quân) và bên người chơi cầm. */
+export interface GoAi {
+  readonly level: Level;
+  readonly rival: string;
+  readonly human: Color;
+}
 
 export interface GoRecord {
   readonly id: string;
   readonly ownerId: string;
-  /** Mã phòng, chỉ tìm được khi còn chờ người vào. */
+  /** Mã phòng, chỉ tìm được khi còn chờ người vào; "" khi đấu sứ quân. */
   readonly code: string;
+  /** Tài khoản cầm Đen; "" khi máy cầm Đen. */
   readonly black: string;
   readonly white: string | null;
   readonly blackName: string;
@@ -37,6 +56,12 @@ export interface GoRecord {
   readonly status: GoStatus;
   readonly match: GoMatch;
   readonly seq: number;
+  /** Đấu sứ quân; null khi đấu người. */
+  readonly ai: GoAi | null;
+  /** Vàng đã cộng khi thắng sứ quân; null là chưa xét (hoặc không có thưởng). */
+  readonly reward: number | null;
+  /** Ngày (giờ VN) của ván có thưởng, để đếm giới hạn mỗi ngày. */
+  readonly rewardDay: string | null;
   readonly createdAt: number;
   readonly updatedAt: number;
 }
@@ -47,6 +72,8 @@ export interface GoStore {
   findWaiting(code: string): Promise<GoRecord | null>;
   /** Ghi khi seq đang lưu đúng bằng `expectedSeq`. */
   save(r: GoRecord, expectedSeq: number): Promise<boolean>;
+  /** Số ván đã nhận vàng (vàng > 0) của người chơi trong ngày. */
+  rewardsOn(ownerId: string, day: string): Promise<number>;
 }
 
 export class MemoryGoStore implements GoStore {
@@ -74,13 +101,34 @@ export class MemoryGoStore implements GoStore {
     this.rows.set(r.id, structuredClone(r));
     return true;
   }
+
+  async rewardsOn(ownerId: string, day: string): Promise<number> {
+    let n = 0;
+    for (const r of this.rows.values()) if (r.ownerId === ownerId && r.rewardDay === day && (r.reward ?? 0) > 0) n++;
+    return n;
+  }
 }
+
+/** Vàng khi thắng sứ quân theo độ khó (cùng mức Tam Quân Kỳ). */
+export const GO_GOLD: Readonly<Record<Level, number>> = { easy: 20, medium: 40, hard: 80 };
+/** Số ván thắng có vàng mỗi ngày; thắng thêm vẫn ghi nhận nhưng không có vàng. */
+export const GO_REWARDS_PER_DAY = 3;
+const LEVELS: readonly Level[] = ["easy", "medium", "hard"];
 
 /** Phòng chờ quá lâu thì mã hết hạn. */
 export const GO_ROOM_TTL_MS = 30 * 60_000;
 
+/** Nước máy chọn: điểm hoặc PASS, hoặc xin thua. */
+export interface GoThought {
+  readonly move: number;
+  readonly resign: boolean;
+}
+
 export interface GoDeps {
   readonly store: GoStore;
+  readonly profiles: ProfileStore;
+  /** Máy chọn nước (server truyền engine thật, test truyền bản nhanh). */
+  readonly think: (pos: Position, level: Level) => GoThought;
   readonly now: number;
   readonly newId: () => string;
   readonly newCode: () => string;
@@ -105,19 +153,29 @@ export interface GoView {
   readonly timeLeft: Readonly<Record<Color, number>>;
   readonly result: GoResult | null;
   readonly seq: number;
+  /** Đấu sứ quân: độ khó và sứ quân; null khi đấu người. */
+  readonly ai: GoAi | null;
+  /** Vàng nhận được ở ván này (null: không có thưởng hoặc chưa xong). */
+  readonly reward: number | null;
+  /** Thắng sứ quân nhưng đã đủ số ván có thưởng hôm nay. */
+  readonly rewardCapped: boolean;
+  /** Vàng hiện có sau khi cộng thưởng (để header cập nhật); chỉ có ở request cộng thưởng. */
+  readonly gold?: number;
   readonly serverNow: number;
 }
 
 export type GoApiResult = { readonly ok: true; readonly view: GoView } | { readonly ok: false; readonly error: GoError };
 
 function sideOf(r: GoRecord, owner: string): Color | null {
+  if (!owner) return null;
   if (r.black === owner) return BLACK;
   if (r.white === owner) return WHITE;
   return null;
 }
 
-function view(r: GoRecord, you: Color, now: number): GoView {
+function view(r: GoRecord, you: Color, now: number, gold?: number): GoView {
   const m = r.match;
+  const won = !!r.ai && m.result?.winner === r.ai.human;
   return {
     id: r.id,
     status: r.status,
@@ -132,13 +190,55 @@ function view(r: GoRecord, you: Color, now: number): GoView {
     timeLeft: goTimeLeft(m, now),
     result: m.result,
     seq: r.seq,
+    ai: r.ai,
+    reward: r.reward && r.reward > 0 ? r.reward : null,
+    rewardCapped: won && r.reward === 0,
+    ...(gold === undefined ? {} : { gold }),
     serverNow: now,
   };
 }
 
-async function commit(prev: GoRecord, match: GoMatch, deps: GoDeps): Promise<GoRecord | null> {
-  const record: GoRecord = { ...prev, match, status: match.result ? "ended" : prev.status, seq: prev.seq + 1, updatedAt: deps.now };
-  return (await deps.store.save(record, prev.seq)) ? record : null;
+/**
+ * Ghi ván mới (đổi trạng thái khi đã có kết quả, xét thưởng thắng sứ quân, cộng nhiệm vụ đánh cờ) rồi cộng vàng nếu có.
+ * Trả về null khi request khác đã ghi trước.
+ */
+async function commit(prev: GoRecord, match: GoMatch, deps: GoDeps): Promise<{ record: GoRecord; gold?: number } | null> {
+  const result = match.result;
+  let reward = prev.reward;
+  let rewardDay = prev.rewardDay;
+  if (result && prev.ai && reward === null) {
+    const day = vnDay(deps.now);
+    const won = result.winner === prev.ai.human;
+    const full = won && (await deps.store.rewardsOn(prev.ownerId, day)) >= GO_REWARDS_PER_DAY;
+    reward = won && !full ? GO_GOLD[prev.ai.level] : 0;
+    rewardDay = day;
+  }
+  const record: GoRecord = { ...prev, match, status: result ? "ended" : prev.status, reward, rewardDay, seq: prev.seq + 1, updatedAt: deps.now };
+  if (!(await deps.store.save(record, prev.seq))) return null;
+  if (result && prev.status !== "ended") await creditBoardGame(deps.profiles, [prev.black, prev.white], match.moves.length, deps.now);
+  const gold = reward ?? 0;
+  if (gold > 0 && prev.reward === null) {
+    const paid = await updateProfile(deps.profiles, prev.ownerId, (p) => ({ ok: true, profile: { ...p, gold: p.gold + gold } }), deps.now);
+    if (paid.ok) return { record, gold: paid.stored.profile.gold };
+  }
+  return { record };
+}
+
+/** Máy đi khi tới lượt máy (đấu sứ quân). Máy xin thua thì ván kết thúc ngay. */
+function machineReply(match: GoMatch, ai: GoAi | null, deps: GoDeps): GoMatch {
+  if (!ai || match.result) return match;
+  const machine = ai.human === BLACK ? WHITE : BLACK;
+  if ((match.moves.length % 2 === 0 ? BLACK : WHITE) !== machine) return match;
+  const thought = deps.think(goPosition(match), ai.level);
+  if (thought.resign) {
+    const r = goResign(match, machine, deps.now);
+    return r.ok ? r.match : match;
+  }
+  const r = goPlay(match, machine, thought.move, deps.now);
+  if (r.ok) return r.match;
+  // Phòng hờ máy trả nước không hợp lệ: bỏ lượt thay vì treo ván.
+  const pass = goPlay(match, machine, PASS, deps.now);
+  return pass.ok ? pass.match : match;
 }
 
 async function load(owner: string, id: unknown, deps: GoDeps): Promise<{ record: GoRecord; side: Color } | GoError> {
@@ -172,6 +272,9 @@ export async function goHost(owner: string, opts: { size: unknown; mode: unknown
       status: "waiting",
       match: newGoMatch({ size, mode, elements: { [BLACK]: element, [WHITE]: other } as Record<Color, Element>, clockMs: clock * 60_000, startedAt: null }),
       seq: 0,
+      ai: null,
+      reward: null,
+      rewardDay: null,
       createdAt: deps.now,
       updatedAt: deps.now,
     };
@@ -210,7 +313,8 @@ export async function goGet(owner: string, id: unknown, deps: GoDeps): Promise<G
   const settled = goSettle(record.match, deps.now);
   if (settled === record.match) return { ok: true, view: view(record, side, deps.now) };
   const saved = await commit(record, settled, deps);
-  const latest = saved ?? (await deps.store.get(record.id));
+  if (saved) return { ok: true, view: view(saved.record, side, deps.now, saved.gold) };
+  const latest = await deps.store.get(record.id);
   return latest ? { ok: true, view: view(latest, side, deps.now) } : { ok: false, error: "notFound" };
 }
 
@@ -225,8 +329,47 @@ export async function goMove(owner: string, id: unknown, point: number, deps: Go
     if (r.error === "ended" && record.status === "playing") await goGet(owner, id, deps);
     return { ok: false, error: r.error };
   }
-  const saved = await commit(record, r.match, deps);
-  return saved ? { ok: true, view: view(saved, side, deps.now) } : { ok: false, error: "conflict" };
+  const saved = await commit(record, machineReply(r.match, record.ai, deps), deps);
+  return saved ? { ok: true, view: view(saved.record, side, deps.now, saved.gold) } : { ok: false, error: "conflict" };
+}
+
+/** Bắt đầu ván đấu sứ quân có thưởng. Người chơi cầm Trắng thì máy (Đen) đi trước ngay. */
+export async function goStartAi(
+  owner: string,
+  opts: { level: unknown; rival: unknown; human: unknown; size: unknown; mode: unknown; element: unknown; rivalElement: unknown },
+  deps: GoDeps,
+): Promise<GoApiResult> {
+  const level = LEVELS.find((l) => l === opts.level);
+  const human = opts.human === BLACK ? BLACK : opts.human === WHITE ? WHITE : null;
+  const mode = opts.mode === "full" || opts.mode === "capture" ? opts.mode : null;
+  if (!level || !human || !mode || !isBoardSize(opts.size) || !isElement(opts.element) || !isElement(opts.rivalElement)) return { ok: false, error: "badRequest" };
+  if (typeof opts.rival !== "string" || opts.rival.length === 0 || opts.rival.length > 64) return { ok: false, error: "badRequest" };
+  const machine = human === BLACK ? WHITE : BLACK;
+  // Trùng hệ thì máy đổi sang hệ khác để hai bên phân biệt được, như khi vào phòng đấu người.
+  const rivalElement = opts.rivalElement === opts.element ? ELEMENTS.find((e) => e !== opts.element)! : opts.rivalElement;
+  const ai: GoAi = { level, rival: opts.rival, human };
+  const name = await deps.nameOf(owner);
+  let match = newGoMatch({ size: opts.size, mode, elements: { [human]: opts.element, [machine]: rivalElement } as Record<Color, Element>, clockMs: 0, startedAt: deps.now });
+  match = machineReply(match, ai, deps);
+  const record: GoRecord = {
+    id: deps.newId(),
+    ownerId: owner,
+    code: "",
+    black: human === BLACK ? owner : "",
+    white: human === WHITE ? owner : null,
+    blackName: human === BLACK ? name : "",
+    whiteName: human === WHITE ? name : "",
+    status: match.result ? "ended" : "playing",
+    match,
+    seq: 0,
+    ai,
+    reward: null,
+    rewardDay: null,
+    createdAt: deps.now,
+    updatedAt: deps.now,
+  };
+  if (!(await deps.store.create(record))) return { ok: false, error: "conflict" };
+  return { ok: true, view: view(record, human, deps.now) };
 }
 
 /** Đầu hàng. Chủ phòng đầu hàng khi chưa ai vào thì là hủy phòng. */
@@ -243,5 +386,5 @@ export async function goResignMatch(owner: string, id: unknown, deps: GoDeps): P
   const r = goResign(record.match, side, deps.now);
   if (!r.ok) return { ok: false, error: r.error };
   const saved = await commit(record, r.match, deps);
-  return saved ? { ok: true, view: view(saved, side, deps.now) } : { ok: false, error: "conflict" };
+  return saved ? { ok: true, view: view(saved.record, side, deps.now, saved.gold) } : { ok: false, error: "conflict" };
 }

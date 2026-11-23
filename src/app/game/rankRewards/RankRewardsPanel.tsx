@@ -9,6 +9,7 @@ import { REWARD_TIERS, type RankRewardMode } from "@/core";
 import { OrnateFrame, SectionTitle } from "@/components/game-ui";
 import { buttonVariants } from "@/components/ui";
 import { SceneLink } from "../SceneContext";
+import { useAudio } from "../audio/AudioProvider";
 
 interface Item {
   readonly mode: RankRewardMode;
@@ -31,6 +32,7 @@ const extras = (i: { readonly tickets?: number; readonly bundles?: number }) =>
 const PERIOD_NOUN: Record<RankRewardMode, string> = { daily: "ngày", destiny: "chu kỳ", survival: "mùa", arena: "mùa", tamTuongKy: "tuần", pvp: "mùa" };
 
 export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankRewardMode; onClaimed?: () => void }) {
+  const { play: playSound } = useAudio();
   const [state, setState] = useState<{ canClaim: boolean; items: Item[] } | null>(null);
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
@@ -58,7 +60,10 @@ export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankReward
       });
       const body = (await res.json()) as { gold?: number; rank?: number; participants?: number; tickets?: number; bundles?: number };
       setNote(res.ok ? `Đã nhận ${body.gold} vàng${extras(body)} (hạng ${body.rank}/${body.participants}).` : "Chưa nhận được thưởng. Xin thử lại sau.");
-      if (res.ok) onClaimed?.();
+      if (res.ok) {
+        playSound("ui.reward");
+        onClaimed?.();
+      }
     } catch {
       setNote("Chưa nhận được thưởng. Xin thử lại sau.");
     }

@@ -1,6 +1,6 @@
 // Trang giới thiệu (/), thiết kế lại 19/11/2026 theo đề xuất Shan duyệt: gọn khoảng sáu màn hình, mỗi mục một ý.
 // Mở đầu (tranh trống đồng, bàn cờ tự chơi, số liệu thật) → Đinh Bộ Lĩnh qua ba thời (giữ nguyên khung cũ, Shan chốt) → Chế độ chơi →
-// Thế giới → Hỏi đáp → lời mời cuối. Trang chủ nói chung cho cả 14 chế độ (Shan 20/11/2026); luật đánh trận ghép ô (ba bước một
+// Thế giới → Hỏi đáp → lời mời cuối. Trang chủ nói chung cho mọi chế độ (Shan 20/11/2026, thêm hai chế độ cờ 23/11); luật đánh trận ghép ô (ba bước một
 // lượt, chuỗi Hợp Kích, bảng ô, nghề, hệ) ở /cam-nang.
 
 import Link from "next/link";
@@ -80,14 +80,16 @@ const MODE_GROUPS: readonly { readonly title: string; readonly sub: string; read
     ],
   },
   {
-    title: "Binh pháp và giải đố",
-    sub: "Không cần phản xạ: bày trận, dò bẫy, học sử, ghép tướng. Phần lớn chơi được ngay không cần tài khoản.",
+    title: "Binh pháp, đánh cờ và giải đố",
+    sub: "Không cần phản xạ: bày trận, đánh cờ, dò bẫy, học sử, ghép tướng. Phần lớn chơi được ngay không cần tài khoản.",
     modes: [
       { slug: "formation", name: "Trận Đồ", kicker: "Binh pháp", art: "/art/home/tran-do.webp", guest: true, body: "Xếp quân theo nghề, theo hệ cho khớp luật từng ô, mở dần bản đồ trận." },
       { slug: "clear-path", name: "Khai Lộ", kicker: "Giải đố", art: "/art/home/khai-lo.webp", guest: true, body: "Chạm để phá cả khối quân cùng hệ, gom khối to lấy điểm và mở đường xuyên bàn." },
       { slug: "scout", name: "Do Thám", kicker: "Giải đố", art: "/art/home/do-tham.webp", guest: true, body: "Dò từng ô trên sa bàn, đọc số để tránh bẫy chông, cắm cờ lau đánh dấu." },
       { slug: "maze", name: "Sử Lộ", kicker: "Học sử", art: "/art/home/su-lo.webp", guest: true, body: "Đổ xúc xắc đi qua mê cung các thời kỳ, đáp đúng câu sử để mở cổng." },
       { slug: "tam-tuong-ky", name: "Tầm Tướng Ký", kicker: "Ghép tướng", art: "/art/home/tam-tuong-ky.webp", flag: "tamTuongKy", body: "Ghép bảy hệ thành nguyên liệu, lần ra chân dung các danh tướng." },
+      { slug: "three-armies", name: "Tam Quân Kỳ", kicker: "Đánh cờ", art: "/art/home/tam-quan-ky.webp", guest: true, body: "Cờ tư lệnh cổ trang: bộ binh, chiến thuyền, thiên mã trên sa bàn; thắng sứ quân có vàng." },
+      { slug: "go", name: "Vây Thành Kỳ", kicker: "Đánh cờ", art: "/art/home/vay-thanh-ky.webp", guest: true, body: "Cờ vây bảy nguyên tố: chọn hệ, đặt quân vây đất, đất mình vây đổi sắc theo hệ." },
     ],
   },
 ];

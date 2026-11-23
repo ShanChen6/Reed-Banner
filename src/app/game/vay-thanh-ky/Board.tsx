@@ -6,7 +6,7 @@
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import type { Element } from "@/core";
 import { BLACK, WHITE, columnLabel, starPoints, type Color } from "@/core/co-vay";
-import { THEME } from "./theme";
+import { GroundFilter, OrbDefs, THEME, groundArt } from "./theme";
 
 /** Ảnh hưởng của quân theo khoảng cách Manhattan 0..3: đất tô màu khi một bên trội hẳn. */
 const REACH = [8, 4, 2, 1] as const;
@@ -36,39 +36,31 @@ export function influence(board: Int8Array, size: number, dead: ReadonlySet<numb
   return owner;
 }
 
-/** Quả cầu nguyên tố. `r` theo đơn vị bàn. */
+/** Quả cầu nguyên tố, dùng dải màu `OrbDefs` có id `gradientId`. `r` theo đơn vị bàn. */
 export function Orb({ element, cx, cy, r, gradientId, opacity = 1 }: { element: Element; cx: number; cy: number; r: number; gradientId: string; opacity?: number }) {
   return (
     <g opacity={opacity}>
-      <circle cx={cx + r * 0.08} cy={cy + r * 0.14} r={r} fill="#000" opacity={0.28} />
-      <circle cx={cx} cy={cy} r={r} fill={`url(#${gradientId})`} stroke={THEME[element].dark} strokeWidth={r * 0.07} />
-      <image href={`/art/elements/${element}.webp`} x={cx - r * 0.68} y={cy - r * 0.68} width={r * 1.36} height={r * 1.36} />
-      <ellipse cx={cx - r * 0.32} cy={cy - r * 0.42} rx={r * 0.34} ry={r * 0.2} fill="#fff" opacity={0.45} transform={`rotate(-28 ${cx - r * 0.32} ${cy - r * 0.42})`} />
+      <ellipse cx={cx + r * 0.1} cy={cy + r * 0.2} rx={r * 0.98} ry={r * 0.9} fill="#000" opacity={0.35} />
+      <circle cx={cx} cy={cy} r={r} fill={`url(#${gradientId}-body)`} />
+      <circle cx={cx} cy={cy} r={r} fill={`url(#${gradientId}-rim)`} />
+      <image href={`/art/elements/${element}.webp`} x={cx - r * 0.6} y={cy - r * 0.6} width={r * 1.2} height={r * 1.2} opacity={0.95} />
+      <circle cx={cx} cy={cy} r={r * 0.965} fill="none" stroke={THEME[element].light} strokeOpacity={0.35} strokeWidth={r * 0.06} />
+      <ellipse cx={cx - r * 0.3} cy={cy - r * 0.46} rx={r * 0.42} ry={r * 0.24} fill={`url(#${gradientId}-shine)`} transform={`rotate(-25 ${cx - r * 0.3} ${cy - r * 0.46})`} />
+      <circle cx={cx - r * 0.42} cy={cy - r * 0.5} r={r * 0.07} fill="#fff" opacity={0.9} />
     </g>
   );
 }
 
-/** Quả cầu nhỏ dùng ngoài bàn (khung người chơi, nút chọn hệ). */
+/** Quả cầu dùng ngoài bàn (khung người chơi, nút chọn hệ). */
 export function OrbIcon({ element, className = "size-6" }: { element: Element; className?: string }) {
   const id = `vtk-orb-${useId().replace(/:/g, "")}`;
   return (
     <svg viewBox="0 0 2 2" className={className} aria-hidden focusable="false">
-      <OrbGradient id={id} element={element} />
+      <defs>
+        <OrbDefs id={id} element={element} />
+      </defs>
       <Orb element={element} cx={0.95} cy={0.92} r={0.82} gradientId={id} />
     </svg>
-  );
-}
-
-function OrbGradient({ id, element }: { id: string; element: Element }) {
-  const t = THEME[element];
-  return (
-    <defs>
-      <radialGradient id={id} cx="0.35" cy="0.3" r="0.8">
-        <stop offset="0" stopColor={t.light} />
-        <stop offset="0.45" stopColor={t.base} />
-        <stop offset="1" stopColor={t.dark} />
-      </radialGradient>
-    </defs>
   );
 }
 
@@ -161,13 +153,14 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
   const coord = (p: number) => ({ cx: (p % size) + 1, cy: Math.floor(p / size) + 1 });
   const ghost = pending ?? (interactive && !onToggleDead ? hover : null);
   const r = 0.46;
+  const k = 10 / (size + 1);
   const blur = size >= 19 ? 0.22 : size >= 13 ? 0.26 : 0.3;
   const grid = (c: Color) => THEME[elements[c]].lightGrid;
   const gradient = (c: Color) => `${uid}-g${c}`;
   const sides = [BLACK, WHITE] as const;
 
   return (
-    <div className="mx-auto w-full max-w-[min(100%,44rem)]" style={{ ["--vtk-frame" as string]: "#5b3a1e" }}>
+    <div className="w-full" style={{ ["--vtk-frame" as string]: "#5b3a1e" }}>
       <div
         role="application"
         tabIndex={0}
@@ -187,11 +180,7 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
           data-testid="vtk-board"
         >
           <defs>
-            {sides.map((c) => (
-              <pattern key={c} id={`${uid}-p${c}`} width={2} height={2} patternUnits="userSpaceOnUse" x={0.5} y={0.5}>
-                {THEME[elements[c]].ground}
-              </pattern>
-            ))}
+            <GroundFilter id={`${uid}-t0`} element="neutral" k={k} x={0} y={0} width={size + 1} height={size + 1} />
             <filter id={`${uid}-blur`} x="-5%" y="-5%" width="110%" height="110%">
               <feGaussianBlur stdDeviation={blur} />
             </filter>
@@ -203,20 +192,26 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
               </mask>
             ))}
             {sides.map((c) => (
-              <radialGradient key={c} id={gradient(c)} cx="0.35" cy="0.3" r="0.8">
-                <stop offset="0" stopColor={THEME[elements[c]].light} />
-                <stop offset="0.45" stopColor={THEME[elements[c]].base} />
-                <stop offset="1" stopColor={THEME[elements[c]].dark} />
-              </radialGradient>
+              <OrbDefs key={c} id={gradient(c)} element={elements[c]} />
             ))}
           </defs>
 
           {/* Đất trung lập: nền đất nâu như sa bàn. */}
-          <rect x={0} y={0} width={size + 1} height={size + 1} fill="#8a6a45" />
-          <rect x={0.5} y={0.5} width={size} height={size} fill="#a07d52" />
+          <rect x={0} y={0} width={size + 1} height={size + 1} filter={`url(#${uid}-t0)`} />
           {sides.map((c) => (
-            <rect key={c} x={0.5} y={0.5} width={size} height={size} fill={`url(#${uid}-p${c})`} mask={`url(#${uid}-m${c})`} data-ground={elements[c]} />
+            <image
+              key={c}
+              href={groundArt(elements[c])}
+              x={0}
+              y={0}
+              width={size + 1}
+              height={size + 1}
+              preserveAspectRatio="xMidYMid slice"
+              mask={`url(#${uid}-m${c})`}
+              data-ground={elements[c]}
+            />
           ))}
+          <rect x={0.5} y={0.5} width={size} height={size} fill="none" stroke="#1b1008" strokeOpacity={0.6} strokeWidth={0.05} />
 
           {Array.from({ length: size }, (_, i) => (
             <g key={i} stroke="#2b1a0e" strokeOpacity={0.7} strokeWidth={0.035}>

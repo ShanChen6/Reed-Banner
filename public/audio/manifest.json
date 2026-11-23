@@ -1,6 +1,49 @@
 {
   "version": 1,
   "sfx": {
+    "ui.click": {
+      "files": [
+        "sfx/ui/click_a",
+        "sfx/ui/click_b"
+      ],
+      "volume": 0.5
+    },
+    "ui.back": {
+      "files": [
+        "sfx/ui/back_a",
+        "sfx/ui/back_b",
+        "sfx/ui/back_c"
+      ],
+      "volume": 0.5
+    },
+    "ui.open": {
+      "files": [
+        "sfx/ui/open_a",
+        "sfx/ui/open_b"
+      ],
+      "volume": 0.5
+    },
+    "ui.close": {
+      "files": [
+        "sfx/ui/close_a",
+        "sfx/ui/close_b"
+      ],
+      "volume": 0.5
+    },
+    "ui.error": {
+      "files": [
+        "sfx/ui/error_a",
+        "sfx/ui/error_b"
+      ],
+      "volume": 0.6
+    },
+    "ui.reward": {
+      "files": [
+        "sfx/ui/reward_a",
+        "sfx/ui/reward_b"
+      ],
+      "volume": 0.75
+    },
     "formation.place": {
       "files": [
         "sfx/formation/place_a",
@@ -669,6 +712,13 @@
       ],
       "volume": 0.8
     },
+    "daily.checkin": {
+      "files": [
+        "sfx/daily/checkin_a",
+        "sfx/daily/checkin_b"
+      ],
+      "volume": 0.75
+    },
     "destiny.choose": {
       "files": [
         "sfx/destiny/choose_a",
@@ -768,6 +818,14 @@
     },
     "prep": {
       "file": "music/prep",
+      "volume": 0.5
+    },
+    "daily": {
+      "file": "music/daily",
+      "volume": 0.5
+    },
+    "expedition": {
+      "file": "music/expedition",
       "volume": 0.5
     },
     "ending": {

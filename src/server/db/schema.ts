@@ -392,8 +392,12 @@ export const goMatches = pgTable(
     status: text("status").notNull(),
     state: jsonb("state").notNull(),
     seq: integer("seq").notNull(),
+    /** Đấu sứ quân có thưởng: { level, rival, human }; null khi đấu người. */
+    ai: jsonb("ai"),
+    reward: integer("reward"),
+    rewardDay: text("reward_day"),
     createdAt: bigint("created_at", { mode: "number" }).notNull(),
     updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
   },
-  (t) => [index("go_matches_code_idx").on(t.code, t.status)],
+  (t) => [index("go_matches_code_idx").on(t.code, t.status), index("go_matches_reward_idx").on(t.ownerId, t.rewardDay)],
 );

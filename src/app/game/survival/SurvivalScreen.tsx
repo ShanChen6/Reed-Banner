@@ -63,6 +63,7 @@ import SurvivalBreakScreen from "./SurvivalBreakScreen";
 import { TierLadder } from "../leaderboard/RankBoard";
 import { SURVIVAL_LADDER, tierClaimNote, tierErrorNote, tierRewards } from "../arena/tiers";
 import { ColumnFill } from "../ColumnFill";
+import { useAudio } from "../audio/AudioProvider";
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
@@ -105,6 +106,7 @@ function saveSlots(slots: SurvivalSlots) {
 
 export default function SurvivalScreen() {
   const { go } = useScene();
+  const { play: playSound } = useAudio();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -250,6 +252,7 @@ export default function SurvivalScreen() {
       const body = (await res.json()) as { claimed?: { tier: string; gold: number; item: GearItem | null; soldFor: number }; error?: string; profile?: Profile };
       if (body.profile) setProfile(body.profile);
       setTierNote(body.claimed ? tierClaimNote(body.claimed) : tierErrorNote(body.error, "kỷ lục số đợt"));
+      if (body.claimed) playSound("ui.reward");
       // Cập nhật số vàng trên thanh đầu trang.
       if (body.claimed) void fetchProfile();
     } catch {

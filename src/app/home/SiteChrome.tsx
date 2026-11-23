@@ -89,13 +89,14 @@ export function SiteFooter() {
       {/* Hai cột: trái là nhận diện, điều hướng và lưu ý; phải là thư cuộn liên hệ, trên điện thoại thư cuộn lên trước. */}
       <div className={`mx-auto grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-start lg:gap-12 ${SITE_WIDTH}`}>
         <div className="order-2 flex flex-col gap-4 lg:order-1 lg:pt-6">
-          <div className="flex items-center gap-4">
+          {/* Bấm logo hoặc tên về trang chủ (/). */}
+          <Link href="/" title="Về trang chủ" className="flex w-fit items-center gap-4 rounded hover:[&_p:first-child]:text-title-on-wood focus-visible:outline-2 focus-visible:outline-frame-gold-hi">
             <LogoMark className="size-14" />
             <div>
               <p className="font-serif text-2xl font-bold text-on-wood">Cờ Lau</p>
               <p className="mt-0.5 text-base">Trò chơi nhỏ thuộc ShanVerse</p>
             </div>
-          </div>
+          </Link>
           <ul className="grid grid-cols-2 gap-x-6 border-y border-frame-gold/20 py-3 text-base sm:grid-cols-3">
             {[
               ...SITE_NAV,

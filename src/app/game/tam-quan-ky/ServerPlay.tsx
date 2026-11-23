@@ -4,15 +4,14 @@
 // Sa bàn, quân và nhật ký dùng chung với ván ở trình duyệt (parts.tsx); nước đi gửi lên server, server kiểm luật rồi trả ván mới.
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { MAIN_ID } from "@/core";
 import { BLUE, RED, inCheck, legalMovesFrom, play, type Color, type Level, type Move, type Position } from "@/core/tam-quan-ky";
 import { Button } from "@/components/ui";
-import { BottomSheet, OrnateFrame, ResultModal, SurrenderButton } from "@/components/game-ui";
-import { Portrait } from "../art/portraits";
+import { BottomSheet, ResultModal, SurrenderButton } from "@/components/game-ui";
+import { DuelLayout } from "../DuelLayout";
 import { PlayCard } from "../PlayCard";
 import { lineAfterMove, type LineKind } from "./lines";
 import { KIND_NAME } from "./pieces";
-import { BO_LINH, Board, LEVEL_NAME, LEVELS, MoveList, Options, RivalPicker, SelectedPanel, Speech, formatClock, pieceLabel, positionsFor, rivalById, type BoardMap } from "./parts";
+import { BOARD_ASPECT, BO_LINH, Board, LEVEL_NAME, LEVELS, MoveList, Options, RivalPicker, SelectedPanel, Speech, TqkSide, formatClock, pieceLabel, positionsFor, rivalById, type BoardMap } from "./parts";
 import { SERVER_ERROR, useServerMatch, type ServerKind } from "./useServerMatch";
 
 /** Vàng thắng sứ quân theo độ khó và số ván có vàng mỗi ngày; khớp TQK_GOLD, TQK_REWARDS_PER_DAY ở src/server/tamQuanKy.ts. */
@@ -164,7 +163,7 @@ export function ServerPlay({ kind, modePicker, mapPicker, map, rivalId, onRival,
           <Options label="Độ khó" value={level} onChange={setLevel} options={LEVELS.map((v) => ({ value: v, label: `${LEVEL_NAME[v]}, ${GOLD[v]} vàng` }))} />
           {mapPicker}
           <p className="text-caption text-on-wood-soft">
-            Ván chạy trên máy chủ: không đi lại, không giới hạn giờ. Thắng được vàng theo độ khó, tối đa {REWARDS_PER_DAY} ván có vàng mỗi ngày.
+            Ván chạy trên máy chủ, không giới hạn giờ. Thắng được vàng theo độ khó, tối đa {REWARDS_PER_DAY} ván có vàng mỗi ngày.
           </p>
           <Button disabled={s.busy} onClick={() => void s.startAi(level, rivalId, human)}>Vào trận đấu {rivalById(rivalId).name}</Button>
         </>
@@ -214,21 +213,61 @@ export function ServerPlay({ kind, modePicker, mapPicker, map, rivalId, onRival,
   const checkNow = !result && !waiting && inCheck(shown, shown.toMove);
   const selectedStack = selected !== null ? shown.board[selected] : null;
 
+  const bottom: Color = flipped ? BLUE : RED;
+  const top: Color = bottom === RED ? BLUE : RED;
+  const side = (c: Color) => (
+    <TqkSide
+      color={c}
+      name={playerName(c)}
+      sub={!online && c !== you ? `${c === RED ? "Quân Đỏ" : "Quân Xanh"}, độ khó ${LEVEL_NAME[view.level ?? "medium"]}` : undefined}
+      rival={rival}
+      clock={view.clockMs > 0 ? formatClock(s.timeLeft(c)) : null}
+      active={shown.toMove === c && !result && !waiting}
+      status={c !== you && (s.busy || pending) ? "Đang tính nước…" : "Tới lượt"}
+      check={checkNow && shown.toMove === c}
+      hqHold={shown.hqHold[c]}
+    />
+  );
+
   return (
     <PlayCard className="sm:mt-5">
-      <OrnateFrame aria-label="Vùng chơi" flush className="grid min-w-0 items-start gap-4 p-2 sm:p-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
-        <div className="flex min-w-0 flex-col gap-3">
-          <Board
-            map={map}
-            position={shown}
-            flipped={flipped}
-            selected={selected}
-            targets={targets}
-            lastMove={pending ?? (moves.length ? moves[moves.length - 1]! : null)}
-            onSquare={onSquare}
-            pieceLabel={pieceLabel}
-          />
-          {choice && (
+      <DuelLayout
+        aspect={BOARD_ASPECT}
+        leftCard={side(bottom)}
+        rightCard={side(top)}
+        leftExtra={
+          <>
+            {waiting && (
+              <div className="ui-frame-inset flex flex-col gap-2 p-3" role="status">
+                <p className="font-semibold text-on-wood">Mã phòng</p>
+                <p data-testid="tqk-room-code" className="font-mono text-3xl font-bold tracking-[0.3em] text-frame-gold">{view.code}</p>
+                <p className="text-caption text-on-wood-soft">Gửi mã này cho bạn bè. Khi họ vào phòng, đồng hồ quân Đỏ bắt đầu chạy. Mã hết hạn sau 30 phút.</p>
+              </div>
+            )}
+            {bottom === RED && <Speech speech={speech} />}
+            {selectedStack && <SelectedPanel stack={selectedStack} unit={unit} onUnit={(u) => { setUnit(u); setChoice(null); }} />}
+            {s.error && <p role="alert" className="text-caption font-semibold text-[var(--lacquer-hi)]">{SERVER_ERROR[s.error] ?? SERVER_ERROR.network}</p>}
+            <div className="flex flex-wrap gap-2" role="toolbar" aria-label="Thao tác">
+              <Button variant="secondary" size="sm" onClick={() => setFlipped((f) => !f)} aria-pressed={flipped}>Xoay sa bàn</Button>
+              {waiting && <Button variant="secondary" size="sm" disabled={s.busy} onClick={() => void s.resign().then((ok) => ok && s.leave())}>Hủy phòng</Button>}
+              {!waiting && !result && (
+                <SurrenderButton consequence={online ? "Ván này tính là thua, người kia thắng." : `Ván này tính là thua, ${rival.name} thắng, không có vàng.`} onConfirm={() => void s.resign()} />
+              )}
+              {result && <Button variant="secondary" size="sm" onClick={s.leave}>Ván mới</Button>}
+            </div>
+          </>
+        }
+        rightExtra={
+          <>
+            {top === RED && <Speech speech={speech} />}
+            <p className="text-caption text-on-wood-soft">
+              {online ? "Đấu người, giao hữu." : `Có thưởng, độ khó ${LEVEL_NAME[view.level ?? "medium"]}: thắng được ${GOLD[view.level ?? "medium"]} vàng.`}
+            </p>
+            <MoveList positions={positions} moves={moves} />
+          </>
+        }
+        below={
+          choice && (
             <div className="flex flex-wrap items-center justify-center gap-2" role="group" aria-label="Chọn cách đánh">
               <span className="text-on-wood">Chọn cách đánh:</span>
               {choice.map((m) => (
@@ -237,61 +276,20 @@ export function ServerPlay({ kind, modePicker, mapPicker, map, rivalId, onRival,
                 </Button>
               ))}
             </div>
-          )}
-        </div>
-
-        <aside className="flex flex-col gap-3">
-          {waiting && (
-            <div className="ui-frame-inset flex flex-col gap-2 p-3" role="status">
-              <p className="font-semibold text-on-wood">Mã phòng</p>
-              <p className="font-mono text-3xl font-bold tracking-[0.3em] text-frame-gold">{view.code}</p>
-              <p className="text-caption text-on-wood-soft">Gửi mã này cho bạn bè. Khi họ vào phòng, đồng hồ quân Đỏ bắt đầu chạy. Mã hết hạn sau 30 phút.</p>
-            </div>
-          )}
-          <Speech speech={speech} />
-          <div className="ui-frame-inset flex flex-col gap-2 p-3">
-            {([RED, BLUE] as const).map((c) => (
-              <div key={c} className={`flex items-center justify-between gap-2 rounded-control border px-2 py-1.5 ${shown.toMove === c && !result && !waiting ? "border-frame-gold" : "border-transparent"}`}>
-                <span className="flex min-w-0 items-center gap-2 font-semibold text-on-wood">
-                  <span aria-hidden className={`size-3 shrink-0 rounded-full ${c === RED ? "bg-[var(--tqk-red)]" : "bg-[var(--tqk-blue)]"}`} />
-                  {c === RED ? (
-                    <Portrait id={MAIN_ID} element="hoa" profession="tuongSi" className="size-8 shrink-0" />
-                  ) : (
-                    <Portrait id={rival.id} element={rival.element} profession={rival.profession} className="size-8 shrink-0" />
-                  )}
-                  <span className="truncate">{playerName(c)}</span>
-                  {shown.toMove === c && !result && !waiting && (
-                    <span className="text-caption font-normal text-on-wood-soft">{c !== you && (s.busy || pending) ? "đang tính" : "tới lượt"}</span>
-                  )}
-                </span>
-                {view.clockMs > 0 && <span className="font-mono text-lg tabular-nums text-on-wood">{formatClock(s.timeLeft(c))}</span>}
-              </div>
-            ))}
-            <p className="text-caption text-on-wood-soft">
-              {online ? "Đấu người, giao hữu" : `Có thưởng, độ khó ${LEVEL_NAME[view.level ?? "medium"]}: thắng được ${GOLD[view.level ?? "medium"]} vàng`}
-            </p>
-            {checkNow && <p className="font-semibold text-[var(--lacquer-hi)]">{playerName(shown.toMove)} đang bị chiếu tướng.</p>}
-            {(shown.hqHold.r > 0 || shown.hqHold.b > 0) && (
-              <p className="text-caption text-on-wood-soft">
-                {playerName(shown.hqHold.r ? RED : BLUE)} đang giữ Soái trướng bên kia: {shown.hqHold.r || shown.hqHold.b}/3 lượt.
-              </p>
-            )}
-            {s.error && <p role="alert" className="text-caption font-semibold text-[var(--lacquer-hi)]">{SERVER_ERROR[s.error] ?? SERVER_ERROR.network}</p>}
-          </div>
-
-          {selectedStack && <SelectedPanel stack={selectedStack} unit={unit} onUnit={(u) => { setUnit(u); setChoice(null); }} />}
-
-          <div className="flex flex-wrap gap-2" role="toolbar" aria-label="Thao tác">
-            <Button variant="secondary" size="sm" onClick={() => setFlipped((f) => !f)} aria-pressed={flipped}>Xoay sa bàn</Button>
-            {waiting && <Button variant="secondary" size="sm" disabled={s.busy} onClick={() => void s.resign().then((ok) => ok && s.leave())}>Hủy phòng</Button>}
-            {!waiting && !result && (
-              <SurrenderButton consequence={online ? "Ván này tính là thua, người kia thắng." : `Ván này tính là thua, ${rival.name} thắng, không có vàng.`} onConfirm={() => void s.resign()} />
-            )}
-            {result && <Button variant="secondary" size="sm" onClick={s.leave}>Ván mới</Button>}
-          </div>
-
-          <MoveList positions={positions} moves={moves} />
-        </aside>
+          )
+        }
+      >
+        <Board
+          map={map}
+          position={shown}
+          flipped={flipped}
+          selected={selected}
+          targets={targets}
+          lastMove={pending ?? (moves.length ? moves[moves.length - 1]! : null)}
+          onSquare={onSquare}
+          pieceLabel={pieceLabel}
+        />
+      </DuelLayout>
 
         {outcome && (
           <ResultModal
@@ -307,7 +305,6 @@ export function ServerPlay({ kind, modePicker, mapPicker, map, rivalId, onRival,
             {view.rewardCapped && <p>Hôm nay đã nhận đủ {REWARDS_PER_DAY} ván có vàng. Mai thắng tiếp sẽ có vàng.</p>}
           </ResultModal>
         )}
-      </OrnateFrame>
     </PlayCard>
   );
 }

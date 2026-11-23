@@ -2,11 +2,11 @@
 
 // Vây Thành Kỳ: cờ vây nguyên tố. Luật chép nguyên từ cờ vây của Shanverse (src/core/co-vay), mỗi bên chọn một trong 7 hệ:
 // quân thành quả cầu nguyên tố, đất quanh quân đổi nền theo hệ (theme.tsx). Đấu máy (một trong 12 sứ quân) hoặc hai người cùng
-// máy; ván dở lưu ở trình duyệt. Đấu người bằng mã phòng do server làm trọng tài nằm ở OnlinePlay.tsx.
+// máy; ván dở lưu ở trình duyệt. Đấu sứ quân có thưởng và đấu người bằng mã phòng do server làm trọng tài nằm ở OnlinePlay.tsx.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Element } from "@/core";
-import { BLACK, PASS, WHITE, groupAt, isLegal, opponent, play, replay, scoreArea, type BoardSize, type Color, type Level, type Mode, type Position } from "@/core/co-vay";
+import { BLACK, KOMI, PASS, WHITE, groupAt, isLegal, opponent, play, replay, scoreArea, type BoardSize, type Color, type Level, type Mode, type Position } from "@/core/co-vay";
 import { Button } from "@/components/ui";
 import { BottomSheet, ModeBanner, ModeScreen, OrnateFrame, ResultModal, SurrenderButton } from "@/components/game-ui";
 import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
@@ -19,14 +19,14 @@ import { PlayCard } from "../PlayCard";
 import { LEVEL_NAME, LEVELS, Options, RivalPicker, freshSeed, rivalById, RIVALS } from "../tam-quan-ky/parts";
 import { Board } from "./Board";
 import { OnlinePlay } from "./OnlinePlay";
-import { ElementPicker, PlayerCard, RULE_HINT, RULE_NAME, SIZES, ScoreLines, sideOrder } from "./parts";
+import { Arena, ElementPicker, PlayerCard, RULE_HINT, RULE_NAME, SIZES, ScoreLines, sideOrder } from "./parts";
 import { useVtkEngine } from "./useEngine";
 import { savedOnline } from "./useOnlineMatch";
 
 const SAVE_KEY = "reed-banner:vay-thanh-ky:save:v1";
 const MIN_THINK_MS = 450;
 
-type PlayMode = "ai" | "two" | "online";
+type PlayMode = "ai" | "two" | "reward" | "online";
 type Phase = "setup" | "playing" | "scoring" | "over";
 type Result = { winner: Color; reason: "score" | "capture" | "resign"; black?: number; white?: number };
 
@@ -106,12 +106,15 @@ export default function VayThanhKyScreen() {
       setDeadReady(s.phase !== "scoring");
       setResult(s.result);
       /* eslint-enable react-hooks/set-state-in-effect */
-    } else if (savedOnline()) setMode("online");
+    } else {
+      const server = savedOnline();
+      if (server) setMode(server);
+    }
     loaded.current = true;
   }, []);
 
   useEffect(() => {
-    if (!loaded.current || mode === "online") return;
+    if (!loaded.current || mode === "online" || mode === "reward") return;
     const value: Saved | null = phase === "setup" ? null : { v: 1, mode, rule, size, human, level, rival: rivalId, elements, moves, phase, dead, result };
     writeStorage(SAVE_KEY, value ? JSON.stringify(value) : null);
   }, [mode, rule, size, human, level, rivalId, elements, moves, phase, dead, result]);
@@ -263,7 +266,8 @@ export default function VayThanhKyScreen() {
   const modePicker = (
     <Options label="Cách chơi" value={mode} onChange={(v) => { if (phase === "setup") setMode(v); }}
       options={[
-        { value: "ai", label: "Đấu sứ quân" },
+        { value: "ai", label: "Luyện với sứ quân" },
+        { value: "reward", label: "Đấu sứ quân có thưởng" },
         { value: "two", label: "Hai người cùng máy" },
         { value: "online", label: "Đấu người bằng mã phòng" },
       ]} />
@@ -294,6 +298,20 @@ export default function VayThanhKyScreen() {
     </div>
   );
 
+  const side = (c: Color, tall: boolean) => (
+    <PlayerCard
+      key={c}
+      tall={tall}
+      element={elements[c]}
+      color={c}
+      name={names[c]}
+      portrait={portrait(c)}
+      captures={position.captures[c]}
+      active={phase === "playing" && position.toPlay === c}
+      status={phase === "playing" && position.toPlay === c ? (machine === c && thinking ? "đang tính" : "tới lượt") : undefined}
+    />
+  );
+
   const portrait = (c: Color) =>
     machine === c ? <Portrait id={rival.id} element={rival.element} profession={rival.profession} className="size-7 shrink-0" /> : undefined;
 
@@ -301,16 +319,18 @@ export default function VayThanhKyScreen() {
     <ModeScreen card label="Vây Thành Kỳ">
       <ModeBanner
         title="Vây Thành Kỳ"
+        art="/art/vay-thanh-ky/banner.webp"
+        artPosition="center 40%"
         kicker="Binh pháp, bản thử"
         description={MODE_TEXT.VAY_THANH_KY}
         stats={[
-          { label: "Đối thủ", value: mode === "online" ? "Người khác" : mode === "two" ? "Hai người" : rival.name },
-          { label: "Nước", value: (mode === "online" ? onlineMoves : moves.length) || "–" },
+          { label: "Đối thủ", value: mode === "online" ? "Người khác" : mode === "two" ? "Hai người" : mode === "reward" ? "Sứ quân" : rival.name },
+          { label: "Nước", value: (mode === "online" || mode === "reward" ? onlineMoves : moves.length) || "–" },
         ]}
       />
       <ModeGuideTabs scene="VAY_THANH_KY">
-        {mode === "online" ? (
-          <OnlinePlay modePicker={modePicker} phone={phone} onMoves={setOnlineMoves} />
+        {mode === "online" || mode === "reward" ? (
+          <OnlinePlay key={mode} kind={mode} modePicker={modePicker} phone={phone} onMoves={setOnlineMoves} />
         ) : phase === "setup" ? (
           <>
             <section className="ui-frame p-4 max-sm:hidden" aria-label="Chuẩn bị ván">{setup}</section>
@@ -325,67 +345,58 @@ export default function VayThanhKyScreen() {
           </>
         ) : (
           <PlayCard className="sm:mt-5">
-            <OrnateFrame aria-label="Vùng chơi" flush className="grid min-w-0 items-start gap-4 p-2 sm:p-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
-              <div className="flex min-w-0 flex-col gap-3">
-                <Board
-                  size={size}
-                  board={position.board}
-                  elements={elements}
-                  toPlay={position.toPlay}
-                  lastMove={position.lastMove}
-                  interactive={myTurn}
-                  onPlay={playHere}
-                  onPass={rule === "full" ? () => playHere(PASS) : undefined}
-                  dead={scoring ? dead : []}
-                  owner={score?.owner ?? null}
-                  onToggleDead={phase === "scoring" && deadReady ? toggleDead : undefined}
-                  label={`Bàn cờ vây ${size} nhân ${size}. Mũi tên để di chuyển, Enter đặt quân${rule === "full" ? ", P bỏ lượt" : ""}.`}
-                />
-                <p role="status" aria-live="polite" className="min-h-5 text-center text-caption text-on-wood-soft">{notice ?? announce}</p>
-              </div>
-
-              <aside className="flex flex-col gap-3">
-                {([BLACK, WHITE] as const).map((c) => (
-                  <PlayerCard
-                    key={c}
-                    element={elements[c]}
-                    color={c}
-                    name={names[c]}
-                    portrait={portrait(c)}
-                    captures={position.captures[c]}
-                    active={phase === "playing" && position.toPlay === c}
-                    status={phase === "playing" && position.toPlay === c ? (machine === c && thinking ? "đang tính" : "tới lượt") : undefined}
+            <OrnateFrame aria-label="Vùng chơi" flush className="p-2 sm:p-4">
+              <Arena
+                left={(tall) => side(BLACK, tall)}
+                right={(tall) => side(WHITE, tall)}
+                board={
+                  <Board
+                    size={size}
+                    board={position.board}
+                    elements={elements}
+                    toPlay={position.toPlay}
+                    lastMove={position.lastMove}
+                    interactive={myTurn}
+                    onPlay={playHere}
+                    onPass={rule === "full" ? () => playHere(PASS) : undefined}
+                    dead={scoring ? dead : []}
+                    owner={score?.owner ?? null}
+                    onToggleDead={phase === "scoring" && deadReady ? toggleDead : undefined}
+                    label={`Bàn cờ vây ${size} nhân ${size}. Mũi tên để di chuyển, Enter đặt quân${rule === "full" ? ", P bỏ lượt" : ""}.`}
                   />
-                ))}
-                <p className="text-caption text-on-wood-soft">
-                  {RULE_NAME[rule]}, bàn {size}×{size}{machine ? `, độ khó ${LEVEL_NAME[level]}` : ""}. Bên {sideOrder(WHITE)} được cộng điểm bù.
-                </p>
-
-                {phase === "scoring" && (
-                  <div className="ui-frame-inset flex flex-col gap-2 p-3">
-                    <p className="font-semibold text-on-wood">Đếm điểm</p>
-                    <p className="text-caption text-on-wood-soft">
-                      {deadReady ? "Quân gạch chéo là quân chết, tính cho bên kia. Bấm vào một nhóm quân để đổi sống hay chết." : "Đang xem quân nào đã chết…"}
-                    </p>
-                    {score && <ScoreLines score={score} names={names} />}
-                    <div className="flex flex-wrap gap-2">
-                      <Button size="sm" disabled={!deadReady} onClick={confirmScore}>Chốt điểm</Button>
-                      <Button size="sm" variant="secondary" onClick={resume}>Đánh tiếp</Button>
+                }
+                below={
+                  <>
+                    <p role="status" aria-live="polite" className="min-h-5 text-center text-caption text-on-wood-soft">{notice ?? announce}</p>
+                    {phase === "scoring" && (
+                      <div className="ui-frame-inset flex w-full flex-col gap-2 p-3">
+                        <p className="font-semibold text-on-wood">Đếm điểm</p>
+                        <p className="text-caption text-on-wood-soft">
+                          {deadReady ? "Quân gạch chéo là quân chết, tính cho bên kia. Bấm vào một nhóm quân để đổi sống hay chết." : "Đang xem quân nào đã chết…"}
+                        </p>
+                        {score && <ScoreLines score={score} names={names} />}
+                        <div className="flex flex-wrap gap-2">
+                          <Button size="sm" disabled={!deadReady} onClick={confirmScore}>Chốt điểm</Button>
+                          <Button size="sm" variant="secondary" onClick={resume}>Đánh tiếp</Button>
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex flex-wrap justify-center gap-2" role="toolbar" aria-label="Thao tác">
+                      {phase === "playing" && rule === "full" && (
+                        <Button variant="secondary" size="sm" disabled={!myTurn} onClick={() => playHere(PASS)} aria-keyshortcuts="P">Bỏ lượt</Button>
+                      )}
+                      <Button variant="secondary" size="sm" onClick={undo} disabled={!moves.length || phase === "scoring"}>Đi lại</Button>
+                      <Button variant="secondary" size="sm" onClick={newGame}>Ván mới</Button>
+                      {phase === "playing" && (
+                        <SurrenderButton consequence={machine ? `Ván này tính là thua, ${rival.name} thắng.` : `${names[position.toPlay]} đầu hàng, bên kia thắng.`} onConfirm={resign} />
+                      )}
                     </div>
-                  </div>
-                )}
-
-                <div className="flex flex-wrap gap-2" role="toolbar" aria-label="Thao tác">
-                  {phase === "playing" && rule === "full" && (
-                    <Button variant="secondary" size="sm" disabled={!myTurn} onClick={() => playHere(PASS)} aria-keyshortcuts="P">Bỏ lượt</Button>
-                  )}
-                  <Button variant="secondary" size="sm" onClick={undo} disabled={!moves.length || phase === "scoring"}>Đi lại</Button>
-                  <Button variant="secondary" size="sm" onClick={newGame}>Ván mới</Button>
-                  {phase === "playing" && (
-                    <SurrenderButton consequence={machine ? `Ván này tính là thua, ${rival.name} thắng.` : `${names[position.toPlay]} đầu hàng, bên kia thắng.`} onConfirm={resign} />
-                  )}
-                </div>
-              </aside>
+                    <p className="text-center text-caption text-on-wood-soft">
+                      {RULE_NAME[rule]}, bàn {size}×{size}{machine ? `, độ khó ${LEVEL_NAME[level]}` : ""}. Bên {sideOrder(WHITE)} được cộng {KOMI} điểm bù.
+                    </p>
+                  </>
+                }
+              />
 
               {outcome && (
                 <ResultModal

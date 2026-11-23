@@ -1,7 +1,7 @@
 # Vây Thành Kỳ: cờ vây bảy nguyên tố
 
 > Cập nhật: 23/11/2026 (bản thử đầu tiên)
-> Trạng thái: **IMPLEMENTED (bản thử)** — Shan đề xuất và chốt tên 23/11/2026; luật lấy nguyên từ cờ vây của Shanverse. Đấu sứ quân và hai người cùng máy chạy trên trình duyệt; đấu người bằng mã phòng do server làm trọng tài. Chưa có thưởng.
+> Trạng thái: **IMPLEMENTED (bản thử)** — Shan đề xuất và chốt tên 23/11/2026; luật lấy nguyên từ cờ vây của Shanverse. Đấu sứ quân và hai người cùng máy chạy trên trình duyệt; đấu người bằng mã phòng do server làm trọng tài. Đấu sứ quân có thưởng (23/11/2026) chạy trên server.
 
 ## 1. Định vị
 
@@ -24,15 +24,18 @@ Giữ **nguyên** luật cờ vây của Shanverse: bàn 9, 13 hoặc 19; bắt 
 Chỉ là lớp giao diện, không đổi luật (`src/app/game/vay-thanh-ky/theme.tsx`, `Board.tsx`).
 
 - Quân: quả cầu tô màu hệ, giữa là biểu tượng hệ Shan vẽ (`public/art/elements/<hệ>.webp`).
-- Nền đất: mẫu SVG lặp cho mỗi hệ (Claude dựng, chưa có tranh riêng). Trong ván, mỗi giao điểm tô theo vùng ảnh hưởng của quân trong bán kính 3; lúc đếm điểm tô theo chủ đất thật (`scoreArea`).
+- Quân có bóng đổ, viền sáng và vệt bóng như quả cầu ngọc (`OrbDefs`).
+- Nền đất: tranh chất liệu từng hệ Shan vẽ (`public/art/vay-thanh-ky/ground/<hệ>.webp`): Hỏa nham thạch, Thủy băng rạn, Mộc cỏ ba lá, Kim kim loại chải, Thổ đất nứt, Lôi đá tím có sét, Phong sóng gió ngọc. Đất chưa ai giữ là nền đá xám vẽ bằng bộ lọc SVG (`GroundFilter`). Trong ván, mỗi giao điểm tô theo vùng ảnh hưởng của quân trong bán kính 3, mép vùng làm mờ; lúc đếm điểm tô theo chủ đất thật (`scoreArea`).
 - Hai bên không chọn trùng hệ. Đấu sứ quân: hệ đối thủ mặc định là hệ của sứ quân, đổi được.
-- Khung người chơi hai bên nền theo hệ.
+- Bố cục hai bên (`Arena` trong `parts.tsx`): màn rộng từ 64rem, khung người chơi đứng dọc hai bên bàn, nền là tranh dọc của hệ (`public/art/vay-thanh-ky/panel/<hệ>.webp`), bàn co theo chiều cao màn để vừa cả thanh nút (kể cả khi phóng to). Màn hẹp: hai khung ngang xếp trên bàn.
+- Tranh thẻ chế độ `public/art/home/vay-thanh-ky.webp`, banner đầu màn `public/art/vay-thanh-ky/banner.webp` (Shan vẽ 24/11).
 
 ## 4. Cách chơi
 
 | Cách | Nơi chạy | Ghi chú |
 |---|---|---|
-| Đấu sứ quân | Trình duyệt (web worker) | Chọn 1 trong 12 sứ quân, ba độ khó, đi trước hay sau. Có đi lại. Ván dở lưu ở trình duyệt |
+| Luyện với sứ quân | Trình duyệt (web worker) | Chọn 1 trong 12 sứ quân, ba độ khó, đi trước hay sau. Có đi lại. Ván dở lưu ở trình duyệt. Không vàng |
+| Đấu sứ quân có thưởng (23/11/2026) | Server (`goStartAi` trong `src/server/coVay.ts`, `/api/go` action `ai`, cột `ai`, `reward`, `reward_day` của `go_matches`, migration 0018) | Chọn như ván luyện. Máy tính nước ngay trong request (MCTS, trần 2,5 giây mỗi nước), không đồng hồ, không đi lại. Thắng được 20, 40, 80 vàng theo độ khó, tối đa 3 ván có vàng mỗi ngày, cùng mức Tam Quân Kỳ (Claude đặt, chờ Shan duyệt). Cần trình danh |
 | Hai người cùng máy | Trình duyệt | Chọn hệ cho bên đi trước và đi sau |
 | Đấu người bằng mã phòng | Server (`src/server/coVay.ts`, `/api/go`, bảng `go_matches`) | Người mở phòng đi trước, chọn luật, cỡ bàn, đồng hồ 10/20/30 phút. Người vào bằng mã đi sau; chọn trùng hệ thì server đổi sang hệ khác. Hai bên cùng bỏ lượt thì server tự đoán quân chết và đếm điểm (seed cố định theo ván), không có bước thỏa thuận. Giao hữu, cần trình danh. Tắt nhanh bằng `VAY_THANH_KY_SERVER_ENABLED=false` |
 
@@ -40,6 +43,5 @@ Ván ở trình duyệt: hai bên cùng bỏ lượt thì máy đoán quân ch�
 
 ## 5. Còn mở
 
-- Thưởng vàng khi thắng sứ quân (cần server trọng tài như Tam Quân Kỳ).
 - Tranh thẻ chế độ, banner và nền đất vẽ tay cho từng hệ.
 - Mạng KataGo cho máy tính bàn như Shanverse.

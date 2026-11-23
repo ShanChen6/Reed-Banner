@@ -13,6 +13,7 @@ import { TierLadder } from "../leaderboard/RankBoard";
 import { ladderOf, tierClaimNote, tierErrorNote, tierRewards } from "../arena/tiers";
 import { SceneLink } from "../SceneContext";
 import { SCENES, type Scene } from "../scene";
+import { useAudio } from "../audio/AudioProvider";
 
 interface LadderView {
   readonly id: string;
@@ -35,6 +36,7 @@ export const readyCount = (l: Pick<LadderView, "score" | "tiers" | "claimed" | "
   l.locked ? 0 : l.tiers.filter((t) => l.score >= t.min && !l.claimed.includes(t.id)).length;
 
 export default function TiersScreen() {
+  const { play: playSound } = useAudio();
   const [ladders, setLadders] = useState<LadderView[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
@@ -59,6 +61,7 @@ export default function TiersScreen() {
       const body = (await res.json()) as ClaimBody;
       if (body.ladders) setLadders(body.ladders);
       setNote({ id: l.id, ok: !!body.claimed, text: body.claimed ? tierClaimNote(body.claimed) : tierErrorNote(body.error, l.unit === "điểm" ? "điểm hạng" : `số ${l.unit}`) });
+      if (body.claimed) playSound("ui.reward");
       // Cập nhật số vàng trên thanh đầu trang.
       if (body.claimed) void fetchProfile();
     } catch {

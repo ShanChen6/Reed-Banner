@@ -24,7 +24,7 @@ export default function DailyQuestsPanel({ profile, now, busy, act }: {
         id="daily-quests-title"
         description={`Làm lại lúc 0 giờ mỗi ngày, đã nhận ${done}/${DAILY_QUESTS.length}${ready > 0 ? `, ${ready} chờ nhận` : ""}.${
           // Phiếu Tầm Tướng Ký chỉ cộng cho người đã vào chế độ đó.
-          profile.tamTuongKy ? ` Nhận đủ: +${TTK_TICKETS_DAILY_ALL} phiếu Tầm Tướng Ký.` : ""
+          profile.tamTuongKy ? ` Nhận đủ (trừ nhiệm vụ đánh cờ): +${TTK_TICKETS_DAILY_ALL} phiếu Tầm Tướng Ký.` : ""
         }`}
         action={
           <SceneLink scene="QUESTS" className="inline-flex min-h-11 items-center text-sm text-frame-gold underline underline-offset-2">
