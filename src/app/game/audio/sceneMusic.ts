@@ -28,6 +28,10 @@ export function soundOfScene(scene: Scene): SceneSound {
       return { music: "arena", ambience: null };
     case "SURVIVAL":
       return { music: "survival", ambience: null };
+    case "DAILY":
+      return { music: "daily", ambience: null };
+    case "EXPEDITION":
+      return { music: "expedition", ambience: null };
     case "FORMATION":
     case "PLAYING":
     case "PRACTICE":

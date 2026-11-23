@@ -30,9 +30,9 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 | Màn | Ghi chú |
 |---|---|
 | Tầm Tướng Ký (`TAM_TUONG_KY`) | Chưa gọi `useAudio`, `soundOfScene` trả im lặng |
-| Viễn Chinh (`EXPEDITION`) | Màn sa bàn im lặng; trận đánh mở ra qua `DemoGame` nên có tiếng trận |
+| Viễn Chinh (`EXPEDITION`) | Màn sa bàn phát `music/expedition` (23/11/2026); trận đánh mở ra qua `DemoGame` nên có tiếng trận |
 | Khai Lộ (`KHAI_LO`) | Chưa nối |
-| Nhật Lệnh (`DAILY`) | Màn chọn thử thách im lặng; trong trận dùng `battle_normal`, cue `daily.complete` đã nối nhưng chưa có tệp |
+| Nhật Lệnh (`DAILY`) | Màn chọn thử thách phát `music/daily`, điểm danh phát `daily.checkin` (23/11/2026); trong trận dùng `battle_normal`, `daily.complete` có tệp |
 
 ### Màn đã nối code nhưng còn thiếu tệp
 
@@ -50,7 +50,7 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 
 ### Cue đã khai báo nhưng chưa nối code
 
-- `ui.click`, `ui.back`, `ui.error`, `ui.reward`: có trong `cues.ts`, chưa nơi nào gọi, chưa có tệp.
+- `ui.error`, `ui.reward`: có trong `cues.ts`, chưa nơi nào gọi, chưa có tệp. `ui.click`, `ui.back` nối 23/11/2026 qua `UiClickSounds`.
 - `music/ending_*`, `pvp.*`: chưa có trong `cues.ts`.
 
 ## Không nằm trong bản UI hiện tại

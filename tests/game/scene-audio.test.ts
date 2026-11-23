@@ -19,7 +19,12 @@ describe("âm thanh theo phân cảnh", () => {
   });
 
   it("màn chính, cửa hàng, hồ sơ và đăng nhập im lặng", () => {
-    for (const s of ["MENU", "SHOP", "PROFILE", "LOGIN", "QUESTS", "LEADERBOARD", "DAILY"] as const) assert.deepEqual(soundOfScene(s), { music: null, ambience: null });
+    for (const s of ["MENU", "SHOP", "PROFILE", "LOGIN", "QUESTS", "LEADERBOARD"] as const) assert.deepEqual(soundOfScene(s), { music: null, ambience: null });
+  });
+
+  it("Nhật Lệnh và Viễn Chinh có nhạc riêng", () => {
+    assert.deepEqual(soundOfScene("DAILY"), { music: "daily", ambience: null });
+    assert.deepEqual(soundOfScene("EXPEDITION"), { music: "expedition", ambience: null });
   });
 
   it("Tháp, Đấu trường, Sinh tồn mỗi nơi một bài", () => {

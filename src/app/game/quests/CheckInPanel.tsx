@@ -5,6 +5,7 @@
 
 import { Button } from "@/components/ui";
 import { OrnateFrame, SectionTitle } from "@/components/game-ui";
+import { useAudio } from "../audio/AudioProvider";
 import { CHECKIN_GOLD, TTK_TICKETS_CHECKIN7, nextStreak, vnDay, type Profile, type ProfileAction } from "@/core";
 
 export default function CheckInPanel({ profile, now, busy, act }: {
@@ -12,8 +13,13 @@ export default function CheckInPanel({ profile, now, busy, act }: {
   /** Giờ lúc mở trang, chỉ để hiển thị; server dùng giờ của server khi điểm danh. */
   now: number;
   busy: boolean;
-  act: (action: ProfileAction) => Promise<unknown>;
+  act: (action: ProfileAction) => Promise<string | null>;
 }) {
+  const { play: playSound } = useAudio();
+  // Điểm danh thành công (server không báo lỗi) thì đóng dấu: `daily.checkin`.
+  const checkIn = async () => {
+    if ((await act({ type: "checkIn" })) === null) playSound("daily.checkin");
+  };
   // Phiếu Tầm Tướng Ký ở ngày 7 chỉ cộng cho người đã vào chế độ đó.
   const ttk = profile.tamTuongKy;
   const checkedToday = profile.quests.checkIn.last === vnDay(now);
@@ -69,7 +75,7 @@ export default function CheckInPanel({ profile, now, busy, act }: {
         <SectionTitle
           description="Điểm danh liền ngày để nhận nhiều hơn; bỏ một ngày thì chuỗi về ngày 1. Đủ 7 ngày thì bắt đầu chuỗi mới."
           action={
-            <Button disabled={busy} onClick={() => void act({ type: "checkIn" })}>
+            <Button disabled={busy} onClick={() => void checkIn()}>
               Điểm danh
             </Button>
           }
