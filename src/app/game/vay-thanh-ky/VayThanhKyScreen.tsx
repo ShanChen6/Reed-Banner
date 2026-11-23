@@ -315,6 +315,8 @@ export default function VayThanhKyScreen() {
     <ModeScreen card label="Vây Thành Kỳ">
       <ModeBanner
         title="Vây Thành Kỳ"
+        art="/art/vay-thanh-ky/banner.webp"
+        artPosition="center 40%"
         kicker="Binh pháp, bản thử"
         description={MODE_TEXT.VAY_THANH_KY}
         stats={[

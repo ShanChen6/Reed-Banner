@@ -3,7 +3,7 @@
 // Phần dùng chung của Vây Thành Kỳ cho ván ở trình duyệt (VayThanhKyScreen) và ván đấu người (OnlinePlay):
 // chọn nguyên tố, khung người chơi theo hệ, dòng đếm điểm.
 
-import { useId, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { ELEMENTS, type Element } from "@/core";
 import { BLACK, KOMI, WHITE, type Color, type Mode, type Score } from "@/core/co-vay";
 import { ChoiceChip } from "@/components/ui";
@@ -12,7 +12,7 @@ import { usePlayCardExpanded } from "../PlayCard";
 import { ELEMENT_NAME } from "../battle/labels";
 import { formatClock } from "../tam-quan-ky/parts";
 import { OrbIcon } from "./Board";
-import { GroundFilter, THEME } from "./theme";
+import { THEME, panelArt } from "./theme";
 
 export const RULE_NAME: Record<Mode, string> = { full: "Vây đất", capture: "Bắt quân trước" };
 export const RULE_HINT: Record<Mode, string> = {
@@ -41,17 +41,10 @@ export function ElementPicker({ label, value, taken, onChange }: { label: string
   );
 }
 
-/** Nền vân của hệ phủ kín khung (cùng bộ lọc với đất trên bàn). */
+/** Tranh nền của hệ (Shan vẽ) phủ kín khung. */
 function ElementBackdrop({ element }: { element: Element }) {
-  const id = `vtk-bg-${useId().replace(/:/g, "")}`;
-  return (
-    <svg aria-hidden viewBox="0 0 10 16" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full">
-      <defs>
-        <GroundFilter id={id} element={element} k={1} x={0} y={0} width={10} height={16} />
-      </defs>
-      <rect width={10} height={16} filter={`url(#${id})`} />
-    </svg>
-  );
+  // eslint-disable-next-line @next/next/no-img-element -- ảnh trang trí nhỏ trong public/art
+  return <img src={panelArt(element)} alt="" aria-hidden className="absolute inset-0 size-full object-cover" />;
 }
 
 /**

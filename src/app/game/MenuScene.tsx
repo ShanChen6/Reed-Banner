@@ -93,6 +93,7 @@ const UPCOMING: readonly { id: string; title: string; text: string; art?: string
     id: "vay-thanh-ky",
     title: "Vây Thành Kỳ",
     text: MODE_TEXT.VAY_THANH_KY,
+    art: "vay-thanh-ky",
     scene: "VAY_THANH_KY",
     note: "Bản thử, cờ vây bảy nguyên tố",
   },

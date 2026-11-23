@@ -6,7 +6,7 @@
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import type { Element } from "@/core";
 import { BLACK, WHITE, columnLabel, starPoints, type Color } from "@/core/co-vay";
-import { GroundFilter, OrbDefs, THEME } from "./theme";
+import { GroundFilter, OrbDefs, THEME, groundArt } from "./theme";
 
 /** Ảnh hưởng của quân theo khoảng cách Manhattan 0..3: đất tô màu khi một bên trội hẳn. */
 const REACH = [8, 4, 2, 1] as const;
@@ -181,9 +181,6 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
         >
           <defs>
             <GroundFilter id={`${uid}-t0`} element="neutral" k={k} x={0} y={0} width={size + 1} height={size + 1} />
-            {sides.map((c) => (
-              <GroundFilter key={c} id={`${uid}-t${c}`} element={elements[c]} k={k} x={0} y={0} width={size + 1} height={size + 1} />
-            ))}
             <filter id={`${uid}-blur`} x="-5%" y="-5%" width="110%" height="110%">
               <feGaussianBlur stdDeviation={blur} />
             </filter>
@@ -202,7 +199,17 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
           {/* Đất trung lập: nền đất nâu như sa bàn. */}
           <rect x={0} y={0} width={size + 1} height={size + 1} filter={`url(#${uid}-t0)`} />
           {sides.map((c) => (
-            <rect key={c} x={0} y={0} width={size + 1} height={size + 1} filter={`url(#${uid}-t${c})`} mask={`url(#${uid}-m${c})`} data-ground={elements[c]} />
+            <image
+              key={c}
+              href={groundArt(elements[c])}
+              x={0}
+              y={0}
+              width={size + 1}
+              height={size + 1}
+              preserveAspectRatio="xMidYMid slice"
+              mask={`url(#${uid}-m${c})`}
+              data-ground={elements[c]}
+            />
           ))}
           <rect x={0.5} y={0.5} width={size} height={size} fill="none" stroke="#1b1008" strokeOpacity={0.6} strokeWidth={0.05} />
 
