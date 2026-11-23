@@ -24,9 +24,11 @@ Giữ **nguyên** luật cờ vây của Shanverse: bàn 9, 13 hoặc 19; bắt 
 Chỉ là lớp giao diện, không đổi luật (`src/app/game/vay-thanh-ky/theme.tsx`, `Board.tsx`).
 
 - Quân: quả cầu tô màu hệ, giữa là biểu tượng hệ Shan vẽ (`public/art/elements/<hệ>.webp`).
-- Nền đất: mẫu SVG lặp cho mỗi hệ (Claude dựng, chưa có tranh riêng). Trong ván, mỗi giao điểm tô theo vùng ảnh hưởng của quân trong bán kính 3; lúc đếm điểm tô theo chủ đất thật (`scoreArea`).
+- Quân có bóng đổ, viền sáng và vệt bóng như quả cầu ngọc (`OrbDefs`).
+- Nền đất: bộ lọc SVG vẽ chất liệu từng hệ, chưa có tranh riêng (`GroundFilter`): Hỏa vân nham thạch phát sáng, Thủy mặt băng có vết rạn, Mộc thảm cỏ, Kim kim loại chải, Thổ đất cát nứt, Lôi tia sét trên nền tím, Phong làn gió trên nền ngọc. Đất chưa ai giữ là nền đá xám. Trong ván, mỗi giao điểm tô theo vùng ảnh hưởng của quân trong bán kính 3, mép vùng làm mờ; lúc đếm điểm tô theo chủ đất thật (`scoreArea`).
 - Hai bên không chọn trùng hệ. Đấu sứ quân: hệ đối thủ mặc định là hệ của sứ quân, đổi được.
-- Khung người chơi hai bên nền theo hệ.
+- Bố cục hai bên (`Arena` trong `parts.tsx`): màn rộng từ 64rem, khung người chơi đứng dọc hai bên bàn, nền là chất liệu hệ, bàn co theo chiều cao màn để vừa cả thanh nút (kể cả khi phóng to). Màn hẹp: hai khung ngang xếp trên bàn.
+- Tranh thẻ chế độ và banner: Shan vẽ theo prompt `/mnt/project-files/art/prompts/vay-thanh-ky.md`; khi có `public/art/home/vay-thanh-ky.webp` thì thêm `art: "vay-thanh-ky"` vào thẻ trong `MenuScene.tsx`.
 
 ## 4. Cách chơi
 
