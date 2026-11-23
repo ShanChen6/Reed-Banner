@@ -87,7 +87,7 @@ const UPCOMING: readonly { id: string; title: string; text: string; art?: string
     text: MODE_TEXT.TAM_QUAN_KY,
     art: "tam-quan-ky",
     scene: "TAM_QUAN_KY",
-    note: "Bản thử, chưa có thưởng",
+    note: "Bản thử, có thưởng khi thắng sứ quân",
   },
 ];
 

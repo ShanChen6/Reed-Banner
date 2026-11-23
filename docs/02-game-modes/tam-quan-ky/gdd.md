@@ -1,13 +1,13 @@
 # Tam Quân Kỳ: cờ tư lệnh trên sa bàn tập trận
 
-> Cập nhật: 23/11/2026 (Shan chốt tên và năm điểm mở; bản thử đã code)
-> Trạng thái: **IMPLEMENTED (bản thử)** — ý tưởng và bản đề xuất của Shan; luật lấy nguyên từ Cờ Việt Nam của Shanverse. Bản thử chạy trên máy người chơi, chưa có thưởng, tranh quân, sa bàn và thẻ chế độ do Shan vẽ (23/11/2026).
+> Cập nhật: 23/11/2026 (thêm đấu sứ quân có thưởng và đấu online 1vs1, server làm trọng tài)
+> Trạng thái: **IMPLEMENTED (bản thử)** — ý tưởng và bản đề xuất của Shan; luật lấy nguyên từ Cờ Việt Nam của Shanverse. Luyện với máy và hai người cùng máy chạy trên trình duyệt; đấu sứ quân có thưởng và đấu online 1vs1 do server làm trọng tài. Tranh quân, sa bàn và thẻ chế độ do Shan vẽ (23/11/2026).
 
 ## 1. Định vị
 
 Chế độ đấu trí hai phe theo lượt, không dùng bàn match-3. Tích "cờ lau tập trận": cậu bé Đinh Bộ Lĩnh bày binh trên sa bàn đất, cát và nước, đánh nhau với một trong 12 sứ quân. Tên "Tam Quân" là ba quân bộ, thủy và thiên mã (quân bay).
 
-Thẻ chế độ nằm ở mục **Sắp ra mắt** trên màn Chiến Trường (bấm được, ghi "Bản thử, chưa có thưởng"). Đường dẫn `/game/three-armies`, scene `TAM_QUAN_KY`.
+Thẻ chế độ nằm ở mục **Sắp ra mắt** trên màn Chiến Trường (bấm được, ghi "Bản thử, có thưởng khi thắng sứ quân"). Đường dẫn `/game/three-armies`, scene `TAM_QUAN_KY`.
 
 ## 2. Luật
 
@@ -54,14 +54,28 @@ Quân: `public/art/tam-quan-ky/quan/<mã>.webp` (256 × 256, cắt tròn từ b�
 
 ## 5. Màn chơi
 
-- Cách chơi: đấu sứ quân (máy, ba độ khó, nghĩ trong web worker) hoặc hai người cùng máy.
+- Cách chơi (bốn lựa chọn):
+  - **Luyện với sứ quân**: máy ba độ khó, nghĩ trong web worker, chạy trên trình duyệt, đi lại được, không thưởng.
+  - **Đấu sứ quân có thưởng**: server làm trọng tài (mục 6).
+  - **Hai người cùng máy**: trên trình duyệt, không thưởng.
+  - **Đấu người 1vs1** (online): hai tài khoản trên hai máy, server làm trọng tài (mục 6).
 - Đối thủ: chọn 1 trong 12 sứ quân (`WARLORD_ENCOUNTERS`), chỉ đổi tên và chân dung. Đỏ luôn là quân Bộ Lĩnh, đi trước; đấu máy thì bạn chọn cầm phe nào.
 - Đồng hồ mỗi bên: không giới hạn, 10, 15 hoặc 30 phút.
 - Đi lại, xoay sa bàn, ván mới, đầu hàng; nhật ký trận; ván dở lưu ở trình duyệt (`reed-banner:tam-quan-ky:save:v1`). Không có dòng mô tả nước đi dưới sa bàn vì nhật ký đã ghi (Shan 23/11/2026); dòng đó chỉ còn cho trình đọc màn hình.
 - Bản đồ: chọn ở phần chuẩn bị, nhớ theo trình duyệt. Mọi bản đồ cùng bố cục địa hình, chỉ khác cảnh. Sáu bản, tranh Shan vẽ (23/11/2026), Claude căn về lưới (dời đầm, sông, cầu về đúng cột, hàng): Đầm Hoa Lư, Đồng xuân tháng giêng, Hoa Lư thu muộn, Đêm trăng tập trận, Thung Tràng An, Cửa Bố Hải. Gốc và bản đã căn ở `art/tam-quan-ky/ban-do/` trong thư mục dự án.
 - Thoại: Đinh Bộ Lĩnh nói một câu ngắn khi vào trận, khi chiếu tướng, khi bị chiếu, khi có anh hùng mới bên Đỏ, khi thắng, thua, hòa (`src/app/game/tam-quan-ky/lines.ts`). Lời game sáng tác, không phải lời nhân vật lịch sử.
 
-## 6. Chưa làm
+## 6. Server làm trọng tài (Shan chốt 23/11/2026)
+
+Code: luật ván `src/core/tam-quan-ky/match.ts`, dịch vụ `src/server/tamQuanKy.ts`, API `/api/tam-quan-ky`, bảng `tqk_matches` (migration 0016), giao diện `ServerPlay.tsx` và `useServerMatch.ts`.
+
+- Cần đăng nhập. Mọi nước đi gửi lên server; server kiểm lượt, luật và đồng hồ rồi mới lưu (ghi kèm điều kiện `seq`). Trình duyệt chỉ hiện ván server trả về.
+- **Đấu sứ quân có thưởng**: chọn sứ quân, phe, độ khó. Máy tính nước ngay trong request của người chơi (engine `chooseMove`, cùng độ khó như bản luyện). Không đi lại, không đồng hồ. Thắng được vàng: Dễ 20, Thường 40, Khó 80; tối đa **3 ván có vàng mỗi ngày** (giờ Việt Nam), thắng thêm vẫn ghi kết quả nhưng không có vàng. Thua, hòa, đầu hàng không có vàng. Mức vàng do Claude đặt, chờ Shan duyệt.
+- **Đấu online 1vs1**: người mở phòng cầm Đỏ, nhận mã 6 ký tự; người kia nhập mã, cầm Xanh. Bắt buộc đồng hồ 10, 15 hoặc 30 phút mỗi bên; đồng hồ Đỏ chạy khi có người vào. Trình duyệt hỏi lại server mỗi 1,5 giây suốt ván (bên kia có thể đầu hàng hay hết giờ bất cứ lúc nào). Hết giờ được xử khi có request tới (bên nào hỏi cũng được). Mã hết hạn sau 30 phút nếu chưa ai vào; chủ phòng hủy được phòng đang chờ. Giao hữu, **không có vàng**, để hai tài khoản không dàn xếp lấy vàng.
+- Ván dở nhớ theo trình duyệt (`reed-banner:tam-quan-ky:server:v1`), tải lại trang thì về đúng ván.
+- Tắt nhanh cả hai chế độ server bằng biến môi trường `TAM_QUAN_KY_SERVER_ENABLED=false` (mặc định bật; luyện với máy và hai người cùng máy vẫn chạy).
+
+## 7. Chưa làm
 
 - Dấu anh hùng bằng tranh (đang là chấm vàng; prompt đã có).
-- Thưởng khi thắng sứ quân: Shan chốt server làm trọng tài (23/11/2026), làm cùng đấu online 1vs1 giữa hai tài khoản, PR sau.
+- Bảng công trạng hay xếp hạng online; dọn ván cũ trong `tqk_matches` bằng việc định kỳ.

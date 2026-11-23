@@ -98,7 +98,8 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
   TAM_QUAN_KY: {
     goal: "Cờ tư lệnh trên sa bàn tập trận của Đinh Bộ Lĩnh: ba quân bộ, thủy và thiên mã cùng ra trận. Vây Chủ tướng bên kia hoặc chiếm giữ Soái trướng của họ để thắng.",
     steps: [
-      "Chọn đấu sứ quân (máy) hay hai người cùng máy, chọn sứ quân đối địch, độ khó, bản đồ và đồng hồ.",
+      "Chọn cách chơi: luyện với sứ quân, đấu sứ quân có thưởng, hai người cùng máy hoặc đấu người 1vs1. Chọn sứ quân, độ khó, bản đồ và đồng hồ.",
+      "Đấu người: một người bấm Mở phòng rồi gửi mã 6 ký tự, người kia nhập mã và bấm Vào phòng.",
       "Bấm một quân của mình để xem chỗ đi được: chấm xanh là ô trống, vòng xanh là lên chung, vòng đỏ là ô ăn được.",
       "Bấm ô đích để đi. Quân bắn xa có hai cách thì chọn tiến vào ăn hay bắn tại chỗ.",
       "Quân đang chở quân khác thì chọn đi cả chồng hay chỉ một quân rời chồng.",
@@ -113,7 +114,8 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Thắng khi Chủ tướng bên kia hết đường thoát, khi giữ Soái trướng bên kia đủ ba lượt, hoặc khi bên kia hết giờ hay đầu hàng.",
     ],
     rewards: [
-      "Bản thử chạy ngay trên máy bạn, chưa có thưởng và bảng công trạng. Ván dở lưu trên trình duyệt này.",
+      "Đấu sứ quân có thưởng: thắng được 20, 40 hoặc 80 vàng theo độ khó, tối đa 3 ván có vàng mỗi ngày. Ván chạy trên máy chủ, cần trình danh, không đi lại.",
+      "Luyện với sứ quân, hai người cùng máy và đấu người là giao hữu, không có vàng.",
       "Viền đỏ là quân Bộ Lĩnh, viền xanh là quân sứ quân. Chấm vàng ở góc quân là dấu anh hùng.",
     ],
     tips: [

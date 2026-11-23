@@ -349,3 +349,28 @@ export const pvpRoomMembers = pgTable("pvp_room_members", {
   ownerId: text("owner_id").primaryKey(),
   code: text("code").notNull(),
 });
+
+/**
+ * Ván Tam Quân Kỳ do server làm trọng tài: đấu sứ quân có thưởng và đấu online 1vs1 (src/server/tamQuanKy.ts).
+ * `state` là TqkMatch (danh sách nước đi, đồng hồ); `code` là mã phòng online khi còn chờ người vào.
+ */
+export const tqkMatches = pgTable(
+  "tqk_matches",
+  {
+    id: text("id").primaryKey(),
+    ownerId: text("owner_id").notNull(),
+    code: text("code"),
+    red: text("red"),
+    blue: text("blue"),
+    redName: text("red_name").notNull(),
+    blueName: text("blue_name").notNull(),
+    status: text("status").notNull(),
+    state: jsonb("state").notNull(),
+    seq: integer("seq").notNull(),
+    reward: integer("reward"),
+    rewardDay: text("reward_day"),
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [index("tqk_matches_code_idx").on(t.code, t.status), index("tqk_matches_reward_idx").on(t.ownerId, t.rewardDay)],
+);
