@@ -22,6 +22,7 @@ export const MODE_TEXT = {
   SU_LO: "Đổ xúc xắc vượt mê cung, đáp đúng sử xưa, mở đường qua cổng thành.",
   TAM_TUONG_KY: "Hội tụ bảy hệ, tìm lại chân dung những bậc danh tướng.",
   EXPEDITION: "Chia quân hai đạo, thần tốc hành quân, giáp công phá thành địch.",
+  TAM_QUAN_KY: "Bày ba quân thủy, bộ, thiên mã trên sa bàn, vây chủ tướng, đoạt soái trướng của sứ quân.",
 } as const;
 
 export interface ModeInfo {

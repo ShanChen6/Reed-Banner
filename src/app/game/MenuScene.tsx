@@ -81,6 +81,14 @@ const UPCOMING: readonly { id: string; title: string; text: string; art?: string
     text: "Long hổ bốn phương tụ về một hội, mỗi mùa một lần so tài, ai trụ đến cuối cùng được thiên hạ nể vì.",
     art: "arena",
   },
+  {
+    id: "tam-quan-ky",
+    title: "Tam Quân Kỳ",
+    text: MODE_TEXT.TAM_QUAN_KY,
+    art: "tam-quan-ky",
+    scene: "TAM_QUAN_KY",
+    note: "Bản thử, chưa có thưởng",
+  },
 ];
 
 
