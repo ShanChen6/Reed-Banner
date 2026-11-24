@@ -5,6 +5,7 @@ import { BottomSheet, FrameInset, OrnateFrame } from "@/components/game-ui";
 import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { Button, choiceVariants, Tabs } from "@/components/ui";
 import { ElementIcon, SuLoAidIcon } from "./art/icons";
+import { TileArt } from "./art/tiles";
 import { Glyph } from "./formation/pieces";
 import { pieceArt } from "./tam-quan-ky/parts";
 import { ReachDiagram } from "./tam-quan-ky/ReachDiagram";
@@ -22,6 +23,7 @@ function GuideItemIcon({ icon }: { icon: GuideIcon }) {
   const box = "size-10 shrink-0";
   if (icon.kind === "element") return <ElementIcon element={icon.element} className={box} />;
   if (icon.kind === "suLoAid") return <SuLoAidIcon aid={icon.aid} className={box} />;
+  if (icon.kind === "tile") return <TileArt kind={icon.tile} className={box} />;
   // eslint-disable-next-line @next/next/no-img-element -- tranh quân nhỏ, cùng ảnh với sa bàn
   if (icon.kind === "tqkPiece") return <img src={pieceArt(icon.piece)} alt="" className={`${box} rounded-full`} />;
   return (

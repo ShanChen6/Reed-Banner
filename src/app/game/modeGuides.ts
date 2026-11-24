@@ -10,7 +10,9 @@ import { DT_ITEM_PICKS, DT_LEVELS } from "@/core/do-tham";
 import { SL_AID_USE_MAX, SL_LEVELS, SL_START_AIDS, type SlAid } from "@/core/su-lo";
 import { KL_CLEAR_BONUS_BASE, KL_CLEAR_BONUS_PER_LEVEL, KL_CLEAR_HEARTS, KL_HEIGHT, KL_KINDS, KL_START_HEARTS, KL_START_TOOLS, KL_TIMED_CLEAR_SECONDS, KL_TIMED_LEFT_SECONDS, KL_TIMED_START_SECONDS, KL_TOOL_CHARGE, KL_WIDTH } from "@/core/khai-lo/engine";
 import { ELEMENTS, type Element } from "@/core/battle/elements";
-import { ELEMENT_NAME } from "./battle/labels";
+import { ENERGY_PER_TILE, FOOD_PER_TILE, FOOD_START, FOOD_UPKEEP, HEAL_PER_TILE_RATIO, PASSIVE_TURNS, RAGE_PER_DRUM, SPIRIT_DECAY_START_TURN, TURN_MS } from "@/core/battle/rules";
+import type { TileKind } from "@/core/board/tiles";
+import { ELEMENT_NAME, TILE_NAME } from "./battle/labels";
 import { DT_ITEM_INFO } from "./do-tham/items";
 import { KL_TOOL_HINT, KL_TOOL_NAME } from "./khai-lo/tools";
 import { EXPEDITION_REST_HEAL, EXPEDITION_SCOUT_SIGHT } from "@/core";
@@ -56,7 +58,8 @@ export type GuideIcon =
   | { readonly kind: "element"; readonly element: Element }
   | { readonly kind: "suLoAid"; readonly aid: SlAid }
   | { readonly kind: "formation"; readonly piece: "wild" | "eraser" }
-  | { readonly kind: "tqkPiece"; readonly piece: PieceType };
+  | { readonly kind: "tqkPiece"; readonly piece: PieceType }
+  | { readonly kind: "tile"; readonly tile: TileKind };
 
 export interface GuideItem {
   readonly icon: GuideIcon;
@@ -98,31 +101,71 @@ export const GUIDE_SCENES: readonly GuideScene[] = [
 const BATTLE_CONTROLS =
   "Vuốt, kéo hoặc bấm hai ô kề nhau để đổi chỗ. Bàn phím: mũi tên hoặc WASD di chuyển, Enter chọn ô, 1–6 dùng kỹ năng, Tab đổi người hành động, Esc hủy.";
 
+/** Bảy loại ô theo thứ tự hiện trên bàn cờ; số liệu khớp src/core/battle/rules.ts và docs/01-gameplay/ban-co.md. */
+const TILE_ITEMS: readonly GuideItem[] = [
+  { icon: { kind: "tile", tile: "kiem" }, name: TILE_NAME.kiem, text: "Đánh thường vào đối thủ đứng đối diện. Ghép càng nhiều ô, đòn càng nặng." },
+  { icon: { kind: "tile", tile: "amDuong" }, name: TILE_NAME.amDuong, text: `Mỗi ô cho người đang hành động ${ENERGY_PER_TILE} năng lượng để dùng kỹ năng.` },
+  { icon: { kind: "tile", tile: "banhChung" }, name: TILE_NAME.banhChung, text: `Mỗi ô cộng ${FOOD_PER_TILE} lương cho cả đội, giữ đội khỏi đói.` },
+  { icon: { kind: "tile", tile: "tim" }, name: TILE_NAME.tim, text: `Mỗi ô hồi ${Math.round(HEAL_PER_TILE_RATIO * 100)}% máu tối đa cho người đang hành động.` },
+  { icon: { kind: "tile", tile: "vang" }, name: TILE_NAME.vang, text: "Nhặt vàng mang ra ngoài trận, ở chế độ có tính vàng nhặt trên bàn." },
+  { icon: { kind: "tile", tile: "sach" }, name: TILE_NAME.sach, text: "Nhặt kinh nghiệm cho tướng, ở chế độ có tính kinh nghiệm." },
+  { icon: { kind: "tile", tile: "trong" }, name: TILE_NAME.trong, text: `Mỗi ô cộng ${RAGE_PER_DRUM} Nộ cho người đang hành động. Nộ đầy thì bị động tự bật.` },
+];
+
+/**
+ * Luật nền của trận đổi ô, dùng chung cho mọi chế độ đánh trận (Bình Loạn, hai tháp, Trấn Ải, Nhật Lệnh, Quần Hùng, Viễn Chinh).
+ * Người mới vào thẳng một chế độ vẫn đọc được cách đánh mà không phải mở Cẩm nang.
+ */
+const BATTLE_ITEMS: GuideItems = {
+  title: "Cách đánh trên bàn cờ",
+  notes: [
+    "Bàn cờ có 12 cột, 8 hàng. Mỗi lượt bạn đổi chỗ hai ô kề nhau để xếp từ 3 ô cùng loại trở lên thành hàng ngang hoặc hàng dọc. Các ô ấy vỡ ra, có tác dụng như bảng dưới, ô phía trên rơi xuống lấp chỗ.",
+    `Một lượt đi theo thứ tự: dùng tối đa một kỹ năng, rồi đổi ô một nước. Chỉ nước đổi ô mới kết thúc lượt. Mỗi lượt có ${TURN_MS / 1000} giây, dùng kỹ năng xong thì đồng hồ đặt lại; hết giờ là mất lượt nhưng không mất máu.`,
+    "Đổi hai ô mà không ghép được thì ô bật về chỗ cũ, không bị phạt, nhưng đồng hồ vẫn chạy.",
+    "Ghép 4 ô trở lên thì được đi thêm một lượt, mỗi nước tối đa một lượt thêm. Ô rơi xuống tự ghép tiếp (dây chuyền) cũng tính, mỗi bước dây chuyền đánh mạnh thêm 10%, tối đa 50%.",
+    "Ghép chữ L hoặc chữ T tạo ô đặc biệt bản yếu, ghép thẳng 5 ô tạo bản mạnh. Ghép tiếp ô đặc biệt ấy để nổ vùng, xóa hàng, xóa cột hoặc hồi máu cả đội tùy loại ô; ô bị nổ đều được tính như ghép.",
+    "Dùng kỹ năng: bấm nút kỹ năng của người đang hành động, rồi chọn đối thủ, đồng đội hoặc ô làm tâm nếu kỹ năng hỏi. Kỹ năng tốn từ 20 đến 100 năng lượng, mỗi tướng tối đa 100. Rê chuột hoặc chạm giữ nút kỹ năng để đọc tác dụng.",
+    `Nộ của mỗi tướng tăng khi ghép ${TILE_NAME.trong} hoặc khi tướng mất máu. Nộ đầy 100 thì bị động theo hệ của tướng ấy tự bật trong ${PASSIVE_TURNS} lượt, không tốn năng lượng.`,
+    `Đánh 3 đấu 3: người vừa ra tay phải nghỉ một lượt, máy sáng sẵn người kế tiếp, bạn chạm chân dung để đổi người khác. Đòn ${TILE_NAME.kiem} đánh vào đối thủ đứng đối diện; đối diện đã gục thì đánh người gần nhất. Đánh 1 đấu 1 thì máu mỗi bên gấp đôi.`,
+    `Lương chung cả đội, bắt đầu ${FOOD_START} và tụt ${FOOD_UPKEEP} mỗi lượt của phe mình. Từ 70 trở lên đội hăng hái, đánh mạnh thêm 15%. Dưới 30 là đói: sát thương giảm 25%, năng lượng từ ${TILE_NAME.amDuong} còn một nửa. Cạn lương thì sát thương còn một nửa và mỗi lượt mất 3% máu.`,
+    "Nguyên tố: đánh hệ mình khắc thì thêm 25% sát thương, đánh hệ khắc mình thì giảm 25%, đánh hệ mình sinh ra thì thêm 10%. Kim khắc Mộc, Mộc khắc Thổ và Phong, Thủy khắc Hỏa, Hỏa khắc Kim, Thổ khắc Thủy và Lôi, Lôi khắc Thủy, Phong khắc Thổ.",
+    `Từ lượt ${SPIRIT_DECAY_START_TURN} của phe, Tinh thần từng tướng giảm dần: máu hồi và khiên mới nhận yếu đi, còn 20% từ lượt 44. Trận càng dài càng nên dồn sát thương thay vì chờ hồi máu.`,
+    "Bàn hết nước đi thì tự xáo lại, không tính lượt. Đối thủ do máy điều khiển chịu đúng luật như bạn.",
+  ],
+  list: TILE_ITEMS,
+};
+
 export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
   VAY_THANH_KY: {
     goal: "Cờ vây trên bàn đất của bảy hệ: mỗi bên chọn một nguyên tố, quân thành quả cầu của hệ ấy, đất quanh quân đổi sắc theo hệ. Vây được nhiều đất hơn, hoặc bắt quân trước ở ván nhập môn, là thắng.",
     steps: [
-      "Chọn cách chơi: đấu sứ quân, hai người cùng máy hoặc đấu người bằng mã phòng. Chọn luật, cỡ bàn 9, 13 hoặc 19 và nguyên tố mỗi bên.",
-      "Đấu người: một người bấm Mở phòng rồi gửi mã 6 ký tự, người kia nhập mã và bấm Vào phòng.",
+      "Chọn cách chơi: luyện với sứ quân, đấu sứ quân có thưởng, hai người cùng máy hoặc đấu người bằng mã phòng.",
+      "Chọn luật (Vây đất hoặc Bắt quân trước), cỡ bàn 9, 13 hoặc 19 và nguyên tố mỗi bên. Đấu sứ quân thì chọn thêm sứ quân, độ khó và bạn đi trước hay đi sau.",
+      "Đấu người: một người bấm Mở phòng rồi gửi mã 6 ký tự, người kia nhập mã và bấm Vào phòng. Người mở phòng đi trước.",
+      "Hai bên lần lượt đặt một quân lên một giao điểm trống (chỗ hai đường kẻ cắt nhau). Quân đã đặt không di chuyển nữa.",
       "Bấm một giao điểm trống để đặt quân. Trên điện thoại chạm một lần để xem trước, chạm lần nữa để đặt.",
       "Không còn chỗ đáng đi thì bấm Bỏ lượt. Hai bên cùng bỏ lượt thì ván dừng để đếm điểm.",
       "Khi đếm điểm, máy đánh dấu quân chết bằng gạch chéo. Bấm vào nhóm quân để sửa, rồi bấm Chốt điểm.",
     ],
     rules: [
-      "Mỗi nhóm quân liền nhau cần ít nhất một khí (giao điểm trống kề bên). Hết khí thì cả nhóm bị bắt khỏi bàn.",
+      "Mỗi nhóm quân liền nhau (nối theo đường kẻ, không tính chéo) cần ít nhất một khí, tức giao điểm trống kề bên. Hết khí thì cả nhóm bị bắt khỏi bàn.",
       "Không được đặt quân vào chỗ hết khí, trừ khi nước ấy bắt được quân bên kia.",
       "Luật cướp (ko): vừa bị bắt một quân thì chưa được bắt lại ngay ở đúng chỗ ấy, phải đi nơi khác một nước.",
-      "Vây đất: điểm là số quân trên bàn cộng đất trống chỉ quân mình bao quanh. Bên đi sau được cộng 7,5 điểm bù.",
+      "Vây đất: điểm là số quân trên bàn cộng đất trống chỉ quân mình bao quanh. Bên đi sau được cộng 7,5 điểm bù vì đi chậm một nước. Điểm cao hơn là thắng.",
       "Bắt quân trước: ván nhập môn bắt đầu từ thế chéo giữa bàn, ai bắt được quân trước là thắng.",
       "Nguyên tố chỉ đổi hình quân và nền đất, không đổi luật. Đất tô màu trong ván là ước lượng vùng ảnh hưởng, điểm thật chỉ tính lúc đếm.",
+      "Luyện với sứ quân và hai người cùng máy được bấm Đi lại. Đấu sứ quân có thưởng và đấu người không có đi lại. Bấm Đầu hàng là thua ván.",
     ],
     rewards: [
-      "Bản thử: mọi ván là giao hữu, chưa có vàng.",
+      "Đấu sứ quân có thưởng: thắng được 20, 40 hoặc 80 vàng theo độ khó Dễ, Thường, Khó, tối đa 3 ván có vàng mỗi ngày. Ván chạy trên máy chủ, cần trình danh.",
+      "Luyện với sứ quân, hai người cùng máy và đấu người là giao hữu, không có vàng.",
       "Đấu người cần trình danh; máy chủ làm trọng tài, có đồng hồ, hai bên cùng bỏ lượt thì máy chủ tự đếm điểm.",
     ],
     tips: [
-      "Góc dễ giữ đất nhất, rồi tới cạnh, giữa bàn khó nhất.",
+      "Mới chơi thì chọn luật Bắt quân trước trên bàn 9×9, đấu sứ quân độ khó Dễ để quen cách bắt quân.",
+      "Góc dễ giữ đất nhất, rồi tới cạnh, giữa bàn khó nhất. Mở ván nên đặt quân gần góc.",
       "Nhóm có hai mắt (hai khoảng trống tách rời bên trong) thì không bao giờ bị bắt.",
+      "Nhóm quân của bạn chỉ còn một khí là đang bị dọa bắt: nối thêm quân để thêm khí, hoặc bỏ nhóm ấy đi nơi khác.",
       "Bàn 9×9 hợp để làm quen; bàn 19×19 ván dài, máy nghĩ lâu hơn.",
     ],
   },
@@ -184,44 +227,54 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     ],
   },
   CAMPAIGN: {
-    goal: "Bạn đóng vai Đinh Bộ Lĩnh, đi qua 6 chương và 24 nhiệm vụ, từ thuở nhỏ ở Hoa Lư đến đại lễ đăng quang năm 968.",
+    goal: "Cốt truyện chính của Cờ Lau. Bạn đóng vai Đinh Bộ Lĩnh, đi qua 6 chương và 24 nhiệm vụ, từ thuở nhỏ chăn trâu ở Hoa Lư, dẹp loạn 12 sứ quân đến đại lễ đăng quang năm 968. Đây là nơi nên bắt đầu nếu bạn mới vào game.",
     steps: [
-      "Mở bản đồ Sử ký, chọn chương rồi chọn nhiệm vụ đang mở.",
+      "Mở bản đồ Sử ký. Chương đang mở sáng lên, chương sau còn khóa cho tới khi bạn xong chương trước.",
+      "Chọn chương rồi chọn nhiệm vụ đang mở. Nhiệm vụ đã xong có dấu hoàn thành, đánh lại được bất cứ lúc nào.",
       "Đọc lời kể. Nhiệm vụ sự kiện và ngoại giao chỉ cần chọn cách đáp, không phải đánh.",
-      "Nhiệm vụ có trận thì chọn hai tướng đi cùng chủ tướng, xem cấp gợi ý rồi xuất quân.",
-      "Thắng thì nhiệm vụ kế và tướng mới mở ra.",
+      "Nhiệm vụ có trận thì vào màn chuẩn bị: đọc ô Mục tiêu, xem đối thủ, cấp gợi ý và lương đang có.",
+      "Chọn hai phó tướng đi cùng chủ tướng Đinh Bộ Lĩnh, đổi hệ và nghề cho ông nếu muốn khắc hệ đối thủ, rồi xuất quân.",
+      "Đánh trận theo luật ở mục Cách đánh trên bàn cờ bên dưới. Đạt mục tiêu là thắng nhiệm vụ.",
+      "Thắng thì nhiệm vụ kế và tướng mới mở ra. Thua thì nhiệm vụ vẫn mở, bạn đổi đội rồi đánh lại.",
     ],
     rules: [
+      "Mục tiêu mỗi trận khác nhau và ghi rõ ở màn chuẩn bị: có trận phải hạ hết đối thủ, có trận chỉ cần trụ đủ số lượt, có trận trùm chỉ cần đẩy xuống mức máu ghi sẵn, trận công thành đánh qua nhiều giai đoạn.",
+      "Trận nhiều giai đoạn giữ giai đoạn đã qua: thua ở giai đoạn sau thì đánh lại từ giai đoạn ấy, máu trùm đã mất không hồi lại.",
       "Lương mang từ trận này sang trận sau, từ 20 đến 100 và bắt đầu ở 60. Ở màn chuẩn bị trận, 3 vàng đổi được 1 lương.",
       "Nhiệm vụ sự kiện và ngoại giao không trừ lương, không tính lượt.",
       "Mỗi đoạn lời kể có nhãn nguồn: sử ghi, dựng lại, còn tranh cãi hoặc hư cấu. Cảnh game sáng tác đều ghi rõ là hư cấu.",
-      "Bình Loạn không có bảng công trạng.",
+      "Bình Loạn không có bảng công trạng, bạn chơi theo nhịp của mình.",
     ],
+    items: BATTLE_ITEMS,
     rewards: [
       "Trận thắng cho kinh nghiệm, vàng và đồ rơi như trận thường.",
       "Lần đầu hoàn thành một nhiệm vụ hoặc một chương có thêm vàng. Đánh lại chỉ nhận thưởng trận thường.",
       "Tướng lịch sử mở theo mốc chương. Bình Loạn không phát Đá Cường Hóa.",
+      "Qua các nhiệm vụ mốc, bạn mở thêm các trận tái đấu sứ quân ở mức khó hơn, có thưởng riêng.",
     ],
     tips: [
       BATTLE_CONTROLS,
-      "Đội dưới cấp gợi ý thì nên luyện thêm ở Giao Tranh trước khi vào trận.",
-      "Qua các nhiệm vụ mốc, bạn mở thêm các trận tái đấu sứ quân ở khó hơn, có thưởng riêng.",
+      "Đội dưới cấp gợi ý thì nên luyện thêm ở Giao Tranh, hoặc mặc trang bị ở Doanh Trại, trước khi vào trận.",
+      "Giữ lương trên 70 để cả đội hăng hái. Trước trận khó mà lương thấp, đổi vàng lấy lương ở màn chuẩn bị.",
+      "Đổi hệ cho Đinh Bộ Lĩnh khắc hệ của trùm là cách dễ nhất để trận nhẹ hơn.",
     ],
   },
   TRIAL: {
-    goal: `Leo ${TRIAL_FLOORS} tầng tháp cố định. Mỗi tầng có một luật chọn đội riêng, bạn xếp đội hợp luật rồi hạ đối thủ.`,
+    goal: `Leo ${TRIAL_FLOORS} tầng tháp cố định, mỗi tầng như một câu đố chọn đội: tầng ra luật cấm, luật bắt buộc hoặc giới hạn nghề và hệ, bạn xếp đội hợp luật rồi hạ đối thủ.`,
     steps: [
-      "Chọn tầng đang mở (100 tầng chia 10 chặng) và đọc luật của tầng.",
-      "Chọn 2 tướng kèm, rồi chọn hệ và nghề cho Đinh Bộ Lĩnh. Chấm xanh trên hệ/nghề là chọn vào thì đội hợp luật.",
+      "Chọn tầng đang mở. 100 tầng chia 10 chặng, tầng sau chỉ mở khi đã qua tầng trước.",
+      "Đọc khung Luật tầng: tầng cấm gì, bắt buộc gì, đối thủ là ai và cần làm gì để thắng.",
+      "Chọn 2 tướng kèm, rồi chọn hệ và nghề cho Đinh Bộ Lĩnh. Chấm xanh trên hệ và nghề là chọn vào thì đội hợp luật. Tướng bị làm mờ là không hợp luật, rê chuột để xem lý do.",
       "Đội chưa hợp luật thì nút Vào tầng bị khóa và màn ghi rõ luật nào chưa đạt.",
       "Đánh trận 3 đấu 3. Thắng thì về thẳng màn chuẩn bị của tầng kế; thua thì về lại tầng vừa đánh để đổi đội.",
     ],
     rules: [
       "Đinh Bộ Lĩnh luôn ra trận ở vị trí thủ lĩnh. Bạn đổi nghề và hệ cho ông miễn phí trước mỗi tầng; chỉ áp dụng cho trận đó.",
-      "Mỗi lần vào tầng, máu và lương bắt đầu lại.",
+      "Mỗi lần vào tầng, máu và lương bắt đầu lại. Thua không mất tiến trình, không mất đá, thử lại bao nhiêu lần tùy ý.",
       "Không đổi được tướng khi trận đang đánh.",
       "Từ tầng 21 trở lên, đối thủ là tướng cửa hàng và luật ghép dần hai, ba điều.",
     ],
+    items: BATTLE_ITEMS,
     rewards: [
       "Lần đầu qua mỗi tầng được Đá Cường Hóa. Đánh lại tầng đã qua không nhận thêm.",
       "Đã qua tầng 1 thì mỗi ngày quét tháp được 1 đến 12 đá, tùy tầng cao nhất đã qua. Ngày đổi lúc 0 giờ (giờ Việt Nam), lượt bỏ lỡ không cộng dồn.",
@@ -230,25 +283,30 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     tips: [
       BATTLE_CONTROLS,
       "Đọc luật tầng rồi mới chọn tướng. Nếu chưa xếp đủ ba người hợp luật, hãy đổi nghề và hệ của Đinh Bộ Lĩnh.",
+      "Nhớ quét tháp mỗi ngày: không phải đánh mà vẫn có đá.",
+      "Kẹt ở một tầng thì quay về nâng cấp tướng rồi thử lại, tháp không chạy mất.",
     ],
   },
   DESTINY: {
-    goal: "Mỗi chu kỳ tuần là một lượt leo tháp với đội hình khóa sẵn. Máu, năng lượng và lương còn lại mang sang tầng sau, nên bạn phải giữ sức cho cả chặng.",
+    goal: "Mỗi chu kỳ tuần là một lượt leo tháp với đội hình khóa sẵn. Máu, năng lượng và lương còn lại mang sang tầng sau, nên bạn phải giữ sức cho cả chặng, thua một tầng là hết lượt leo.",
     steps: [
-      "Khóa đội hình khi bắt đầu lượt leo. Số tầng của chu kỳ hiện ở đầu màn.",
-      "Mỗi tầng chọn ba tướng ra trận từ đội hình, số còn lại là dự bị.",
+      "Khóa đội hình khi bắt đầu lượt leo: Đinh Bộ Lĩnh và tối đa 8 tướng. Số tầng của chu kỳ hiện ở đầu màn.",
+      "Bấm một tầng ở Hành trình để xem độ khó, cấp đối thủ và mốc đá của tầng đó.",
+      "Mỗi tầng chọn ba tướng ra trận từ đội hình, số còn lại là dự bị. Màn chuẩn bị ghi cấp, hệ, nghề và máu của ba đối thủ; sao xanh cạnh tên là tướng có hệ khắc ít nhất một đối thủ.",
       "Thắng tầng thì chọn một trong ba ban thưởng giữa tầng: hồi phục hoặc Phúc.",
       "Thắng tầng cuối là hoàn thành lượt leo.",
     ],
     rules: [
-      "Đội hình khóa gồm Đinh Bộ Lĩnh và nhiều nhất 8 tướng.",
+      "Đội hình khóa gồm Đinh Bộ Lĩnh và nhiều nhất 8 tướng, không đổi được tới hết lượt leo. Lúc khóa, máy kiểm tra trước đội hình xếp được ba người hợp luật cho mọi tầng.",
       "Đối thủ mạnh dần từ chặng Dễ tới chặng Trùm: tầng 1 cấp 1, tăng đều tới tầng 20 cấp 30, không phụ thuộc đội hình của bạn.",
       "Dự bị không tự hồi, trừ khi bạn đã chọn Phúc Hậu quân.",
       "Phúc giữ tới hết lượt leo. Chọn lại một Phúc thì cộng dồn.",
+      "Thua một tầng thì lượt leo kết thúc. Kỷ lục chu kỳ và đá đã nhận vẫn giữ, bạn khóa đội hình mới để leo lại từ tầng 1.",
       "Nếu thắng tầng mà Đinh Bộ Lĩnh đã gục, bạn phải chọn Cứu viện cho ông mới lên được tầng kế. Tải lại trang không hồi miễn phí.",
-      "Muốn dừng giữa chừng phải xác nhận. Kỷ lục chu kỳ và đá đã nhận vẫn giữ, bạn khóa đội hình mới để leo lại từ tầng 1.",
+      "Muốn dừng giữa chừng phải xác nhận, rồi khóa đội hình mới để leo lại từ đầu.",
       "Chu kỳ bắt đầu thứ Hai lúc 0 giờ (giờ Việt Nam) và kéo dài 7 ngày. Luật không đổi trong chu kỳ.",
     ],
+    items: BATTLE_ITEMS,
     rewards: [
       "Bậc Tháp Thiên Mệnh theo tầng cao nhất từng vượt: Đồng 1, Bạc 4, Vàng 8, Bạch Kim 12, Kim Cương 16, Huyền Thoại 20. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Công trạng tuần, mỗi bậc một lần.",
       "Đá Cường Hóa khi lần đầu qua các mốc tầng và theo kỷ lục cuối chu kỳ. Chọn Phúc hoặc hồi phục giữa tầng không cho đá.",
@@ -257,16 +315,19 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     tips: [
       BATTLE_CONTROLS,
       "Đừng dồn hết sức vào các tầng đầu: tầng sau khó dần và máu không tự đầy lại.",
+      "Mang nhiều tướng khác hệ khác nghề để tầng nào cũng có người khắc đối thủ, và có người thay khi tướng chính kiệt máu.",
+      "Đội đang yếu máu thì chọn hồi phục; đội còn khỏe thì lấy Phúc để mạnh dần về sau.",
       "Cần trình danh để chơi và lên bảng.",
     ],
   },
   SURVIVAL: {
-    goal: "Giữ ải trên một bàn cờ duy nhất. Đối thủ kéo đến theo từng đợt, mỗi đợt mạnh hơn, và bạn xem mình trụ được bao nhiêu đợt.",
+    goal: "Giữ ải trên một bàn cờ duy nhất. Đối thủ kéo đến theo từng đợt, đợt sau mạnh hơn đợt trước, và bạn xem mình trụ được bao nhiêu đợt.",
     steps: [
       "Vào ải với Đinh Bộ Lĩnh, hai tướng ra trận và tối đa hai dự bị. Đội hình khóa từ đầu.",
-      "Đánh hết đối thủ của đợt. Màn hình luôn báo trước đợt kế tiếp.",
-      "Giữa các đợt, bạn được đổi người, hồi sinh tướng đã gục và tăng sức.",
-      "Ba tướng ra trận cùng gục thì lượt chơi kết thúc, dù còn dự bị.",
+      "Đánh hết đối thủ của đợt. Màn hình luôn báo trước đợt kế tiếp để bạn tính trước.",
+      "Giữa các đợt, bạn được đổi người ra trận với dự bị, hồi sinh tướng đã gục và tăng sức.",
+      "Bấm đánh tiếp để vào đợt sau, hoặc tạm nghỉ và quay lại sau.",
+      "Ba tướng ra trận cùng gục thì lượt chơi kết thúc, dù còn dự bị. Số đợt đã vượt là kết quả của bạn.",
     ],
     rules: [
       `Cứ ${SURVIVAL_BOSS_EVERY} đợt có một đợt trùm: một sứ quân dẫn hai tùy tướng.`,
@@ -277,6 +338,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Đang đánh dở một đợt mà bỏ quá 24 giờ thì không bị xử thua: lượt chơi dừng ở đợt cuối đã vượt qua.",
       "Mỗi lúc chỉ có một lượt chơi. Muốn mở lượt mới thì tiếp tục hoặc dừng lượt đang dở trước.",
     ],
+    items: BATTLE_ITEMS,
     rewards: [
       `${SURVIVAL_WAVE_GOLD} vàng cho mỗi đợt vượt qua, cộng vàng và sách nhặt trên bàn cờ.`,
       "Xếp hạng theo số đợt giữ được, có bảng mùa theo tuần và thưởng vàng theo hạng cuối mùa. Số đợt lên bảng ngay khi bạn vượt qua, không cần dừng lượt chơi.",
@@ -285,81 +347,92 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     tips: [
       BATTLE_CONTROLS,
       "Xoay người giữa các đợt để tướng yếu có lúc hồi sức.",
+      "Năng lượng giữ qua đợt: để dành một kỹ năng mạnh cho đợt trùm sắp tới.",
+      "Mang theo một Y sư hoặc tướng biết hồi máu, ải càng dài càng cần.",
       "Cần trình danh để chơi và lên bảng.",
     ],
   },
   DAILY: {
-    goal: "Mỗi ngày một đề chung cho mọi người. Bạn chỉ đánh một lần, so tài cùng quần hùng trên cùng một bàn.",
+    goal: "Mỗi ngày một đề chung cho mọi người. Ai cũng cầm cùng một đội, gặp cùng một đối thủ trên cùng một bàn, bạn chỉ đánh một lần để so tài cùng quần hùng.",
     steps: [
-      "Xem đề hôm nay: đội cho sẵn và đối thủ.",
+      "Điểm danh ở đầu màn để nhận vàng của ngày.",
+      "Xem đề hôm nay: đội cho sẵn, hệ và nghề của Đinh Bộ Lĩnh, sứ quân đối thủ.",
       "Bấm Đánh (1 lần) rồi vào trận. Bạn đi trước.",
-      "Xong ván, xem hạng của bạn trên bảng trong ngày.",
+      "Xong ván, xem hạng của bạn trên bảng trong ngày và nhận vàng thắng hoặc thua.",
+      "Làm thêm nhiệm vụ ngày ở ngay cạnh đề hôm nay để lấy vàng.",
     ],
     rules: [
       "Đề mới lúc 0 giờ (giờ Việt Nam). Mỗi người một lượt mỗi ngày, tải lại trang vẫn tiếp tục được trận đang dở.",
       "Đội cho sẵn gồm Đinh Bộ Lĩnh theo nghề và hệ của đề, cùng hai tướng. Mọi tướng cấp 10, không trang bị, nên hồ sơ của bạn không ảnh hưởng.",
       "Đối thủ là một sứ quân dẫn hai tùy tướng, đánh trên sân nhà của sứ quân, do máy điều khiển ở mức Khó.",
-      "Ai đi cùng một nước thì gặp cùng ô rơi.",
+      "Ai đi cùng một nước thì gặp cùng ô rơi, nên đề công bằng cho mọi người.",
     ],
+    items: BATTLE_ITEMS,
     rewards: [
       "Bậc Nhật Lệnh theo số ngày đã đánh: Đồng 1, Bạc 7, Vàng 20, Bạch Kim 50, Kim Cương 100, Huyền Thoại 200. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Công trạng, mỗi bậc một lần.",
       `Thắng ${DAILY_GOLD.win} vàng, thua vẫn được ${DAILY_GOLD.loss} vàng. Không có kinh nghiệm hay đồ rơi.`,
       "Xếp hạng: thắng đứng trên thua; cùng thắng thì ít lượt hơn đứng trên, rồi tới còn nhiều máu hơn. Thua thì xếp theo sát thương đã gây.",
       "Bảng hiện 20 người đầu, có thưởng vàng theo hạng cuối ngày.",
-      "Điểm danh mỗi ngày ở đầu màn: liền 7 ngày thì vàng tăng dần, bỏ một ngày thì chuỗi về ngày 1.",
-      "Nhiệm vụ ngày nằm ngay cạnh đề hôm nay: đánh đủ trận, thắng, nhặt ô vàng và nhận Nhật Lệnh để lấy thêm vàng.",
+      "Điểm danh mỗi ngày: liền 7 ngày thì vàng tăng dần, bỏ một ngày thì chuỗi về ngày 1.",
+      "Nhiệm vụ ngày: đánh đủ trận, thắng, nhặt ô vàng và nhận Nhật Lệnh để lấy thêm vàng.",
     ],
-    tips: [BATTLE_CONTROLS, "Chưa nghĩ ra thế đánh thì cứ thử một nước nhỏ: đề chỉ chơi một lần nên hãy đọc kỹ đội trước."],
+    tips: [
+      BATTLE_CONTROLS,
+      "Đề chỉ chơi một lần, nên đọc kỹ đội và hệ của sứ quân trước khi bấm Đánh.",
+      "Muốn lên hạng thì thắng nhanh: ít lượt hơn đứng trên. Ưu tiên nước ghép 4, ghép 5 để có lượt thêm.",
+      "Dù thua vẫn có vàng và vẫn tính ngày đã đánh cho bậc Nhật Lệnh, nên ngày nào cũng ghé.",
+    ],
   },
   ARENA: {
-    goal: "Đánh với đội phòng thủ của người khác, do máy điều khiển ở mức Khó. Thắng tăng điểm hạng, thua giảm điểm hạng.",
+    goal: "Đấu với đội phòng thủ của người khác (Phá Doanh) hoặc đánh trực tiếp với người thật (Thư Hùng). Thắng tăng điểm hạng, thua giảm điểm hạng, tranh ngôi đầu bảng mùa.",
     steps: [
-      "Quần Hùng tự chụp đội 3 đấu 3 đang chọn ở Doanh Trại làm đội phòng thủ của bạn.",
-      "Chọn một trong ba đối thủ được bày, hoặc bấm Đổi đối thủ để bày lại, miễn phí.",
+      "Chọn thẻ Phá Doanh để đánh đội phòng thủ do máy điều khiển, hoặc thẻ Thư Hùng để đánh người thật khi đang mở.",
+      "Phá Doanh tự chụp đội 3 đấu 3 đang chọn ở Doanh Trại làm đội phòng thủ của bạn.",
+      "Chọn một trong ba đối thủ được bày, hoặc bấm Đổi đối thủ để bày lại, miễn phí. Thẻ đối thủ ghi mạnh hơn, ngang sức hay yếu hơn bạn.",
       "Đánh trận. Điểm hạng đổi ngay sau trận.",
     ],
     rules: [
-      `Mỗi ngày có ${ARENA_ATTACKS_PER_DAY} lượt đánh, đổi lúc 0 giờ (giờ Việt Nam).`,
+      `Phá Doanh có ${ARENA_ATTACKS_PER_DAY} lượt đánh mỗi ngày, đổi lúc 0 giờ (giờ Việt Nam).`,
       "Nâng cấp tướng hoặc đổi đội xong thì bấm Cập nhật theo đội hiện tại để đội phòng thủ theo kịp.",
-      "Đối thủ ưu tiên người có điểm và lực chiến gần bạn; thẻ đối thủ ghi mạnh hơn, ngang sức hay yếu hơn. Thiếu người thì máy tạo bóng ma luyện tập cùng cấp, 1000 điểm; càng lên cao, đánh bóng ma càng ít điểm.",
+      "Đội phòng thủ của bạn do máy điều khiển ở mức Khó khi người khác đến đánh.",
+      "Đối thủ ưu tiên người có điểm và lực chiến gần bạn. Thiếu người thì máy tạo bóng ma luyện tập cùng cấp, 1000 điểm; càng lên cao, đánh bóng ma càng ít điểm.",
       "Trong Quần Hùng, trang bị cộng tối đa 30% Công và máu gốc theo cấp (Thủ tối đa gấp đôi), nên cấp tướng quan trọng hơn đồ.",
       "Điểm hạng bắt đầu từ 1000, tăng giảm theo sức đối thủ và không xuống dưới 0.",
+      "Thư Hùng: ai cũng dùng Đinh Bộ Lĩnh, hệ thống ghép người có điểm gần bạn, mỗi lượt 30 giây.",
+      "Thư Hùng: bỏ lượt liên tục là phá trận và không được tính điểm. Mất mạng được tha 3 lần mỗi ngày; mất mạng quá 90 giây thì máy điều khiển tướng của bạn.",
     ],
+    items: BATTLE_ITEMS,
     rewards: [
-      `Thắng nhận thưởng trận thường và thêm ${ARENA_WIN_GOLD} vàng.`,
+      `Thắng Phá Doanh nhận thưởng trận thường và thêm ${ARENA_WIN_GOLD} vàng.`,
       "Bậc hạng theo điểm hạng: Đồng, Bạc, Vàng, Bạch Kim, Kim Cương, Huyền Thoại. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị (từ Lục tới Cam) ở thẻ Công trạng, mỗi bậc một lần; tụt bậc không mất thưởng đã nhận.",
+      "Thư Hùng có một dải bậc hạng chung cho 1vs1 và 3vs3, tính theo điểm hạng cao hơn của hai thể thức, cùng mốc và thưởng với Phá Doanh.",
       "Bảng mùa theo tuần chỉ tính các trận bạn đi đánh, không tính phòng thủ. Hạng cuối mùa có thưởng vàng.",
     ],
     tips: [
       BATTLE_CONTROLS,
-      "Khi Thư Hùng được mở, bạn chọn thẻ Thư Hùng để đánh trực tiếp 1vs1 với người khác: ai cũng dùng Đinh Bộ Lĩnh, hệ thống ghép người có điểm gần bạn, mỗi lượt 30 giây.",
-      "Thư Hùng có một dải bậc hạng chung cho 1vs1 và 3vs3, tính theo điểm hạng cao hơn của hai thể thức, cùng mốc và thưởng với Phá Doanh; lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Công trạng.",
-      "Ở Thư Hùng, bỏ lượt liên tục là phá trận và không được tính điểm. Mất mạng được tha 3 lần mỗi ngày; mất mạng quá 90 giây thì máy điều khiển tướng của bạn.",
       "Thắng đối thủ mạnh hơn bạn được nhiều điểm hơn, thua đối thủ yếu hơn mất nhiều điểm hơn.",
+      "Mới vào thì chọn đối thủ ngang sức hoặc yếu hơn để quen, rồi mới đánh đối thủ mạnh hơn.",
+      "Dùng hết lượt đánh mỗi ngày: lượt không cộng dồn sang hôm sau.",
       "Cần trình danh để chơi và lên bảng.",
     ],
   },
   FORMATION: {
-    goal: "Bày quân tướng theo nghề và hệ để khai thông toàn bộ sa bàn. Không đánh nhau; mỗi ô khai thông lộ một mảnh bản đồ thời Loạn 12 sứ quân.",
+    goal: "Bày quân tướng theo nghề và hệ để khai thông toàn bộ sa bàn. Không đánh nhau: đây là trò xếp quân, mỗi ô khai thông lộ ra một mảnh bản đồ thời Loạn 12 sứ quân.",
     steps: [
-      "Chọn bậc: Hướng dẫn 3×3, Thường 5×5, Khó 6×6, Đại trận (cạnh từ 7 đến 10).",
-      "Đặt quân hiện tại vào một ô trống sát một quân đã có. Sa bàn đang trống thì đặt ở ô nào cũng được.",
-      "Lấp kín một hàng hoặc một cột (từ 3 ô chơi được trở lên) thì quân ở đó được dọn đi, ô vẫn giữ vệt khai thông.",
+      "Chọn bậc: Hướng dẫn 3×3, Thường 5×5, Khó 6×6, Đại trận (cạnh từ 7 đến 10). Mới chơi nên bắt đầu ở Hướng dẫn.",
+      "Xem lệnh bài: đó là quân tướng bạn phải đặt lúc này, có một nghề và một hệ.",
+      "Đặt quân vào một ô trống sát một quân đã có. Sa bàn đang trống thì đặt ở ô nào cũng được. Ô đặt được sẽ sáng lên nếu bạn bật gợi ý.",
+      "Lấp kín một hàng hoặc một cột (từ 3 ô chơi được trở lên) thì quân ở đó được dọn đi, ô vẫn giữ vệt khai thông và bạn có thêm chỗ đặt.",
+      "Không còn chỗ đặt quân hiện tại thì bấm Bỏ Lệnh để đổi quân khác.",
       "Khai thông hết mọi ô chơi được là thắng và hiện cả bản đồ.",
     ],
     rules: [
       "Quân mới phải cùng nghề hoặc cùng hệ với từng quân kề (trên, dưới, trái, phải). Chỉ cần một quân kề không khớp là không đặt được.",
+      "Ô khai thông là ô đã từng có quân đứng. Quân bị dọn đi thì ô vẫn tính là đã khai thông.",
       "Quân tướng kế tiếp luôn có chung nghề hoặc hệ với một quân trên bàn, nhưng chưa chắc còn chỗ đặt. Lúc đó hãy Bỏ Lệnh.",
-      "Bỏ Lệnh đổi sang quân khác nhưng làm ngọn lửa bùng lên. Lửa đầy mà còn bỏ nữa là thua. Đặt quân thành công hạ lửa 1 bậc, dọn được hàng hoặc cột thì tắt hết.",
+      "Bỏ Lệnh đổi sang quân khác nhưng làm ngọn lửa bùng lên một bậc, tối đa 3 bậc. Lửa đầy mà còn bỏ nữa là thua. Đặt quân thành công hạ lửa 1 bậc, dọn được hàng hoặc cột thì tắt hết.",
       "Chướng ngại (núi, rừng, đầm lầy, thành lũy) mọc ngẫu nhiên: không đặt quân được, không cần khai thông và không nối được hai quân.",
     ],
-    rewards: [
-      "Chơi thường không thưởng, không xếp hạng, chơi bao nhiêu ván tùy ý.",
-      "Xếp hạng có thưởng ở các bậc Thường, Khó và Đại trận khi chế độ này đang mở. Bậc Hướng dẫn không xếp hạng.",
-      "Bậc Trận Đồ theo số ván xếp hạng đã thắng: Đồng 1, Bạc 5, Vàng 15, Bạch Kim 30, Kim Cương 60, Huyền Thoại 100. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Chiến tích, mỗi bậc một lần.",
-      "Điểm: đặt quân 10, mỗi quân kề khớp cả nghề lẫn hệ thêm 5, mỗi hàng hoặc cột dọn 50, thắng thêm 500 và thưởng theo bậc lửa còn trống.",
-    ],
-    tips: ["Bắt đầu ở bậc Hướng dẫn để quen luật khớp nghề và hệ."],
     items: {
       title: "Quân đặc biệt",
       notes: ["Thỉnh thoảng lệnh bài trao cho bạn một quân đặc biệt thay cho quân tướng."],
@@ -368,29 +441,48 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
         { icon: { kind: "formation", piece: "eraser" }, name: "Thu Hồi", text: "Chạm vào một quân trên bàn để xóa, ô vẫn giữ vệt khai thông." },
       ],
     },
+    rewards: [
+      "Chơi thường không thưởng, không xếp hạng, chơi bao nhiêu ván tùy ý.",
+      "Xếp hạng có thưởng ở các bậc Thường, Khó và Đại trận khi chế độ này đang mở. Bậc Hướng dẫn không xếp hạng.",
+      "Bậc Trận Đồ theo số ván xếp hạng đã thắng: Đồng 1, Bạc 5, Vàng 15, Bạch Kim 30, Kim Cương 60, Huyền Thoại 100. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Chiến tích, mỗi bậc một lần.",
+      "Điểm: đặt quân 10, mỗi quân kề khớp cả nghề lẫn hệ thêm 5, mỗi hàng hoặc cột dọn 50, thắng thêm 500 và thưởng theo bậc lửa còn trống.",
+    ],
+    tips: [
+      "Bắt đầu ở bậc Hướng dẫn để quen luật khớp nghề và hệ. Ở bậc này gợi ý ô đặt được bật sẵn; bậc khác bật bằng nút tròn nhỏ có chấm sáng cạnh lệnh bài.",
+      "Đặt quân ở chỗ khớp cả nghề lẫn hệ để được thêm điểm và giữ đường cho quân sau.",
+      "Ưu tiên lấp hàng hoặc cột sắp đầy: dọn được thì tắt hết lửa và mở thêm chỗ trống.",
+      "Đừng xây một khối đặc ở giữa: để chừa nhiều cạnh trống thì quân sau dễ có chỗ đặt.",
+      "Giữ Quân Lệnh cho ô khó nhất, nơi các quân kề khác nghề khác hệ.",
+    ],
   },
   KHAI_LO: {
-    goal: "Giải đố trên bàn cờ quân nguyên tố. Chạm một quân để xóa cả khối cùng hệ, gom khối to để được nhiều điểm và mở đường xuyên bàn cờ.",
+    goal: "Giải đố trên bàn cờ quân nguyên tố. Chạm một quân để xóa cả khối cùng hệ liền nhau, gom khối to để được nhiều điểm và dọn sạch bàn cờ.",
     steps: [
       "Chọn Thường (không giới hạn thời gian, quân sót trừ tim) hoặc Cấp tốc (chạy đua với đồng hồ, quân sót trừ giây).",
-      "Chạm vào một quân có ít nhất 1 quân cùng hệ liền cạnh. Cả khối biến mất, quân phía trên rơi xuống.",
-      `Thường: hết khối thì hết màn. Quân còn sót trừ tim (ván bắt đầu với ${KL_START_HEARTS} tim); không đủ tim đỡ thì hết ván.`,
+      "Nhìn bàn cờ tìm khối: các quân cùng hệ đứng liền cạnh nhau. Rê chuột qua khối để xem số quân và điểm.",
+      "Chạm vào một quân có ít nhất 1 quân cùng hệ liền cạnh. Cả khối biến mất, quân phía trên rơi xuống, cột trống thì các cột bên phải dồn sang trái.",
+      "Dùng đạo cụ khi bí: bấm đạo cụ rồi chọn ô trên bàn.",
+      "Hết khối và hết đạo cụ thì hết màn. Quân còn sót bị trừ tim (Thường) hoặc trừ giây (Cấp tốc), rồi sang màn sau.",
+      `Thường: ván bắt đầu với ${KL_START_HEARTS} tim; không đủ tim đỡ số quân sót thì hết ván. Cấp tốc: hết giờ là hết ván.`,
     ],
     rules: [
-      `Bàn có ${KL_WIDTH} cột và ${KL_HEIGHT} hàng. Quân lẻ không xóa được; liền cạnh không tính đường chéo. Không có quân mới rơi vào, cột trống thì các cột bên phải dồn sang trái.`,
+      `Bàn có ${KL_WIDTH} cột và ${KL_HEIGHT} hàng. Quân lẻ không xóa được; liền cạnh không tính đường chéo. Không có quân mới rơi vào.`,
       `Mỗi màn chỉ ${KL_KINDS} hệ (đổi theo màn); màn càng sau quân càng vụn, ít khối lớn sẵn.`,
       `Thường: hết khối và hết đạo cụ thì hết màn, mỗi quân còn sót trừ 1 tim. Số quân sót nhiều hơn số tim còn lại là hết ván. Dọn sạch bàn được thêm ${KL_CLEAR_HEARTS} tim. Có thể bấm Kết thúc màn sớm (quân sót vẫn trừ tim).`,
       "Mỗi màn được hoàn tác một lần, chỉ lùi được nước vừa đi.",
       `Cấp tốc: ván bắt đầu với ${KL_TIMED_START_SECONDS} giây. Hết bàn thì sang màn mới ngay: dọn sạch được thêm ${KL_TIMED_CLEAR_SECONDS} giây, mỗi quân còn sót trừ ${KL_TIMED_LEFT_SECONDS} giây. Hết giờ là hết ván. Đồng hồ dừng khi bạn rời trang.`,
     ],
     rewards: [
-      "Khối n quân được n² điểm. Ô số (viền vàng, nhãn ×2 hoặc ×3, từ màn 2) nhân điểm cả khối chứa nó; khối có nhiều ô số thì nhân dồn, ví dụ ×2 và ×3 thành ×6.",
+      "Khối n quân được n² điểm: khối 2 quân được 4 điểm, khối 10 quân được 100 điểm. Ô số (viền vàng, nhãn ×2 hoặc ×3, từ màn 2) nhân điểm cả khối chứa nó; khối có nhiều ô số thì nhân dồn, ví dụ ×2 và ×3 thành ×6.",
       `Dọn sạch bàn: thưởng ${KL_CLEAR_BONUS_BASE} điểm cộng ${KL_CLEAR_BONUS_PER_LEVEL} điểm × số màn (cả hai chế độ). Thường: dọn sạch tự sang màn sau.`,
       "Chơi ngay trên máy bạn, không thưởng và không xếp hạng. Ván dở và điểm cao nhất mỗi chế độ lưu trên trình duyệt này.",
     ],
     tips: [
-      "Rê chuột qua khối để xem trước số quân và điểm. Trên điện thoại, chạm lần đầu để xem, chạm lần nữa để xóa.",
-      "Xóa khối nhỏ trước để các khối khác dồn lại thành khối lớn.",
+      "Trên điện thoại, chạm lần đầu để xem khối, chạm lần nữa để xóa.",
+      "Điểm tăng theo bình phương số quân, nên một khối 10 quân đáng hơn năm khối 2 quân. Xóa khối nhỏ của hệ khác trước để các quân cùng hệ dồn lại thành khối lớn.",
+      "Nhìn trước quân sẽ rơi: xóa khối ở dưới làm cả cột trên tụt xuống, có thể nối hoặc tách các khối.",
+      "Để dành hoàn tác cho nước lỡ tay làm vỡ một khối lớn.",
+      "Quân lẻ cuối màn thì dùng đạo cụ để xóa hoặc đổi hệ, đỡ mất tim.",
     ],
     items: {
       title: "Đạo cụ",
@@ -403,16 +495,19 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     },
   },
   DO_THAM: {
-    goal: "Dò bẫy trên sa bàn. Mở từng ô, suy ra chỗ giấu bẫy từ các con số rồi cắm cờ lau. Mọi bàn đều suy luận được từ đầu đến cuối, bạn không cần đoán.",
+    goal: "Dò bẫy trên sa bàn. Mở từng ô, suy ra chỗ giấu bẫy từ các con số rồi cắm cờ lau đánh dấu. Mọi bàn đều suy luận được từ đầu đến cuối, bạn không bao giờ phải đoán mò.",
     steps: [
       `Chọn bậc: Nhập môn ${DT_LEVELS.nhapMon.width}×${DT_LEVELS.nhapMon.height} với ${DT_LEVELS.nhapMon.mines} bẫy, Thường ${DT_LEVELS.thuong.width}×${DT_LEVELS.thuong.height} với ${DT_LEVELS.thuong.mines} bẫy, Khó ${DT_LEVELS.kho.width}×${DT_LEVELS.kho.height} với ${DT_LEVELS.kho.mines} bẫy.`,
-      `Chọn tối đa ${DT_ITEM_PICKS} đạo cụ nguyên tố mang theo, rồi mở một ô bất kỳ. Ô đầu và 8 ô quanh nó luôn an toàn.`,
-      "Đọc con số trên ô đã mở: đó là số bẫy ở 8 ô quanh nó. Suy ra ô nào có bẫy thì cắm cờ lau, ô nào an toàn thì mở.",
-      "Mở hết mọi ô an toàn là thắng.",
+      `Chọn tối đa ${DT_ITEM_PICKS} đạo cụ nguyên tố mang theo.`,
+      "Mở một ô bất kỳ. Ô đầu và 8 ô quanh nó luôn an toàn, nên nước đầu không bao giờ sa bẫy.",
+      "Đọc con số trên ô đã mở: đó là số bẫy ở 8 ô quanh nó (trên, dưới, trái, phải và bốn góc chéo).",
+      "Ô số 1 chỉ còn đúng một ô chưa mở quanh nó thì ô ấy chắc chắn có bẫy: cắm cờ lau. Ô số đã đủ cờ thì các ô chưa mở còn lại quanh nó đều an toàn: mở ra.",
+      "Lặp lại cho tới khi mở hết mọi ô an toàn. Thế là thắng.",
     ],
     rules: [
-      "Số 0 tự mở lan ra các ô kề.",
-      "Chuột phải hoặc chạm giữ để cắm cờ. Cờ chỉ là dấu ghi nhớ, không làm ván thắng hay thua. Bấm vào ô số đã đủ cờ thì mở nhanh các ô còn lại quanh nó; cắm sai cờ thì có thể sa bẫy.",
+      "Số 0 không có bẫy quanh, nên tự mở lan ra các ô kề.",
+      "Chuột phải hoặc chạm giữ để cắm cờ. Cờ chỉ là dấu ghi nhớ, không làm ván thắng hay thua.",
+      "Bấm vào ô số đã đủ cờ thì mở nhanh các ô còn lại quanh nó; cắm sai cờ thì có thể sa bẫy.",
       "Mở trúng bẫy là thua, trừ khi Khiên đất còn.",
     ],
     rewards: [
@@ -421,6 +516,8 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     tips: [
       "Bắt đầu từ góc nhỏ có số 1 nằm cạnh các ô đã biết: thường chỉ còn một ô để dò.",
       "Khi hai ô số chung nhau vài ô trống, so sánh số bẫy của chúng để tìm ô chắc chắn.",
+      "Mẫu hay gặp: dãy 1-2-1 dọc một bức tường thì bẫy nằm dưới hai số 1, ô dưới số 2 an toàn.",
+      "Chưa chắc thì đừng mở: bàn nào cũng có nước suy ra được, hãy tìm ở chỗ khác.",
       "Cất Gió mách cho lúc bí: nó luôn chỉ ra một ô suy ra được.",
     ],
     items: {
@@ -433,12 +530,14 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     },
   },
   SU_LO: {
-    goal: "Dẫn tướng qua mê cung lịch sử từ thời Ngô Quyền tới loạn sứ quân. Mỗi ô dừng chân là một câu hỏi sử, đáp đúng mới đứng vững, sai thì đọc sử chép rồi thử lại.",
+    goal: "Dẫn tướng qua mê cung lịch sử từ thời Ngô Quyền tới loạn sứ quân. Mỗi ô dừng chân là một câu hỏi sử, đáp đúng mới đứng vững, sai thì đọc sử chép rồi thử lại. Tới cổng, đánh bại quân giặc trấn giữ để thoát.",
     steps: [
       `Chọn mê cung, độ khó và hai tướng đi cùng. Dễ ${SL_LEVELS.de.cols}×${SL_LEVELS.de.rows} không sương, Thường ${SL_LEVELS.thuong.cols}×${SL_LEVELS.thuong.rows} có ${SL_LEVELS.thuong.questionSeconds} giây mỗi câu, Khó ${SL_LEVELS.kho.cols}×${SL_LEVELS.kho.rows} có ${SL_LEVELS.kho.questionSeconds} giây mỗi câu.`,
       "Đổ xúc xắc rồi chọn một ô viền vàng để tới (rê chuột vào ô để xem đường đi). Bạn được dừng sớm hơn số đã đổ.",
-      "Trả lời câu hỏi ở ô vừa tới. Đúng thì cắm cờ lau, ô đó đã thông.",
+      "Trả lời câu hỏi ở ô vừa tới. Đúng thì cắm cờ lau, ô đó đã thông và lượt sau đi tiếp từ đây.",
+      "Sai thì đọc đoạn sử chép giải thích đáp án, tướng quay về ô bắt đầu lượt, rồi đổ xúc xắc lại.",
       "Tới ô Trấn giữ cổng thì vào giao tranh: đổi ô ghép ba để hạ Thành lực. Hạ xong thì đi vào Cổng là thoát.",
+      "Cuối ván xem số sao và ôn lại các câu đã trả lời sai.",
     ],
     rules: [
       "Trả lời sai thì tướng quay về ô bắt đầu lượt đó. Số lượt không giới hạn, chỉ dùng để chấm sao.",
@@ -455,8 +554,10 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Thoát trong mốc lượt và sai không quá hai câu thì được ba sao.",
     ],
     tips: [
+      "Mới chơi thì chọn bậc Dễ: bàn nhỏ, không sương, không đếm giờ.",
       "Đọc kỹ phần sử chép sau mỗi câu: câu sai sẽ hiện lại ở phần ôn tập cuối ván.",
       "Khi đổ số lớn, cân nhắc dừng ở ô Lục gần cổng thay vì chạy vào ô Đỏ xa.",
+      "Chọn tướng đi cùng rành giai đoạn mê cung: Hỏi tướng sẽ loại thêm đáp án sai.",
       "Trong giao tranh, ghép sách để Quân sư hiến kế: đáp đúng thì Thành lực giảm mạnh.",
     ],
     items: {
@@ -474,47 +575,64 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
     },
   },
   TAM_TUONG_KY: {
-    goal: "Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng. Không đánh nhau. Công thức là biểu trưng của trò chơi, không phải diễn giải sử học.",
+    goal: "Ghép yếu tố từ bảy hệ để tìm lại chân dung danh tướng. Không đánh nhau: đây là trò dò công thức. Công thức là biểu trưng của trò chơi, không phải diễn giải sử học.",
     steps: [
-      "Chọn hai yếu tố đặt lên đài rồi ghép.",
-      "Thứ tự có nghĩa: Lôi rồi Mộc khác Mộc rồi Lôi, hai công thức cho hai kết quả.",
-      "Ghép ra tướng thì tướng ghi vào Tướng Lục của tài khoản.",
+      "Chọn thẻ Thường để dò công thức thoải mái, hoặc thẻ Hạng tuần để thi điểm với mọi người.",
+      "Bạn khởi đầu với bảy yếu tố gốc là bảy hệ: Kim, Mộc, Thủy, Hỏa, Thổ, Lôi, Phong.",
+      "Chọn hai yếu tố đặt lên đài theo thứ tự, rồi bấm ghép.",
+      "Ghép đúng thì ra yếu tố mới (vật liệu, tri thức) hoặc ra tướng. Yếu tố mới vào kho để ghép tiếp ở các bước sau.",
+      "Ghép ra tướng thì tướng ghi vào Tướng Lục của tài khoản. Ghép sai thì không ra gì, cặp ấy được đánh dấu để lần sau bạn khỏi đặt lại.",
     ],
     rules: [
-      "Chế độ Thường: mỗi lượt chơi tốn một phiếu, nguyên liệu không mất. Có gợi ý, nhưng gợi ý không lộ đủ công thức.",
-      "Chế độ Hạng tuần: mỗi lần ghép tiêu nguyên liệu, ghép sai cũng mất, không hoàn lại. Danh sách tướng đề cử đổi theo tuần.",
+      "Thứ tự có nghĩa: Lôi rồi Mộc khác Mộc rồi Lôi, hai công thức cho hai kết quả.",
+      "Mỗi tướng cần một chuỗi nhiều lần ghép: tướng thường 7 lần, tướng đặc biệt 9 lần, tướng lịch sử 12 lần. Tướng không làm nguyên liệu ghép tiếp.",
+      "Chế độ Thường: mỗi lượt chơi tốn một phiếu, được 15 lần ghép trong 24 giờ, nguyên liệu không mất. Mỗi ngày có 2 gợi ý; gợi ý chỉ lộ nhóm hoặc một nguyên liệu, không lộ đủ công thức.",
+      "Chế độ Hạng tuần: mỗi lần ghép tiêu nguyên liệu, ghép sai cũng mất, không hoàn lại. Mỗi tuần có 7 tướng đề cử, mỗi ô chỉ hiện lời dẫn và số điểm, tên và chân dung chỉ hiện khi ghép ra.",
       "Cần trình danh, lữ khách không chơi được.",
       "Tìm thấy chân dung chỉ ghi vào Tướng Lục, không thêm tướng vào đội.",
     ],
     rewards: [
       "Bậc Tầm Tướng Ký theo số tướng đã khám phá: Đồng 10, Bạc 20, Vàng 35, Bạch Kim 50, Kim Cương 65, Huyền Thoại 76. Lần đầu đạt mỗi bậc nhận vàng và một món trang bị ở thẻ Ban thưởng, mỗi bậc một lần.",
       "Mở đủ một bộ tướng thì nhận vàng và huy hiệu. Mở một tướng lẻ không có thành tựu.",
-      "Hạng tuần có bảng và thưởng theo hạng. Nguyên liệu thêm kiếm từ thưởng hạng các chế độ và mua ở Cửa Hàng, có giới hạn mỗi tuần.",
+      "Hạng tuần: tướng đề cử thường 100 điểm, đặc biệt 200, lịch sử 300, mỗi tướng tính một lần. Bằng điểm thì ai tiêu ít nguyên liệu hơn đứng trên. Bảng tuần có thưởng theo hạng.",
+      "Nguyên liệu thêm kiếm từ thưởng hạng các chế độ và mua ở Cửa Hàng, có giới hạn mỗi tuần. Phiếu cũng đến từ thưởng hạng các chế độ.",
     ],
-    tips: ["Phiếu kiếm từ thưởng các chế độ khác và phát ít, nên hãy đọc gợi ý trước khi ghép."],
+    tips: [
+      "Phiếu phát ít, nên hãy đọc gợi ý trước khi ghép và tận dụng đủ 15 lần ghép của một lượt.",
+      "Nghĩ theo nghĩa: hai hệ gặp nhau sinh ra gì (Hỏa gặp Thổ, Thủy gặp Mộc), rồi từ đó dẫn tới nghề và danh hiệu của tướng.",
+      "Dò công thức ở chế độ Thường trước, rồi mới vào Hạng tuần để khỏi phí nguyên liệu vì ghép sai.",
+    ],
   },
   EXPEDITION: {
-    goal: "Chia sáu tướng làm hai đạo quân, hành quân trên sa bàn để chiếm thành đích trước khi hết ngày. Quyết định chính là hôm nay đạo nào tiến, đạo nào nghỉ.",
+    goal: "Chia sáu tướng làm hai đạo quân, hành quân trên sa bàn để chiếm thành đích trước khi hết ngày. Quyết định chính mỗi ngày là đạo nào tiến, đạo nào nghỉ, và khi nào hai đạo cùng đánh.",
     steps: [
-      "Chọn sa bàn (Ải Bắc, Thượng Du, Cửa Biển, Ngã Ba Sông, Kinh Thành, Quần Đảo) và bậc.",
+      "Chọn sa bàn (Ải Bắc, Thượng Du, Cửa Biển, Ngã Ba Sông, Kinh Thành, Quần Đảo) và bậc. Mới chơi nên chọn bậc thấp nhất.",
       "Chia đội: Đinh Bộ Lĩnh cùng hai tướng là một đạo, ba tướng còn lại là đạo kia.",
-      "Mỗi ngày làm một việc: một đạo tiến sang ô kề (gặp giặc thì đánh trận), hoặc cả hai đóng quân.",
-      "Chiếm được thành đích là thắng.",
+      "Chạm cờ để chọn đạo quân. Ô kề đi được có viền màu của đạo ấy; chạm ô để xem rồi bấm tiến quân.",
+      "Mỗi ngày làm một việc: một đạo tiến sang ô kề, trinh sát, hoặc cả hai đóng quân. Đạo không đi thì nghỉ và hồi máu.",
+      "Tiến vào ô có giặc thì đánh trận 3 đấu 3 như trận thường. Thắng thì chiếm ô, thua thì đạo đó rút về ô cũ.",
+      "Đưa một đạo chiếm được thành đích là thắng.",
     ],
     rules: [
-      `Đạo không đi trong ngày thì nghỉ và hồi ${Math.round(EXPEDITION_REST_HEAL * 100)}% máu.`,
+      `Đạo không đi trong ngày thì nghỉ và hồi ${Math.round(EXPEDITION_REST_HEAL * 100)}% máu. Người gục cũng hồi máu khi đạo nghỉ.`,
       "Giặc mạnh thêm 5% mỗi ngày. Hết ngày mà chưa chiếm được thành là thua.",
       "Sa bàn có sương mù: bạn chỉ thấy ô đi được, chòi canh giúp nhìn xa. Đường vượt nước mất 2 ngày.",
       "Đạo kia đứng kề ô đang đánh thì hai đạo giáp công, giặc yếu đi.",
       "Thua trận thì đạo đó rút về ô cũ, cả ba gục, phải nghỉ để hồi. Không mất lượt viễn chinh. Mỗi ngày có 3 lượt xuất quân.",
-      "Chạm cờ để chọn đạo quân, chạm ô kề (viền màu đạo) để xem rồi tiến quân. Người gục cũng hồi máu khi đạo nghỉ.",
       "Ký hiệu đường: xanh đứt nét là vượt nước (2 ngày); xanh lá đứt nét là lội đầm (2 ngày); chấm xanh ≈ là cửa nước, chỉ qua lúc nước rút; đỏ ✕ là đường đã biết bị phá. Chấm đỏ trên đồn: đồn đánh dở, địch giữ thương vong.",
       `Trinh sát: đạo đang chọn đứng yên 1 ngày (không hồi sức), vén sương mọi ô trong ${EXPEDITION_SCOUT_SIGHT} bước và phát hiện đường bị phá quanh đó. Đường bị phá trông như đường thường; đi trúng thì mất ngày.`,
     ],
+    items: BATTLE_ITEMS,
     rewards: [
       "Thưởng trận như trận thường, lần đầu thắng mỗi bậc có thưởng lớn.",
       "Lữ khách chơi được, không có bảng công trạng.",
     ],
-    tips: [BATTLE_CONTROLS, "Đừng để một đạo đi quá xa: chờ đạo kia tới kề để giáp công thì trận nhẹ hơn nhiều."],
+    tips: [
+      BATTLE_CONTROLS,
+      "Đừng để một đạo đi quá xa: chờ đạo kia tới kề để giáp công thì trận nhẹ hơn nhiều.",
+      "Giặc mạnh lên theo ngày, nên đừng nghỉ quá lâu. Cho một đạo tiến trong khi đạo kia nghỉ hồi sức.",
+      "Trinh sát trước khi đi đường lạ để khỏi mất ngày vì đường bị phá.",
+      "Chia hai đạo cân sức: đạo nào cũng nên có người đánh mạnh và người hồi máu.",
+    ],
   },
 };
