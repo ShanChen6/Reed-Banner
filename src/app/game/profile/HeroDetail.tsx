@@ -50,6 +50,7 @@ import { nameOf } from "./roster";
 import Biography from "./Biography";
 import { SceneLink } from "../SceneContext";
 import { ItemIcon } from "../art/items";
+import { useAudio } from "../audio/AudioProvider";
 
 /** Ô trang bị hai bên tranh; vũ khí đứng giữa phía dưới. Đúng 9 ô như luật trang bị. */
 export const LEFT_SLOTS: readonly NonWeaponSlot[] = ["dinhMao", "yPhuc", "hoThu", "baoNgoa"];
@@ -353,10 +354,15 @@ function StatCard({ label, value, bonus }: { label: string; value: number | stri
  * tiêu quá số cuốn cần để tới cấp tối đa.
  */
 export function XpBooks({ profile, id, busy, onAction }: { profile: Profile; id: string; busy: boolean; onAction: (a: ProfileAction) => Promise<string | null> }) {
+  const { play: playSound } = useAudio();
   const have = profile.xpBooks ?? 0;
   const p = progressOf(profile, id);
   if (p.level >= MAX_LEVEL) return null;
   const toNext = Math.max(1, Math.ceil((totalXpFor(p.level + 1) - p.xp) / XP_BOOK_XP));
+  // Đủ sách để lên cấp kế và server nhận lệnh: `ui.levelup`.
+  const spendBooks = async (n: number) => {
+    if ((await onAction({ type: "useXpBook", character: id, amount: n })) === null && n >= toNext) playSound("ui.levelup");
+  };
   const packs = [...new Set([1, toNext, 10])].filter((n) => n <= Math.max(have, 1)).sort((a, b) => a - b);
   return (
     <div className="barracks-inset flex flex-wrap items-center gap-2 rounded-md px-2.5 py-2 text-sm">
@@ -370,7 +376,7 @@ export function XpBooks({ profile, id, busy, onAction }: { profile: Profile; id:
             key={n}
             type="button"
             disabled={busy || n > have}
-            onClick={() => void onAction({ type: "useXpBook", character: id, amount: n })}
+            onClick={() => void spendBooks(n)}
             className="barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-2.5 whitespace-nowrap disabled:opacity-45"
           >
             {n === toNext && n !== 1 ? `Dùng ${n} (lên cấp ${p.level + 1})` : `Dùng ${n}`}

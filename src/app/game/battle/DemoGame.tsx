@@ -320,6 +320,13 @@ export default function DemoGame({
   useEffect(() => {
     if (towerCue) playSound(towerCue);
   }, [towerCue, playSound]);
+  // Có tướng lên cấp sau trận (server trả `levelUps`): chiêng ngân `ui.levelup`, trễ một nhịp để không chồng tiếng thắng.
+  const leveledUp = (outcome?.levelUps.length ?? 0) > 0;
+  useEffect(() => {
+    if (!leveledUp) return;
+    const t = window.setTimeout(() => playSound("ui.levelup"), 900);
+    return () => window.clearTimeout(t);
+  }, [leveledUp, playSound]);
   /** Đang chạy hoạt ảnh thì chưa nhận thao tác mới. */
   const myTurn = playerTurn && anim === null && !pending && !pacing;
   const actor = state.sides[PLAYER].fighters[state.turn.actor]!;

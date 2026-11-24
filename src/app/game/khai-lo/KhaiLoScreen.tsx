@@ -41,6 +41,8 @@ import { ModeGuideTabs } from "../ModeGuide";
 import { PlayCard } from "../PlayCard";
 import { ColumnFill } from "../ColumnFill";
 import { KL_TOOL_HINT as TOOL_HINT, KL_TOOL_NAME as TOOL_NAME } from "./tools";
+import { useAudio } from "../audio/AudioProvider";
+import { cuesForEvents } from "./sounds";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -122,6 +124,7 @@ function ElementGem({ element, mult }: { element: Element; mult?: 2 | 3 }) {
 }
 
 export default function KhaiLoScreen() {
+  const { play: playSound } = useAudio();
   const [mode, setMode] = useState<KlMode>("classic");
   const [state, setState] = useState<KlState | null>(null);
   /** Ván đã hết mà người chơi đóng hộp kết quả để xem bàn; ván mới là đối tượng khác nên hộp tự mở lại. */
@@ -254,8 +257,9 @@ export default function KhaiLoScreen() {
       setGhosts(gone);
       setMessage(parts.join(" "));
       setArmed(null);
+      for (const c of cuesForEvents(events)) playSound(c.id, { rate: c.rate });
     },
-    [best, setClock],
+    [best, setClock, playSound],
   );
 
   const act = useCallback(

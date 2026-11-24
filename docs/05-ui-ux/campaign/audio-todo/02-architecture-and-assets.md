@@ -66,7 +66,7 @@ Việt cổ thế kỷ X, ấm và trầm: **sáo trúc, đàn bầu, đàn tran
 | `ui.open` / `ui.close` | Mở/đóng hộp thoại | Cuộn giấy dó, vút nhẹ | 0,3 s | P2 |
 | `ui.error` | Thao tác không hợp lệ | Gõ đục ngắn | 0,2 s | P1 |
 | `ui.reward` | Nhận thưởng vàng | Tiếng đồng xu đồng rơi, chuông nhỏ | 0,9 s | P1 |
-| `ui.levelup` | Lên cấp/mở khóa | Chiêng ngân + sáo lên | 1,5 s | P2 |
+| `ui.levelup` | Lên cấp: tướng lên cấp sau trận (trễ 0,9 s sau tiếng thắng), dùng đủ sách kinh nghiệm để lên cấp kế (nối 24/11/2026) | Chiêng ngân + sáo lên | 1,5 s | P2 |
 
 ### 5.2 Trận Đồ (`formation.*`)
 
@@ -176,6 +176,17 @@ Engine Do Thám không phát sự kiện nên `do-tham/sounds.ts` so trạng th�
 | `dotham.win` / `dotham.lose` | Thắng / thua ván | Đã có tệp riêng `do-tham/win` / `do-tham/lose` | P1 |
 
 Nhạc: `dotham` (một bài cho cả màn, tệp riêng `music/dotham`). Phân cảnh `DO_THAM` là `SELF` trong `sceneMusic.ts`.
+
+### 5.8 Khai Lộ (`khailo.*`, nối 24/11/2026)
+
+`khai-lo/sounds.ts` (`cuesForEvents`) chọn cue từ sự kiện engine; `KhaiLoScreen` phát ở `commit`. Bàn là `role="grid"` nên không có tiếng bấm chung.
+
+| Cue | Khi nào | Tệp | Ưu tiên |
+|---|---|---|---|
+| `khailo.remove` | Xóa khối hoặc đạo cụ phá dưới 8 quân; tốc độ phát tăng theo số quân (2 quân = 1, +0,02 mỗi quân, trần 1,25) | Tệp riêng `khailo/remove` (3 biến thể) | P1 |
+| `khailo.big` | Xóa khối hoặc đạo cụ phá từ 8 quân (`BIG_GROUP`), thay cho `khailo.remove` | Tệp riêng `khailo/big` (2 biến thể) | P1 |
+
+Chưa có: `khailo.fall`, `whirl`, `thunder`, `undo`, `reject`, `tick`, `leveldone`, `over` và nhạc `khai_lo` (màn im nhạc).
 
 ## 6. Kiểm tra
 

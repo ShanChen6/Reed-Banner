@@ -86,9 +86,11 @@ export const DOTHAM_CUES = ["dotham.open", "dotham.cascade", "dotham.flag", "dot
 
 export const MODE_CUES = ["atlas.select", "atlas.unlock", "arena.ghost", "dialogue.next", "survival.wave", "survival.warn", "daily.complete", "daily.checkin", "arena.rank", "tower.floor", "tower.firstclear", "destiny.choose", "destiny.fail"] as const;
 
-export const UI_CUES = ["ui.click", "ui.back", "ui.open", "ui.close", "ui.error", "ui.reward"] as const;
+export const UI_CUES = ["ui.click", "ui.back", "ui.open", "ui.close", "ui.error", "ui.reward", "ui.levelup"] as const;
 
-export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...SULO_CUES, ...DOTHAM_CUES, ...MODE_CUES] as const;
+export const KHAILO_CUES = ["khailo.remove", "khailo.big"] as const;
+
+export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...SULO_CUES, ...DOTHAM_CUES, ...MODE_CUES, ...KHAILO_CUES] as const;
 export type CueId = (typeof CUE_IDS)[number];
 
 export const MUSIC_IDS = ["formation_menu", "formation_play", "formation_result_win", "formation_result_lose", "battle_normal", "battle_boss", "survival", "atlas", "dialogue", "ending", "tower_trial", "tower_destiny", "arena", "pvp", "sulo_maze", "sulo_boss", "dotham", "prep", "daily", "expedition"] as const;

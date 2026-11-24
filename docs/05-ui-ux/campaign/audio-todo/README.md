@@ -31,7 +31,7 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 |---|---|
 | Tầm Tướng Ký (`TAM_TUONG_KY`) | Chưa gọi `useAudio`, `soundOfScene` trả im lặng |
 | Viễn Chinh (`EXPEDITION`) | Màn sa bàn phát `music/expedition` (23/11/2026); trận đánh mở ra qua `DemoGame` nên có tiếng trận |
-| Khai Lộ (`KHAI_LO`) | Chưa nối |
+| Khai Lộ (`KHAI_LO`) | `khailo.remove`, `khailo.big` có tệp và đã nối (24/11/2026); chưa có nhạc và các cue khác (xem mục 5.8) |
 | Nhật Lệnh (`DAILY`) | Màn chọn thử thách phát `music/daily`, điểm danh phát `daily.checkin` (23/11/2026); trong trận dùng `battle_normal`, `daily.complete` có tệp |
 
 ### Màn đã nối code nhưng còn thiếu tệp

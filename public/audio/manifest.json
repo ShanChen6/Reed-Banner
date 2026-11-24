@@ -44,6 +44,13 @@
       ],
       "volume": 0.75
     },
+    "ui.levelup": {
+      "files": [
+        "sfx/ui/levelup_a",
+        "sfx/ui/levelup_b"
+      ],
+      "volume": 0.8
+    },
     "formation.place": {
       "files": [
         "sfx/formation/place_a",
@@ -746,6 +753,21 @@
         "sfx/tower/firstclear_b"
       ],
       "volume": 0.85
+    },
+    "khailo.remove": {
+      "files": [
+        "sfx/khailo/remove_a",
+        "sfx/khailo/remove_b",
+        "sfx/khailo/remove_c"
+      ],
+      "volume": 0.7
+    },
+    "khailo.big": {
+      "files": [
+        "sfx/khailo/big_a",
+        "sfx/khailo/big_b"
+      ],
+      "volume": 0.8
     }
   },
   "music": {
