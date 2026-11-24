@@ -42,7 +42,7 @@ import { PlayCard } from "../PlayCard";
 import { ColumnFill } from "../ColumnFill";
 import { KL_TOOL_HINT as TOOL_HINT, KL_TOOL_NAME as TOOL_NAME } from "./tools";
 import { useAudio } from "../audio/AudioProvider";
-import { cuesForEvents, rejectCue } from "./sounds";
+import { cuesForEvents, rejectCue, tickDue } from "./sounds";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -294,6 +294,7 @@ export default function KhaiLoScreen() {
     let saved = from;
     const id = window.setInterval(() => {
       const left = Math.max(0, from - (nowMs() - start));
+      if (tickDue(msRef.current, left)) playSound("khailo.tick");
       setClock(left);
       if (Math.abs(saved - left) >= 1000) {
         saved = left;
@@ -309,7 +310,7 @@ export default function KhaiLoScreen() {
       window.clearInterval(id);
       writeClock(state, msRef.current);
     };
-  }, [running, state, commit, setClock]);
+  }, [running, state, commit, setClock, playSound]);
 
   const newGame = useCallback(() => {
     const s = createGame(freshSeed(), mode);

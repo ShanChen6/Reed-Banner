@@ -190,7 +190,12 @@ Nhạc: `dotham` (một bài cho cả màn, tệp riêng `music/dotham`). Phân 
 | `khailo.charged` | Thanh nạp đầy, +1 đạo cụ (`toolCharged`); trễ 300 ms sau tiếng xóa | Tệp riêng `khailo/charged` (24/11/2026) | P2 |
 | `khailo.heart` | Tim đổi khi hết màn Thường: được cộng (dọn sạch) phát như gốc, bị trừ phát chậm 0,85 cho trầm | Tệp riêng `khailo/heart` (24/11/2026) | P2 |
 
-Chưa có: `khailo.whirl`, `thunder`, `undo`, `tick`, `leveldone`, `over` và nhạc `khai_lo` (màn im nhạc).
+| `khailo.clear` | Hết màn mà dọn sạch bàn (Thường `levelDone`, Cấp tốc `levelPassed`) | Tệp riêng `khailo/clear` (1 biến thể, 24/11/2026) | P1 |
+| `khailo.leveldone` | Hết màn còn sót quân | Tệp riêng `khailo/leveldone` (24/11/2026) | P1 |
+| `khailo.over` | Hết ván (thiếu tim, hết giờ, đầu hàng); không kèm tiếng hết màn hay tim | Tệp riêng `khailo/over` (24/11/2026) | P1 |
+| `khailo.tick` | Cấp tốc: mỗi giây một tiếng trong 5 giây cuối (`tickDue`), chỉ khi đồng hồ đang chạy | Tệp riêng `khailo/tick` (24/11/2026) | P2 |
+
+`khailo.heart` vào sau tiếng hết màn 1,2 s (`HEART_DELAY_MS`). Chưa có: `khailo.whirl`, `thunder`, `undo` và nhạc `khai_lo` (màn im nhạc).
 
 ## 6. Kiểm tra
 

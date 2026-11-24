@@ -797,6 +797,33 @@
         "sfx/khailo/heart_b"
       ],
       "volume": 0.75
+    },
+    "khailo.clear": {
+      "files": [
+        "sfx/khailo/clear_a"
+      ],
+      "volume": 0.85
+    },
+    "khailo.leveldone": {
+      "files": [
+        "sfx/khailo/leveldone_a",
+        "sfx/khailo/leveldone_b"
+      ],
+      "volume": 0.8
+    },
+    "khailo.over": {
+      "files": [
+        "sfx/khailo/over_a",
+        "sfx/khailo/over_b"
+      ],
+      "volume": 0.8
+    },
+    "khailo.tick": {
+      "files": [
+        "sfx/khailo/tick_a",
+        "sfx/khailo/tick_b"
+      ],
+      "volume": 0.6
     }
   },
   "music": {
