@@ -14,7 +14,7 @@ describe("âm thanh theo phân cảnh", () => {
   });
 
   it("phân cảnh tự lo nhạc: Trận Đồ, trận đánh, Sử Lộ và Do Thám; bản đồ chiến dịch có nhạc và âm nền", () => {
-    for (const s of ["FORMATION", "PLAYING", "PRACTICE", "SU_LO", "DO_THAM"] as const) assert.equal(soundOfScene(s).music, SELF);
+    for (const s of ["FORMATION", "PLAYING", "PRACTICE", "SU_LO", "DO_THAM", "KHAI_LO"] as const) assert.equal(soundOfScene(s).music, SELF);
     assert.deepEqual(soundOfScene("CAMPAIGN"), { music: "atlas", ambience: "atlas" });
   });
 

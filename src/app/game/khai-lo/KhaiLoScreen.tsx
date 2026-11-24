@@ -124,8 +124,13 @@ function ElementGem({ element, mult }: { element: Element; mult?: 2 | 3 }) {
 }
 
 export default function KhaiLoScreen() {
-  const { play: playSound } = useAudio();
+  const { play: playSound, playMusic, stopMusic } = useAudio();
   const [mode, setMode] = useState<KlMode>("classic");
+  // Nhạc theo chế độ: Thường một bài thong thả, Cấp tốc một bài nhanh; rời màn thì tắt dần.
+  useEffect(() => {
+    playMusic(mode === "timed" ? "khai_lo_timed" : "khai_lo");
+  }, [mode, playMusic]);
+  useEffect(() => () => stopMusic(600), [stopMusic]);
   const [state, setState] = useState<KlState | null>(null);
   /** Ván đã hết mà người chơi đóng hộp kết quả để xem bàn; ván mới là đối tượng khác nên hộp tự mở lại. */
   const [dismissed, setDismissed] = useState<KlState | null>(null);

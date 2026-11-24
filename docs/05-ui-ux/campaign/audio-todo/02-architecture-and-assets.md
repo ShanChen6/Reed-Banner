@@ -195,7 +195,18 @@ Nhạc: `dotham` (một bài cho cả màn, tệp riêng `music/dotham`). Phân 
 | `khailo.over` | Hết ván (thiếu tim, hết giờ, đầu hàng); không kèm tiếng hết màn hay tim | Tệp riêng `khailo/over` (24/11/2026) | P1 |
 | `khailo.tick` | Cấp tốc: mỗi giây một tiếng trong 5 giây cuối (`tickDue`), chỉ khi đồng hồ đang chạy | Tệp riêng `khailo/tick` (24/11/2026) | P2 |
 
-`khailo.heart` vào sau tiếng hết màn 1,2 s (`HEART_DELAY_MS`). Chưa có: `khailo.whirl`, `thunder`, `undo` và nhạc `khai_lo` (màn im nhạc).
+`khailo.heart` vào sau tiếng hết màn 1,2 s (`HEART_DELAY_MS`). Nhạc (25/11/2026): `khai_lo` cho Thường, `khai_lo_timed` cho Cấp tốc, đổi theo chế độ đang chọn; phân cảnh `KHAI_LO` là `SELF`. Chưa có: `khailo.whirl`, `thunder`, `undo`.
+
+### 5.9 Tam Quân Kỳ (`tqk.*`, nối 25/11/2026)
+
+Sa bàn là `role="application"` nên không có tiếng bấm chung.
+
+| Cue | Khi nào | Tệp | Ưu tiên |
+|---|---|---|---|
+| `tqk.select` | Chọn một quân của phe đang đi (đấu máy, hai người, đấu người, có thưởng) | Tệp riêng `tqk/select` (2 biến thể) | P1 |
+| `tqk.move` | Mỗi nước đi được ghi, của mình hay đối thủ/máy; ván qua server phát khi server ghi thêm nước (lần nạp ván đầu im) | Tệp riêng `tqk/move` (3 biến thể) | P1 |
+
+Chưa có nhạc riêng cho Tam Quân Kỳ.
 
 ## 6. Kiểm tra
 

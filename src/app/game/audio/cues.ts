@@ -90,10 +90,12 @@ export const UI_CUES = ["ui.click", "ui.back", "ui.open", "ui.close", "ui.error"
 
 export const KHAILO_CUES = ["khailo.remove", "khailo.big", "khailo.fall", "khailo.reject", "khailo.charged", "khailo.heart", "khailo.clear", "khailo.leveldone", "khailo.over", "khailo.tick"] as const;
 
-export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...SULO_CUES, ...DOTHAM_CUES, ...MODE_CUES, ...KHAILO_CUES] as const;
+export const TQK_CUES = ["tqk.select", "tqk.move"] as const;
+
+export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...SULO_CUES, ...DOTHAM_CUES, ...MODE_CUES, ...KHAILO_CUES, ...TQK_CUES] as const;
 export type CueId = (typeof CUE_IDS)[number];
 
-export const MUSIC_IDS = ["formation_menu", "formation_play", "formation_result_win", "formation_result_lose", "battle_normal", "battle_boss", "survival", "atlas", "dialogue", "ending", "tower_trial", "tower_destiny", "arena", "pvp", "sulo_maze", "sulo_boss", "dotham", "prep", "daily", "expedition"] as const;
+export const MUSIC_IDS = ["formation_menu", "formation_play", "formation_result_win", "formation_result_lose", "battle_normal", "battle_boss", "survival", "atlas", "dialogue", "ending", "tower_trial", "tower_destiny", "arena", "pvp", "sulo_maze", "sulo_boss", "dotham", "prep", "daily", "expedition", "khai_lo", "khai_lo_timed"] as const;
 export const AMBIENCE_IDS = ["atlas"] as const;
 export type AmbienceId = (typeof AMBIENCE_IDS)[number];
 export type MusicId = (typeof MUSIC_IDS)[number];

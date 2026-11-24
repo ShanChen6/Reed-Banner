@@ -824,6 +824,21 @@
         "sfx/khailo/tick_b"
       ],
       "volume": 0.6
+    },
+    "tqk.select": {
+      "files": [
+        "sfx/tqk/select_a",
+        "sfx/tqk/select_b"
+      ],
+      "volume": 0.6
+    },
+    "tqk.move": {
+      "files": [
+        "sfx/tqk/move_a",
+        "sfx/tqk/move_b",
+        "sfx/tqk/move_c"
+      ],
+      "volume": 0.75
     }
   },
   "music": {
@@ -904,6 +919,14 @@
     },
     "expedition": {
       "file": "music/expedition",
+      "volume": 0.5
+    },
+    "khai_lo": {
+      "file": "music/khai_lo",
+      "volume": 0.5
+    },
+    "khai_lo_timed": {
+      "file": "music/khai_lo_timed",
       "volume": 0.5
     },
     "ending": {
