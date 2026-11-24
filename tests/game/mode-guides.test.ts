@@ -24,7 +24,11 @@ describe("Thẻ Hướng dẫn của các chế độ", () => {
   });
 
   it("chế độ có đạo cụ thì Hướng dẫn có mục đạo cụ kèm icon, tên không trùng", () => {
-    const withItems = { KHAI_LO: 7, DO_THAM: 7, SU_LO: 4, FORMATION: 2 } as const;
+    const withItems = {
+      KHAI_LO: 7, DO_THAM: 7, SU_LO: 4, FORMATION: 2,
+      // Bảy loại ô của bàn cờ trận đấu, cho mọi chế độ đánh trận.
+      CAMPAIGN: 7, TRIAL: 7, DESTINY: 7, SURVIVAL: 7, DAILY: 7, ARENA: 7, EXPEDITION: 7,
+    } as const;
     for (const [scene, count] of Object.entries(withItems)) {
       const items = MODE_GUIDES[scene as keyof typeof withItems].items;
       assert.ok(items, `${scene}: thiếu mục đạo cụ`);
