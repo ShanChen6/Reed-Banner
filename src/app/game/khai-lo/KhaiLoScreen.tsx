@@ -42,7 +42,7 @@ import { PlayCard } from "../PlayCard";
 import { ColumnFill } from "../ColumnFill";
 import { KL_TOOL_HINT as TOOL_HINT, KL_TOOL_NAME as TOOL_NAME } from "./tools";
 import { useAudio } from "../audio/AudioProvider";
-import { cuesForEvents } from "./sounds";
+import { cuesForEvents, rejectCue } from "./sounds";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -257,7 +257,10 @@ export default function KhaiLoScreen() {
       setGhosts(gone);
       setMessage(parts.join(" "));
       setArmed(null);
-      for (const c of cuesForEvents(events)) playSound(c.id, { rate: c.rate });
+      for (const c of cuesForEvents(events)) {
+        if (c.delayMs) window.setTimeout(() => playSound(c.id, { rate: c.rate }), c.delayMs);
+        else playSound(c.id, { rate: c.rate });
+      }
     },
     [best, setClock, playSound],
   );
@@ -269,13 +272,15 @@ export default function KhaiLoScreen() {
       setConfirmEnd(false);
       if (!r.ok) {
         setMessage(REASON_TEXT[r.reason]);
+        const cue = rejectCue(r.reason);
+        if (cue) playSound(cue);
         return;
       }
       if (action.type === "surrender") setGaveUp(true);
       if (action.type === "tool") setTool(null);
       commit(r.state, r.events, state);
     },
-    [state, commit, setConfirmEnd],
+    [state, commit, setConfirmEnd, playSound],
   );
 
   const active = state !== null && (state.phase === "playing" || state.phase === "stuck");

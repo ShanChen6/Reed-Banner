@@ -185,8 +185,12 @@ Nhạc: `dotham` (một bài cho cả màn, tệp riêng `music/dotham`). Phân 
 |---|---|---|---|
 | `khailo.remove` | Xóa khối hoặc đạo cụ phá dưới 8 quân; tốc độ phát tăng theo số quân (2 quân = 1, +0,02 mỗi quân, trần 1,25) | Tệp riêng `khailo/remove` (3 biến thể) | P1 |
 | `khailo.big` | Xóa khối hoặc đạo cụ phá từ 8 quân (`BIG_GROUP`), thay cho `khailo.remove` | Tệp riêng `khailo/big` (2 biến thể) | P1 |
+| `khailo.fall` | Quân rơi, cột dồn sau mỗi lần xóa; trễ 150 ms (`FALL_DELAY_MS`, giữa hoạt ảnh rơi 0,24 s) | Tệp riêng `khailo/fall` (3 biến thể, 24/11/2026) | P1 |
+| `khailo.reject` | Lệnh bị từ chối (khối 1 quân, ô trống, hết đạo cụ...); `notPlaying`, `outOfBounds` im | Tệp riêng `khailo/reject` (24/11/2026) | P1 |
+| `khailo.charged` | Thanh nạp đầy, +1 đạo cụ (`toolCharged`); trễ 300 ms sau tiếng xóa | Tệp riêng `khailo/charged` (24/11/2026) | P2 |
+| `khailo.heart` | Tim đổi khi hết màn Thường: được cộng (dọn sạch) phát như gốc, bị trừ phát chậm 0,85 cho trầm | Tệp riêng `khailo/heart` (24/11/2026) | P2 |
 
-Chưa có: `khailo.fall`, `whirl`, `thunder`, `undo`, `reject`, `tick`, `leveldone`, `over` và nhạc `khai_lo` (màn im nhạc).
+Chưa có: `khailo.whirl`, `thunder`, `undo`, `tick`, `leveldone`, `over` và nhạc `khai_lo` (màn im nhạc).
 
 ## 6. Kiểm tra
 

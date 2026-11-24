@@ -768,6 +768,35 @@
         "sfx/khailo/big_b"
       ],
       "volume": 0.8
+    },
+    "khailo.fall": {
+      "files": [
+        "sfx/khailo/fall_a",
+        "sfx/khailo/fall_b",
+        "sfx/khailo/fall_c"
+      ],
+      "volume": 0.45
+    },
+    "khailo.reject": {
+      "files": [
+        "sfx/khailo/reject_a",
+        "sfx/khailo/reject_b"
+      ],
+      "volume": 0.6
+    },
+    "khailo.charged": {
+      "files": [
+        "sfx/khailo/charged_a",
+        "sfx/khailo/charged_b"
+      ],
+      "volume": 0.75
+    },
+    "khailo.heart": {
+      "files": [
+        "sfx/khailo/heart_a",
+        "sfx/khailo/heart_b"
+      ],
+      "volume": 0.75
     }
   },
   "music": {

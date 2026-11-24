@@ -88,7 +88,7 @@ export const MODE_CUES = ["atlas.select", "atlas.unlock", "arena.ghost", "dialog
 
 export const UI_CUES = ["ui.click", "ui.back", "ui.open", "ui.close", "ui.error", "ui.reward", "ui.levelup"] as const;
 
-export const KHAILO_CUES = ["khailo.remove", "khailo.big"] as const;
+export const KHAILO_CUES = ["khailo.remove", "khailo.big", "khailo.fall", "khailo.reject", "khailo.charged", "khailo.heart"] as const;
 
 export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...SULO_CUES, ...DOTHAM_CUES, ...MODE_CUES, ...KHAILO_CUES] as const;
 export type CueId = (typeof CUE_IDS)[number];
