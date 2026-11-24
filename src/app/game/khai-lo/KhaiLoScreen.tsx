@@ -41,6 +41,8 @@ import { ModeGuideTabs } from "../ModeGuide";
 import { PlayCard } from "../PlayCard";
 import { ColumnFill } from "../ColumnFill";
 import { KL_TOOL_HINT as TOOL_HINT, KL_TOOL_NAME as TOOL_NAME } from "./tools";
+import { useAudio } from "../audio/AudioProvider";
+import { cuesForEvents, rejectCue, tickDue } from "./sounds";
 
 /** Khóa lưu theo chế độ; khóa của Thường giữ như bản đầu để không mất ván dở cũ. */
 const KEYS: Record<KlMode, { save: string; best: string; clock?: string }> = {
@@ -122,7 +124,13 @@ function ElementGem({ element, mult }: { element: Element; mult?: 2 | 3 }) {
 }
 
 export default function KhaiLoScreen() {
+  const { play: playSound, playMusic, stopMusic } = useAudio();
   const [mode, setMode] = useState<KlMode>("classic");
+  // Nhạc theo chế độ: Thường một bài thong thả, Cấp tốc một bài nhanh; rời màn thì tắt dần.
+  useEffect(() => {
+    playMusic(mode === "timed" ? "khai_lo_timed" : "khai_lo");
+  }, [mode, playMusic]);
+  useEffect(() => () => stopMusic(600), [stopMusic]);
   const [state, setState] = useState<KlState | null>(null);
   /** Ván đã hết mà người chơi đóng hộp kết quả để xem bàn; ván mới là đối tượng khác nên hộp tự mở lại. */
   const [dismissed, setDismissed] = useState<KlState | null>(null);
@@ -254,8 +262,12 @@ export default function KhaiLoScreen() {
       setGhosts(gone);
       setMessage(parts.join(" "));
       setArmed(null);
+      for (const c of cuesForEvents(events)) {
+        if (c.delayMs) window.setTimeout(() => playSound(c.id, { rate: c.rate }), c.delayMs);
+        else playSound(c.id, { rate: c.rate });
+      }
     },
-    [best, setClock],
+    [best, setClock, playSound],
   );
 
   const act = useCallback(
@@ -265,13 +277,15 @@ export default function KhaiLoScreen() {
       setConfirmEnd(false);
       if (!r.ok) {
         setMessage(REASON_TEXT[r.reason]);
+        const cue = rejectCue(r.reason);
+        if (cue) playSound(cue);
         return;
       }
       if (action.type === "surrender") setGaveUp(true);
       if (action.type === "tool") setTool(null);
       commit(r.state, r.events, state);
     },
-    [state, commit, setConfirmEnd],
+    [state, commit, setConfirmEnd, playSound],
   );
 
   const active = state !== null && (state.phase === "playing" || state.phase === "stuck");
@@ -285,6 +299,7 @@ export default function KhaiLoScreen() {
     let saved = from;
     const id = window.setInterval(() => {
       const left = Math.max(0, from - (nowMs() - start));
+      if (tickDue(msRef.current, left)) playSound("khailo.tick");
       setClock(left);
       if (Math.abs(saved - left) >= 1000) {
         saved = left;
@@ -300,7 +315,7 @@ export default function KhaiLoScreen() {
       window.clearInterval(id);
       writeClock(state, msRef.current);
     };
-  }, [running, state, commit, setClock]);
+  }, [running, state, commit, setClock, playSound]);
 
   const newGame = useCallback(() => {
     const s = createGame(freshSeed(), mode);

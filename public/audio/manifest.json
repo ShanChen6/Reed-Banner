@@ -44,6 +44,13 @@
       ],
       "volume": 0.75
     },
+    "ui.levelup": {
+      "files": [
+        "sfx/ui/levelup_a",
+        "sfx/ui/levelup_b"
+      ],
+      "volume": 0.8
+    },
     "formation.place": {
       "files": [
         "sfx/formation/place_a",
@@ -746,6 +753,92 @@
         "sfx/tower/firstclear_b"
       ],
       "volume": 0.85
+    },
+    "khailo.remove": {
+      "files": [
+        "sfx/khailo/remove_a",
+        "sfx/khailo/remove_b",
+        "sfx/khailo/remove_c"
+      ],
+      "volume": 0.7
+    },
+    "khailo.big": {
+      "files": [
+        "sfx/khailo/big_a",
+        "sfx/khailo/big_b"
+      ],
+      "volume": 0.8
+    },
+    "khailo.fall": {
+      "files": [
+        "sfx/khailo/fall_a",
+        "sfx/khailo/fall_b",
+        "sfx/khailo/fall_c"
+      ],
+      "volume": 0.45
+    },
+    "khailo.reject": {
+      "files": [
+        "sfx/khailo/reject_a",
+        "sfx/khailo/reject_b"
+      ],
+      "volume": 0.6
+    },
+    "khailo.charged": {
+      "files": [
+        "sfx/khailo/charged_a",
+        "sfx/khailo/charged_b"
+      ],
+      "volume": 0.75
+    },
+    "khailo.heart": {
+      "files": [
+        "sfx/khailo/heart_a",
+        "sfx/khailo/heart_b"
+      ],
+      "volume": 0.75
+    },
+    "khailo.clear": {
+      "files": [
+        "sfx/khailo/clear_a"
+      ],
+      "volume": 0.85
+    },
+    "khailo.leveldone": {
+      "files": [
+        "sfx/khailo/leveldone_a",
+        "sfx/khailo/leveldone_b"
+      ],
+      "volume": 0.8
+    },
+    "khailo.over": {
+      "files": [
+        "sfx/khailo/over_a",
+        "sfx/khailo/over_b"
+      ],
+      "volume": 0.8
+    },
+    "khailo.tick": {
+      "files": [
+        "sfx/khailo/tick_a",
+        "sfx/khailo/tick_b"
+      ],
+      "volume": 0.6
+    },
+    "tqk.select": {
+      "files": [
+        "sfx/tqk/select_a",
+        "sfx/tqk/select_b"
+      ],
+      "volume": 0.6
+    },
+    "tqk.move": {
+      "files": [
+        "sfx/tqk/move_a",
+        "sfx/tqk/move_b",
+        "sfx/tqk/move_c"
+      ],
+      "volume": 0.75
     }
   },
   "music": {
@@ -826,6 +919,14 @@
     },
     "expedition": {
       "file": "music/expedition",
+      "volume": 0.5
+    },
+    "khai_lo": {
+      "file": "music/khai_lo",
+      "volume": 0.5
+    },
+    "khai_lo_timed": {
+      "file": "music/khai_lo_timed",
       "volume": 0.5
     },
     "ending": {

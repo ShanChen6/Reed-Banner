@@ -13,6 +13,7 @@ import { lineAfterMove, type LineKind } from "./lines";
 import { KIND_NAME } from "./pieces";
 import { BOARD_ASPECT, BO_LINH, Board, LEVEL_NAME, LEVELS, MoveList, Options, RivalPicker, SelectedPanel, Speech, TqkSide, formatClock, pieceLabel, positionsFor, rivalById, type BoardMap } from "./parts";
 import { SERVER_ERROR, useServerMatch, type ServerKind } from "./useServerMatch";
+import { useAudio } from "../audio/AudioProvider";
 
 /** Vàng thắng sứ quân theo độ khó và số ván có vàng mỗi ngày; khớp TQK_GOLD, TQK_REWARDS_PER_DAY ở src/server/tamQuanKy.ts. */
 const GOLD: Record<Level, number> = { easy: 20, medium: 40, hard: 80 };
@@ -34,6 +35,7 @@ interface Props {
 
 export function ServerPlay({ kind, modePicker, mapPicker, map, rivalId, onRival, phone, onMoves }: Props) {
   const s = useServerMatch();
+  const { play: playSound } = useAudio();
   const view = s.view;
   const [human, setHuman] = useState<Color>(RED);
   const [level, setLevel] = useState<Level>("medium");
@@ -71,6 +73,13 @@ export function ServerPlay({ kind, modePicker, mapPicker, map, rivalId, onRival,
   const canMove = !!view && s.myTurn && !pending && !s.busy && !result;
 
   useEffect(() => onMoves(moves.length), [moves.length, onMoves]);
+  // Server ghi thêm nước (của mình hay đối thủ): tiếng đặt quân. Lần đầu nạp ván chỉ ghi nhớ số nước.
+  const heardMoves = useRef<number | null>(null);
+  useEffect(() => {
+    if (!view) return;
+    if (heardMoves.current !== null && moves.length > heardMoves.current) playSound("tqk.move");
+    heardMoves.current = moves.length;
+  }, [view, moves.length, playSound]);
 
   // Xoay sa bàn về phía mình khi vào ván.
   const viewId = view?.id ?? null;
@@ -126,6 +135,7 @@ export function ServerPlay({ kind, modePicker, mapPicker, map, rivalId, onRival,
       if (options.length > 1) return setChoice(options);
     }
     if (stack && stack.carrier.color === shown.toMove && sq !== selected) {
+      playSound("tqk.select");
       setSelected(sq);
       setUnit(stack.carrier.type === "h" && stack.riders.length ? 0 : "stack");
       return;

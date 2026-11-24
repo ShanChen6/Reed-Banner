@@ -40,6 +40,7 @@ import {
 } from "./parts";
 import { ServerPlay } from "./ServerPlay";
 import { useTqkEngine } from "./useEngine";
+import { useAudio } from "../audio/AudioProvider";
 import { savedServerKind, type ServerKind } from "./useServerMatch";
 
 const SAVE_KEY = "reed-banner:tam-quan-ky:save:v1";
@@ -74,6 +75,7 @@ function readSaved(): Saved | null {
 }
 
 export default function TamQuanKyScreen() {
+  const { play: playSound } = useAudio();
   const [mode, setMode] = useState<Mode>("ai");
   const [human, setHuman] = useState<Color>(RED);
   const [level, setLevel] = useState<Level>("medium");
@@ -183,6 +185,7 @@ export default function TamQuanKyScreen() {
   const commit = useCallback(
     (move: Move, from: Position) => {
       const next = play(from, move);
+      playSound("tqk.move");
       setMoves((list) => [...list, move]);
       setBegun(true);
       setSelected(null);
@@ -193,7 +196,7 @@ export default function TamQuanKyScreen() {
       const line = lineAfterMove(from, next) ?? (from.moveNumber === 1 ? "start" : null);
       if (line) setSpeech(line);
     },
-    [playerName, setSpeech],
+    [playerName, setSpeech, playSound],
   );
 
   // ---- lượt máy ----
@@ -229,6 +232,7 @@ export default function TamQuanKyScreen() {
       if (options.length > 1) return setChoice(options);
     }
     if (stack && stack.carrier.color === position.toMove && s !== selected) {
+      playSound("tqk.select");
       setSelected(s);
       setUnit(stack.carrier.type === "h" && stack.riders.length ? 0 : "stack");
       return;
