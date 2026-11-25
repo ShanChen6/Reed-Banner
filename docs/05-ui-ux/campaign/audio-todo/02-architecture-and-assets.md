@@ -204,7 +204,13 @@ Sa bàn là `role="application"` nên không có tiếng bấm chung.
 | Cue | Khi nào | Tệp | Ưu tiên |
 |---|---|---|---|
 | `tqk.select` | Chọn một quân của phe đang đi (đấu máy, hai người, đấu người, có thưởng) | Tệp riêng `tqk/select` (2 biến thể) | P1 |
-| `tqk.move` | Mỗi nước đi được ghi, của mình hay đối thủ/máy; ván qua server phát khi server ghi thêm nước (lần nạp ván đầu im) | Tệp riêng `tqk/move` (3 biến thể) | P1 |
+| `tqk.move` | Mỗi nước đi được ghi, của mình hay đối thủ/máy, khi không thuộc các dòng dưới; ván qua server phát khi server ghi thêm nước (lần nạp ván đầu im) | Tệp riêng `tqk/move` (3 biến thể) | P1 |
+| `tqk.capture` | Nước ăn quân: đánh chiếm, bắn, Thiên mã lao vào vùng phòng không (ưu tiên cao nhất) | Tệp riêng `tqk/capture` (3 biến thể, 25/11/2026) | P1 |
+| `tqk.carry` | Lên chung với quân khác, hoặc đi cả chồng đang chở quân | Tệp riêng `tqk/carry` (3 biến thể, 25/11/2026) | P2 |
+| `tqk.boat` | Chiến thuyền đi (kể cả khi chở quân) | Tệp riêng `tqk/boat` (2 biến thể, 25/11/2026) | P2 |
+| `tqk.fly` | Thiên mã bay | Tệp riêng `tqk/fly` (2 biến thể, 25/11/2026) | P2 |
+
+Thứ tự chọn ở `tam-quan-ky/sounds.ts` (`moveCue`): ăn quân → lên chung → Chiến thuyền → Thiên mã → chồng chở quân → thường.
 
 Chưa có nhạc riêng cho Tam Quân Kỳ.
 

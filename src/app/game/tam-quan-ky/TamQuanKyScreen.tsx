@@ -41,6 +41,7 @@ import {
 import { ServerPlay } from "./ServerPlay";
 import { useTqkEngine } from "./useEngine";
 import { useAudio } from "../audio/AudioProvider";
+import { moveCue } from "./sounds";
 import { savedServerKind, type ServerKind } from "./useServerMatch";
 
 const SAVE_KEY = "reed-banner:tam-quan-ky:save:v1";
@@ -185,7 +186,7 @@ export default function TamQuanKyScreen() {
   const commit = useCallback(
     (move: Move, from: Position) => {
       const next = play(from, move);
-      playSound("tqk.move");
+      playSound(moveCue(from, move));
       setMoves((list) => [...list, move]);
       setBegun(true);
       setSelected(null);
