@@ -210,7 +210,12 @@ Sa bàn là `role="application"` nên không có tiếng bấm chung.
 | `tqk.boat` | Chiến thuyền đi (kể cả khi chở quân) | Tệp riêng `tqk/boat` (2 biến thể, 25/11/2026) | P2 |
 | `tqk.fly` | Thiên mã bay | Tệp riêng `tqk/fly` (2 biến thể, 25/11/2026) | P2 |
 
-Thứ tự chọn ở `tam-quan-ky/sounds.ts` (`moveCue`): ăn quân → lên chung → Chiến thuyền → Thiên mã → chồng chở quân → thường.
+| `tqk.check` | Sau nước đi, một bên bị chiếu tướng: mình chiếu đối thủ, hoặc hai người chơi chung máy | Tệp riêng `tqk/check` (25/11/2026) | P1 |
+| `tqk.checked` | Bên mình (người chơi trên máy này) bị chiếu tướng | Tệp riêng `tqk/checked` (25/11/2026) | P1 |
+| `tqk.hero` | Phe nào có thêm quân anh hùng sau nước đi (quân dọa Chủ tướng địch, hoặc quân chiến đấu cuối cùng) | Tệp riêng `tqk/hero` (25/11/2026) | P2 |
+| `tqk.illegal` | Đang cầm quân mà bấm ô quân đó không tới được (bấm lại chính quân đó là bỏ chọn, im) | Tệp riêng `tqk/illegal` (25/11/2026) | P1 |
+
+Thứ tự chọn tiếng đi quân ở `tam-quan-ky/sounds.ts` (`moveCue`): ăn quân → lên chung → Chiến thuyền → Thiên mã → chồng chở quân → thường. `moveSounds` nối thêm tiếng chiếu và tiếng anh hùng (ván đã ngã ngũ thì không báo chiếu), `playInTurn` phát cách nhau 280 ms.
 
 Chưa có nhạc riêng cho Tam Quân Kỳ.
 

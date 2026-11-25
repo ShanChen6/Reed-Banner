@@ -14,7 +14,7 @@ import { KIND_NAME } from "./pieces";
 import { BOARD_ASPECT, BO_LINH, Board, LEVEL_NAME, LEVELS, MoveList, Options, RivalPicker, SelectedPanel, Speech, TqkSide, formatClock, pieceLabel, positionsFor, rivalById, type BoardMap } from "./parts";
 import { SERVER_ERROR, useServerMatch, type ServerKind } from "./useServerMatch";
 import { useAudio } from "../audio/AudioProvider";
-import { moveCue } from "./sounds";
+import { moveSounds, playInTurn } from "./sounds";
 
 /** Vàng thắng sứ quân theo độ khó và số ván có vàng mỗi ngày; khớp TQK_GOLD, TQK_REWARDS_PER_DAY ở src/server/tamQuanKy.ts. */
 const GOLD: Record<Level, number> = { easy: 20, medium: 40, hard: 80 };
@@ -74,17 +74,19 @@ export function ServerPlay({ kind, modePicker, mapPicker, map, rivalId, onRival,
   const canMove = !!view && s.myTurn && !pending && !s.busy && !result;
 
   useEffect(() => onMoves(moves.length), [moves.length, onMoves]);
-  // Server ghi thêm nước (của mình hay đối thủ): tiếng theo nước cuối (moveCue). Lần đầu nạp ván chỉ ghi nhớ số nước.
+  // Server ghi thêm nước (của mình hay đối thủ): các tiếng của nước cuối (moveSounds). Lần đầu nạp ván chỉ ghi nhớ số nước.
   const heardMoves = useRef<number | null>(null);
   useEffect(() => {
     if (!view) return;
     if (heardMoves.current !== null && moves.length > heardMoves.current) {
       const n = moves.length;
       const before = positions[n - 1];
-      playSound(before ? moveCue(before, moves[n - 1]!) : "tqk.move");
+      const after = positions[n];
+      if (before && after) playInTurn(moveSounds(before, result ? { ...after, result } : after, moves[n - 1]!, you), playSound);
+      else playSound("tqk.move");
     }
     heardMoves.current = moves.length;
-  }, [view, moves, positions, playSound]);
+  }, [view, moves, positions, result, you, playSound]);
 
   // Xoay sa bàn về phía mình khi vào ván.
   const viewId = view?.id ?? null;
@@ -145,6 +147,7 @@ export function ServerPlay({ kind, modePicker, mapPicker, map, rivalId, onRival,
       setUnit(stack.carrier.type === "h" && stack.riders.length ? 0 : "stack");
       return;
     }
+    if (selected !== null && sq !== selected) playSound("tqk.illegal");
     clearSelection();
   };
 

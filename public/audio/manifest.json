@@ -869,6 +869,34 @@
         "sfx/tqk/fly_b"
       ],
       "volume": 0.6
+    },
+    "tqk.check": {
+      "files": [
+        "sfx/tqk/check_a",
+        "sfx/tqk/check_b"
+      ],
+      "volume": 0.8
+    },
+    "tqk.checked": {
+      "files": [
+        "sfx/tqk/checked_a",
+        "sfx/tqk/checked_b"
+      ],
+      "volume": 0.8
+    },
+    "tqk.hero": {
+      "files": [
+        "sfx/tqk/hero_a",
+        "sfx/tqk/hero_b"
+      ],
+      "volume": 0.75
+    },
+    "tqk.illegal": {
+      "files": [
+        "sfx/tqk/illegal_a",
+        "sfx/tqk/illegal_b"
+      ],
+      "volume": 0.6
     }
   },
   "music": {

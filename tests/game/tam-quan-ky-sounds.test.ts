@@ -1,9 +1,9 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { BLUE, RED, newGame, type Move, type Piece, type Position, type Stack } from "../../src/core/tam-quan-ky";
+import { BLUE, RED, newGame, play, type Move, type Piece, type Position, type Stack } from "../../src/core/tam-quan-ky";
 import { CUE_IDS, TQK_CUES } from "../../src/app/game/audio/cues";
-import { moveCue } from "../../src/app/game/tam-quan-ky/sounds";
+import { moveCue, moveSounds } from "../../src/app/game/tam-quan-ky/sounds";
 
 const piece = (type: Piece["type"]): Piece => ({ type, color: RED, hero: false });
 /** Thế chỉ có một chồng ở ô 0, đủ để moveCue đọc quân đi. */
@@ -37,5 +37,33 @@ describe("âm thanh Tam Quân Kỳ", () => {
       assert.ok((CUE_IDS as readonly string[]).includes(id));
       assert.ok(manifest.sfx[id], id);
     }
+  });
+
+  it("chiếu tướng: bên mình bị chiếu là checked, mình chiếu hoặc chơi chung máy là check; có thêm anh hùng thì hero", () => {
+    // Bốn nước đầu, nước thứ tư của Xanh chiếu tướng Đỏ (tìm bằng dò cây nước đi).
+    const line: Move[] = [
+      { from: 15, to: 12, unit: "stack", kind: "join" },
+      { from: 114, to: 90, unit: "stack", kind: "join" },
+      { from: 35, to: 79, unit: "stack", kind: "fire" },
+      { from: 90, to: 46, unit: "stack", kind: "capture" },
+    ];
+    const before = line.slice(0, 3).reduce((p, m) => play(p, m), newGame());
+    const last = line[3]!;
+    const after = play(before, last);
+    const red = moveSounds(before, after, last, RED);
+    assert.equal(red[0], "tqk.capture");
+    assert.ok(red.includes("tqk.checked"));
+    assert.ok(moveSounds(before, after, last, BLUE).includes("tqk.check"));
+    assert.ok(moveSounds(before, after, last, null).includes("tqk.check"));
+    // Quân chiếu tướng được phong anh hùng.
+    assert.ok(red.includes("tqk.hero"));
+    // Nước mở đầu bình thường: chỉ một tiếng.
+    assert.deepEqual(moveSounds(newGame(), play(newGame(), line[0]!), line[0]!, RED), ["tqk.carry"]);
+  });
+
+  it("phong anh hùng mà không chiếu", () => {
+    const from = at({ carrier: piece("i"), riders: [] });
+    const next = at({ carrier: { ...piece("i"), hero: true }, riders: [] });
+    assert.deepEqual(moveSounds(from, next, mv("move"), RED), ["tqk.move", "tqk.hero"]);
   });
 });

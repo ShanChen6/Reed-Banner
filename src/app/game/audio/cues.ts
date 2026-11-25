@@ -90,7 +90,7 @@ export const UI_CUES = ["ui.click", "ui.back", "ui.open", "ui.close", "ui.error"
 
 export const KHAILO_CUES = ["khailo.remove", "khailo.big", "khailo.fall", "khailo.reject", "khailo.charged", "khailo.heart", "khailo.clear", "khailo.leveldone", "khailo.over", "khailo.tick"] as const;
 
-export const TQK_CUES = ["tqk.select", "tqk.move", "tqk.capture", "tqk.carry", "tqk.boat", "tqk.fly"] as const;
+export const TQK_CUES = ["tqk.select", "tqk.move", "tqk.capture", "tqk.carry", "tqk.boat", "tqk.fly", "tqk.check", "tqk.checked", "tqk.hero", "tqk.illegal"] as const;
 
 export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...SULO_CUES, ...DOTHAM_CUES, ...MODE_CUES, ...KHAILO_CUES, ...TQK_CUES] as const;
 export type CueId = (typeof CUE_IDS)[number];
