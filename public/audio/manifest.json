@@ -897,6 +897,34 @@
         "sfx/tqk/illegal_b"
       ],
       "volume": 0.6
+    },
+    "tqk.win": {
+      "files": [
+        "sfx/tqk/win_a",
+        "sfx/tqk/win_b"
+      ],
+      "volume": 0.8
+    },
+    "tqk.lose": {
+      "files": [
+        "sfx/tqk/lose_a",
+        "sfx/tqk/lose_b"
+      ],
+      "volume": 0.8
+    },
+    "tqk.draw": {
+      "files": [
+        "sfx/tqk/draw_a",
+        "sfx/tqk/draw_b"
+      ],
+      "volume": 0.75
+    },
+    "tqk.clock": {
+      "files": [
+        "sfx/tqk/clock_a",
+        "sfx/tqk/clock_b"
+      ],
+      "volume": 0.55
     }
   },
   "music": {

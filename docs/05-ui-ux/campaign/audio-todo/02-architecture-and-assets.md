@@ -217,6 +217,11 @@ Sa bàn là `role="application"` nên không có tiếng bấm chung.
 
 Thứ tự chọn tiếng đi quân ở `tam-quan-ky/sounds.ts` (`moveCue`): ăn quân → lên chung → Chiến thuyền → Thiên mã → chồng chở quân → thường. `moveSounds` nối thêm tiếng chiếu và tiếng anh hùng (ván đã ngã ngũ thì không báo chiếu), `playInTurn` phát cách nhau 280 ms.
 
+| Cue | Khi nào | Tệp | Ưu tiên |
+|---|---|---|---|
+| `tqk.win` / `tqk.lose` / `tqk.draw` | Hết ván (`resultCue`): phe mình thắng hoặc hai người chung máy là win, thua là lose, hòa là draw. Nước kết thúc ván: phát sau tiếng nước 0,7 s; đầu hàng và hết giờ: phát ngay; ván qua server: khi server báo hết ván (nạp lại ván đã xong thì im) | Tệp riêng `tqk/win`, `tqk/lose`, `tqk/draw` (25/11/2026) | P1 |
+| `tqk.clock` | Còn 10 giây cuối trong lượt của mình (hai người chung máy: lượt bên đang đi), mỗi giây một tiếng (`clockTickDue`) | Tệp riêng `tqk/clock` (25/11/2026) | P2 |
+
 Chưa có nhạc riêng cho Tam Quân Kỳ.
 
 ## 6. Kiểm tra

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { BLUE, RED, newGame, play, type Move, type Piece, type Position, type Stack } from "../../src/core/tam-quan-ky";
 import { CUE_IDS, TQK_CUES } from "../../src/app/game/audio/cues";
-import { moveCue, moveSounds } from "../../src/app/game/tam-quan-ky/sounds";
+import { clockTickDue, moveCue, moveSounds, resultCue } from "../../src/app/game/tam-quan-ky/sounds";
 
 const piece = (type: Piece["type"]): Piece => ({ type, color: RED, hero: false });
 /** Thế chỉ có một chồng ở ô 0, đủ để moveCue đọc quân đi. */
@@ -65,5 +65,19 @@ describe("âm thanh Tam Quân Kỳ", () => {
     const from = at({ carrier: piece("i"), riders: [] });
     const next = at({ carrier: { ...piece("i"), hero: true }, riders: [] });
     assert.deepEqual(moveSounds(from, next, mv("move"), RED), ["tqk.move", "tqk.hero"]);
+  });
+
+  it("hết ván: thắng, thua, hòa theo phe mình; chơi chung máy luôn là thắng", () => {
+    assert.equal(resultCue({ winner: RED, reason: "checkmate" }, RED), "tqk.win");
+    assert.equal(resultCue({ winner: RED, reason: "timeout" }, BLUE), "tqk.lose");
+    assert.equal(resultCue({ winner: BLUE, reason: "resign" }, null), "tqk.win");
+    assert.equal(resultCue({ winner: null, reason: "stalemate" }, RED), "tqk.draw");
+  });
+
+  it("đồng hồ gõ mỗi giây trong 10 giây cuối, không gõ ở 0", () => {
+    assert.equal(clockTickDue(11_000, 10_900), false);
+    assert.equal(clockTickDue(10_100, 9_950), true);
+    assert.equal(clockTickDue(9_950, 9_800), false);
+    assert.equal(clockTickDue(200, 0), false);
   });
 });

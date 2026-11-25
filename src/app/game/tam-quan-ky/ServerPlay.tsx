@@ -14,7 +14,7 @@ import { KIND_NAME } from "./pieces";
 import { BOARD_ASPECT, BO_LINH, Board, LEVEL_NAME, LEVELS, MoveList, Options, RivalPicker, SelectedPanel, Speech, TqkSide, formatClock, pieceLabel, positionsFor, rivalById, type BoardMap } from "./parts";
 import { SERVER_ERROR, useServerMatch, type ServerKind } from "./useServerMatch";
 import { useAudio } from "../audio/AudioProvider";
-import { moveSounds, playInTurn } from "./sounds";
+import { RESULT_DELAY_MS, clockTickDue, moveSounds, playInTurn, resultCue } from "./sounds";
 
 /** Vàng thắng sứ quân theo độ khó và số ván có vàng mỗi ngày; khớp TQK_GOLD, TQK_REWARDS_PER_DAY ở src/server/tamQuanKy.ts. */
 const GOLD: Record<Level, number> = { easy: 20, medium: 40, hard: 80 };
@@ -109,10 +109,22 @@ export function ServerPlay({ kind, modePicker, mapPicker, map, rivalId, onRival,
     }
     let line: LineKind | null = null;
     for (let i = prev.n + 1; i <= n; i++) line = lineAfterMove(positions[i - 1]!, positions[i]!) ?? (i === 1 ? "start" : line);
-    if (ended && !prev.ended && result) line = result.winner === null ? "draw" : result.winner === RED ? "win" : "lose";
+    if (ended && !prev.ended && result) {
+      line = result.winner === null ? "draw" : result.winner === RED ? "win" : "lose";
+      const cue = resultCue(result, you);
+      window.setTimeout(() => playSound(cue), RESULT_DELAY_MS);
+    }
     seen.current = { id: viewId, n, ended };
     if (line) setSpeech({ kind: line, n: speechCount.current++ });
-  }, [positions, result, viewId]);
+  }, [positions, result, viewId, you, playSound]);
+
+  // Còn 10 giây cuối trong lượt của bạn thì mỗi giây gõ một tiếng (đồng hồ vẽ lại mỗi 250 ms).
+  const myClockMs = view && view.clockMs > 0 && s.myTurn && !result ? s.timeLeft(you) : null;
+  const lastClock = useRef<number | null>(null);
+  useEffect(() => {
+    if (myClockMs !== null && lastClock.current !== null && clockTickDue(lastClock.current, myClockMs)) playSound("tqk.clock");
+    lastClock.current = myClockMs;
+  }, [myClockMs, playSound]);
 
   const targets = useMemo(
     () => (selected === null || !canMove ? [] : legalMovesFrom(shown, selected).filter((m) => m.unit === unit)),

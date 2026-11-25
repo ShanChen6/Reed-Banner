@@ -1,7 +1,7 @@
 // Âm thanh của Tam Quân Kỳ: chọn tiếng cho một nước đi theo loại nước và quân đi, hàm thuần để test không cần AudioContext.
 // Bảng cue: docs/05-ui-ux/campaign/audio-todo/02-architecture-and-assets.md mục 5.9.
 
-import { inCheck, type Color, type Move, type Position } from "@/core/tam-quan-ky";
+import { inCheck, type Color, type Move, type Position, type Result } from "@/core/tam-quan-ky";
 import type { TQK_CUES } from "../audio/cues";
 
 type TqkCue = (typeof TQK_CUES)[number];
@@ -53,4 +53,23 @@ export function moveSounds(from: Position, next: Position, move: Move, me: Color
 /** Phát lần lượt các tiếng của một nước, cách nhau `FOLLOW_GAP_MS`. */
 export function playInTurn(cues: readonly TqkCue[], play: (id: TqkCue) => void): void {
   cues.forEach((id, i) => (i === 0 ? play(id) : window.setTimeout(() => play(id), FOLLOW_GAP_MS * i)));
+}
+
+/** Tiếng hết ván: hòa là `tqk.draw`; hai người chơi chung máy (`me` null) hoặc phe mình thắng là `tqk.win`, còn lại `tqk.lose`. */
+export function resultCue(result: Result, me: Color | null): TqkCue {
+  if (result.winner === null) return "tqk.draw";
+  return me === null || result.winner === me ? "tqk.win" : "tqk.lose";
+}
+
+/** Tiếng hết ván vào sau tiếng nước cuối một nhịp, để nghe rõ nước kết thúc ván. */
+export const RESULT_DELAY_MS = 700;
+
+/** Đồng hồ: còn chừng này giây cuối thì mỗi giây một tiếng `tqk.clock`. */
+export const CLOCK_WARN_SECONDS = 10;
+
+/** Đồng hồ vừa qua mốc một giây trong `CLOCK_WARN_SECONDS` giây cuối (chưa về 0). */
+export function clockTickDue(prevMs: number, nextMs: number): boolean {
+  const before = Math.ceil(prevMs / 1000);
+  const after = Math.ceil(nextMs / 1000);
+  return after < before && after > 0 && after <= CLOCK_WARN_SECONDS;
 }
