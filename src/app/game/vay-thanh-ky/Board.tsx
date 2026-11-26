@@ -167,6 +167,8 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
   }
   const gradient = (c: Color) => `${uid}-g${c}`;
   const sides = [BLACK, WHITE] as const;
+  /** Cỡ một tấm tranh lõi (đơn vị giao điểm): lặp tấm để mỗi quân có một mảng khác nhau. */
+  const coreTile = size >= 19 ? 7 : size >= 13 ? 5.5 : 4.5;
 
   return (
     <div className="w-full" style={{ ["--vtk-frame" as string]: "#5b3a1e" }}>
@@ -205,13 +207,29 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
             ))}
             {/* Dịu tranh nền: bớt tương phản và độ rực để lưới và quân nổi lên trên. */}
             <filter id={`${uid}-soft`} colorInterpolationFilters="sRGB">
-              <feColorMatrix type="saturate" values="0.8" />
+              <feColorMatrix type="saturate" values="0.9" />
               <feComponentTransfer>
-                <feFuncR type="linear" slope={0.62} intercept={0.1} />
-                <feFuncG type="linear" slope={0.62} intercept={0.1} />
-                <feFuncB type="linear" slope={0.62} intercept={0.1} />
+                <feFuncR type="linear" slope={0.82} intercept={0.05} />
+                <feFuncG type="linear" slope={0.82} intercept={0.05} />
+                <feFuncB type="linear" slope={0.82} intercept={0.05} />
               </feComponentTransfer>
             </filter>
+            <filter id={`${uid}-glow`} x="-10%" y="-10%" width="120%" height="120%">
+              <feGaussianBlur stdDeviation={0.32} />
+            </filter>
+            {/* Lõi nguyên tố: vùng tròn quanh mỗi quân còn sống, mờ dần ra rìa. */}
+            {sides.map((c) => (
+              <mask key={c} id={`${uid}-k${c}`} maskUnits="userSpaceOnUse" x={0} y={0} width={size + 1} height={size + 1}>
+                <g filter={`url(#${uid}-glow)`} fill="#fff">
+                  {Array.from(board, (stone, p) => (stone === c && !deadSet.has(p) ? <circle key={p} {...coord(p)} r={0.7} /> : null))}
+                </g>
+              </mask>
+            ))}
+            {sides.map((c) => (
+              <pattern key={c} id={`${uid}-p${c}`} patternUnits="userSpaceOnUse" width={coreTile} height={coreTile}>
+                <image href={groundArt(elements[c], "core")} width={coreTile} height={coreTile} preserveAspectRatio="xMidYMid slice" />
+              </pattern>
+            ))}
             <radialGradient id={`${uid}-clash`}>
               <stop offset="0" stopColor="#fffbea" stopOpacity={0.95} />
               <stop offset="0.35" stopColor="#ffd98a" stopOpacity={0.7} />
@@ -225,7 +243,7 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
           {sides.map((c) => (
             <image
               key={c}
-              href={groundArt(elements[c])}
+              href={groundArt(elements[c], "calm")}
               x={0}
               y={0}
               width={size + 1}
@@ -236,6 +254,9 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
             />
           ))}
           </g>
+          {sides.map((c) => (
+            <rect key={c} x={0} y={0} width={size + 1} height={size + 1} fill={`url(#${uid}-p${c})`} mask={`url(#${uid}-k${c})`} opacity={0.9} data-core={elements[c]} />
+          ))}
           <rect x={0.5} y={0.5} width={size} height={size} fill="none" stroke="#1b1008" strokeOpacity={0.6} strokeWidth={0.05} />
 
           {/* Lưới hai lớp: viền sáng mảnh dưới nét tối, đọc rõ trên cả nền sáng lẫn nền tối. */}
