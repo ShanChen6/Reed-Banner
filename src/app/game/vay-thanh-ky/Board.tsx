@@ -155,16 +155,6 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
   const r = 0.46;
   const k = 10 / (size + 1);
   const blur = size >= 19 ? 0.22 : size >= 13 ? 0.26 : 0.3;
-  // Hai quân khác bên đứng sát nhau: chỗ hai hệ giáp trận, vẽ tia lửa giữa hai quân.
-  const clashes: [number, number][] = [];
-  for (let p = 0; p < size * size; p++) {
-    const a = board[p];
-    if (a !== BLACK && a !== WHITE) continue;
-    for (const q of [p % size < size - 1 ? p + 1 : -1, p + size < size * size ? p + size : -1]) {
-      const b = q >= 0 ? board[q] : undefined;
-      if ((b === BLACK || b === WHITE) && b !== a) clashes.push([p, q]);
-    }
-  }
   const gradient = (c: Color) => `${uid}-g${c}`;
   const sides = [BLACK, WHITE] as const;
   /** Cỡ một tấm tranh lõi (đơn vị giao điểm): lặp tấm để mỗi quân có một mảng khác nhau. */
@@ -230,11 +220,6 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
                 <image href={groundArt(elements[c], "core")} width={coreTile} height={coreTile} preserveAspectRatio="xMidYMid slice" />
               </pattern>
             ))}
-            <radialGradient id={`${uid}-clash`}>
-              <stop offset="0" stopColor="#fffbea" stopOpacity={0.95} />
-              <stop offset="0.35" stopColor="#ffd98a" stopOpacity={0.7} />
-              <stop offset="1" stopColor="#ff9a3c" stopOpacity={0} />
-            </radialGradient>
           </defs>
 
           {/* Đất trung lập: nền đất nâu như sa bàn. */}
@@ -300,29 +285,6 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
               </g>
             );
           })}
-          {/* Tia lửa giữa hai quân khác bên đứng sát nhau. */}
-          {!onToggleDead && (
-            <g data-clash={clashes.length}>
-              {clashes.map(([p, q]) => {
-                const a = coord(p);
-                const b = coord(q);
-                const mx = (a.cx + b.cx) / 2;
-                const my = (a.cy + b.cy) / 2;
-                const flat = a.cy === b.cy;
-                return (
-                  <g key={`${p}-${q}`}>
-                    <circle cx={mx} cy={my} r={0.2} fill={`url(#${uid}-clash)`} />
-                    <path
-                      d={flat ? `M${mx} ${my - 0.17} L${mx} ${my + 0.17}` : `M${mx - 0.17} ${my} L${mx + 0.17} ${my}`}
-                      stroke="#fffbea"
-                      strokeWidth={0.03}
-                      strokeLinecap="round"
-                    />
-                  </g>
-                );
-              })}
-            </g>
-          )}
           {lastMove !== null && lastMove >= 0 && board[lastMove] !== 0 && !onToggleDead && (
             <circle {...coord(lastMove)} r={0.56} fill="none" stroke="#fde68a" strokeWidth={0.06} strokeDasharray="0.18 0.1" />
           )}
