@@ -18,7 +18,7 @@ import { Arena, ElementPicker, PlayerCard, RULE_HINT, RULE_NAME, SIZES, ScoreLin
 import { SERVER_ERROR, useOnlineMatch, type ServerKind } from "./useOnlineMatch";
 import { useAudio } from "../audio/AudioProvider";
 import { clockTickDue } from "../tam-quan-ky/sounds";
-import { goMoveSounds, playInTurn } from "./sounds";
+import { RESULT_AFTER_SCORE_MS, goMoveSounds, goResultCue, playInTurn } from "./sounds";
 
 /** Vàng thắng sứ quân theo độ khó và số ván có vàng mỗi ngày; khớp GO_GOLD, GO_REWARDS_PER_DAY ở src/server/coVay.ts. */
 const GOLD: Record<Level, number> = { easy: 20, medium: 40, hard: 80 };
@@ -64,7 +64,7 @@ export function OnlinePlay({ kind, modePicker, phone, onMoves }: Props) {
 
   useEffect(() => onMoves(moves.length), [moves.length, onMoves]);
   const viewId = view?.id ?? null;
-  // Server ghi thêm nước (của mình hay đối thủ): tiếng của nước cuối; hết ván bằng đếm điểm thì `go.score`. Lần đầu nạp ván chỉ ghi nhớ.
+  // Server ghi thêm nước (của mình hay đối thủ): tiếng của nước cuối; hết ván thì `go.win`/`go.lose` (đếm điểm có `go.score` trước). Lần đầu nạp ván chỉ ghi nhớ.
   const heard = useRef<{ id: string | null; n: number; over: boolean } | null>(null);
   useEffect(() => {
     if (!view) return;
@@ -72,7 +72,12 @@ export function OnlinePlay({ kind, modePicker, phone, onMoves }: Props) {
     const over = !!view.result;
     if (prev && prev.id === view.id) {
       if (moves.length > prev.n) playInTurn(goMoveSounds(positionOf(view.size, view.mode, moves.slice(0, -1)), moves[moves.length - 1]!), playSound);
-      if (over && !prev.over && view.result?.reason === "score") playSound("go.score");
+      if (over && !prev.over && view.result) {
+        const score = view.result.reason === "score";
+        if (score) playSound("go.score");
+        const cue = goResultCue(view.result.winner, view.you);
+        window.setTimeout(() => playSound(cue), score ? RESULT_AFTER_SCORE_MS : 400);
+      }
     }
     heard.current = { id: view.id, n: moves.length, over };
   }, [view, moves, playSound]);

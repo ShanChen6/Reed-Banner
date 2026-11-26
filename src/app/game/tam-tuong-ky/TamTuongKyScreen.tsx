@@ -67,6 +67,8 @@ import {
 } from "./client";
 import { ModeGuideTabs, type ModePlayTabs } from "../ModeGuide";
 import { PlayCard, usePlayCardExpanded } from "../PlayCard";
+import { useAudio } from "../audio/AudioProvider";
+import { slotFilled } from "./sounds";
 import ModeTierPanel from "../leaderboard/ModeTierPanel";
 
 /** Thẻ Bậc thưởng của Tầm Tướng Ký: bậc theo số tướng đã khám phá (cả chế độ Thường và Hạng). */
@@ -211,9 +213,11 @@ function TtkLoading({ error, label, playTabs }: { error: string | null; label: s
 }
 
 function NormalMode({ initial, playTabs }: { initial: TtkView | null; playTabs?: ModePlayTabs }) {
+  const slotsSound = useSlotSound();
   const [view, setView] = useState<TtkView | null>(initial);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [slots, setSlots] = useState<Slots>(EMPTY_SLOTS);
+  const [slots, setSlotsRaw] = useState<Slots>(EMPTY_SLOTS);
+  const setSlots = slotsSound(setSlotsRaw);
   const [pending, setPending] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
   const [recent, setRecent] = useState<readonly HistoryEntry[]>([]);
@@ -398,6 +402,22 @@ function NormalMode({ initial, playTabs }: { initial: TtkView | null; playTabs?:
 }
 
 /** Hai ô đang đặt đúng một cặp đã ghép trước đây mà không ra gì. */
+/**
+ * Bọc `setSlots` để phát `ttk.slot` khi có nguyên liệu mới vào ô (luật ở `slotFilled`). Tính tiếng ngoài hàm cập nhật
+ * để chế độ dev chạy hàm cập nhật hai lần cũng chỉ một tiếng.
+ */
+function useSlotSound() {
+  const { play } = useAudio();
+  const last = useRef<Slots>(EMPTY_SLOTS);
+  return (set: (next: Slots | ((s: Slots) => Slots)) => void) =>
+    (next: Slots | ((s: Slots) => Slots)) => {
+      const value = typeof next === "function" ? next(last.current) : next;
+      if (slotFilled(last.current, value)) play("ttk.slot");
+      last.current = value;
+      set(value);
+    };
+}
+
 function triedPair(list: readonly string[] | undefined, [a, b]: Slots): boolean {
   return a !== null && b !== null && (list ?? []).includes(`${a}>${b}`);
 }
@@ -416,9 +436,11 @@ function TriedWarning({ cost }: { cost: string }) {
 
 /** Chế độ Hạng tuần (LT-06): túi nguyên tố tự chọn, kho tuần, ô đề cử chỉ có lời dẫn (A-23), cửa hàng bó, bảng tuần. */
 function RankedMode({ initial, playTabs }: { initial: TtkRankedView | null; playTabs?: ModePlayTabs }) {
+  const slotsSound = useSlotSound();
   const [view, setView] = useState<TtkRankedView | null>(initial);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [slots, setSlots] = useState<Slots>(EMPTY_SLOTS);
+  const [slots, setSlotsRaw] = useState<Slots>(EMPTY_SLOTS);
+  const setSlots = slotsSound(setSlotsRaw);
   const [pending, setPending] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
   const [card, setCard] = useState<AltarCardState>(null);

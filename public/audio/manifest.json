@@ -982,6 +982,28 @@
         "sfx/go/clock_b"
       ],
       "volume": 0.55
+    },
+    "go.win": {
+      "files": [
+        "sfx/go/win_a",
+        "sfx/go/win_b"
+      ],
+      "volume": 0.8
+    },
+    "go.lose": {
+      "files": [
+        "sfx/go/lose_a",
+        "sfx/go/lose_b"
+      ],
+      "volume": 0.8
+    },
+    "ttk.slot": {
+      "files": [
+        "sfx/ttk/slot_a",
+        "sfx/ttk/slot_b",
+        "sfx/ttk/slot_c"
+      ],
+      "volume": 0.65
     }
   },
   "music": {
@@ -1074,6 +1096,10 @@
     },
     "tam_quan_ky": {
       "file": "music/tam_quan_ky",
+      "volume": 0.5
+    },
+    "vay_thanh_ky": {
+      "file": "music/vay_thanh_ky",
       "volume": 0.5
     },
     "ending": {

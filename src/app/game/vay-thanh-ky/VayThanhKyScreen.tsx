@@ -23,7 +23,7 @@ import { Arena, ElementPicker, PlayerCard, RULE_HINT, RULE_NAME, SIZES, ScoreLin
 import { useVtkEngine } from "./useEngine";
 import { savedOnline } from "./useOnlineMatch";
 import { useAudio } from "../audio/AudioProvider";
-import { goMoveSounds, playInTurn } from "./sounds";
+import { RESULT_AFTER_SCORE_MS, goMoveSounds, goResultCue, playInTurn } from "./sounds";
 
 const SAVE_KEY = "reed-banner:vay-thanh-ky:save:v1";
 const MIN_THINK_MS = 450;
@@ -126,7 +126,11 @@ export default function VayThanhKyScreen() {
     setResult(r);
     setPhase("over");
     setDismissed(false);
-  }, []);
+    // Đếm điểm đã có tiếng `go.score` ở nút xác nhận; tiếng thắng/thua vào sau. Bắt quân hay đầu hàng thì phát ngay.
+    const cue = goResultCue(r.winner, machine ? human : null);
+    if (r.reason === "score") window.setTimeout(() => playSound(cue), RESULT_AFTER_SCORE_MS);
+    else window.setTimeout(() => playSound(cue), 400);
+  }, [machine, human, playSound]);
 
   const apply = useCallback(
     (move: number, current: number[]) => {

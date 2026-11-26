@@ -1,9 +1,9 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { PASS, newGame, play, type Position } from "../../src/core/co-vay";
+import { BLACK, PASS, WHITE, newGame, play, type Position } from "../../src/core/co-vay";
 import { CUE_IDS, GO_CUES } from "../../src/app/game/audio/cues";
-import { goMoveSounds } from "../../src/app/game/vay-thanh-ky/sounds";
+import { goMoveSounds, goResultCue } from "../../src/app/game/vay-thanh-ky/sounds";
 
 /** Chơi lần lượt các điểm (hàng * 9 + cột) trên bàn 9×9. */
 function after(points: readonly number[], mode: "full" | "capture" = "full"): Position {
@@ -41,5 +41,11 @@ describe("âm thanh Vây Thành Kỳ", () => {
       assert.ok((CUE_IDS as readonly string[]).includes(id));
       assert.ok(manifest.sfx[id], id);
     }
+  });
+
+  it("hết ván: phe mình thắng hoặc chơi chung máy là go.win, thua là go.lose", () => {
+    assert.equal(goResultCue(BLACK, BLACK), "go.win");
+    assert.equal(goResultCue(WHITE, BLACK), "go.lose");
+    assert.equal(goResultCue(WHITE, null), "go.win");
   });
 });

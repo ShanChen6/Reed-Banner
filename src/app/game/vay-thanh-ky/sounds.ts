@@ -60,3 +60,9 @@ export function goMoveSounds(before: Position, move: number): GoCue[] {
 export function playInTurn(cues: readonly GoCue[], playCue: (id: GoCue) => void): void {
   cues.forEach((id, i) => (i === 0 ? playCue(id) : window.setTimeout(() => playCue(id), FOLLOW_GAP_MS * i)));
 }
+
+/** Tiếng hết ván: hai người chơi chung máy (`me` null) hoặc phe mình thắng là `go.win`, còn lại `go.lose`. */
+export const goResultCue = (winner: Color, me: Color | null): GoCue => (me === null || winner === me ? "go.win" : "go.lose");
+
+/** Hết ván bằng đếm điểm: tiếng đếm điểm trước, tiếng thắng/thua sau chừng này. */
+export const RESULT_AFTER_SCORE_MS = 1200;

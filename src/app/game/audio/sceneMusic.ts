@@ -34,6 +34,8 @@ export function soundOfScene(scene: Scene): SceneSound {
       return { music: "expedition", ambience: null };
     case "TAM_QUAN_KY":
       return { music: "tam_quan_ky", ambience: null };
+    case "VAY_THANH_KY":
+      return { music: "vay_thanh_ky", ambience: null };
     case "FORMATION":
     case "PLAYING":
     case "PRACTICE":

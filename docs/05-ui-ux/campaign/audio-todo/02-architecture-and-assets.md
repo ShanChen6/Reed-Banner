@@ -237,8 +237,17 @@ Bàn cờ là `role="application"` nên không có tiếng bấm chung. `vay-tha
 | `go.illegal` | Bấm điểm không đặt được (đã có quân, luật cướp, tự hết khí) | Tệp riêng `go/illegal` | P1 |
 | `go.score` | Hết ván bằng đếm điểm: bấm xác nhận điểm (chơi trên máy) hoặc server báo kết quả đếm điểm | Tệp riêng `go/score` | P2 |
 | `go.clock` | Đấu người có đồng hồ: còn 10 giây cuối trong lượt của bạn, mỗi giây một tiếng | Tệp riêng `go/clock` | P2 |
+| `go.win` / `go.lose` | Hết ván (`goResultCue`): phe mình thắng hoặc hai người chung máy là win, thua là lose. Đếm điểm: sau `go.score` 1,2 s; bắt quân trước, đầu hàng: sau 0,4 s. Ván qua server: khi server báo hết ván | Tệp riêng `go/win`, `go/lose` (26/11/2026) | P1 |
 
-Chưa có nhạc riêng cho Vây Thành Kỳ.
+Nhạc: `vay_thanh_ky` (26/11/2026) ở phân cảnh `VAY_THANH_KY` (`sceneMusic.ts`).
+
+### 5.11 Tầm Tướng Ký (`ttk.*`, nối một phần 26/11/2026)
+
+| Cue | Khi nào | Tệp | Ưu tiên |
+|---|---|---|---|
+| `ttk.slot` | Nguyên liệu mới vào ô Đài Hợp Nguyên (chọn từ kho, dùng thẻ, chọn lại cặp đã thử), cả Thường và Hạng; gỡ, dọn ô sau khi ghép, đổi chỗ thì im (`tam-tuong-ky/sounds.ts`, `slotFilled`) | Tệp riêng `ttk/slot` (3 biến thể) | P1 |
+
+Chưa có: `ttk.unslot`, `miss`, `known`, `new`, `hero`, `reject`, `hint` và nhạc `tam_tuong_ky` (prompt ở 04-prompts mục D5).
 
 ## 6. Kiểm tra
 
