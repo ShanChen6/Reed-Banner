@@ -9,6 +9,7 @@ import {
   WEEKLY_RANK_REWARD_MODES,
   type Profile,
   rankRewardGold,
+  rankRewardStones,
   DAY_MS,
   vnDay,
   vnWeek,
@@ -108,7 +109,7 @@ export function destinySource(board: DestinyLeaderboardStore): RankRewardSource 
 }
 
 /** Mùa theo tuần của Trấn Ải và Quần Hùng: kỳ là khóa thứ Hai đầu tuần, bảng là điểm mùa của @/server/seasons. */
-export function seasonSource(mode: "survival" | "arena" | "tamTuongKy" | "pvp", seasons: SeasonStore): RankRewardSource {
+export function seasonSource(mode: "survival" | "arena" | "tamTuongKy" | "pvp" | "trade", seasons: SeasonStore): RankRewardSource {
   return {
     mode,
     closedPeriods(now, count) {
@@ -145,6 +146,8 @@ export interface PendingRankReward {
   readonly bundles?: number;
   /** Phiếu Tầm Tướng Ký kèm thưởng (P-10b); không có khi 0. */
   readonly tickets?: number;
+  /** Đá Cường Hóa kèm thưởng (Hành Thương Ký); không có khi 0. */
+  readonly stones?: number;
 }
 
 const isMode = (v: unknown): v is RankRewardMode => typeof v === "string" && (RANK_REWARD_MODES as readonly string[]).includes(v);
@@ -160,14 +163,14 @@ export async function pendingRankRewards(deps: RankRewardDeps, ownerId: string |
       if (claimed.has(period)) continue;
       const st = await source.standing(period, ownerId);
       const reward = st ? rankRewardGold(source.mode, st.rank, st.participants) : null;
-      if (st && reward) items.push({ mode: source.mode, period, rank: st.rank, participants: st.participants, ...reward, ...ttkExtras(deps, source.mode, reward.tier) });
+      if (st && reward) items.push({ mode: source.mode, period, rank: st.rank, participants: st.participants, ...reward, ...ttkExtras(deps, source.mode, reward.tier), ...stoneExtra(source.mode, reward.tier) });
     }
   }
   return { canClaim: true, items };
 }
 
 export type ClaimRankRewardResult =
-  | { readonly ok: true; readonly gold: number; readonly tier: RewardTier; readonly rank: number; readonly participants: number; readonly bundles?: number; readonly tickets?: number }
+  | { readonly ok: true; readonly gold: number; readonly tier: RewardTier; readonly rank: number; readonly participants: number; readonly bundles?: number; readonly tickets?: number; readonly stones?: number }
   | { readonly ok: false; readonly error: RankRewardError };
 
 /** Nhận thưởng một kỳ đã khép: ghi sổ trước (đúng một bên thắng khi gọi song song) rồi cộng vàng; cộng hỏng thì hoàn sổ. */
@@ -185,13 +188,25 @@ export async function claimRankReward(deps: RankRewardDeps, ownerId: string, mod
   const ok = await deps.claims.claim({ mode, period, ownerId, rank: st.rank, gold: reward.gold, claimedAt: deps.now });
   if (!ok) return { ok: false, error: "alreadyClaimed" };
   const extras = ttkExtras(deps, mode, reward.tier);
-  const updated = await updateProfile(deps.profiles, ownerId, (p) => ({ ok: true as const, profile: withTtkBundles({ ...p, gold: p.gold + reward.gold }, extras.bundles ?? 0, extras.tickets ?? 0) }), deps.now);
+  const stones = stoneExtra(mode, reward.tier);
+  const updated = await updateProfile(
+    deps.profiles,
+    ownerId,
+    (p) => ({ ok: true as const, profile: withTtkBundles({ ...p, gold: p.gold + reward.gold, stones: p.stones + (stones.stones ?? 0) }, extras.bundles ?? 0, extras.tickets ?? 0) }),
+    deps.now,
+  );
   if (!updated.ok) {
     await deps.claims.release(mode, period, ownerId);
     console.error("Không cộng được thưởng hạng", mode, period, ownerId);
     return { ok: false, error: "conflict" };
   }
-  return { ok: true, gold: reward.gold, tier: reward.tier, rank: st.rank, participants: st.participants, ...extras };
+  return { ok: true, gold: reward.gold, tier: reward.tier, rank: st.rank, participants: st.participants, ...extras, ...stones };
+}
+
+/** Đá Cường Hóa kèm một bậc thưởng (chỉ Hành Thương Ký); bỏ trường khi 0. */
+function stoneExtra(mode: RankRewardMode, tier: RewardTier): { stones?: number } {
+  const stones = rankRewardStones(mode, tier);
+  return stones > 0 ? { stones } : {};
 }
 
 /** Bó và phiếu Tầm Tướng Ký kèm một bậc thưởng; bỏ trường khi 0 và khi chế độ chưa bật. */

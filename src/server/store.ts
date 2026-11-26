@@ -19,6 +19,8 @@ import { DrizzlePvpStore } from "./db/pvp";
 import { MemoryPvpStore, type PvpStore } from "./pvp";
 import { DrizzleTqkStore } from "./db/tamQuanKy";
 import { DrizzleGoStore } from "./db/coVay";
+import { DrizzleTradeStore } from "./db/trade";
+import { MemoryTradeStore, type TradeStore } from "./trade";
 import { MemoryGoStore, type GoStore } from "./coVay";
 import { MemoryTqkStore, type TqkStore } from "./tamQuanKy";
 import { MemoryArenaStore, type ArenaStore } from "./arena";
@@ -84,7 +86,7 @@ export class MemoryMatchStore implements MatchStore {
   }
 }
 
-const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauPvpStore?: PvpStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore; coLauFormationStore?: FormationStore; coLauRankRewardStore?: RankRewardStore; coLauSeasonStore?: SeasonStore; coLauTqkStore?: TqkStore; coLauGoStore?: GoStore };
+const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauPvpStore?: PvpStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore; coLauFormationStore?: FormationStore; coLauRankRewardStore?: RankRewardStore; coLauSeasonStore?: SeasonStore; coLauTqkStore?: TqkStore; coLauGoStore?: GoStore; coLauTradeStore?: TradeStore };
 
 /**
  * Kho dùng chung của server: Postgres (Neon) khi có DATABASE_URL, ngược lại lưu trong bộ nhớ (dev).
@@ -207,4 +209,10 @@ export function goStore(): GoStore {
   const url = process.env.DATABASE_URL;
   globalStore.coLauGoStore ??= url ? new DrizzleGoStore(neonDb(url)) : new MemoryGoStore();
   return globalStore.coLauGoStore;
+}
+
+export function tradeStore(): TradeStore {
+  const url = process.env.DATABASE_URL;
+  globalStore.coLauTradeStore ??= url ? new DrizzleTradeStore(neonDb(url)) : new MemoryTradeStore();
+  return globalStore.coLauTradeStore;
 }

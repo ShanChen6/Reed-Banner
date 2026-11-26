@@ -24,6 +24,7 @@ export const MODE_TEXT = {
   EXPEDITION: "Chia quân hai đạo, thần tốc hành quân, giáp công phá thành địch.",
   VAY_THANH_KY: "Chọn một trong bảy hệ, đặt quân vây đất trên bàn cờ vây: đất mình vây đổi sắc theo hệ, bên nào giữ nhiều thành hơn thì thắng.",
   TAM_QUAN_KY: "Bày ba quân thủy, bộ, thiên mã trên sa bàn, vây chủ tướng, đoạt soái trướng của sứ quân.",
+  TRADE: "Xuôi thuyền ngược ngựa khắp mười ba bến chợ, mua rẻ bán đắt, tranh ngôi phú thương mỗi tuần.",
 } as const;
 
 export interface ModeInfo {
@@ -60,6 +61,10 @@ export const MODE_INFO: Partial<Record<Scene, ModeInfo>> = {
   TAM_TUONG_KY: {
     text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép yếu tố",
     perks: ["Mỗi lượt chơi tốn một phiếu", "Tướng tìm được ghi vào Tướng Lục theo tài khoản"],
+  },
+  TRADE: {
+    text: MODE_TEXT.TRADE, kicker: "Buôn bán",
+    perks: ["Ai cũng khởi đầu 10.000 kim tiền, mùa một tuần", "Kho chung, giá đổi mỗi hai giờ", "Hết mùa xếp hạng theo lãi, thưởng vàng và Đá Cường Hóa"],
   },
   LEADERBOARD: {
     text: "Thành tích theo mùa của bạn ở mọi chế độ có xếp hạng.", kicker: "Công Trạng",

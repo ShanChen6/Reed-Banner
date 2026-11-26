@@ -401,3 +401,68 @@ export const goMatches = pgTable(
   },
   (t) => [index("go_matches_code_idx").on(t.code, t.status), index("go_matches_reward_idx").on(t.ownerId, t.rewardDay)],
 );
+
+/**
+ * Hành Thương Ký (src/server/trade.ts): đoàn hàng của từng người theo mùa tuần. `state` là TradePlayer (kim tiền, khoang,
+ * vị trí, chặng đang đi, lộ phiếu); `version` để ghi có điều kiện.
+ */
+export const tradePlayers = pgTable(
+  "trade_players",
+  {
+    season: text("season").notNull(),
+    ownerId: text("owner_id").notNull(),
+    state: jsonb("state").notNull(),
+    version: integer("version").notNull(),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.season, t.ownerId] })],
+);
+
+/** Kho chung của Hành Thương Ký: một dòng mỗi (mùa, điểm, món), khóa `node:item`. */
+export const tradeMarkets = pgTable(
+  "trade_markets",
+  {
+    season: text("season").notNull(),
+    key: text("key").notNull(),
+    stock: integer("stock").notNull(),
+    slot: integer("slot").notNull(),
+    slotStock: integer("slot_stock").notNull(),
+    prevSlotStock: integer("prev_slot_stock").notNull(),
+    version: integer("version").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.season, t.key] })],
+);
+
+/** Chặng đã đi của Hành Thương Ký, để tìm đoàn gặp nhau trên cùng cạnh (`edge` là khóa vô hướng "a~b"). */
+export const tradeLegs = pgTable(
+  "trade_legs",
+  {
+    id: text("id").primaryKey(),
+    season: text("season").notNull(),
+    ownerId: text("owner_id").notNull(),
+    edge: text("edge").notNull(),
+    leg: jsonb("leg").notNull(),
+    departAt: bigint("depart_at", { mode: "number" }).notNull(),
+    arriveAt: bigint("arrive_at", { mode: "number" }).notNull(),
+  },
+  (t) => [index("trade_legs_edge_idx").on(t.season, t.edge, t.departAt)],
+);
+
+/** Lời ngỏ giao thương giữa đường. `give`/`want` là gói hàng + kim tiền. */
+export const tradeOffers = pgTable(
+  "trade_offers",
+  {
+    id: text("id").primaryKey(),
+    season: text("season").notNull(),
+    fromOwner: text("from_owner").notNull(),
+    toOwner: text("to_owner").notNull(),
+    fromLeg: text("from_leg").notNull(),
+    toLeg: text("to_leg").notNull(),
+    give: jsonb("give").notNull(),
+    want: jsonb("want").notNull(),
+    status: text("status").notNull(),
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
+    resolvedAt: bigint("resolved_at", { mode: "number" }),
+  },
+  (t) => [index("trade_offers_from_idx").on(t.season, t.fromOwner, t.status), index("trade_offers_to_idx").on(t.season, t.toOwner, t.status)],
+);

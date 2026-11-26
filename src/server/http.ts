@@ -5,7 +5,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { httpStatus, type Deps, type ServiceResult } from "./battles";
 import { GUEST_COOKIE, newGuestId, signGuest, verifyGuest } from "./guest";
 import { arenaStore, dailyStore, destinyLeaderboardStore, leaderboardStore, matchStore, profileStore } from "./store";
-import { expeditionFlag, formationRankedEnabled, tamTuongKyEnabled, tamTuongKyPack2Enabled, tamTuongKyPack3Enabled, tamTuongKyRankedEnabled, towerFeatureFlags } from "./featureFlags";
+import { expeditionFlag, tradeFlag, formationRankedEnabled, tamTuongKyEnabled, tamTuongKyPack2Enabled, tamTuongKyPack3Enabled, tamTuongKyRankedEnabled, towerFeatureFlags } from "./featureFlags";
 import type { TamTuongKyDeps, TtkRankedResult, TtkServiceResult } from "./tamTuongKy";
 import { ttkHttpStatus } from "./tamTuongKy";
 import type { FormationDeps } from "./formation";
@@ -135,6 +135,7 @@ export function rankRewardDeps(): RankRewardDeps {
       seasonSource("arena", seasonStore()),
       seasonSource("pvp", seasonStore()),
       ...(tamTuongKyRankedEnabled() ? [seasonSource("tamTuongKy", seasonStore())] : []),
+      ...(tradeFlag() ? [seasonSource("trade", seasonStore())] : []),
     ],
     claims: rankRewardStore(),
     profiles: profileStore(),

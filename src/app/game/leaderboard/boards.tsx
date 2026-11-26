@@ -44,6 +44,8 @@ const SEASON_NOTE = {
   pvp: "Mùa theo tuần, đổi vào thứ Hai 0 giờ: tổng điểm hạng Thư Hùng bạn nhận được từ các trận được tính trong tuần (chỉ người có tổng dương mới có tên). Hạng cuối mùa nhận vàng.",
   arena:
     "Mùa theo tuần, đổi vào thứ Hai 0 giờ: tổng điểm Quần Hùng nhận được từ các trận bạn đi đánh trong tuần (chỉ người có tổng dương mới có tên). Hạng cuối mùa nhận vàng.",
+  trade:
+    "Mùa theo tuần, đổi vào thứ Hai 0 giờ: kim tiền lãi so với vốn đầu mùa (hàng còn trong khoang chưa tính, chỉ người có lãi mới có tên). Hạng cuối mùa nhận vàng và Đá Cường Hóa.",
 } as const;
 
 export function BoardNote({ children }: { children: ReactNode }) {
@@ -101,11 +103,14 @@ function useJson<T extends { error?: string }>(url: string | null): T | null {
   return data;
 }
 
-const seasonScore = (board: "survival" | "arena" | "pvp", score: number) => (board === "survival" ? `${score} đợt` : `+${score} điểm`);
+type SeasonBoardId = keyof typeof SEASON_NOTE;
 
-/** Bảng mùa tuần hiện tại của Trấn Ải hoặc Quần Hùng; `myExtra` gắn vào thanh hạng của mình (ví dụ bậc hạng). */
-export function SeasonBoardPanel({ board, myExtra }: { board: "survival" | "arena" | "pvp"; myExtra?: ReactNode }) {
-  const data = useJson<SeasonBoardResponse>(board === "pvp" ? "/api/pvp/board" : `/api/leaderboard?board=${board}&season=current`);
+const seasonScore = (board: SeasonBoardId, score: number) =>
+  board === "survival" ? `${score} đợt` : board === "trade" ? `+${score.toLocaleString("vi-VN")} kim tiền` : `+${score} điểm`;
+
+/** Bảng mùa tuần hiện tại của Trấn Ải, Quần Hùng hoặc Hành Thương Ký; `myExtra` gắn vào thanh hạng của mình (ví dụ bậc hạng). */
+export function SeasonBoardPanel({ board, myExtra }: { board: SeasonBoardId; myExtra?: ReactNode }) {
+  const data = useJson<SeasonBoardResponse>(board === "pvp" ? "/api/pvp/board" : board === "trade" ? "/api/trade?board=1" : `/api/leaderboard?board=${board}&season=current`);
   return (
     <OrnateFrame className="flex flex-col gap-3">
       <SectionTitle description={`${SEASON_NOTE[board]}${data?.season ? ` (mùa bắt đầu ${data.season})` : ""}`}>Công trạng mùa này</SectionTitle>
