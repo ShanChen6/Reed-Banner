@@ -90,6 +90,15 @@ export function tradeFlag(env: Readonly<Record<string, string | undefined>> = pr
   return env.TRADE_ENABLED === "true";
 }
 
+/**
+ * Tốc độ chạy thử Hành Thương Ký (Shan 27/11/2026): số nguyên 2–120 thì khung giá, đường đi nhanh lên chừng đó lần và
+ * lộ phiếu nhân theo. Thiếu hay giá trị lạ là 1 (giờ thật). Chạy thử dùng kho riêng, tắt đi thì kho thật không bị đụng.
+ */
+export function tradeSpeed(env: Readonly<Record<string, string | undefined>> = process.env): number {
+  const n = Number(env.TRADE_SPEED);
+  return Number.isInteger(n) && n >= 2 && n <= 120 ? n : 1;
+}
+
 /** Quần Hùng online (PvP). Chỉ chuỗi `true` mới bật; thiếu, rỗng hoặc giá trị lạ đều fail-closed (mặc định tắt). */
 export function pvpEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
   return env.PVP_ENABLED === "true";

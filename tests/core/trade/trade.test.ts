@@ -7,7 +7,9 @@ import {
   TRADE_NODE_IDS,
   TRADE_PASSES_PER_DAY,
   TRADE_START_MONEY,
+  MARKET_FIXED,
   advanceRow,
+  assortment,
   buyGoods,
   buyPrice,
   depart,
@@ -15,6 +17,14 @@ import {
   encounterBoard,
   hops,
   initialRow,
+  isSpecialtyHere,
+  legMs,
+  marketSeason,
+  nextSlotAt,
+  normalSpeed,
+  passesPerDay,
+  presenceAt,
+  stockTarget,
   legsMeet,
   loseCargo,
   newTradePlayer,
@@ -56,22 +66,71 @@ describe("Hành Thương Ký: chợ", () => {
       }
   });
 
-  it("đặc sản rẻ ở quê nhà, hiếm và đắt hơn ở nơi khác", () => {
+  it("đặc sản rẻ ở quê nhà, đắt hơn ở nơi khác; nhãn Đặc sản và Hiếm không chồng nhau", () => {
     const slot = tradeSlot(T0);
     const silkHome = quote("s", "teGiang", "silk", initialRow("silk", "teGiang", slot));
-    const silkAway = quote("s", "hoiHo", "silk", initialRow("silk", "hoiHo", slot));
+    assert.equal(silkHome.specialty, true);
     assert.equal(silkHome.rare, false);
-    assert.equal(silkAway.rare, true);
+    const away = TRADE_NODE_IDS.find((n) => n !== "teGiang" && presenceAt("s", n, slot).has("silk"))!;
+    const silkAway = quote("s", away, "silk", initialRow("silk", away, slot));
+    assert.equal(silkAway.specialty, false);
     assert.ok(silkAway.sell > silkHome.buy, "chở lụa đi xa phải có lãi");
+  });
+
+  it("40 món, mỗi chợ khoảng 20 món mỗi phiên, 2 đặc sản luôn bày, 1–2 món Hiếm không phải đặc sản", () => {
+    assert.equal(TRADE_ITEMS.length, 40);
+    const s0 = tradeSlot(T0);
+    for (const node of TRADE_NODE_IDS) {
+      const a = assortment(node);
+      assert.equal(a.fixed.length, MARKET_FIXED);
+      for (let slot = s0; slot < s0 + 24; slot++) {
+        const shown = presenceAt("s", node, slot);
+        assert.ok(shown.size >= 17 && shown.size <= 26, `${node} bày ${shown.size} món`);
+        const tags = [...shown].map(([id, how]) => ({ id, how, home: isSpecialtyHere(id, node) }));
+        assert.equal(tags.filter((t) => t.home).length, 2, node);
+        assert.ok(tags.filter((t) => t.home).every((t) => t.how === "fixed"));
+        const rare = tags.filter((t) => t.how === "rare");
+        assert.ok(rare.length >= 1 && rare.length <= 2);
+        assert.ok(rare.every((t) => !t.home && TRADE_ITEMS.find((i) => i.id === t.id)!.tier !== "treasure"));
+        assert.deepEqual([...presenceAt("s", node, slot)], [...shown], "ai cũng thấy chợ bày như nhau");
+      }
+    }
+  });
+
+  it("món chợ không bày có mức tồn 0; kho đặc sản đủ cho nhiều đoàn", () => {
+    const slot = tradeSlot(T0);
+    for (const node of TRADE_NODE_IDS) {
+      for (const id of assortment(node).absent) assert.equal(initialRow(id, node, slot).stock, 0);
+      for (const it of TRADE_ITEMS.filter((i) => i.homes.includes(node))) assert.ok(stockTarget(it.id, node) * (it.tier === "treasure" ? 1 / 5 : 1) >= 30, it.id);
+    }
   });
 
   it("kho thiếu thì khung sau giá lên; chợ tự hồi về mức bình thường", () => {
     const slot = tradeSlot(T0);
-    const row = initialRow("rice", "hoaLu", slot);
-    const drained = advanceRow("s", "hoaLu", "rice", { ...row, stock: 20 }, slot + 1);
-    assert.ok(drained.slotStock > 20 && drained.slotStock < row.stock, "chợ chỉ tự sinh một ít mỗi khung");
-    assert.ok(buyPrice("s", "hoaLu", "rice", slot + 1, drained.slotStock) > buyPrice("s", "hoaLu", "rice", slot + 1, row.stock));
-    assert.equal(quote("s", "hoaLu", "rice", drained).stock, drained.stock);
+    const row = initialRow("rice", "dangChau", slot);
+    const drained = advanceRow("s", "dangChau", "rice", { ...row, stock: 20 }, slot + 1);
+    assert.ok(drained.slotStock > 20 && drained.slotStock < row.stock, "chợ chỉ tự sinh một phần mỗi khung");
+    assert.ok(buyPrice("s", "dangChau", "rice", slot + 1, drained.slotStock) > buyPrice("s", "dangChau", "rice", slot + 1, row.stock));
+    assert.equal(quote("s", "dangChau", "rice", drained).stock, drained.stock);
+  });
+
+  it("chạy thử nhanh: khung giá, đường đi và lộ phiếu theo tốc độ; kho riêng", () => {
+    assert.equal(tradeSlot(T0, 1), tradeSlot(T0));
+    assert.ok(tradeSlot(T0, 10) >= tradeSlot(T0) * 10);
+    assert.equal(nextSlotAt(T0, 10) - T0 <= 12 * MIN, true);
+    assert.equal(normalSpeed(0), 1);
+    assert.equal(normalSpeed(500), 120);
+    assert.equal(marketSeason("2026-11-23", 1), "2026-11-23");
+    assert.notEqual(marketSeason("2026-11-23", 10), "2026-11-23");
+    assert.equal(passesPerDay(10), TRADE_PASSES_PER_DAY * 10);
+    const p = fresh();
+    const next = TRADE_EDGES.find((e) => e.a === p.node || e.b === p.node)!;
+    const to = next.a === p.node ? next.b : next.a;
+    const slow = depart(p, to, T0, "a", 0.99, 1);
+    const fast = depart(p, to, T0, "a", 0.99, 1, 10);
+    assert.ok(slow.ok && fast.ok);
+    assert.equal(fast.player.leg!.arriveAt - T0, legMs(tradeEdge(p.node, to)!, 1, 10));
+    assert.ok(fast.player.leg!.arriveAt - T0 < slow.player.leg!.arriveAt - T0);
   });
 });
 

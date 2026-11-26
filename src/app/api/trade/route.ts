@@ -6,7 +6,7 @@
 
 import { randomInt, randomUUID } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
-import { tradeFlag } from "@/server/featureFlags";
+import { tradeFlag, tradeSpeed } from "@/server/featureFlags";
 import { guestOf, isSignedInAccount, loginRequiredResponse, readJson, sameOrigin } from "@/server/http";
 import { accountStore, seasonStore, tradeStore } from "@/server/store";
 import {
@@ -34,6 +34,7 @@ function deps(): TradeDeps {
     newId: () => randomUUID(),
     random: () => randomInt(0, 2 ** 30) / 2 ** 30,
     nameOf: async (id) => (await accountStore().get(id))?.name ?? `Lữ khách ${id.slice(-4)}`,
+    speed: tradeSpeed(),
   };
 }
 
