@@ -32,6 +32,7 @@ import SurvivalScreen from "./survival/SurvivalScreen";
 import TrialScreen from "./trial/TrialScreen";
 import DestinyScreen from "./destiny/DestinyScreen";
 import ExpeditionScreen from "./expedition/ExpeditionScreen";
+import TradeScreen from "./trade/TradeScreen";
 import FullscreenToggle from "./FullscreenToggle";
 import MobileTabBar from "./MobileTabBar";
 import GameHeader from "./header/GameHeader";
@@ -57,6 +58,8 @@ export interface TowerFeatures {
   readonly formationRanked?: boolean;
   /** Viễn Chinh, mặc định tắt (`EXPEDITION_ENABLED`). */
   readonly expedition?: boolean;
+  /** Hành Thương Ký, mặc định tắt (`TRADE_ENABLED`). */
+  readonly trade?: boolean;
   /** Tầm Tướng Ký Gói 2 (đã duyệt, đi cùng cờ chế độ). */
   readonly tamTuongKyPack2?: boolean;
   /** Tầm Tướng Ký Gói 3 (khi đã duyệt, đi cùng cờ chế độ). */
@@ -171,6 +174,8 @@ function SceneView({
       return <TamQuanKyScreen />;
     case "VAY_THANH_KY":
       return <VayThanhKyScreen />;
+    case "TRADE":
+      return !towerFeatures.trade ? <DisabledTowerMode name={SCENE_TITLE.TRADE} /> : account ? <TradeScreen /> : <LoginGate scene="TRADE" name={SCENE_TITLE.TRADE} />;
     case "QUESTS":
       return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} tamTuongKyPack2={towerFeatures.tamTuongKyPack2 === true} tamTuongKyPack3={towerFeatures.tamTuongKyPack3 === true} />;
     case "TIERS":
@@ -180,7 +185,7 @@ function SceneView({
     case "SHOP":
       return <ShopScreen />;
     case "LEADERBOARD":
-      return account ? <HonorsScreen destinyEnabled={towerFeatures.destiny} tamTuongKyRanked={towerFeatures.tamTuongKyRanked === true} formationRanked={towerFeatures.formationRanked === true} /> : <LoginGate scene="LEADERBOARD" name={SCENE_TITLE.LEADERBOARD} />;
+      return account ? <HonorsScreen destinyEnabled={towerFeatures.destiny} tamTuongKyRanked={towerFeatures.tamTuongKyRanked === true} formationRanked={towerFeatures.formationRanked === true} tradeEnabled={towerFeatures.trade === true} /> : <LoginGate scene="LEADERBOARD" name={SCENE_TITLE.LEADERBOARD} />;
     case "PROFILE":
       return <ProfileScreen playerName={account?.name ?? null} />;
     case "LOGIN":

@@ -2,6 +2,11 @@
 
 > Trạng thái: **REFERENCE** — nhật ký quyết định theo ngày.
 
+## 26/11/2026
+
+**Hành Thương Ký: chế độ buôn bán mới (Shan duyệt thiết kế, "Đồng ý và triển khai")**
+- Buôn bán theo mùa tuần giữa 13 điểm trên bản đồ Bình Loạn (thêm Cửa Đại Ác, Bình Loạn không đổi), kho chung cho mọi người, giá đổi mỗi 2 giờ, 5 lộ phiếu mỗi ngày không tích. Gặp nạn đánh ghép ô rất dễ hoặc nộp mãi lộ; giao thương giữa đường khi hai đoàn gặp nhau, mỗi chuyến một lần, kim tiền người khác chỉ hiện trên bảng Công trạng. Hết mùa thưởng vàng và Đá Cường Hóa ([GDD](../02-game-modes/hanh-thuong-ky/gdd.md)). Thẻ ở mục Giải đố, tắt mặc định (`TRADE_ENABLED`).
+
 ## 23/11/2026
 
 **Vây Thành Kỳ có thưởng và nhiệm vụ ngày đánh cờ (Shan chọn "Thêm thưởng và nhiệm vụ")**

@@ -134,6 +134,13 @@
       "when": 1795465097602,
       "tag": "0018_go_rewards",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1795649857754,
+      "tag": "0019_trade",
+      "breakpoints": true
     }
   ]
 }
