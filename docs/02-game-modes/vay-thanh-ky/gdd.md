@@ -26,6 +26,7 @@ Chỉ là lớp giao diện, không đổi luật (`src/app/game/vay-thanh-ky/th
 - Quân: quả cầu tô màu hệ, giữa là biểu tượng hệ Shan vẽ (`public/art/elements/<hệ>.webp`).
 - Quân có bóng đổ, viền sáng và vệt bóng như quả cầu ngọc (`OrbDefs`).
 - Nền đất: tranh chất liệu từng hệ Shan vẽ (`public/art/vay-thanh-ky/ground/<hệ>.webp`): Hỏa nham thạch, Thủy băng rạn, Mộc cỏ ba lá, Kim kim loại chải, Thổ đất nứt, Lôi đá tím có sét, Phong sóng gió ngọc. Đất chưa ai giữ là nền đá xám vẽ bằng bộ lọc SVG (`GroundFilter`). Trong ván, mỗi giao điểm tô theo vùng ảnh hưởng của quân trong bán kính 3, mép vùng làm mờ; lúc đếm điểm tô theo chủ đất thật (`scoreArea`).
+- Tranh đất được làm dịu bằng bộ lọc (bớt tương phản, bớt rực) để lưới nổi lên. Lưới kẻ hai lớp: viền sáng mảnh dưới nét tối, đọc được trên cả nền sáng lẫn nền tối. Hai quân khác bên đứng sát nhau thì có tia lửa ở giữa.
 - Hai bên không chọn trùng hệ. Đấu sứ quân: hệ đối thủ mặc định là hệ của sứ quân, đổi được.
 - Bố cục hai bên (`Arena` trong `parts.tsx`): màn rộng từ 64rem, khung người chơi đứng dọc hai bên bàn, nền là tranh dọc của hệ (`public/art/vay-thanh-ky/panel/<hệ>.webp`), bàn co theo chiều cao màn để vừa cả thanh nút (kể cả khi phóng to). Màn hẹp: hai khung ngang xếp trên bàn.
 - Tranh thẻ chế độ `public/art/home/vay-thanh-ky.webp`, banner đầu màn `public/art/vay-thanh-ky/banner.webp` (Shan vẽ 24/11).

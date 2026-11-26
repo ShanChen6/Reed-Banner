@@ -155,7 +155,16 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
   const r = 0.46;
   const k = 10 / (size + 1);
   const blur = size >= 19 ? 0.22 : size >= 13 ? 0.26 : 0.3;
-  const grid = (c: Color) => THEME[elements[c]].lightGrid;
+  // Hai quân khác bên đứng sát nhau: chỗ hai hệ giáp trận, vẽ tia lửa giữa hai quân.
+  const clashes: [number, number][] = [];
+  for (let p = 0; p < size * size; p++) {
+    const a = board[p];
+    if (a !== BLACK && a !== WHITE) continue;
+    for (const q of [p % size < size - 1 ? p + 1 : -1, p + size < size * size ? p + size : -1]) {
+      const b = q >= 0 ? board[q] : undefined;
+      if ((b === BLACK || b === WHITE) && b !== a) clashes.push([p, q]);
+    }
+  }
   const gradient = (c: Color) => `${uid}-g${c}`;
   const sides = [BLACK, WHITE] as const;
 
@@ -194,10 +203,25 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
             {sides.map((c) => (
               <OrbDefs key={c} id={gradient(c)} element={elements[c]} />
             ))}
+            {/* Dịu tranh nền: bớt tương phản và độ rực để lưới và quân nổi lên trên. */}
+            <filter id={`${uid}-soft`} colorInterpolationFilters="sRGB">
+              <feColorMatrix type="saturate" values="0.8" />
+              <feComponentTransfer>
+                <feFuncR type="linear" slope={0.62} intercept={0.1} />
+                <feFuncG type="linear" slope={0.62} intercept={0.1} />
+                <feFuncB type="linear" slope={0.62} intercept={0.1} />
+              </feComponentTransfer>
+            </filter>
+            <radialGradient id={`${uid}-clash`}>
+              <stop offset="0" stopColor="#fffbea" stopOpacity={0.95} />
+              <stop offset="0.35" stopColor="#ffd98a" stopOpacity={0.7} />
+              <stop offset="1" stopColor="#ff9a3c" stopOpacity={0} />
+            </radialGradient>
           </defs>
 
           {/* Đất trung lập: nền đất nâu như sa bàn. */}
           <rect x={0} y={0} width={size + 1} height={size + 1} filter={`url(#${uid}-t0)`} />
+          <g filter={`url(#${uid}-soft)`}>
           {sides.map((c) => (
             <image
               key={c}
@@ -211,27 +235,24 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
               data-ground={elements[c]}
             />
           ))}
+          </g>
           <rect x={0.5} y={0.5} width={size} height={size} fill="none" stroke="#1b1008" strokeOpacity={0.6} strokeWidth={0.05} />
 
-          {Array.from({ length: size }, (_, i) => (
-            <g key={i} stroke="#2b1a0e" strokeOpacity={0.7} strokeWidth={0.035}>
-              <line x1={1} y1={i + 1} x2={size} y2={i + 1} />
-              <line x1={i + 1} y1={1} x2={i + 1} y2={size} />
-            </g>
-          ))}
-          {/* Trên nền tối (Hỏa, Lôi), kẻ lại lưới sáng trong vùng đất ấy. */}
-          {sides.map((c) =>
-            grid(c) ? (
-              <g key={c} mask={`url(#${uid}-m${c})`} stroke="#f5deb3" strokeOpacity={0.35} strokeWidth={0.035}>
-                {Array.from({ length: size }, (_, i) => (
-                  <g key={i}>
-                    <line x1={1} y1={i + 1} x2={size} y2={i + 1} />
-                    <line x1={i + 1} y1={1} x2={i + 1} y2={size} />
-                  </g>
-                ))}
+          {/* Lưới hai lớp: viền sáng mảnh dưới nét tối, đọc rõ trên cả nền sáng lẫn nền tối. */}
+          <g strokeLinecap="square">
+            {Array.from({ length: size }, (_, i) => (
+              <g key={i} stroke="#f5e6c8" strokeOpacity={0.3} strokeWidth={0.085}>
+                <line x1={1} y1={i + 1} x2={size} y2={i + 1} />
+                <line x1={i + 1} y1={1} x2={i + 1} y2={size} />
               </g>
-            ) : null,
-          )}
+            ))}
+            {Array.from({ length: size }, (_, i) => (
+              <g key={`d${i}`} stroke="#1b1008" strokeOpacity={0.9} strokeWidth={0.038}>
+                <line x1={1} y1={i + 1} x2={size} y2={i + 1} />
+                <line x1={i + 1} y1={1} x2={i + 1} y2={size} />
+              </g>
+            ))}
+          </g>
           {stars.map((p) => (
             <circle key={p} {...coord(p)} r={size >= 13 ? 0.1 : 0.09} fill="#2b1a0e" opacity={0.75} />
           ))}
@@ -258,6 +279,29 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
               </g>
             );
           })}
+          {/* Tia lửa giữa hai quân khác bên đứng sát nhau. */}
+          {!onToggleDead && (
+            <g data-clash={clashes.length}>
+              {clashes.map(([p, q]) => {
+                const a = coord(p);
+                const b = coord(q);
+                const mx = (a.cx + b.cx) / 2;
+                const my = (a.cy + b.cy) / 2;
+                const flat = a.cy === b.cy;
+                return (
+                  <g key={`${p}-${q}`}>
+                    <circle cx={mx} cy={my} r={0.2} fill={`url(#${uid}-clash)`} />
+                    <path
+                      d={flat ? `M${mx} ${my - 0.17} L${mx} ${my + 0.17}` : `M${mx - 0.17} ${my} L${mx + 0.17} ${my}`}
+                      stroke="#fffbea"
+                      strokeWidth={0.03}
+                      strokeLinecap="round"
+                    />
+                  </g>
+                );
+              })}
+            </g>
+          )}
           {lastMove !== null && lastMove >= 0 && board[lastMove] !== 0 && !onToggleDead && (
             <circle {...coord(lastMove)} r={0.56} fill="none" stroke="#fde68a" strokeWidth={0.06} strokeDasharray="0.18 0.1" />
           )}
