@@ -68,7 +68,7 @@ import {
 import { ModeGuideTabs, type ModePlayTabs } from "../ModeGuide";
 import { PlayCard, usePlayCardExpanded } from "../PlayCard";
 import { useAudio } from "../audio/AudioProvider";
-import { slotFilled } from "./sounds";
+import { combineCue, slotCue } from "./sounds";
 import ModeTierPanel from "../leaderboard/ModeTierPanel";
 
 /** Thẻ Bậc thưởng của Tầm Tướng Ký: bậc theo số tướng đã khám phá (cả chế độ Thường và Hạng). */
@@ -214,6 +214,7 @@ function TtkLoading({ error, label, playTabs }: { error: string | null; label: s
 
 function NormalMode({ initial, playTabs }: { initial: TtkView | null; playTabs?: ModePlayTabs }) {
   const slotsSound = useSlotSound();
+  const { play: playSound } = useAudio();
   const [view, setView] = useState<TtkView | null>(initial);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [slots, setSlotsRaw] = useState<Slots>(EMPTY_SLOTS);
@@ -266,8 +267,11 @@ function NormalMode({ initial, playTabs }: { initial: TtkView | null; playTabs?:
     if (r.ok || r.error !== "network") retry.current = null;
     if (r.view) setView(r.view);
     if (r.ok) onOk(r);
-    else setNotice({ tone: "invalid", text: ERROR_TEXT[r.error] ?? ERROR_TEXT.network! });
-  }, []);
+    else {
+      playSound("ttk.reject");
+      setNotice({ tone: "invalid", text: ERROR_TEXT[r.error] ?? ERROR_TEXT.network! });
+    }
+  }, [playSound]);
 
   const combine = () => {
     const [a, b] = slots;
@@ -276,6 +280,8 @@ function NormalMode({ initial, playTabs }: { initial: TtkView | null; playTabs?:
       if (r.response?.kind !== "combine") return;
       const n = noticeFor(catalog, r.response);
       setNotice(n);
+      const cue = combineCue(r.response);
+      if (cue) playSound(cue);
       const res = altarResult(r.response, ++seq.current, [a, b]);
       if (res) setRecent((list) => [{ first: a, second: b, result: res.kind === "miss" ? null : (res.nodeId ?? null), text: `${nameOf(catalog, a)} + ${nameOf(catalog, b)}: ${n.text}` }, ...list].slice(0, HISTORY_MAX));
       setCard(res ? { kind: "result", result: res } : null);
@@ -288,7 +294,7 @@ function NormalMode({ initial, playTabs }: { initial: TtkView | null; playTabs?:
         setLedgerFocus({ id: res.nodeId, seq: res.seq });
         setTab("ledger");
       }
-      setSlots(EMPTY_SLOTS);
+      setSlots(EMPTY_SLOTS, true);
     });
   };
 
@@ -403,16 +409,17 @@ function NormalMode({ initial, playTabs }: { initial: TtkView | null; playTabs?:
 
 /** Hai ô đang đặt đúng một cặp đã ghép trước đây mà không ra gì. */
 /**
- * Bọc `setSlots` để phát `ttk.slot` khi có nguyên liệu mới vào ô (luật ở `slotFilled`). Tính tiếng ngoài hàm cập nhật
- * để chế độ dev chạy hàm cập nhật hai lần cũng chỉ một tiếng.
+ * Bọc `setSlots` để phát `ttk.slot`/`ttk.unslot` khi người chơi đổi ô (luật ở `slotCue`). Tính tiếng ngoài hàm cập nhật
+ * để chế độ dev chạy hàm cập nhật hai lần cũng chỉ một tiếng. `silent` dùng khi màn tự dọn ô sau lần ghép.
  */
 function useSlotSound() {
   const { play } = useAudio();
   const last = useRef<Slots>(EMPTY_SLOTS);
-  return (set: (next: Slots | ((s: Slots) => Slots)) => void) =>
-    (next: Slots | ((s: Slots) => Slots)) => {
+  return (set: (next: Slots) => void) =>
+    (next: Slots | ((s: Slots) => Slots), silent = false) => {
       const value = typeof next === "function" ? next(last.current) : next;
-      if (slotFilled(last.current, value)) play("ttk.slot");
+      const cue = silent ? null : slotCue(last.current, value);
+      if (cue) play(cue);
       last.current = value;
       set(value);
     };
@@ -437,6 +444,7 @@ function TriedWarning({ cost }: { cost: string }) {
 /** Chế độ Hạng tuần (LT-06): túi nguyên tố tự chọn, kho tuần, ô đề cử chỉ có lời dẫn (A-23), cửa hàng bó, bảng tuần. */
 function RankedMode({ initial, playTabs }: { initial: TtkRankedView | null; playTabs?: ModePlayTabs }) {
   const slotsSound = useSlotSound();
+  const { play: playSound } = useAudio();
   const [view, setView] = useState<TtkRankedView | null>(initial);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [slots, setSlotsRaw] = useState<Slots>(EMPTY_SLOTS);
@@ -471,8 +479,11 @@ function RankedMode({ initial, playTabs }: { initial: TtkRankedView | null; play
     if (r.ok || r.error !== "network") retry.current = null;
     if (r.view) setView(r.view);
     if (r.ok) onOk(r);
-    else setNotice({ tone: "invalid", text: ERROR_TEXT[r.error] ?? ERROR_TEXT.network! });
-  }, []);
+    else {
+      playSound("ttk.reject");
+      setNotice({ tone: "invalid", text: ERROR_TEXT[r.error] ?? ERROR_TEXT.network! });
+    }
+  }, [playSound]);
 
   if (!view) return <TtkLoading error={loadError} label="Đang mở tuần Hạng…" playTabs={playTabs} />;
 
@@ -485,11 +496,13 @@ function RankedMode({ initial, playTabs }: { initial: TtkRankedView | null; play
     void run(`ranked:${a}>${b}:${view.unitsSpent}:${JSON.stringify(view.stock)}`, (id) => rankedCombineApi(id, a, b), (r) => {
       if (r.response?.kind !== "rankedCombine") return;
       const res = r.response;
+      const cue = combineCue({ ...res, status: res.status });
+      if (cue) playSound(cue);
       const base = res.status === "noRecipe" ? "Chưa tìm được mối liên hệ. Nguyên liệu đã mất." : noticeFor(catalog, { ...res, status: res.status }).text;
       setNotice({ tone: res.points > 0 ? "hero" : res.status === "created" ? "discovery" : res.status === "invalid" ? "invalid" : "miss", text: res.points > 0 ? `${base} +${res.points} điểm.` : base });
       const result = altarResult({ ...res, status: res.status }, ++seq.current, [a, b], res.points);
       setCard(result ? { kind: "result", result } : null);
-      setSlots(EMPTY_SLOTS);
+      setSlots(EMPTY_SLOTS, true);
     });
   };
   const buy = () => {

@@ -245,9 +245,13 @@ Nhạc: `vay_thanh_ky` (26/11/2026) ở phân cảnh `VAY_THANH_KY` (`sceneMusic
 
 | Cue | Khi nào | Tệp | Ưu tiên |
 |---|---|---|---|
-| `ttk.slot` | Nguyên liệu mới vào ô Đài Hợp Nguyên (chọn từ kho, dùng thẻ, chọn lại cặp đã thử), cả Thường và Hạng; gỡ, dọn ô sau khi ghép, đổi chỗ thì im (`tam-tuong-ky/sounds.ts`, `slotFilled`) | Tệp riêng `ttk/slot` (3 biến thể) | P1 |
+| `ttk.slot` | Nguyên liệu mới vào ô Đài Hợp Nguyên (chọn từ kho, dùng thẻ, chọn lại cặp đã thử), cả Thường và Hạng (`tam-tuong-ky/sounds.ts`, `slotCue`) | Tệp riêng `ttk/slot` (3 biến thể) | P1 |
+| `ttk.unslot` | Gỡ nguyên liệu khỏi ô hoặc đổi chỗ hai ô; dọn ô sau khi ghép thì im | Tệp riêng `ttk/unslot` (3 biến thể, 27/11/2026) | P1 |
+| `ttk.miss` | Ghép không ra gì (`noRecipe`; Hạng: nguyên liệu mất) (`combineCue`) | Tệp riêng `ttk/miss` (27/11/2026) | P1 |
+| `ttk.known` | Ghép ra yếu tố đã biết (`alreadyKnown`, hoặc thêm một cách ra yếu tố đã biết) | Tệp riêng `ttk/known` (27/11/2026) | P1 |
+| `ttk.reject` | Server từ chối lần ghép (`invalid`) hoặc thao tác lỗi (mạng, hết lượt...) | Tệp riêng `ttk/reject` (27/11/2026) | P1 |
 
-Chưa có: `ttk.unslot`, `miss`, `known`, `new`, `hero`, `reject`, `hint` và nhạc `tam_tuong_ky` (prompt ở 04-prompts mục D5).
+Chưa có: `ttk.new` (khám phá mới), `ttk.hero` (ra tướng), `ttk.hint` và nhạc `tam_tuong_ky` (prompt ở 04-prompts mục D5).
 
 ## 6. Kiểm tra
 

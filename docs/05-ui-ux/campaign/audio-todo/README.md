@@ -29,7 +29,7 @@ Giữ voice profile nhất quán theo ID nhân vật; music/ambience/SFX/voice h
 
 | Màn | Ghi chú |
 |---|---|
-| Tầm Tướng Ký (`TAM_TUONG_KY`) | `ttk.slot` có tệp và đã nối (26/11/2026); chưa có các cue kết quả ghép và nhạc (xem mục 5.11) |
+| Tầm Tướng Ký (`TAM_TUONG_KY`) | `ttk.slot` (26/11/2026), `unslot`, `miss`, `known`, `reject` (27/11/2026) có tệp và đã nối; chưa có `new`, `hero`, `hint` và nhạc (xem mục 5.11) |
 | Viễn Chinh (`EXPEDITION`) | Màn sa bàn phát `music/expedition` (23/11/2026); trận đánh mở ra qua `DemoGame` nên có tiếng trận |
 | Khai Lộ (`KHAI_LO`) | `khailo.remove`, `big`, `fall`, `reject`, `charged`, `heart`, `clear`, `leveldone`, `over`, `tick` có tệp và đã nối (24/11/2026); nhạc `khai_lo`/`khai_lo_timed` theo chế độ (25/11/2026); còn thiếu `whirl`, `thunder`, `undo` (xem mục 5.8) |
 | Tam Quân Kỳ (`TAM_QUAN_KY`) | `tqk.select`, `move`, `capture`, `carry`, `boat`, `fly`, `check`, `checked`, `hero`, `illegal`, `win`, `lose`, `draw`, `clock` có tệp và đã nối (25/11/2026); nhạc `tam_quan_ky` (26/11/2026) (xem mục 5.9) |

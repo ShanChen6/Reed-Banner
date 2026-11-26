@@ -1004,6 +1004,36 @@
         "sfx/ttk/slot_c"
       ],
       "volume": 0.65
+    },
+    "ttk.unslot": {
+      "files": [
+        "sfx/ttk/unslot_a",
+        "sfx/ttk/unslot_b",
+        "sfx/ttk/unslot_c"
+      ],
+      "volume": 0.6
+    },
+    "ttk.miss": {
+      "files": [
+        "sfx/ttk/miss_a",
+        "sfx/ttk/miss_b"
+      ],
+      "volume": 0.75
+    },
+    "ttk.known": {
+      "files": [
+        "sfx/ttk/known_a",
+        "sfx/ttk/known_b",
+        "sfx/ttk/known_c"
+      ],
+      "volume": 0.7
+    },
+    "ttk.reject": {
+      "files": [
+        "sfx/ttk/reject_a",
+        "sfx/ttk/reject_b"
+      ],
+      "volume": 0.6
     }
   },
   "music": {

@@ -94,7 +94,7 @@ export const TQK_CUES = ["tqk.select", "tqk.move", "tqk.capture", "tqk.carry", "
 
 export const GO_CUES = ["go.place", "go.capture_small", "go.capture_big", "go.atari", "go.pass", "go.illegal", "go.score", "go.clock", "go.win", "go.lose"] as const;
 
-export const TTK_CUES = ["ttk.slot"] as const;
+export const TTK_CUES = ["ttk.slot", "ttk.unslot", "ttk.miss", "ttk.known", "ttk.reject"] as const;
 
 export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...SULO_CUES, ...DOTHAM_CUES, ...MODE_CUES, ...KHAILO_CUES, ...TQK_CUES, ...GO_CUES, ...TTK_CUES] as const;
 export type CueId = (typeof CUE_IDS)[number];
