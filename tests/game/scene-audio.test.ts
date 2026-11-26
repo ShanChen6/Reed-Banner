@@ -22,9 +22,10 @@ describe("âm thanh theo phân cảnh", () => {
     for (const s of ["MENU", "SHOP", "PROFILE", "LOGIN", "QUESTS", "LEADERBOARD"] as const) assert.deepEqual(soundOfScene(s), { music: null, ambience: null });
   });
 
-  it("Nhật Lệnh và Viễn Chinh có nhạc riêng", () => {
+  it("Nhật Lệnh, Viễn Chinh và Tam Quân Kỳ có nhạc riêng", () => {
     assert.deepEqual(soundOfScene("DAILY"), { music: "daily", ambience: null });
     assert.deepEqual(soundOfScene("EXPEDITION"), { music: "expedition", ambience: null });
+    assert.deepEqual(soundOfScene("TAM_QUAN_KY"), { music: "tam_quan_ky", ambience: null });
   });
 
   it("Tháp, Đấu trường, Sinh tồn mỗi nơi một bài", () => {

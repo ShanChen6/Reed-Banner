@@ -5,7 +5,7 @@
 //   vàng theo độ khó, tối đa REWARDS_PER_DAY ván có vàng mỗi ngày.
 // - "online": đấu người bằng mã phòng: người mở phòng đi trước, người vào bằng mã đi sau, mỗi người tự chọn nguyên tố. Giao hữu.
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { Element } from "@/core";
 import { BLACK, GO_ONLINE_CLOCKS, PASS, WHITE, isLegal, newGame, opponent, play, playInPlace, type BoardSize, type Color, type Level, type Mode, type Position } from "@/core/co-vay";
 import { Button } from "@/components/ui";
@@ -16,6 +16,9 @@ import { LEVEL_NAME, LEVELS, Options, RivalPicker, rivalById } from "../tam-quan
 import { Board } from "./Board";
 import { Arena, ElementPicker, PlayerCard, RULE_HINT, RULE_NAME, SIZES, ScoreLines } from "./parts";
 import { SERVER_ERROR, useOnlineMatch, type ServerKind } from "./useOnlineMatch";
+import { useAudio } from "../audio/AudioProvider";
+import { clockTickDue } from "../tam-quan-ky/sounds";
+import { goMoveSounds, playInTurn } from "./sounds";
 
 /** Vàng thắng sứ quân theo độ khó và số ván có vàng mỗi ngày; khớp GO_GOLD, GO_REWARDS_PER_DAY ở src/server/coVay.ts. */
 const GOLD: Record<Level, number> = { easy: 20, medium: 40, hard: 80 };
@@ -36,6 +39,7 @@ function positionOf(size: BoardSize, mode: Mode, moves: readonly number[]): Posi
 
 export function OnlinePlay({ kind, modePicker, phone, onMoves }: Props) {
   const s = useOnlineMatch();
+  const { play: playSound } = useAudio();
   const view = s.view;
   const [rule, setRule] = useState<Mode>("full");
   const [size, setSize] = useState<BoardSize>(9);
@@ -60,6 +64,25 @@ export function OnlinePlay({ kind, modePicker, phone, onMoves }: Props) {
 
   useEffect(() => onMoves(moves.length), [moves.length, onMoves]);
   const viewId = view?.id ?? null;
+  // Server ghi thêm nước (của mình hay đối thủ): tiếng của nước cuối; hết ván bằng đếm điểm thì `go.score`. Lần đầu nạp ván chỉ ghi nhớ.
+  const heard = useRef<{ id: string | null; n: number; over: boolean } | null>(null);
+  useEffect(() => {
+    if (!view) return;
+    const prev = heard.current;
+    const over = !!view.result;
+    if (prev && prev.id === view.id) {
+      if (moves.length > prev.n) playInTurn(goMoveSounds(positionOf(view.size, view.mode, moves.slice(0, -1)), moves[moves.length - 1]!), playSound);
+      if (over && !prev.over && view.result?.reason === "score") playSound("go.score");
+    }
+    heard.current = { id: view.id, n: moves.length, over };
+  }, [view, moves, playSound]);
+  // Còn 10 giây cuối trong lượt của bạn thì mỗi giây gõ một tiếng.
+  const myClockMs = view && view.clockMs > 0 && s.myTurn && !view.result ? s.timeLeft(view.you) : null;
+  const lastClock = useRef<number | null>(null);
+  useEffect(() => {
+    if (myClockMs !== null && lastClock.current !== null && clockTickDue(lastClock.current, myClockMs)) playSound("go.clock");
+    lastClock.current = myClockMs;
+  }, [myClockMs, playSound]);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- mở lại hộp kết quả cho mỗi ván mới
     setDismissed(false);
@@ -68,6 +91,7 @@ export function OnlinePlay({ kind, modePicker, phone, onMoves }: Props) {
   const send = async (point: number) => {
     if (!canMove || !last) return;
     if (point !== PASS && !isLegal(last, point)) {
+      playSound("go.illegal");
       setNotice(last.board[point] !== 0 ? "Chỗ này đã có quân." : point === last.ko ? "Luật cướp (ko): chưa được bắt lại ngay." : "Không được tự đặt quân vào chỗ hết khí.");
       return;
     }

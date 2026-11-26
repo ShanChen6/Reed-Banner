@@ -222,7 +222,23 @@ Thứ tự chọn tiếng đi quân ở `tam-quan-ky/sounds.ts` (`moveCue`): ăn
 | `tqk.win` / `tqk.lose` / `tqk.draw` | Hết ván (`resultCue`): phe mình thắng hoặc hai người chung máy là win, thua là lose, hòa là draw. Nước kết thúc ván: phát sau tiếng nước 0,7 s; đầu hàng và hết giờ: phát ngay; ván qua server: khi server báo hết ván (nạp lại ván đã xong thì im) | Tệp riêng `tqk/win`, `tqk/lose`, `tqk/draw` (25/11/2026) | P1 |
 | `tqk.clock` | Còn 10 giây cuối trong lượt của mình (hai người chung máy: lượt bên đang đi), mỗi giây một tiếng (`clockTickDue`) | Tệp riêng `tqk/clock` (25/11/2026) | P2 |
 
-Chưa có nhạc riêng cho Tam Quân Kỳ.
+Nhạc: `tam_quan_ky` (26/11/2026) ở phân cảnh `TAM_QUAN_KY` (`sceneMusic.ts`).
+
+### 5.10 Vây Thành Kỳ (`go.*`, nối 26/11/2026)
+
+Bàn cờ là `role="application"` nên không có tiếng bấm chung. `vay-thanh-ky/sounds.ts` (`goMoveSounds`) chọn tiếng cho một nước, `playInTurn` phát cách nhau 220 ms. Đấu máy, hai người chung máy và đấu người dùng chung; ván qua server phát khi server ghi thêm nước (nạp ván đầu im).
+
+| Cue | Khi nào | Tệp | Ưu tiên |
+|---|---|---|---|
+| `go.place` | Đặt quân hợp lệ | Tệp riêng `go/place` (3 biến thể) | P1 |
+| `go.capture_small` / `go.capture_big` | Nước đó bắt quân: dưới 4 quân / từ 4 quân (`BIG_CAPTURE`), sau tiếng đặt quân | Tệp riêng `go/capture_small`, `go/capture_big` | P1 |
+| `go.atari` | Bên kia có thêm nhóm chỉ còn một khí (ván chưa ngã ngũ) | Tệp riêng `go/atari` | P2 |
+| `go.pass` | Bỏ lượt | Tệp riêng `go/pass` | P1 |
+| `go.illegal` | Bấm điểm không đặt được (đã có quân, luật cướp, tự hết khí) | Tệp riêng `go/illegal` | P1 |
+| `go.score` | Hết ván bằng đếm điểm: bấm xác nhận điểm (chơi trên máy) hoặc server báo kết quả đếm điểm | Tệp riêng `go/score` | P2 |
+| `go.clock` | Đấu người có đồng hồ: còn 10 giây cuối trong lượt của bạn, mỗi giây một tiếng | Tệp riêng `go/clock` | P2 |
+
+Chưa có nhạc riêng cho Vây Thành Kỳ.
 
 ## 6. Kiểm tra
 

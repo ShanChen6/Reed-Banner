@@ -925,6 +925,63 @@
         "sfx/tqk/clock_b"
       ],
       "volume": 0.55
+    },
+    "go.place": {
+      "files": [
+        "sfx/go/place_a",
+        "sfx/go/place_b",
+        "sfx/go/place_c"
+      ],
+      "volume": 0.75
+    },
+    "go.capture_small": {
+      "files": [
+        "sfx/go/capture_small_a",
+        "sfx/go/capture_small_b"
+      ],
+      "volume": 0.75
+    },
+    "go.capture_big": {
+      "files": [
+        "sfx/go/capture_big_a",
+        "sfx/go/capture_big_b"
+      ],
+      "volume": 0.8
+    },
+    "go.atari": {
+      "files": [
+        "sfx/go/atari_a",
+        "sfx/go/atari_b"
+      ],
+      "volume": 0.7
+    },
+    "go.pass": {
+      "files": [
+        "sfx/go/pass_a",
+        "sfx/go/pass_b"
+      ],
+      "volume": 0.6
+    },
+    "go.illegal": {
+      "files": [
+        "sfx/go/illegal_a",
+        "sfx/go/illegal_b"
+      ],
+      "volume": 0.6
+    },
+    "go.score": {
+      "files": [
+        "sfx/go/score_a",
+        "sfx/go/score_b"
+      ],
+      "volume": 0.8
+    },
+    "go.clock": {
+      "files": [
+        "sfx/go/clock_a",
+        "sfx/go/clock_b"
+      ],
+      "volume": 0.55
     }
   },
   "music": {
@@ -1013,6 +1070,10 @@
     },
     "khai_lo_timed": {
       "file": "music/khai_lo_timed",
+      "volume": 0.5
+    },
+    "tam_quan_ky": {
+      "file": "music/tam_quan_ky",
       "volume": 0.5
     },
     "ending": {

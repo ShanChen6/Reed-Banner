@@ -22,6 +22,8 @@ import { OnlinePlay } from "./OnlinePlay";
 import { Arena, ElementPicker, PlayerCard, RULE_HINT, RULE_NAME, SIZES, ScoreLines, sideOrder } from "./parts";
 import { useVtkEngine } from "./useEngine";
 import { savedOnline } from "./useOnlineMatch";
+import { useAudio } from "../audio/AudioProvider";
+import { goMoveSounds, playInTurn } from "./sounds";
 
 const SAVE_KEY = "reed-banner:vay-thanh-ky:save:v1";
 const MIN_THINK_MS = 450;
@@ -55,6 +57,7 @@ function readSaved(): Saved | null {
 }
 
 export default function VayThanhKyScreen() {
+  const { play: playSound } = useAudio();
   const [mode, setMode] = useState<PlayMode>("ai");
   const [rule, setRule] = useState<Mode>("full");
   const [size, setSize] = useState<BoardSize>(9);
@@ -132,6 +135,7 @@ export default function VayThanhKyScreen() {
       const by = before.toPlay;
       const { position: after, legal, captured } = play(before, move);
       if (!legal) return;
+      playInTurn(goMoveSounds(before, move), playSound);
       setMoves([...current, move]);
       setAnnounce(move === PASS ? `${names[by]} bỏ lượt.` : `${names[by]} đặt quân${captured ? `, bắt ${captured} quân` : ""}.`);
       if (move === PASS && by === machine && after.passes < 2) setNotice(`${rival.name} bỏ lượt. Bạn cũng bỏ lượt thì ván dừng để đếm điểm.`);
@@ -142,7 +146,7 @@ export default function VayThanhKyScreen() {
         setPhase("scoring");
       }
     },
-    [size, rule, names, machine, rival.name, finish],
+    [size, rule, names, machine, rival.name, finish, playSound],
   );
 
   // ---- lượt máy ----
@@ -187,6 +191,7 @@ export default function VayThanhKyScreen() {
 
   const confirmScore = () => {
     if (!score) return;
+    playSound("go.score");
     finish({ winner: score.black > score.white ? BLACK : WHITE, reason: "score", black: score.black, white: score.white });
   };
 
@@ -202,6 +207,7 @@ export default function VayThanhKyScreen() {
   const playHere = (point: number) => {
     if (!myTurn) return;
     if (point !== PASS && !isLegal(position, point)) {
+      playSound("go.illegal");
       setNotice(position.board[point] !== 0 ? "Chỗ này đã có quân." : point === position.ko ? "Luật cướp (ko): chưa được bắt lại ngay, hãy đi chỗ khác một nước." : "Không được tự đặt quân vào chỗ hết khí.");
       return;
     }
