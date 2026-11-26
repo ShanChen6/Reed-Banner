@@ -21,9 +21,10 @@ const levelName = (id: string) => (id === "thuong" ? "Thường" : id === "kho" 
 
 const rankText = (rank: number, detail: string) => `Hạng ${rank}, ${detail}`;
 
-function useStandings(destinyEnabled: boolean, tamTuongKyRanked: boolean, formationRanked: boolean): Standing[] {
+function useStandings(destinyEnabled: boolean, tamTuongKyRanked: boolean, formationRanked: boolean, tradeEnabled: boolean): Standing[] {
   const survival = useJson<SeasonBoardResponse>("/api/leaderboard?board=survival&season=current");
   const arena = useJson<SeasonBoardResponse>("/api/leaderboard?board=arena&season=current");
+  const trade = useJson<SeasonBoardResponse>(tradeEnabled ? "/api/trade?board=1" : null);
   const destiny = useJson<DestinyBoardResponse>(destinyEnabled ? "/api/destiny/leaderboard?cursor=0&limit=1" : null);
   const ttk = useJson<TtkBoardResponse>(tamTuongKyRanked ? "/api/tam-tuong-ky/board?week=current" : null);
   const [formation, setFormation] = useState<Overview | null>(null);
@@ -36,6 +37,7 @@ function useStandings(destinyEnabled: boolean, tamTuongKyRanked: boolean, format
     { title: "Quần Hùng – mùa tuần", text: arena === null ? undefined : arena.mine ? rankText(arena.mine.rank, `+${arena.mine.score} điểm`) : null },
   ];
   if (destinyEnabled) out.push({ title: "Tháp Thiên Mệnh – chu kỳ", text: destiny === null ? undefined : destiny.mine ? rankText(destiny.mine.rank, `tầng ${destiny.mine.clearedFloor}`) : null });
+  if (tradeEnabled) out.push({ title: "Hành Thương Ký – mùa tuần", text: trade === null ? undefined : trade.mine ? rankText(trade.mine.rank, `lãi ${trade.mine.score.toLocaleString("vi-VN")} kim tiền`) : null });
   if (tamTuongKyRanked) out.push({ title: "Tầm Tướng Ký – hạng tuần", text: ttk === null ? undefined : ttk.mine ? rankText(ttk.mine.rank, `${ttk.mine.points} điểm`) : null });
   if (formation === null && formationRanked) {
     // Đang tải: giữ chỗ cho các bậc Trận Đồ để lưới không cao thêm (và đẩy phần dưới) khi dữ liệu về.
@@ -66,12 +68,14 @@ export default function HonorsScreen({
   destinyEnabled = true,
   tamTuongKyRanked = false,
   formationRanked = false,
+  tradeEnabled = false,
 }: {
   destinyEnabled?: boolean;
   tamTuongKyRanked?: boolean;
   formationRanked?: boolean;
+  tradeEnabled?: boolean;
 }) {
-  const standings = useStandings(destinyEnabled, tamTuongKyRanked, formationRanked);
+  const standings = useStandings(destinyEnabled, tamTuongKyRanked, formationRanked, tradeEnabled);
   const honors = useJson<{ signedIn?: boolean; items?: HonorItem[]; error?: string }>("/api/honors");
   return (
     <ModeScreen card label="Công Trạng">

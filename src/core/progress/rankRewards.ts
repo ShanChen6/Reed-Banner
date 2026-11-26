@@ -23,9 +23,9 @@ export function rewardTier(rank: number, participants: number): RewardTier | nul
 }
 
 /** Chế độ có thưởng hạng theo kỳ chạy qua sổ nhận chung (`rank_reward_claims`). Trận Đồ có sổ riêng. */
-export type RankRewardMode = "daily" | "destiny" | "survival" | "arena" | "tamTuongKy" | "pvp";
+export type RankRewardMode = "daily" | "destiny" | "survival" | "arena" | "tamTuongKy" | "pvp" | "trade";
 
-export const RANK_REWARD_MODES: readonly RankRewardMode[] = ["daily", "destiny", "survival", "arena", "tamTuongKy", "pvp"];
+export const RANK_REWARD_MODES: readonly RankRewardMode[] = ["daily", "destiny", "survival", "arena", "tamTuongKy", "pvp", "trade"];
 
 /**
  * Chế độ theo tuần: thưởng hạng kèm bó nguyên tố Tầm Tướng Ký (Design Freeze P-11), cho người đã vào Tầm Tướng Ký.
@@ -40,6 +40,7 @@ export const RANK_REWARD_MODE_NAME: Readonly<Record<RankRewardMode, string>> = {
   arena: "Quần Hùng",
   tamTuongKy: "Tầm Tướng Ký",
   pvp: "Quần Hùng – Thư Hùng",
+  trade: "Hành Thương Ký",
 };
 
 /** Vàng theo bậc thưởng của từng chế độ chung sổ (kỳ theo ngày, theo chu kỳ hoặc theo mùa tuần). Nhật Lệnh đã có 150/50 vàng cố định mỗi ván nên thưởng hạng nhỏ hơn. */
@@ -53,7 +54,16 @@ export const RANK_REWARD_GOLD: Readonly<Record<RankRewardMode, Readonly<Record<R
   tamTuongKy: { top1: 500, top3: 300, top10: 180, half: 80, win: 30 },
   // Quần Hùng Đấu người (PVP-07, đề xuất bằng Quần Hùng đấu bóng ma, chờ Shan duyệt): tổng Elo nhận được trong tuần.
   pvp: { top1: 600, top3: 400, top10: 240, half: 100, win: 40 },
+  // Hành Thương Ký (Shan chốt 26/11/2026: hết mùa thưởng vàng và đá): lãi kim tiền trong tuần; vàng bằng Quần Hùng.
+  trade: { top1: 600, top3: 400, top10: 240, half: 100, win: 40 },
 };
+
+/** Đá Cường Hóa kèm thưởng hạng (chỉ Hành Thương Ký, Shan chốt 26/11/2026). */
+export const RANK_REWARD_STONES: Readonly<Partial<Record<RankRewardMode, Readonly<Record<RewardTier, number>>>>> = {
+  trade: { top1: 4, top3: 3, top10: 2, half: 1, win: 0 },
+};
+
+export const rankRewardStones = (mode: RankRewardMode, tier: RewardTier): number => RANK_REWARD_STONES[mode]?.[tier] ?? 0;
 
 export function rankRewardGold(mode: RankRewardMode, rank: number, participants: number): { tier: RewardTier; gold: number } | null {
   const tier = rewardTier(rank, participants);

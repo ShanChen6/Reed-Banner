@@ -41,6 +41,7 @@ import {
 import { ServerPlay } from "./ServerPlay";
 import { useTqkEngine } from "./useEngine";
 import { useAudio } from "../audio/AudioProvider";
+import { RESULT_DELAY_MS, clockTickDue, moveSounds, playInTurn, resultCue } from "./sounds";
 import { savedServerKind, type ServerKind } from "./useServerMatch";
 
 const SAVE_KEY = "reed-banner:tam-quan-ky:save:v1";
@@ -112,6 +113,8 @@ export default function TamQuanKyScreen() {
   const server = mode === "reward" || mode === "online";
   const [serverMoves, setServerMoves] = useState(0);
   const machine: Color | null = mode === "ai" ? (human === RED ? BLUE : RED) : null;
+  /** Phe của người ngồi máy này (đấu máy); hai người chung máy thì không có, mọi nước chiếu đều là tiếng chiếu. */
+  const me: Color | null = machine ? human : null;
   const machineTurn = !!machine && position.toMove === machine && !result;
 
   /** Đỏ luôn là quân Bộ Lĩnh, Xanh là sứ quân; đấu máy thì bạn chọn cầm phe nào. */
@@ -156,6 +159,8 @@ export default function TamQuanKyScreen() {
 
   // ---- đồng hồ ----
   const ticking = clock > 0 && started && !result;
+  /** Hết giờ ghi trong hàm cập nhật đồng hồ (có thể chạy hai lần ở chế độ dev); tiếng thua/thắng phát ở effect dưới, một lần. */
+  const timedOut = useRef(false);
   useEffect(() => {
     if (!ticking) return;
     const side = position.toMove;
@@ -167,6 +172,7 @@ export default function TamQuanKyScreen() {
       setTimeLeft((t) => {
         const left = t[side] - spent;
         if (left <= 0) {
+          timedOut.current = true;
           setEnded({ loser: side, reason: "timeout" });
           setSpeech(side === RED ? "lose" : "win");
         }
@@ -175,6 +181,18 @@ export default function TamQuanKyScreen() {
     }, 200);
     return () => window.clearInterval(id);
   }, [ticking, position.toMove, setSpeech]);
+  useEffect(() => {
+    if (!timedOut.current || !ended) return;
+    timedOut.current = false;
+    playSound(resultCue(endGame(current, ended.loser, ended.reason).result!, me));
+  }, [ended, current, me, playSound]);
+  // Còn 10 giây cuối của bên đang đi (đấu máy: chỉ lượt của bạn) thì mỗi giây gõ một tiếng.
+  const watchedMs = ticking && (machine === null || position.toMove === human) ? timeLeft[position.toMove] : null;
+  const lastWatched = useRef<number | null>(null);
+  useEffect(() => {
+    if (watchedMs !== null && lastWatched.current !== null && clockTickDue(lastWatched.current, watchedMs)) playSound("tqk.clock");
+    lastWatched.current = watchedMs;
+  }, [watchedMs, playSound]);
 
   const clearSelection = () => {
     setSelected(null);
@@ -185,7 +203,11 @@ export default function TamQuanKyScreen() {
   const commit = useCallback(
     (move: Move, from: Position) => {
       const next = play(from, move);
-      playSound("tqk.move");
+      playInTurn(moveSounds(from, next, move, me), playSound);
+      if (next.result) {
+        const cue = resultCue(next.result, me);
+        window.setTimeout(() => playSound(cue), RESULT_DELAY_MS);
+      }
       setMoves((list) => [...list, move]);
       setBegun(true);
       setSelected(null);
@@ -196,7 +218,7 @@ export default function TamQuanKyScreen() {
       const line = lineAfterMove(from, next) ?? (from.moveNumber === 1 ? "start" : null);
       if (line) setSpeech(line);
     },
-    [playerName, setSpeech, playSound],
+    [playerName, setSpeech, playSound, me],
   );
 
   // ---- lượt máy ----
@@ -237,6 +259,8 @@ export default function TamQuanKyScreen() {
       setUnit(stack.carrier.type === "h" && stack.riders.length ? 0 : "stack");
       return;
     }
+    // Đang cầm quân mà bấm ô quân đó không tới được: báo nước không hợp lệ (bấm lại chính quân đó là bỏ chọn, im).
+    if (selected !== null && s !== selected) playSound("tqk.illegal");
     clearSelection();
   };
 
@@ -258,6 +282,7 @@ export default function TamQuanKyScreen() {
     setThinking(false);
     const loser = machine ? human : position.toMove;
     setEnded({ loser, reason: "resign" });
+    playSound(resultCue(endGame(current, loser, "resign").result!, me));
     setSpeech(loser === RED ? "lose" : "win");
     clearSelection();
   };

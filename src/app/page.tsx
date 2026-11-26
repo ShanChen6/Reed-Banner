@@ -25,7 +25,7 @@ import { Logo } from "./game/art/logo";
 import { Portrait } from "./game/art/portraits";
 import { ModeIcon, type ModeIconKind } from "./game/art/mode-icons";
 import { BoardCrest } from "./game/art/tiles";
-import { expeditionFlag, tamTuongKyEnabled, towerFeatureFlags, type TowerFeatureFlags } from "@/server/featureFlags";
+import { expeditionFlag, tamTuongKyEnabled, tradeFlag, towerFeatureFlags, type TowerFeatureFlags } from "@/server/featureFlags";
 import { ELEMENT_TRAIT, FAQ, PROFESSION_ROLE } from "./home/data";
 import DrumFace from "./home/DrumFace";
 import HeroBoard from "./home/HeroBoard";
@@ -47,7 +47,7 @@ function heroBoard(): (Tile | null)[] {
   return cells;
 }
 
-type ModeFlag = keyof TowerFeatureFlags | "expedition" | "tamTuongKy";
+type ModeFlag = keyof TowerFeatureFlags | "expedition" | "tamTuongKy" | "trade";
 
 interface LandingMode {
   readonly slug: ModeIconKind;
@@ -89,6 +89,7 @@ const MODE_GROUPS: readonly { readonly title: string; readonly sub: string; read
       { slug: "maze", name: "Sử Lộ", kicker: "Học sử", art: "/art/home/su-lo.webp", guest: true, body: "Đổ xúc xắc đi qua mê cung các thời kỳ, đáp đúng câu sử để mở cổng." },
       { slug: "tam-tuong-ky", name: "Tầm Tướng Ký", kicker: "Ghép tướng", art: "/art/home/tam-tuong-ky.webp", flag: "tamTuongKy", body: "Ghép bảy hệ thành nguyên liệu, lần ra chân dung các danh tướng." },
       { slug: "three-armies", name: "Tam Quân Kỳ", kicker: "Đánh cờ", art: "/art/home/tam-quan-ky.webp", guest: true, body: "Cờ tư lệnh cổ trang: bộ binh, chiến thuyền, thiên mã trên sa bàn; thắng sứ quân có vàng." },
+      { slug: "trade", name: "Hành Thương Ký", kicker: "Buôn bán", art: "/art/campaign/world-map.webp", flag: "trade", body: "Buôn hàng giữa mười ba bến chợ thời mười hai sứ quân, kho chung cho mọi người, xếp hạng theo lãi mỗi tuần." },
       { slug: "go", name: "Vây Thành Kỳ", kicker: "Đánh cờ", art: "/art/home/vay-thanh-ky.webp", guest: true, body: "Cờ vây bảy nguyên tố: chọn hệ, đặt quân vây đất, đất mình vây đổi sắc theo hệ." },
     ],
   },
@@ -102,7 +103,7 @@ const DBL_ERAS = [
 
 export default function Home() {
   const board = heroBoard();
-  const flags: Record<ModeFlag, boolean> = { ...towerFeatureFlags(), expedition: expeditionFlag(), tamTuongKy: tamTuongKyEnabled() };
+  const flags: Record<ModeFlag, boolean> = { ...towerFeatureFlags(), expedition: expeditionFlag(), tamTuongKy: tamTuongKyEnabled(), trade: tradeFlag() };
   const modeCount = MODE_GROUPS.reduce((n, g) => n + g.modes.length, 0);
   // Số liệu đếm thẳng từ dữ liệu game, không viết tay.
   const facts = [

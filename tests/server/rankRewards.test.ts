@@ -11,12 +11,14 @@ import { DrizzleRankRewardStore } from "../../src/server/db/rankRewards";
 import type { Db } from "../../src/server/db/store";
 import { MemoryDestinyLeaderboardStore, type DestinyLeaderboardStore } from "../../src/server/destinyLeaderboard";
 import { MemoryProfileStore, loadProfile, type ProfileStore } from "../../src/server/profiles";
+import { MemorySeasonStore } from "../../src/server/seasons";
 import {
   MemoryRankRewardStore,
   claimRankReward,
   dailySource,
   destinySource,
   pendingRankRewards,
+  seasonSource,
   type RankRewardDeps,
   type RankRewardStore,
 } from "../../src/server/rankRewards";
@@ -148,6 +150,21 @@ describe("thưởng hạng Tháp Thiên Mệnh", () => {
     assert.equal((await pendingRankRewards(d, "a")).items.length, 2);
     await claimRankReward(d, "a", "daily", YESTERDAY);
     assert.deepEqual((await pendingRankRewards(d, "a")).items.map((i) => i.mode), ["destiny"]);
+  });
+
+  it("Hành Thương Ký: hết mùa thưởng vàng kèm Đá Cường Hóa", async () => {
+    const seasons = new MemorySeasonStore();
+    const lastWeek = "2026-10-26";
+    await seasons.add("trade", lastWeek, "a", 5000, 1);
+    await seasons.add("trade", lastWeek, "b", 3000, 2);
+    const d = deps({ sources: [seasonSource("trade", seasons)] });
+    const [item] = (await pendingRankRewards(d, "a")).items;
+    assert.equal(item?.mode, "trade");
+    assert.equal(item?.stones, 4);
+    const stones0 = (await loadProfile(d.profiles, "a")).profile.stones;
+    const r = await claimRankReward(d, "a", "trade", lastWeek);
+    assert.ok(r.ok && r.stones === 4 && r.gold === RANK_REWARD_GOLD.trade.top1);
+    assert.equal((await loadProfile(d.profiles, "a")).profile.stones, stones0 + 4);
   });
 });
 

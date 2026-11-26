@@ -43,7 +43,7 @@ interface Mode {
   readonly lockedText?: string;
 }
 
-// Giọng văn thẻ chế độ: câu mô tả lấy từ MODE_TEXT (modeInfo.ts), hào sảng, nhịp hai vế; tránh thuật ngữ nội bộ. Nhãn kicker theo bộ cố định: Cốt truyện, Leo tháp, Sinh tồn, Mỗi ngày, Đấu người, Binh pháp, Giải đố, Ghép tướng, Hành quân, Đánh cờ.
+// Giọng văn thẻ chế độ: câu mô tả lấy từ MODE_TEXT (modeInfo.ts), hào sảng, nhịp hai vế; tránh thuật ngữ nội bộ. Nhãn kicker theo bộ cố định: Cốt truyện, Leo tháp, Sinh tồn, Mỗi ngày, Đấu người, Binh pháp, Giải đố, Ghép tướng, Hành quân, Đánh cờ, Buôn bán.
 const MODES: readonly Mode[] = [
   {
     scene: "CAMPAIGN",
@@ -68,6 +68,7 @@ const MODES: readonly Mode[] = [
   { scene: "TAM_TUONG_KY", group: "puzzle", title: "Tầm Tướng Ký", text: MODE_TEXT.TAM_TUONG_KY, art: "tam-tuong-ky", kicker: "Ghép tướng", status: "Một phiếu, một lượt tìm tướng", cta: "Ghép tướng", lockedText: "Sắp khai mở" },
   { scene: "TAM_QUAN_KY", group: "puzzle", title: "Tam Quân Kỳ", text: MODE_TEXT.TAM_QUAN_KY, art: "tam-quan-ky", kicker: "Đánh cờ", status: "Thắng sứ quân có vàng, đấu người bằng mã phòng", cta: "Bày cờ" },
   { scene: "VAY_THANH_KY", group: "puzzle", title: "Vây Thành Kỳ", text: MODE_TEXT.VAY_THANH_KY, art: "vay-thanh-ky", kicker: "Đánh cờ", status: "Đấu sứ quân hoặc đấu người bằng mã phòng", cta: "Vây thành" },
+  { scene: "TRADE", group: "puzzle", title: "Hành Thương Ký", text: MODE_TEXT.TRADE, kicker: "Buôn bán", status: "Mùa một tuần, giá đổi mỗi hai giờ", cta: "Lên đường", lockedText: "Sắp khai mở" },
   { scene: "EXPEDITION", group: "battle", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, art: "vien-chinh", kicker: "Hành quân", status: "Bày mưu tính kế trên sa bàn", cta: "Hành quân", lockedText: "Sắp khai mở" },
 ];
 
@@ -144,7 +145,9 @@ export default function MenuScene({ account, towerFeatures }: { account: ShellAc
           ? !towerFeatures.tamTuongKy
           : scene === "EXPEDITION"
             ? !towerFeatures.expedition
-            : false;
+            : scene === "TRADE"
+              ? !towerFeatures.trade
+              : false;
   const byTab: Record<ModeTab, readonly Mode[]> = {
     battle: MODES.filter((m) => m.group === "battle"),
     puzzle: MODES.filter((m) => m.group === "puzzle"),

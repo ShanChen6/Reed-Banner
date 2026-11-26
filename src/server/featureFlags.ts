@@ -85,6 +85,11 @@ export function expeditionFlag(env: Readonly<Record<string, string | undefined>>
 export const expeditionEnabled = (deps: { readonly expeditionEnabled?: boolean }): boolean =>
   deps.expeditionEnabled === true;
 
+/** Hành Thương Ký (buôn bán theo mùa tuần). Chỉ chuỗi `true` mới bật; mặc định tắt, thẻ hiện khóa ở mục Giải đố. */
+export function tradeFlag(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+  return env.TRADE_ENABLED === "true";
+}
+
 /** Quần Hùng online (PvP). Chỉ chuỗi `true` mới bật; thiếu, rỗng hoặc giá trị lạ đều fail-closed (mặc định tắt). */
 export function pvpEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
   return env.PVP_ENABLED === "true";

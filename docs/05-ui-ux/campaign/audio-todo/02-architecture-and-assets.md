@@ -204,7 +204,23 @@ Sa bàn là `role="application"` nên không có tiếng bấm chung.
 | Cue | Khi nào | Tệp | Ưu tiên |
 |---|---|---|---|
 | `tqk.select` | Chọn một quân của phe đang đi (đấu máy, hai người, đấu người, có thưởng) | Tệp riêng `tqk/select` (2 biến thể) | P1 |
-| `tqk.move` | Mỗi nước đi được ghi, của mình hay đối thủ/máy; ván qua server phát khi server ghi thêm nước (lần nạp ván đầu im) | Tệp riêng `tqk/move` (3 biến thể) | P1 |
+| `tqk.move` | Mỗi nước đi được ghi, của mình hay đối thủ/máy, khi không thuộc các dòng dưới; ván qua server phát khi server ghi thêm nước (lần nạp ván đầu im) | Tệp riêng `tqk/move` (3 biến thể) | P1 |
+| `tqk.capture` | Nước ăn quân: đánh chiếm, bắn, Thiên mã lao vào vùng phòng không (ưu tiên cao nhất) | Tệp riêng `tqk/capture` (3 biến thể, 25/11/2026) | P1 |
+| `tqk.carry` | Lên chung với quân khác, hoặc đi cả chồng đang chở quân | Tệp riêng `tqk/carry` (3 biến thể, 25/11/2026) | P2 |
+| `tqk.boat` | Chiến thuyền đi (kể cả khi chở quân) | Tệp riêng `tqk/boat` (2 biến thể, 25/11/2026) | P2 |
+| `tqk.fly` | Thiên mã bay | Tệp riêng `tqk/fly` (2 biến thể, 25/11/2026) | P2 |
+
+| `tqk.check` | Sau nước đi, một bên bị chiếu tướng: mình chiếu đối thủ, hoặc hai người chơi chung máy | Tệp riêng `tqk/check` (25/11/2026) | P1 |
+| `tqk.checked` | Bên mình (người chơi trên máy này) bị chiếu tướng | Tệp riêng `tqk/checked` (25/11/2026) | P1 |
+| `tqk.hero` | Phe nào có thêm quân anh hùng sau nước đi (quân dọa Chủ tướng địch, hoặc quân chiến đấu cuối cùng) | Tệp riêng `tqk/hero` (25/11/2026) | P2 |
+| `tqk.illegal` | Đang cầm quân mà bấm ô quân đó không tới được (bấm lại chính quân đó là bỏ chọn, im) | Tệp riêng `tqk/illegal` (25/11/2026) | P1 |
+
+Thứ tự chọn tiếng đi quân ở `tam-quan-ky/sounds.ts` (`moveCue`): ăn quân → lên chung → Chiến thuyền → Thiên mã → chồng chở quân → thường. `moveSounds` nối thêm tiếng chiếu và tiếng anh hùng (ván đã ngã ngũ thì không báo chiếu), `playInTurn` phát cách nhau 280 ms.
+
+| Cue | Khi nào | Tệp | Ưu tiên |
+|---|---|---|---|
+| `tqk.win` / `tqk.lose` / `tqk.draw` | Hết ván (`resultCue`): phe mình thắng hoặc hai người chung máy là win, thua là lose, hòa là draw. Nước kết thúc ván: phát sau tiếng nước 0,7 s; đầu hàng và hết giờ: phát ngay; ván qua server: khi server báo hết ván (nạp lại ván đã xong thì im) | Tệp riêng `tqk/win`, `tqk/lose`, `tqk/draw` (25/11/2026) | P1 |
+| `tqk.clock` | Còn 10 giây cuối trong lượt của mình (hai người chung máy: lượt bên đang đi), mỗi giây một tiếng (`clockTickDue`) | Tệp riêng `tqk/clock` (25/11/2026) | P2 |
 
 Chưa có nhạc riêng cho Tam Quân Kỳ.
 

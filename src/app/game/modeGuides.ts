@@ -16,6 +16,7 @@ import { ELEMENT_NAME, TILE_NAME } from "./battle/labels";
 import { DT_ITEM_INFO } from "./do-tham/items";
 import { KL_TOOL_HINT, KL_TOOL_NAME } from "./khai-lo/tools";
 import { EXPEDITION_REST_HEAL, EXPEDITION_SCOUT_SIGHT } from "@/core";
+import { DEFEAT_RATIO, ENCOUNTERS_PER_DAY, TOLL_RATIO, TRADE_LEG_MINUTES, TRADE_PASSES_PER_DAY, TRADE_START_MONEY } from "@/core/trade";
 import type { PieceType } from "@/core/tam-quan-ky";
 import type { Scene } from "./scene";
 
@@ -36,6 +37,7 @@ export type GuideScene = Extract<
   | "EXPEDITION"
   | "TAM_QUAN_KY"
   | "VAY_THANH_KY"
+  | "TRADE"
 >;
 
 export interface ModeGuide {
@@ -95,6 +97,7 @@ export const GUIDE_SCENES: readonly GuideScene[] = [
   "EXPEDITION",
   "TAM_QUAN_KY",
   "VAY_THANH_KY",
+  "TRADE",
 ];
 
 /** Cách đổi ô và phím tắt trên bàn cờ trận đấu; trước đây là dòng chữ dưới bàn cờ (Shan 20/11/2026: gợi ý đưa vào Hướng dẫn). */
@@ -136,6 +139,34 @@ const BATTLE_ITEMS: GuideItems = {
 };
 
 export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
+  TRADE: {
+    goal: `Làm thương nhân thời mười hai sứ quân: mua hàng nơi rẻ, chở tới nơi đắt mà bán. Ai cũng khởi đầu ${TRADE_START_MONEY.toLocaleString("vi-VN")} kim tiền ở một bến chợ ngẫu nhiên; hết tuần, ai lãi nhiều nhất đứng đầu.`,
+    steps: [
+      "Xem bảng giá: chọn bất kỳ điểm nào trên bản đồ để xem giá và tồn kho khung hiện tại của chợ đó.",
+      "Mua hàng ở chợ đang đứng, xem khoang còn bao nhiêu chỗ.",
+      `Chọn một điểm có đường nối rồi xuất hành. Mỗi chặng tốn 1 lộ phiếu, đi ${TRADE_LEG_MINUTES[1]}, ${TRADE_LEG_MINUTES[2]} hoặc ${TRADE_LEG_MINUTES[3]} phút tùy xa gần. Không cần mở game trong lúc đi.`,
+      "Tới nơi thì bán hàng, mua chuyến mới, hoặc giao thương với đoàn đã gặp trên đường.",
+    ],
+    rules: [
+      `Mỗi ngày ${TRADE_PASSES_PER_DAY} lộ phiếu, không cộng dồn sang hôm sau, không mua thêm được.`,
+      "Giá đổi mỗi hai giờ, ai cũng thấy như nhau. Chỉ xem được khung hiện tại, không xem trước khung sau.",
+      "Kho chung cho mọi người: ai mua thì kho giảm, ai bán thì hàng vào kho. Kho thiếu thì khung sau giá lên, kho ứ thì giá xuống; chợ ứ quá thì tạm không thu mua món đó.",
+      "Bán lại tại chỗ luôn lỗ: giá thu mua chỉ bằng 90% giá bán ra.",
+      "Đặc sản rẻ ở quê nhà, đi càng xa càng hiếm và đắt. Kỳ trân dị bảo lãi lớn nhưng hiếm hàng, chở kỳ trân dễ gặp nạn hơn.",
+      `Trên đường có thể gặp giặc sông, sóng dữ hay thảo khấu (tối đa ${ENCOUNTERS_PER_DAY} lần mỗi ngày). Nộp mãi lộ mất ${Math.round(TOLL_RATIO * 100)}% giá trị hàng; đánh trận ghép ô dễ, thắng giữ trọn hàng, thua mất ${Math.round(DEFEAT_RATIO * 100)}%. Không bao giờ mất đoàn.`,
+      "Hai đoàn đi cùng chặng, trùng giờ ít nhất 5 phút là gặp nhau. Tới nơi, một bên ngỏ lời đổi hàng hoặc kim tiền, bên kia đồng ý mới đổi; không cần cùng vào game. Mỗi chuyến chỉ giao thương một lần, lời ngỏ tự hủy khi một bên xuất hành chặng mới.",
+      "Kim tiền của người khác không hiện ở đâu, trừ lãi mùa trên bảng Công trạng.",
+    ],
+    rewards: [
+      "Điểm mùa là kim tiền lãi so với vốn đầu mùa; hàng còn trong khoang và tiền nâng cấp không tính.",
+      "Mùa đổi vào thứ Hai 0 giờ: kim tiền, khoang và cấp đoàn hàng làm lại từ đầu. Hạng cuối mùa nhận vàng và Đá Cường Hóa.",
+    ],
+    tips: [
+      "Bán hết hàng trước khi mùa khép để lãi được tính.",
+      "Đọc cột % đổi giá: chợ vừa bị mua cạn thường lên giá ở khung sau.",
+      "Nâng cấp sớm thì khoang rộng và đi nhanh hơn cho cả tuần.",
+    ],
+  },
   VAY_THANH_KY: {
     goal: "Cờ vây trên bàn đất của bảy hệ: mỗi bên chọn một nguyên tố, quân thành quả cầu của hệ ấy, đất quanh quân đổi sắc theo hệ. Vây được nhiều đất hơn, hoặc bắt quân trước ở ván nhập môn, là thắng.",
     steps: [

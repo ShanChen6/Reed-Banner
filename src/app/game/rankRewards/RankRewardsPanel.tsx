@@ -22,14 +22,16 @@ interface Item {
   readonly bundles?: number;
   /** Phiếu Tầm Tướng Ký kèm thưởng. */
   readonly tickets?: number;
+  /** Đá Cường Hóa kèm thưởng (Hành Thương Ký). */
+  readonly stones?: number;
 }
 
 const TIER_LABEL = Object.fromEntries(REWARD_TIERS.map((t) => [t.tier, t.label])) as Record<string, string>;
-/** Phần thưởng kèm vàng, nối sau “N vàng”: phiếu và bó Tầm Tướng Ký. */
-const extras = (i: { readonly tickets?: number; readonly bundles?: number }) =>
-  [i.tickets ? `${i.tickets} phiếu Tầm Tướng Ký` : "", i.bundles ? `${i.bundles} bó nguyên tố Tầm Tướng Ký` : ""].filter(Boolean).map((t) => `, ${t}`).join("");
+/** Phần thưởng kèm vàng, nối sau “N vàng”: Đá Cường Hóa, phiếu và bó Tầm Tướng Ký. */
+const extras = (i: { readonly tickets?: number; readonly bundles?: number; readonly stones?: number }) =>
+  [i.stones ? `${i.stones} Đá Cường Hóa` : "", i.tickets ? `${i.tickets} phiếu Tầm Tướng Ký` : "", i.bundles ? `${i.bundles} bó nguyên tố Tầm Tướng Ký` : ""].filter(Boolean).map((t) => `, ${t}`).join("");
 
-const PERIOD_NOUN: Record<RankRewardMode, string> = { daily: "ngày", destiny: "chu kỳ", survival: "mùa", arena: "mùa", tamTuongKy: "tuần", pvp: "mùa" };
+const PERIOD_NOUN: Record<RankRewardMode, string> = { daily: "ngày", destiny: "chu kỳ", survival: "mùa", arena: "mùa", tamTuongKy: "tuần", pvp: "mùa", trade: "mùa" };
 
 export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankRewardMode; onClaimed?: () => void }) {
   const { play: playSound } = useAudio();
@@ -58,7 +60,7 @@ export default function RankRewardsPanel({ mode, onClaimed }: { mode: RankReward
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ mode: item.mode, period: item.period }),
       });
-      const body = (await res.json()) as { gold?: number; rank?: number; participants?: number; tickets?: number; bundles?: number };
+      const body = (await res.json()) as { gold?: number; rank?: number; participants?: number; tickets?: number; bundles?: number; stones?: number };
       setNote(res.ok ? `Đã nhận ${body.gold} vàng${extras(body)} (hạng ${body.rank}/${body.participants}).` : "Chưa nhận được thưởng. Xin thử lại sau.");
       if (res.ok) {
         playSound("ui.reward");
