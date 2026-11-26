@@ -397,12 +397,56 @@ const TIER_ORDER = { treasure: 0, fine: 1, common: 2 } as const;
 /** Viền ô hình theo phẩm cấp. */
 const TIER_FRAME = { common: "border-frame-line", fine: "border-jade", treasure: "border-frame-gold-hi" } as const;
 
-/** Ô hình món hàng. Chưa có tranh thì hiện chữ đầu tên trên nền theo nhóm (tranh đặt ở public/art/trade/goods/<id>.webp). */
+/** Món đã có tranh Shan vẽ (public/art/trade/goods/<id>.webp, 160 px nền trong). */
+const GOODS_ART: ReadonlySet<TradeItemId> = new Set<TradeItemId>([
+  "agarwood",
+  "anise",
+  "areca",
+  "bamboo",
+  "basketry",
+  "beans",
+  "brocade",
+  "bronze",
+  "charcoal",
+  "cinnamon",
+  "coral",
+  "driedFish",
+  "fishSauce",
+  "ginseng",
+  "herbs",
+  "honey",
+  "ironBar",
+  "ironwood",
+  "ivory",
+  "laterite",
+  "longan",
+  "molasses",
+  "pearl",
+  "pottery",
+  "rice",
+  "riceWine",
+  "rosewood",
+  "salt",
+  "seaCucumber",
+  "sesame",
+  "squid",
+  "stickyRice",
+  "taro",
+  "tea",
+  "tortoiseshell",
+]);
+
+/** Ô hình món hàng. Món chưa có tranh hiện chữ đầu tên. */
 function GoodsIcon({ id, count }: { id: TradeItemId; count: number | null }) {
   const it = tradeItem(id);
   return (
-    <span aria-hidden className={`relative grid size-11 shrink-0 place-items-center sm:size-14 rounded-control border-2 bg-wood-lo ${TIER_FRAME[it.tier]}`}>
-      <span className="font-serif text-xl text-frame-gold sm:text-2xl">{it.name.charAt(0)}</span>
+    <span aria-hidden className={`relative grid size-11 shrink-0 place-items-center overflow-hidden sm:size-14 rounded-control border-2 bg-wood-lo ${TIER_FRAME[it.tier]}`}>
+      {GOODS_ART.has(id) ? (
+        // eslint-disable-next-line @next/next/no-img-element -- biểu tượng tĩnh 160px, dùng lại ở mọi thẻ
+        <img src={`/art/trade/goods/${id}.webp`} alt="" className="size-full object-contain p-0.5" draggable={false} loading="lazy" />
+      ) : (
+        <span className="font-serif text-xl text-frame-gold sm:text-2xl">{it.name.charAt(0)}</span>
+      )}
       {count !== null && <span className="absolute bottom-0 left-0 rounded-tr-control bg-wood/90 px-1 text-[11px] leading-tight text-on-wood tabular-nums">{count}</span>}
     </span>
   );
