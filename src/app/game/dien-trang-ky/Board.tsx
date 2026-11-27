@@ -21,14 +21,25 @@ const SPECIAL_MARK: Record<SpecialKind, string> = {
   start: "Khởi hành",
   boat: "Đi đò",
   festival: "Mở hội",
-  shrine: "Được phúc",
+  jail: "Bị giam",
   omen: "Rút quẻ",
   poll: "Nộp thuế",
   tribute: "Nộp cống",
-  relay: "Ngựa trạm",
   market: "Mua đất",
-  mire: "Mất lượt",
 };
+
+/** Dải màu của bốn danh thắng. */
+const SCENIC_COLOR = "#1f9e89";
+
+/** Núi và mái chùa nhỏ cho ô danh thắng. */
+function ScenicIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="size-[34%] max-h-6" aria-hidden focusable="false">
+      <path d="M2 20 L8 9 L12 15 L16 7 L22 20 Z" fill={SCENIC_COLOR} opacity={0.75} />
+      <path d="M12 6 L9 9 H15 Z M10 9 V12 H14 V9" fill="none" stroke="currentColor" strokeWidth={1.3} strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 /** Hàng, cột (0..10) của ô `i`. */
 export function cellOf(i: number): [number, number] {
@@ -44,13 +55,11 @@ function SpecialIcon({ kind }: { kind: SpecialKind }) {
     start: <path {...common} d="M4 20 V4 M4 5 C8 3 11 7 16 5 V12 C11 14 8 10 4 12" />,
     boat: <path {...common} d="M3 15 H21 L18 19 H6 Z M12 15 V5 L17 13 H12" />,
     festival: <path {...common} d="M6 21 V3 M6 4 Q11 6 9 9 Q13 8 18 10 Q12 12 6 12 M14 21 V8" />,
-    shrine: <path {...common} d="M3 9 H21 M5 6 H19 M7 9 V20 M17 9 V20 M10 20 V14 H14 V20" />,
+    jail: <path {...common} d="M4 4 H20 V20 H4 Z M8 4 V20 M12 4 V20 M16 4 V20 M4 12 H20" />,
     omen: <path {...common} d="M7 3 H17 V21 H7 Z M10 7 H14 M10 11 H14 M10 15 H14" />,
     poll: <path {...common} d="M12 4 A8 8 0 1 0 12.01 4 M9 12 H15 M12 9 V15" />,
     tribute: <path {...common} d="M4 18 H20 L18 10 H6 Z M8 10 V7 H16 V10" />,
-    relay: <path {...common} d="M4 16 L8 10 L14 9 L17 5 L19 7 L17 11 L18 16 M8 10 L7 18 M14 12 L15 18" />,
     market: <path {...common} d="M3 9 L5 4 H19 L21 9 Z M5 9 V20 H19 V9 M10 20 V14 H14 V20" />,
-    mire: <path {...common} d="M3 15 Q6 12 9 15 T15 15 T21 15 M3 19 Q6 16 9 19 T15 19 T21 19 M12 11 V4" />,
   };
   return (
     <svg viewBox="0 0 24 24" className="size-[42%] max-h-7" aria-hidden focusable="false">
@@ -84,7 +93,7 @@ export function Board({ state, pickable, selected, onTile, center }: BoardProps)
             key={i}
             type="button"
             onClick={() => onTile?.(i)}
-            aria-label={`${t.name}${t.kind === "land" ? `, giá ${money(t.price)}${owner ? `, của ${owner.name}` : ", còn trống"}` : ""}`}
+            aria-label={`${t.name}${t.kind === "land" || t.kind === "scenic" ? `, giá ${money(t.price)}${owner ? `, của ${owner.name}` : ", còn trống"}` : ""}`}
             aria-pressed={selected === i}
             className={cn(
               "relative flex min-w-0 flex-col items-center justify-between overflow-hidden text-center leading-none transition-[box-shadow,filter]",
@@ -104,6 +113,13 @@ export function Board({ state, pickable, selected, onTile, center }: BoardProps)
                 <span aria-hidden className="h-[14%] w-full shrink-0" style={{ background: REGION_COLOR[t.region] }} />
                 <span className="line-clamp-2 px-px text-[clamp(5px,1.05vw,10px)] font-semibold">{t.name}</span>
                 {plot && plot.level > 0 && owner ? <House level={plot.level} element={owner.element} className="h-[34%] w-auto" /> : <span className="text-[clamp(5px,0.95vw,9px)] opacity-75">{t.price}</span>}
+              </>
+            ) : t.kind === "scenic" ? (
+              <>
+                <span aria-hidden className="h-[14%] w-full shrink-0" style={{ background: SCENIC_COLOR }} />
+                <span className="line-clamp-2 px-px text-[clamp(5px,1.05vw,10px)] font-semibold">{t.name}</span>
+                <ScenicIcon />
+                <span className="text-[clamp(5px,0.95vw,9px)] opacity-75">{owner ? "Danh thắng" : t.price}</span>
               </>
             ) : (
               <>

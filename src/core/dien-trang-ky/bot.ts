@@ -3,17 +3,19 @@
 // Người chơi để hết giờ thì máy đi thay theo lối Lão luyện.
 
 import { createRng } from "../rng";
-import { BOAT_FARE, MAX_LEVEL_ON_BUY, REGION_TILES, TILES } from "./board";
+import { BOAT_FARE, JAIL_BAIL, MAX_LEVEL_ON_BUY, REGION_TILES, TILES } from "./board";
 import {
   aliveSeats,
   assetsOf,
   buildCostBetween,
   freeLands,
   holdsRegion,
+  isScenic,
   levelCap,
   ownedTiles,
   priceOf,
   rentOf,
+  scenicCount,
   sellOf,
   type DtkAction,
   type DtkState,
@@ -73,6 +75,7 @@ function params(s: DtkState, seat: number, style: BotStyle): StyleParams {
 
 /** Ô này giúp mình gom đủ vùng (vùng chỉ còn thiếu đúng ô này). */
 function completes(s: DtkState, tile: number, seat: number): boolean {
+  if (isScenic(tile)) return scenicCount(s, seat) > 0;
   const t = TILES[tile];
   if (t?.kind !== "land") return false;
   return REGION_TILES[t.region]!.every((i) => i === tile || s.plots[i]?.owner === seat);
@@ -96,7 +99,10 @@ export function chooseAction(s: DtkState, style: BotStyle = styleOf(s.players[s.
   const ph = s.phase;
   switch (ph.k) {
     case "ended":
+      return { t: "roll" };
     case "roll":
+      // Ở Lao Ngục: còn nhiều đất trống và dư tiền thì chuộc ra để kịp mua đất, không thì đổ thử.
+      if (me.jail > 0 && me.cash - JAIL_BAIL >= prm.reserve * 2 && freeLands(s).length > 8 && !whim()) return { t: "bail" };
       return { t: "roll" };
     case "buy": {
       const price = priceOf(ph.tile);
@@ -104,7 +110,7 @@ export function chooseAction(s: DtkState, style: BotStyle = styleOf(s.players[s.
       if (me.cash - price < reserve && !whim()) return { t: "skip" };
       if (me.cash < price) return { t: "skip" };
       const build = style === "tichLuc" ? 0 : prm.build;
-      return { t: "buy", level: targetLevel(me.cash, prm.reserve, ph.tile, 0, MAX_LEVEL_ON_BUY, build, price) };
+      return { t: "buy", level: isScenic(ph.tile) ? 0 : targetLevel(me.cash, prm.reserve, ph.tile, 0, MAX_LEVEL_ON_BUY, build, price) };
     }
     case "build": {
       const plot = s.plots[ph.tile]!;
@@ -138,8 +144,6 @@ export function chooseAction(s: DtkState, style: BotStyle = styleOf(s.players[s.
       if (ph.what === "boat" && !completes(s, best, seat) && rng.next() < 0.3) return { t: "skip" };
       return { t: "pick", tile: best };
     }
-    case "relay":
-      return ph.to < me.pos || rng.next() < 0.5 ? { t: "ride" } : { t: "skip" };
     case "raise": {
       const mine = ownedTiles(s, seat);
       if (!mine.length) return { t: "bankrupt" };

@@ -26,34 +26,37 @@ export const REGIONS: readonly Region[] = [
   { id: "boHai", name: "Bố Hải Khẩu", lord: "tranLam", price: 350 },
 ];
 
+/** Giá mỗi danh thắng và tô theo số danh thắng cùng chủ (1..4). */
+export const SCENIC_PRICE = 200;
+export const SCENIC_RENT = [0, 50, 100, 200, 400] as const;
+
 export type SpecialKind =
   /** Kinh thành Hoa Lư: ô xuất phát, đi qua nhận lương vòng. */
   | "start"
+  /** Lao Ngục: bị giam, đổ ra đôi hoặc nộp tiền chuộc mới ra; giam tối đa ba lượt. */
+  | "jail"
   /** Bến Sông Đáy: trả tiền đò để tới một ô bất kỳ. */
   | "boat"
   /** Hội Cờ Lau: mở hội trên một ô đất của mình, tô ô đó gấp đôi. */
   | "festival"
-  /** Miếu Thổ Thần: được phúc, lần nộp tô kế tiếp được miễn. */
-  | "shrine"
   /** Quẻ bói: rút một quẻ thời loạn. */
   | "omen"
   /** Thuế đinh: nộp một phần mười tiền mặt. */
   | "poll"
   /** Cống nạp: nộp theo số bậc nhà đang có. */
   | "tribute"
-  /** Trạm dịch: được phi ngựa trạm sang trạm bên kia bàn. */
-  | "relay"
   /** Chợ phiên: được mua một ô đất trống bất kỳ theo giá gốc. */
-  | "market"
-  /** Đường lầy: mất lượt kế tiếp. */
-  | "mire";
+  | "market";
 
 export type Tile =
   | { readonly kind: "land"; readonly name: string; readonly region: number; readonly price: number }
+  /** Danh thắng: mua được, không xây nhà; tô theo số danh thắng cùng chủ. */
+  | { readonly kind: "scenic"; readonly name: string; readonly price: number }
   | { readonly kind: SpecialKind; readonly name: string };
 
 const land = (region: number, name: string): Tile => ({ kind: "land", name, region, price: REGIONS[region]!.price });
 const sp = (kind: SpecialKind, name: string): Tile => ({ kind, name });
+const scenic = (name: string): Tile => ({ kind: "scenic", name, price: SCENIC_PRICE });
 
 export const TILES: readonly Tile[] = [
   sp("start", "Kinh thành Hoa Lư"),
@@ -61,17 +64,17 @@ export const TILES: readonly Tile[] = [
   sp("omen", "Quẻ bói"),
   land(0, "Bến Thanh Oai"),
   sp("poll", "Thuế đinh"),
-  sp("relay", "Trạm dịch Nam"),
+  scenic("Đền Hùng"),
   land(1, "Núi Hồi Hồ"),
   land(1, "Bến Cẩm Khê"),
   land(2, "Làng Đường Lâm"),
   land(2, "Giếng Mông Phụ"),
-  sp("boat", "Bến Sông Đáy"),
+  sp("jail", "Lao Ngục"),
   land(3, "Ngã ba Bạch Hạc"),
   sp("market", "Chợ phiên"),
   land(3, "Đồi Phong Châu"),
   land(4, "Phủ Tam Đái"),
-  sp("mire", "Đường lầy"),
+  scenic("Núi Tản Viên"),
   land(4, "Đầm Vĩnh Tường"),
   sp("omen", "Quẻ bói"),
   land(5, "Thành Bình Kiều"),
@@ -81,17 +84,17 @@ export const TILES: readonly Tile[] = [
   sp("omen", "Quẻ bói"),
   land(6, "Chợ Văn Giang"),
   land(7, "Ấp Phù Liệt"),
-  sp("relay", "Trạm dịch Bắc"),
+  scenic("Chùa Dâu"),
   land(7, "Bến Thanh Trì"),
   land(8, "Núi Tiên Du"),
-  sp("mire", "Đường lầy"),
+  sp("omen", "Quẻ bói"),
   land(8, "Làng Nội Duệ"),
-  sp("shrine", "Miếu Thổ Thần"),
+  sp("boat", "Bến Sông Đáy"),
   land(9, "Thành Siêu Loại"),
   land(9, "Bến Thuận Thành"),
   sp("market", "Chợ phiên"),
   land(10, "Thành Đằng Châu"),
-  sp("omen", "Quẻ bói"),
+  scenic("Tràng An"),
   land(10, "Bãi Kim Động"),
   sp("tribute", "Cống nạp"),
   land(11, "Thành Bố Hải"),
@@ -125,6 +128,10 @@ export const DTK_GOLD: Readonly<Record<number, readonly number[]>> = {
 /** Số ván có vàng mỗi ngày của một tài khoản. */
 export const DTK_REWARDS_PER_DAY = 3;
 
+/** Lao Ngục: số lần đổ thử tối đa và tiền chuộc. */
+export const JAIL_TRIES = 3;
+export const JAIL_BAIL = 100;
+
 export const START_CASH = 2000;
 export const SALARY = 200;
 export const BOAT_FARE = 50;
@@ -148,4 +155,5 @@ export const REGION_TILES: readonly (readonly number[])[] = REGIONS.map((_, r) =
   TILES.flatMap((t, i) => (t.kind === "land" && t.region === r ? [i] : [])),
 );
 
-export const RELAY_TILES = TILES.flatMap((t, i) => (t.kind === "relay" ? [i] : []));
+export const SCENIC_TILES = TILES.flatMap((t, i) => (t.kind === "scenic" ? [i] : []));
+export const JAIL_TILE = TILES.findIndex((t) => t.kind === "jail");

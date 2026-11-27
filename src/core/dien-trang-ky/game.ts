@@ -12,14 +12,18 @@ import {
   BUYOUT_RATE,
   FESTIVAL_RATE,
   HOLD_RATE,
+  JAIL_BAIL,
+  JAIL_TILE,
+  JAIL_TRIES,
   MAX_LEVEL,
   MAX_LEVEL_ON_BUY,
   POLL_MIN,
   POLL_RATE,
   REGION_TILES,
-  RELAY_TILES,
   RENT_RATE,
   SALARY,
+  SCENIC_RENT,
+  SCENIC_TILES,
   SELL_RATE,
   START_CASH,
   TILES,
@@ -48,9 +52,9 @@ export interface Player extends Seat {
   cash: number;
   pos: number;
   out: boolean;
-  /** Mất lượt kế tiếp (Đường lầy, quẻ sa lầy). */
-  skip: boolean;
-  /** Phúc Miếu Thổ Thần: lần nộp tô kế tiếp được miễn. */
+  /** Đang ở Lao Ngục: số lần đổ thử còn lại (0 là tự do). */
+  jail: number;
+  /** Phúc từ quẻ Phúc ấm: lần nộp tô kế tiếp được miễn. */
   blessing: boolean;
 }
 
@@ -70,7 +74,6 @@ export type Phase =
   | { readonly k: "build"; readonly tile: number }
   | { readonly k: "rent"; readonly tile: number; readonly owner: number; readonly amount: number; readonly buyout: number }
   | { readonly k: "pick"; readonly what: "market" | "boat" | "festival" }
-  | { readonly k: "relay"; readonly to: number }
   | { readonly k: "raise"; readonly amount: number; readonly payees: readonly Payee[] }
   | { readonly k: "ended" };
 
@@ -84,15 +87,15 @@ export type DtkEventBody =
   | { readonly k: "blessUsed"; readonly tile: number; readonly owner: number }
   | { readonly k: "buyout"; readonly tile: number; readonly from: number; readonly cost: number }
   | { readonly k: "omen"; readonly omen: string }
-  | { readonly k: "pay"; readonly amount: number; readonly reason: "poll" | "tribute" | "omen" | "boat" | "each" }
+  | { readonly k: "pay"; readonly amount: number; readonly reason: "poll" | "tribute" | "omen" | "boat" | "each" | "bail" }
   | { readonly k: "gain"; readonly amount: number; readonly reason: "omen" | "each" }
   | { readonly k: "sell"; readonly tile: number; readonly amount: number }
   | { readonly k: "out"; readonly by: number | null; readonly resign?: boolean }
-  | { readonly k: "skipTurn" }
-  | { readonly k: "mire" }
+  | { readonly k: "jailed" }
+  | { readonly k: "jailStay"; readonly left: number }
+  | { readonly k: "freed"; readonly how: "doubles" | "bail" | "served" }
   | { readonly k: "blessing" }
   | { readonly k: "festival"; readonly tile: number }
-  | { readonly k: "ride"; readonly to: number }
   | { readonly k: "freeBuild"; readonly tile: number; readonly level: number }
   | { readonly k: "extra" }
   | { readonly k: "end"; readonly ranking: readonly number[] };
@@ -134,7 +137,7 @@ export type DtkAction =
   | { readonly t: "pay" }
   | { readonly t: "buyout" }
   | { readonly t: "pick"; readonly tile: number }
-  | { readonly t: "ride" }
+  | { readonly t: "bail" }
   | { readonly t: "sell"; readonly tile: number }
   | { readonly t: "skip" }
   | { readonly t: "bankrupt" };
@@ -167,8 +170,8 @@ export function newDtk(opts: { seats: readonly Seat[]; seed: number }): DtkState
   }
   return {
     v: 1,
-    players: opts.seats.map((s) => ({ name: s.name, element: s.element, bot: s.bot, cash: START_CASH, pos: 0, out: false, skip: false, blessing: false })),
-    plots: TILES.map((t) => (t.kind === "land" ? { owner: null, level: 0 } : null)),
+    players: opts.seats.map((s) => ({ name: s.name, element: s.element, bot: s.bot, cash: START_CASH, pos: 0, out: false, jail: 0, blessing: false })),
+    plots: TILES.map((t) => (t.kind === "land" || t.kind === "scenic" ? { owner: null, level: 0 } : null)),
     turn: 0,
     phase: { k: "roll" },
     rng: rng.state(),
@@ -190,8 +193,13 @@ export function newDtk(opts: { seats: readonly Seat[]; seed: number }): DtkState
 
 export const priceOf = (tile: number): number => {
   const t = TILES[tile];
-  return t?.kind === "land" ? t.price : 0;
+  return t?.kind === "land" || t?.kind === "scenic" ? t.price : 0;
 };
+
+export const isScenic = (tile: number): boolean => TILES[tile]?.kind === "scenic";
+
+/** Số danh thắng của một chủ. */
+export const scenicCount = (s: DtkState, owner: number): number => SCENIC_TILES.filter((i) => s.plots[i]?.owner === owner).length;
 
 /** Giữ đủ mọi ô của vùng chứa ô này. */
 export function holdsRegion(s: DtkState, tile: number, owner: number): boolean {
@@ -203,7 +211,7 @@ export function holdsRegion(s: DtkState, tile: number, owner: number): boolean {
 export function rentOf(s: DtkState, tile: number): number {
   const plot = s.plots[tile];
   if (!plot || plot.owner === null) return 0;
-  let r = priceOf(tile) * RENT_RATE[plot.level]!;
+  let r = isScenic(tile) ? SCENIC_RENT[scenicCount(s, plot.owner)]! : priceOf(tile) * RENT_RATE[plot.level]!;
   if (holdsRegion(s, tile, plot.owner)) r *= HOLD_RATE;
   if (s.festival === tile) r *= FESTIVAL_RATE;
   return Math.round(r);
@@ -225,7 +233,7 @@ export function buildCostBetween(tile: number, from: number, to: number): number
 }
 
 /** Bậc cao nhất được xây tới trên ô của mình: 4, hoặc 5 khi hùng cứ. */
-export const levelCap = (s: DtkState, tile: number, owner: number): number => (holdsRegion(s, tile, owner) ? MAX_LEVEL : MAX_LEVEL - 1);
+export const levelCap = (s: DtkState, tile: number, owner: number): number => (isScenic(tile) ? 0 : holdsRegion(s, tile, owner) ? MAX_LEVEL : MAX_LEVEL - 1);
 
 export const ownedTiles = (s: DtkState, seat: number): number[] => s.plots.flatMap((p, i) => (p?.owner === seat ? [i] : []));
 
@@ -256,11 +264,6 @@ function advance(d: DtkState): void {
     const p = d.players[d.turn]!;
     if (p.out) continue;
     d.turns += 1;
-    if (p.skip) {
-      p.skip = false;
-      emit(d, d.turn, { k: "skipTurn" });
-      continue;
-    }
     break;
   }
   d.phase = { k: "roll" };
@@ -271,7 +274,7 @@ function endTurn(d: DtkState): void {
   if (d.phase.k === "ended") return;
   const p = d.players[d.turn]!;
   if (aliveSeats(d).length <= 1) return finish(d);
-  if (!p.out && d.doubles && !d.extraUsed && !p.skip) {
+  if (!p.out && d.doubles && !d.extraUsed && p.jail === 0) {
     d.extraUsed = true;
     d.doubles = false;
     d.phase = { k: "roll" };
@@ -291,7 +294,7 @@ function bankrupt(d: DtkState, seat: number, creditor: number | null, resign = f
     if (d.festival === i) d.festival = null;
   }
   p.out = true;
-  p.skip = false;
+  p.jail = 0;
   p.blessing = false;
   d.outOrder.push(seat);
   emit(d, seat, { k: "out", by: creditor, ...(resign ? { resign: true } : {}) });
@@ -342,6 +345,7 @@ function land(d: DtkState, seat: number): void {
   const p = d.players[seat]!;
   const tile = TILES[p.pos]!;
   switch (tile.kind) {
+    case "scenic":
     case "land": {
       const plot = d.plots[p.pos]!;
       if (plot.owner === null) {
@@ -379,10 +383,8 @@ function land(d: DtkState, seat: number): void {
       if (ownedTiles(d, seat).length) d.phase = { k: "pick", what: "festival" };
       else endTurn(d);
       return;
-    case "shrine":
-      p.blessing = true;
-      emit(d, seat, { k: "blessing" });
-      return endTurn(d);
+    case "jail":
+      return jail(d, seat);
     case "omen":
       return drawOmen(d, seat);
     case "poll": {
@@ -395,20 +397,23 @@ function land(d: DtkState, seat: number): void {
       emit(d, seat, { k: "pay", amount, reason: "tribute" });
       return charge(d, seat, amount, []);
     }
-    case "relay":
-      d.phase = { k: "relay", to: RELAY_TILES.find((i) => i !== p.pos)! };
-      return;
     case "market": {
       const free = freeLands(d);
       if (free.some((i) => priceOf(i) <= p.cash)) d.phase = { k: "pick", what: "market" };
       else endTurn(d);
       return;
     }
-    case "mire":
-      p.skip = true;
-      emit(d, seat, { k: "mire" });
-      return endTurn(d);
   }
+}
+
+/** Vào Lao Ngục: giam tại chỗ, hết lượt, không được đổ thêm dù vừa ra đôi. */
+function jail(d: DtkState, seat: number): void {
+  const p = d.players[seat]!;
+  if (p.pos !== JAIL_TILE) moveTo(d, seat, JAIL_TILE, false);
+  p.jail = JAIL_TRIES;
+  d.doubles = false;
+  emit(d, seat, { k: "jailed" });
+  endTurn(d);
 }
 
 function drawOmen(d: DtkState, seat: number): void {
@@ -475,12 +480,10 @@ function drawOmen(d: DtkState, seat: number): void {
       p.blessing = true;
       emit(d, seat, { k: "blessing" });
       return endTurn(d);
-    case "mire":
-      p.skip = true;
-      emit(d, seat, { k: "mire" });
-      return endTurn(d);
+    case "jail":
+      return jail(d, seat);
     case "freeBuild": {
-      const mine = ownedTiles(d, seat).filter((i) => d.plots[i]!.level < MAX_LEVEL - 1);
+      const mine = ownedTiles(d, seat).filter((i) => !isScenic(i) && d.plots[i]!.level < MAX_LEVEL - 1);
       if (mine.length) {
         const i = mine.reduce((a, b) => (d.plots[b]!.level < d.plots[a]!.level ? b : a));
         d.plots[i]!.level += 1;
@@ -498,6 +501,21 @@ function roll(d: DtkState, seat: number): void {
   d.doubles = a === b && !d.extraUsed;
   emit(d, seat, { k: "roll", dice: [a, b] });
   const p = d.players[seat]!;
+  if (p.jail > 0) {
+    // Ở Lao Ngục: ra đôi thì ra và đi theo số vừa đổ (không đổ thêm); hết lần thử thì cũng ra và đi.
+    d.doubles = false;
+    if (a !== b) {
+      p.jail -= 1;
+      if (p.jail > 0) {
+        emit(d, seat, { k: "jailStay", left: p.jail });
+        return endTurn(d);
+      }
+      emit(d, seat, { k: "freed", how: "served" });
+    } else {
+      p.jail = 0;
+      emit(d, seat, { k: "freed", how: "doubles" });
+    }
+  }
   moveTo(d, seat, (p.pos + a + b) % BOARD_SIZE, true);
   land(d, seat);
 }
@@ -517,6 +535,14 @@ export function act(s: DtkState, seat: number, a: DtkAction): DtkResult {
   }
   switch (ph.k) {
     case "roll":
+      if (a.t === "bail") {
+        if (p.jail === 0 || p.cash < JAIL_BAIL) return bad;
+        p.cash -= JAIL_BAIL;
+        p.jail = 0;
+        emit(d, seat, { k: "pay", amount: JAIL_BAIL, reason: "bail" });
+        emit(d, seat, { k: "freed", how: "bail" });
+        break;
+      }
       if (a.t !== "roll") return bad;
       roll(d, seat);
       break;
@@ -525,7 +551,7 @@ export function act(s: DtkState, seat: number, a: DtkAction): DtkResult {
         endTurn(d);
         break;
       }
-      if (a.t !== "buy" || !Number.isInteger(a.level) || a.level < 0 || a.level > MAX_LEVEL_ON_BUY) return bad;
+      if (a.t !== "buy" || !Number.isInteger(a.level) || a.level < 0 || a.level > (isScenic(ph.tile) ? 0 : MAX_LEVEL_ON_BUY)) return bad;
       const cost = priceOf(ph.tile) + buildCostBetween(ph.tile, 0, a.level);
       if (p.cash < cost) return bad;
       p.cash -= cost;
@@ -592,16 +618,6 @@ export function act(s: DtkState, seat: number, a: DtkAction): DtkResult {
       }
       break;
     }
-    case "relay":
-      if (a.t === "skip") {
-        endTurn(d);
-        break;
-      }
-      if (a.t !== "ride") return bad;
-      moveTo(d, seat, ph.to, true);
-      emit(d, seat, { k: "ride", to: ph.to });
-      endTurn(d);
-      break;
     case "raise": {
       if (a.t !== "sell" || d.plots[a.tile]?.owner !== seat) return bad;
       const got = sellOf(d, a.tile);

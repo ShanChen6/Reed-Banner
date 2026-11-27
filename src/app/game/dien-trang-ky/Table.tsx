@@ -6,6 +6,9 @@
 import { useMemo, useState, type ReactNode } from "react";
 import {
   BOAT_FARE,
+  JAIL_BAIL,
+  JAIL_TRIES,
+  SCENIC_RENT,
   LEVEL_NAME,
   MAX_LEVEL_ON_BUY,
   TILES,
@@ -13,10 +16,12 @@ import {
   buildCostBetween,
   freeLands,
   holdsRegion,
+  isScenic,
   levelCap,
   ownedTiles,
   priceOf,
   rentOf,
+  scenicCount,
   type DtkAction,
   type DtkState,
 } from "@/core/dien-trang-ky";
@@ -64,6 +69,16 @@ const Dice = ({ n }: { n: number }) => {
 
 function TileInfo({ state, tile }: { state: DtkState; tile: number }) {
   const t = TILES[tile]!;
+  if (t.kind === "scenic") {
+    const plot = state.plots[tile]!;
+    const owner = plot.owner !== null ? state.players[plot.owner]! : null;
+    return (
+      <p className="text-caption text-on-wood-soft">
+        <b className="text-on-wood">{t.name}</b>, danh thắng, giá {money(t.price)}. Không xây nhà; tô theo số danh thắng cùng chủ ({SCENIC_RENT.slice(1).join(", ")} quan).{" "}
+        {owner ? `Của ${owner.name}, giữ ${scenicCount(state, plot.owner!)} danh thắng. Tô hiện tại ${money(rentOf(state, tile))}.` : "Còn trống."}
+      </p>
+    );
+  }
   if (t.kind !== "land") return <p className="text-caption text-on-wood-soft"><b className="text-on-wood">{t.name}</b>. {SPECIAL_HELP[t.kind]}</p>;
   const plot = state.plots[tile]!;
   const owner = plot.owner !== null ? state.players[plot.owner]! : null;
@@ -82,13 +97,11 @@ const SPECIAL_HELP = {
   start: "Đi qua nhận lương vòng.",
   boat: `Trả ${BOAT_FARE} quan tiền đò để tới một ô bất kỳ.`,
   festival: "Mở hội trên một ô đất của mình: tô ô đó gấp đôi tới khi mở hội nơi khác.",
-  shrine: "Được phúc: lần nộp tô kế tiếp được miễn.",
+  jail: `Bị giam: mỗi lượt đổ thử, ra đôi thì ra; hoặc nộp ${JAIL_BAIL} quan chuộc ra ngay. Đổ hỏng ${JAIL_TRIES} lần thì cũng được ra.`,
   omen: "Rút một quẻ thời loạn.",
   poll: "Nộp một phần mười tiền mặt.",
   tribute: "Nộp cống theo số bậc nhà đang có.",
-  relay: "Được phi ngựa trạm sang trạm bên kia bàn.",
   market: "Được mua một ô đất trống bất kỳ theo giá gốc.",
-  mire: "Mất lượt kế tiếp.",
 } as const;
 
 export function Table({ state, controls, onAction, busy = false, status, toolbar, me }: TableProps) {
@@ -127,6 +140,7 @@ export function Table({ state, controls, onAction, busy = false, status, toolbar
     if (!mine) return `${p.name} đang đi…`;
     switch (ph.k) {
       case "roll":
+        if (p.jail > 0) return `${p.name} đang ở Lao Ngục: đổ ra đôi để ra (còn ${p.jail} lần thử), hoặc nộp ${money(JAIL_BAIL)} chuộc.`;
         return state.extraUsed ? "Ra đôi: đổ thêm một lần." : `Tới lượt ${p.name}: đổ xúc xắc.`;
       case "buy":
         return `${tileName(ph.tile)} còn trống. Mua không?`;
@@ -136,8 +150,6 @@ export function Table({ state, controls, onAction, busy = false, status, toolbar
         return `Đất của ${state.players[ph.owner]!.name}: nộp tô ${money(ph.amount)} hoặc mua lại ${money(ph.buyout)}.`;
       case "pick":
         return ph.what === "market" ? "Chợ phiên: chọn một ô đất trống sáng lên để mua theo giá gốc." : ph.what === "boat" ? `Bến đò: chọn ô muốn tới (tiền đò ${money(BOAT_FARE)}).` : "Hội Cờ Lau: chọn một ô đất của bạn để mở hội.";
-      case "relay":
-        return `Trạm dịch: phi ngựa sang ${tileName(ph.to)}?`;
       case "raise":
         return `Cần ${money(ph.amount)}, đang có ${money(p.cash)}. Chọn ô đất để bán lại cho triều đình (nửa giá).`;
     }
@@ -147,10 +159,15 @@ export function Table({ state, controls, onAction, busy = false, status, toolbar
     if (!mine) return null;
     switch (ph.k) {
       case "roll":
-        return <Button disabled={!can} onClick={() => onAction({ t: "roll" })} autoFocus>Đổ xúc xắc</Button>;
+        return (
+          <>
+            <Button disabled={!can} onClick={() => onAction({ t: "roll" })} autoFocus>{p.jail > 0 ? "Đổ thử" : "Đổ xúc xắc"}</Button>
+            {p.jail > 0 && <Button variant="secondary" disabled={!can || p.cash < JAIL_BAIL} onClick={() => onAction({ t: "bail" })}>Nộp {money(JAIL_BAIL)} chuộc</Button>}
+          </>
+        );
       case "buy": {
         const price = priceOf(ph.tile);
-        const opts = Array.from({ length: MAX_LEVEL_ON_BUY + 1 }, (_, l) => ({ l, cost: price + buildCostBetween(ph.tile, 0, l) })).filter((o) => o.cost <= p.cash);
+        const opts = Array.from({ length: (isScenic(ph.tile) ? 0 : MAX_LEVEL_ON_BUY) + 1 }, (_, l) => ({ l, cost: price + buildCostBetween(ph.tile, 0, l) })).filter((o) => o.cost <= p.cash);
         return (
           <>
             {opts.map((o) => (
@@ -190,13 +207,6 @@ export function Table({ state, controls, onAction, busy = false, status, toolbar
         );
       case "pick":
         return <Button size="sm" variant="secondary" disabled={!can} onClick={() => onAction({ t: "skip" })}>Bỏ qua</Button>;
-      case "relay":
-        return (
-          <>
-            <Button size="sm" disabled={!can} onClick={() => onAction({ t: "ride" })}>Phi ngựa</Button>
-            <Button size="sm" variant="secondary" disabled={!can} onClick={() => onAction({ t: "skip" })}>Ở lại</Button>
-          </>
-        );
       case "raise":
         return <Button size="sm" variant="secondary" disabled={!can} onClick={() => onAction({ t: "bankrupt" })}>Chịu phá sản</Button>;
     }
@@ -260,7 +270,7 @@ export function PlayersPanel({ state, me }: { state: DtkState; me?: number }) {
               <p className="truncate text-on-wood">{pl.name}{me === i ? " (bạn)" : ""}</p>
               <p className="text-caption text-on-wood-soft">
                 {pl.out ? "Đã phá sản" : `${money(pl.cash)}, ${lands} ô, tài sản ${money(assetsOf(state, i))}`}
-                {pl.skip ? ", mất lượt" : ""}
+                {pl.jail > 0 ? ", đang bị giam" : ""}
                 {pl.blessing ? ", có phúc" : ""}
               </p>
             </div>

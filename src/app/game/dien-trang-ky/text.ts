@@ -5,7 +5,7 @@ import { LEVEL_NAME, OMENS, TILES, type DtkEvent, type DtkState } from "@/core/d
 export const money = (n: number) => `${n.toLocaleString("vi-VN")} quan`;
 export const tileName = (i: number) => TILES[i]?.name ?? "";
 
-const PAY_REASON = { poll: "thuế đinh", tribute: "cống nạp", omen: "theo quẻ", boat: "tiền đò", each: "chia cho mỗi người" } as const;
+const PAY_REASON = { poll: "thuế đinh", tribute: "cống nạp", omen: "theo quẻ", boat: "tiền đò", each: "chia cho mỗi người", bail: "tiền chuộc" } as const;
 
 /** Một dòng nhật ký; null với sự kiện không cần kể (đi ô đã có dòng đổ xúc xắc). */
 export function eventText(e: DtkEvent, s: DtkState): string | null {
@@ -25,7 +25,7 @@ export function eventText(e: DtkEvent, s: DtkState): string | null {
     case "rent":
       return `${who} nộp ${money(e.amount)} tô cho ${name(e.owner)} ở ${tileName(e.tile)}.`;
     case "blessUsed":
-      return `${who} được phúc Thổ Thần, miễn tô ở ${tileName(e.tile)}.`;
+      return `${who} được phúc, miễn tô ở ${tileName(e.tile)}.`;
     case "buyout":
       return `${who} mua lại ${tileName(e.tile)} của ${name(e.from)} với giá ${money(e.cost)}.`;
     case "omen": {
@@ -40,16 +40,16 @@ export function eventText(e: DtkEvent, s: DtkState): string | null {
       return `${who} bán ${tileName(e.tile)} lại cho triều đình, được ${money(e.amount)}.`;
     case "out":
       return e.resign ? `${who} rời ván, đất về trống.` : `${who} phá sản${e.by !== null ? ` vì nợ ${name(e.by)}` : ""}, đất về trống.`;
-    case "skipTurn":
-      return `${who} mất lượt này.`;
-    case "mire":
-      return `${who} sa lầy, mất lượt kế tiếp.`;
+    case "jailed":
+      return `${who} bị giam vào Lao Ngục.`;
+    case "jailStay":
+      return `${who} đổ không ra đôi, còn ${e.left} lần thử.`;
+    case "freed":
+      return e.how === "bail" ? `${who} nộp tiền chuộc, ra khỏi Lao Ngục.` : e.how === "doubles" ? `${who} đổ ra đôi, thoát Lao Ngục.` : `${who} mãn hạn giam, ra khỏi Lao Ngục.`;
     case "blessing":
-      return `${who} được phúc Thổ Thần: lần nộp tô kế tiếp được miễn.`;
+      return `${who} được phúc: lần nộp tô kế tiếp được miễn.`;
     case "festival":
       return `${who} mở Hội Cờ Lau ở ${tileName(e.tile)}, tô ô này gấp đôi.`;
-    case "ride":
-      return `${who} phi ngựa trạm tới ${tileName(e.to)}.`;
     case "freeBuild":
       return `Thợ làng dựng giúp ${who}: ${tileName(e.tile)} lên ${LEVEL_NAME[e.level]}.`;
     case "extra":

@@ -3,9 +3,13 @@ import test from "node:test";
 
 import {
   BOARD_SIZE,
+  JAIL_BAIL,
+  JAIL_TILE,
+  JAIL_TRIES,
   MAX_TURNS,
   REGION_TILES,
   SALARY,
+  SCENIC_RENT,
   START_CASH,
   TILES,
   act,
@@ -30,11 +34,12 @@ function playOut(s: DtkState): DtkState {
   return s;
 }
 
-test("bàn 40 ô: 24 ô đất, mười hai vùng mỗi vùng hai ô, bốn góc riêng", () => {
+test("bàn 40 ô: 24 ô đất, bốn danh thắng, mười hai vùng mỗi vùng hai ô, bốn góc riêng", () => {
   assert.equal(BOARD_SIZE, 40);
   assert.equal(TILES.filter((t) => t.kind === "land").length, 24);
   assert.ok(REGION_TILES.every((r) => r.length === 2));
-  assert.deepEqual([0, 10, 20, 30].map((i) => TILES[i]!.kind), ["start", "boat", "festival", "shrine"]);
+  assert.deepEqual(TILES.flatMap((t, i) => (t.kind === "scenic" ? [i] : [])), [5, 15, 25, 35]);
+  assert.deepEqual([0, 10, 20, 30].map((i) => TILES[i]!.kind), ["start", "jail", "festival", "boat"]);
 });
 
 test("cùng seed, cùng lệnh thì ra cùng ván", () => {
@@ -130,6 +135,45 @@ test("thiếu tiền thì bán đất nửa giá, bán hết vẫn thiếu thì 
   assert.ok(out.ok);
   assert.equal(out.state.players[0]!.out, true);
   assert.equal(out.state.players[1]!.cash, START_CASH + 145);
+});
+
+test("danh thắng: không xây nhà, tô tăng theo số danh thắng cùng chủ", () => {
+  const s = structuredClone(newDtk({ seats: seats(2), seed: 4 }));
+  s.phase = { k: "buy", tile: 5 };
+  s.players[0]!.pos = 5;
+  assert.deepEqual(act(s, 0, { t: "buy", level: 1 }), { ok: false, error: "illegal" });
+  const r = act(s, 0, { t: "buy", level: 0 });
+  assert.ok(r.ok);
+  const d = structuredClone(r.state);
+  assert.equal(rentOf(d, 5), SCENIC_RENT[1]);
+  d.plots[15] = { owner: 0, level: 0 };
+  d.plots[25] = { owner: 0, level: 0 };
+  assert.equal(rentOf(d, 5), SCENIC_RENT[3]);
+});
+
+test("Lao Ngục: bị giam, đổ hỏng thì ở lại, nộp tiền chuộc thì ra", () => {
+  const s = structuredClone(newDtk({ seats: seats(2), seed: 8 }));
+  s.players[0]!.jail = JAIL_TRIES;
+  s.players[0]!.pos = JAIL_TILE;
+  const bailed = act(s, 0, { t: "bail" });
+  assert.ok(bailed.ok);
+  assert.equal(bailed.state.players[0]!.jail, 0);
+  assert.equal(bailed.state.players[0]!.cash, START_CASH - JAIL_BAIL);
+  assert.equal(bailed.state.phase.k, "roll");
+  // Đổ thử nhiều seed: không ra đôi thì vẫn ở ô ngục, lần thử giảm.
+  for (let seed = 1; seed < 40; seed++) {
+    const t = structuredClone(newDtk({ seats: seats(2), seed }));
+    t.players[0]!.jail = JAIL_TRIES;
+    t.players[0]!.pos = JAIL_TILE;
+    const r = act(t, 0, { t: "roll" });
+    assert.ok(r.ok);
+    const [a, b] = r.state.dice!;
+    if (a !== b) {
+      assert.equal(r.state.players[0]!.pos, JAIL_TILE);
+      assert.equal(r.state.players[0]!.jail, JAIL_TRIES - 1);
+    } else assert.equal(r.state.players[0]!.jail, 0);
+  }
+  assert.deepEqual(act(newDtk({ seats: seats(2), seed: 1 }), 0, { t: "bail" }), { ok: false, error: "illegal" });
 });
 
 test("đi qua Hoa Lư nhận lương vòng", () => {

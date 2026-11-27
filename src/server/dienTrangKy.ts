@@ -384,7 +384,7 @@ export function parseDtkAction(v: unknown): DtkAction | null {
     case "roll":
     case "pay":
     case "buyout":
-    case "ride":
+    case "bail":
     case "skip":
     case "bankrupt":
       return { t: a.t };

@@ -11,7 +11,7 @@ export type OmenEffect =
   | { readonly k: "step"; readonly by: number }
   | { readonly k: "nearestFree" }
   | { readonly k: "blessing" }
-  | { readonly k: "mire" }
+  | { readonly k: "jail" }
   | { readonly k: "freeBuild" };
 
 export interface Omen {
@@ -34,8 +34,8 @@ export const OMENS: readonly Omen[] = [
   { id: "satLo", title: "Đường núi sạt lở", text: "Đường phía trước sạt, lùi lại 3 ô.", effect: { k: "step", by: -3 } },
   { id: "diaLy", title: "Thầy địa lý chỉ đất", text: "Tiến tới ô đất trống gần nhất phía trước.", effect: { k: "nearestFree" } },
   { id: "phucAm", title: "Phúc ấm tổ tiên", text: "Được phúc, lần nộp tô kế tiếp được miễn.", effect: { k: "blessing" } },
-  { id: "saLay", title: "Sa lầy giữa đồng", text: "Xe sa lầy, mất lượt kế tiếp.", effect: { k: "mire" } },
-  { id: "veBenDo", title: "Gọi đò sông Đáy", text: "Đi tới Bến Sông Đáy.", effect: { k: "goto", tile: 10 } },
+  { id: "batGiam", title: "Bị quan bắt giam", text: "Vướng vụ kiện đất, bị giải thẳng vào Lao Ngục.", effect: { k: "jail" } },
+  { id: "veBenDo", title: "Gọi đò sông Đáy", text: "Đi tới Bến Sông Đáy.", effect: { k: "goto", tile: 30 } },
   { id: "dungNoc", title: "Thợ làng dựng giúp", text: "Ô thấp nhất của bạn được lên một bậc nhà, không mất tiền.", effect: { k: "freeBuild" } },
   { id: "thueMuoi", title: "Quan thu thuế muối", text: "Nộp một phần mười tiền mặt.", effect: { k: "loseRate", rate: 0.1 } },
 ];

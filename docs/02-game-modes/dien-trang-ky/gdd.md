@@ -24,8 +24,10 @@ Phòng mã: mỗi quyết định 30 giây; quá giờ thì máy đi thay một 
 Lưới 11×11, Hoa Lư ở góc dưới phải, đi ngược chiều kim đồng hồ.
 
 - **24 ô đất**: 12 vùng của 12 sứ quân, mỗi vùng 2 ô, giá từ 60 (Đỗ Động) tới 350 quan (Bố Hải Khẩu).
-- **4 góc**: Kinh thành Hoa Lư (xuất phát, đi qua lĩnh 200 quan lương vòng), Bến Sông Đáy (trả 50 quan tiền đò để tới ô bất kỳ), Hội Cờ Lau (mở hội trên một ô đất của mình: tô gấp đôi tới khi mở hội nơi khác), Miếu Thổ Thần (được phúc: lần nộp tô kế tiếp được miễn).
-- **12 ô riêng**: 4 Quẻ bói, Thuế đinh (một phần mười tiền mặt, ít nhất 20), Cống nạp (50 quan cộng 15 quan mỗi bậc nhà), 2 Trạm dịch (được phi ngựa sang trạm bên kia bàn), 2 Chợ phiên (mua một ô đất trống bất kỳ theo giá gốc), 2 Đường lầy (mất lượt kế tiếp).
+- **4 danh thắng** ở giữa mỗi cạnh (ô 5, 15, 25, 35): Đền Hùng, Núi Tản Viên, Chùa Dâu, Tràng An. Giá 200 quan, không xây nhà; tô theo số danh thắng cùng chủ: 50, 100, 200, 400 quan. Mua lại (gấp đôi giá) và mở hội được như đất thường.
+- **4 góc**: Kinh thành Hoa Lư (xuất phát, đi qua lĩnh 200 quan lương vòng), Lao Ngục (ô 10; dừng thường chỉ là ghé qua), Hội Cờ Lau (ô 20; mở hội trên một ô của mình: tô gấp đôi tới khi mở hội nơi khác), Bến Sông Đáy (ô 30; trả 50 quan tiền đò để tới ô bất kỳ).
+- **8 ô riêng**: 4 Quẻ bói, Thuế đinh (một phần mười tiền mặt, ít nhất 20), Cống nạp (50 quan cộng 15 quan mỗi bậc nhà), 2 Chợ phiên (mua một ô đất trống bất kỳ theo giá gốc).
+- **Bị giam**: rút quẻ “Bị quan bắt giam” thì về Lao Ngục, không lĩnh lương, hết lượt. Mỗi lượt sau đổ thử một lần: ra đôi thì ra và đi luôn (không được đổ thêm); hỏng 3 lần thì mãn hạn, đi theo lần đổ cuối. Đầu lượt có thể nộp 100 quan chuộc để ra rồi đổ như thường. Trong ngục vẫn thu tô. Phúc miễn tô chỉ còn qua quẻ “Phúc ấm tổ tiên”.
 
 Thứ tự ô và tên ở `TILES` trong `board.ts`.
 
