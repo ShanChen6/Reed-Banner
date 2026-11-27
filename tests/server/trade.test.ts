@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
-import { TRADE_BOT_MAX, TRADE_BOT_OWNERS, TRADE_MASTER_ID, TRADE_ITEM_IDS, TRADE_START_MONEY, initialMarket, marketKey, neighbors, tradeBotName, tradeSlot, type TradeItemId, type TradeNodeId } from "../../src/core/trade";
+import { TRADE_BOT_MAX, TRADE_BOT_OWNERS, TRADE_MASTER_ID, TRADE_ITEM_IDS, TRADE_NODE_IDS, TRADE_START_MONEY, initialMarket, marketKey, neighbors, newTradePlayer, tradeBotName, tradeSlot, type TradeItemId, type TradeNodeId } from "../../src/core/trade";
 import { seasonSource } from "../../src/server/rankRewards";
 import { DrizzleTradeStore } from "../../src/server/db/trade";
 import type { Db } from "../../src/server/db/store";
@@ -206,6 +206,29 @@ for (const [name, make] of stores) {
       assert.equal(withdrawn.player.money, TRADE_START_MONEY);
       assert.equal(withdrawn.player.canOffer, true);
       assert.deepEqual(await tradeWithdraw("b", offered.offers[0]!.id, h.deps()), { ok: false, error: "offerGone" });
+    });
+  });
+}
+
+for (const [name, make] of stores) {
+  describe(`Hành Thương Ký đổi mã món (${name})`, () => {
+    it("mã cũ trong khoang đọc sang mã mới; kho mùa đang chạy được bổ sung dòng thiếu, bỏ dòng mã cũ", async () => {
+      const store = await make();
+      const h = harness(store);
+      const season = tradeSeason(h.now);
+      const full = initialMarket(0, season);
+      const node = TRADE_NODE_IDS[0]!;
+      // Kho mùa cũ: một dòng mã cũ, thiếu hết các dòng còn lại.
+      const [, sample] = [...full][0]!;
+      await store.initMarket(season, new Map([[`${node}:hemp`, sample]]));
+      const old = { ...newTradePlayer(season, 0, h.now), cargo: { hemp: 5, basketry: 2, rice: 1 } };
+      await store.createPlayer(season, "a", old as never, h.now);
+      const v = view(await tradeGet("a", h.deps()));
+      assert.deepEqual(v.player.cargo, { indigoCloth: 5, conicalHat: 2, rice: 1 });
+      const m = await store.market(season);
+      for (const k of full.keys()) assert.ok(m.has(k), `thiếu dòng ${k}`);
+      assert.ok(!JSON.stringify(v.markets).includes("hemp"));
+      assert.ok(m.has(marketKey(node, "indigoCloth")));
     });
   });
 }

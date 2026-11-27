@@ -283,10 +283,14 @@ async function scoreChange(ownerId: string, before: TradePlayer, after: TradePla
 async function loadMarket(deps: TradeDeps): Promise<Map<string, StoredRow>> {
   const season = mSeason(deps);
   let m = await deps.store.market(season);
-  if (m.size === 0) {
-    await deps.store.initMarket(season, initialMarket(slotNow(deps), season));
+  const want = initialMarket(slotNow(deps), season);
+  // Kho mùa đang chạy thiếu dòng (món mới hay món đổi mã) thì bổ sung; dòng đã có giữ nguyên.
+  if ([...want.keys()].some((k) => !m.has(k))) {
+    await deps.store.initMarket(season, want);
     m = await deps.store.market(season);
   }
+  // Dòng của mã cũ còn trong kho thì bỏ qua.
+  for (const k of m.keys()) if (!want.has(k)) m.delete(k);
   return m;
 }
 
