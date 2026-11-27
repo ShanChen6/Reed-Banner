@@ -66,6 +66,31 @@ Shan chốt 27/11/2026: **40 món**, chia năm nhóm (nông sản, hải sản, 
 - Tới nơi, một bên ngỏ lời: đưa hàng và/hoặc kim tiền, xin hàng và/hoặc kim tiền. Phần đưa ra bị khóa tới khi bên kia trả lời. Xem được khoang của bên kia trước khi quyết; **kim tiền của người khác không hiện ở đâu**, trừ lãi mùa trên bảng Công trạng.
 - Hai bên đồng ý mới đổi. Mỗi chuyến chỉ giao thương một lần. Lời ngỏ tự hủy (trả hàng khóa) khi một bên xuất hành chặng mới hoặc khi mùa khép. Không giới hạn số lần giữa một cặp, không chặn chênh giá trị (chênh giá mua bán đã đủ, Shan 26/11/2026). Không có trò chuyện.
 
+### 6.1 Thương đoàn của các nhân vật (Shan chốt 27/11/2026)
+
+- **Là người chơi thật trong mùa.** 20 nhân vật (12 sứ quân, 6 tướng lịch sử, Minh Nguyệt, Vũ Phong) mỗi người một đoàn hàng lưu chung bảng `trade_players` (mã `bot:<id>`): vốn 10.000, cấp 1, 5 lộ phiếu mỗi ngày, gặp nạn thì nộp mãi lộ. Mua bán qua **kho chung** như mọi người nên làm giá và tồn kho đổi thật.
+- **Tên:** sứ quân ghi "Sứ quân <tên>" (ví dụ Sứ quân Trần Lãm), còn lại ghi tên nhân vật. Không ghi "máy" (Shan 27/11/2026). Khi gặp giữa đường có thêm dòng tính cách và lối buôn.
+- **Chạy lười, không cần tiến trình nền:** mỗi lần có người mở Hành Thương Ký, server cho các đoàn tới việc đi tiếp (mỗi kho tối đa một lần mỗi 20 giây): tới chợ nghỉ 30 phút (để người tới sau còn kịp gặp), bán sạch hàng chợ thu mua, chọn chuyến kế theo giá đang niêm yết ở các điểm kề, mua rồi xuất hành. Không có lãi thì đi không sang điểm kề.
+- **Đệm dân số:** vắng người thì đủ 20 đoàn; cứ 5 người thật có ghi trong 24 giờ qua thì bớt một đoàn, ít nhất 6 đoàn. Thứ tự nghỉ xáo theo mùa.
+- **Trần tài:** lãi mùa của mỗi đoàn không vượt quá trần mỗi ngày nhân số ngày đã qua của mùa. Trần chung 3.000/ngày, xê dịch 60–120% theo nhân vật (`TRADE_BOT_DAILY_CAP`, `tradeBotDailyCap`). Chạm trần thì chỉ bán hàng đang chở. Mô phỏng một tuần (mở chế độ mỗi 10 phút, chỉ có đoàn nhân vật): lãi 13.000–25.000, 12–27 chặng mỗi đoàn.
+- **Đại thương gia (Shan 27/11/2026: "một máy cực kỳ thông minh trong buôn bán"):** Sứ quân Trần Lãm, chủ cửa biển Bố Hải (`TRADE_MASTER_ID`). Luôn chạy (không bị đệm dân số cho nghỉ), không có trần tài, nâng cấp đoàn khi kim tiền gấp ba giá cấp kế, chở nhiều món một chuyến (món lãi nhất trên mỗi ô khoang trước, không chở quá phần chợ nơi tới còn thu mua), chọn điểm tới theo lãi mỗi phút của chuyến này cộng 80% chuyến kế tốt nhất, chuyến cuối mùa đi không. Vẫn đúng luật như mọi người: cùng bảng giá khung hiện tại, cùng kho chung, cùng lộ phiếu. Mô phỏng một tuần (mở chế độ mỗi 10 phút): lãi 260.000–420.000, đủ 35 chặng, lên cấp 5; các đoàn khác 13.000–33.000.
+- Mọi đoàn nhân vật bán và mua không quá phần chợ còn thu mua (sức chứa kho), để không kẹt hàng.
+- **Bảng Công trạng:** đoàn nhân vật có lãi đứng trên bảng như người. **Thưởng mùa chỉ xếp giữa người thật**: hạng thưởng và số người tính lại sau khi bỏ các đoàn nhân vật (`seasonSource(..., TRADE_BOT_OWNERS)`), đoàn nhân vật không nhận thưởng.
+- **Đoàn nhân vật ngỏ trước:** mỗi đoàn đã gặp (chưa giao thương chuyến đó) ngỏ một lần, bán một phần món đắt nhất trong khoang lấy kim tiền theo giá chợ nơi tới nhân hệ số lối buôn. Đồng ý thì đổi ngay bằng hàng và tiền thật của cả hai bên; từ chối thì không hiện lại và vẫn còn lượt giao thương.
+- **Người chơi ngỏ:** đoàn nhân vật trả lời ngay. Nhận khi có đủ hàng và kim tiền bị xin, và giá trị nhận về (hàng người chơi đưa tính 90% như chợ thu mua) ít nhất bằng mức chịu của lối buôn nhân giá trị phải đưa. Chê giá thì người chơi ngỏ lại được. Đổi xong thì đoàn đó cũng hết lượt giao thương chuyến đó.
+- Lối buôn theo tính cách (`TRADE_STYLES`, `src/core/trade/bots.ts`):
+
+| Tính cách | Bỏ vốn mỗi chuyến | Chọn trong | Lãi tối thiểu | Ưu tiên | Giá bán cho người gặp | Mức chịu khi được ngỏ | Phần hàng đem bán |
+|---|---|---|---|---|---|---|---|
+| Mãnh công | 90% | 1 phương án tốt nhất | 3% | | ×1,00 | 0,95 | 50% |
+| Thủ thành | 50% | 2 | 8% | ít kỳ trân | ×1,00 | 1,00 | 30% |
+| Mưu phá | 70% | 2 | 6% | chở tới nơi đang Hiếm | ×1,15 | 1,12 | 30% |
+| Tích lực | 60% | 2 | 12% | | ×1,10 | 0,92 | 20% |
+| Liều lĩnh | 100% | 3 | 2% | kỳ trân | ×0,90 | 1,05 | 60% |
+| Lão luyện | 75% | 1 | 6% | nơi Hiếm | ×1,03 | 1,00 | 35% |
+| Hộ chủ | 60% | 2 | 5% | | ×0,95 | 0,92 | 40% |
+| Tùy cơ | 70% | 3 | 5% | kỳ trân, nơi Hiếm | ×1,05 | 1,00 | 40% |
+
 ## 7. Đoàn hàng
 
 Khoang 100 ở cấp 1. Một đường nâng cấp chung (Shan chọn), trả bằng kim tiền, làm lại mỗi mùa:
