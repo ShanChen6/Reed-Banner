@@ -7,6 +7,7 @@ import {
   JAIL_TILE,
   JAIL_TRIES,
   MAX_TURNS,
+  OMENS,
   REGION_TILES,
   SALARY,
   SCENIC_RENT,
@@ -89,7 +90,7 @@ test("mua đất kèm xây, đi vào đất người khác thì nộp tô hoặc
   s = at(s, 1, 1);
   const rent = rentOf(s, 1);
   const buyout = buyoutOf(s, 1);
-  assert.equal(rent, Math.round(60 * 1.2));
+  assert.equal(rent, Math.round(60 * 0.9));
   assert.equal(buyout, 2 * (60 + 30 + 30));
   s.phase = { k: "rent", tile: 1, owner: 0, amount: rent, buyout };
   const paid = act(s, 1, { t: "pay" });
@@ -110,7 +111,7 @@ test("hùng cứ nhân tô, bậc 5 chỉ xây được khi giữ đủ vùng", 
   s.phase = { k: "build", tile: 1 };
   assert.equal(act(s, 0, { t: "build", level: 5 }).ok, false);
   s.plots[3] = { owner: 0, level: 0 };
-  assert.equal(rentOf(s, 1), Math.round(60 * 3.2 * 1.5));
+  assert.equal(rentOf(s, 1), Math.round(60 * 2.1 * 1.5));
   const r = act(s, 0, { t: "build", level: 5 });
   assert.ok(r.ok);
   assert.equal(r.state.plots[1]!.level, 5);
@@ -174,6 +175,24 @@ test("Lao Ngục: bị giam, đổ hỏng thì ở lại, nộp tiền chuộc t
     } else assert.equal(r.state.players[0]!.jail, 0);
   }
   assert.deepEqual(act(newDtk({ seats: seats(2), seed: 1 }), 0, { t: "bail" }), { ok: false, error: "illegal" });
+});
+
+test("quẻ Động đất hạ nhà cao nhất một bậc, Trang ấp đứng vững", () => {
+  const quake = OMENS.findIndex((o) => o.id === "dongDat");
+  const s = structuredClone(newDtk({ seats: seats(2), seed: 3 }));
+  s.plots[1] = { owner: 0, level: 2 };
+  s.plots[3] = { owner: 0, level: 5 };
+  s.plots[6] = { owner: 0, level: 4 };
+  s.deck = [quake];
+  s.deckAt = 0;
+  s.players[0]!.pos = 0;
+  // Đi đò tới ô Quẻ bói số 2 để rút quẻ đã xếp sẵn.
+  s.phase = { k: "pick", what: "boat" };
+  const r = act(s, 0, { t: "pick", tile: 2 });
+  assert.ok(r.ok);
+  assert.equal(r.state.plots[6]!.level, 3);
+  assert.equal(r.state.plots[3]!.level, 5);
+  assert.equal(r.state.plots[1]!.level, 2);
 });
 
 test("đi qua Hoa Lư nhận lương vòng", () => {

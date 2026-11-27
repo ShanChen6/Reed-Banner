@@ -7,7 +7,7 @@
 
 Chế độ đấu trí 2–4 người theo lượt, không dùng bàn match-3. Thẻ ở mục **Giải đố** của Chiến trường (kicker "Đánh cờ"), đường dẫn `/game/tycoon`, scene `DIEN_TRANG_KY`.
 
-Mã: lõi thuần `src/core/dien-trang-ky/` (`board.ts` bàn và số liệu, `game.ts` luật, `omens.ts` 16 quẻ, `bot.ts` máy theo tính cách), server `src/server/dienTrangKy.ts` + `src/server/db/dienTrangKy.ts` (bảng `dtk_matches`, `dtk_rewards`, migration `0020_dtk_matches`), API `src/app/api/tycoon/route.ts`, màn `src/app/game/dien-trang-ky/`. Test ở `tests/core/dien-trang-ky/` và `tests/server/dien-trang-ky.test.ts`. Tắt nhanh phần server bằng `DIEN_TRANG_KY_SERVER_ENABLED=false`.
+Mã: lõi thuần `src/core/dien-trang-ky/` (`board.ts` bàn và số liệu, `game.ts` luật, `omens.ts` 18 quẻ, `bot.ts` máy theo tính cách), server `src/server/dienTrangKy.ts` + `src/server/db/dienTrangKy.ts` (bảng `dtk_matches`, `dtk_rewards`, migration `0020_dtk_matches`), API `src/app/api/tycoon/route.ts`, màn `src/app/game/dien-trang-ky/`. Test ở `tests/core/dien-trang-ky/` và `tests/server/dien-trang-ky.test.ts`. Tắt nhanh phần server bằng `DIEN_TRANG_KY_SERVER_ENABLED=false`.
 
 ## 2. Ba cách chơi (Shan chốt mục 5)
 
@@ -43,21 +43,23 @@ Thứ tự ô và tên ở `TILES` trong `board.ts`.
 
 ## 5. Nhà năm bậc (mục 3)
 
-| Bậc | Tên | Giá xây | Tô (nhân giá đất) |
-| --- | --- | --- | --- |
-| 0 | Đất (đã có chủ, chưa xây) | giá đất | 0,15 |
-| 1 | Nhà tranh | nửa giá đất | 0,5 |
-| 2 | Nhà gỗ | nửa giá đất | 1,2 |
-| 3 | Nhà ngói | nửa giá đất | 2,2 |
-| 4 | Dinh thự | nửa giá đất | 3,2 |
-| 5 | Trang ấp | bằng giá đất, chỉ khi hùng cứ | 4,5 |
+| Bậc | Tên | Giá xây | Tổng vốn (nhân giá đất) | Tô (nhân giá đất) |
+| --- | --- | --- | --- | --- |
+| 0 | Đất (đã có chủ, chưa xây) | giá đất | 1 | 0,15 |
+| 1 | Nhà tranh | nửa giá đất | 1,5 | 0,45 |
+| 2 | Nhà gỗ | nửa giá đất | 2 | 0,9 |
+| 3 | Nhà ngói | nửa giá đất | 2,5 | 1,5 |
+| 4 | Dinh thự | nửa giá đất | 3 | 2,1 |
+| 5 | Trang ấp | bằng giá đất, chỉ khi hùng cứ | 4 | 3 |
+
+Nguyên tắc (Shan 27/11): một lần thu tô (chưa tính hùng cứ, mở hội) không vượt tổng vốn đã bỏ vào ô. Bảng cũ 0,5/1,2/2,2/3,2/4,5 làm Dinh thự gỡ vốn sau một lần dừng.
 
 - **Hùng cứ**: giữ đủ hai ô của vùng thì tô cả hai ô nhân 1,5.
 - **Nguyên tố** chỉ quyết định kiểu dáng và màu nhà của người chơi (màu mái, vật trên nóc), không đổi tô hay luật.
 
 ## 6. Quẻ bói
 
-16 quẻ thời loạn (`omens.ts`), xếp lại theo seed đầu ván rồi rút vòng: được mùa, giặc đốt kho, Hoa Lư ban thưởng, về Hoa Lư, lũ tràn bờ đê (20 quan mỗi bậc nhà), khao quân (trả mỗi người 30), các làng góp lễ (nhận của mỗi người 30), ngựa trạm gấp (tiến 3), sạt lở (lùi 3), thầy địa lý (tới ô đất trống gần nhất), phúc ấm (miễn tô một lần), bị quan bắt giam (vào Lao Ngục), gọi đò (tới Bến Sông Đáy), thợ làng dựng giúp (ô thấp nhất lên một bậc), thuế muối (một phần mười tiền mặt), thương lái trả nợ.
+18 quẻ thời loạn (`omens.ts`), xếp lại theo seed đầu ván rồi rút vòng: được mùa, giặc đốt kho, Hoa Lư ban thưởng, về Hoa Lư, lũ tràn bờ đê (20 quan mỗi bậc nhà), khao quân (trả mỗi người 30), các làng góp lễ (nhận của mỗi người 30), ngựa trạm gấp (tiến 3), sạt lở (lùi 3), thầy địa lý (tới ô đất trống gần nhất), phúc ấm (miễn tô một lần), bị quan bắt giam (vào Lao Ngục), gọi đò (tới Bến Sông Đáy), thợ làng dựng giúp (ô thấp nhất lên một bậc), thuế muối (một phần mười tiền mặt), thương lái trả nợ, động đất (nhà cao nhất của người rút mất một bậc, Trang ấp không sập), bão lớn (mọi nhà nộp 10 quan mỗi bậc nhà; người khác nộp tới đâu hay tới đó, không phá sản vì bão).
 
 ## 7. Hết tiền và kết thúc (mục 6, 7)
 
@@ -82,7 +84,7 @@ Mỗi tài khoản tối đa 3 ván có vàng mỗi ngày (giờ Việt Nam). Kh
 
 Mười hai sứ quân, mỗi người một tính cách (cùng tên bộ tính cách của bot nhân vật): Mãnh công (Phạm Bạch Hổ, Lý Khuê, Nguyễn Siêu) mua hăng, xây cao, giữ ít tiền; Thủ thành (Nguyễn Khoan, Kiều Thuận) giữ tiền chắc; Mưu phá (Ngô Xương Xí, Ngô Nhật Khánh) chuyên mua lại để phá hùng cứ; Tích lực (Kiều Công Hãn, Lữ Đường) gom đất trước, đủ tiền mới xây; Liều lĩnh (Đỗ Cảnh Thạc); Lão luyện (Trần Lãm), cũng là lối máy đi thay người quá giờ; Tùy cơ (Nguyễn Thủ Tiệp) giàu thì giữ, nghèo thì liều. Máy chỉ nhìn bàn như người chơi, không biết trước xúc xắc hay quẻ.
 
-Chạy thử 300 ván mỗi cỡ (máy với máy): ván 2 người trung vị 81 lượt, 3 người 113 lượt, 4 người 142 lượt (khoảng 35 vòng).
+Chạy thử 300 ván mỗi cỡ (máy với máy, bảng tô mới, danh thắng, Lao Ngục, 18 quẻ): trung vị 106 / 141 / 170 lượt cho 2 / 3 / 4 người (khoảng 53 / 47 / 43 vòng), không ván nào chạm chốt an toàn.
 
 ## 10. Hình
 

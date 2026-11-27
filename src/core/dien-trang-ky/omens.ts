@@ -1,4 +1,4 @@
-// Mười sáu quẻ thời loạn của Điền Trang Ký. Rút ở ô Quẻ bói, xếp lại theo seed đầu ván rồi rút vòng.
+// Mười tám quẻ thời loạn của Điền Trang Ký. Rút ở ô Quẻ bói, xếp lại theo seed đầu ván rồi rút vòng.
 
 export type OmenEffect =
   | { readonly k: "gain"; readonly amount: number }
@@ -12,6 +12,8 @@ export type OmenEffect =
   | { readonly k: "nearestFree" }
   | { readonly k: "blessing" }
   | { readonly k: "jail" }
+  | { readonly k: "quake" }
+  | { readonly k: "storm"; readonly perLevel: number }
   | { readonly k: "freeBuild" };
 
 export interface Omen {
@@ -37,5 +39,7 @@ export const OMENS: readonly Omen[] = [
   { id: "batGiam", title: "Bị quan bắt giam", text: "Vướng vụ kiện đất, bị giải thẳng vào Lao Ngục.", effect: { k: "jail" } },
   { id: "veBenDo", title: "Gọi đò sông Đáy", text: "Đi tới Bến Sông Đáy.", effect: { k: "goto", tile: 30 } },
   { id: "dungNoc", title: "Thợ làng dựng giúp", text: "Ô thấp nhất của bạn được lên một bậc nhà, không mất tiền.", effect: { k: "freeBuild" } },
+  { id: "dongDat", title: "Động đất", text: "Đất rung chuyển, ngôi nhà cao nhất của bạn sập mất một bậc. Trang ấp đứng vững.", effect: { k: "quake" } },
+  { id: "baoLon", title: "Bão lớn", text: "Bão quét khắp vùng, mọi nhà nộp 10 quan mỗi bậc nhà để dựng lại.", effect: { k: "storm", perLevel: 10 } },
   { id: "thueMuoi", title: "Quan thu thuế muối", text: "Nộp một phần mười tiền mặt.", effect: { k: "loseRate", rate: 0.1 } },
 ];

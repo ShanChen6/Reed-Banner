@@ -97,6 +97,7 @@ export type DtkEventBody =
   | { readonly k: "blessing" }
   | { readonly k: "festival"; readonly tile: number }
   | { readonly k: "freeBuild"; readonly tile: number; readonly level: number }
+  | { readonly k: "quake"; readonly tile: number; readonly level: number }
   | { readonly k: "extra" }
   | { readonly k: "end"; readonly ranking: readonly number[] };
 
@@ -482,6 +483,29 @@ function drawOmen(d: DtkState, seat: number): void {
       return endTurn(d);
     case "jail":
       return jail(d, seat);
+    case "quake": {
+      const mine = ownedTiles(d, seat).filter((i) => !isScenic(i) && d.plots[i]!.level > 0 && d.plots[i]!.level < MAX_LEVEL);
+      if (mine.length) {
+        const i = mine.reduce((a, b) => (d.plots[b]!.level > d.plots[a]!.level ? b : a));
+        d.plots[i]!.level -= 1;
+        emit(d, seat, { k: "quake", tile: i, level: d.plots[i]!.level });
+      }
+      return endTurn(d);
+    }
+    case "storm": {
+      // Người khác nộp tới đâu hay tới đó (bão không làm ai phá sản ngoài lượt); người rút quẻ nộp đủ.
+      for (const i of aliveSeats(d)) {
+        if (i === seat) continue;
+        const take = Math.min(e.perLevel * totalLevels(d, i), d.players[i]!.cash);
+        if (take > 0) {
+          d.players[i]!.cash -= take;
+          emit(d, i, { k: "pay", amount: take, reason: "omen" });
+        }
+      }
+      const amount = e.perLevel * totalLevels(d, seat);
+      if (amount > 0) emit(d, seat, { k: "pay", amount, reason: "omen" });
+      return charge(d, seat, amount, []);
+    }
     case "freeBuild": {
       const mine = ownedTiles(d, seat).filter((i) => !isScenic(i) && d.plots[i]!.level < MAX_LEVEL - 1);
       if (mine.length) {

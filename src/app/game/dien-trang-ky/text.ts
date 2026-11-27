@@ -52,6 +52,8 @@ export function eventText(e: DtkEvent, s: DtkState): string | null {
       return `${who} mở Hội Cờ Lau ở ${tileName(e.tile)}, tô ô này gấp đôi.`;
     case "freeBuild":
       return `Thợ làng dựng giúp ${who}: ${tileName(e.tile)} lên ${LEVEL_NAME[e.level]}.`;
+    case "quake":
+      return `Động đất: nhà ở ${tileName(e.tile)} của ${who} sập còn ${LEVEL_NAME[e.level]}.`;
     case "extra":
       return `${who} ra đôi, được đổ thêm một lần.`;
     case "end":

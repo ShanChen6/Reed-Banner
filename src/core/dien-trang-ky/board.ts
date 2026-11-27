@@ -109,7 +109,7 @@ export const MAX_LEVEL = 5;
 /** Lúc mua đất được xây luôn tới bậc này. */
 export const MAX_LEVEL_ON_BUY = 3;
 /** Tô theo bậc, nhân với giá đất. */
-export const RENT_RATE = [0.15, 0.5, 1.2, 2.2, 3.2, 4.5] as const;
+export const RENT_RATE = [0.15, 0.45, 0.9, 1.5, 2.1, 3.0] as const;
 /** Giữ đủ hai ô một vùng (hùng cứ): tô nhân thêm. Bậc 5 chỉ xây được khi hùng cứ. */
 export const HOLD_RATE = 1.5;
 /** Ô đang mở Hội Cờ Lau: tô nhân thêm. */
