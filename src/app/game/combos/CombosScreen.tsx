@@ -149,7 +149,7 @@ export default function CombosScreen() {
             const m = id ? team.find((t) => t.id === id) : undefined;
             const active = slot === i;
             return (
-              <div key={i} className={cn("ui-frame-inset flex flex-col gap-2 rounded-xl p-3", active && "ring-2 ring-frame-gold")}>
+              <div key={i} className={cn("ui-frame-inset flex flex-col gap-2 rounded-lg p-3", active && "ring-2 ring-frame-gold")}>
                 <button type="button" aria-pressed={active} aria-label={`Ô tướng ${i + 1}${m ? `: ${m.name}` : ""}`} onClick={() => { setSlot(i as 0 | 1 | 2); if (phone) setSheet(true); }} className="flex min-h-14 items-center gap-3 text-left">
                   {m ? (
                     <>
@@ -374,10 +374,10 @@ function ChainList({ team, chains }: { team: readonly ComboMember[]; chains: rea
 /** Chiêu mở của một người: chồng tối đa ba biểu tượng, tên chiêu đầy đủ ở dòng dưới. */
 function ChainOpenerChip({ who, skills }: { who: string; skills: readonly SkillDef[] }) {
   return (
-    <li className="flex min-w-0 max-w-full items-center gap-1.5 rounded-md border border-frame-line-soft bg-wood-inset px-1.5 py-1">
+    <li className="flex min-w-0 max-w-full items-center gap-1.5 rounded-lg border border-frame-line-soft bg-wood-inset px-1.5 py-1">
       <span className="flex shrink-0 -space-x-3">
         {skills.slice(0, 3).map((s) => (
-          <SkillIcon key={s.id} def={s} className="size-8 rounded-md ring-1 ring-black/40" />
+          <SkillIcon key={s.id} def={s} className="size-8 rounded-lg ring-1 ring-black/40" />
         ))}
       </span>
       <span className="flex min-w-0 flex-col leading-tight">
@@ -392,7 +392,7 @@ function ChainOpenerChip({ who, skills }: { who: string; skills: readonly SkillD
 
 function ChainNode({ icon, who, what }: { icon: React.ReactNode; who: string; what: string }) {
   return (
-    <span className="flex items-center gap-1.5 rounded-md border border-frame-line-soft bg-wood-inset px-1.5 py-1">
+    <span className="flex items-center gap-1.5 rounded-lg border border-frame-line-soft bg-wood-inset px-1.5 py-1">
       {icon}
       <span className="flex flex-col leading-tight">
         <span className="text-caption font-semibold text-title-on-wood">{what}</span>

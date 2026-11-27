@@ -54,7 +54,7 @@ export function Bar({
       aria-label={`${label} ${Math.round(value)}/${max}`}
     >
       <span className="hidden w-7 shrink-0 opacity-70 md:block">{label}</span>
-      <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded bg-black/30 md:h-2">
+      <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-lg bg-black/30 md:h-2">
         <div
           className={`h-full ${color} transition-[width] duration-300`}
           style={{ width: `${pct}%` }}
@@ -208,7 +208,7 @@ export function FighterCard({
         <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1.5">
           {rageTurns > 0 && (
             <span
-              className="inline-flex items-center gap-1 rounded bg-stat-rage/40 px-1 py-0.5 text-caption"
+              className="inline-flex items-center gap-1 rounded-lg bg-stat-rage/40 px-1 py-0.5 text-caption"
               title={`Bị động khi đầy Nộ, ${passiveText(fighter.element)}, còn ${rageTurns} lượt`}
             >
               <PassiveIcon id={ragePassiveId(fighter.element)} name={PASSIVES[fighter.element].name} className="size-3.5" />
@@ -217,7 +217,7 @@ export function FighterCard({
           )}
           {fighter.comboReady && fighter.comboPassive && (
             <span
-              className={`inline-flex items-center gap-1 rounded px-1 py-0.5 text-caption ${comboBlocked ? "bg-ash/50" : "bg-frame-bronze/40"}`}
+              className={`inline-flex items-center gap-1 rounded-lg px-1 py-0.5 text-caption ${comboBlocked ? "bg-ash/50" : "bg-frame-bronze/40"}`}
               title={`Do ${comboSource} mở${comboTarget ? `, mục tiêu ${comboTarget}` : ""}, ${comboTurns ? `${comboTurns} lượt thường kế tiếp` : "lượt hiện tại"}. Chọn hành động để tận dụng.`}
             >
               <PassiveIcon id={fighter.comboPassive} name={COMBO_PASSIVES[fighter.comboPassive].name} className="size-3.5" />

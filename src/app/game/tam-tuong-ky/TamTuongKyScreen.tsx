@@ -549,7 +549,7 @@ function RankedMode({ initial, playTabs }: { initial: TtkRankedView | null; play
             </div>
             <div className="flex flex-wrap items-center gap-2 text-sm">
               <span>Cửa hàng: {view.shop.price} vàng một bó, tuần này {view.shop.bought}/{view.shop.max}, vàng: {view.gold}</span>
-              <button type="button" disabled={pending || view.shop.bought >= view.shop.max || view.gold < view.shop.price} onClick={buy} className="min-h-11 rounded border border-[var(--frame-gold)] px-3 font-semibold disabled:opacity-50">
+              <button type="button" disabled={pending || view.shop.bought >= view.shop.max || view.gold < view.shop.price} onClick={buy} className="min-h-11 rounded-lg border border-[var(--frame-gold)] px-3 font-semibold disabled:opacity-50">
                 Mua 1 bó
               </button>
             </div>
@@ -1268,7 +1268,7 @@ function InfoCard({ id, state }: { id: NodeId; state: DiscoveryState }) {
   const name = (x: NodeId) => nameOf(catalog, x);
   const USED_MAX = 4;
   const more = (count: number) => (
-    <button type="button" onClick={() => setFull(true)} aria-haspopup="dialog" aria-label={`Xem đủ công thức đã biết của ${node.nameVi}`} title="Xem đủ công thức đã biết" className="shrink-0 rounded border border-[var(--frame-gold)] px-1.5 font-bold text-[var(--frame-gold-hi)] hover:bg-[var(--wood-hi)]">
+    <button type="button" onClick={() => setFull(true)} aria-haspopup="dialog" aria-label={`Xem đủ công thức đã biết của ${node.nameVi}`} title="Xem đủ công thức đã biết" className="shrink-0 rounded-lg border border-[var(--frame-gold)] px-1.5 font-bold text-[var(--frame-gold-hi)] hover:bg-[var(--wood-hi)]">
       +{count}
     </button>
   );
@@ -1287,7 +1287,7 @@ function InfoCard({ id, state }: { id: NodeId; state: DiscoveryState }) {
             <span>nguyên tố gốc</span>
           ) : (
             book.madeFrom.slice(0, 2).map(([a, b], i) => (
-              <span key={i} aria-hidden className="inline-flex items-center gap-0.5 rounded border border-[var(--frame-line-mid)] px-1">
+              <span key={i} aria-hidden className="inline-flex items-center gap-0.5 rounded-lg border border-[var(--frame-line-mid)] px-1">
                 <MiniGlyph id={a} />+<MiniGlyph id={b} />
               </span>
             ))
@@ -1298,7 +1298,7 @@ function InfoCard({ id, state }: { id: NodeId; state: DiscoveryState }) {
           <span className="shrink-0 text-[var(--ash)]">Dùng ghép</span>
           {book.usedIn.length === 0 && <span aria-hidden className="text-[var(--ash)]">chưa có</span>}
           {book.usedIn.slice(0, USED_MAX).map((r, i) => (
-            <span key={i} aria-hidden className="inline-flex items-center gap-0.5 rounded border border-[var(--frame-line-mid)] px-1">
+            <span key={i} aria-hidden className="inline-flex items-center gap-0.5 rounded-lg border border-[var(--frame-line-mid)] px-1">
               <MiniGlyph id={r.first === id ? r.second : r.first} />→<MiniGlyph id={r.result} />
             </span>
           ))}
@@ -1334,7 +1334,7 @@ function RecipeBookDialog({ id, book, open, onClose }: { id: NodeId; book: Recip
     if (open && !d.open) d.showModal();
     if (!open && d.open) d.close();
   }, [open]);
-  const row = "flex flex-wrap items-center gap-x-2 gap-y-1 rounded-md border border-[var(--frame-line-mid)] px-2 py-1.5 text-sm";
+  const row = "flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-[var(--frame-line-mid)] px-2 py-1.5 text-sm";
   return (
     <dialog
       ref={ref}
@@ -1428,7 +1428,7 @@ function History({ entries, onReplay }: { entries: readonly HistoryEntry[]; onRe
       <ol className="flex h-[calc(5*1.625rem+4*0.25rem)] flex-col gap-1 overflow-hidden">
         {entries.slice(0, HISTORY_MAX).map((e, i) => (
           <li key={i}>
-            <button type="button" onClick={() => onReplay(e)} aria-label={`${e.text} Đặt lại cặp này`} title={e.text} className="flex h-[1.625rem] w-full items-center gap-1.5 rounded-md border border-transparent px-1.5 text-left text-caption hover:border-[var(--frame-line-mid)]">
+            <button type="button" onClick={() => onReplay(e)} aria-label={`${e.text} Đặt lại cặp này`} title={e.text} className="flex h-[1.625rem] w-full items-center gap-1.5 rounded-lg border border-transparent px-1.5 text-left text-caption hover:border-[var(--frame-line-mid)]">
               <MiniGlyph id={e.first} />
               <span aria-hidden>+</span>
               <MiniGlyph id={e.second} />
@@ -1550,7 +1550,7 @@ function Ledger({
               type="button"
               aria-pressed={selected}
               onClick={() => pickSection(sec)}
-              className={`flex min-w-0 flex-col items-center rounded-md px-1 py-1 leading-tight ${selected ? "bg-[var(--wood-hi)] text-[var(--title-on-wood)] ring-1 ring-[var(--frame-gold)]" : "hover:bg-[var(--wood-hi)]/60"}`}
+              className={`flex min-w-0 flex-col items-center rounded-lg px-1 py-1 leading-tight ${selected ? "bg-[var(--wood-hi)] text-[var(--title-on-wood)] ring-1 ring-[var(--frame-gold)]" : "hover:bg-[var(--wood-hi)]/60"}`}
             >
               <span className="truncate text-caption font-semibold">{sec.name}</span>
               <span className="text-caption text-[var(--ash)] tabular-nums">
@@ -1573,7 +1573,7 @@ function Ledger({
                 aria-label={`${g.name} ${g.found}/${g.entries.length}`}
                 title={`${g.name} ${g.found}/${g.entries.length}`}
                 onClick={() => onGroup(g.id)}
-                className={`flex min-w-0 flex-1 flex-col items-center rounded-md border px-0.5 py-1 ${selected ? "border-[var(--frame-gold)] bg-[var(--wood-hi)]" : "border-transparent hover:border-[var(--frame-line-mid)]"}`}
+                className={`flex min-w-0 flex-1 flex-col items-center rounded-lg border px-0.5 py-1 ${selected ? "border-[var(--frame-gold)] bg-[var(--wood-hi)]" : "border-transparent hover:border-[var(--frame-line-mid)]"}`}
               >
                 <ProfessionIcon profession={profession} className="size-7" />
                 <span aria-hidden className="text-caption text-[var(--ash)] tabular-nums">{g.found}/{g.entries.length}</span>

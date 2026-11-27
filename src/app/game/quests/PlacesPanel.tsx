@@ -28,7 +28,7 @@ function PlaceViewer({ place, onClose }: { place: FormationMap; onClose: () => v
       <div className="flex flex-col gap-1 p-4">
         <h2 id="place-viewer-title" className="font-serif text-xl font-bold text-title-on-wood">{place.place}</h2>
         <p className="text-[15px] leading-relaxed">{place.blurb}</p>
-        <button type="button" onClick={onClose} autoFocus className="mt-2 min-h-11 self-end rounded-md border border-frame-gold/60 px-5 text-title-on-wood">
+        <button type="button" onClick={onClose} autoFocus className="mt-2 min-h-11 self-end rounded-lg border border-frame-gold/60 px-5 text-title-on-wood">
           Đóng
         </button>
       </div>
@@ -56,11 +56,11 @@ export default function PlacesPanel({ collected }: { collected: readonly string[
           return (
             <li key={m.id}>
               {has ? (
-                <button type="button" onClick={() => setOpen(m)} className="min-h-11 w-full rounded border border-frame-gold/70 bg-frame-gold/15 px-2 py-1 text-left focus-visible:outline-2 focus-visible:outline-frame-gold">
+                <button type="button" onClick={() => setOpen(m)} className="min-h-11 w-full rounded-lg border border-frame-gold/70 bg-frame-gold/15 px-2 py-1 text-left focus-visible:outline-2 focus-visible:outline-frame-gold">
                   <span aria-hidden>✓ </span>{m.place}
                 </button>
               ) : (
-                <span aria-label="chưa khai thông" className="block min-h-11 rounded border border-frame-bronze/30 px-2 py-2 text-on-wood-soft">? ? ?</span>
+                <span aria-label="chưa khai thông" className="block min-h-11 rounded-lg border border-frame-bronze/30 px-2 py-2 text-on-wood-soft">? ? ?</span>
               )}
             </li>
           );

@@ -90,7 +90,7 @@ export default function ShopScreen() {
                   on ? "border-frame-gold bg-frame-gold/15 shadow-[inset_3px_0_0_var(--frame-gold)]" : "border-frame-line-soft bg-wood-inset hover:border-frame-gold/60",
                 )}
               >
-                <span aria-hidden className="grid size-9 shrink-0 place-items-center rounded-md bg-black/25 sm:size-10">{s.icon}</span>
+                <span aria-hidden className="grid size-9 shrink-0 place-items-center rounded-lg bg-black/25 sm:size-10">{s.icon}</span>
                 <span className="min-w-0">
                   <span className={cn("block font-serif font-bold whitespace-nowrap", on ? "text-title-on-wood" : "text-on-wood")}>{s.label}</span>
                   <span className="block truncate text-caption text-on-wood-soft max-lg:hidden">{s.note}</span>

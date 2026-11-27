@@ -90,7 +90,7 @@ export function BoardCells({
             }
             onPointerDown={(e) => onPointerDown(pos, e)}
             onPointerEnter={onHoverCell ? (e) => onHoverCell(pos, e.pointerType) : undefined}
-            className={`relative aspect-square rounded-md bg-[var(--battle-cell)] ${
+            className={`relative aspect-square rounded-lg bg-[var(--battle-cell)] ${
               isWhirlHub ? "z-30" : isSel ? "z-10 scale-110 ring-2 ring-frame-gold-hi" : ""
             } ${isRing ? "ring-2 ring-info" : ""} ${willMatch ? "z-10 ring-2 ring-frame-gold-hi brightness-125" : ""} ${isCur ? "outline-2 outline-stat-shield" : ""} ${(aim && needsCell(aim.skill)) || whirlAim ? "cursor-crosshair" : "cursor-pointer"}`}
           >

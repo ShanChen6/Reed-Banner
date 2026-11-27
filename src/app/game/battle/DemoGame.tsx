@@ -1238,10 +1238,10 @@ export default function DemoGame({
     <div
       ref={rootRef}
       // battle-live: đang ở màn trận (cả lúc hiện kết quả); màn ngang thấp ẩn header chung và dồn bàn cờ vừa chiều cao (components.css).
-      className={`${palette} ui-mode-screen ${started ? "battle-live" : ""}`}
+      className={`${palette} ui-mode-screen ${started ? "battle-live ui-mode-fit" : ""}`}
     >
       {/* Điện thoại: khung ngoài phẳng (.ui-frame--phone-flat) để bàn cờ lấp ngang (Shan chọn 1A, 21/11/2026). */}
-      <OrnateFrame level="raised" flush className={`ui-frame--phone-flat mx-auto flex w-full flex-col gap-2 p-0 sm:gap-3 sm:p-6 ${started ? "landscape-short:gap-1.5 landscape-short:p-0" : ""} ${MODE_CONTENT_WIDTH}`}>
+      <OrnateFrame level="raised" flush className={`battle-shell ui-frame--phone-flat mx-auto flex w-full flex-col gap-2 p-0 sm:gap-3 sm:p-6 ${started ? "landscape-short:gap-1.5 landscape-short:p-0" : ""} ${MODE_CONTENT_WIDTH}`}>
         <BattleHeader
           atBreak={atBreak}
           difficulty={difficulty}
@@ -1261,7 +1261,7 @@ export default function DemoGame({
           clock={turnClock}
         />
         {scenario && live && !scenarioOver && (phaseTurns || labels.length > 1) && (
-          <p className="rounded-md border border-frame-line bg-frame-gold/10 px-3 py-1 text-sm text-title-on-wood">
+          <p className="rounded-lg border border-frame-line bg-frame-gold/10 px-3 py-1 text-sm text-title-on-wood">
             {storyNodeById(scenario.nodeId)?.title}
             {labels.length > 1 &&
               `, giai đoạn ${scenario.phaseIndex + 1}/${labels.length}: ${labels[scenario.phaseIndex]}`}
@@ -1289,7 +1289,7 @@ export default function DemoGame({
           </p>
         )}
         {expeditionObjective && live && state.winner === null && (
-          <p className="rounded-md border border-frame-line bg-wood-inset px-3 py-1 text-sm text-on-wood">
+          <p className="rounded-lg border border-frame-line bg-wood-inset px-3 py-1 text-sm text-on-wood">
             {expeditionObjective.type === "gate"
               ? `Phá cổng: hạ Cổng thành là qua (cổng còn ${Math.round((Math.max(0, live.sides[1].fighters[expeditionObjective.fighter]?.hp ?? 0) / Math.max(1, live.sides[1].fighters[expeditionObjective.fighter]?.maxHp ?? 1)) * 100)}% độ bền).`
               : `${expeditionObjective.type === "hold" ? "Giữ vị trí" : "Hộ tống đoàn dân"}: đã giữ ${Math.min(completedPlayerTurns(live), expeditionObjective.turns)}/${expeditionObjective.turns} lượt của bạn, hoặc hạ hết đối thủ.`}
@@ -1357,7 +1357,7 @@ export default function DemoGame({
                 Toàn màn hình: hộp .battle-board-box giãn hết chiều cao còn lại, bàn cờ vừa hộp (globals.css). */}
             <div className="battle-board-box">
             <div
-              className="battle-board relative mx-auto mt-3 w-full landscape-short:mt-2 landscape-short:max-w-[calc((100dvh-8rem)*var(--board-ratio))] rounded-xl border border-[var(--primary)] bg-[var(--decorative-frame)] p-1 shadow-lg max-sm:-mx-1 max-sm:w-[calc(100%+0.5rem)] sm:border-2 sm:p-1.5 lg:max-w-[max(34rem,calc((100dvh-21rem)*var(--board-ratio)))]"
+              className="battle-board relative mx-auto mt-3 w-full landscape-short:mt-2 landscape-short:max-w-[calc((100dvh-8rem)*var(--board-ratio))] rounded-lg border border-[var(--primary)] bg-[var(--decorative-frame)] p-1 shadow-lg max-sm:-mx-1 max-sm:w-[calc(100%+0.5rem)] sm:border-2 sm:p-1.5 lg:max-w-[max(34rem,calc((100dvh-21rem)*var(--board-ratio)))]"
               style={{ "--board-ratio": board.cols / board.rows } as React.CSSProperties}
             >
               <BoardCrest className="pointer-events-none absolute -top-4 left-1/2 z-10 h-8 w-40 -translate-x-1/2 md:-top-5 md:h-10 md:w-52" />
@@ -1368,7 +1368,7 @@ export default function DemoGame({
                 />
               ))}
               <div
-                className="relative grid touch-none select-none gap-px overflow-hidden rounded-md bg-black/25 p-0.5 sm:gap-0.5"
+                className="relative grid touch-none select-none gap-px overflow-hidden rounded-lg bg-black/25 p-0.5 sm:gap-0.5"
                 style={{
                   gridTemplateColumns: `repeat(${board.cols}, minmax(0, 1fr))`,
                 }}
@@ -1406,7 +1406,7 @@ export default function DemoGame({
                 {frame?.chain && (
                   <div
                     key={`${anim!.id}-${anim!.i}`}
-                    className="chain-pop pointer-events-none absolute left-1/2 top-2 rounded bg-primary px-3 py-1 text-sm font-bold text-primary-foreground shadow"
+                    className="chain-pop pointer-events-none absolute left-1/2 top-2 rounded-lg bg-primary px-3 py-1 text-sm font-bold text-primary-foreground shadow"
                   >
                     Chuỗi ×{frame.chain}
                   </div>
@@ -1416,7 +1416,7 @@ export default function DemoGame({
                     key={turnBanner.id}
                     role="status"
                     aria-live="polite"
-                    className={`turn-banner pointer-events-none absolute inset-x-3 top-1/2 z-20 rounded border px-3 py-2 text-center font-serif text-base font-black uppercase tracking-[0.16em] shadow-lg sm:inset-x-10 sm:text-lg ${
+                    className={`turn-banner pointer-events-none absolute inset-x-3 top-1/2 z-20 rounded-lg border px-3 py-2 text-center font-serif text-base font-black uppercase tracking-[0.16em] shadow-lg sm:inset-x-10 sm:text-lg ${
                       turnBanner.side === AI
                         ? "border-stat-hp/70 bg-danger-surface/90 text-danger shadow-danger-surface/60"
                         : "border-frame-gold-hi/70 bg-success-surface/90 text-title-on-wood shadow-success-surface/60"
@@ -1427,7 +1427,7 @@ export default function DemoGame({
                   </div>
                 )}
                 {toast && (
-                  <div className="pointer-events-none absolute inset-x-0 top-1/2 mx-auto w-fit -translate-y-1/2 rounded bg-black/80 px-3 py-1.5 text-sm text-white">
+                  <div className="pointer-events-none absolute inset-x-0 top-1/2 mx-auto w-fit -translate-y-1/2 rounded-lg bg-black/80 px-3 py-1.5 text-sm text-white">
                     {toast}
                   </div>
                 )}
@@ -1486,7 +1486,7 @@ export default function DemoGame({
                       onPointerLeave={() => setSpinPreview(null)}
                       onFocus={() => setSpinPreview(t)}
                       onBlur={() => setSpinPreview(null)}
-                      className="rounded bg-info px-2 py-1 font-bold text-white"
+                      className="rounded-lg bg-info px-2 py-1 font-bold text-white"
                       aria-label={`Xoay ${t} nấc theo chiều kim đồng hồ, ${matched.size > 0 ? `ghép được ${matched.size} ô` : "không ghép được ô nào"}`}
                     >
                       ↻{t > 1 ? ` ×${t}` : ""}

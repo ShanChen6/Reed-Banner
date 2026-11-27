@@ -73,7 +73,7 @@ export default function BoardView({
   return (
     <div ref={boardRef} role="grid" aria-label={`Sa bàn ${height} hàng ${width} cột`} data-won={state.phase === "won"} className="ui-frame w-fit p-2">
       <div
-        className="fm-board relative grid overflow-hidden rounded-sm"
+        className="fm-board relative grid overflow-hidden rounded-lg"
         style={{ ...vars, backgroundImage: `url(${map.src})` }}
         onMouseLeave={() => setPeek(null)}
       >

@@ -547,7 +547,7 @@ function CompletedMap({ map }: { map: FormationMap }) {
   return (
     <figure className="m-0 flex flex-col gap-1.5">
       {/* eslint-disable-next-line @next/next/no-img-element -- ảnh bản đồ tĩnh, kích thước theo khung */}
-      <img src={map.src} alt={`Bản đồ hoàn chỉnh: ${map.place}`} className="aspect-[16/10] w-full rounded border border-frame-bronze object-cover" />
+      <img src={map.src} alt={`Bản đồ hoàn chỉnh: ${map.place}`} className="aspect-[16/10] w-full rounded-lg border border-frame-bronze object-cover" />
       <figcaption className="text-sm leading-snug">
         <b className="font-serif text-base text-title-on-wood">{map.place}</b>
         <span className="block text-on-wood-soft">{map.blurb}</span>

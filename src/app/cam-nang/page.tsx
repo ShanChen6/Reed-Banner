@@ -85,7 +85,7 @@ export default function GuidePage() {
             </div>
             <ul aria-hidden className="hidden grid-cols-3 gap-3 lg:grid">
               {(["special", "rage", "morale", "energy", "gear", "ai"] as const).map((c) => (
-                <li key={c} className="rounded-2xl bg-black/30 p-2 ring-1 ring-frame-gold/30 backdrop-blur-sm">
+                <li key={c} className="rounded-xl bg-black/30 p-2 ring-1 ring-frame-gold/30 backdrop-blur-sm">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={`/art/highlights/${c}.webp`} alt="" className="size-24" />
                 </li>
@@ -99,11 +99,11 @@ export default function GuidePage() {
           <OrnateFrame level="raised" className={SITE_FRAME}>
           <SectionTitle id="how-title" kicker="Cách chơi" title="Ba bước một lượt" sub="Mỗi lượt có ba mươi giây. Đánh sai không bị phạt, nước đổi không ghép được chỉ bị trả lại." />
           <ol className={`mx-auto grid gap-5 lg:grid-cols-3 ${SITE_WIDTH}`}>
-            <li className="flex flex-col gap-4 rounded-2xl fx-panel p-6">
+            <li className="flex flex-col gap-4 rounded-xl fx-panel p-6">
               <StepHead n="I" title="Đổi ô, ghép từ ba" />
-              <div aria-hidden className="flex items-center justify-center gap-1.5 rounded-xl bg-black/25 p-4">
+              <div aria-hidden className="flex items-center justify-center gap-1.5 rounded-lg bg-black/25 p-4">
                 {(["kiem", "kiem", "tim", "kiem"] as const).map((k, i) => (
-                  <TileArt key={i} kind={k} className={`size-12 ${i === 2 ? "ring-2 ring-frame-gold-hi rounded-md" : ""}`} />
+                  <TileArt key={i} kind={k} className={`size-12 ${i === 2 ? "ring-2 ring-frame-gold-hi rounded-lg" : ""}`} />
                 ))}
                 <span className="mx-1 text-2xl text-frame-gold">⇄</span>
                 <TileArt kind="kiem" special="strong" className="tile-strong size-12" />
@@ -113,9 +113,9 @@ export default function GuidePage() {
                 {TILE_KINDS.slice(0, 4).map((k) => TILE_NAME[k].toLowerCase()).join(", ")}… Ghép bốn, năm ô tạo ô đặc biệt và thêm lượt.
               </p>
             </li>
-            <li className="flex flex-col gap-4 rounded-2xl fx-panel p-6">
+            <li className="flex flex-col gap-4 rounded-xl fx-panel p-6">
               <StepHead n="II" title="Tích Nộ, tung kỹ năng" />
-              <div aria-hidden className="flex flex-col gap-2.5 rounded-xl bg-black/25 p-4">
+              <div aria-hidden className="flex flex-col gap-2.5 rounded-lg bg-black/25 p-4">
                 <Meter label="Năng lượng" value={80} tone="from-sky-700 to-sky-300" />
                 <Meter label="Nộ" value={100} tone="from-frame-bronze to-frame-gold-hi" />
                 <div className="flex items-center gap-2 text-sm">
@@ -127,9 +127,9 @@ export default function GuidePage() {
                 Mỗi tướng có sáu kỹ năng. Trước khi đổi ô được dùng một kỹ năng; đầy Nộ thì bị động theo hệ của thủ lĩnh bùng phát ba lượt.
               </p>
             </li>
-            <li className="flex flex-col gap-4 rounded-2xl fx-panel-hi p-6">
+            <li className="flex flex-col gap-4 rounded-xl fx-panel-hi p-6">
               <StepHead n="III" title="Đồng đội phản ứng thành chuỗi" />
-              <ol aria-label="Ví dụ một chuỗi Hợp Kích" className="flex flex-col gap-1.5 rounded-xl bg-black/25 p-3">
+              <ol aria-label="Ví dụ một chuỗi Hợp Kích" className="flex flex-col gap-1.5 rounded-lg bg-black/25 p-3">
                 {LANDING_CHAIN.map((s, i) => {
                   const c = companion(s.who);
                   return (
@@ -161,7 +161,7 @@ export default function GuidePage() {
           <h2 id="g-rules" className="sr-only">Điểm nhấn luật chơi</h2>
           <ul className={`mx-auto grid gap-4 sm:grid-cols-2 lg:grid-cols-3 ${SITE_WIDTH}`}>
             {FEATURES.map((f) => (
-              <li key={f.title} className="flex gap-4 rounded-2xl fx-panel p-5">
+              <li key={f.title} className="flex gap-4 rounded-xl fx-panel p-5">
                 <span className="shrink-0">{f.art}</span>
                 <div>
                   <h3 className="font-bold">{f.title}</h3>
@@ -176,7 +176,7 @@ export default function GuidePage() {
         <section id="tiles" aria-labelledby="g-tiles" className="scroll-mt-20 px-4 py-6 md:py-8">
           <OrnateFrame level="raised" className={SITE_FRAME}>
           <SectionTitle id="g-tiles" kicker="Bàn cờ" title="Bảy loại ô" sub="Ô thường, bản yếu (chữ L, chữ T) và bản mạnh (thẳng năm)." />
-          <div className={`mx-auto overflow-x-auto rounded-2xl fx-panel ${SITE_WIDTH}`}>
+          <div className={`mx-auto overflow-x-auto rounded-xl fx-panel ${SITE_WIDTH}`}>
             <table className="w-full min-w-[520px] text-left text-sm">
               <thead className="text-kicker text-on-wood-soft">
                 <tr>
@@ -219,7 +219,7 @@ export default function GuidePage() {
           <SectionTitle id="g-prof" kicker="Nghề" title={`${NumberWords(PROFESSIONS.length)} nghề, nội tại riêng`} sub="Nội tại nghề luôn có hiệu lực, cộng thêm sáu kỹ năng và bốn bị động của từng tướng." />
           <ul className={`mx-auto grid gap-4 sm:grid-cols-2 lg:grid-cols-4 ${SITE_WIDTH}`}>
             {PROFESSIONS.map((p) => (
-              <li key={p} className="flex flex-col gap-2 rounded-2xl fx-panel p-5">
+              <li key={p} className="flex flex-col gap-2 rounded-xl fx-panel p-5">
                 <span className="flex items-center gap-2 font-serif text-lg font-bold">
                   <ProfessionIcon profession={p} className="size-7" />
                   {PROFESSION_NAME[p]}
@@ -244,7 +244,7 @@ export default function GuidePage() {
               { k: "Tương sinh", v: pct(ELEMENT_DAMAGE.generate), body: "Đánh vào hệ mình sinh ra, sát thương nhỉnh hơn một chút." },
               { k: "Bị khắc", v: pct(ELEMENT_DAMAGE.countered), body: "Đánh vào hệ khắc mình, sát thương giảm một phần tư." },
             ].map((c) => (
-              <li key={c.k} className="rounded-2xl fx-panel p-5">
+              <li key={c.k} className="rounded-xl fx-panel p-5">
                 <p className="text-kicker text-on-wood-soft">{c.k}</p>
                 <p className="fx-gilt-text font-serif text-3xl font-black">{c.v}</p>
                 <p className="mt-1 text-sm text-on-wood-soft">{c.body}</p>

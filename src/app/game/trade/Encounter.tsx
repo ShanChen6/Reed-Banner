@@ -103,7 +103,7 @@ function Fight({ kind, seed, busy, onDone }: { kind: EncounterKind; seed: number
         <span className="text-sm font-semibold">
           {FOE[kind].hp} {sk.hp}/{sk.maxHp}, còn {sk.movesLeft} nước{sk.lastDamage > 0 ? `, vừa gây ${sk.lastDamage}` : ""}
         </span>
-        <div className="h-3 overflow-hidden rounded bg-wood-inset">
+        <div className="h-3 overflow-hidden rounded-lg bg-wood-inset">
           <div className="h-full bg-lacquer transition-[width]" style={{ width: `${(sk.hp / sk.maxHp) * 100}%` }} />
         </div>
         <p className="text-caption text-on-wood-soft">
@@ -124,7 +124,7 @@ function Fight({ kind, seed, busy, onDone }: { kind: EncounterKind; seed: number
                   aria-pressed={picked}
                   disabled={locked}
                   onClick={() => press(p)}
-                  className={`relative aspect-square p-0.5 disabled:cursor-default ${picked ? "rounded ring-2 ring-frame-gold-hi" : ""}`}
+                  className={`relative aspect-square p-0.5 disabled:cursor-default ${picked ? "rounded-lg ring-2 ring-frame-gold-hi" : ""}`}
                 >
                   {t && (
                     <span

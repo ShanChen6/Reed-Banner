@@ -37,7 +37,7 @@ export default function WorldLedger({
   return (
     <section
       aria-labelledby="world-ledger-title"
-      className="rounded-xl border border-frame-line-soft bg-wood-inset p-3 text-sm"
+      className="rounded-lg border border-frame-line-soft bg-wood-inset p-3 text-sm"
     >
       <h3
         id="world-ledger-title"
@@ -49,7 +49,7 @@ export default function WorldLedger({
         {CAMPAIGN_LEDGER_GROUPS.map((group) => (
           <li
             key={group}
-            className="rounded border border-frame-line-soft bg-wood-inset px-2 py-1"
+            className="rounded-lg border border-frame-line-soft bg-wood-inset px-2 py-1"
           >
             <span className="font-bold text-on-wood">
               {ledger.resolved[group]}/{CAMPAIGN_LEDGER_EXPECTED[group]}

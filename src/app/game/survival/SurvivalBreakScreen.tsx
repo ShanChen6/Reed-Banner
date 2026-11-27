@@ -274,7 +274,7 @@ function SurvivalBreakReady({
                                 <span className="truncate">{fighter.name}</span>
                                 <CounterStar element={fighter.element} foes={next.foes} />
                               </span>
-                              <span className={cn("rounded px-1.5 text-caption font-bold", active ? "bg-jade/20 text-jade" : "bg-black/30 text-on-wood-soft")}>
+                              <span className={cn("rounded-lg px-1.5 text-caption font-bold", active ? "bg-jade/20 text-jade" : "bg-black/30 text-on-wood-soft")}>
                                 {active ? "Ra trận" : "Dự bị"}
                               </span>
                             </span>
@@ -342,7 +342,7 @@ function SurvivalBreakReady({
                     </summary>
                     <ul className="mt-1 grid gap-1 sm:grid-cols-2">
                       {leaderSkills.map(({ skill, unlocked }) => (
-                        <li key={skill.id} className={`flex min-w-0 items-center gap-2 rounded px-2 py-1 ${unlocked ? "bg-wood-inset" : "bg-wood-inset/50 opacity-55"}`}>
+                        <li key={skill.id} className={`flex min-w-0 items-center gap-2 rounded-lg px-2 py-1 ${unlocked ? "bg-wood-inset" : "bg-wood-inset/50 opacity-55"}`}>
                           <SkillIcon def={scaleSkill(skill, leaderSkillLevel(skill.slot))} className="size-8 shrink-0" />
                           <span className="min-w-0">
                             <span className="block truncate text-caption font-semibold text-on-wood">{skill.name}</span>

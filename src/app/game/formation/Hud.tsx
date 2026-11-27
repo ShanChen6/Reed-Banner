@@ -101,7 +101,7 @@ export function CommandCard({ state }: { state: PuzzleState }) {
   return (
     <section aria-label="Quân đang cầm" className="relative overflow-hidden rounded-lg border-2 border-frame-bronze bg-gradient-to-br from-paper-hi to-paper-deep px-4 py-3 text-wood shadow-[0_4px_14px_rgb(0_0_0/0.55)]">
       {/* Viền card như các card lớn khác (Shan 21/11/2026): vạch đồng bên trong và bốn góc hoa văn, màu gỗ sẫm trên giấy. */}
-      <span aria-hidden className="pointer-events-none absolute inset-1 rounded-md border border-frame-bronze/70" />
+      <span aria-hidden className="pointer-events-none absolute inset-1 rounded-lg border border-frame-bronze/70" />
       <FrameCorners size="size-6" cornerClass="text-wood/70" />
       <div className="relative flex items-center gap-4">
         <div className="relative w-[6.5rem] shrink-0 2xl:w-28">
@@ -159,7 +159,7 @@ export function MobileBar({ state, rules, noMove, disabled, covered, total, onDi
   return (
     <div className="mobile-dock fixed inset-x-0 bottom-0 z-30 border-t-2 border-frame-bronze bg-wood-lo/95 px-3 pt-2 pb-3 shadow-[0_-6px_18px_rgb(0_0_0/0.6)] backdrop-blur lg:hidden">
       <div className="mx-auto flex max-w-md items-center gap-3">
-        <div className="size-14 shrink-0 rounded-md border border-frame-bronze bg-paper p-0.5"><PieceFace piece={h} large /></div>
+        <div className="size-14 shrink-0 rounded-lg border border-frame-bronze bg-paper p-0.5"><PieceFace piece={h} large /></div>
         <div className="min-w-0 flex-1 text-sm leading-tight">
           <p className="truncate font-serif font-bold text-title-on-wood">{h.kind === "normal" || h.kind === "fusion" ? nameOf(h.characterId) : h.kind === "wild" ? "Quân Lệnh" : "Thu Hồi"}</p>
           <p className="truncate text-on-wood-soft">
@@ -194,7 +194,7 @@ export function TutorialTip({ text, onDismiss }: { text: string; onDismiss: () =
     <div role="note" className="flex items-start gap-3 rounded-lg border border-frame-gold/60 bg-frame-gold/15 p-3 text-[15px] leading-snug">
       <span aria-hidden className="mt-0.5 rounded-full bg-lacquer px-2 py-0.5 text-caption font-bold text-title-on-wood">Mẹo</span>
       <p className="flex-1">{text}</p>
-      <button type="button" onClick={onDismiss} className="min-h-9 pointer-coarse:min-h-11 shrink-0 rounded border border-frame-bronze/60 px-3 text-sm font-semibold">Đã hiểu</button>
+      <button type="button" onClick={onDismiss} className="min-h-9 pointer-coarse:min-h-11 shrink-0 rounded-lg border border-frame-bronze/60 px-3 text-sm font-semibold">Đã hiểu</button>
     </div>
   );
 }

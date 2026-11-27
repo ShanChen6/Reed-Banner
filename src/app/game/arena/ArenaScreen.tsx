@@ -308,7 +308,7 @@ export default function ArenaScreen() {
                           type="button"
                           aria-label={`Bỏ ${c?.name ?? id} khỏi đội ra trận`}
                           onClick={() => choosePicks(lineup.filter((x) => x !== id))}
-                          className="grid size-8 shrink-0 place-items-center rounded text-on-wood-soft hover:bg-black/30 hover:text-on-wood pointer-coarse:size-11"
+                          className="grid size-8 shrink-0 place-items-center rounded-lg text-on-wood-soft hover:bg-black/30 hover:text-on-wood pointer-coarse:size-11"
                         >
                           ×
                         </button>
@@ -472,7 +472,7 @@ function PowerTag({ mine, theirs }: { mine: number; theirs: number }) {
     : ratio < 0.8 ? ["Yếu hơn nhiều", "bg-jade/25 text-jade"]
     : ratio < 0.9 ? ["Yếu hơn", "bg-jade/15 text-jade"]
     : ["Ngang sức", "bg-frame-gold/20 text-frame-gold"];
-  return <span className={`self-start rounded px-2 py-0.5 text-caption font-bold ${tone}`}>{text}</span>;
+  return <span className={`self-start rounded-lg px-2 py-0.5 text-caption font-bold ${tone}`}>{text}</span>;
 }
 
 function Stat({ label, value }: { label: string; value: string }) {

@@ -439,7 +439,7 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
       <span className="text-caption text-on-wood-soft">
         {label} {v}/{max}
       </span>
-      <div className="h-2 overflow-hidden rounded bg-wood-inset">
+      <div className="h-2 overflow-hidden rounded-lg bg-wood-inset">
         <div className="h-full" style={{ width: `${Math.min(100, (v / max) * 100)}%`, background: color }} />
       </div>
     </div>
@@ -455,7 +455,7 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
           <span className="text-sm font-semibold">
             Thành lực {sk.hp}/{sk.maxHp}, còn {sk.movesLeft} nước{sk.lastDamage > 0 ? `, vừa gây ${sk.lastDamage}` : ""}
           </span>
-          <div className="h-3 overflow-hidden rounded bg-wood-inset">
+          <div className="h-3 overflow-hidden rounded-lg bg-wood-inset">
             <div className="h-full bg-lacquer transition-[width]" style={{ width: `${(sk.hp / sk.maxHp) * 100}%` }} />
           </div>
         </div>
@@ -484,7 +484,7 @@ function Skirmish({ s, act }: { s: SlState; act: (a: SlAction) => boolean }) {
                   aria-pressed={picked}
                   disabled={locked}
                   onClick={() => press(p)}
-                  className={`relative aspect-square p-0.5 disabled:cursor-default ${picked ? "rounded ring-2 ring-frame-gold-hi" : ""} ${stratagem && sel === null ? "hover:bg-lacquer/40" : ""}`}
+                  className={`relative aspect-square p-0.5 disabled:cursor-default ${picked ? "rounded-lg ring-2 ring-frame-gold-hi" : ""} ${stratagem && sel === null ? "hover:bg-lacquer/40" : ""}`}
                 >
                   {t && (
                     <span
@@ -554,7 +554,7 @@ function MazePicker({ setup, best, onChange, onStart }: { setup: Setup; best: Be
                 aria-checked={on}
                 disabled={!open}
                 onClick={() => onChange({ ...setup, era })}
-                className={`group relative flex flex-col overflow-hidden rounded-xl border-2 text-left transition ${
+                className={`group relative flex flex-col overflow-hidden rounded-lg border-2 text-left transition ${
                   on ? "border-frame-gold-hi shadow-[0_0_0_3px_color-mix(in_srgb,var(--frame-gold)_35%,transparent)]" : "border-frame-line hover:border-frame-gold"
                 } disabled:cursor-not-allowed disabled:opacity-60`}
               >

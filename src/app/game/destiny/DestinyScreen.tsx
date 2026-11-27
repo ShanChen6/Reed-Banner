@@ -132,7 +132,7 @@ function rememberBattle(id: string) {
 function HpBar({ hp, maxHp }: { hp: number; maxHp: number }) {
   const ratio = Math.max(0, Math.min(100, Math.round(100 * hp / Math.max(1, maxHp))));
   return (
-    <div className="h-1.5 overflow-hidden rounded bg-black/40" role="img" aria-label={`Máu ${ratio}%`}>
+    <div className="h-1.5 overflow-hidden rounded-lg bg-black/40" role="img" aria-label={`Máu ${ratio}%`}>
       <div className={cn("h-full", ratio < 30 ? "bg-danger" : "bg-jade")} style={{ width: `${ratio}%` }} />
     </div>
   );
@@ -251,7 +251,7 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
         </dl>
       </div>
 
-      <div className="h-1.5 overflow-hidden rounded bg-black/40" role="progressbar" aria-label="Tiến độ lượt leo"
+      <div className="h-1.5 overflow-hidden rounded-lg bg-black/40" role="progressbar" aria-label="Tiến độ lượt leo"
         aria-valuemin={0} aria-valuemax={floorCount} aria-valuenow={Math.min(cleared, floorCount)}>
         <div className="h-full bg-jade" style={{ width: `${percent}%` }} />
       </div>
@@ -286,7 +286,7 @@ function FloorTrack({ floorCount, version, cleared, current, best, milestones, c
                       )}
                       <button type="button" title={label} aria-label={label} aria-pressed={floor === shown}
                         aria-controls="destiny-floor-detail" onClick={() => setPicked(floor)}
-                        className="relative flex min-h-9 w-full items-start justify-center rounded focus-visible:outline-2 focus-visible:outline-frame-gold pointer-coarse:min-h-11">
+                        className="relative flex min-h-9 w-full items-start justify-center rounded-lg focus-visible:outline-2 focus-visible:outline-frame-gold pointer-coarse:min-h-11">
                       <span aria-hidden className={cn(
                         "relative flex size-7 items-center justify-center rounded-full border-2 text-caption leading-none tabular-nums sm:size-8 sm:text-sm",
                         floor === shown && "ring-2 ring-on-wood/70 ring-offset-1 ring-offset-wood-inset",

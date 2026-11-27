@@ -170,7 +170,7 @@ export default function PvpDraftScreen({ id, onMatch, onExit }: { id: string; on
               key={i}
               title={`${s.kind === "ban" ? "Cấm" : "Chọn"}, ${s.name}`}
               className={cn(
-                "rounded px-1.5 py-0.5 text-caption font-semibold",
+                "rounded-lg px-1.5 py-0.5 text-caption font-semibold",
                 s.current ? "bg-frame-gold text-wood-lo" : s.done ? "bg-black/30 text-on-wood-soft line-through decoration-1" : "bg-wood-inset text-on-wood-soft",
                 s.side === view.mySide ? "ring-1 ring-jade/50" : "ring-1 ring-danger/40",
               )}
@@ -222,7 +222,7 @@ export default function PvpDraftScreen({ id, onMatch, onExit }: { id: string; on
                 ) : (
                   <ul className="flex flex-wrap gap-1.5">
                     {bans.map((b, i) => (
-                      <li key={i} className="flex items-center gap-1 rounded bg-danger/15 px-2 py-0.5 text-caption text-on-wood">
+                      <li key={i} className="flex items-center gap-1 rounded-lg bg-danger/15 px-2 py-0.5 text-caption text-on-wood">
                         {b.kind === "element" ? <ElementIcon element={b.value as Element} className="size-3.5" /> : b.kind === "profession" ? <ProfessionIcon profession={b.value as Profession} className="size-3.5" /> : null}
                         <span className="line-through decoration-danger">{banLabel(b)}</span>
                         {b.auto && <span className="text-on-wood-soft">(máy)</span>}
@@ -346,7 +346,7 @@ export default function PvpDraftScreen({ id, onMatch, onExit }: { id: string; on
             <p className="mb-1 text-caption text-on-wood-soft">Phe đối thủ</p>
             <ul className="flex flex-wrap gap-2">
               {[...view.prep.foes].sort((a, b) => a.hero.name.localeCompare(b.hero.name, "vi")).map((f, i) => (
-                <li key={i} className="flex items-center gap-1.5 rounded bg-black/20 px-2 py-1 text-sm text-on-wood">
+                <li key={i} className="flex items-center gap-1.5 rounded-lg bg-black/20 px-2 py-1 text-sm text-on-wood">
                   <Portrait id={f.hero.id} element={f.hero.element} profession={f.hero.profession} className="size-8" />
                   {f.hero.name}
                 </li>

@@ -45,7 +45,7 @@ export function ProgressSection({
     <div
       className="flex w-full flex-col gap-3"
     >
-      <div className="ui-frame-inset rounded-xl p-3">
+      <div className="ui-frame-inset rounded-lg p-3">
         <ShopPanel
           compact={online}
           profile={profile}
@@ -55,7 +55,7 @@ export function ProgressSection({
       </div>
 
       {online ? (
-        <p className="ui-frame-inset rounded-xl p-3 text-caption text-on-wood-soft">
+        <p className="ui-frame-inset rounded-lg p-3 text-caption text-on-wood-soft">
           Kho đồ {profile.bag.length}/{BAG_LIMIT} món. Mặc trang bị và nâng kỹ năng ở{" "}
           <SceneLink scene="PROFILE" className="ui-link text-frame-gold underline underline-offset-2">
             Doanh Trại

@@ -74,7 +74,7 @@ function XpBar({ p }: { p: CharacterProgress }) {
     <div className="flex items-center gap-2 text-caption">
       <span className="font-semibold">Cấp {p.level}</span>
       <div
-        className="h-1.5 flex-1 overflow-hidden rounded bg-black/20"
+        className="h-1.5 flex-1 overflow-hidden rounded-lg bg-black/20"
         role="meter"
         aria-valuenow={cur}
         aria-valuemax={max}
@@ -189,7 +189,7 @@ export default function ProgressPanel({
   return (
     <section
       aria-label="Tiến trình"
-      className="ui-frame-inset rounded-xl p-3 text-caption text-on-wood"
+      className="ui-frame-inset rounded-lg p-3 text-caption text-on-wood"
     >
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-semibold">Tiến trình ({storage})</h2>
@@ -222,7 +222,7 @@ export default function ProgressPanel({
           return (
             <div
               key={id}
-              className="flex flex-col gap-1.5 rounded bg-black/5 p-2"
+              className="flex flex-col gap-1.5 rounded-lg bg-black/5 p-2"
             >
               <div className="flex items-center justify-between font-semibold">
                 <span>{isMain ? "Đinh Bộ Lĩnh" : companionName(id)}</span>

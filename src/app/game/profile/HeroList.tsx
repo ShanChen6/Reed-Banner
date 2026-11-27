@@ -133,7 +133,7 @@ export default function HeroList({
             onChange={(e) => onFilter({ ...filter, query: e.target.value })}
             placeholder="Tìm theo tên…"
             aria-label="Tìm tướng quân theo tên, gõ có dấu hoặc không dấu"
-            className="size-full min-h-10 pointer-coarse:min-h-11 rounded-md bg-transparent pr-2 pl-9 text-[15px] text-on-wood outline-none placeholder:text-on-wood-soft"
+            className="size-full min-h-10 pointer-coarse:min-h-11 rounded-lg bg-transparent pr-2 pl-9 text-[15px] text-on-wood outline-none placeholder:text-on-wood-soft"
           />
         </label>
         <div className="flex min-w-0 basis-full gap-2">
@@ -142,7 +142,7 @@ export default function HeroList({
             aria-expanded={panel}
             aria-controls={panelId}
             onClick={() => setPanel(!panel)}
-            className={`barracks-btn flex min-h-10 pointer-coarse:min-h-11 shrink-0 items-center justify-center gap-1.5 rounded-md px-3 text-[15px] whitespace-nowrap ${panel ? "is-on" : ""}`}
+            className={`barracks-btn flex min-h-10 pointer-coarse:min-h-11 shrink-0 items-center justify-center gap-1.5 rounded-lg px-3 text-[15px] whitespace-nowrap ${panel ? "is-on" : ""}`}
           >
             <FilterGlyph className="size-4" />
             Bộ lọc
@@ -169,7 +169,7 @@ export default function HeroList({
       </div>
 
       {panel && (
-        <div id={panelId} role="group" aria-label="Bộ lọc tướng quân" className="barracks-inset mt-2 flex flex-col gap-2 rounded-md p-2.5 text-sm">
+        <div id={panelId} role="group" aria-label="Bộ lọc tướng quân" className="barracks-inset mt-2 flex flex-col gap-2 rounded-lg p-2.5 text-sm">
           <FilterRow label="Hệ">
             {ELEMENTS.map((el) => (
               <IconToggle
@@ -201,7 +201,7 @@ export default function HeroList({
                 type="button"
                 aria-pressed={filter.team === t}
                 onClick={() => onFilter({ ...filter, team: t })}
-                className={`barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-3 ${filter.team === t ? "is-on" : ""}`}
+                className={`barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-lg px-3 ${filter.team === t ? "is-on" : ""}`}
               >
                 {t === "all" ? "Tất cả" : TEAM_FILTER_NAME[t]}
               </button>
@@ -229,7 +229,7 @@ export default function HeroList({
           )}
           {filter.team !== "all" && chip(TEAM_FILTER_NAME[filter.team], () => onFilter({ ...filter, team: "all" }))}
           <li>
-            <button type="button" onClick={() => onFilter(NO_FILTER)} className="min-h-8 pointer-coarse:min-h-11 rounded px-2 text-sm text-[var(--frame-gold-hi)] underline-offset-2 hover:underline">
+            <button type="button" onClick={() => onFilter(NO_FILTER)} className="min-h-8 pointer-coarse:min-h-11 rounded-lg px-2 text-sm text-[var(--frame-gold-hi)] underline-offset-2 hover:underline">
               Xóa tất cả
             </button>
           </li>
@@ -241,7 +241,7 @@ export default function HeroList({
       </p>
 
       {hiddenSelected && (
-        <p role="status" className="barracks-inset mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-md px-3 py-2 text-sm">
+        <p role="status" className="barracks-inset mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg px-3 py-2 text-sm">
           <span className="min-w-0 flex-1">
             Đang xem <b className="text-title-on-wood">{selected.name}</b>, không khớp bộ lọc nên không có trong danh sách.
           </span>
@@ -256,7 +256,7 @@ export default function HeroList({
           <div className="flex flex-col items-center gap-2 py-10 text-center text-[15px] text-[var(--on-wood-soft)]">
             <p>{entries.length === 0 ? "Chưa có tướng quân nào." : "Không tìm thấy tướng quân phù hợp."}</p>
             {isFiltered(filter) && (
-              <button type="button" onClick={() => onFilter(NO_FILTER)} className="barracks-btn min-h-10 pointer-coarse:min-h-11 rounded-md px-4">
+              <button type="button" onClick={() => onFilter(NO_FILTER)} className="barracks-btn min-h-10 pointer-coarse:min-h-11 rounded-lg px-4">
                 Xóa bộ lọc
               </button>
             )}
@@ -309,7 +309,7 @@ function IconToggle({ on, label, onClick, children }: { on: boolean; label: stri
       aria-label={label}
       title={label}
       onClick={onClick}
-      className={`barracks-btn flex size-9 items-center justify-center rounded-md ${on ? "is-on" : ""}`}
+      className={`barracks-btn flex size-9 items-center justify-center rounded-lg ${on ? "is-on" : ""}`}
     >
       {children}
     </button>
@@ -338,7 +338,7 @@ export function HeroCard({
       tabIndex={tabbable ? 0 : -1}
       onClick={onClick}
       aria-label={`${entry.name}, cấp ${entry.level}, ${ELEMENT_NAME[entry.element]}, ${PROFESSION_NAME[entry.profession]}${status ? `, ${status}` : ""}`}
-      className={`hero-card group flex w-full flex-col overflow-hidden rounded-md text-left ${selected ? "is-selected" : ""}`}
+      className={`hero-card group flex w-full flex-col overflow-hidden rounded-lg text-left ${selected ? "is-selected" : ""}`}
     >
       <span
         className="relative block aspect-square w-full overflow-hidden"

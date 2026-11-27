@@ -67,7 +67,7 @@ const Dice = ({ n, tilt = 0 }: { n: number; tilt?: number }) => {
     6: [[1, 1], [1, 3], [2, 1], [2, 3], [3, 1], [3, 3]],
   };
   return (
-    <svg viewBox="0 0 4 4" className="size-[clamp(22px,6vw,44px)] rounded-md shadow transition-transform duration-75" style={{ background: PAPER, transform: tilt ? `rotate(${tilt}deg) translateY(-3px)` : undefined }} role="img" aria-label={`${n} chấm`}>
+    <svg viewBox="0 0 4 4" className="size-[clamp(22px,6vw,44px)] rounded-lg shadow transition-transform duration-75" style={{ background: PAPER, transform: tilt ? `rotate(${tilt}deg) translateY(-3px)` : undefined }} role="img" aria-label={`${n} chấm`}>
       {pips[n]!.map(([r, c], i) => (
         <circle key={i} cx={c} cy={r} r={0.38} fill={n === 1 || n === 4 ? "#b3261e" : "#2b1d10"} />
       ))}
