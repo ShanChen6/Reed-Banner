@@ -7,10 +7,10 @@ import { Alert, Button, buttonVariants, choiceVariants } from "@/components/ui";
 // thưởng đã xem để tải lại trang không phải xem lại từ đầu.
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
-import StartBar from "./StartBar";
+import { DESKTOP_FIT_QUERY, PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
+import { ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon } from "@/components/ui";
 import BattlePrep, { type BattleChoice } from "./BattlePrep";
-import { nextMissionAfter, startTarget } from "./startMission";
+import { nextMissionAfter } from "./startMission";
 import {
   CAMPAIGN_CHAPTERS,
   CAMPAIGN_FINAL_NODE,
@@ -286,6 +286,10 @@ export default function ChapterOne({
   };
   // Điện thoại: Hướng dẫn là bảng trượt mở từ nút "?" trên thanh Sử ký (Shan chọn 5B, 21/11/2026), không còn là một màn.
   const phone = useMediaQuery(PHONE_QUERY);
+  // Máy tính rộng: card Sử ký cao đúng một màn hình, năm thẻ chung chiều cao, nội dung dài chia trang (Shan 28/11/2026).
+  const fit = useMediaQuery(DESKTOP_FIT_QUERY);
+  /** Trang của thẻ Bản đồ khi khung cố định: 0 là ba cột, 1 là Hội quân / tuyến chương / hồi kết bên dưới. */
+  const [atlasPage, setAtlasPage] = useState(0);
   const view = phone && atlas.view === "guide" ? "atlas" : atlas.view;
   const strongholdId = atlas.stronghold;
   const stronghold = strongholdId ? strongholdById(strongholdId) : undefined;
@@ -417,6 +421,7 @@ export default function ChapterOne({
               : campaignMusterReady(campaign)
                 ? "muster-title"
                 : null;
+            if (jumpTo.current) setAtlasPage(1);
             updateAtlas({ ...atlas, view: "atlas" });
           },
         };
@@ -476,7 +481,7 @@ export default function ChapterOne({
       aria-labelledby={
         view === "atlas" ? "chapter-one-title" : view === "guide" ? "mode-guide-title" : "mission-title"
       }
-      className="flex scroll-mt-4 flex-col gap-4"
+      className="flex scroll-mt-4 flex-col gap-4 xl:h-[var(--mode-fit-h)]"
     >
       <RewardNotice
         profile={profile}
@@ -490,8 +495,8 @@ export default function ChapterOne({
       />
       {/* Đại card Sử ký (Polish V2 P02): header, ba cột và tuyến dưới nằm trong một khung gỗ. Màn nhiệm vụ và
           Sử ký chỉ giữ header trong khung, nội dung của chúng nằm dưới. */}
-      <div className="campaign-atlas">
-        <div className="atlas-frame atlas-frame-wood atlas-shell flex flex-col gap-3 p-2 sm:p-3">
+      <div className="campaign-atlas xl:flex xl:min-h-0 xl:flex-1 xl:flex-col">
+        <div className="atlas-frame atlas-frame-wood atlas-shell flex flex-col gap-3 p-2 sm:p-3 xl:min-h-0 xl:flex-1">
           <AtlasCorners />
           <AtlasHeader
             view={view}
@@ -500,20 +505,47 @@ export default function ChapterOne({
             supply={campaign.supply}
             onView={(view) => updateAtlas({ ...atlas, view })}
           />
-          {view === "atlas" && (
-            <div ref={mapRef} className="flex flex-col gap-3">
-              {(() => {
-                const target = startTarget(campaign);
-                return target ? <StartBar target={target} onOpen={openMission} /> : null;
-              })()}
-              {/* Ba cột cùng hàng cao bằng nhau; panel phải dài thì cuộn bên trong thay vì kéo dài hàng. */}
-              <div className="grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)] xl:grid-cols-[minmax(260px,0.22fr)_minmax(0,1fr)_minmax(300px,0.3fr)]">
-                <div className="md:col-span-2 xl:col-span-1">
+          {view === "atlas" && (() => {
+            const extras = [
+              chapter.chapter === 6 && campaignCompleted(campaign) && (
+                <CampaignEnding
+                  key="ending"
+                  campaign={campaign}
+                  onReplay={() => openMission(CAMPAIGN_FINAL_NODE)}
+                />
+              ),
+              chapter.chapter === 3 && campaignMusterReady(campaign) && (
+                <MusterPanel
+                  key="muster"
+                  profile={profile}
+                  busy={actionBusy}
+                  onAction={onAction}
+                  onPick={openMission}
+                />
+              ),
+              chapter.chapter >= 4 && (
+                <RouteSummary
+                  key="route"
+                  campaign={campaign}
+                  chapter={chapter.chapter}
+                  onPick={openMission}
+                />
+              ),
+            ].filter(Boolean);
+            // Khung cố định: ba cột là trang 1, các khối dưới bản đồ (hồi kết, Hội quân, tuyến chương) là trang 2.
+            const paged = fit && extras.length > 0;
+            const page = paged ? atlasPage : 0;
+            return (
+            <div ref={mapRef} className="flex flex-col gap-3 xl:min-h-0 xl:flex-1">
+              {page === 0 && (
+              <div className="grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)] xl:min-h-0 xl:flex-1 xl:grid-cols-[minmax(260px,0.22fr)_minmax(0,1fr)_minmax(300px,0.3fr)] xl:grid-rows-[minmax(0,1fr)]">
+                <div className="md:col-span-2 xl:col-span-1 xl:min-h-0">
                   <ChapterRail
                     campaign={campaign}
                     current={chapter}
                     onPick={(c) => {
                       updateAtlas({ view: "atlas", stronghold: null });
+                      setAtlasPage(0);
                       move({
                         nodeId: chapterFocus(campaign, c),
                         phase: "intro",
@@ -527,65 +559,60 @@ export default function ChapterOne({
                   selected={strongholdId}
                   onSelect={setStronghold}
                 />
-                {/* Bảng chương/cứ điểm tự giãn theo nội dung (không cuộn lồng trong card); bản đồ bên cạnh căn đầu hàng. */}
-                <div className="min-w-0">
-                  <div className="xl:h-full">
-                    {stronghold ? (
-                      <StrongholdPanel
-                        campaign={campaign}
-                        stronghold={stronghold}
-                        current={step.nodeId}
-                        onPick={openMission}
-                        onClose={() => setStronghold(null)}
-                      />
-                    ) : (
-                      <ChapterPanel
-                        campaign={campaign}
-                        chapter={chapter}
-                        current={step.nodeId}
-                        onPick={openMission}
-                      />
-                    )}
-                  </div>
+                {/* Bảng chương/cứ điểm cao bằng hàng; dài hơn thì chia trang (FitPages), không cuộn lồng. */}
+                <div className="min-w-0 xl:min-h-0">
+                  {stronghold ? (
+                    <StrongholdPanel
+                      key={stronghold.id}
+                      campaign={campaign}
+                      stronghold={stronghold}
+                      current={step.nodeId}
+                      onPick={openMission}
+                      onClose={() => setStronghold(null)}
+                      fit={fit}
+                    />
+                  ) : (
+                    <ChapterPanel
+                      key={chapter.chapter}
+                      campaign={campaign}
+                      chapter={chapter}
+                      current={step.nodeId}
+                      onPick={openMission}
+                      fit={fit}
+                    />
+                  )}
                 </div>
               </div>
-
-              {chapter.chapter === 6 && campaignCompleted(campaign) && (
-                <CampaignEnding
-                  campaign={campaign}
-                  onReplay={() => openMission(CAMPAIGN_FINAL_NODE)}
-                />
               )}
-
-              {chapter.chapter === 3 && campaignMusterReady(campaign) && (
-                <MusterPanel
-                  profile={profile}
-                  busy={actionBusy}
-                  onAction={onAction}
-                  onPick={openMission}
-                />
+              {(!paged || page === 1) && extras.length > 0 && (
+                <div className="flex flex-col gap-3 xl:min-h-0 xl:flex-1 xl:overflow-y-auto">{extras}</div>
               )}
-
-              {chapter.chapter >= 4 && (
-                <RouteSummary
-                  campaign={campaign}
-                  chapter={chapter.chapter}
-                  onPick={openMission}
-                />
+              {paged && (
+                <nav aria-label="Trang Bản đồ" className="flex shrink-0 items-center justify-center gap-3">
+                  <button type="button" aria-label="Trang trước" disabled={page === 0} onClick={() => setAtlasPage(0)}
+                    className={buttonVariants({ variant: "secondary", size: "icon", className: "disabled:opacity-40" })}>
+                    <ChevronLeftIcon className="size-5" />
+                  </button>
+                  <span aria-live="polite" className="text-sm font-semibold text-on-wood tabular-nums">
+                    {page === 0 ? "Bản đồ" : chapter.chapter === 3 ? "Hội quân Hoa Lư" : chapter.chapter >= 4 ? "Tuyến chương" : "Hồi kết"}, trang {page + 1}/2
+                  </span>
+                  <button type="button" aria-label="Trang sau" disabled={page === 1} onClick={() => setAtlasPage(1)}
+                    className={buttonVariants({ variant: "secondary", size: "icon", className: "disabled:opacity-40" })}>
+                    <ChevronRightIcon className="size-5" />
+                  </button>
+                </nav>
               )}
             </div>
-          )}
+            );
+          })()}
       {view === "guide" ? (
-        <div className="px-1 sm:px-2">
-          <ModeGuidePanel scene="CAMPAIGN" headingId="mode-guide-title" onPlay={() => updateAtlas({ ...atlas, view: "atlas" })} />
+        <div className="flex flex-col px-1 sm:px-2 xl:min-h-0 xl:flex-1">
+          <ModeGuidePanel scene="CAMPAIGN" headingId="mode-guide-title" paged onPlay={() => updateAtlas({ ...atlas, view: "atlas" })} />
         </div>
       ) : view === "codex" ? (
-        <>
-          <WorldLedger campaign={profile.campaign} />
-          <WarlordCodex campaign={campaign} />
-        </>
+        <WarlordCodex campaign={campaign} fit={fit} ledger={<WorldLedger campaign={profile.campaign} />} />
       ) : view === "raid" ? (
-        <div className="px-1 sm:px-2">{footer}</div>
+        <div className="px-1 sm:px-2 xl:min-h-0 xl:flex-1 xl:overflow-y-auto">{footer}</div>
       ) : view === "atlas" ? null : (
         <>
           <nav
@@ -597,7 +624,8 @@ export default function ChapterOne({
               onClick={() => updateAtlas({ ...atlas, view: "atlas" })}
               className={buttonVariants({ variant: "secondary", className: "min-h-11" })}
             >
-              ← Về bản đồ Sử ký
+              <ArrowLeftIcon className="size-5" />
+              Về bản đồ Sử ký
             </button>
             <p className="text-sm text-on-wood-soft">
               Chương {ROMAN[chapter.chapter]} – {chapter.title}
@@ -606,13 +634,13 @@ export default function ChapterOne({
           </nav>
 
           <article
-            className={`border-t border-frame-line-soft px-1 pt-3 sm:px-2 ${
+            className={`border-t border-frame-line-soft px-1 pt-3 sm:px-2 xl:min-h-0 xl:flex-1 ${
               prepSide
-                ? "grid gap-4 pb-24 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start lg:pb-0 xl:grid-cols-[minmax(0,1fr)_26rem]"
-                : "flex flex-col gap-3"
+                ? "grid gap-4 pb-24 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start lg:pb-0 xl:grid-cols-[minmax(0,1fr)_26rem] xl:grid-rows-[minmax(0,1fr)] xl:items-stretch"
+                : "flex flex-col gap-3 xl:overflow-y-auto"
             }`}
           >
-           <div className="flex min-w-0 flex-col gap-3">
+           <div className="flex min-w-0 flex-col gap-3 xl:min-h-0 xl:overflow-y-auto">
             <header>
               <p className="text-kicker text-frame-gold">
                 {node.location.name},{" "}
@@ -827,7 +855,7 @@ export default function ChapterOne({
             {prepSide && (
               <aside
                 aria-label="Bày trận"
-                className="ui-frame-inset rounded-xl p-3 lg:sticky lg:top-[4.5rem] lg:max-h-[calc(100dvh-5.5rem)] lg:overflow-y-auto xl:top-[80px]"
+                className="ui-frame-inset rounded-xl p-3 lg:sticky lg:top-[4.5rem] lg:max-h-[calc(100dvh-5.5rem)] lg:overflow-y-auto xl:static xl:max-h-none xl:min-h-0"
               >
                 <BattlePrep
                   key={step.nodeId}

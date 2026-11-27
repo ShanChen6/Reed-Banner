@@ -20,6 +20,7 @@ import { DEFEAT_RATIO, ENCOUNTERS_PER_DAY, TOLL_RATIO, TRADE_LEG_MINUTES, TRADE_
 import type { PieceType } from "@/core/tam-quan-ky";
 import { BOAT_FARE, BUYOUT_RATE, DTK_GOLD, DTK_REWARDS_PER_DAY, FAIR_RATE, FESTIVAL_RATE, HOLD3_RATE, HOLD_RATE, JAIL_BAIL, JAIL_TRIES, LEVEL_NAME, MAX_LEVEL_ON_BUY, RENT_RATE, RUIN_MAX, RUIN_MIN, SALARY, SCENIC_PRICE, SCENIC_RENT, SELL_RATE, START_CASH, TRIBUTE_BASE, TRIBUTE_PER_LEVEL } from "@/core/dien-trang-ky";
 import type { Scene } from "./scene";
+import { strongholdLeader, WORLD_STRONGHOLDS, type StrongholdId } from "./campaign/worldAtlas";
 
 /** Các chế độ có thẻ Hướng dẫn (mười hai chế độ ở thẻ Chiến Trường và Tam Quân Kỳ ở mục Sắp ra mắt). */
 export type GuideScene = Extract<
@@ -55,6 +56,8 @@ export interface ModeGuide {
   readonly tips: readonly string[];
   /** Đạo cụ (hoặc trợ giúp, quân đặc biệt) của chế độ, mỗi món kèm icon như trong màn chơi. */
   readonly items?: GuideItems;
+  /** Địa điểm trên bản đồ của chế độ (Bình Loạn: 13 cứ điểm), hiện sau mục đạo cụ. */
+  readonly places?: GuideItems;
 }
 
 /** Icon của một đạo cụ trong Hướng dẫn; ModeGuide.tsx vẽ đúng hình đang dùng ở màn chơi. */
@@ -63,7 +66,8 @@ export type GuideIcon =
   | { readonly kind: "suLoAid"; readonly aid: SlAid }
   | { readonly kind: "formation"; readonly piece: "wild" | "eraser" }
   | { readonly kind: "tqkPiece"; readonly piece: PieceType }
-  | { readonly kind: "tile"; readonly tile: TileKind };
+  | { readonly kind: "tile"; readonly tile: TileKind }
+  | { readonly kind: "stronghold"; readonly id: StrongholdId };
 
 export interface GuideItem {
   readonly icon: GuideIcon;
@@ -122,6 +126,25 @@ const TILE_ITEMS: readonly GuideItem[] = [
  * Luật nền của trận đổi ô, dùng chung cho mọi chế độ đánh trận (Bình Loạn, hai tháp, Trấn Ải, Nhật Lệnh, Quần Hùng, Viễn Chinh).
  * Người mới vào thẳng một chế độ vẫn đọc được cách đánh mà không phải mở Cẩm nang.
  */
+/**
+ * 13 cứ điểm trên bản đồ Bình Loạn (Shan 28/11/2026: danh sách cứ điểm bỏ khỏi bản đồ, đưa vào Hướng dẫn). Lấy từ
+ * WORLD_STRONGHOLDS nên thêm hay đổi cứ điểm thì Hướng dẫn tự theo.
+ */
+const CAMPAIGN_PLACES: GuideItems = {
+  title: "Cứ điểm trên bản đồ",
+  notes: [
+    "Bản đồ có Hoa Lư, đầu não của Đinh Bộ Lĩnh, và 12 cứ điểm sứ quân. Bấm lá cờ trên bản đồ để xem cứ điểm và nhiệm vụ ở đó.",
+    "Cứ điểm có vòng đỏ là nơi đang có nhiệm vụ mở. Cứ điểm của chương đang xem sáng hơn các cứ điểm khác.",
+    "Màu cờ theo thế cục đã ghi trong hồ sơ của bạn: đầu não Hoa Lư, chưa có kết cục, liên minh, quy phục, đánh dẹp, tan rã hoặc còn tranh luận. Chú giải màu nằm ngay dưới bản đồ. Vị trí trên bản đồ là bố cục minh họa để định hướng, không phải tọa độ chiến trường.",
+    "Bình Kiều của Ngô Xương Xí không cắm cờ vì sử chép không rõ chỗ; chọn ở ô riêng dưới bản đồ.",
+  ],
+  list: WORLD_STRONGHOLDS.map((s) => ({
+    icon: { kind: "stronghold" as const, id: s.id },
+    name: s.place,
+    text: `${s.faction ? "Sứ quân " : "Đầu não của "}${strongholdLeader(s)}${s.modernRegion ? `, ngày nay: ${s.modernRegion}` : ""}.`,
+  })),
+};
+
 const BATTLE_ITEMS: GuideItems = {
   title: "Cách đánh trên bàn cờ",
   notes: [
@@ -320,6 +343,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Bình Loạn không có bảng công trạng, bạn chơi theo nhịp của mình.",
     ],
     items: BATTLE_ITEMS,
+    places: CAMPAIGN_PLACES,
     rewards: [
       "Trận thắng cho kinh nghiệm, vàng và đồ rơi như trận thường.",
       "Lần đầu hoàn thành một nhiệm vụ hoặc một chương có thêm vàng. Đánh lại chỉ nhận thưởng trận thường.",
