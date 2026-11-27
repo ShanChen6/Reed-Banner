@@ -42,11 +42,11 @@ export type TradeItemId =
   | "pottery"
   | "silk"
   | "brocade"
-  | "hemp"
+  | "indigoCloth"
   | "sedgeMat"
   | "doPaper"
   | "lacquer"
-  | "basketry"
+  | "conicalHat"
   | "laterite"
   | "ironBar"
   | "bronze"
@@ -111,11 +111,11 @@ export const TRADE_ITEMS: readonly TradeItem[] = [
   item("pottery", "Gốm men", "craft", "fine", 160, ["sieuLoai"], ["plain"]),
   item("silk", "Lụa tơ tằm", "craft", "fine", 180, ["teGiang"], ["river"]),
   item("brocade", "Gấm vóc", "craft", "fine", 300, ["tienDu"], ["plain"]),
-  item("hemp", "Vải chàm", "craft", "common", 45, ["tamDai"], ["river", "mountain"]),
+  item("indigoCloth", "Vải chàm", "craft", "common", 45, ["tamDai"], ["river", "mountain"]),
   item("sedgeMat", "Chiếu cói", "craft", "fine", 90, ["doDong"], ["river"]),
   item("doPaper", "Giấy dó", "craft", "fine", 110, ["tayPhuLiet"], ["plain"]),
   item("lacquer", "Sơn mài", "craft", "fine", 240, ["sieuLoai"], ["plain"]),
-  item("basketry", "Nón lá", "craft", "common", 40, [], ["river", "plain"]),
+  item("conicalHat", "Nón lá", "craft", "common", 40, [], ["river", "plain"]),
   // Khoáng sản, lễ khí
   item("laterite", "Đá ong", "mineral", "common", 35, ["duongLam"], ["mountain"]),
   item("ironBar", "Sắt thỏi", "mineral", "fine", 120, [], ["mountain"]),
@@ -134,6 +134,22 @@ export const TRADE_CATEGORY_NAME: Readonly<Record<TradeCategory, string>> = {
   craft: "Thủ công",
   mineral: "Khoáng sản, lễ khí",
 };
+
+/** Mã cũ đã đổi cho khớp tên rút gọn (27/11/2026): hồ sơ và kho lưu mã cũ được đọc sang mã mới. */
+export const LEGACY_TRADE_ITEM_IDS: Readonly<Record<string, TradeItemId>> = { hemp: "indigoCloth", basketry: "conicalHat" };
+
+/** Mã món sau khi đổi mã cũ (giữ nguyên mã lạ để bộ kiểm phía sau từ chối). */
+export const currentTradeItemId = (id: string): string => LEGACY_TRADE_ITEM_IDS[id] ?? id;
+
+/** Khoang hàng đọc từ kho: gộp mã cũ vào mã mới, bỏ món không còn trong danh mục. */
+export function migrateCargo(c: Readonly<Record<string, number | undefined>>): Partial<Record<TradeItemId, number>> {
+  const out: Partial<Record<TradeItemId, number>> = {};
+  for (const [raw, n] of Object.entries(c)) {
+    const id = currentTradeItemId(raw);
+    if (n && n > 0 && isTradeItem(id)) out[id] = (out[id] ?? 0) + n;
+  }
+  return out;
+}
 
 export const isTradeItem = (v: unknown): v is TradeItemId => typeof v === "string" && (TRADE_ITEM_IDS as readonly string[]).includes(v);
 

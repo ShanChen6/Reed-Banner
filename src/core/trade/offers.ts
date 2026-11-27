@@ -2,7 +2,7 @@
 // (hàng và kim tiền đưa ra bị khóa), bên kia đồng ý hay từ chối khi mở game, không cần cùng online. Mỗi chuyến chỉ giao
 // dịch một lần; lời ngỏ tự hủy khi một bên đã tới điểm kế tiếp và xuất hành chặng mới, hoặc khi mùa khép (Shan, 26/11/2026).
 
-import { cargoWeight, isTradeItem, type TradeItemId } from "./goods";
+import { cargoWeight, currentTradeItemId, isTradeItem, type TradeItemId } from "./goods";
 import { edgeKey } from "./map";
 import { addCargo, capacityOf, type Cargo, type TradeLeg, type TradePlayer } from "./player";
 
@@ -31,7 +31,8 @@ export function parseBundle(v: unknown): Bundle | null {
   const items: Partial<Record<TradeItemId, number>> = {};
   if (raw.items !== undefined) {
     if (!raw.items || typeof raw.items !== "object") return null;
-    for (const [id, n] of Object.entries(raw.items as Record<string, unknown>)) {
+    for (const [rawId, n] of Object.entries(raw.items as Record<string, unknown>)) {
+      const id = currentTradeItemId(rawId);
       if (!isTradeItem(id) || !Number.isInteger(n) || (n as number) < 0 || (n as number) > 10_000) return null;
       if ((n as number) > 0) items[id] = n as number;
     }
