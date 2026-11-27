@@ -48,7 +48,7 @@ Shan chốt 27/11/2026: **40 món**, chia năm nhóm (nông sản, hải sản, 
 | Thượng phẩm | 800 | 250 |
 | Kỳ trân | 150 | 40 |
 
-- Màn chợ dạng thẻ (Shan 27/11/2026, theo ảnh mẫu): lưới thẻ 2 cột trên điện thoại, 3–4 cột trên máy lớn. Mỗi thẻ có ô hình (viền theo phẩm cấp, số tồn ở góc), tên, phẩm cấp, giá, % đổi so với phiên trước, dải góc **Đặc sản** hoặc **Hiếm**. Chạm thẻ mở ô mua bán ngay dưới thẻ. Xếp theo mặc định, giá cao, giá thấp, tăng giá. Tab Bán hiện mọi món trong khoang, món chợ không thu thì thẻ mờ. Tranh món đặt ở `public/art/trade/goods/<id>.webp` (prompt ở thư mục prompt tranh của dự án); chưa có tranh thì hiện chữ đầu tên.
+- Màn chợ dạng thẻ (Shan 27/11/2026, theo ảnh mẫu): lưới thẻ 2 cột trên điện thoại, 3–4 cột trên máy lớn. Mỗi thẻ có ô hình (viền theo phẩm cấp, số tồn ở góc), tên, phẩm cấp, giá, % đổi so với phiên trước, dải góc **Đặc sản** hoặc **Hiếm**. Chạm thẻ mở ô mua bán ngay dưới thẻ. Xếp theo mặc định, giá cao, giá thấp, tăng giá. Tab Bán hiện mọi món trong khoang, món chợ không thu thì thẻ mờ. Tranh 40 món Shan vẽ ở `public/art/trade/goods/<id>.webp` (160 px nền trong; test kiểm đủ tranh cho mọi món).
 
 ### Chạy thử nhanh
 
@@ -87,6 +87,5 @@ Khoang 100 ở cấp 1. Một đường nâng cấp chung (Shan chọn), trả b
 
 ## 9. Chưa làm
 
-- Tranh 40 món hàng (`public/art/trade/goods/`): chờ Shan vẽ theo prompt.
 - Tranh thẻ chế độ (`public/art/home/`) và biểu tượng (`public/art/modes/trade.webp`): thẻ đang dùng tranh mực tạm, trang chủ dùng bản đồ.
 - Bật cờ `TRADE_ENABLED=true` trên Vercel khi Shan muốn mở.

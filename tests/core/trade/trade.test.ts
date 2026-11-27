@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { describe, it } from "node:test";
 import { findBestSwap, skAct, type SkAction } from "../../../src/core/su-lo";
 import {
@@ -75,6 +76,10 @@ describe("Hành Thương Ký: chợ", () => {
     const silkAway = quote("s", away, "silk", initialRow("silk", away, slot));
     assert.equal(silkAway.specialty, false);
     assert.ok(silkAway.sell > silkHome.buy, "chở lụa đi xa phải có lãi");
+  });
+
+  it("món nào cũng có tranh ở public/art/trade/goods", () => {
+    for (const it of TRADE_ITEMS) assert.ok(existsSync(`public/art/trade/goods/${it.id}.webp`), it.id);
   });
 
   it("40 món, mỗi chợ khoảng 20 món mỗi phiên, 2 đặc sản luôn bày, 1–2 món Hiếm không phải đặc sản", () => {
