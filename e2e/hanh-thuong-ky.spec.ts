@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { TRADE_ITEMS } from "../src/core/trade/goods";
 import { expectClean, expectNoHorizontalOverflow, playMode, registerAccount, watchProblems } from "./helpers";
 
 test("Hành Thương Ký: mua hàng ở chợ rồi xuất hành sang điểm kề", async ({ page }) => {
@@ -12,7 +13,9 @@ test("Hành Thương Ký: mua hàng ở chợ rồi xuất hành sang điểm k�
 
   // Chợ dạng thẻ: chạm thẻ món đầu tiên rồi mua 3 đơn vị.
   const card = page.getByRole("list", { name: "Hàng chợ bày" }).getByRole("button").first();
-  const name = ((await card.getAttribute("aria-label")) ?? "").split(",")[0]!;
+  // Tên món có thể chứa dấu phẩy ("Cá khô, tôm khô"), nên lấy tên dài nhất khớp đầu nhãn thay vì cắt ở dấu phẩy đầu.
+  const label = (await card.getAttribute("aria-label")) ?? "";
+  const name = TRADE_ITEMS.map((i) => i.name).filter((n) => label.startsWith(`${n}, `)).sort((a, b) => b.length - a.length)[0]!;
   await card.click();
   await page.getByRole("spinbutton", { name: `Số ${name}` }).fill("3");
   await page.getByRole("button", { name: "Mua", exact: true }).last().click();
