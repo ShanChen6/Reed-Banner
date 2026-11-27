@@ -10,6 +10,12 @@ import {
   PVP_GOLD_DAILY_CAP,
   PVP_GOLD_PER_OPPONENT,
   pvpBanMs,
+  botIntro,
+  type BotIntro,
+  PVP_BOT_AFTER_MS,
+  PVP_TEAM_SOLO_MS,
+  botFighter,
+  pickBots,
   pvpGoldBase,
   vnWeek,
   createPvpMatch,
@@ -476,7 +482,7 @@ async function tryMatch(me: PvpQueueRow, deps: PvpDeps): Promise<string | null> 
     if (gap > window) continue;
     if (best === null || gap < Math.abs(best.rating - me.rating)) best = o;
   }
-  if (!best) return null;
+  if (!best) return others.length === 0 && deps.now - me.enqueuedAt >= PVP_BOT_AFTER_MS ? startBotMatch(me, deps) : null;
   // Ai vào hàng đợi trước làm phe đầu để thứ tự dựng ổn định.
   const [first, second] = me.enqueuedAt <= best.enqueuedAt ? [me, best] : [best, me];
   const record = await buildDuel(first, second, deps);
@@ -495,12 +501,69 @@ async function tryMatch(me: PvpQueueRow, deps: PvpDeps): Promise<string | null> 
 async function tryTeamMatch(me: PvpQueueRow, deps: PvpDeps): Promise<string | null> {
   const others = (await deps.pvp.waiting("team", deps.now - PVP_QUEUE_STALE_MS)).filter((r) => r.ownerId !== me.ownerId);
   const group = pickTeamGroup(me, others, deps.now, pvpMatchWindow);
-  if (!group) return null;
+  if (!group) return others.length === 0 && deps.now - me.enqueuedAt >= PVP_TEAM_SOLO_MS ? startBotMatch(me, deps) : null;
   const record = await buildDraft(group, deps);
   await deps.pvp.createDraft(record);
   if (!(await deps.pvp.claimGroup(record.owners, record.id))) {
     // Có người vừa bị ghép chỗ khác hoặc rời hàng đợi: bỏ phiên dư, không ảnh hưởng ai.
     await deps.pvp.saveDraft({ ...record, status: "abandoned", seq: 2 }, 1);
+    return null;
+  }
+  return record.id;
+}
+
+/**
+ * Đấu máy khi chờ lâu mà hàng đợi không có ai khác (Shan chốt 27/11/2026): 1vs1 gặp một nhân vật máy, 3vs3 đánh cùng hai
+ * nhân vật máy gặp ba nhân vật máy. Máy dựng ở cấp Đinh Bộ Lĩnh của người chơi, chơi theo tính cách riêng. Không tính điểm
+ * hạng và bảng mùa; vàng vẫn có, giảm theo số máy như mọi trận có máy, chung trần mỗi ngày.
+ */
+async function startBotMatch(me: PvpQueueRow, deps: PvpDeps): Promise<string | null> {
+  const { profile } = await loadProfile(deps.profiles, me.ownerId);
+  const row = await deps.pvp.rating(me.ownerId, me.format);
+  const day = vnDay(deps.now);
+  const forgive = row.forgiveDay === day ? Math.max(0, PVP_FORGIVE_PER_DAY - row.forgiveUsed) : PVP_FORGIVE_PER_DAY;
+  const team = me.format === "team";
+  const bots = pickBots(deps.seed, team ? 5 : 1);
+  const level = profile.main.level;
+  const fighter = (i: number) => botFighter(bots[i]!.id, level);
+  const nameOfBot = (i: number) => fighter(i).name;
+  const mine = (await deps.nameOf?.(me.ownerId)) ?? "Người chơi";
+  const sides = team
+    ? ([
+        { fighters: [profileTeam(profile)[0]!, fighter(0), fighter(1)], players: [me.ownerId, null, null], captain: 0 },
+        { fighters: [fighter(2), fighter(3), fighter(4)], players: [null, null, null], captain: 0 },
+      ] as const)
+    : ([
+        { fighters: [profileTeam(profile)[0]!], players: [me.ownerId], captain: 0 },
+        { fighters: [fighter(0)], players: [null], captain: 0 },
+      ] as const);
+  const names: [(string | null)[], (string | null)[]] = team
+    ? [[mine, nameOfBot(0), nameOfBot(1)], [nameOfBot(2), nameOfBot(3), nameOfBot(4)]]
+    : [[mine], [nameOfBot(0)]];
+  const { state } = createPvpMatch({
+    sides,
+    seed: deps.seed,
+    firstSide: createRng(deps.seed + 7).int(0, 1) as 0 | 1,
+    now: deps.now,
+    forgiveLeft: { [me.ownerId]: forgive },
+    names,
+    vsBot: true,
+  });
+  const record: PvpMatchRecord = {
+    id: deps.newId(),
+    format: me.format,
+    state,
+    seq: 1,
+    status: "active",
+    owners: [me.ownerId],
+    results: null,
+    createdAt: deps.now,
+    updatedAt: deps.now,
+    settledAt: null,
+  };
+  await deps.pvp.createMatch(record);
+  if (!(await deps.pvp.claimGroup([me.ownerId], record.id))) {
+    await deps.pvp.saveMatch({ ...record, status: "abandoned", seq: 2 }, 1);
     return null;
   }
   return record.id;
@@ -645,6 +708,9 @@ export interface PvpMatchView {
   readonly serverNow: number;
   /** Giao hữu (phòng mời bằng mã): không đổi điểm, không có vàng. */
   readonly friendly: boolean;
+  /** Đấu máy khi chờ lâu: không đổi điểm hạng; `bots` là các nhân vật máy (tên, tính cách, thoại) theo phe rồi vị trí. */
+  readonly vsBot: boolean;
+  readonly bots: readonly (BotIntro & { readonly side: 0 | 1; readonly position: number })[];
   readonly you: {
     readonly side: 0 | 1;
     readonly position: number;
@@ -678,6 +744,16 @@ function viewOf(rec: PvpMatchRecord, owner: string, now: number): PvpMatchView {
     seq: rec.seq,
     serverNow: now,
     friendly: rec.state.friendly === true,
+    vsBot: rec.state.vsBot === true,
+    bots:
+      rec.state.vsBot === true
+        ? rec.state.seats.flatMap((row, side) =>
+            row.flatMap((p, position) => {
+              const intro = p === null ? botIntro(rec.state.battle.sides[side as 0 | 1].fighters[position]?.id ?? "") : null;
+              return intro ? [{ ...intro, side: side as 0 | 1, position }] : [];
+            }),
+          )
+        : [],
     you: {
       side: you.side,
       position: you.position,
@@ -723,7 +799,9 @@ async function settleIfOver(rec: PvpMatchRecord, deps: PvpDeps): Promise<PvpMatc
     // Điểm mùa = tổng Elo đổi trong tuần của các trận được tính; chỉ người có tổng dương lên bảng.
     if (r.counted && r.delta !== 0) await recordSeason(deps.seasons, { mode: "pvp", ownerId: r.player, now: deps.now, add: r.delta });
     let gold = 0;
-    if (r.counted) {
+    // Đấu máy không đổi điểm nhưng vẫn có vàng (giảm theo số máy) nếu không phá trận, không bị máy thay.
+    const paidMatch = r.counted || (rec.state.vsBot === true && !r.breaker && !r.left);
+    if (paidMatch) {
       // Giới hạn vàng theo cùng một đối thủ chỉ áp dụng ở 1vs1.
       const opponent = rec.format === "duel" ? rec.owners.find((o) => o !== r.player) : undefined;
       const meetings = opponent ? await deps.pvp.pairMatches(r.player, opponent, day) : 0;
