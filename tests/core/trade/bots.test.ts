@@ -1,91 +1,114 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { BOT_CHARACTERS, PERSONALITIES, type PersonalityId } from "../../../src/core/ai";
 import {
-  TRADE_BOT_CAPACITY,
-  TRADE_BOT_PURSE,
-  TRADE_EDGES,
+  TRADE_BOT_DAILY_CAP,
+  TRADE_BOT_MAX,
+  TRADE_BOT_MIN,
+  TRADE_BOT_OWNERS,
+  TRADE_NODE_IDS,
+  TRADE_START_MONEY,
   TRADE_STYLES,
+  activeTradeBots,
   botAccepts,
-  botLegById,
-  botLegsOn,
   botOffer,
-  cargoWeight,
-  edgeKey,
-  legMs,
-  legsMeet,
-  referencePrice,
-  type BotLeg,
-  type TradeItemId,
+  initialMarket,
+  isTradeBot,
+  marketKey,
+  neighbors,
+  newTradePlayer,
+  planTradeBot,
+  quote,
+  tradeBotCapped,
+  tradeBotDailyCap,
+  tradeBotCount,
+  tradeBotName,
+  tradeSlot,
+  type MarketQuote,
+  type TradeNodeId,
+  type TradePlayer,
 } from "../../../src/core/trade";
+import { MARKET_ITEMS } from "../../../src/core/trade/market";
+import { BOT_CHARACTERS } from "../../../src/core/ai";
 
+const SEASON = "2026-11-23";
 const T0 = Date.UTC(2026, 10, 23, 1, 0, 0);
-const DAY = 24 * 3_600_000;
-const SEASON = "2026-W48";
+const DAY = 86_400_000;
 
-const allLegs = (from: number, to: number) => TRADE_EDGES.flatMap((e) => botLegsOn(SEASON, edgeKey(e.a, e.b), from, to));
+/** Bảng giá mọi chợ lúc mở mùa (bày đủ món, để thử lối buôn). */
+function markets(): Record<TradeNodeId, MarketQuote[]> {
+  const rows = initialMarket(tradeSlot(T0), SEASON);
+  const out = {} as Record<TradeNodeId, MarketQuote[]>;
+  for (const node of TRADE_NODE_IDS) out[node] = MARKET_ITEMS.map((item) => quote(SEASON, node, item, rows.get(marketKey(node, item))!));
+  return out;
+}
+
+const character = (personality: string) => BOT_CHARACTERS.find((c) => c.personality === personality)!;
 
 describe("thương đoàn máy Hành Thương Ký", () => {
-  it("lịch tất định theo mùa, chặng nằm trong khoảng hỏi, mã chặng dựng lại được", () => {
-    const e = TRADE_EDGES[0]!;
-    const a = botLegsOn(SEASON, edgeKey(e.a, e.b), T0, T0 + DAY);
-    assert.deepEqual(a, botLegsOn(SEASON, edgeKey(e.a, e.b), T0, T0 + DAY));
-    assert.notDeepEqual(a, botLegsOn("2026-W49", edgeKey(e.a, e.b), T0, T0 + DAY));
-    for (const l of a) {
-      assert.equal(edgeKey(l.from, l.to), edgeKey(e.a, e.b));
-      assert.ok(l.departAt <= T0 + DAY && l.arriveAt >= T0);
-      assert.deepEqual(botLegById(SEASON, l.legId), l);
-      assert.ok(l.ownerId.startsWith("bot:"));
+  it("tên theo nhân vật: sứ quân ghi 'Sứ quân <tên>', không ghi máy; mã máy tách khỏi tài khoản", () => {
+    assert.equal(tradeBotName("bot:tranLam"), "Sứ quân Trần Lãm");
+    assert.equal(tradeBotName("bot:leHoan"), "Lê Hoàn");
+    assert.equal(tradeBotName("acc-1"), null);
+    for (const o of TRADE_BOT_OWNERS) {
+      assert.ok(isTradeBot(o));
+      assert.doesNotMatch(tradeBotName(o)!, /Máy/);
     }
-    assert.equal(botLegById(SEASON, "bot-khongCo-1"), null);
   });
 
-  it("đủ đông: chặng người chơi đi bất kỳ lúc nào cũng thường gặp ít nhất một thương đoàn máy", () => {
-    let met = 0;
-    let total = 0;
-    for (const e of TRADE_EDGES) {
-      for (let t = T0; t < T0 + DAY; t += 37 * 60_000) {
-        const leg = { from: e.a, to: e.b, departAt: t, arriveAt: t + legMs(e, 1) };
-        total++;
-        if (botLegsOn(SEASON, edgeKey(e.a, e.b), leg.departAt, leg.arriveAt).some((b) => legsMeet(leg, b))) met++;
+  it("đệm dân số: vắng người đủ 20 đoàn, đông người bớt dần, ít nhất 6; đoàn chạy cố định trong mùa", () => {
+    assert.equal(tradeBotCount(0), TRADE_BOT_MAX);
+    assert.equal(tradeBotCount(10), TRADE_BOT_MAX - 2);
+    assert.equal(tradeBotCount(10_000), TRADE_BOT_MIN);
+    assert.deepEqual(activeTradeBots(SEASON, 0), activeTradeBots(SEASON, 0));
+    const few = activeTradeBots(SEASON, 40).map((c) => c.id);
+    const all = activeTradeBots(SEASON, 0).map((c) => c.id);
+    assert.deepEqual(few, all.slice(0, few.length), "đông người thì đoàn cuối danh sách nghỉ trước");
+  });
+
+  it("chọn chuyến có lãi theo giá đang niêm yết, mua vừa vốn và khoang, đi sang điểm kề", () => {
+    const m = markets();
+    const p = newTradePlayer(SEASON, 0, T0);
+    for (const c of BOT_CHARACTERS) {
+      const plan = planTradeBot(p, c, m, T0, 1, 7);
+      assert.ok(plan, c.id);
+      assert.ok(neighbors(p.node).includes(plan.to));
+      if (plan.item) {
+        const here = m[p.node].find((q) => q.item === plan.item)!;
+        const there = m[plan.to].find((q) => q.item === plan.item)!;
+        assert.ok(there.sell > here.buy, `${c.id} phải chở hàng có lãi`);
+        assert.ok(plan.amount * here.buy <= p.money * TRADE_STYLES[c.personality].spend);
       }
     }
-    assert.ok(met / total > 0.25, `chỉ gặp ${met}/${total}`);
-    assert.ok(met / total < 0.9, `gặp quá dày ${met}/${total}`);
   });
 
-  it("khoang đoàn máy không quá sức chở, mỗi người dẫn đoàn là một nhân vật máy", () => {
-    for (const l of allLegs(T0, T0 + DAY)) {
-      assert.ok(cargoWeight(l.cargo) <= TRADE_BOT_CAPACITY, `${l.legId} ${cargoWeight(l.cargo)}`);
-      assert.ok(BOT_CHARACTERS.includes(l.character));
-    }
+  it("hết lộ phiếu hay chạm trần lãi theo ngày thì nghỉ", () => {
+    const m = markets();
+    const c = BOT_CHARACTERS[0]!;
+    const p = newTradePlayer(SEASON, 0, T0);
+    assert.equal(planTradeBot({ ...p, passesUsed: 5 }, c, m, T0, 1, 1), null);
+    const cap = tradeBotDailyCap(c);
+    assert.ok(cap >= TRADE_BOT_DAILY_CAP * 0.6 && cap <= TRADE_BOT_DAILY_CAP * 1.2);
+    const rich: TradePlayer = { ...p, money: TRADE_START_MONEY + cap };
+    assert.ok(tradeBotCapped(rich, c, T0));
+    assert.equal(planTradeBot(rich, c, m, T0, 1, 1), null);
+    assert.ok(!tradeBotCapped(rich, c, T0 + DAY), "sang ngày thứ hai thì trần nâng lên");
   });
 
-  it("lời ngỏ đoàn máy: bán món đắt nhất lấy kim tiền, giá theo chợ nơi tới nhân hệ số tính cách", () => {
-    const leg = allLegs(T0, T0 + DAY).find((l) => Object.keys(l.cargo).length > 0)!;
-    const o = botOffer(SEASON, leg, leg.arriveAt)!;
-    const [item, n] = Object.entries(o.give.items)[0]! as [TradeItemId, number];
-    assert.ok(n > 0 && n <= (leg.cargo[item] ?? 0));
-    assert.equal(o.want.money, Math.round(referencePrice(SEASON, leg.to, item, leg.arriveAt) * n * TRADE_STYLES[leg.character.personality].markup));
-    assert.deepEqual(o.want.items, {});
-  });
-
-  it("trả lời lời ngỏ theo tính cách: mưu phá khó ép giá hơn hộ chủ; xin hàng đoàn không có hoặc quá túi tiền thì chê", () => {
-    const base = allLegs(T0, T0 + DAY).find((l) => Object.keys(l.cargo).length > 0)!;
-    const as = (p: PersonalityId): BotLeg => ({ ...base, character: BOT_CHARACTERS.find((c) => c.personality === p)! });
-    const [item, have] = Object.entries(base.cargo)[0]! as [TradeItemId, number];
-    const ref = referencePrice(SEASON, base.to, item, base.arriveAt);
-    const want = { items: { [item]: 1 }, money: 0 };
-    // Trả đúng giá chợ: hộ chủ (0,92) nhận, mưu phá (1,12) chê.
-    const fair = { items: {}, money: ref };
-    assert.equal(botAccepts(SEASON, as("hoChu"), fair, want, base.arriveAt), true);
-    assert.equal(botAccepts(SEASON, as("muuPha"), fair, want, base.arriveAt), false);
-    assert.equal(botAccepts(SEASON, as("muuPha"), { items: {}, money: Math.ceil(ref * 1.2) }, want, base.arriveAt), true);
-    assert.equal(botAccepts(SEASON, as("thuThanh"), fair, { items: { [item]: have + 1 }, money: 0 }, base.arriveAt), false);
-    assert.equal(botAccepts(SEASON, as("thuThanh"), { items: {}, money: TRADE_BOT_PURSE * 2 }, { items: {}, money: TRADE_BOT_PURSE + 1 }, base.arriveAt), false);
-    // Bán hàng cho đoàn máy: tính như chợ thu mua (90%), nên đòi đúng giá chợ thì thủ thành chê.
-    assert.equal(botAccepts(SEASON, as("thuThanh"), { items: { [item]: 10 }, money: 0 }, { items: {}, money: ref * 10 }, base.arriveAt), false);
-    assert.equal(botAccepts(SEASON, as("thuThanh"), { items: { [item]: 10 }, money: 0 }, { items: {}, money: Math.floor(ref * 10 * 0.85) }, base.arriveAt), true);
-    for (const id of Object.keys(PERSONALITIES) as PersonalityId[]) assert.ok(TRADE_STYLES[id]);
+  it("lời ngỏ của đoàn máy bán món đắt nhất lấy kim tiền; trả lời theo lối buôn, không xin quá hàng hay túi tiền", () => {
+    const m = markets();
+    const node = TRADE_NODE_IDS[0]!;
+    const item = m[node][0]!.item;
+    const bot: TradePlayer = { ...newTradePlayer(SEASON, 0, T0), cargo: { [item]: 40 } };
+    const offer = botOffer(bot, character("hoChu"), m)!;
+    assert.deepEqual(Object.keys(offer.give.items), [item]);
+    assert.ok(offer.want.money > 0);
+    assert.equal(botOffer({ ...bot, cargo: {} }, character("hoChu"), m), null);
+    const price = m[node][0]!.buy;
+    const fair = { items: {}, money: Math.ceil(price * 10 * 0.96) };
+    const want = { items: { [item]: 10 }, money: 0 };
+    assert.ok(botAccepts(bot, character("hoChu"), m, fair, want), "hộ chủ dễ tính");
+    assert.ok(!botAccepts(bot, character("muuPha"), m, fair, want), "mưu phá khó ép giá");
+    assert.ok(!botAccepts(bot, character("hoChu"), m, fair, { items: { [item]: 41 }, money: 0 }), "không có đủ hàng");
+    assert.ok(!botAccepts(bot, character("hoChu"), m, { items: { [item]: 1 }, money: 0 }, { items: {}, money: bot.money + 1 }), "quá túi tiền");
   });
 });

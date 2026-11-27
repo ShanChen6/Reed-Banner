@@ -89,12 +89,19 @@ export interface SeasonBoardView {
   readonly mine: { rank: number; score: number } | null;
 }
 
-export async function seasonBoardView(store: SeasonStore, mode: SeasonMode, season: string, ownerId: string | null): Promise<SeasonBoardView> {
+/** `nameOf` đặt tên cho dòng không phải tài khoản (thương đoàn máy ở Hành Thương Ký); null thì theo tài khoản. */
+export async function seasonBoardView(
+  store: SeasonStore,
+  mode: SeasonMode,
+  season: string,
+  ownerId: string | null,
+  nameOf: (ownerId: string) => string | null = () => null,
+): Promise<SeasonBoardView> {
   const [top, mine] = await Promise.all([store.top(mode, season, SEASON_BOARD_SIZE), ownerId ? store.rankOf(mode, season, ownerId) : null]);
   return {
     board: mode,
     season,
-    top: top.map((e, i) => ({ rank: i + 1, name: e.name ?? `Lữ khách ${e.ownerId.slice(-4)}`, mine: e.ownerId === ownerId, score: e.score })),
+    top: top.map((e, i) => ({ rank: i + 1, name: nameOf(e.ownerId) ?? e.name ?? `Lữ khách ${e.ownerId.slice(-4)}`, mine: e.ownerId === ownerId, score: e.score })),
     mine,
   };
 }

@@ -116,8 +116,22 @@ export function assortment(node: TradeNodeId): Assortment {
 /** Cách một món có mặt ở chợ trong khung: bày cố định, bày theo phiên, hoặc là món Hiếm của phiên. */
 export type Presence = "fixed" | "rotating" | "rare";
 
+/** Nhớ kết quả `presenceAt` (hàm thuần, gọi lại rất nhiều lần mỗi lần dựng bảng giá); giữ tối đa vài khung gần nhất. */
+const presenceCache = new Map<string, ReadonlyMap<TradeItemId, Presence>>();
+const PRESENCE_CACHE_MAX = 400;
+
 /** Món chợ bày trong khung `slot`; ai cũng thấy như nhau vì chỉ phụ thuộc mùa, điểm và khung. */
 export function presenceAt(season: string, node: TradeNodeId, slot: number): ReadonlyMap<TradeItemId, Presence> {
+  const key = `${season}|${node}|${slot}`;
+  const hit = presenceCache.get(key);
+  if (hit) return hit;
+  const out = computePresence(season, node, slot);
+  if (presenceCache.size >= PRESENCE_CACHE_MAX) presenceCache.delete(presenceCache.keys().next().value!);
+  presenceCache.set(key, out);
+  return out;
+}
+
+function computePresence(season: string, node: TradeNodeId, slot: number): ReadonlyMap<TradeItemId, Presence> {
   const a = assortment(node);
   const out = new Map<TradeItemId, Presence>();
   for (const id of a.fixed) out.set(id, "fixed");

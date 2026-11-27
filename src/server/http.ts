@@ -12,6 +12,7 @@ import type { FormationDeps } from "./formation";
 import type { HonorsDeps } from "./honors";
 import { accountStore, dailyStore as dailyStoreOf, destinyLeaderboardStore as destinyBoardOf, formationStore, rankRewardStore, seasonStore } from "./store";
 import { dailySource, destinySource, seasonSource, type RankRewardDeps } from "./rankRewards";
+import { TRADE_BOT_OWNERS } from "@/core/trade";
 
 /** Cookie khách sống 30 ngày, khớp với hạn xóa tài khoản khách không hoạt động. */
 const GUEST_MAX_AGE = 30 * 24 * 60 * 60;
@@ -135,7 +136,7 @@ export function rankRewardDeps(): RankRewardDeps {
       seasonSource("arena", seasonStore()),
       seasonSource("pvp", seasonStore()),
       ...(tamTuongKyRankedEnabled() ? [seasonSource("tamTuongKy", seasonStore())] : []),
-      ...(tradeFlag() ? [seasonSource("trade", seasonStore())] : []),
+      ...(tradeFlag() ? [seasonSource("trade", seasonStore(), TRADE_BOT_OWNERS)] : []),
     ],
     claims: rankRewardStore(),
     profiles: profileStore(),

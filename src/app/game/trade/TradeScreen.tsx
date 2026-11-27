@@ -561,7 +561,7 @@ function Meetings({ view, busy, run }: { view: TradeView; busy: boolean; run: (a
               </span>
               {m.bot && (
                 <span className="text-caption text-on-wood-soft">
-                  Thương đoàn máy, {m.bot.personality.toLowerCase()}: {m.bot.note}. Ngỏ lời thì trả lời ngay.
+                  Tính {m.bot.personality.toLowerCase()}, {m.bot.note}. Ngỏ lời thì trả lời ngay.
                 </span>
               )}
               <span className="text-caption text-on-wood-soft">{cargoText(m.cargo)}</span>

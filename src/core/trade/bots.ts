@@ -1,47 +1,91 @@
-// Thương đoàn máy ở Hành Thương Ký (Shan chốt 27/11/2026): khi vắng người, đoàn của các sứ quân, tướng lịch sử và nhân vật
-// đặc biệt đi các chặng theo lịch tính sẵn từ hạt giống mùa (không cần tiến trình nền). Gặp đoàn người chơi thì ngỏ lời bán
-// một phần hàng theo giá chợ nơi tới, hoặc trả lời ngay lời ngỏ của người chơi theo tính cách. Thương đoàn máy luôn ghi
-// rõ là máy, không có kim tiền trên bảng mùa, không đụng kho chung. Hàm thuần.
+// Thương đoàn của các sứ quân, tướng lịch sử và nhân vật đặc biệt ở Hành Thương Ký (Shan chốt 27/11/2026): đoàn máy là
+// người chơi thật trong mùa, có kim tiền, khoang hàng, lộ phiếu như mọi người, mua bán qua kho chung nên làm giá và tồn
+// kho đổi thật, lên bảng Công trạng với tên nhân vật (sứ quân ghi "Sứ quân <tên>"), nhưng thưởng mùa chỉ chia cho người
+// thật. Server cho đoàn máy đi lười mỗi khi có người mở chế độ; số đoàn máy giảm dần khi đông người. Hàm thuần.
 
 import { BOT_CHARACTERS, type BotCharacter, type PersonalityId } from "../ai";
 import { createRng } from "../rng";
-import { cargoWeight, TRADE_ITEMS, tradeItem, type TradeItemId } from "./goods";
-import { edgeKey, TRADE_EDGES, type TradeNodeId } from "./map";
-import { hashSeed, normalSpeed, regionFactor, TRADE_SELL_RATIO, TRADE_SLOT_MS, trendFactor, tradeSlot } from "./market";
+import { companionById, WARLORD_COMPANIONS } from "../roster";
+import { DAY_MS, vnDay, vnDayStart } from "../vnTime";
+import { cargoWeight, TREASURE_PER_SLOT, tradeItem, type TradeItemId } from "./goods";
+import { neighbors, type TradeNodeId } from "./map";
+import { hashSeed, TRADE_SELL_RATIO, type MarketQuote } from "./market";
 import type { Bundle } from "./offers";
-import { legMs, type Cargo } from "./player";
+import { capacityOf, passesLeft, tradeScore, type TradePlayer } from "./player";
 
-/** Mã đoàn máy trong lời ngỏ và danh sách đoàn đã gặp: `bot:<id nhân vật>`. */
+/** Mã đoàn máy trong kho: `bot:<id nhân vật>`. */
 export const TRADE_BOT_PREFIX = "bot:";
 export const isTradeBot = (ownerId: string): boolean => ownerId.startsWith(TRADE_BOT_PREFIX);
+export const tradeBotOwner = (c: Pick<BotCharacter, "id">) => `${TRADE_BOT_PREFIX}${c.id}`;
+export const tradeBotCharacter = (ownerId: string): BotCharacter | undefined =>
+  isTradeBot(ownerId) ? BOT_CHARACTERS.find((c) => c.id === ownerId.slice(TRADE_BOT_PREFIX.length)) : undefined;
 
-/** Mỗi khung lịch (bằng một phiên giá) mỗi đoàn máy đi tối đa một chặng, xác suất này. */
-export const TRADE_BOT_ACTIVE = 0.85;
-/** Khoang đoàn máy: như đoàn người cấp 2. */
-export const TRADE_BOT_CAPACITY = 150;
+/** Mã của mọi thương đoàn máy (để bỏ qua khi chia thưởng mùa). */
+export const TRADE_BOT_OWNERS: readonly string[] = BOT_CHARACTERS.map(tradeBotOwner);
 
-/** Cách buôn theo tính cách: giá bán ra (nhân giá chợ), mức chịu khi người chơi ngỏ (giá trị nhận / giá trị đưa), hàng chở. */
+/** Tên hiện cho người chơi và trên bảng: sứ quân ghi "Sứ quân <tên>", còn lại là tên nhân vật (Shan 27/11/2026). */
+export function tradeBotName(ownerId: string): string | null {
+  const c = tradeBotCharacter(ownerId);
+  if (!c) return null;
+  const name = companionById(c.id)?.name ?? c.id;
+  return WARLORD_COMPANIONS.some((w) => w.fighter.id === c.id) ? `Sứ quân ${name}` : name;
+}
+
+/** Đệm dân số: vắng người thì đủ 20 đoàn; cứ thêm 5 người thật đang chơi thì bớt một đoàn, ít nhất 6 đoàn. */
+export const TRADE_BOT_MAX = BOT_CHARACTERS.length;
+export const TRADE_BOT_MIN = 6;
+export const TRADE_BOT_PER_HUMANS = 5;
+export const tradeBotCount = (humans: number) => Math.max(TRADE_BOT_MIN, TRADE_BOT_MAX - Math.floor(Math.max(0, humans) / TRADE_BOT_PER_HUMANS));
+
+/** Các đoàn máy chạy trong mùa: thứ tự xáo theo mùa, lấy `count` đoàn đầu (đông người thì đoàn cuối danh sách nghỉ trước). */
+export function activeTradeBots(season: string, humans: number): BotCharacter[] {
+  const rng = createRng(hashSeed("tradeBots", season));
+  const order = [...BOT_CHARACTERS];
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = rng.int(0, i);
+    [order[i], order[j]] = [order[j]!, order[i]!];
+  }
+  return order.slice(0, tradeBotCount(humans));
+}
+
+/**
+ * Trần tài: lãi mùa của đoàn máy không vượt quá mức này (xê dịch theo nhân vật) nhân số ngày đã qua của mùa (tính cả hôm nay). Chạm trần thì
+ * đoàn máy chỉ bán hàng đang chở, không xuất hành chuyến mới, để máy là mốc để vượt chứ không chiếm hết bảng.
+ */
+export const TRADE_BOT_DAILY_CAP = 3_000;
+
+/** Lối buôn theo tính cách. */
 interface TradeStyle {
-  readonly markup: number;
-  readonly accept: number;
-  /** Tỉ lệ chở kỳ trân (còn lại thường dụng, thượng phẩm). */
+  /** Phần kim tiền dám bỏ ra mỗi chuyến. */
+  readonly spend: number;
+  /** Chọn ngẫu nhiên trong bấy nhiêu phương án lãi nhất (1 là luôn chọn phương án tốt nhất). */
+  readonly pick: number;
+  /** Lãi tối thiểu trên vốn mới chịu chở hàng. */
+  readonly minMargin: number;
+  /** Hệ số ưu tiên kỳ trân. */
   readonly treasure: number;
-  /** Phần khoang đem bán cho người gặp. */
+  /** Hệ số ưu tiên chở tới nơi đang thiếu (món Hiếm ở nơi tới). */
+  readonly rare: number;
+  /** Giá bán cho người gặp giữa đường, nhân giá chợ nơi tới. */
+  readonly markup: number;
+  /** Mức chịu khi người chơi ngỏ: giá trị nhận về / giá trị phải đưa. */
+  readonly accept: number;
+  /** Phần hàng đem bán cho người gặp. */
   readonly sellShare: number;
 }
 
 export const TRADE_STYLES: Readonly<Record<PersonalityId, TradeStyle>> = {
-  manhCong: { markup: 1.0, accept: 0.95, treasure: 0.15, sellShare: 0.5 },
-  thuThanh: { markup: 1.0, accept: 1.0, treasure: 0.05, sellShare: 0.3 },
-  muuPha: { markup: 1.15, accept: 1.12, treasure: 0.15, sellShare: 0.3 },
-  tichLuc: { markup: 1.1, accept: 0.92, treasure: 0.1, sellShare: 0.2 },
-  lieuLinh: { markup: 0.9, accept: 1.05, treasure: 0.5, sellShare: 0.6 },
-  laoLuyen: { markup: 1.03, accept: 1.0, treasure: 0.15, sellShare: 0.35 },
-  hoChu: { markup: 0.95, accept: 0.92, treasure: 0.05, sellShare: 0.4 },
-  tuyCo: { markup: 1.05, accept: 1.0, treasure: 0.2, sellShare: 0.4 },
+  manhCong: { spend: 0.9, pick: 1, minMargin: 0.03, treasure: 1, rare: 1, markup: 1.0, accept: 0.95, sellShare: 0.5 },
+  thuThanh: { spend: 0.5, pick: 2, minMargin: 0.08, treasure: 0.6, rare: 1, markup: 1.0, accept: 1.0, sellShare: 0.3 },
+  muuPha: { spend: 0.7, pick: 2, minMargin: 0.06, treasure: 1, rare: 1.6, markup: 1.15, accept: 1.12, sellShare: 0.3 },
+  tichLuc: { spend: 0.6, pick: 2, minMargin: 0.12, treasure: 1, rare: 1, markup: 1.1, accept: 0.92, sellShare: 0.2 },
+  lieuLinh: { spend: 1.0, pick: 3, minMargin: 0.02, treasure: 1.8, rare: 1, markup: 0.9, accept: 1.05, sellShare: 0.6 },
+  laoLuyen: { spend: 0.75, pick: 1, minMargin: 0.06, treasure: 1, rare: 1.2, markup: 1.03, accept: 1.0, sellShare: 0.35 },
+  hoChu: { spend: 0.6, pick: 2, minMargin: 0.05, treasure: 0.8, rare: 1, markup: 0.95, accept: 0.92, sellShare: 0.4 },
+  tuyCo: { spend: 0.7, pick: 3, minMargin: 0.05, treasure: 1.2, rare: 1.2, markup: 1.05, accept: 1.0, sellShare: 0.4 },
 };
 
-/** Lời mô tả cách buôn, hiện cho người chơi. */
+/** Lời mô tả lối buôn, hiện cho người chơi khi gặp. */
 export const TRADE_STYLE_NOTE: Readonly<Record<PersonalityId, string>> = {
   manhCong: "buôn nhanh, bán gọn theo giá chợ",
   thuThanh: "đổi sòng phẳng, chở hàng thường",
@@ -53,116 +97,103 @@ export const TRADE_STYLE_NOTE: Readonly<Record<PersonalityId, string>> = {
   tuyCo: "giá theo thời, nhỉnh hơn chợ một chút",
 };
 
-export interface BotLeg {
-  readonly ownerId: string;
-  readonly character: BotCharacter;
-  readonly legId: string;
-  readonly from: TradeNodeId;
+/** Số ngày của mùa đã qua (tính cả hôm nay), mùa bắt đầu ngày `season` (thứ Hai, giờ VN). */
+function seasonDays(season: string, now: number): number {
+  const days = Math.round((vnDayStart(vnDay(now)) - vnDayStart(season)) / DAY_MS) + 1;
+  return Number.isFinite(days) ? Math.max(1, days) : 1;
+}
+
+/** Trần lãi mỗi ngày riêng từng đoàn (60–120% mức chung, cố định theo nhân vật), để bảng không thành một hàng máy bằng điểm. */
+export const tradeBotDailyCap = (c: Pick<BotCharacter, "id">) => Math.round(TRADE_BOT_DAILY_CAP * (0.6 + 0.6 * createRng(hashSeed("tradeBotCap", c.id)).next()));
+
+/** Lãi mùa còn được phép tới hết hôm nay. */
+const capLeftOf = (p: TradePlayer, c: Pick<BotCharacter, "id">, now: number) => tradeBotDailyCap(c) * seasonDays(p.season, now) - tradeScore(p);
+
+export const tradeBotCapped = (p: TradePlayer, c: Pick<BotCharacter, "id">, now: number) => capLeftOf(p, c, now) <= 0;
+
+/** Một chuyến đoàn máy định đi: mua `amount` món `item` ở đây (0 là đi không) rồi xuất hành tới `to`. */
+export interface BotPlan {
   readonly to: TradeNodeId;
-  readonly departAt: number;
-  readonly arriveAt: number;
-  readonly cargo: Cargo;
+  readonly item: TradeItemId | null;
+  readonly amount: number;
 }
 
-/** Hàng chở của một đoàn máy trên một chặng: vài món hợp nơi đi (rẻ ở đó), tỉ lệ kỳ trân theo tính cách. */
-function botCargo(seed: number, style: TradeStyle, from: TradeNodeId): Cargo {
+/**
+ * Chọn chuyến kế cho đoàn máy đang đứng ở chợ, đã bán hết hàng: xét mọi món chợ này bày và mọi điểm kề, lãi = giá thu mua
+ * nơi tới trừ giá bán ra ở đây (giá khung hiện tại, ai cũng xem được); chọn theo lối buôn. Null khi hết lộ phiếu hay chạm
+ * trần tài. Không có phương án lãi thì đi không sang một điểm kề để đổi chợ.
+ */
+export function planTradeBot(
+  p: TradePlayer,
+  character: BotCharacter,
+  markets: Readonly<Record<TradeNodeId, readonly MarketQuote[]>>,
+  now: number,
+  speed: number,
+  seed: number,
+): BotPlan | null {
+  if (passesLeft(p, now, speed) <= 0 || tradeBotCapped(p, character, now)) return null;
+  const style = TRADE_STYLES[character.personality];
   const rng = createRng(seed);
-  const cheap = [...TRADE_ITEMS].sort((a, b) => regionFactor(a, from) - regionFactor(b, from));
-  const pick = (treasure: boolean) => {
-    const pool = cheap.filter((i) => (i.tier === "treasure") === treasure).slice(0, 8);
-    return pool[rng.int(0, pool.length - 1)]!;
-  };
-  const cargo: Partial<Record<TradeItemId, number>> = {};
-  const kinds = rng.int(2, 3);
-  for (let k = 0; k < kinds; k++) {
-    const it = pick(rng.next() < style.treasure);
-    const room = TRADE_BOT_CAPACITY - cargoWeight(cargo);
-    const cap = it.tier === "treasure" ? room * 5 : room;
-    const n = Math.floor(cap * (0.25 + rng.next() * 0.25));
-    if (n > 0) cargo[it.id] = (cargo[it.id] ?? 0) + n;
-  }
-  return cargo;
-}
-
-/** Chặng của một đoàn máy trong một khung lịch, null khi khung đó đoàn nghỉ. */
-function botLegAt(season: string, c: BotCharacter, window: number, speed: number): BotLeg | null {
-  const seed = hashSeed("tradeBot", season, c.id, window);
-  const rng = createRng(seed);
-  if (rng.next() >= TRADE_BOT_ACTIVE) return null;
-  const edge = TRADE_EDGES[rng.int(0, TRADE_EDGES.length - 1)]!;
-  const [from, to] = rng.next() < 0.5 ? [edge.a, edge.b] : [edge.b, edge.a];
-  const len = TRADE_SLOT_MS / normalSpeed(speed);
-  const ms = legMs(edge, 1, speed);
-  const start = window * len + Math.floor(rng.next() * Math.max(1, len - ms));
-  return {
-    ownerId: `${TRADE_BOT_PREFIX}${c.id}`,
-    character: c,
-    legId: `bot-${c.id}-${window}`,
-    from,
-    to,
-    departAt: start,
-    arriveAt: start + ms,
-    cargo: botCargo(seed ^ 0x9e3779b9, TRADE_STYLES[c.personality], from),
-  };
-}
-
-/** Chặng của các đoàn máy trên cạnh `edge`, chồng lên khoảng giờ [from, to] (cùng ý nghĩa với kho `legsOn`). */
-export function botLegsOn(season: string, edge: string, from: number, to: number, speed = 1): BotLeg[] {
-  const len = TRADE_SLOT_MS / normalSpeed(speed);
-  const out: BotLeg[] = [];
-  for (let w = Math.floor(from / len) - 1; w <= Math.floor(to / len); w++) {
-    for (const c of BOT_CHARACTERS) {
-      const leg = botLegAt(season, c, w, speed);
-      if (leg && edgeKey(leg.from, leg.to) === edge && leg.departAt <= to && leg.arriveAt >= from) out.push(leg);
+  const room = capacityOf(p) - cargoWeight(p.cargo);
+  const budget = Math.floor(p.money * style.spend);
+  // Không chở quá phần lãi còn được phép trong trần tài của mùa tới hôm nay.
+  const capLeft = capLeftOf(p, character, now);
+  const options: { plan: BotPlan; score: number }[] = [];
+  for (const here of markets[p.node] ?? []) {
+    if (here.stock <= 0 || here.buy <= 0) continue;
+    const it = tradeItem(here.item);
+    const fit = it.tier === "treasure" ? room * TREASURE_PER_SLOT : room;
+    const amount = Math.min(here.stock, Math.floor(budget / here.buy), fit);
+    if (amount <= 0) continue;
+    for (const to of neighbors(p.node)) {
+      const there = markets[to]?.find((q) => q.item === here.item);
+      if (!there || there.full) continue;
+      const margin = (there.sell - here.buy) / here.buy;
+      if (margin < style.minMargin) continue;
+      const n = Math.min(amount, Math.max(1, Math.floor(capLeft / (there.sell - here.buy))));
+      const weight = (it.tier === "treasure" ? style.treasure : 1) * (there.rare ? style.rare : 1);
+      options.push({ plan: { to, item: here.item, amount: n }, score: margin * here.buy * n * weight });
     }
   }
-  return out;
+  options.sort((a, b) => b.score - a.score);
+  if (options.length > 0) return options[rng.int(0, Math.min(style.pick, options.length) - 1)]!.plan;
+  const ns = neighbors(p.node);
+  return ns.length > 0 ? { to: ns[rng.int(0, ns.length - 1)]!, item: null, amount: 0 } : null;
 }
 
-/** Một chặng máy theo mã (để kiểm lời ngỏ gửi lên); null khi mã sai. */
-export function botLegById(season: string, legId: string, speed = 1): BotLeg | null {
-  const m = /^bot-([A-Za-z]+)-(-?\d+)$/.exec(legId);
-  const c = m ? BOT_CHARACTERS.find((x) => x.id === m[1]) : undefined;
-  if (!m || !c) return null;
-  const leg = botLegAt(season, c, Number(m[2]), speed);
-  return leg && leg.legId === legId ? leg : null;
-}
+/** Giá tham chiếu một món ở một chợ theo bảng giá khung hiện tại; null khi chợ đó không bày. */
+const priceAt = (markets: Readonly<Record<TradeNodeId, readonly MarketQuote[]>>, node: TradeNodeId, item: TradeItemId) =>
+  markets[node]?.find((q) => q.item === item)?.buy ?? null;
 
-/** Giá tham chiếu một món ở nơi tới trong khung hiện tại: giá gốc × hệ số vùng × xu hướng (không tính sức ép kho). */
-export function referencePrice(season: string, node: TradeNodeId, item: TradeItemId, now: number, speed = 1): number {
-  const it = tradeItem(item);
-  return Math.max(1, Math.round(it.base * regionFactor(it, node) * trendFactor(season, node, item, tradeSlot(now, speed))));
-}
-
-/** Giá trị một gói theo giá tham chiếu; `goodsRatio` nhân phần hàng (đoàn máy thu hàng như chợ thu mua, 90%). */
-export function bundleValue(season: string, node: TradeNodeId, b: Bundle, now: number, speed = 1, goodsRatio = 1): number {
-  return b.money + goodsRatio * Object.entries(b.items).reduce((sum, [id, n]) => sum + referencePrice(season, node, id as TradeItemId, now, speed) * (n ?? 0), 0);
+/** Giá trị một gói theo giá chợ `node`; hàng chợ không bày tính theo giá gốc. `goodsRatio` nhân phần hàng. */
+export function bundleValue(markets: Readonly<Record<TradeNodeId, readonly MarketQuote[]>>, node: TradeNodeId, b: Bundle, goodsRatio = 1): number {
+  return b.money + goodsRatio * Object.entries(b.items).reduce((s, [id, n]) => s + (priceAt(markets, node, id as TradeItemId) ?? tradeItem(id as TradeItemId).base) * (n ?? 0), 0);
 }
 
 /**
  * Lời ngỏ đoàn máy đưa ra khi gặp: bán một phần món đắt nhất trong khoang lấy kim tiền, giá theo chợ nơi tới nhân hệ số
- * tính cách. Null khi khoang trống.
+ * lối buôn. Null khi khoang trống.
  */
-export function botOffer(season: string, leg: BotLeg, now: number, speed = 1): { give: Bundle; want: Bundle } | null {
-  const style = TRADE_STYLES[leg.character.personality];
-  const items = (Object.entries(leg.cargo) as [TradeItemId, number][]).filter(([, n]) => n > 0);
+export function botOffer(bot: TradePlayer, character: BotCharacter, markets: Readonly<Record<TradeNodeId, readonly MarketQuote[]>>): { give: Bundle; want: Bundle } | null {
+  const node = bot.leg?.to ?? bot.node;
+  const style = TRADE_STYLES[character.personality];
+  const value = (id: TradeItemId) => priceAt(markets, node, id) ?? tradeItem(id).base;
+  const items = (Object.entries(bot.cargo) as [TradeItemId, number][]).filter(([, n]) => n > 0).sort((a, b) => value(b[0]) - value(a[0]));
   if (items.length === 0) return null;
-  const [item, have] = items.sort((a, b) => referencePrice(season, leg.to, b[0], now, speed) - referencePrice(season, leg.to, a[0], now, speed))[0]!;
+  const [item, have] = items[0]!;
   const n = Math.max(1, Math.floor(have * style.sellShare));
-  const price = Math.round(referencePrice(season, leg.to, item, now, speed) * n * style.markup);
-  return { give: { items: { [item]: n }, money: 0 }, want: { items: {}, money: price } };
+  return { give: { items: { [item]: n }, money: 0 }, want: { items: {}, money: Math.round(value(item) * n * style.markup) } };
 }
 
 /**
- * Đoàn máy trả lời lời ngỏ của người chơi: chỉ nhận khi có đủ hàng được xin và giá trị nhận về (theo giá chợ nơi tới) ít
- * nhất bằng mức chịu của tính cách nhân giá trị phải đưa; hàng người chơi đưa tính như chợ thu mua (90%). Đoàn máy mang theo tối đa `TRADE_BOT_PURSE` kim tiền.
+ * Đoàn máy trả lời lời ngỏ của người chơi: chỉ nhận khi đoàn máy có đủ hàng và kim tiền bị xin, và giá trị nhận về (theo
+ * giá chợ nơi tới, hàng người chơi đưa tính như chợ thu mua 90%) ít nhất bằng mức chịu của lối buôn nhân giá trị phải đưa.
  */
-export const TRADE_BOT_PURSE = 20_000;
-export function botAccepts(season: string, leg: BotLeg, give: Bundle, want: Bundle, now: number, speed = 1): boolean {
-  if (want.money > TRADE_BOT_PURSE) return false;
-  for (const [id, n] of Object.entries(want.items)) if ((leg.cargo[id as TradeItemId] ?? 0) < (n ?? 0)) return false;
-  const style = TRADE_STYLES[leg.character.personality];
-  const got = bundleValue(season, leg.to, give, now, speed, TRADE_SELL_RATIO);
-  const paid = bundleValue(season, leg.to, want, now, speed);
-  return paid === 0 ? got > 0 : got >= paid * style.accept;
+export function botAccepts(bot: TradePlayer, character: BotCharacter, markets: Readonly<Record<TradeNodeId, readonly MarketQuote[]>>, give: Bundle, want: Bundle): boolean {
+  if (want.money > bot.money) return false;
+  for (const [id, n] of Object.entries(want.items)) if ((bot.cargo[id as TradeItemId] ?? 0) < (n ?? 0)) return false;
+  const node = bot.leg?.to ?? bot.node;
+  const got = bundleValue(markets, node, give, TRADE_SELL_RATIO);
+  const paid = bundleValue(markets, node, want);
+  return paid === 0 ? got > 0 : got >= paid * TRADE_STYLES[character.personality].accept;
 }
