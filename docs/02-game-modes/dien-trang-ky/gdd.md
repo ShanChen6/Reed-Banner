@@ -24,7 +24,7 @@ Phòng mã: mỗi quyết định 30 giây; quá giờ thì máy đi thay một 
 Lưới 11×11, Hoa Lư ở góc dưới phải, đi ngược chiều kim đồng hồ.
 
 - **24 ô đất** chia 9 dãy mang tên vùng của 9 sứ quân: dãy đôi Đỗ Động (60 quan), dãy ba Hồi Hồ (80), Đường Lâm (100), Phong Châu (140), Tây Phù Liệt (180), Tiên Du (220), Siêu Loại (260), dãy đôi Đằng Châu (300) và Bố Hải Khẩu (350). Mỗi cạnh: cạnh 1 có 5 ô đất, cạnh 2 và 3 mỗi cạnh 6, cạnh 4 có 7. Ba sứ quân Nguyễn Khoan, Ngô Xương Xí, Lữ Đường không có dãy nhưng vẫn làm máy chơi.
-- **4 danh thắng** ở giữa mỗi cạnh (ô 5, 15, 25, 35): Đền Hùng, Núi Tản Viên, Chùa Dâu, Tràng An. Giá 200 quan, không xây nhà; tô theo số danh thắng cùng chủ: 50, 100, 200, 400 quan. Mua lại (gấp đôi giá) và mở hội được như đất thường.
+- **4 danh thắng** ở giữa mỗi cạnh (ô 5, 15, 25, 35): Đền Hùng, Núi Tản Viên, Chùa Dâu, Tràng An. Giá 200 quan, không xây nhà; tô theo số danh thắng cùng chủ: 50, 100, 200, 400 quan. Chỉ mua được khi còn trống; đã có chủ thì không ai mua lại được (Shan chốt 27/11). Mở hội được như đất thường.
 - **4 góc**: Kinh thành Hoa Lư (xuất phát, đi qua lĩnh 200 quan lương vòng), Lao Ngục (ô 10; dừng thường chỉ là ghé qua), Hội Cờ Lau (ô 20; mở hội trên một ô của mình: tô gấp đôi tới khi mở hội nơi khác), Bến Sông Đáy (ô 30; trả 50 quan tiền đò để tới ô bất kỳ).
 - **8 ô riêng**: 4 Quẻ bói, Thuế đinh (một phần mười tiền mặt, ít nhất 20), Cống nạp (50 quan cộng 15 quan mỗi bậc nhà), 2 Chợ phiên (mua một ô đất trống bất kỳ theo giá gốc).
 - **Bị giam**: rút quẻ “Bị quan bắt giam” thì về Lao Ngục, không lĩnh lương, hết lượt. Mỗi lượt sau đổ thử một lần: ra đôi thì ra và đi luôn (không được đổ thêm); hỏng 3 lần thì mãn hạn, đi theo lần đổ cuối. Đầu lượt có thể nộp 100 quan chuộc để ra rồi đổ như thường. Trong ngục vẫn thu tô. Phúc miễn tô chỉ còn qua quẻ “Phúc ấm tổ tiên”.
@@ -37,7 +37,7 @@ Thứ tự ô và tên ở `TILES` trong `board.ts`.
 2. Xử ô dừng:
    - Đất trống: được mua, lúc mua được dựng luôn tới bậc 3.
    - Đất của mình: được xây thêm bậc.
-   - Đất người khác: **nộp tô hoặc mua lại** (mục 4). Mua lại tốn gấp đôi giá trị ô (đất và nhà), trả cho chủ đất, nhà giữ nguyên; mua xong còn tiền thì được xây thêm. Trang ấp không mua lại được.
+   - Đất người khác: **nộp tô hoặc mua lại** (mục 4). Mua lại tốn gấp đôi giá trị ô (đất và nhà), trả cho chủ đất, nhà giữ nguyên; mua xong còn tiền thì được xây thêm. Trang ấp và danh thắng không mua lại được.
    - Ô riêng và góc như mục 3.
 3. Hết lượt.
 
@@ -59,7 +59,9 @@ Nguyên tắc: một lần thu tô (chưa tính hùng cứ, lễ hội) không v
 - **Dãy và hùng cứ** (Shan chọn 27/11: 3 dãy đôi, 6 dãy ba): chỉ khi giữ đủ dãy mới nhân tô (Shan 27/11): dãy đôi nhân 1,5, dãy ba nhân 2. Giữ đủ dãy mới xây được Trang ấp.
 - **Lễ hội nhỏ**: đầu ván chọn ngẫu nhiên theo seed 3 ô đất có lễ hội suốt ván (đèn lồng trên ô). Giá không đổi, tô nhân 1,5; cộng dồn với hùng cứ và Hội Cờ Lau.
 - **Thiên tai** (Shan 27/11): người rút quẻ chọn một ngôi nhà của nhà khác (bậc 1 tới 4). Động đất: nhà đó sập một bậc. Bão lũ: nhà đó giữ nguyên bậc nhưng phải sửa 1 tới 3 lượt của chủ (ngẫu nhiên), trong lúc sửa không thu tô, người dừng chỉ được chọn mua lại hoặc đi tiếp. Hai hiệu ứng không xảy ra cùng lúc. Đất chưa xây và Trang ấp (nhà cao cấp) không bị ảnh hưởng. Không có nhà nào hợp lệ thì quẻ qua.
-- **Nguyên tố** chỉ quyết định kiểu dáng và màu nhà của người chơi (màu mái, vật trên nóc), không đổi tô hay luật.
+- **Nguyên tố** chỉ quyết định kiểu nhà (vật trên nóc, chi tiết), không đổi tô hay luật.
+- **Màu nhà** (Shan 28/11): mỗi ghế một màu trong 8 màu (`DTK_COLORS`: đỏ son, lam, lục, vàng nghệ, tím, cam, hồng, chàm), tô mái nhà, viền ô đất, quân và khung tên, nên hai nhà cùng hệ vẫn phân biệt được. Người thật tự chọn; màu đã có người chọn bị khóa (cùng máy: khóa giữa các người ngồi chung; phòng mã: chọn lúc mở hoặc vào phòng, đổi được trong phòng chờ, server từ chối màu trùng). Máy lấy màu còn trống.
+- **Hoạt ảnh** (Shan 28/11): luật chạy xong ngay trong lõi, màn diễn lại nhật ký mới (`usePlayback.ts`): xúc xắc lăn khoảng nửa giây, quân nhảy từng ô (đi xa thì nhanh hơn, tối đa 1,5 giây), dừng một nhịp ở việc đáng đọc. Trong lúc diễn bàn giữ hình trước nước đi, nút khóa, máy chờ diễn xong mới đi. Máy bật giảm chuyển động thì diễn rút gọn.
 
 ## 6. Quẻ bói
 
@@ -93,4 +95,6 @@ Chạy thử 300 ván mỗi cỡ (máy với máy, có thắng ngay, máy gặp 
 
 ## 10. Hình
 
-Bàn, ô, nhà và xúc xắc đang vẽ bằng code. Chờ Shan vẽ: tranh thẻ `public/art/home/dien-trang-ky.webp`, banner, biểu tượng ô riêng, nhà năm bậc theo bảy hệ. Prompt ở `/mnt/project-files/art/prompts/dien-trang-ky.md`.
+Nhà năm bậc × bảy hệ đã có tranh (28/11): `public/art/dien-trang-ky/house/<bậc>-<hệ>.webp` cộng lớp mặt nạ `-mask.webp` tách từ vùng #ff00ff, game tô mặt nạ bằng màu ghế. Prompt nhà ở `/mnt/project-files/art/prompts/dien-trang-ky-nha.md`.
+
+Bàn, ô và xúc xắc vẫn vẽ bằng code. Chờ Shan vẽ: tranh thẻ `public/art/home/dien-trang-ky.webp`, banner, biểu tượng ô riêng. Prompt ở `/mnt/project-files/art/prompts/dien-trang-ky.md`.

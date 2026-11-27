@@ -7,7 +7,7 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { ELEMENTS, type Element } from "@/core";
-import { DTK_GOLD, DTK_REWARDS_PER_DAY, MAX_PLAYERS, act, chooseAction, newDtk, resign, type DtkAction, type DtkState, type Seat } from "@/core/dien-trang-ky";
+import { DTK_COLORS, DTK_GOLD, DTK_REWARDS_PER_DAY, MAX_PLAYERS, act, chooseAction, freeColor, newDtk, resign, type DtkAction, type DtkColor, type DtkState, type Seat } from "@/core/dien-trang-ky";
 import { Button, ChoiceChip, Input } from "@/components/ui";
 import { ModeBanner, ModeScreen, OrnateFrame, ResultModal, SurrenderButton } from "@/components/game-ui";
 import { Portrait } from "../art/portraits";
@@ -64,6 +64,36 @@ function RivalsPicker({ value, onChange, max, label = "Sứ quân cùng chơi" }
   );
 }
 
+/** Chọn màu nhà; màu ghế khác đã giữ thì khóa. */
+function ColorPicker({ label, value, onChange, taken = [], disabled = false }: { label: string; value: DtkColor; onChange: (c: DtkColor) => void; taken?: readonly DtkColor[]; disabled?: boolean }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <h2 className="ui-title-on-wood text-sm font-bold">{label}</h2>
+      <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label={label}>
+        {DTK_COLORS.map((c) => {
+          const locked = taken.includes(c.id) && c.id !== value;
+          return (
+            <button
+              key={c.id}
+              type="button"
+              role="radio"
+              aria-checked={value === c.id}
+              aria-label={`${c.name}${locked ? ", đã có người chọn" : ""}`}
+              title={locked ? `${c.name} (đã có người chọn)` : c.name}
+              disabled={disabled || locked}
+              onClick={() => onChange(c.id)}
+              className="relative grid size-9 place-items-center rounded-full border-2 transition disabled:cursor-not-allowed disabled:opacity-30"
+              style={{ background: c.hex, borderColor: value === c.id ? "#f5e6b8" : "rgba(0,0,0,0.35)", boxShadow: value === c.id ? "0 0 0 2px #b8860b" : undefined }}
+            >
+              {locked && <span aria-hidden className="text-base font-bold text-white">×</span>}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function Ranking({ state, you, gold }: { state: DtkState; you?: number; gold?: readonly number[] }) {
   return (
     <ol className="flex flex-col gap-1">
@@ -83,6 +113,7 @@ function LocalPlay({ modePicker }: { modePicker: ReactNode }) {
   const [state, setState] = useState<DtkState | null>(null);
   const [humans, setHumans] = useState(1);
   const [element, setElement] = useState<Element>("hoa");
+  const [colors, setColors] = useState<DtkColor[]>(DTK_COLORS.slice(0, MAX_PLAYERS).map((c) => c.id));
   const [rivals, setRivals] = useState<string[]>(["tranLam", "phamBachHo"]);
   const [dismissed, setDismissed] = useState(false);
   const loaded = useRef(false);
@@ -96,9 +127,11 @@ function LocalPlay({ modePicker }: { modePicker: ReactNode }) {
     if (loaded.current) writeStorage(LOCAL_KEY, state ? JSON.stringify(state) : null);
   }, [state]);
 
+  const [playing, setPlaying] = useState(false);
   const bot = state && state.phase.k !== "ended" ? state.players[state.turn]!.bot : null;
   useEffect(() => {
-    if (!state || !bot) return;
+    // Máy chờ bàn diễn xong nước trước mới đi.
+    if (!state || !bot || playing) return;
     const timer = window.setTimeout(() => {
       setState((cur) => {
         if (!cur || cur.phase.k === "ended" || !cur.players[cur.turn]!.bot) return cur;
@@ -107,7 +140,7 @@ function LocalPlay({ modePicker }: { modePicker: ReactNode }) {
       });
     }, BOT_DELAY_MS);
     return () => window.clearTimeout(timer);
-  }, [state, bot]);
+  }, [state, bot, playing]);
 
   const onAction = useCallback((a: DtkAction) => {
     setState((cur) => {
@@ -120,17 +153,12 @@ function LocalPlay({ modePicker }: { modePicker: ReactNode }) {
   const maxRivals = MAX_PLAYERS - humans;
   const total = humans + Math.min(rivals.length, maxRivals);
   const start = () => {
-    const taken: Element[] = [];
-    const pick = (want: Element) => {
-      const e = taken.includes(want) ? ELEMENTS.find((x) => !taken.includes(x))! : want;
-      taken.push(e);
-      return e;
-    };
+    // Người chọn màu trước, máy lấy màu còn trống; hệ của máy giữ đúng hệ sứ quân, nhà cùng hệ vẫn khác màu.
     const seats: Seat[] = [];
-    for (let i = 0; i < humans; i++) seats.push({ name: humans === 1 ? "Bạn" : `Người ${i + 1}`, element: pick(i === 0 ? element : ELEMENTS[(ELEMENTS.indexOf(element) + i * 2) % ELEMENTS.length]!), bot: null });
+    for (let i = 0; i < humans; i++) seats.push({ name: humans === 1 ? "Bạn" : `Người ${i + 1}`, element: i === 0 ? element : ELEMENTS[(ELEMENTS.indexOf(element) + i * 2) % ELEMENTS.length]!, bot: null, color: colors[i] });
     for (const id of rivals.slice(0, maxRivals)) {
       const r = DTK_RIVAL_INFO[id]!;
-      seats.push({ name: r.name, element: pick(r.element), bot: id });
+      seats.push({ name: r.name, element: r.element, bot: id, color: freeColor(seats.map((s) => s.color)) });
     }
     setDismissed(false);
     setState(newDtk({ seats, seed: freshSeed() }));
@@ -141,7 +169,16 @@ function LocalPlay({ modePicker }: { modePicker: ReactNode }) {
       <section className="ui-frame flex flex-col gap-4 p-4" aria-label="Chuẩn bị ván">
         {modePicker}
         <Options label="Số người ngồi chung máy" value={humans} onChange={setHumans} options={[1, 2, 3, 4].map((n) => ({ value: n, label: `${n} người` }))} />
-        <ElementPicker label={humans === 1 ? "Hệ của bạn (kiểu và màu nhà)" : "Hệ của người thứ nhất (kiểu và màu nhà)"} value={element} onChange={setElement} />
+        <ElementPicker label={humans === 1 ? "Hệ của bạn (kiểu nhà)" : "Hệ của người thứ nhất (kiểu nhà)"} value={element} onChange={setElement} />
+        {Array.from({ length: humans }, (_, i) => (
+          <ColorPicker
+            key={i}
+            label={humans === 1 ? "Màu nhà của bạn" : `Màu nhà của người ${i + 1}`}
+            value={colors[i]!}
+            taken={colors.slice(0, humans).filter((_, j) => j !== i)}
+            onChange={(c) => setColors((cur) => cur.map((x, j) => (j === i ? c : x)))}
+          />
+        ))}
         {maxRivals > 0 && <RivalsPicker value={rivals.slice(0, maxRivals)} onChange={setRivals} max={maxRivals} />}
         <Button disabled={total < 2} onClick={start}>{total < 2 ? "Cần ít nhất hai ghế" : `Vào ván ${total} người`}</Button>
       </section>
@@ -157,6 +194,7 @@ function LocalPlay({ modePicker }: { modePicker: ReactNode }) {
           state={state}
           controls={(seat) => !state.players[seat]!.bot}
           onAction={onAction}
+          onPlaying={setPlaying}
           toolbar={
             <>
               {!ended && !bot && (
@@ -204,6 +242,7 @@ function LocalPlay({ modePicker }: { modePicker: ReactNode }) {
 function ServerPlay({ kind, modePicker }: { kind: "reward" | "room"; modePicker: ReactNode }) {
   const m = useServerMatch();
   const [element, setElement] = useState<Element>("hoa");
+  const [color, setColor] = useState<DtkColor>("son");
   const [rivals, setRivals] = useState<string[]>(["tranLam", "phamBachHo", "nguyenKhoan"]);
   const [code, setCode] = useState("");
   const [dismissed, setDismissed] = useState(false);
@@ -215,24 +254,25 @@ function ServerPlay({ kind, modePicker }: { kind: "reward" | "room"; modePicker:
     return (
       <section className="ui-frame flex flex-col gap-4 p-4" aria-label="Chuẩn bị ván">
         {modePicker}
-        <ElementPicker label="Hệ của bạn (kiểu và màu nhà)" value={element} onChange={setElement} />
+        <ElementPicker label="Hệ của bạn (kiểu nhà)" value={element} onChange={setElement} />
+        <ColorPicker label={kind === "room" ? "Màu nhà của bạn (vào phòng thì màu đã có người chọn sẽ bị khóa)" : "Màu nhà của bạn"} value={color} onChange={setColor} />
         {kind === "reward" ? (
           <>
             <RivalsPicker value={rivals} onChange={setRivals} max={MAX_PLAYERS - 1} />
             <p className="text-caption text-on-wood-soft">
               Vàng theo hạng: ván 2 người {DTK_GOLD[2]![0]} vàng cho hạng nhất; 3 người {DTK_GOLD[3]!.slice(0, 2).join(" và ")}; 4 người {DTK_GOLD[4]!.slice(0, 3).join(", ")} cho ba hạng đầu. Tối đa {DTK_REWARDS_PER_DAY} ván có vàng mỗi ngày.
             </p>
-            <Button disabled={m.busy || rivals.length < 1} onClick={() => { setDismissed(false); void m.startAi(element, rivals); }}>
+            <Button disabled={m.busy || rivals.length < 1} onClick={() => { setDismissed(false); void m.startAi(element, color, rivals); }}>
               {rivals.length < 1 ? "Chọn ít nhất một sứ quân" : `Vào ván với ${rivals.length} sứ quân`}
             </Button>
           </>
         ) : (
           <>
             <div className="flex flex-wrap items-end gap-2">
-              <Button disabled={m.busy} onClick={() => { setDismissed(false); void m.host(element); }}>Mở phòng</Button>
+              <Button disabled={m.busy} onClick={() => { setDismissed(false); void m.host(element, color); }}>Mở phòng</Button>
               <span className="text-caption text-on-wood-soft">hoặc</span>
               <Input value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="Mã phòng" maxLength={6} className="w-32" aria-label="Mã phòng" />
-              <Button variant="secondary" disabled={m.busy || code.trim().length < 4} onClick={() => { setDismissed(false); void m.join(code.trim(), element); }}>Vào phòng</Button>
+              <Button variant="secondary" disabled={m.busy || code.trim().length < 4} onClick={() => { setDismissed(false); void m.join(code.trim(), element, color); }}>Vào phòng</Button>
             </div>
             <p className="text-caption text-on-wood-soft">Phòng 2–4 ghế. Chủ phòng gửi mã cho bạn bè, thêm sứ quân máy vào ghế trống rồi khai cuộc. Mỗi quyết định có 30 giây, quá giờ máy đi thay.</p>
           </>
@@ -317,6 +357,7 @@ function Lobby({ v, m, errorLine }: { v: DtkView; m: ReturnType<typeof useServer
           const info = s.bot ? DTK_RIVAL_INFO[s.bot] : null;
           return (
             <li key={i} className="ui-frame-inset flex items-center gap-2 p-2">
+              <span aria-hidden className="size-4 shrink-0 rounded-full border border-black/40" style={{ background: DTK_COLORS.find((c) => c.id === s.color)?.hex }} />
               {info && <Portrait id={info.id} element={info.element} profession={info.profession} className="size-8 shrink-0" />}
               <span className="flex-1 text-on-wood">{s.name}{i === v.you ? " (bạn)" : ""}{i === 0 ? ", chủ phòng" : ""}{info ? `, máy ${info.style}` : ""}</span>
               {v.host && i > 0 && <Button size="sm" variant="secondary" disabled={m.busy} onClick={() => void m.removeSeat(i)}>Mời ra</Button>}
@@ -324,6 +365,15 @@ function Lobby({ v, m, errorLine }: { v: DtkView; m: ReturnType<typeof useServer
           );
         })}
       </ul>
+      {v.seats[v.you] && (
+        <ColorPicker
+          label="Màu nhà của bạn (màu ghế khác đã chọn bị khóa)"
+          value={v.seats[v.you]!.color}
+          taken={v.seats.filter((_, i) => i !== v.you).map((s) => s.color)}
+          disabled={m.busy}
+          onChange={(c) => void m.setColor(c)}
+        />
+      )}
       {v.host && room && (
         <div className="flex flex-col gap-2">
           <h2 className="ui-title-on-wood font-bold">Thêm sứ quân máy vào ghế trống</h2>

@@ -5,7 +5,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Element } from "@/core";
-import type { DtkAction } from "@/core/dien-trang-ky";
+import type { DtkAction, DtkColor } from "@/core/dien-trang-ky";
 import type { DtkView } from "@/server/dienTrangKy";
 import { PROFILE_GOLD_EVENT } from "../battle/online";
 import { readStorage, writeStorage } from "../formation/storage";
@@ -28,6 +28,7 @@ export const SERVER_ERROR: Readonly<Record<string, string>> = {
   notYourTurn: "Chưa tới lượt bạn.",
   illegal: "Lệnh không hợp lệ. Bàn đã cập nhật lại.",
   waiting: "Phòng cần ít nhất hai ghế mới khai cuộc được.",
+  colorTaken: "Màu này đã có người chọn. Xin chọn màu khác.",
   badRequest: "Lệnh không hợp lệ. Xin tải lại trang rồi thử lại.",
   network: "Chưa liên lạc được máy chủ. Xin thử lại.",
 };
@@ -125,9 +126,10 @@ export function useServerMatch() {
     error,
     busy,
     turnLeft,
-    startAi: (element: Element, rivals: readonly string[]) => run({ action: "ai", element, rivals }),
-    host: (element: Element) => run({ action: "host", element }),
-    join: (code: string, element: Element) => run({ action: "join", code, element }),
+    startAi: (element: Element, color: DtkColor, rivals: readonly string[]) => run({ action: "ai", element, color, rivals }),
+    host: (element: Element, color: DtkColor) => run({ action: "host", element, color }),
+    join: (code: string, element: Element, color: DtkColor) => run({ action: "join", code, element, color }),
+    setColor: (color: DtkColor) => (view ? run({ action: "color", id: view.id, color }) : Promise.resolve(false)),
     addBot: (rival: string) => (view ? run({ action: "addBot", id: view.id, rival }) : Promise.resolve(false)),
     removeSeat: (index: number) => (view ? run({ action: "removeSeat", id: view.id, index }) : Promise.resolve(false)),
     start: () => (view ? run({ action: "start", id: view.id }) : Promise.resolve(false)),

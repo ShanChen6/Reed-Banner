@@ -91,6 +91,6 @@ export default function CampaignScreen() {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <ModeScreen label="Bình Loạn">{children}</ModeScreen>
+    <ModeScreen label="Bình Loạn" className="ui-mode-fit">{children}</ModeScreen>
   );
 }

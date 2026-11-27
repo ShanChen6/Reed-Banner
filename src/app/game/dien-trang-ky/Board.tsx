@@ -1,13 +1,12 @@
 "use client";
 
 // Bàn 40 ô của Điền Trang Ký trên lưới 11×11: Hoa Lư ở góc dưới phải, đi ngược chiều kim đồng hồ. Mỗi ô đất có dải màu
-// vùng, viền và nền theo hệ chủ đất, nhà năm bậc (House.tsx). Giữa bàn là xúc xắc và dòng nhật ký mới nhất.
+// vùng, viền và nền theo hệ chủ đất, nhà năm bậc theo tranh (House.tsx). Giữa bàn là xúc xắc và dòng nhật ký mới nhất.
 // Hình vẽ bằng code, chờ tranh Shan vẽ (prompt ở /mnt/project-files/art/prompts/dien-trang-ky.md).
 
 import type { ReactNode } from "react";
-import { REGIONS, TILES, type DtkState, type SpecialKind } from "@/core/dien-trang-ky";
+import { REGIONS, TILES, colorHex, colorOf, type DtkState, type SpecialKind } from "@/core/dien-trang-ky";
 import { cn } from "@/lib/cn";
-import { ELEMENT_COLOR } from "../art/icons";
 import { House } from "./House";
 import { money } from "./text";
 
@@ -114,7 +113,7 @@ export function Board({ state, pickable, selected, onTile, center }: BoardProps)
         const owner = plot && plot.owner !== null ? state.players[plot.owner]! : null;
         const here = state.players.flatMap((p, seat) => (!p.out && p.pos === i ? [seat] : []));
         const can = pickable?.has(i) ?? false;
-        const tint = owner ? ELEMENT_COLOR[owner.element] : null;
+        const tint = plot && plot.owner !== null ? colorHex(colorOf(state, plot.owner)) : null;
         return (
           <button
             key={i}
@@ -139,7 +138,7 @@ export function Board({ state, pickable, selected, onTile, center }: BoardProps)
               <>
                 <span aria-hidden className="h-[14%] w-full shrink-0" style={{ background: REGION_COLOR[t.region] }} />
                 <span className="line-clamp-2 px-px text-[clamp(5px,1.05vw,10px)] font-semibold">{t.name}</span>
-                {plot && plot.level > 0 && owner ? <House level={plot.level} element={owner.element} className="h-[34%] w-auto" /> : <span className="text-[clamp(5px,0.95vw,9px)] opacity-75">{t.price}</span>}
+                {plot && plot.level > 0 && owner ? <House level={plot.level} element={owner.element} color={tint!} className="h-[46%] w-auto" /> : <span className="text-[clamp(5px,0.95vw,9px)] opacity-75">{t.price}</span>}
               </>
             ) : t.kind === "scenic" ? (
               <>
@@ -175,13 +174,12 @@ export function Board({ state, pickable, selected, onTile, center }: BoardProps)
 }
 
 export function Token({ seat, state, className }: { seat: number; state: DtkState; className?: string }) {
-  const p = state.players[seat]!;
   const active = state.turn === seat && state.phase.k !== "ended";
   return (
     <span
       aria-hidden
       className={cn("grid size-[clamp(8px,2.1vw,18px)] place-items-center rounded-full border text-[clamp(5px,1vw,9px)] font-bold text-white shadow", active ? "border-white ring-1 ring-frame-gold" : "border-black/40", className)}
-      style={{ background: ELEMENT_COLOR[p.element] }}
+      style={{ background: colorHex(colorOf(state, seat)) }}
     >
       {seat + 1}
     </span>

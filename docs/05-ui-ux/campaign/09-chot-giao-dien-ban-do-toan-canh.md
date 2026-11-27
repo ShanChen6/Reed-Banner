@@ -49,10 +49,10 @@ Các tên/nhóm/trạng thái hiện hành phải đọc lại ở `factions.ts`
 ### D1. Mở Campaign lần đầu
 - Màn tổng quan chứa **6 chapter tabs bên trái + World Atlas giữa + contextual panel phải**.
 - Chapter active suy từ `campaignFocusChapter` (nếu còn), mission unlock/complete suy từ profile server. Không phát thưởng/move mission khi chỉ click map/chapter.
-- Nút `Xem toàn cảnh` về zoom 1; `+`/`−` giữ cơ chế keyboard và pointer hiện có.
+- ~~Nút `Xem toàn cảnh` về zoom 1; `+`/`−` giữ cơ chế keyboard và pointer hiện có.~~ Shan bỏ zoom 28/11/2026: bản đồ luôn xem toàn cảnh, không phóng, không kéo; chọn chương chỉ làm sáng các điểm của chương. Từ 1280px card Sử ký cao bằng màn hình (xem dòng "Vừa một màn hình" ở [theme.md](../design-system/theme.md)), bỏ thanh Nhiệm vụ kế tiếp và danh sách cứ điểm dưới bản đồ (danh sách 13 cứ điểm chuyển vào Hướng dẫn).
 
 ### D2. Click Chương II
-- Chương II highlight; world map vẫn hiển thị tất cả địa bàn; focus camera tới Bố Hải, vùng liên quan nổi bật và vùng ngoài bị giảm sáng nhẹ.
+- Chương II highlight; world map vẫn hiển thị tất cả địa bàn; (bỏ từ 28/11/2026: focus camera tới Bố Hải), vùng liên quan nổi bật và vùng ngoài bị giảm sáng nhẹ.
 - Right panel chuyển sang thông tin Chương II, các nhiệm vụ M05–M08 từ data hiện hữu.
 - Không tự mở M05 và không tự hoàn thành mission khi click chương.
 

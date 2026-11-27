@@ -394,16 +394,17 @@
   background: linear-gradient(var(--wood-hi), var(--wood-panel));
   color: var(--on-wood);
 }
-/* Thẻ nhắc việc trong đại card (thanh bắt đầu, hướng dẫn): cùng viền và nền gỗ với các khung Bình Loạn, không đậm hơn. */
-.campaign-atlas .atlas-callout {
-  border: 1.5px solid var(--frame-line-mid);
-  border-radius: 0.75rem;
-  background: linear-gradient(var(--wood-hi), var(--wood-panel));
-  color: var(--on-wood);
+/* Khung cố định chiều cao (máy tính rộng, Shan 28/11/2026): màn thấp thì thẻ chương gọn lại và bỏ tranh cuối cột để
+   sáu chương luôn vừa cột, không cuộn. */
+@media (min-width: 1280px) and (max-height: 949px) {
+  .campaign-atlas .atlas-rail-art {
+    display: none;
+  }
 }
-.campaign-atlas .atlas-callout-primary {
-  border-color: var(--frame-line);
-  box-shadow: 0 0 20px -10px var(--frame-gold-hi);
+@media (min-width: 1280px) and (max-height: 799px) {
+  .campaign-atlas .atlas-chapter {
+    height: 3.75rem;
+  }
 }
 .campaign-atlas .world-strip {
   background: linear-gradient(var(--tone-dcc08a), var(--paper-deep));
@@ -568,8 +569,7 @@
   stroke-opacity: 1;
   stroke-width: 4px;
 }
-/* Nút phóng/thu và ô chọn cứ điểm ngoài bản đồ dùng chung bảng màu giấy dó. */
-.campaign-map .map-control,
+/* Ô chọn cứ điểm ngoài bản đồ dùng bảng màu giấy dó. */
 .campaign-map .map-chip {
   border-color: var(--frame-bronze);
   background: color-mix(
@@ -586,13 +586,9 @@
 .campaign-map .world-strip {
   border-color: var(--frame-line);
 }
-.campaign-map .map-controls {
+/* Máy tính rộng: tranh thu vừa khung cột giữa, khoảng trống hai bên (nếu có) là giấy dó như mép tranh. */
+.campaign-map .map-viewport {
   background: linear-gradient(var(--tone-dcc08a), var(--paper-deep));
-}
-@media (min-width: 768px) {
-  .campaign-map .map-controls {
-    background: none;
-  }
 }
 /* Gợi ý xoay ngang: chỉ điện thoại nhỏ đang cầm dọc. */
 .campaign-map .rotate-hint {

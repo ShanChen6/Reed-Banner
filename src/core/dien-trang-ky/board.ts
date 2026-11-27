@@ -23,6 +23,25 @@ export const REGIONS: readonly Region[] = [
   { id: "boHai", name: "Bố Hải Khẩu", lord: "tranLam", price: 350 },
 ];
 
+/** Màu nhà của từng ghế (Shan 27/11): hệ quyết định kiểu nhà, màu quyết định mái, cờ, quân và viền đất, nên hai nhà cùng hệ
+ * vẫn phân biệt được. Mỗi ván mỗi màu chỉ một ghế giữ. */
+export const DTK_COLORS = [
+  { id: "son", name: "Đỏ son", hex: "#c0392b" },
+  { id: "lam", name: "Lam", hex: "#2f6fd6" },
+  { id: "luc", name: "Lục", hex: "#2e9b4f" },
+  { id: "nghe", name: "Vàng nghệ", hex: "#d9a400" },
+  { id: "tim", name: "Tím", hex: "#8048c8" },
+  { id: "cam", name: "Cam", hex: "#e2691b" },
+  { id: "hong", name: "Hồng", hex: "#d6508c" },
+  { id: "cham", name: "Chàm", hex: "#24466e" },
+] as const;
+export type DtkColor = (typeof DTK_COLORS)[number]["id"];
+export const isDtkColor = (v: unknown): v is DtkColor => typeof v === "string" && DTK_COLORS.some((c) => c.id === v);
+export const colorHex = (c: DtkColor): string => DTK_COLORS.find((x) => x.id === c)!.hex;
+/** Màu muốn lấy nếu còn trống, không thì màu trống đầu tiên. */
+export const freeColor = (taken: readonly (DtkColor | undefined)[], want?: DtkColor): DtkColor =>
+  want && !taken.includes(want) ? want : (DTK_COLORS.find((c) => !taken.includes(c.id))?.id ?? DTK_COLORS[0].id);
+
 /** Giá mỗi danh thắng và tô theo số danh thắng cùng chủ (1..4). */
 export const SCENIC_PRICE = 200;
 export const SCENIC_RENT = [0, 50, 100, 200, 400] as const;

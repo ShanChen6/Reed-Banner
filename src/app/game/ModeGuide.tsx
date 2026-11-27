@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import { BottomSheet, FrameInset, OrnateFrame } from "@/components/game-ui";
-import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
+import { BottomSheet, FitPages, FrameInset, OrnateFrame, type FitUnit } from "@/components/game-ui";
+import { DESKTOP_FIT_QUERY, PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { Button, choiceVariants, Tabs } from "@/components/ui";
 import { ElementIcon, SuLoAidIcon } from "./art/icons";
 import { TileArt } from "./art/tiles";
 import { Glyph } from "./formation/pieces";
 import { pieceArt } from "./tam-quan-ky/parts";
 import { ReachDiagram } from "./tam-quan-ky/ReachDiagram";
+import { FactionFlag, STATE_COLOR } from "./campaign/WorldMap";
 import { MODE_GUIDES, type GuideIcon, type GuideItems, type GuideScene, type ModeGuide as ModeGuideData } from "./modeGuides";
 
-const SECTIONS: readonly { readonly key: Exclude<keyof ModeGuideData, "goal" | "items">; readonly title: string }[] = [
+const SECTIONS: readonly { readonly key: Exclude<keyof ModeGuideData, "goal" | "items" | "places">; readonly title: string }[] = [
   { key: "steps", title: "Cách chơi" },
   { key: "rules", title: "Luật cần nhớ" },
   { key: "rewards", title: "Ban thưởng" },
@@ -24,12 +25,29 @@ function GuideItemIcon({ icon }: { icon: GuideIcon }) {
   if (icon.kind === "element") return <ElementIcon element={icon.element} className={box} />;
   if (icon.kind === "suLoAid") return <SuLoAidIcon aid={icon.aid} className={box} />;
   if (icon.kind === "tile") return <TileArt kind={icon.tile} className={box} />;
+  if (icon.kind === "stronghold")
+    return <FactionFlag id={icon.id} color={icon.id === "hoaLu" ? STATE_COLOR.hq : STATE_COLOR.unresolved} className="h-10 w-7 shrink-0" />;
   // eslint-disable-next-line @next/next/no-img-element -- tranh quân nhỏ, cùng ảnh với sa bàn
   if (icon.kind === "tqkPiece") return <img src={pieceArt(icon.piece)} alt="" className={`${box} rounded-full`} />;
   return (
     <span className={`${box} block`}>
       <Glyph kind={icon.piece} />
     </span>
+  );
+}
+
+/** Một món trong mục đạo cụ hoặc địa điểm: icon, tên, cách dùng. */
+function GuideItemRow({ item, ...rest }: { item: GuideItems["list"][number] } & Record<`data-${string}`, unknown>) {
+  // `rest`: dấu đo của FitPages (data-fit-unit) phải nằm trên chính thẻ li.
+  return (
+    <li {...rest} className="flex items-start gap-3 rounded-md border border-frame-bronze/40 bg-black/15 p-2">
+      <GuideItemIcon icon={item.icon} />
+      <div className="min-w-0 flex-1">
+        <p className="font-bold text-title-on-wood">{item.name}</p>
+        <p className="text-sm text-on-wood">{item.text}</p>
+      </div>
+      {item.icon.kind === "tqkPiece" && <ReachDiagram type={item.icon.piece} className="size-28 shrink-0 sm:size-32" />}
+    </li>
   );
 }
 
@@ -46,16 +64,7 @@ function GuideItemsSection({ items }: { items: GuideItems }) {
         </ul>
       )}
       <ul className="grid gap-2 sm:grid-cols-2" aria-label={items.title}>
-        {items.list.map((item) => (
-          <li key={item.name} className="flex items-start gap-3 rounded-md border border-frame-bronze/40 bg-black/15 p-2">
-            <GuideItemIcon icon={item.icon} />
-            <div className="min-w-0 flex-1">
-              <p className="font-bold text-title-on-wood">{item.name}</p>
-              <p className="text-sm text-on-wood">{item.text}</p>
-            </div>
-            {item.icon.kind === "tqkPiece" && <ReachDiagram type={item.icon.piece} className="size-28 shrink-0 sm:size-32" />}
-          </li>
-        ))}
+        {items.list.map((item) => <GuideItemRow key={item.name} item={item} />)}
       </ul>
     </FrameInset>
   );
@@ -96,13 +105,20 @@ export function markGuideSeen(scene: GuideScene): void {
 }
 
 /** Nội dung Hướng dẫn của một chế độ: mục tiêu, các bước, luật, thưởng, mẹo. Dùng cả ở màn có thẻ riêng (Bình Loạn, Trận Đồ). */
-export function ModeGuidePanel({ scene, headingId, onPlay, bare }: {
+export function ModeGuidePanel({ scene, headingId, onPlay, bare, paged }: {
   scene: GuideScene;
   headingId?: string;
   onPlay?: () => void;
   /** Không bọc khung (trong bảng trượt đáy đã có khung). */
   bare?: boolean;
+  /**
+   * Khung cha cao cố định (màn chế độ vừa một màn hình, Shan chốt 28/11/2026): chia Hướng dẫn thành trang trên máy
+   * tính rộng, nút "Vào chơi" luôn ở đáy. Màn hẹp vẫn hiện hết.
+   */
+  paged?: boolean;
 }) {
+  const fit = useMediaQuery(DESKTOP_FIT_QUERY);
+  if (paged) return <PagedGuide scene={scene} headingId={headingId} onPlay={onPlay} enabled={fit} />;
   const guide = MODE_GUIDES[scene];
   const Frame = bare ? "div" : OrnateFrame;
   return (
@@ -116,7 +132,10 @@ export function ModeGuidePanel({ scene, headingId, onPlay, bare }: {
       {SECTIONS.flatMap(({ key, title }) => {
         const items = guide[key];
         // Mục đạo cụ đứng ngay sau Luật cần nhớ, trước Ban thưởng.
-        const after = key === "rules" && guide.items ? [<GuideItemsSection key="items" items={guide.items} />] : [];
+        const after =
+          key === "rules"
+            ? [guide.items, guide.places].flatMap((g, i) => (g ? [<GuideItemsSection key={`items${i}`} items={g} />] : []))
+            : [];
         if (items.length === 0) return after;
         const List = key === "steps" ? "ol" : "ul";
         return [
@@ -137,6 +156,85 @@ export function ModeGuidePanel({ scene, headingId, onPlay, bare }: {
         </Button>
       )}
     </Frame>
+  );
+}
+
+/**
+ * Hướng dẫn chia trang: mỗi dòng (bước, luật, đạo cụ) là một khối; khối cùng mục bọc chung khung, sang trang thì khung
+ * lặp tiêu đề kèm chữ "tiếp". Thứ tự mục giống bản đầy đủ.
+ */
+function PagedGuide({ scene, headingId, onPlay, enabled }: { scene: GuideScene; headingId?: string; onPlay?: () => void; enabled: boolean }) {
+  const guide = MODE_GUIDES[scene];
+  const units: FitUnit[] = [
+    {
+      key: "goal",
+      node: (
+        <section className="flex flex-col gap-1">
+          <h2 id={headingId} className="text-lg font-bold text-title-on-wood">Mục tiêu</h2>
+          <p className="text-on-wood">{guide.goal}</p>
+        </section>
+      ),
+    },
+  ];
+  const titles: Record<string, string> = {};
+  for (const { key, title } of SECTIONS) {
+    guide[key].forEach((text, i) => units.push({ key: `${key}${i}`, group: key, node: <li><GuideText text={text} /></li> }));
+    titles[key] = title;
+    if (key !== "rules") continue;
+    for (const [name, items] of [["items", guide.items], ["places", guide.places]] as const) {
+      if (!items) continue;
+      titles[name] = items.title;
+      if (items.notes.length)
+        units.push({
+          key: `${name}-notes`,
+          group: name,
+          node: (
+            <li className="sm:col-span-2">
+              <ul className="flex list-disc flex-col gap-1.5 pl-5 text-on-wood">
+                {items.notes.map((t) => <li key={t}>{t}</li>)}
+              </ul>
+            </li>
+          ),
+        });
+      items.list.forEach((item) => units.push({ key: `${name}-${item.name}`, group: name, node: <GuideItemRow item={item} /> }));
+    }
+  }
+  const steps = new Set<string>(["steps"]);
+  const firstStep = units.findIndex((u) => u.group === "steps");
+  return (
+    <OrnateFrame className="flex min-h-0 flex-1 flex-col" aria-labelledby={headingId}>
+      <FitPages
+        className="flex-1"
+        enabled={enabled}
+        label="Trang Hướng dẫn"
+        units={units}
+        groupWrap={(group, items, continued, from) => {
+          const title = `${titles[group] ?? ""}${continued ? " (tiếp)" : ""}`;
+          if (group === "items" || group === "places")
+            return (
+              <FrameInset className="flex flex-col gap-3 p-3">
+                <h3 className="text-base font-bold text-frame-gold">{title}</h3>
+                <ul className="grid gap-2 sm:grid-cols-2" aria-label={titles[group]}>{items}</ul>
+              </FrameInset>
+            );
+          const List = steps.has(group) ? "ol" : "ul";
+          return (
+            <FrameInset className="flex flex-col gap-2 p-3">
+              <h3 className="text-base font-bold text-frame-gold">{title}</h3>
+              <List start={List === "ol" ? from - firstStep + 1 : undefined}
+                className={`flex flex-col gap-1.5 pl-5 text-on-wood ${List === "ol" ? "list-decimal" : "list-disc"}`}>{items}</List>
+            </FrameInset>
+          );
+        }}
+        footer={
+          onPlay && (
+            <Button className="mt-3 min-h-11 self-center px-8" onClick={onPlay}>
+              Vào chơi
+            </Button>
+          )
+        }
+      />
+    </OrnateFrame>
   );
 }
 

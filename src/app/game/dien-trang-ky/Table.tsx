@@ -3,10 +3,13 @@
 // Một ván Điền Trang Ký đang chơi: bàn, khung người chơi, nút theo bước hiện tại, nhật ký. Dùng chung cho ván cùng máy
 // (trình duyệt tự chạy luật) và ván trên máy chủ (gửi lệnh lên /api/tycoon).
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   BOAT_FARE,
+  DTK_COLORS,
   FAIR_RATE,
+  colorHex,
+  colorOf,
   disasterTargets,
   REGION_TILES,
   JAIL_BAIL,
@@ -30,10 +33,10 @@ import {
 } from "@/core/dien-trang-ky";
 import { Button } from "@/components/ui";
 import { cn } from "@/lib/cn";
-import { ELEMENT_COLOR } from "../art/icons";
 import { Portrait } from "../art/portraits";
 import { ELEMENT_NAME } from "../battle/labels";
 import { Board, Token, regionName } from "./Board";
+import { usePlayback } from "./usePlayback";
 import { DTK_RIVAL_INFO } from "./rivals";
 import { eventText, money, tileName } from "./text";
 
@@ -48,11 +51,13 @@ export interface TableProps {
   readonly toolbar?: ReactNode;
   /** Ghế của người xem để tô đậm khung (máy chủ). */
   readonly me?: number;
+  /** Báo khi bắt đầu hoặc diễn xong hoạt ảnh (máy cùng máy chờ diễn xong mới đi). */
+  readonly onPlaying?: (playing: boolean) => void;
 }
 
 const PAPER = "#f6efe0";
 
-const Dice = ({ n }: { n: number }) => {
+const Dice = ({ n, tilt = 0 }: { n: number; tilt?: number }) => {
   const pips: Record<number, [number, number][]> = {
     1: [[2, 2]],
     2: [[1, 1], [3, 3]],
@@ -62,7 +67,7 @@ const Dice = ({ n }: { n: number }) => {
     6: [[1, 1], [1, 3], [2, 1], [2, 3], [3, 1], [3, 3]],
   };
   return (
-    <svg viewBox="0 0 4 4" className="size-[clamp(22px,6vw,44px)] rounded-md shadow" style={{ background: PAPER }} role="img" aria-label={`${n} chấm`}>
+    <svg viewBox="0 0 4 4" className="size-[clamp(22px,6vw,44px)] rounded-md shadow transition-transform duration-75" style={{ background: PAPER, transform: tilt ? `rotate(${tilt}deg) translateY(-3px)` : undefined }} role="img" aria-label={`${n} chấm`}>
       {pips[n]!.map(([r, c], i) => (
         <circle key={i} cx={c} cy={r} r={0.38} fill={n === 1 || n === 4 ? "#b3261e" : "#2b1d10"} />
       ))}
@@ -109,16 +114,18 @@ const SPECIAL_HELP = {
   market: "Được mua một ô đất trống bất kỳ theo giá gốc.",
 } as const;
 
-export function Table({ state, controls, onAction, busy = false, status, toolbar, me }: TableProps) {
+export function Table({ state, controls, onAction, busy = false, status, toolbar, me, onPlaying }: TableProps) {
   const [selected, setSelected] = useState<number | null>(null);
+  const pb = usePlayback(state);
+  useEffect(() => onPlaying?.(pb.playing), [pb.playing, onPlaying]);
   const ph = state.phase;
   const seat = state.turn;
   const p = state.players[seat]!;
   const mine = ph.k !== "ended" && controls(seat);
-  const can = mine && !busy;
+  const can = mine && !busy && !pb.playing;
 
   const pickable = useMemo(() => {
-    if (!mine) return undefined;
+    if (!mine || pb.playing) return undefined;
     if (ph.k === "pick") {
       if (ph.what === "market") return new Set(freeLands(state).filter((i) => priceOf(i) <= p.cash));
       if (ph.what === "festival") return new Set(ownedTiles(state, seat));
@@ -127,7 +134,7 @@ export function Table({ state, controls, onAction, busy = false, status, toolbar
     }
     if (ph.k === "raise") return new Set(ownedTiles(state, seat));
     return undefined;
-  }, [mine, ph, state, p.cash, p.pos, seat]);
+  }, [mine, pb.playing, ph, state, p.cash, p.pos, seat]);
 
   const tap = (i: number) => {
     if (can && pickable?.has(i)) {
@@ -139,9 +146,13 @@ export function Table({ state, controls, onAction, busy = false, status, toolbar
     setSelected((cur) => (cur === i ? null : i));
   };
 
-  const recent = useMemo(() => state.log.flatMap((e) => (e.k === "move" && !e.back ? [] : [{ n: e.n, text: eventText(e, state) }])).filter((x) => x.text).slice(-8).reverse(), [state]);
+  const recent = useMemo(
+    () => state.log.flatMap((e) => (e.n > pb.shownN || (e.k === "move" && !e.back) ? [] : [{ n: e.n, text: eventText(e, state) }])).filter((x) => x.text).slice(-8).reverse(),
+    [state, pb.shownN],
+  );
 
   const prompt = (() => {
+    if (pb.playing) return `${state.players[pb.view.turn]?.name ?? ""} đang đi…`;
     if (ph.k === "ended") return "Ván đã xong.";
     if (!mine) return `${p.name} đang đi…`;
     switch (ph.k) {
@@ -223,10 +234,10 @@ export function Table({ state, controls, onAction, busy = false, status, toolbar
   const center = (
     <>
       <p className="font-serif text-[clamp(10px,2.4vw,20px)] font-bold tracking-wide text-frame-gold">Điền Trang Ký</p>
-      {state.dice && (
+      {pb.view.dice && (
         <div className="flex gap-2">
-          <Dice n={state.dice[0]} />
-          <Dice n={state.dice[1]} />
+          <Dice n={pb.view.dice[0]} tilt={pb.rolling ? (pb.view.dice[0] * 37) % 50 - 25 : 0} />
+          <Dice n={pb.view.dice[1]} tilt={pb.rolling ? (pb.view.dice[1] * 53) % 50 - 25 : 0} />
         </div>
       )}
       <p className="line-clamp-3 max-w-[90%] text-center text-[clamp(8px,1.6vw,13px)] leading-snug opacity-90" aria-hidden>{recent[0]?.text}</p>
@@ -236,7 +247,7 @@ export function Table({ state, controls, onAction, busy = false, status, toolbar
   return (
     <div className="flex flex-col gap-3 lg:flex-row lg:items-start">
       <div className="mx-auto w-full max-w-[min(100%,46rem)] lg:flex-1">
-        <Board state={state} pickable={pickable} selected={selected} onTile={tap} center={center} />
+        <Board state={pb.view} pickable={pickable} selected={selected} onTile={tap} center={center} />
       </div>
       <div className="flex w-full flex-col gap-3 lg:w-80 lg:shrink-0">
         <section className="ui-frame-inset flex flex-col gap-2 p-3" aria-label="Lượt hiện tại">
@@ -245,7 +256,7 @@ export function Table({ state, controls, onAction, busy = false, status, toolbar
           {buttons && <div className="flex flex-wrap gap-2">{buttons}</div>}
           {selected !== null && <TileInfo state={state} tile={selected} />}
         </section>
-        <PlayersPanel state={state} me={me} />
+        <PlayersPanel state={pb.view} me={me} />
         {toolbar && <div className="flex flex-wrap gap-2" role="toolbar" aria-label="Thao tác">{toolbar}</div>}
         <section className="ui-frame-inset p-3" aria-label="Nhật ký ván">
           <h2 className="mb-1 text-caption font-semibold text-frame-gold">Nhật ký</h2>
@@ -271,7 +282,7 @@ export function PlayersPanel({ state, me }: { state: DtkState; me?: number }) {
           <li
             key={i}
             className={cn("ui-frame-inset flex items-center gap-2 p-2", active && "ring-2 ring-frame-gold", pl.out && "opacity-50", me === i && "font-semibold")}
-            style={{ borderLeft: `4px solid ${ELEMENT_COLOR[pl.element]}` }}
+            style={{ borderLeft: `4px solid ${colorHex(colorOf(state, i))}` }}
           >
             {info ? <Portrait id={pl.bot!} element={info.element} profession={info.profession} className="size-8 shrink-0" /> : <Token seat={i} state={state} className="!size-8 !text-sm" />}
             <div className="min-w-0 flex-1">
@@ -282,7 +293,7 @@ export function PlayersPanel({ state, me }: { state: DtkState; me?: number }) {
                 {pl.blessing ? ", có phúc" : ""}
               </p>
             </div>
-            <span className="text-caption text-on-wood-soft">{ELEMENT_NAME[pl.element]}</span>
+            <span className="text-caption text-on-wood-soft">{ELEMENT_NAME[pl.element]}, {DTK_COLORS.find((c) => c.id === colorOf(state, i))!.name.toLowerCase()}</span>
           </li>
         );
       })}

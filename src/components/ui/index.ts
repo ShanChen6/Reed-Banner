@@ -6,3 +6,4 @@ export * from "./alert";
 export * from "./badge";
 export * from "./divider";
 export * from "./choice";
+export * from "./icons";
