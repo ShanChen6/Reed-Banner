@@ -95,4 +95,6 @@ Chạy thử 300 ván mỗi cỡ (máy với máy, có thắng ngay, máy gặp 
 
 ## 10. Hình
 
-Bàn, ô, nhà và xúc xắc đang vẽ bằng code. Chờ Shan vẽ: tranh thẻ `public/art/home/dien-trang-ky.webp`, banner, biểu tượng ô riêng, nhà năm bậc theo bảy hệ. Prompt ở `/mnt/project-files/art/prompts/dien-trang-ky.md`.
+Nhà năm bậc × bảy hệ đã có tranh (28/11): `public/art/dien-trang-ky/house/<bậc>-<hệ>.webp` cộng lớp mặt nạ `-mask.webp` tách từ vùng #ff00ff, game tô mặt nạ bằng màu ghế. Bộ hệ Thủy chỉ có cờ màu #ff00ff (mái ngói đỏ), nên nhà Thủy chỉ đổi màu cờ; Mộc bậc 3 và 4 cũng mái đỏ một phần. Prompt nhà ở `/mnt/project-files/art/prompts/dien-trang-ky-nha.md`.
+
+Bàn, ô và xúc xắc vẫn vẽ bằng code. Chờ Shan vẽ: tranh thẻ `public/art/home/dien-trang-ky.webp`, banner, biểu tượng ô riêng. Prompt ở `/mnt/project-files/art/prompts/dien-trang-ky.md`.

@@ -1,7 +1,7 @@
 "use client";
 
 // Bàn 40 ô của Điền Trang Ký trên lưới 11×11: Hoa Lư ở góc dưới phải, đi ngược chiều kim đồng hồ. Mỗi ô đất có dải màu
-// vùng, viền và nền theo hệ chủ đất, nhà năm bậc (House.tsx). Giữa bàn là xúc xắc và dòng nhật ký mới nhất.
+// vùng, viền và nền theo hệ chủ đất, nhà năm bậc theo tranh (House.tsx). Giữa bàn là xúc xắc và dòng nhật ký mới nhất.
 // Hình vẽ bằng code, chờ tranh Shan vẽ (prompt ở /mnt/project-files/art/prompts/dien-trang-ky.md).
 
 import type { ReactNode } from "react";
@@ -138,7 +138,7 @@ export function Board({ state, pickable, selected, onTile, center }: BoardProps)
               <>
                 <span aria-hidden className="h-[14%] w-full shrink-0" style={{ background: REGION_COLOR[t.region] }} />
                 <span className="line-clamp-2 px-px text-[clamp(5px,1.05vw,10px)] font-semibold">{t.name}</span>
-                {plot && plot.level > 0 && owner ? <House level={plot.level} element={owner.element} color={tint!} className="h-[34%] w-auto" /> : <span className="text-[clamp(5px,0.95vw,9px)] opacity-75">{t.price}</span>}
+                {plot && plot.level > 0 && owner ? <House level={plot.level} element={owner.element} color={tint!} className="h-[46%] w-auto" /> : <span className="text-[clamp(5px,0.95vw,9px)] opacity-75">{t.price}</span>}
               </>
             ) : t.kind === "scenic" ? (
               <>
