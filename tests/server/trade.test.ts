@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
-import { TRADE_BOT_MAX, TRADE_BOT_OWNERS, TRADE_ITEM_IDS, TRADE_START_MONEY, initialMarket, marketKey, neighbors, tradeBotName, tradeSlot, type TradeItemId, type TradeNodeId } from "../../src/core/trade";
+import { TRADE_BOT_MAX, TRADE_BOT_OWNERS, TRADE_MASTER_ID, TRADE_ITEM_IDS, TRADE_START_MONEY, initialMarket, marketKey, neighbors, tradeBotName, tradeSlot, type TradeItemId, type TradeNodeId } from "../../src/core/trade";
 import { seasonSource } from "../../src/server/rankRewards";
 import { DrizzleTradeStore } from "../../src/server/db/trade";
 import type { Db } from "../../src/server/db/store";
@@ -227,7 +227,8 @@ describe("thương đoàn máy trên server", () => {
     const v0 = view(await tradeGet("a", h.deps()));
     const season = tradeSeason(T0);
     const bots = await h.store.players(season, TRADE_BOT_OWNERS);
-    const [owner, bot] = [...bots].find(([, b]) => b.leg && Object.keys(b.cargo).length > 0 && b.leg.from === v0.player.node)!;
+    // Đoàn thường (cấp 1 như "a"); đại thương gia đã nâng cấp nên đi nhanh hơn.
+    const [owner, bot] = [...bots].find(([o, b]) => o !== `bot:${TRADE_MASTER_ID}` && b.leg && Object.keys(b.cargo).length > 0 && b.leg.from === v0.player.node)!;
     h.at(T0 + MIN);
     view(await tradeDepart("a", bot.leg!.to, h.deps()));
     h.at(bot.leg!.arriveAt + MIN + 1000);

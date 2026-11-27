@@ -5,6 +5,7 @@ import {
   TRADE_BOT_MAX,
   TRADE_BOT_MIN,
   TRADE_BOT_OWNERS,
+  TRADE_MASTER_ID,
   TRADE_NODE_IDS,
   TRADE_START_MONEY,
   TRADE_STYLES,
@@ -13,6 +14,7 @@ import {
   botOffer,
   initialMarket,
   isTradeBot,
+  isTradeMaster,
   marketKey,
   neighbors,
   newTradePlayer,
@@ -45,6 +47,18 @@ function markets(): Record<TradeNodeId, MarketQuote[]> {
 const character = (personality: string) => BOT_CHARACTERS.find((c) => c.personality === personality)!;
 
 describe("thương đoàn máy Hành Thương Ký", () => {
+  it("đại thương gia: chở nhiều món vừa vốn và khoang, nâng cấp đoàn khi dư vốn", () => {
+    const m = markets();
+    const master = BOT_CHARACTERS.find(isTradeMaster)!;
+    const p = newTradePlayer(SEASON, 0, T0);
+    const plan = planTradeBot({ ...p, money: 4_000 }, master, m, T0, 1, 1)!;
+    assert.ok(plan.buys.length > 0);
+    const cost = plan.buys.reduce((s, b) => s + b.amount * m[p.node].find((q) => q.item === b.item)!.buy, 0);
+    assert.ok(cost <= 4_000);
+    assert.equal(plan.upgrade, undefined, "vốn chưa gấp ba giá nâng cấp thì chưa nâng");
+    assert.equal(planTradeBot({ ...p, money: 100_000 }, master, m, T0, 1, 1)!.upgrade, true);
+  });
+
   it("tên theo nhân vật: sứ quân ghi 'Sứ quân <tên>', không ghi máy; mã máy tách khỏi tài khoản", () => {
     assert.equal(tradeBotName("bot:tranLam"), "Sứ quân Trần Lãm");
     assert.equal(tradeBotName("bot:leHoan"), "Lê Hoàn");
@@ -63,6 +77,7 @@ describe("thương đoàn máy Hành Thương Ký", () => {
     const few = activeTradeBots(SEASON, 40).map((c) => c.id);
     const all = activeTradeBots(SEASON, 0).map((c) => c.id);
     assert.deepEqual(few, all.slice(0, few.length), "đông người thì đoàn cuối danh sách nghỉ trước");
+    assert.equal(few[0], TRADE_MASTER_ID, "đại thương gia luôn chạy");
   });
 
   it("chọn chuyến có lãi theo giá đang niêm yết, mua vừa vốn và khoang, đi sang điểm kề", () => {
@@ -72,18 +87,20 @@ describe("thương đoàn máy Hành Thương Ký", () => {
       const plan = planTradeBot(p, c, m, T0, 1, 7);
       assert.ok(plan, c.id);
       assert.ok(neighbors(p.node).includes(plan.to));
-      if (plan.item) {
-        const here = m[p.node].find((q) => q.item === plan.item)!;
-        const there = m[plan.to].find((q) => q.item === plan.item)!;
+      let cost = 0;
+      for (const b of plan.buys) {
+        const here = m[p.node].find((q) => q.item === b.item)!;
+        const there = m[plan.to].find((q) => q.item === b.item)!;
         assert.ok(there.sell > here.buy, `${c.id} phải chở hàng có lãi`);
-        assert.ok(plan.amount * here.buy <= p.money * TRADE_STYLES[c.personality].spend);
+        cost += b.amount * here.buy;
       }
+      assert.ok(cost <= p.money * (isTradeMaster(c) ? 1 : TRADE_STYLES[c.personality].spend));
     }
   });
 
   it("hết lộ phiếu hay chạm trần lãi theo ngày thì nghỉ", () => {
     const m = markets();
-    const c = BOT_CHARACTERS[0]!;
+    const c = BOT_CHARACTERS.find((x) => !isTradeMaster(x))!;
     const p = newTradePlayer(SEASON, 0, T0);
     assert.equal(planTradeBot({ ...p, passesUsed: 5 }, c, m, T0, 1, 1), null);
     const cap = tradeBotDailyCap(c);
@@ -92,6 +109,8 @@ describe("thương đoàn máy Hành Thương Ký", () => {
     assert.ok(tradeBotCapped(rich, c, T0));
     assert.equal(planTradeBot(rich, c, m, T0, 1, 1), null);
     assert.ok(!tradeBotCapped(rich, c, T0 + DAY), "sang ngày thứ hai thì trần nâng lên");
+    const master = BOT_CHARACTERS.find(isTradeMaster)!;
+    assert.ok(!tradeBotCapped({ ...rich, money: 1_000_000 }, master, T0), "đại thương gia không có trần");
   });
 
   it("lời ngỏ của đoàn máy bán món đắt nhất lấy kim tiền; trả lời theo lối buôn, không xin quá hàng hay túi tiền", () => {

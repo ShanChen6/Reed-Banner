@@ -8,10 +8,10 @@ import { createRng } from "../rng";
 import { companionById, WARLORD_COMPANIONS } from "../roster";
 import { DAY_MS, vnDay, vnDayStart } from "../vnTime";
 import { cargoWeight, TREASURE_PER_SLOT, tradeItem, type TradeItemId } from "./goods";
-import { neighbors, type TradeNodeId } from "./map";
-import { hashSeed, TRADE_SELL_RATIO, type MarketQuote } from "./market";
+import { neighbors, tradeEdge, type TradeNodeId } from "./map";
+import { hashSeed, stockCap, TRADE_SELL_RATIO, type MarketQuote } from "./market";
 import type { Bundle } from "./offers";
-import { capacityOf, passesLeft, tradeScore, type TradePlayer } from "./player";
+import { capacityOf, legMs, passesLeft, TRADE_LEVELS, TRADE_MAX_LEVEL, tradeScore, type TradePlayer } from "./player";
 
 /** Mã đoàn máy trong kho: `bot:<id nhân vật>`. */
 export const TRADE_BOT_PREFIX = "bot:";
@@ -45,8 +45,19 @@ export function activeTradeBots(season: string, humans: number): BotCharacter[] 
     const j = rng.int(0, i);
     [order[i], order[j]] = [order[j]!, order[i]!];
   }
-  return order.slice(0, tradeBotCount(humans));
+  // Đại thương gia luôn chạy, không bị đệm dân số cho nghỉ.
+  const picked = order.filter((c) => c.id !== TRADE_MASTER_ID).slice(0, tradeBotCount(humans) - 1);
+  const master = BOT_CHARACTERS.find((c) => c.id === TRADE_MASTER_ID);
+  return master ? [master, ...picked] : order.slice(0, tradeBotCount(humans));
 }
+
+/**
+ * Đại thương gia (Shan 27/11/2026: "một máy cực kỳ thông minh trong việc buôn bán"): Sứ quân Trần Lãm, chủ cửa biển Bố Hải.
+ * Không chịu trần tài, luôn chạy, nâng cấp đoàn hàng khi dư vốn, chở nhiều món cùng lúc và tính trước hai chặng theo lãi
+ * mỗi phút. Vẫn đúng luật như mọi người: cùng bảng giá, cùng kho chung, cùng lộ phiếu, không nhìn trước giá khung sau.
+ */
+export const TRADE_MASTER_ID = "tranLam";
+export const isTradeMaster = (c: Pick<BotCharacter, "id">) => c.id === TRADE_MASTER_ID;
 
 /**
  * Trần tài: lãi mùa của đoàn máy không vượt quá mức này (xê dịch theo nhân vật) nhân số ngày đã qua của mùa (tính cả hôm nay). Chạm trần thì
@@ -109,13 +120,13 @@ export const tradeBotDailyCap = (c: Pick<BotCharacter, "id">) => Math.round(TRAD
 /** Lãi mùa còn được phép tới hết hôm nay. */
 const capLeftOf = (p: TradePlayer, c: Pick<BotCharacter, "id">, now: number) => tradeBotDailyCap(c) * seasonDays(p.season, now) - tradeScore(p);
 
-export const tradeBotCapped = (p: TradePlayer, c: Pick<BotCharacter, "id">, now: number) => capLeftOf(p, c, now) <= 0;
+export const tradeBotCapped = (p: TradePlayer, c: Pick<BotCharacter, "id">, now: number) => !isTradeMaster(c) && capLeftOf(p, c, now) <= 0;
 
-/** Một chuyến đoàn máy định đi: mua `amount` món `item` ở đây (0 là đi không) rồi xuất hành tới `to`. */
+/** Một chuyến đoàn máy định đi: nâng cấp đoàn (nếu có), mua các món ở đây (rỗng là đi không) rồi xuất hành tới `to`. */
 export interface BotPlan {
   readonly to: TradeNodeId;
-  readonly item: TradeItemId | null;
-  readonly amount: number;
+  readonly buys: readonly { readonly item: TradeItemId; readonly amount: number }[];
+  readonly upgrade?: boolean;
 }
 
 /**
@@ -132,6 +143,7 @@ export function planTradeBot(
   seed: number,
 ): BotPlan | null {
   if (passesLeft(p, now, speed) <= 0 || tradeBotCapped(p, character, now)) return null;
+  if (isTradeMaster(character)) return planMaster(p, markets, now, speed);
   const style = TRADE_STYLES[character.personality];
   const rng = createRng(seed);
   const room = capacityOf(p) - cargoWeight(p.cargo);
@@ -150,15 +162,83 @@ export function planTradeBot(
       if (!there || there.full) continue;
       const margin = (there.sell - here.buy) / here.buy;
       if (margin < style.minMargin) continue;
-      const n = Math.min(amount, Math.max(1, Math.floor(capLeft / (there.sell - here.buy))));
+      const sellRoom = stockCap(here.item, to) - there.stock;
+      if (sellRoom <= 0) continue;
+      const n = Math.min(amount, sellRoom, Math.max(1, Math.floor(capLeft / (there.sell - here.buy))));
       const weight = (it.tier === "treasure" ? style.treasure : 1) * (there.rare ? style.rare : 1);
-      options.push({ plan: { to, item: here.item, amount: n }, score: margin * here.buy * n * weight });
+      options.push({ plan: { to, buys: [{ item: here.item, amount: n }] }, score: margin * here.buy * n * weight });
     }
   }
   options.sort((a, b) => b.score - a.score);
   if (options.length > 0) return options[rng.int(0, Math.min(style.pick, options.length) - 1)]!.plan;
   const ns = neighbors(p.node);
-  return ns.length > 0 ? { to: ns[rng.int(0, ns.length - 1)]!, item: null, amount: 0 } : null;
+  return ns.length > 0 ? { to: ns[rng.int(0, ns.length - 1)]!, buys: [] } : null;
+}
+
+type Markets = Readonly<Record<TradeNodeId, readonly MarketQuote[]>>;
+
+/** Xếp hàng chở từ `from` tới `to` để lãi nhất: món lãi nhất trên mỗi ô khoang trước, tới khi hết vốn hay hết khoang. */
+function fillCargo(markets: Markets, from: TradeNodeId, to: TradeNodeId, money: number, room: number): { buys: { item: TradeItemId; amount: number }[]; profit: number } {
+  const options = (markets[from] ?? []).flatMap((here) => {
+    const there = markets[to]?.find((q) => q.item === here.item);
+    if (!there || there.full || here.stock <= 0 || there.sell <= here.buy) return [];
+    const perSlot = tradeItem(here.item).tier === "treasure" ? TREASURE_PER_SLOT : 1;
+    const sellRoom = Math.max(0, stockCap(here.item, to) - there.stock);
+    return sellRoom > 0 ? [{ here, sellRoom, unit: there.sell - here.buy, perSlot, slotGain: (there.sell - here.buy) * perSlot }] : [];
+  });
+  options.sort((a, b) => b.slotGain - a.slotGain);
+  const buys: { item: TradeItemId; amount: number }[] = [];
+  let left = money;
+  let slots = room;
+  let profit = 0;
+  for (const o of options) {
+    if (slots <= 0 || left <= 0) break;
+    const n = Math.min(o.here.stock, o.sellRoom, Math.floor(left / o.here.buy), slots * o.perSlot);
+    if (n <= 0) continue;
+    buys.push({ item: o.here.item, amount: n });
+    left -= n * o.here.buy;
+    slots -= Math.ceil(n / o.perSlot);
+    profit += n * o.unit;
+  }
+  return { buys, profit };
+}
+
+const legMinutesOf = (from: TradeNodeId, to: TradeNodeId, level: number, speed: number) => {
+  const edge = tradeEdge(from, to);
+  return edge ? legMs(edge, level, speed) / 60_000 : Infinity;
+};
+
+/** Đại thương gia: nâng cấp khi dư vốn, chọn điểm tới theo lãi mỗi phút của chuyến này cộng chuyến kế tốt nhất từ đó. */
+function planMaster(p: TradePlayer, markets: Markets, now: number, speed: number): BotPlan {
+  const next = TRADE_LEVELS[p.level];
+  const upgrade = p.level < TRADE_MAX_LEVEL && next !== undefined && p.money >= next.cost * 3;
+  const level = upgrade ? p.level + 1 : p.level;
+  const money = upgrade ? p.money - next!.cost : p.money;
+  const room = TRADE_LEVELS[level - 1]!.capacity - cargoWeight(p.cargo);
+  const twoLegs = passesLeft(p, now, speed) >= 2;
+  // Chuyến cuối của ngày cuối mùa thì đi không: hàng còn trong khoang lúc khép mùa không tính lãi.
+  const lastLeg = seasonDays(p.season, now) >= 7 && !twoLegs;
+  let best: { plan: BotPlan; rate: number } | null = null;
+  for (const to of neighbors(p.node)) {
+    const first = lastLeg ? { buys: [], profit: 0 } : fillCargo(markets, p.node, to, money, room);
+    const t1 = legMinutesOf(p.node, to, level, speed);
+    let follow = 0;
+    let t2 = 0;
+    if (twoLegs) {
+      for (const after of neighbors(to)) {
+        const second = fillCargo(markets, to, after, money + first.profit, TRADE_LEVELS[level - 1]!.capacity);
+        const t = legMinutesOf(to, after, level, speed);
+        if (second.profit / t > follow / Math.max(1, t2)) {
+          follow = second.profit;
+          t2 = t;
+        }
+      }
+    }
+    // Chuyến kế tính 80% vì giá khung sau có thể đổi.
+    const rate = (first.profit + 0.8 * follow) / (t1 + t2);
+    if (!best || rate > best.rate) best = { plan: { to, buys: first.buys, ...(upgrade ? { upgrade: true } : {}) }, rate };
+  }
+  return best?.plan ?? { to: neighbors(p.node)[0]!, buys: [] };
 }
 
 /** Giá tham chiếu một món ở một chợ theo bảng giá khung hiện tại; null khi chợ đó không bày. */

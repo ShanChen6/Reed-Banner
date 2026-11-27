@@ -797,8 +797,9 @@ async function stepBot(owner: string, c: NonNullable<ReturnType<typeof tradeBotC
   // Bán sạch hàng đang chở ở chợ này (món chợ không bày hay đã ứ thì chở tiếp).
   for (const [item, n] of Object.entries(p.cargo) as [TradeItemId, number][]) {
     const q = markets[p.node]?.find((x) => x.item === item);
-    if (!q || q.full || n <= 0) continue;
-    const r = await sellCore(owner, item, n, deps);
+    const room = q ? stockCap(item, p.node) - q.stock : 0;
+    if (!q || q.full || n <= 0 || room <= 0) continue;
+    const r = await sellCore(owner, item, Math.min(n, room), deps);
     if (r.ok) {
       p = r.player;
       traded = true;
@@ -806,7 +807,8 @@ async function stepBot(owner: string, c: NonNullable<ReturnType<typeof tradeBotC
   }
   const plan = planTradeBot(p, c, markets, deps.now, normalSpeed(deps.speed), Math.floor(deps.random() * 0x7fffffff));
   if (!plan) return traded;
-  if (plan.item && plan.amount > 0 && (await buyCore(owner, plan.item, plan.amount, deps)).ok) traded = true;
+  if (plan.upgrade) await mutatePlayer(owner, deps, (x) => upgrade(x, deps.now));
+  for (const b of plan.buys) if ((await buyCore(owner, b.item, b.amount, deps)).ok) traded = true;
   await departCore(owner, plan.to, deps);
   return traded;
 }
