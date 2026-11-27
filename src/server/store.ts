@@ -19,9 +19,11 @@ import { DrizzlePvpStore } from "./db/pvp";
 import { MemoryPvpStore, type PvpStore } from "./pvp";
 import { DrizzleTqkStore } from "./db/tamQuanKy";
 import { DrizzleGoStore } from "./db/coVay";
+import { DrizzleDtkStore } from "./db/dienTrangKy";
 import { DrizzleTradeStore } from "./db/trade";
 import { MemoryTradeStore, type TradeStore } from "./trade";
 import { MemoryGoStore, type GoStore } from "./coVay";
+import { MemoryDtkStore, type DtkStore } from "./dienTrangKy";
 import { MemoryTqkStore, type TqkStore } from "./tamQuanKy";
 import { MemoryArenaStore, type ArenaStore } from "./arena";
 import { MemoryLeaderboardStore, type LeaderboardStore } from "./leaderboard";
@@ -86,7 +88,7 @@ export class MemoryMatchStore implements MatchStore {
   }
 }
 
-const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauPvpStore?: PvpStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore; coLauFormationStore?: FormationStore; coLauRankRewardStore?: RankRewardStore; coLauSeasonStore?: SeasonStore; coLauTqkStore?: TqkStore; coLauGoStore?: GoStore; coLauTradeStore?: TradeStore };
+const globalStore = globalThis as unknown as { coLauMatchStore?: MatchStore; coLauPvpStore?: PvpStore; coLauAccountStore?: AccountStore; coLauProfileStore?: ProfileStore; coLauDailyStore?: DailyStore; coLauLeaderboardStore?: LeaderboardStore; coLauDestinyLeaderboardStore?: DestinyLeaderboardStore; coLauArenaStore?: ArenaStore; coLauFormationStore?: FormationStore; coLauRankRewardStore?: RankRewardStore; coLauSeasonStore?: SeasonStore; coLauTqkStore?: TqkStore; coLauGoStore?: GoStore; coLauTradeStore?: TradeStore; coLauDtkStore?: DtkStore };
 
 /**
  * Kho dùng chung của server: Postgres (Neon) khi có DATABASE_URL, ngược lại lưu trong bộ nhớ (dev).
@@ -215,4 +217,11 @@ export function tradeStore(): TradeStore {
   const url = process.env.DATABASE_URL;
   globalStore.coLauTradeStore ??= url ? new DrizzleTradeStore(neonDb(url)) : new MemoryTradeStore();
   return globalStore.coLauTradeStore;
+}
+
+/** Kho ván Điền Trang Ký (đấu sứ quân, phòng mã), cùng nguồn với kho trận. */
+export function dtkStore(): DtkStore {
+  const url = process.env.DATABASE_URL;
+  globalStore.coLauDtkStore ??= url ? new DrizzleDtkStore(neonDb(url)) : new MemoryDtkStore();
+  return globalStore.coLauDtkStore;
 }

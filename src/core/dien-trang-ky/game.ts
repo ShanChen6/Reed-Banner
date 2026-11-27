@@ -1,0 +1,634 @@
+// Luật Điền Trang Ký: trạng thái ván và các lệnh. Thuần, xác định theo seed (src/core/rng.ts): server làm trọng tài cho
+// đấu sứ quân có thưởng và đấu người bằng mã phòng, trình duyệt dùng cùng mã cho ván cùng máy.
+// Một lượt: đổ hai xúc xắc → đi → xử ô dừng (mua, xây, nộp tô hoặc mua lại, quẻ, thuế…) → hết lượt. Đổ ra đôi được đổ
+// thêm một lần (tối đa một). Thiếu tiền thì bán đất lại cho triều đình nửa giá; bán hết vẫn thiếu thì phá sản, đất về trống.
+// Chơi tới khi chỉ còn một người.
+
+import type { Element } from "../battle/elements";
+import { createRng } from "../rng";
+import {
+  BOARD_SIZE,
+  BOAT_FARE,
+  BUYOUT_RATE,
+  FESTIVAL_RATE,
+  HOLD_RATE,
+  MAX_LEVEL,
+  MAX_LEVEL_ON_BUY,
+  POLL_MIN,
+  POLL_RATE,
+  REGION_TILES,
+  RELAY_TILES,
+  RENT_RATE,
+  SALARY,
+  SELL_RATE,
+  START_CASH,
+  TILES,
+  TRIBUTE_BASE,
+  TRIBUTE_PER_LEVEL,
+  buildCost,
+  tileValue,
+} from "./board";
+import { OMENS } from "./omens";
+
+export const MIN_PLAYERS = 2;
+export const MAX_PLAYERS = 4;
+/** Chốt an toàn: quá chừng này lượt (hiếm khi tới) thì ván dừng, xếp hạng theo tài sản. */
+export const MAX_TURNS = 1600;
+const LOG_KEEP = 60;
+
+export interface Seat {
+  readonly name: string;
+  /** Hệ của người chơi: kiểu dáng và màu nhà, không đổi luật. */
+  readonly element: Element;
+  /** Id sứ quân khi máy cầm ghế này; null là người. */
+  readonly bot: string | null;
+}
+
+export interface Player extends Seat {
+  cash: number;
+  pos: number;
+  out: boolean;
+  /** Mất lượt kế tiếp (Đường lầy, quẻ sa lầy). */
+  skip: boolean;
+  /** Phúc Miếu Thổ Thần: lần nộp tô kế tiếp được miễn. */
+  blessing: boolean;
+}
+
+export interface Plot {
+  owner: number | null;
+  level: number;
+}
+
+export interface Payee {
+  readonly seat: number;
+  readonly amount: number;
+}
+
+export type Phase =
+  | { readonly k: "roll" }
+  | { readonly k: "buy"; readonly tile: number }
+  | { readonly k: "build"; readonly tile: number }
+  | { readonly k: "rent"; readonly tile: number; readonly owner: number; readonly amount: number; readonly buyout: number }
+  | { readonly k: "pick"; readonly what: "market" | "boat" | "festival" }
+  | { readonly k: "relay"; readonly to: number }
+  | { readonly k: "raise"; readonly amount: number; readonly payees: readonly Payee[] }
+  | { readonly k: "ended" };
+
+export type DtkEventBody =
+  | { readonly k: "roll"; readonly dice: readonly [number, number] }
+  | { readonly k: "move"; readonly from: number; readonly to: number; readonly back?: boolean }
+  | { readonly k: "salary"; readonly amount: number }
+  | { readonly k: "buy"; readonly tile: number; readonly level: number; readonly cost: number }
+  | { readonly k: "build"; readonly tile: number; readonly level: number; readonly cost: number }
+  | { readonly k: "rent"; readonly tile: number; readonly owner: number; readonly amount: number }
+  | { readonly k: "blessUsed"; readonly tile: number; readonly owner: number }
+  | { readonly k: "buyout"; readonly tile: number; readonly from: number; readonly cost: number }
+  | { readonly k: "omen"; readonly omen: string }
+  | { readonly k: "pay"; readonly amount: number; readonly reason: "poll" | "tribute" | "omen" | "boat" | "each" }
+  | { readonly k: "gain"; readonly amount: number; readonly reason: "omen" | "each" }
+  | { readonly k: "sell"; readonly tile: number; readonly amount: number }
+  | { readonly k: "out"; readonly by: number | null; readonly resign?: boolean }
+  | { readonly k: "skipTurn" }
+  | { readonly k: "mire" }
+  | { readonly k: "blessing" }
+  | { readonly k: "festival"; readonly tile: number }
+  | { readonly k: "ride"; readonly to: number }
+  | { readonly k: "freeBuild"; readonly tile: number; readonly level: number }
+  | { readonly k: "extra" }
+  | { readonly k: "end"; readonly ranking: readonly number[] };
+
+export type DtkEvent = { readonly n: number; readonly seat: number } & DtkEventBody;
+
+export interface DtkState {
+  readonly v: 1;
+  players: Player[];
+  /** Theo ô; null với ô không phải đất. */
+  plots: (Plot | null)[];
+  /** Ghế đang đi (cũng là ghế phải ra lệnh). */
+  turn: number;
+  phase: Phase;
+  rng: number;
+  /** Thứ tự quẻ đã xếp, rút vòng từ `deckAt`. */
+  deck: number[];
+  deckAt: number;
+  /** Ô đang mở Hội Cờ Lau. */
+  festival: number | null;
+  dice: [number, number] | null;
+  /** Lần đổ này ra đôi (được đổ thêm nếu chưa dùng). */
+  doubles: boolean;
+  extraUsed: boolean;
+  /** Số lượt đã qua (mọi người cộng lại). */
+  turns: number;
+  /** Thứ tự bị loại, sớm trước. */
+  outOrder: number[];
+  /** Xếp hạng khi xong ván (hạng nhất trước). */
+  ranking: number[] | null;
+  log: DtkEvent[];
+  evSeq: number;
+}
+
+export type DtkAction =
+  | { readonly t: "roll" }
+  | { readonly t: "buy"; readonly level: number }
+  | { readonly t: "build"; readonly level: number }
+  | { readonly t: "pay" }
+  | { readonly t: "buyout" }
+  | { readonly t: "pick"; readonly tile: number }
+  | { readonly t: "ride" }
+  | { readonly t: "sell"; readonly tile: number }
+  | { readonly t: "skip" }
+  | { readonly t: "bankrupt" };
+
+export type DtkError = "ended" | "notYourTurn" | "illegal";
+export type DtkResult = { readonly ok: true; readonly state: DtkState } | { readonly ok: false; readonly error: DtkError };
+
+const clone = (s: DtkState): DtkState => JSON.parse(JSON.stringify(s)) as DtkState;
+
+function emit(d: DtkState, seat: number, e: DtkEventBody): void {
+  d.evSeq += 1;
+  d.log.push({ ...e, n: d.evSeq, seat } as DtkEvent);
+  if (d.log.length > LOG_KEEP) d.log.splice(0, d.log.length - LOG_KEEP);
+}
+
+function draw(d: DtkState, max: number): number {
+  const rng = createRng(d.rng);
+  const v = rng.int(1, max);
+  d.rng = rng.state();
+  return v;
+}
+
+export function newDtk(opts: { seats: readonly Seat[]; seed: number }): DtkState {
+  if (opts.seats.length < MIN_PLAYERS || opts.seats.length > MAX_PLAYERS) throw new RangeError("Điền Trang Ký cần 2 đến 4 người.");
+  const rng = createRng(opts.seed >>> 0 || 1);
+  const deck = OMENS.map((_, i) => i);
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = rng.int(0, i);
+    [deck[i], deck[j]] = [deck[j]!, deck[i]!];
+  }
+  return {
+    v: 1,
+    players: opts.seats.map((s) => ({ name: s.name, element: s.element, bot: s.bot, cash: START_CASH, pos: 0, out: false, skip: false, blessing: false })),
+    plots: TILES.map((t) => (t.kind === "land" ? { owner: null, level: 0 } : null)),
+    turn: 0,
+    phase: { k: "roll" },
+    rng: rng.state(),
+    deck,
+    deckAt: 0,
+    festival: null,
+    dice: null,
+    doubles: false,
+    extraUsed: false,
+    turns: 0,
+    outOrder: [],
+    ranking: null,
+    log: [],
+    evSeq: 0,
+  };
+}
+
+// ---------- tra cứu ----------
+
+export const priceOf = (tile: number): number => {
+  const t = TILES[tile];
+  return t?.kind === "land" ? t.price : 0;
+};
+
+/** Giữ đủ mọi ô của vùng chứa ô này. */
+export function holdsRegion(s: DtkState, tile: number, owner: number): boolean {
+  const t = TILES[tile];
+  if (t?.kind !== "land") return false;
+  return REGION_TILES[t.region]!.every((i) => s.plots[i]?.owner === owner);
+}
+
+export function rentOf(s: DtkState, tile: number): number {
+  const plot = s.plots[tile];
+  if (!plot || plot.owner === null) return 0;
+  let r = priceOf(tile) * RENT_RATE[plot.level]!;
+  if (holdsRegion(s, tile, plot.owner)) r *= HOLD_RATE;
+  if (s.festival === tile) r *= FESTIVAL_RATE;
+  return Math.round(r);
+}
+
+export const valueOf = (s: DtkState, tile: number): number => {
+  const plot = s.plots[tile];
+  return plot && plot.owner !== null ? tileValue(priceOf(tile), plot.level) : 0;
+};
+
+export const buyoutOf = (s: DtkState, tile: number): number => Math.round(valueOf(s, tile) * BUYOUT_RATE);
+export const sellOf = (s: DtkState, tile: number): number => Math.floor(valueOf(s, tile) * SELL_RATE);
+
+/** Tiền để đưa ô từ bậc `from` lên bậc `to` (không tính giá đất). */
+export function buildCostBetween(tile: number, from: number, to: number): number {
+  let c = 0;
+  for (let l = from + 1; l <= to; l++) c += buildCost(priceOf(tile), l);
+  return c;
+}
+
+/** Bậc cao nhất được xây tới trên ô của mình: 4, hoặc 5 khi hùng cứ. */
+export const levelCap = (s: DtkState, tile: number, owner: number): number => (holdsRegion(s, tile, owner) ? MAX_LEVEL : MAX_LEVEL - 1);
+
+export const ownedTiles = (s: DtkState, seat: number): number[] => s.plots.flatMap((p, i) => (p?.owner === seat ? [i] : []));
+
+export const totalLevels = (s: DtkState, seat: number): number => ownedTiles(s, seat).reduce((n, i) => n + s.plots[i]!.level, 0);
+
+export const assetsOf = (s: DtkState, seat: number): number => s.players[seat]!.cash + ownedTiles(s, seat).reduce((n, i) => n + valueOf(s, i), 0);
+
+const sellableOf = (s: DtkState, seat: number): number => ownedTiles(s, seat).reduce((n, i) => n + sellOf(s, i), 0);
+
+export const aliveSeats = (s: DtkState): number[] => s.players.flatMap((p, i) => (p.out ? [] : [i]));
+
+export const freeLands = (s: DtkState): number[] => s.plots.flatMap((p, i) => (p && p.owner === null ? [i] : []));
+
+// ---------- diễn biến ----------
+
+function finish(d: DtkState): void {
+  const alive = aliveSeats(d).sort((a, b) => assetsOf(d, b) - assetsOf(d, a) || a - b);
+  d.ranking = [...alive, ...[...d.outOrder].reverse()];
+  d.phase = { k: "ended" };
+  emit(d, alive[0] ?? 0, { k: "end", ranking: d.ranking });
+}
+
+function advance(d: DtkState): void {
+  d.doubles = false;
+  d.extraUsed = false;
+  for (let guard = 0; guard < MAX_PLAYERS * 2; guard++) {
+    d.turn = (d.turn + 1) % d.players.length;
+    const p = d.players[d.turn]!;
+    if (p.out) continue;
+    d.turns += 1;
+    if (p.skip) {
+      p.skip = false;
+      emit(d, d.turn, { k: "skipTurn" });
+      continue;
+    }
+    break;
+  }
+  d.phase = { k: "roll" };
+  if (d.turns >= MAX_TURNS) finish(d);
+}
+
+function endTurn(d: DtkState): void {
+  if (d.phase.k === "ended") return;
+  const p = d.players[d.turn]!;
+  if (aliveSeats(d).length <= 1) return finish(d);
+  if (!p.out && d.doubles && !d.extraUsed && !p.skip) {
+    d.extraUsed = true;
+    d.doubles = false;
+    d.phase = { k: "roll" };
+    emit(d, d.turn, { k: "extra" });
+    return;
+  }
+  advance(d);
+}
+
+function bankrupt(d: DtkState, seat: number, creditor: number | null, resign = false): void {
+  const p = d.players[seat]!;
+  if (p.out) return;
+  if (creditor !== null && p.cash > 0) d.players[creditor]!.cash += p.cash;
+  p.cash = 0;
+  for (const i of ownedTiles(d, seat)) {
+    d.plots[i] = { owner: null, level: 0 };
+    if (d.festival === i) d.festival = null;
+  }
+  p.out = true;
+  p.skip = false;
+  p.blessing = false;
+  d.outOrder.push(seat);
+  emit(d, seat, { k: "out", by: creditor, ...(resign ? { resign: true } : {}) });
+  if (aliveSeats(d).length <= 1) return finish(d);
+  if (d.turn === seat) return advance(d);
+  // Người rời ván lúc người khác đang đi: bỏ khoản phải trả cho người đó.
+  const ph = d.phase;
+  if (ph.k === "rent" && ph.owner === seat) return endTurn(d);
+  if (ph.k === "raise" && ph.payees.some((x) => x.seat === seat)) {
+    const payees = ph.payees.filter((x) => x.seat !== seat);
+    const amount = payees.reduce((n, x) => n + x.amount, 0);
+    if (amount <= 0) return endTurn(d);
+    charge(d, d.turn, amount, payees);
+  }
+}
+
+function settle(d: DtkState, seat: number, payees: readonly Payee[]): void {
+  for (const pay of payees) d.players[pay.seat]!.cash += pay.amount;
+  const total = payees.reduce((n, x) => n + x.amount, 0);
+  d.players[seat]!.cash -= total;
+}
+
+/** Thu một khoản của người đang đi; đủ tiền thì trả rồi hết lượt, thiếu thì vào bước bán đất hoặc phá sản. */
+function charge(d: DtkState, seat: number, amount: number, payees: readonly Payee[]): void {
+  const p = d.players[seat]!;
+  if (amount <= 0) return endTurn(d);
+  if (p.cash >= amount) {
+    if (payees.length) settle(d, seat, payees);
+    else p.cash -= amount;
+    return endTurn(d);
+  }
+  if (p.cash + sellableOf(d, seat) < amount) return bankrupt(d, seat, payees[0]?.seat ?? null);
+  d.phase = { k: "raise", amount, payees };
+}
+
+function moveTo(d: DtkState, seat: number, to: number, forward: boolean): void {
+  const p = d.players[seat]!;
+  const from = p.pos;
+  if (forward && (to < from || (to === 0 && from !== 0))) {
+    p.cash += SALARY;
+    emit(d, seat, { k: "salary", amount: SALARY });
+  }
+  p.pos = to;
+  emit(d, seat, { k: "move", from, to, ...(forward ? {} : { back: true }) });
+}
+
+function land(d: DtkState, seat: number): void {
+  const p = d.players[seat]!;
+  const tile = TILES[p.pos]!;
+  switch (tile.kind) {
+    case "land": {
+      const plot = d.plots[p.pos]!;
+      if (plot.owner === null) {
+        if (p.cash >= tile.price) d.phase = { k: "buy", tile: p.pos };
+        else endTurn(d);
+        return;
+      }
+      if (plot.owner === seat) {
+        const cap = levelCap(d, p.pos, seat);
+        if (plot.level < cap && p.cash >= buildCostBetween(p.pos, plot.level, plot.level + 1)) d.phase = { k: "build", tile: p.pos };
+        else endTurn(d);
+        return;
+      }
+      if (p.blessing) {
+        p.blessing = false;
+        emit(d, seat, { k: "blessUsed", tile: p.pos, owner: plot.owner });
+        return endTurn(d);
+      }
+      const amount = rentOf(d, p.pos);
+      const buyout = buyoutOf(d, p.pos);
+      if (plot.level < MAX_LEVEL && p.cash >= buyout) {
+        d.phase = { k: "rent", tile: p.pos, owner: plot.owner, amount, buyout };
+        return;
+      }
+      emit(d, seat, { k: "rent", tile: p.pos, owner: plot.owner, amount });
+      return charge(d, seat, amount, [{ seat: plot.owner, amount }]);
+    }
+    case "start":
+      return endTurn(d);
+    case "boat":
+      if (p.cash >= BOAT_FARE) d.phase = { k: "pick", what: "boat" };
+      else endTurn(d);
+      return;
+    case "festival":
+      if (ownedTiles(d, seat).length) d.phase = { k: "pick", what: "festival" };
+      else endTurn(d);
+      return;
+    case "shrine":
+      p.blessing = true;
+      emit(d, seat, { k: "blessing" });
+      return endTurn(d);
+    case "omen":
+      return drawOmen(d, seat);
+    case "poll": {
+      const amount = Math.max(POLL_MIN, Math.round(p.cash * POLL_RATE));
+      emit(d, seat, { k: "pay", amount, reason: "poll" });
+      return charge(d, seat, amount, []);
+    }
+    case "tribute": {
+      const amount = TRIBUTE_BASE + TRIBUTE_PER_LEVEL * totalLevels(d, seat);
+      emit(d, seat, { k: "pay", amount, reason: "tribute" });
+      return charge(d, seat, amount, []);
+    }
+    case "relay":
+      d.phase = { k: "relay", to: RELAY_TILES.find((i) => i !== p.pos)! };
+      return;
+    case "market": {
+      const free = freeLands(d);
+      if (free.some((i) => priceOf(i) <= p.cash)) d.phase = { k: "pick", what: "market" };
+      else endTurn(d);
+      return;
+    }
+    case "mire":
+      p.skip = true;
+      emit(d, seat, { k: "mire" });
+      return endTurn(d);
+  }
+}
+
+function drawOmen(d: DtkState, seat: number): void {
+  const omen = OMENS[d.deck[d.deckAt % d.deck.length]!]!;
+  d.deckAt = (d.deckAt + 1) % d.deck.length;
+  emit(d, seat, { k: "omen", omen: omen.id });
+  const p = d.players[seat]!;
+  const e = omen.effect;
+  switch (e.k) {
+    case "gain":
+      p.cash += e.amount;
+      emit(d, seat, { k: "gain", amount: e.amount, reason: "omen" });
+      return endTurn(d);
+    case "lose":
+      emit(d, seat, { k: "pay", amount: e.amount, reason: "omen" });
+      return charge(d, seat, e.amount, []);
+    case "loseRate": {
+      const amount = Math.round(p.cash * e.rate);
+      emit(d, seat, { k: "pay", amount, reason: "omen" });
+      return charge(d, seat, amount, []);
+    }
+    case "repair": {
+      const amount = e.perLevel * totalLevels(d, seat);
+      if (amount > 0) emit(d, seat, { k: "pay", amount, reason: "omen" });
+      return charge(d, seat, amount, []);
+    }
+    case "payEach": {
+      const payees = aliveSeats(d).filter((i) => i !== seat).map((i) => ({ seat: i, amount: e.amount }));
+      const amount = payees.reduce((n, x) => n + x.amount, 0);
+      emit(d, seat, { k: "pay", amount, reason: "each" });
+      return charge(d, seat, amount, payees);
+    }
+    case "collectEach": {
+      let got = 0;
+      for (const i of aliveSeats(d)) {
+        if (i === seat) continue;
+        const take = Math.min(e.amount, d.players[i]!.cash);
+        d.players[i]!.cash -= take;
+        got += take;
+      }
+      p.cash += got;
+      emit(d, seat, { k: "gain", amount: got, reason: "each" });
+      return endTurn(d);
+    }
+    case "goto":
+      moveTo(d, seat, e.tile, true);
+      return land(d, seat);
+    case "step": {
+      const to = (p.pos + e.by + BOARD_SIZE) % BOARD_SIZE;
+      moveTo(d, seat, to, e.by > 0);
+      return land(d, seat);
+    }
+    case "nearestFree": {
+      for (let k = 1; k < BOARD_SIZE; k++) {
+        const i = (p.pos + k) % BOARD_SIZE;
+        if (d.plots[i] && d.plots[i]!.owner === null) {
+          moveTo(d, seat, i, true);
+          return land(d, seat);
+        }
+      }
+      return endTurn(d);
+    }
+    case "blessing":
+      p.blessing = true;
+      emit(d, seat, { k: "blessing" });
+      return endTurn(d);
+    case "mire":
+      p.skip = true;
+      emit(d, seat, { k: "mire" });
+      return endTurn(d);
+    case "freeBuild": {
+      const mine = ownedTiles(d, seat).filter((i) => d.plots[i]!.level < MAX_LEVEL - 1);
+      if (mine.length) {
+        const i = mine.reduce((a, b) => (d.plots[b]!.level < d.plots[a]!.level ? b : a));
+        d.plots[i]!.level += 1;
+        emit(d, seat, { k: "freeBuild", tile: i, level: d.plots[i]!.level });
+      }
+      return endTurn(d);
+    }
+  }
+}
+
+function roll(d: DtkState, seat: number): void {
+  const a = draw(d, 6);
+  const b = draw(d, 6);
+  d.dice = [a, b];
+  d.doubles = a === b && !d.extraUsed;
+  emit(d, seat, { k: "roll", dice: [a, b] });
+  const p = d.players[seat]!;
+  moveTo(d, seat, (p.pos + a + b) % BOARD_SIZE, true);
+  land(d, seat);
+}
+
+/** Một lệnh của ghế `seat`. Trả trạng thái mới; trạng thái cũ không đổi. */
+export function act(s: DtkState, seat: number, a: DtkAction): DtkResult {
+  if (s.phase.k === "ended") return { ok: false, error: "ended" };
+  if (seat !== s.turn) return { ok: false, error: "notYourTurn" };
+  const d = clone(s);
+  const p = d.players[seat]!;
+  const ph = d.phase;
+  const bad: DtkResult = { ok: false, error: "illegal" };
+  if (a.t === "bankrupt") {
+    if (ph.k !== "raise") return bad;
+    bankrupt(d, seat, ph.payees[0]?.seat ?? null);
+    return { ok: true, state: d };
+  }
+  switch (ph.k) {
+    case "roll":
+      if (a.t !== "roll") return bad;
+      roll(d, seat);
+      break;
+    case "buy": {
+      if (a.t === "skip") {
+        endTurn(d);
+        break;
+      }
+      if (a.t !== "buy" || !Number.isInteger(a.level) || a.level < 0 || a.level > MAX_LEVEL_ON_BUY) return bad;
+      const cost = priceOf(ph.tile) + buildCostBetween(ph.tile, 0, a.level);
+      if (p.cash < cost) return bad;
+      p.cash -= cost;
+      d.plots[ph.tile] = { owner: seat, level: a.level };
+      emit(d, seat, { k: "buy", tile: ph.tile, level: a.level, cost });
+      endTurn(d);
+      break;
+    }
+    case "build": {
+      if (a.t === "skip") {
+        endTurn(d);
+        break;
+      }
+      const plot = d.plots[ph.tile]!;
+      if (a.t !== "build" || !Number.isInteger(a.level) || a.level <= plot.level || a.level > levelCap(d, ph.tile, seat)) return bad;
+      const cost = buildCostBetween(ph.tile, plot.level, a.level);
+      if (p.cash < cost) return bad;
+      p.cash -= cost;
+      plot.level = a.level;
+      emit(d, seat, { k: "build", tile: ph.tile, level: a.level, cost });
+      endTurn(d);
+      break;
+    }
+    case "rent": {
+      if (a.t === "pay") {
+        emit(d, seat, { k: "rent", tile: ph.tile, owner: ph.owner, amount: ph.amount });
+        charge(d, seat, ph.amount, [{ seat: ph.owner, amount: ph.amount }]);
+        break;
+      }
+      if (a.t !== "buyout" || p.cash < ph.buyout) return bad;
+      settle(d, seat, [{ seat: ph.owner, amount: ph.buyout }]);
+      d.plots[ph.tile]!.owner = seat;
+      if (d.festival === ph.tile) d.festival = null;
+      emit(d, seat, { k: "buyout", tile: ph.tile, from: ph.owner, cost: ph.buyout });
+      const plot = d.plots[ph.tile]!;
+      if (plot.level < levelCap(d, ph.tile, seat) && p.cash >= buildCostBetween(ph.tile, plot.level, plot.level + 1)) d.phase = { k: "build", tile: ph.tile };
+      else endTurn(d);
+      break;
+    }
+    case "pick": {
+      if (a.t === "skip") {
+        endTurn(d);
+        break;
+      }
+      if (a.t !== "pick" || !Number.isInteger(a.tile) || a.tile < 0 || a.tile >= BOARD_SIZE) return bad;
+      if (ph.what === "market") {
+        const plot = d.plots[a.tile];
+        if (!plot || plot.owner !== null || p.cash < priceOf(a.tile)) return bad;
+        p.cash -= priceOf(a.tile);
+        d.plots[a.tile] = { owner: seat, level: 0 };
+        emit(d, seat, { k: "buy", tile: a.tile, level: 0, cost: priceOf(a.tile) });
+        endTurn(d);
+      } else if (ph.what === "festival") {
+        if (d.plots[a.tile]?.owner !== seat) return bad;
+        d.festival = a.tile;
+        emit(d, seat, { k: "festival", tile: a.tile });
+        endTurn(d);
+      } else {
+        if (a.tile === p.pos || p.cash < BOAT_FARE || TILES[a.tile]!.kind === "boat") return bad;
+        p.cash -= BOAT_FARE;
+        emit(d, seat, { k: "pay", amount: BOAT_FARE, reason: "boat" });
+        moveTo(d, seat, a.tile, true);
+        land(d, seat);
+      }
+      break;
+    }
+    case "relay":
+      if (a.t === "skip") {
+        endTurn(d);
+        break;
+      }
+      if (a.t !== "ride") return bad;
+      moveTo(d, seat, ph.to, true);
+      emit(d, seat, { k: "ride", to: ph.to });
+      endTurn(d);
+      break;
+    case "raise": {
+      if (a.t !== "sell" || d.plots[a.tile]?.owner !== seat) return bad;
+      const got = sellOf(d, a.tile);
+      p.cash += got;
+      d.plots[a.tile] = { owner: null, level: 0 };
+      if (d.festival === a.tile) d.festival = null;
+      emit(d, seat, { k: "sell", tile: a.tile, amount: got });
+      if (p.cash >= ph.amount) charge(d, seat, ph.amount, ph.payees);
+      break;
+    }
+  }
+  return { ok: true, state: d };
+}
+
+/** Xin thua (rời ván) bất cứ lúc nào: như phá sản, đất về trống. */
+export function resign(s: DtkState, seat: number): DtkResult {
+  if (s.phase.k === "ended") return { ok: false, error: "ended" };
+  if (!s.players[seat] || s.players[seat]!.out) return { ok: false, error: "illegal" };
+  const d = clone(s);
+  bankrupt(d, seat, null, true);
+  return { ok: true, state: d };
+}
+
+/** Dừng ván ngay, xếp hạng người còn lại theo tài sản (khi không còn người thật nào trong ván). */
+export function concludeByAssets(s: DtkState): DtkState {
+  if (s.phase.k === "ended") return s;
+  const d = clone(s);
+  finish(d);
+  return d;
+}

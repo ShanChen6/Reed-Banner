@@ -1,0 +1,146 @@
+"use client";
+
+// Bàn 40 ô của Điền Trang Ký trên lưới 11×11: Hoa Lư ở góc dưới phải, đi ngược chiều kim đồng hồ. Mỗi ô đất có dải màu
+// vùng, viền và nền theo hệ chủ đất, nhà năm bậc (House.tsx). Giữa bàn là xúc xắc và dòng nhật ký mới nhất.
+// Hình vẽ bằng code, chờ tranh Shan vẽ (prompt ở /mnt/project-files/art/prompts/dien-trang-ky.md).
+
+import type { ReactNode } from "react";
+import { REGIONS, TILES, type DtkState, type SpecialKind } from "@/core/dien-trang-ky";
+import { cn } from "@/lib/cn";
+import { ELEMENT_COLOR } from "../art/icons";
+import { House } from "./House";
+import { money } from "./text";
+
+/** Màu dải vùng, theo thứ tự vùng từ rẻ tới đắt (tông đất, lúa, sông núi). */
+export const REGION_COLOR = ["#8c6239", "#a0522d", "#b8860b", "#6b8e23", "#2e8b57", "#3d7d8c", "#4169a8", "#6a5acd", "#8b4f9e", "#b03a6a", "#c0392b", "#d4a017"] as const;
+
+/** Màu giấy và gỗ của bàn (vẽ tạm tới khi có tranh). */
+const BOARD = { frame: "#3b2a1a", rim: "#7a5a35", ink: "#2b1d10", tile: "#f1e4c6", corner: "#e7d3a6", center: "#2b1f14" } as const;
+
+const SPECIAL_MARK: Record<SpecialKind, string> = {
+  start: "Khởi hành",
+  boat: "Đi đò",
+  festival: "Mở hội",
+  shrine: "Được phúc",
+  omen: "Rút quẻ",
+  poll: "Nộp thuế",
+  tribute: "Nộp cống",
+  relay: "Ngựa trạm",
+  market: "Mua đất",
+  mire: "Mất lượt",
+};
+
+/** Hàng, cột (0..10) của ô `i`. */
+export function cellOf(i: number): [number, number] {
+  if (i <= 10) return [10, 10 - i];
+  if (i <= 20) return [10 - (i - 10), 0];
+  if (i <= 30) return [0, i - 20];
+  return [i - 30, 10];
+}
+
+function SpecialIcon({ kind }: { kind: SpecialKind }) {
+  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  const paths: Record<SpecialKind, ReactNode> = {
+    start: <path {...common} d="M4 20 V4 M4 5 C8 3 11 7 16 5 V12 C11 14 8 10 4 12" />,
+    boat: <path {...common} d="M3 15 H21 L18 19 H6 Z M12 15 V5 L17 13 H12" />,
+    festival: <path {...common} d="M6 21 V3 M6 4 Q11 6 9 9 Q13 8 18 10 Q12 12 6 12 M14 21 V8" />,
+    shrine: <path {...common} d="M3 9 H21 M5 6 H19 M7 9 V20 M17 9 V20 M10 20 V14 H14 V20" />,
+    omen: <path {...common} d="M7 3 H17 V21 H7 Z M10 7 H14 M10 11 H14 M10 15 H14" />,
+    poll: <path {...common} d="M12 4 A8 8 0 1 0 12.01 4 M9 12 H15 M12 9 V15" />,
+    tribute: <path {...common} d="M4 18 H20 L18 10 H6 Z M8 10 V7 H16 V10" />,
+    relay: <path {...common} d="M4 16 L8 10 L14 9 L17 5 L19 7 L17 11 L18 16 M8 10 L7 18 M14 12 L15 18" />,
+    market: <path {...common} d="M3 9 L5 4 H19 L21 9 Z M5 9 V20 H19 V9 M10 20 V14 H14 V20" />,
+    mire: <path {...common} d="M3 15 Q6 12 9 15 T15 15 T21 15 M3 19 Q6 16 9 19 T15 19 T21 19 M12 11 V4" />,
+  };
+  return (
+    <svg viewBox="0 0 24 24" className="size-[42%] max-h-7" aria-hidden focusable="false">
+      {paths[kind]}
+    </svg>
+  );
+}
+
+export interface BoardProps {
+  readonly state: DtkState;
+  /** Ô đang chọn được (chợ phiên, đi đò, mở hội, bán đất). */
+  readonly pickable?: ReadonlySet<number>;
+  readonly selected?: number | null;
+  readonly onTile?: (i: number) => void;
+  readonly center?: ReactNode;
+}
+
+export function Board({ state, pickable, selected, onTile, center }: BoardProps) {
+  return (
+    <div className="dtk-board relative grid aspect-square w-full grid-cols-11 grid-rows-11 gap-px rounded-md p-px" style={{ background: BOARD.frame, color: BOARD.ink, boxShadow: `inset 0 0 0 2px ${BOARD.rim}` }}>
+      {TILES.map((t, i) => {
+        const [row, col] = cellOf(i);
+        const corner = i % 10 === 0;
+        const plot = state.plots[i];
+        const owner = plot && plot.owner !== null ? state.players[plot.owner]! : null;
+        const here = state.players.flatMap((p, seat) => (!p.out && p.pos === i ? [seat] : []));
+        const can = pickable?.has(i) ?? false;
+        const tint = owner ? ELEMENT_COLOR[owner.element] : null;
+        return (
+          <button
+            key={i}
+            type="button"
+            onClick={() => onTile?.(i)}
+            aria-label={`${t.name}${t.kind === "land" ? `, giá ${money(t.price)}${owner ? `, của ${owner.name}` : ", còn trống"}` : ""}`}
+            aria-pressed={selected === i}
+            className={cn(
+              "relative flex min-w-0 flex-col items-center justify-between overflow-hidden text-center leading-none transition-[box-shadow,filter]",
+              can && "z-10 animate-pulse shadow-[0_0_0_2px_#f5c542] brightness-110",
+              selected === i && "z-10 shadow-[0_0_0_2px_#fff]",
+              state.festival === i && "shadow-[inset_0_0_0_2px_#e0482f]",
+            )}
+            style={{
+              gridRow: row + 1,
+              gridColumn: col + 1,
+              backgroundColor: corner ? BOARD.corner : BOARD.tile,
+              ...(tint ? { backgroundImage: `linear-gradient(${tint}40, ${tint}26)`, boxShadow: `inset 0 0 0 2px ${tint}` } : {}),
+            }}
+          >
+            {t.kind === "land" ? (
+              <>
+                <span aria-hidden className="h-[14%] w-full shrink-0" style={{ background: REGION_COLOR[t.region] }} />
+                <span className="line-clamp-2 px-px text-[clamp(5px,1.05vw,10px)] font-semibold">{t.name}</span>
+                {plot && plot.level > 0 && owner ? <House level={plot.level} element={owner.element} className="h-[34%] w-auto" /> : <span className="text-[clamp(5px,0.95vw,9px)] opacity-75">{t.price}</span>}
+              </>
+            ) : (
+              <>
+                <span className={cn("px-px pt-0.5 font-semibold", corner ? "text-[clamp(6px,1.15vw,11px)]" : "text-[clamp(5px,1vw,9px)]")}>{t.name}</span>
+                <SpecialIcon kind={t.kind} />
+                <span className="pb-0.5 text-[clamp(5px,0.85vw,8px)] opacity-75">{SPECIAL_MARK[t.kind]}</span>
+              </>
+            )}
+            {here.length > 0 && (
+              <span className="pointer-events-none absolute inset-x-0 bottom-[18%] flex justify-center gap-px">
+                {here.map((seat) => (
+                  <Token key={seat} seat={seat} state={state} />
+                ))}
+              </span>
+            )}
+          </button>
+        );
+      })}
+      <div className="pointer-events-auto relative col-start-2 col-end-11 row-start-2 row-end-11 flex min-h-0 flex-col items-center justify-center gap-2 overflow-hidden p-2" style={{ background: BOARD.center, color: BOARD.tile }}>
+        {center}
+      </div>
+    </div>
+  );
+}
+
+export function Token({ seat, state, className }: { seat: number; state: DtkState; className?: string }) {
+  const p = state.players[seat]!;
+  const active = state.turn === seat && state.phase.k !== "ended";
+  return (
+    <span
+      aria-hidden
+      className={cn("grid size-[clamp(8px,2.1vw,18px)] place-items-center rounded-full border text-[clamp(5px,1vw,9px)] font-bold text-white shadow", active ? "border-white ring-1 ring-frame-gold" : "border-black/40", className)}
+      style={{ background: ELEMENT_COLOR[p.element] }}
+    >
+      {seat + 1}
+    </span>
+  );
+}
+
+export const regionName = (r: number) => REGIONS[r]?.name ?? "";

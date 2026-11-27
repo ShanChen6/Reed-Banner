@@ -116,3 +116,8 @@ export function tamQuanKyServerEnabled(env: Readonly<Record<string, string | und
 export function vayThanhKyServerEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
   return env.VAY_THANH_KY_SERVER_ENABLED?.trim().toLowerCase() !== "false";
 }
+
+/** Điền Trang Ký trên server (đấu sứ quân có thưởng, phòng mã). Mặc định bật; đặt `DIEN_TRANG_KY_SERVER_ENABLED=false` để khóa nhanh. */
+export function dienTrangKyServerEnabled(env: Readonly<Record<string, string | undefined>> = process.env): boolean {
+  return env.DIEN_TRANG_KY_SERVER_ENABLED?.trim().toLowerCase() !== "false";
+}
