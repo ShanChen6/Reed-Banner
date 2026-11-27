@@ -1,7 +1,7 @@
 # Điền Trang Ký: làm phú hộ trên đất mười hai sứ quân
 
 > Cập nhật: 27/11/2026 (bản thử đầu tiên)
-> Trạng thái: **IMPLEMENTED (bản thử)** — Shan yêu cầu chế độ "phú hộ" theo thể loại cờ tỷ phú và chốt 9 mục thiết kế 27/11/2026. Lối chơi chung của thể loại (đổ xúc xắc, đi vòng, mua đất, xây nhà, thu tô); bàn, ô, quẻ, luật và hình tự làm, không chép trò nào (không ô tù, không đấu giá, không thẻ Cơ hội/Khí vận).
+> Trạng thái: **IMPLEMENTED (bản thử)** — Shan yêu cầu chế độ "phú hộ" theo thể loại cờ tỷ phú và chốt 9 mục thiết kế 27/11/2026. Lối chơi chung của thể loại (đổ xúc xắc, đi vòng, mua đất, xây nhà, thu tô); bàn, ô, quẻ, luật và hình tự làm, không chép trò nào (không đấu giá, không thẻ Cơ hội/Khí vận).
 
 ## 1. Định vị
 
@@ -45,7 +45,7 @@ Thứ tự ô và tên ở `TILES` trong `board.ts`.
 
 | Bậc | Tên | Giá xây | Tô (nhân giá đất) |
 | --- | --- | --- | --- |
-| 0 | Đất | giá đất | 0,15 |
+| 0 | Đất (đã có chủ, chưa xây) | giá đất | 0,15 |
 | 1 | Nhà tranh | nửa giá đất | 0,5 |
 | 2 | Nhà gỗ | nửa giá đất | 1,2 |
 | 3 | Nhà ngói | nửa giá đất | 2,2 |
@@ -57,7 +57,7 @@ Thứ tự ô và tên ở `TILES` trong `board.ts`.
 
 ## 6. Quẻ bói
 
-16 quẻ thời loạn (`omens.ts`), xếp lại theo seed đầu ván rồi rút vòng: được mùa, giặc đốt kho, Hoa Lư ban thưởng, về Hoa Lư, lũ tràn bờ đê (20 quan mỗi bậc nhà), khao quân (trả mỗi người 30), các làng góp lễ (nhận của mỗi người 30), ngựa trạm gấp (tiến 3), sạt lở (lùi 3), thầy địa lý (tới ô đất trống gần nhất), phúc ấm (miễn tô một lần), sa lầy (mất lượt), gọi đò (tới Bến Sông Đáy), thợ làng dựng giúp (ô thấp nhất lên một bậc), thuế muối (một phần mười tiền mặt), thương lái trả nợ.
+16 quẻ thời loạn (`omens.ts`), xếp lại theo seed đầu ván rồi rút vòng: được mùa, giặc đốt kho, Hoa Lư ban thưởng, về Hoa Lư, lũ tràn bờ đê (20 quan mỗi bậc nhà), khao quân (trả mỗi người 30), các làng góp lễ (nhận của mỗi người 30), ngựa trạm gấp (tiến 3), sạt lở (lùi 3), thầy địa lý (tới ô đất trống gần nhất), phúc ấm (miễn tô một lần), bị quan bắt giam (vào Lao Ngục), gọi đò (tới Bến Sông Đáy), thợ làng dựng giúp (ô thấp nhất lên một bậc), thuế muối (một phần mười tiền mặt), thương lái trả nợ.
 
 ## 7. Hết tiền và kết thúc (mục 6, 7)
 
