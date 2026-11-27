@@ -433,8 +433,13 @@ export default function ArenaScreen() {
                   <p className="truncate text-base font-bold text-on-wood" title={o.name}>{o.name}</p>
                   <p className="text-caption text-on-wood-soft">
                     {o.rating} điểm, lực chiến {o.power}
-                    {o.bot && ", bóng ma luyện tập"}
+                    {o.bot && (o.leader ? ", máy" : ", bóng ma luyện tập")}
                   </p>
+                  {o.leader && (
+                    <p className="text-caption text-on-wood-soft">
+                      {o.leader.personality}: {o.leader.quirk}
+                    </p>
+                  )}
                   {myPower > 0 && <PowerTag mine={myPower} theirs={o.power} />}
                 </div>
                 <Members list={o.members} compact />
