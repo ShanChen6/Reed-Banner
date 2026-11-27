@@ -165,6 +165,18 @@ test("danh thắng: không xây nhà, tô tăng theo số danh thắng cùng ch�
   assert.equal(rentOf(d, 5), SCENIC_RENT[3]);
 });
 
+test("danh thắng đã có chủ thì người khác dừng chỉ nộp tô, không mua lại được", () => {
+  const s = structuredClone(newDtk({ seats: seats(2), seed: 4 }));
+  s.plots[5] = { owner: 1, level: 0 };
+  s.players[0]!.pos = 0;
+  s.phase = { k: "pick", what: "boat" };
+  const r = act(s, 0, { t: "pick", tile: 5 });
+  assert.ok(r.ok);
+  assert.notEqual(r.state.phase.k, "rent");
+  assert.equal(r.state.plots[5]!.owner, 1);
+  assert.equal(r.state.players[0]!.cash, START_CASH - 50 - SCENIC_RENT[1]);
+});
+
 test("Lao Ngục: bị giam, đổ hỏng thì ở lại, nộp tiền chuộc thì ra", () => {
   const s = structuredClone(newDtk({ seats: seats(2), seed: 8 }));
   s.players[0]!.jail = JAIL_TRIES;

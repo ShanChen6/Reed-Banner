@@ -1,12 +1,12 @@
 // Điền Trang Ký do server làm trọng tài (src/server/dienTrangKy.ts): đấu sứ quân có thưởng theo hạng và phòng mã 2–4 người.
 // GET /api/tycoon?id=...: xem ván (phòng mã: quá giờ thì máy đi thay).
-// POST /api/tycoon `{ action: "ai" | "host" | "join" | "addBot" | "removeSeat" | "start" | "act" | "resign", ... }`.
+// POST /api/tycoon `{ action: "ai" | "host" | "join" | "color" | "addBot" | "removeSeat" | "start" | "act" | "resign", ... }`.
 // Chỉ tài khoản đã trình danh. Tắt nhanh bằng DIEN_TRANG_KY_SERVER_ENABLED=false.
 
 import { randomInt, randomUUID } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { dienTrangKyServerEnabled } from "@/server/featureFlags";
-import { dtkAct, dtkAddBot, dtkGet, dtkHost, dtkJoin, dtkRemoveSeat, dtkResign, dtkStart, dtkStartAi, parseDtkAction, type DtkApiResult, type DtkDeps } from "@/server/dienTrangKy";
+import { dtkAct, dtkAddBot, dtkGet, dtkHost, dtkJoin, dtkRemoveSeat, dtkResign, dtkSetColor, dtkStart, dtkStartAi, parseDtkAction, type DtkApiResult, type DtkDeps } from "@/server/dienTrangKy";
 import { guestOf, isSignedInAccount, loginRequiredResponse, readJson, sameOrigin } from "@/server/http";
 import { makeRoomCode, normalizeRoomCode } from "@/server/pvpRooms";
 import { accountStore, dtkStore, profileStore } from "@/server/store";
@@ -52,13 +52,15 @@ export async function POST(request: NextRequest) {
   const d = deps();
   switch (body?.action) {
     case "ai":
-      return reply(await dtkStartAi(who, { element: body.element, rivals: body.rivals }, d));
+      return reply(await dtkStartAi(who, { element: body.element, rivals: body.rivals, color: body.color }, d));
     case "host":
-      return reply(await dtkHost(who, { element: body.element }, d));
+      return reply(await dtkHost(who, { element: body.element, color: body.color }, d));
     case "join": {
       const code = normalizeRoomCode(body.code);
-      return code ? reply(await dtkJoin(who, code, { element: body.element }, d)) : reply({ ok: false, error: "notFound" });
+      return code ? reply(await dtkJoin(who, code, { element: body.element, color: body.color }, d)) : reply({ ok: false, error: "notFound" });
     }
+    case "color":
+      return reply(await dtkSetColor(who, body.id, body.color, d));
     case "addBot":
       return reply(await dtkAddBot(who, body.id, body.rival, d));
     case "removeSeat":

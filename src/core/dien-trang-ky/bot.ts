@@ -149,8 +149,6 @@ export function chooseAction(s: DtkState, style: BotStyle = styleOf(s.players[s.
       // Mua lại khi thắng ngay được, hoặc khi chủ ô đang giữ thế sắp thắng (cướp một ô của cạnh hay danh thắng của họ).
       if (winsWith(s, ph.tile, seat)) return { t: "buyout" };
       if (nearWin(s, ph.owner) && me.cash - ph.buyout >= ph.amount) return { t: "buyout" };
-      // Người khác đã gom từ hai danh thắng: mua lại để chặn, miễn còn đủ tiền dự phòng.
-      if (isScenic(ph.tile) && scenicCount(s, ph.owner) >= 2 && me.cash - ph.buyout >= prm.reserve / 2) return { t: "buyout" };
       const left = me.cash - ph.buyout;
       if (left < Math.max(prm.reserve, ph.amount)) return { t: "pay" };
       let want = prm.buyout * 0.5;

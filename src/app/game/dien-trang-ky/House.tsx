@@ -1,5 +1,5 @@
 // Nhà năm bậc của Điền Trang Ký, vẽ bằng SVG tạm tới khi Shan vẽ tranh. Bậc quyết định dáng nhà (nhà tranh → trang ấp),
-// hệ của chủ đất quyết định màu mái và vật trang trí trên nóc. Hệ không đổi tô.
+// hệ của chủ đất quyết định vật trang trí trên nóc, màu nhà của ghế (chủ đất tự chọn) tô mái. Hệ và màu không đổi tô.
 
 import type { Element } from "@/core";
 import { ELEMENT_COLOR } from "../art/icons";
@@ -25,9 +25,9 @@ function Finial({ element, x, y }: { element: Element; x: number; y: number }) {
   }
 }
 
-export function House({ level, element, className = "size-6" }: { level: number; element: Element; className?: string }) {
+export function House({ level, element, color, className = "size-6" }: { level: number; element: Element; color: string; className?: string }) {
   if (level <= 0) return null;
-  const roof = ELEMENT_COLOR[element];
+  const roof = color;
   const wall = "#e9dcc1";
   const beam = "#5a3b22";
   return (
