@@ -89,7 +89,7 @@ Mỗi tài khoản tối đa 3 ván có vàng mỗi ngày (giờ Việt Nam). Kh
 
 Mười hai sứ quân, mỗi người một tính cách (cùng tên bộ tính cách của bot nhân vật): Mãnh công (Phạm Bạch Hổ, Lý Khuê, Nguyễn Siêu) mua hăng, xây cao, giữ ít tiền; Thủ thành (Nguyễn Khoan, Kiều Thuận) giữ tiền chắc; Mưu phá (Ngô Xương Xí, Ngô Nhật Khánh) chuyên mua lại để phá hùng cứ; Tích lực (Kiều Công Hãn, Lữ Đường) gom đất trước, đủ tiền mới xây; Liều lĩnh (Đỗ Cảnh Thạc); Lão luyện (Trần Lãm), cũng là lối máy đi thay người quá giờ; Tùy cơ (Nguyễn Thủ Tiệp) giàu thì giữ, nghèo thì liều. Máy chỉ nhìn bàn như người chơi, không biết trước xúc xắc hay quẻ.
 
-Chạy thử 300 ván mỗi cỡ (máy với máy, có thắng ngay, máy biết chặn): trung vị 75 / 99 / 139 lượt cho 2 / 3 / 4 người (khoảng 38 / 33 / 35 vòng), không ván nào chạm chốt an toàn. Cách kết thúc: đủ bốn danh thắng khoảng 41–47%, giữ hết một cạnh khoảng 25%, phá sản tới người cuối khoảng 28–33%.
+Chạy thử 300 ván mỗi cỡ (máy với máy, có thắng ngay, máy gặp danh thắng là mua và mua lại để chặn): trung vị 75 / 112 / 150 lượt cho 2 / 3 / 4 người (khoảng 38 / 37 / 38 vòng), không ván nào chạm chốt an toàn. Cách kết thúc: đủ bốn danh thắng khoảng 47–50%, giữ hết một cạnh khoảng 22–25%, phá sản tới người cuối khoảng 27–31%.
 
 ## 10. Hình
 

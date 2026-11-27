@@ -127,6 +127,8 @@ export function chooseAction(s: DtkState, style: BotStyle = styleOf(s.players[s.
     case "buy": {
       const price = priceOf(ph.tile);
       if (me.cash >= price && (winsWith(s, ph.tile, seat) || blocks(s, ph.tile, seat))) return { t: "buy", level: 0 };
+      // Danh thắng: gặp là mua để chặn cửa thắng bốn danh thắng (Shan dặn 27/11).
+      if (isScenic(ph.tile) && me.cash >= price) return { t: "buy", level: 0 };
       const reserve = completes(s, ph.tile, seat) ? prm.reserve / 2 : prm.reserve;
       if (me.cash - price < reserve && !whim()) return { t: "skip" };
       if (me.cash < price) return { t: "skip" };
@@ -143,6 +145,8 @@ export function chooseAction(s: DtkState, style: BotStyle = styleOf(s.players[s.
       // Mua lại khi thắng ngay được, hoặc khi chủ ô đang giữ thế sắp thắng (cướp một ô của cạnh hay danh thắng của họ).
       if (winsWith(s, ph.tile, seat)) return { t: "buyout" };
       if (nearWin(s, ph.owner) && me.cash - ph.buyout >= ph.amount) return { t: "buyout" };
+      // Người khác đã gom từ hai danh thắng: mua lại để chặn, miễn còn đủ tiền dự phòng.
+      if (isScenic(ph.tile) && scenicCount(s, ph.owner) >= 2 && me.cash - ph.buyout >= prm.reserve / 2) return { t: "buyout" };
       const left = me.cash - ph.buyout;
       if (left < Math.max(prm.reserve, ph.amount)) return { t: "pay" };
       let want = prm.buyout * 0.5;
@@ -168,8 +172,10 @@ export function chooseAction(s: DtkState, style: BotStyle = styleOf(s.players[s.
       const affordable = free.filter((i) => priceOf(i) <= budget);
       if (!affordable.length) return { t: "skip" };
       const best = affordable.reduce((a, b) => {
-        const sa = (winsWith(s, a, seat) ? 5000 : 0) + (blocks(s, a, seat) ? 3000 : 0) + (completes(s, a, seat) ? 1000 : 0) + priceOf(a);
-        const sb = (winsWith(s, b, seat) ? 5000 : 0) + (blocks(s, b, seat) ? 3000 : 0) + (completes(s, b, seat) ? 1000 : 0) + priceOf(b);
+        const rival = aliveSeats(s).some((o) => o !== seat && scenicCount(s, o) > 0);
+        const score = (i: number) => (winsWith(s, i, seat) ? 5000 : 0) + (blocks(s, i, seat) ? 3000 : 0) + (rival && isScenic(i) ? 2000 : 0) + (completes(s, i, seat) ? 1000 : 0) + priceOf(i);
+        const sa = score(a);
+        const sb = score(b);
         return sb > sa ? b : a;
       });
       if (ph.what === "boat" && !completes(s, best, seat) && rng.next() < 0.3) return { t: "skip" };
