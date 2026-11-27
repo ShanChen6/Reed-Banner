@@ -56,6 +56,10 @@ import {
 } from "../battle";
 import { createRng, type Rng } from "../rng";
 import { simulateFrom, simulateKnown, type KnownOutcome } from "./simulate";
+import { BASE_WEIGHTS, resolveWeights, type AiWeights, type PersonalityId } from "./personality";
+
+/** Tính cách máy: id tính cách, "auto" lấy theo nhân vật đang hành động, bỏ trống là AI gốc. */
+export type AiPersonality = PersonalityId | "auto";
 
 export type Difficulty = "easy" | "normal" | "hard" | "boss" | "nightmare";
 
@@ -78,14 +82,15 @@ interface Context {
   readonly view: AiView;
   readonly me: Fighter;
   readonly target: Fighter | undefined;
+  readonly p: AiWeights;
 }
 
-function context(view: AiView): Context {
+function context(view: AiView, p: AiWeights = BASE_WEIGHTS): Context {
   const own = view.sides[view.turn.side];
   const foe = view.sides[otherSide(view.turn.side)];
   const forced = view.sides.every(s => s.fighters.length === 1) ? -1 : foe.fighters.findIndex(f => isAlive(f) && !hasEffect(f.effects, "freeze") && hasEffect(f.effects, "taunt"));
   const t = forced >= 0 ? forced : pickTarget(foe, view.turn.actor);
-  return { view, me: own.fighters[view.turn.actor]!, target: t === null ? undefined : foe.fighters[t] };
+  return { view, me: own.fighters[view.turn.actor]!, target: t === null ? undefined : foe.fighters[t], p };
 }
 
 /** Giá trị (quy ra điểm sát thương) của một ô mỗi loại với người hành động hiện tại. */
@@ -97,11 +102,11 @@ function tileValue(ctx: Context, kind: TileKind): number {
     case "kiem":
       return swordDamage(ctx);
     case "amDuong":
-      return (me.skills?.length ?? 0) > 0 && me.energy < 100 ? 10 * unit : unit;
+      return ((me.skills?.length ?? 0) > 0 && me.energy < 100 ? 10 * unit : unit) * ctx.p.energy;
     case "banhChung":
-      return 4 * unit * (own.food < 30 ? 3 : own.food < 70 ? 1 : 0.3);
+      return 4 * unit * (own.food < 30 ? 3 : own.food < 70 ? 1 : 0.3) * ctx.p.sustain;
     case "tim":
-      return Math.min(me.maxHp - me.hp, Math.round(me.maxHp * 0.03 * (me.profession === "ySu" ? 1.5 : 1) * spiritHealMultiplier(me.spirit, view.experimentalSpirit))) * 0.8;
+      return Math.min(me.maxHp - me.hp, Math.round(me.maxHp * 0.03 * (me.profession === "ySu" ? 1.5 : 1) * spiritHealMultiplier(me.spirit, view.experimentalSpirit))) * 0.8 * ctx.p.sustain;
     case "trong": {
       if (own.passives) {
         const i = own.fighters.indexOf(me);
@@ -133,10 +138,10 @@ function scoreOutcome(ctx: Context, o: KnownOutcome, fromSkill = false): number 
   }
   const perSword = swordDamage(ctx) * (fromSkill ? SKILL_BOARD_SWORD : 1);
   const dmg = o.swordsByStep.reduce((sum, n, i) => sum + n * cascadeMultiplier(i) * perSword, 0);
-  score += dmg;
-  if (ctx.target && dmg >= ctx.target.hp) score += ctx.me.atk * 10;
-  if (o.extraTurn && !fromSkill) score += ctx.me.atk * 3;
-  score += o.specialsCreated * ctx.me.atk * 2;
+  score += dmg * ctx.p.damage;
+  if (ctx.target && dmg >= ctx.target.hp) score += ctx.me.atk * 10 * ctx.p.kill;
+  if (o.extraTurn && !fromSkill) score += ctx.me.atk * 3 * ctx.p.tempo;
+  score += o.specialsCreated * ctx.me.atk * 2 * ctx.p.tempo;
   return score;
 }
 
@@ -157,14 +162,14 @@ function sampledBonus(ctx: Context, board: Board, rng: Rng): number {
   return total / SAMPLES;
 }
 
-export function chooseMove(view: AiView, difficulty: Difficulty, rng: Rng): Move {
-  const ctx = context(view);
+export function chooseMove(view: AiView, difficulty: Difficulty, rng: Rng, personality?: AiPersonality): Move {
+  const ctx = context(view, resolveWeights(view, personality));
   const moves = findValidMoves(view.board);
   if (moves.length === 0) throw new Error("Bàn không có nước đi");
   let scored = moves.map((move) => {
     const o = simulateKnown(view.board, move.from, move.to);
     let score = scoreOutcome(ctx, o);
-    if (difficulty === "hard" || difficulty === "boss" || difficulty === "nightmare") {
+    if (ctx.p.lookahead || difficulty === "hard" || difficulty === "boss" || difficulty === "nightmare") {
       score += expectedNewTiles(ctx, o.unknownCells);
     }
     return { move, o, score };
@@ -175,7 +180,7 @@ export function chooseMove(view: AiView, difficulty: Difficulty, rng: Rng): Move
       i < SAMPLE_TOP ? { ...s, score: scoreOutcome(ctx, s.o) + sampledBonus(ctx, s.o.board, rng) } : s,
     );
   }
-  const noise = NOISE[difficulty];
+  const noise = Math.min(0.9, NOISE[difficulty] * ctx.p.noise);
   let best = scored[0]!;
   let bestScore = -Infinity;
   for (const s of scored) {
@@ -227,7 +232,8 @@ export function bestWhirl(view: AiView, maxTurns: number): { whirl: Whirl; score
 }
 
 /** Chấm sơ bộ một kỹ năng; null nếu không dùng được hoặc vô ích. */
-export function scoreSkill(view: AiView, def: SkillDef): { score: number; target?: number; whirl?: Whirl; cell?: Pos } | null {
+export function scoreSkill(view: AiView, def: SkillDef, personality?: AiPersonality): { score: number; target?: number; whirl?: Whirl; cell?: Pos } | null {
+  const p = resolveWeights(view, personality);
   const side = def.target === "enemy" ? otherSide(view.turn.side) : view.turn.side;
   const forced = def.target === "enemy" && view.sides[0].fighters.length > 1
     ? view.sides[side].fighters.findIndex(f => isAlive(f) && !hasEffect(f.effects, "freeze") && hasEffect(f.effects, "taunt")) : -1;
@@ -235,14 +241,14 @@ export function scoreSkill(view: AiView, def: SkillDef): { score: number; target
     ? view.sides[side].fighters.flatMap((f, i) => isAlive(f) ? [i] : []) : [undefined];
   let best: ReturnType<typeof scoreSkillTarget> = null;
   for (const target of candidates) {
-    const scored = scoreSkillTarget(view, def, target);
+    const scored = scoreSkillTarget(view, def, p, target);
     if (scored && (!best || scored.score > best.score)) best = scored;
   }
   return best;
 }
 
-function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { score: number; target?: number; whirl?: Whirl; cell?: Pos } | null {
-  const ctx = context(view);
+function scoreSkillTarget(view: AiView, def: SkillDef, p: AiWeights, selected?: number): { score: number; target?: number; whirl?: Whirl; cell?: Pos } | null {
+  const ctx = context(view, p);
   const own = view.sides[view.turn.side];
   const foe = view.sides[otherSide(view.turn.side)];
   const enemies = foe.fighters.filter(isAlive);
@@ -266,6 +272,7 @@ function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { sco
   let whirl: Whirl | undefined;
   let cell: Pos | undefined;
   for (const step of def.steps) {
+    const before = score;
     switch (step.type) {
       case "whirl": {
         if (step.auto) {
@@ -386,6 +393,9 @@ function scoreSkillTarget(view: AiView, def: SkillDef, selected?: number): { sco
         score += ctx.me.atk * 0.3;
         break;
     }
+    // Tính cách nhân phần điểm của bước này; hệ số 1 thì để nguyên điểm (tránh sai số làm tròn đổi lựa chọn của AI gốc).
+    const weight = stepWeight(p, step, def, hostile);
+    if (weight !== 1) score = before + (score - before) * weight;
   }
   if (score > 0) score += comboSetupValue(view,def,hit,list);
   if (score <= 0) return null;
@@ -399,12 +409,13 @@ export interface SkillChoice {
 }
 
 /** Chẩn đoán dùng cùng phép chấm/chọn với AI thực, không tiêu thụ RNG. */
-export function inspectSkillChoices(view: AiView): SkillChoice[] {
+export function inspectSkillChoices(view: AiView, personality?: AiPersonality): SkillChoice[] {
+  const p = resolveWeights(view, personality);
   const me = view.sides[view.turn.side].fighters[view.turn.actor]!;
   const options = (me.skills ?? []).map(id => {
     const base = fighterSkill(me,id)!;
     const def = { ...base, cost: comboSkillCost(me,base) };
-    const scored = scoreSkill(view,def);
+    const scored = scoreSkill(view,def,personality);
     const score = scored?.score ?? 0;
     const ratio = score / Math.max(1,(def.cost + TURN_SLOT_ENERGY)*me.atk*0.02);
     const cell = scored?.cell ?? (needsCell(def)?{row:Math.floor(view.board.rows/2),col:Math.floor(view.board.cols/2)}:undefined);
@@ -418,21 +429,23 @@ export function inspectSkillChoices(view: AiView): SkillChoice[] {
     else if(hasEffect(me.effects,"silence")) o.reason="silenced";
     else if(o.score<=0) o.reason="noValue";
     else if(o.cost>me.energy) o.reason="energy";
-    else if(o.ratio<bestRatio*SAVE_FOR_BETTER) o.reason="saving";
+    else if(o.ratio<bestRatio*(p===BASE_WEIGHTS?SAVE_FOR_BETTER:p.saveForBetter)) o.reason="saving";
     else if(o.ratio<=1) o.reason="belowThreshold";
     else if(!best||o.ratio>best.ratio) best=o;
   }
   for(const o of options) if(!o.reason) o.reason=o===best?"chosen":`dominated:${best?.id ?? "none"}`;
   return options;
 }
-export function chooseSkill(view: AiView): BattleAction | null {
-  return inspectSkillChoices(view).find(o=>o.reason==="chosen")?.action ?? null;
+export function chooseSkill(view: AiView, personality?: AiPersonality): BattleAction | null {
+  return inspectSkillChoices(view, personality).find(o=>o.reason==="chosen")?.action ?? null;
 }
 
 export interface AiTurnPolicy {
   readonly chooseSkill?: (view: AiView) => BattleAction | null;
   readonly chooseMove?: typeof chooseMove;
   readonly bestWhirl?: typeof bestWhirl;
+  /** Tính cách máy cho mọi người hành động của phe này ("auto": theo từng nhân vật). */
+  readonly personality?: AiPersonality;
 }
 
 /**
@@ -464,15 +477,44 @@ export function playAiTurn(
       if (free.score > 0) apply({ type: "whirl", whirl: free.whirl });
       if (state.winner !== null) break;
     }
-    const skill = (policy.chooseSkill ?? chooseSkill)(toView(state));
+    const skill = policy.chooseSkill ? policy.chooseSkill(toView(state)) : chooseSkill(toView(state), policy.personality);
     if (skill) apply(skill);
     if (state.winner !== null) break;
     const rng = createRng(state.aiRng);
-    const move = (policy.chooseMove ?? chooseMove)(toView(state), difficulty, rng);
+    const move = (policy.chooseMove ?? chooseMove)(toView(state), difficulty, rng, policy.personality);
     state = { ...state, aiRng: rng.state() };
     if (!apply({ type: "swap", from: move.from, to: move.to })) throw new Error("AI chọn nước đi không hợp lệ");
   }
   return { state, events };
+}
+
+/** Hệ số tính cách cho một bước kỹ năng theo nhóm: sát thương, giữ thân (kể cả cho đồng đội), phá đối thủ, năng lượng, bàn cờ. */
+function stepWeight(p: AiWeights, step: SkillStep, def: SkillDef, hostile: boolean): number {
+  if (p === BASE_WEIGHTS) return 1;
+  const care = (to: StepRecipient) => (to === "team" || (to === "targets" && (def.target === "ally" || def.target === "team")) ? p.allyCare : 1);
+  switch (step.type) {
+    case "damage":
+      return p.damage;
+    case "heal":
+    case "cleanse":
+      return p.sustain * care(step.to);
+    case "effect": {
+      if (NEGATIVE_EFFECTS.includes(step.effect)) return hostile || step.to === "enemies" ? p.disrupt : 1;
+      if (step.effect === "atkUp") return p.damage;
+      return p.sustain * care(step.to);
+    }
+    case "dispel":
+    case "enemyFood":
+      return p.disrupt;
+    case "energy":
+      return step.amount < 0 ? p.disrupt : p.energy;
+    case "whirl":
+    case "destroy":
+    case "transform":
+      return p.tempo;
+    default:
+      return 1;
+  }
 }
 
 /** Small preparation credit, only for a reachable useful event and a living eligible teammate. */

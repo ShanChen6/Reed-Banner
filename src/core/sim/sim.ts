@@ -2,7 +2,7 @@
 // Thuần, tất định theo seed; script trong scripts/ chỉ gọi vào đây và in kết quả.
 
 import { simRageOption } from "./rage";
-import { playAiTurn, type Difficulty } from "../ai";
+import { playAiTurn, type AiPersonality, type Difficulty } from "../ai";
 import {
   createBattle,
   type BattleEvent,
@@ -40,6 +40,8 @@ export interface SimOptions {
   readonly difficulty?: readonly [Difficulty, Difficulty];
   /** Giới hạn tổng số lượt; quá thì tính hòa. */
   readonly maxTurns?: number;
+  /** Tính cách máy từng phe (docs/01-gameplay/ai.md mục Tính cách); bỏ trống là AI gốc. */
+  readonly personality?: readonly [AiPersonality | undefined, AiPersonality | undefined];
 }
 
 export const DEFAULT_MAX_TURNS = 400;
@@ -65,7 +67,8 @@ export function runBattle(m: Matchup, options: SimOptions = {}): BattleResult {
     }
   };
   while (state.winner === null && state.turn.number <= maxTurns) {
-    const r = playAiTurn(state, difficulty[state.turn.side]);
+    const personality = options.personality?.[state.turn.side];
+    const r = playAiTurn(state, difficulty[state.turn.side], 0, personality ? { personality } : {});
     count(r.events);
     state = r.state;
   }
