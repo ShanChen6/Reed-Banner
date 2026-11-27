@@ -1,13 +1,13 @@
-// Điền Trang Ký (Shan chốt 27/11/2026): bàn vòng 40 ô quanh đất mười hai sứ quân. Lối chơi chung của thể loại cờ tỷ phú
+// Điền Trang Ký (Shan chốt 27/11/2026): bàn vòng 40 ô, chín dãy đất mang tên vùng các sứ quân. Lối chơi chung của thể loại cờ tỷ phú
 // (đổ xúc xắc, đi vòng, mua đất, xây nhà, thu tô) nhưng bàn, ô, quẻ và luật riêng của Cờ Lau, không chép trò nào.
 // Luật chính thức: docs/02-game-modes/dien-trang-ky/gdd.md.
 
-/** Mười hai vùng đất, mỗi vùng hai ô, xếp từ rẻ tới đắt theo chiều đi. `lord` là id sứ quân trong roster. */
+/** Chín dãy đất (Shan chốt 27/11: 3 dãy đôi, 6 dãy ba), xếp từ rẻ tới đắt theo chiều đi. `lord` là id sứ quân giữ vùng. */
 export interface Region {
   readonly id: string;
   readonly name: string;
   readonly lord: string;
-  /** Giá mỗi ô đất (quan tiền). */
+  /** Giá mỗi ô đất của dãy (quan tiền). */
   readonly price: number;
 }
 
@@ -15,11 +15,8 @@ export const REGIONS: readonly Region[] = [
   { id: "doDong", name: "Đỗ Động", lord: "doCanhThac", price: 60 },
   { id: "hoiHo", name: "Hồi Hồ", lord: "kieuThuan", price: 80 },
   { id: "duongLam", name: "Đường Lâm", lord: "ngoNhatKhanh", price: 100 },
-  { id: "phongChau", name: "Phong Châu", lord: "kieuCongHan", price: 120 },
-  { id: "tamDai", name: "Tam Đái", lord: "nguyenKhoan", price: 140 },
-  { id: "binhKieu", name: "Bình Kiều", lord: "ngoXuongXi", price: 160 },
-  { id: "teGiang", name: "Tế Giang", lord: "luDuong", price: 180 },
-  { id: "tayPhuLiet", name: "Tây Phù Liệt", lord: "nguyenSieu", price: 200 },
+  { id: "phongChau", name: "Phong Châu", lord: "kieuCongHan", price: 140 },
+  { id: "tayPhuLiet", name: "Tây Phù Liệt", lord: "nguyenSieu", price: 180 },
   { id: "tienDu", name: "Tiên Du", lord: "nguyenThuTiep", price: 220 },
   { id: "sieuLoai", name: "Siêu Loại", lord: "lyKhue", price: 260 },
   { id: "dangChau", name: "Đằng Châu", lord: "phamBachHo", price: 300 },
@@ -67,38 +64,38 @@ export const TILES: readonly Tile[] = [
   scenic("Đền Hùng"),
   land(1, "Núi Hồi Hồ"),
   land(1, "Bến Cẩm Khê"),
-  land(2, "Làng Đường Lâm"),
-  land(2, "Giếng Mông Phụ"),
+  sp("market", "Chợ phiên"),
+  land(1, "Chợ Hạ Hòa"),
   sp("jail", "Lao Ngục"),
-  land(3, "Ngã ba Bạch Hạc"),
-  sp("market", "Chợ phiên"),
-  land(3, "Đồi Phong Châu"),
-  land(4, "Phủ Tam Đái"),
+  land(2, "Làng Đường Lâm"),
+  sp("omen", "Quẻ bói"),
+  land(2, "Giếng Mông Phụ"),
+  land(2, "Đền Phùng Hưng"),
   scenic("Núi Tản Viên"),
-  land(4, "Đầm Vĩnh Tường"),
+  land(3, "Ngã ba Bạch Hạc"),
   sp("omen", "Quẻ bói"),
-  land(5, "Thành Bình Kiều"),
-  land(5, "Bến Triệu Sơn"),
+  land(3, "Đồi Phong Châu"),
+  land(3, "Đầm Vĩnh Tường"),
   sp("festival", "Hội Cờ Lau"),
-  land(6, "Bãi Tế Giang"),
+  land(4, "Ấp Phù Liệt"),
   sp("omen", "Quẻ bói"),
-  land(6, "Chợ Văn Giang"),
-  land(7, "Ấp Phù Liệt"),
+  land(4, "Bến Thanh Trì"),
+  land(4, "Bãi Văn Giang"),
   scenic("Chùa Dâu"),
-  land(7, "Bến Thanh Trì"),
-  land(8, "Núi Tiên Du"),
-  sp("omen", "Quẻ bói"),
-  land(8, "Làng Nội Duệ"),
-  sp("boat", "Bến Sông Đáy"),
-  land(9, "Thành Siêu Loại"),
-  land(9, "Bến Thuận Thành"),
+  land(5, "Núi Tiên Du"),
   sp("market", "Chợ phiên"),
-  land(10, "Thành Đằng Châu"),
+  land(5, "Làng Nội Duệ"),
+  land(5, "Đồi Lim"),
+  sp("boat", "Bến Sông Đáy"),
+  land(6, "Thành Siêu Loại"),
+  land(6, "Bến Thuận Thành"),
+  land(6, "Làng Luy Lâu"),
+  land(7, "Thành Đằng Châu"),
   scenic("Tràng An"),
-  land(10, "Bãi Kim Động"),
+  land(7, "Bãi Kim Động"),
   sp("tribute", "Cống nạp"),
-  land(11, "Thành Bố Hải"),
-  land(11, "Cửa Kỳ Bố"),
+  land(8, "Thành Bố Hải"),
+  land(8, "Cửa Kỳ Bố"),
 ];
 
 export const BOARD_SIZE = TILES.length;
@@ -108,10 +105,21 @@ export const LEVEL_NAME = ["Đất", "Nhà tranh", "Nhà gỗ", "Nhà ngói", "D
 export const MAX_LEVEL = 5;
 /** Lúc mua đất được xây luôn tới bậc này. */
 export const MAX_LEVEL_ON_BUY = 3;
-/** Tô theo bậc, nhân với giá đất. */
-export const RENT_RATE = [0.15, 0.45, 0.9, 1.5, 2.1, 3.0] as const;
-/** Giữ đủ hai ô một vùng (hùng cứ): tô nhân thêm. Bậc 5 chỉ xây được khi hùng cứ. */
+/** Giá xây mỗi bậc (1..5) tính theo phần trăm giá đất của khu. */
+export const BUILD_RATE = [0, 0.5, 0.5, 0.5, 0.5, 1] as const;
+/** Tô theo phần trăm giá trị ô (đất cộng nhà đã xây), Shan chốt 27/11: một lần thu không vượt tổng vốn. */
+export const RENT_RATE = [0.15, 0.3, 0.45, 0.6, 0.7, 0.75] as const;
+/** Ba ô có lễ hội nhỏ suốt ván (chọn ngẫu nhiên đầu ván): tô nhân thêm. */
+export const FAIR_COUNT = 3;
+export const FAIR_RATE = 1.5;
+/** Thiên tai: nhà sập một bậc và đang sửa, không thu tô trong 1..3 lượt của chủ. Trang ấp không bị ảnh hưởng. */
+export const RUIN_MIN = 1;
+export const RUIN_MAX = 3;
+/** Giữ đủ cả dãy đôi (hùng cứ): tô nhân thêm. Bậc 5 chỉ xây được khi giữ đủ dãy. */
 export const HOLD_RATE = 1.5;
+/** Dãy ba: giữ hai ô thì tô nhân chừng này, giữ đủ ba ô (hùng cứ) thì nhân `HOLD3_RATE`. */
+export const PART3_RATE = 1.25;
+export const HOLD3_RATE = 2;
 /** Ô đang mở Hội Cờ Lau: tô nhân thêm. */
 export const FESTIVAL_RATE = 2;
 /** Mua lại đất người khác: trả chủ đất gấp chừng này giá trị (đất và nhà). Trang ấp không mua lại được. */
@@ -141,7 +149,7 @@ export const POLL_RATE = 0.1;
 export const POLL_MIN = 20;
 
 /** Giá xây một bậc nhà (bậc 1..5) trên ô có giá `price`. */
-export const buildCost = (price: number, level: number): number => (level >= MAX_LEVEL ? price : Math.round(price / 2));
+export const buildCost = (price: number, level: number): number => Math.round(price * BUILD_RATE[Math.min(level, MAX_LEVEL)]!);
 
 /** Tổng tiền đã bỏ vào ô: giá đất và các bậc nhà. */
 export function tileValue(price: number, level: number): number {

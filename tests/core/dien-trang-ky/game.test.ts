@@ -6,6 +6,8 @@ import {
   JAIL_BAIL,
   JAIL_TILE,
   JAIL_TRIES,
+  FAIR_COUNT,
+  FAIR_RATE,
   MAX_TURNS,
   OMENS,
   REGION_TILES,
@@ -16,10 +18,13 @@ import {
   act,
   buyoutOf,
   chooseAction,
+  groupRate,
   newDtk,
+  priceOf,
   rentOf,
   resign,
   sellOf,
+  tileValue,
   type DtkState,
   type Seat,
 } from "../../../src/core/dien-trang-ky";
@@ -35,10 +40,10 @@ function playOut(s: DtkState): DtkState {
   return s;
 }
 
-test("bàn 40 ô: 24 ô đất, bốn danh thắng, mười hai vùng mỗi vùng hai ô, bốn góc riêng", () => {
+test("bàn 40 ô: 24 ô đất chia 3 dãy đôi và 6 dãy ba, bốn danh thắng, bốn góc riêng", () => {
   assert.equal(BOARD_SIZE, 40);
   assert.equal(TILES.filter((t) => t.kind === "land").length, 24);
-  assert.ok(REGION_TILES.every((r) => r.length === 2));
+  assert.deepEqual(REGION_TILES.map((r) => r.length), [2, 3, 3, 3, 3, 3, 3, 2, 2]);
   assert.deepEqual(TILES.flatMap((t, i) => (t.kind === "scenic" ? [i] : [])), [5, 15, 25, 35]);
   assert.deepEqual([0, 10, 20, 30].map((i) => TILES[i]!.kind), ["start", "jail", "festival", "boat"]);
 });
@@ -73,6 +78,7 @@ test("lệnh sai lượt hoặc sai pha bị từ chối, trạng thái cũ khô
 /** Đặt người chơi lên ô `tile`; pha dựng thẳng trong từng test cho dễ kiểm. */
 function at(s: DtkState, seat: number, tile: number): DtkState {
   const d = structuredClone(s);
+  d.fairs = [];
   d.turn = seat;
   d.players[seat]!.pos = tile;
   return d;
@@ -107,6 +113,7 @@ test("mua đất kèm xây, đi vào đất người khác thì nộp tô hoặc
 test("hùng cứ nhân tô, bậc 5 chỉ xây được khi giữ đủ vùng", () => {
   let s = newDtk({ seats: seats(2), seed: 5 });
   s = structuredClone(s);
+  s.fairs = [];
   s.plots[1] = { owner: 0, level: 4 };
   s.phase = { k: "build", tile: 1 };
   assert.equal(act(s, 0, { t: "build", level: 5 }).ok, false);
@@ -177,6 +184,28 @@ test("Lao Ngục: bị giam, đổ hỏng thì ở lại, nộp tiền chuộc t
   assert.deepEqual(act(newDtk({ seats: seats(2), seed: 1 }), 0, { t: "bail" }), { ok: false, error: "illegal" });
 });
 
+test("dãy ba: giữ hai ô tô nhân 1,25, đủ ba ô nhân 2 và mở được Trang ấp", () => {
+  const s = structuredClone(newDtk({ seats: seats(2), seed: 7 }));
+  s.fairs = [];
+  const [a, b, c] = REGION_TILES[2]!;
+  s.plots[a!] = { owner: 0, level: 1 };
+  const one = rentOf(s, a!);
+  s.plots[b!] = { owner: 0, level: 0 };
+  assert.equal(rentOf(s, a!), Math.round(one * 1.25));
+  s.plots[c!] = { owner: 0, level: 0 };
+  assert.equal(rentOf(s, a!), Math.round(one * 2));
+});
+
+test("ba ô lễ hội nhỏ chọn đầu ván, tô nhân thêm", () => {
+  const s = structuredClone(newDtk({ seats: seats(2), seed: 12 }));
+  assert.equal(new Set(s.fairs).size, FAIR_COUNT);
+  assert.ok(s.fairs!.every((i) => TILES[i]!.kind === "land"));
+  const f = s.fairs![0]!;
+  s.plots[f] = { owner: 0, level: 1 };
+  const plain = Math.round(tileValue(priceOf(f), 1) * 0.3 * groupRate(s, f, 0));
+  assert.equal(rentOf(s, f), Math.round(plain * FAIR_RATE));
+});
+
 test("quẻ Động đất hạ nhà cao nhất một bậc, Trang ấp đứng vững", () => {
   const quake = OMENS.findIndex((o) => o.id === "dongDat");
   const s = structuredClone(newDtk({ seats: seats(2), seed: 3 }));
@@ -193,6 +222,22 @@ test("quẻ Động đất hạ nhà cao nhất một bậc, Trang ấp đứng 
   assert.equal(r.state.plots[6]!.level, 3);
   assert.equal(r.state.plots[3]!.level, 5);
   assert.equal(r.state.plots[1]!.level, 2);
+  // Nhà đang sửa: không thu tô, mỗi lượt của chủ bớt một, hết thì thu lại.
+  const ruin = r.state.plots[6]!.ruin!;
+  assert.ok(ruin >= 1 && ruin <= 3);
+  assert.equal(rentOf(r.state, 6), 0);
+  let t = r.state;
+  for (let k = 0; k < ruin; k++) {
+    t = structuredClone(t);
+    t.phase = { k: "build", tile: 1 };
+    t.turn = 1;
+    const n = act(t, 1, { t: "skip" });
+    assert.ok(n.ok);
+    t = n.state;
+    assert.equal(t.turn, 0);
+  }
+  assert.equal(t.plots[6]!.ruin, 0);
+  assert.ok(rentOf(t, 6) > 0);
 });
 
 test("đi qua Hoa Lư nhận lương vòng", () => {

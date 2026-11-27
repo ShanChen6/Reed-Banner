@@ -30,6 +30,8 @@ const SPECIAL_MARK: Record<SpecialKind, string> = {
 
 /** Dải màu của bốn danh thắng. */
 const SCENIC_COLOR = "#1f9e89";
+/** Màu đèn lồng lễ hội nhỏ. */
+const FAIR_COLOR = "#d9432b";
 
 /** Núi và mái chùa nhỏ cho ô danh thắng. */
 function ScenicIcon() {
@@ -38,6 +40,31 @@ function ScenicIcon() {
       <path d="M2 20 L8 9 L12 15 L16 7 L22 20 Z" fill={SCENIC_COLOR} opacity={0.75} />
       <path d="M12 6 L9 9 H15 Z M10 9 V12 H14 V9" fill="none" stroke="currentColor" strokeWidth={1.3} strokeLinejoin="round" />
     </svg>
+  );
+}
+
+/** Đèn lồng nhỏ đánh dấu ô có lễ hội nhỏ suốt ván. */
+function FairMark() {
+  return (
+    <svg viewBox="0 0 12 16" className="pointer-events-none absolute right-0.5 top-[17%] h-[30%] w-auto drop-shadow" aria-hidden focusable="false">
+      <path d="M6 0 V3" stroke={FAIR_COLOR} strokeWidth={1} />
+      <ellipse cx={6} cy={8.5} rx={5} ry={5.5} fill={FAIR_COLOR} />
+      <path d="M3 8.5 H9 M6 14 V16" stroke="#f5c542" strokeWidth={1} />
+    </svg>
+  );
+}
+
+/** Vết nứt và số lượt còn sửa trên nhà bị thiên tai. */
+function RuinMark({ left }: { left: number }) {
+  return (
+    <span className="pointer-events-none absolute inset-0 grid place-items-center" style={{ background: "rgba(60,45,30,0.35)" }} aria-hidden>
+      <svg viewBox="0 0 24 24" className="absolute inset-0 size-full" preserveAspectRatio="none" focusable="false">
+        <path d="M14 0 L10 7 L15 11 L8 17 L12 24" fill="none" stroke="#2b1d10" strokeWidth={1.2} opacity={0.7} />
+      </svg>
+      <span className="relative rounded-sm px-0.5 text-[clamp(5px,0.9vw,9px)] font-bold text-white" style={{ background: "#5a4632" }}>
+        Sửa {left}
+      </span>
+    </span>
   );
 }
 
@@ -93,7 +120,7 @@ export function Board({ state, pickable, selected, onTile, center }: BoardProps)
             key={i}
             type="button"
             onClick={() => onTile?.(i)}
-            aria-label={`${t.name}${t.kind === "land" || t.kind === "scenic" ? `, giá ${money(t.price)}${owner ? `, của ${owner.name}` : ", còn trống"}` : ""}`}
+            aria-label={`${t.name}${t.kind === "land" || t.kind === "scenic" ? `, giá ${money(t.price)}${owner ? `, của ${owner.name}` : ", còn trống"}${state.fairs?.includes(i) ? ", có lễ hội nhỏ" : ""}` : ""}`}
             aria-pressed={selected === i}
             className={cn(
               "relative flex min-w-0 flex-col items-center justify-between overflow-hidden text-center leading-none transition-[box-shadow,filter]",
@@ -128,6 +155,8 @@ export function Board({ state, pickable, selected, onTile, center }: BoardProps)
                 <span className="pb-0.5 text-[clamp(5px,0.85vw,8px)] opacity-75">{SPECIAL_MARK[t.kind]}</span>
               </>
             )}
+            {state.fairs?.includes(i) && <FairMark />}
+            {(plot?.ruin ?? 0) > 0 && <RuinMark left={plot!.ruin!} />}
             {here.length > 0 && (
               <span className="pointer-events-none absolute inset-x-0 bottom-[18%] flex justify-center gap-px">
                 {here.map((seat) => (

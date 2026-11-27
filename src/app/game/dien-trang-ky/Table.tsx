@@ -6,6 +6,8 @@
 import { useMemo, useState, type ReactNode } from "react";
 import {
   BOAT_FARE,
+  FAIR_RATE,
+  REGION_TILES,
   JAIL_BAIL,
   JAIL_TRIES,
   SCENIC_RENT,
@@ -74,7 +76,7 @@ function TileInfo({ state, tile }: { state: DtkState; tile: number }) {
     const owner = plot.owner !== null ? state.players[plot.owner]! : null;
     return (
       <p className="text-caption text-on-wood-soft">
-        <b className="text-on-wood">{t.name}</b>, danh thắng, giá {money(t.price)}. Không xây nhà; tô theo số danh thắng cùng chủ ({SCENIC_RENT.slice(1).join(", ")} quan).{" "}
+        <b className="text-on-wood">{t.name}</b>, danh thắng, giá {money(t.price)}{state.fairs?.includes(tile) ? ", có lễ hội nhỏ" : ""}. Không xây nhà; tô theo số danh thắng cùng chủ ({SCENIC_RENT.slice(1).join(", ")} quan).{" "}
         {owner ? `Của ${owner.name}, giữ ${scenicCount(state, plot.owner!)} danh thắng. Tô hiện tại ${money(rentOf(state, tile))}.` : "Còn trống."}
       </p>
     );
@@ -84,10 +86,12 @@ function TileInfo({ state, tile }: { state: DtkState; tile: number }) {
   const owner = plot.owner !== null ? state.players[plot.owner]! : null;
   return (
     <p className="text-caption text-on-wood-soft">
-      <b className="text-on-wood">{t.name}</b>, vùng {regionName(t.region)}, giá {money(t.price)}.{" "}
+      <b className="text-on-wood">{t.name}</b>, dãy {regionName(t.region)} ({REGION_TILES[t.region]!.length} ô), giá {money(t.price)}.{" "}
       {owner
         ? `Của ${owner.name}, ${LEVEL_NAME[plot.level]}${holdsRegion(state, tile, plot.owner!) ? ", hùng cứ" : ""}. Tô hiện tại ${money(rentOf(state, tile))}.`
         : "Còn trống."}
+      {state.fairs?.includes(tile) ? ` Có lễ hội nhỏ suốt ván, tô nhân ${FAIR_RATE.toLocaleString("vi-VN")}.` : ""}
+      {(plot.ruin ?? 0) > 0 ? ` Nhà đang sửa sau thiên tai, chưa thu tô (còn ${plot.ruin} lượt).` : ""}
       {state.festival === tile ? " Đang mở Hội Cờ Lau." : ""}
     </p>
   );
@@ -147,7 +151,7 @@ export function Table({ state, controls, onAction, busy = false, status, toolbar
       case "build":
         return `Đất của bạn: ${tileName(ph.tile)}, đang là ${LEVEL_NAME[state.plots[ph.tile]!.level]}. Xây thêm không?`;
       case "rent":
-        return `Đất của ${state.players[ph.owner]!.name}: nộp tô ${money(ph.amount)} hoặc mua lại ${money(ph.buyout)}.`;
+        return ph.amount === 0 ? `Nhà của ${state.players[ph.owner]!.name} đang sửa sau thiên tai, chưa thu tô. Mua lại ${money(ph.buyout)} không?` : `Đất của ${state.players[ph.owner]!.name}: nộp tô ${money(ph.amount)} hoặc mua lại ${money(ph.buyout)}.`;
       case "pick":
         return ph.what === "market" ? "Chợ phiên: chọn một ô đất trống sáng lên để mua theo giá gốc." : ph.what === "boat" ? `Bến đò: chọn ô muốn tới (tiền đò ${money(BOAT_FARE)}).` : "Hội Cờ Lau: chọn một ô đất của bạn để mở hội.";
       case "raise":
@@ -201,7 +205,7 @@ export function Table({ state, controls, onAction, busy = false, status, toolbar
       case "rent":
         return (
           <>
-            <Button size="sm" disabled={!can} onClick={() => onAction({ t: "pay" })}>Nộp tô {money(ph.amount)}</Button>
+            <Button size="sm" disabled={!can} onClick={() => onAction({ t: "pay" })}>{ph.amount === 0 ? "Đi tiếp" : `Nộp tô ${money(ph.amount)}`}</Button>
             <Button size="sm" variant="secondary" disabled={!can} onClick={() => onAction({ t: "buyout" })}>Mua lại {money(ph.buyout)}</Button>
           </>
         );
