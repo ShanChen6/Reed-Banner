@@ -9,11 +9,14 @@
 // Sinh tồn: --survival [--level 10] --battles 50 in số đợt AI Thường vượt qua.
 // Campaign V2: --mission M15 (hoặc M15,M16 / west / east) đánh nhiệm vụ có encounter với đúng tham số server
 // (cấp, độ khó, địa hình, lương đối thủ, lương gợi ý); --level, --team, --sweep=-2..3 (lệch so với cấp gợi ý).
+// Tính cách máy: --personality [--mode 1v1|3v3|all] --battles 200 đấu gương, phe có tính cách gặp AI gốc cùng đội hình.
 // Nhân vật kèm: --roster [--level 20] --battles 200 [--only haVan,tranLam] đo tỉ lệ thắng khi có từng người.
 
 import { parseArgs } from "node:util";
 import {
   ALL_COMPANIONS,
+  PERSONALITIES,
+  type PersonalityId,
   buildMatchups,
   CAMPAIGN_ROUTES,
   campaignEncounter,
@@ -65,6 +68,7 @@ const { values } = parseArgs({
     raid: { type: "string" },
     survival: { type: "boolean", default: false },
     roster: { type: "boolean", default: false },
+    personality: { type: "boolean", default: false },
     only: { type: "string" },
     json: { type: "boolean", default: false },
   },
@@ -106,6 +110,29 @@ function runSurvival(): void {
     const t = runs.flatMap((r) => r.turns);
     const perWave = t.reduce((a, b) => a + b, 0) / t.length;
     console.log(`| ${lv} | ${num(avg)} | ${q(0.1)} | ${q(0.5)} | ${q(0.9)} | ${reach(5)} | ${reach(10)} | ${reach(15)} | ${num(perWave)} |`);
+  }
+}
+
+if (values.personality) {
+  runPersonality();
+  process.exit(0);
+}
+
+/**
+ * Đấu gương: hai phe cùng đội hình, phe 0 mang tính cách, phe 1 là AI gốc; mỗi cặp đánh hai lần đổi phe đi trước.
+ * Tỉ lệ thắng gần 50% là tính cách không mạnh hay yếu hơn AI gốc, chỉ khác lối đánh.
+ */
+function runPersonality(): void {
+  for (const mode of modes) {
+    console.log(`\n## Tính cách ${mode}, ${battles} trận mỗi tính cách, AI ${difficulty}${levelLabel}, đấu gương với AI gốc`);
+    console.log("| Tính cách | Thắng | Hòa | Lượt mỗi phe |\n|---|---|---|---|");
+    const base = buildMatchups(mode, Math.ceil(battles / 2), seed, element, undefined, level).slice(0, Math.ceil(battles / 2));
+    const mirrors = base.flatMap((m) => ([0, 1] as const).map((first) => ({ ...m, sides: [m.sides[0], m.sides[0]] as const, firstSide: first })));
+    for (const id of Object.keys(PERSONALITIES) as PersonalityId[]) {
+      const results = mirrors.map((m) => runBattle(m, { difficulty: [difficulty, difficulty], maxTurns, personality: [id, undefined] }));
+      const s = summarize(results);
+      console.log(`| ${PERSONALITIES[id].name} | ${pct(s.side0WinRate)} | ${s.draws} | ${num(s.turnsPerSide.mean)} |`);
+    }
   }
 }
 
