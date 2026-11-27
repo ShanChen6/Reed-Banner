@@ -4,7 +4,8 @@
 // Chỉ là trình bày: chọn chương chỉ đổi chương đang xem, không mở hay hoàn thành nhiệm vụ nào. Tiến độ lấy từ
 // hồ sơ server qua chapterStatus.
 
-import { buttonVariants } from "@/components/ui";
+import { BookOpenIcon, buttonVariants, CircleHelpIcon, MapIcon, ScrollTextIcon, SwordsIcon } from "@/components/ui";
+import type { ComponentType } from "react";
 import { FitPages, type FitUnit } from "@/components/game-ui";
 import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { GuideSheetButton } from "../ModeGuide";
@@ -674,52 +675,18 @@ export function StrongholdPanel({
 
 export type AtlasView = "atlas" | "mission" | "codex" | "raid" | "guide";
 
-/** Biểu tượng nét mảnh cho thanh header (bản đồ, cuộn nhiệm vụ, sách sử, binh lính). */
+/** Icon thẻ lấy từ bộ chung (hình Lucide), không vẽ riêng (Shan 28/11/2026). */
+const TAB_ICON: Record<AtlasView, ComponentType<{ className?: string }>> = {
+  atlas: MapIcon,
+  mission: ScrollTextIcon,
+  codex: BookOpenIcon,
+  raid: SwordsIcon,
+  guide: CircleHelpIcon,
+};
+
 function TabIcon({ kind }: { kind: AtlasView }) {
-  const p = {
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinejoin: "round" as const,
-    strokeLinecap: "round" as const,
-  };
-  return (
-    <svg viewBox="0 0 24 24" className="size-5 shrink-0" aria-hidden>
-      {kind === "atlas" && (
-        <>
-          <path {...p} d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z" />
-          <path {...p} d="M9 4v14M15 6v14" />
-        </>
-      )}
-      {kind === "mission" && (
-        <>
-          <path {...p} d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8l-3-3V5" />
-          <path {...p} d="M9 8h7M9 12h7M9 16h4" />
-        </>
-      )}
-      {kind === "codex" && (
-        <>
-          <path
-            {...p}
-            d="M12 6c-2-1.5-5-2-8-1.5V19c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V4.5C17 4 14 4.5 12 6z"
-          />
-          <path {...p} d="M12 6v14.5" />
-        </>
-      )}
-      {kind === "raid" && (
-        <>
-          <path {...p} d="M4 4l9 9M6 14l-2 2 2 2 2-2M11 15l2 2" />
-          <path {...p} d="M20 4l-9 9M18 14l2 2-2 2-2-2" />
-        </>
-      )}
-      {kind === "guide" && (
-        <>
-          <circle {...p} cx="12" cy="12" r="9" />
-          <path {...p} d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01" />
-        </>
-      )}
-    </svg>
-  );
+  const Glyph = TAB_ICON[kind];
+  return <Glyph className="size-5" />;
 }
 
 /**

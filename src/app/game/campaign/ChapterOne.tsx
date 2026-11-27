@@ -590,7 +590,7 @@ export default function ChapterOne({
           })()}
       {view === "guide" ? (
         <div className="flex flex-col px-1 sm:px-2 xl:min-h-0 xl:flex-1">
-          <ModeGuidePanel scene="CAMPAIGN" headingId="mode-guide-title" paged onPlay={() => updateAtlas({ ...atlas, view: "atlas" })} />
+          <ModeGuidePanel scene="CAMPAIGN" headingId="mode-guide-title" paged />
         </div>
       ) : view === "codex" ? (
         <WarlordCodex campaign={campaign} fit={fit} ledger={<WorldLedger campaign={profile.campaign} />} />
