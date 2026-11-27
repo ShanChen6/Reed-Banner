@@ -8,7 +8,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import type { Element, Profession } from "@/core";
 import { useAudio } from "../audio/AudioProvider";
-import { buttonVariants } from "@/components/ui";
+import { ArrowLeftIcon, ArrowRightIcon, buttonVariants } from "@/components/ui";
 import { Portrait } from "../art/portraits";
 import { BasisBadge } from "./StoryBeats";
 import {
@@ -322,17 +322,18 @@ export default function DialoguePlayer({
           type="button"
           onClick={() => goTo(index - 1)}
           disabled={index === 0}
-          className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-11" })}
+          className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-11 gap-1.5" })}
         >
-          ← Trước
+          <ArrowLeftIcon />
+          Trước
         </button>
         {(index < last || finishLabel) && (
           <button
             type="button"
             onClick={forward}
-            className={buttonVariants({ size: "sm", className: "min-h-11" })}
+            className={buttonVariants({ size: "sm", className: "min-h-11 gap-1.5" })}
           >
-            {index < last ? "Tiếp →" : finishLabel}
+            {index < last ? <>Tiếp<ArrowRightIcon /></> : finishLabel}
           </button>
         )}
         <span className="text-caption text-on-wood-soft" aria-hidden>

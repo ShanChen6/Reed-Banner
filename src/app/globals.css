@@ -1739,6 +1739,51 @@ html {
     max-width: none;
   }
 }
+/* Trận ở trang thường trên máy tính (từ 1280px): khung trận cao bằng cửa sổ như các màn chế độ (Shan 28/11/2026: Giao
+   tranh trong Bình Loạn còn phải cuộn). Hàng ba cột lấp phần dưới sân đấu, bàn cờ lớn nhất vừa ô chứa (container query)
+   như khi phóng to; sân đấu thôi dính vì trang không cuộn nữa; nút phóng to nằm ở góc dưới cột phải, không chừa dải riêng. */
+@media (width >= 80rem) {
+  .battle-live.ui-mode-fit .battle-shell {
+    height: var(--mode-fit-h);
+  }
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    min-height: 0;
+    padding-bottom: 0;
+  }
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) > .play-card-body {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) .play-card-sticky {
+    position: static;
+  }
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) .battle-fill {
+    flex: 1 1 0;
+    min-height: 0;
+    align-items: stretch;
+  }
+  /* Đội ba người trên laptop thấp: cột thẻ tướng dài hơn khung thì cuộn riêng trong cột, bàn cờ không bị đẩy. */
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) .battle-side {
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    padding: 2px 2px 0.75rem;
+  }
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) .battle-board-box {
+    flex: 1 1 0;
+    min-height: 0;
+    container-type: size;
+    margin-top: 0.75rem;
+  }
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) .battle-board {
+    margin-top: 0;
+    width: min(100cqw, calc((100cqh - 16px) * var(--board-ratio) + 16px));
+    max-width: none;
+  }
+}
 /* Do Thám: trang thường ô 26–38px theo bề ngang màn. Phóng to màn chơi thì ô giãn lấp cả bề ngang lẫn bề cao màn (trừ lề,
    bảng tên chế độ, hàng nút đạo cụ, dòng thông báo), tối đa 96px (Shan 20/11/2026: phóng to còn rất nhiều chỗ trống). */
 .dt-board {

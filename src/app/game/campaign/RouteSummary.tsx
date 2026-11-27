@@ -14,6 +14,7 @@ import {
   type CampaignProgressV2,
   type CampaignRoute,
 } from "@/core";
+import { ArrowRightIcon } from "@/components/ui";
 import { AtlasCorners } from "./AtlasFrame";
 import { FACTION_STATUS_TEXT } from "./StoryBeats";
 
@@ -149,8 +150,8 @@ export default function RouteSummary({
       </div>
       {/* Điểm hội: hai tuyến cùng dẫn tới Đỗ Động. */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-sm">
-        <span aria-hidden className="atlas-muted">
-          Tây + Đông →
+        <span aria-hidden className="atlas-muted inline-flex items-center gap-1">
+          Tây + Đông <ArrowRightIcon />
         </span>
         <button
           type="button"

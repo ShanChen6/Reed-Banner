@@ -69,10 +69,10 @@ export function TeamColumn({
       // Màn ngang thấp (điện thoại xoay ngang) dùng bố cục ba cột như md, cột hẹp hơn (Shan chọn 2A, 21/11/2026).
       className={`w-full grid-cols-3 gap-1.5 md:w-40 md:shrink-0 md:flex-col md:gap-2 lg:w-56 3xl:w-72 landscape-short:w-36 landscape-short:shrink-0 landscape-short:flex-col landscape-short:gap-1.5 ${
         s === AI
-          ? "order-1 grid md:order-none md:flex landscape-short:order-none landscape-short:flex"
+          ? "battle-side order-1 grid md:order-none md:flex landscape-short:order-none landscape-short:flex"
           : inline
             ? "grid md:hidden landscape-short:hidden"
-            : "hidden md:flex landscape-short:flex"
+            : "battle-side hidden md:flex landscape-short:flex"
       }`}
     >
       <div className="col-span-3 flex items-center justify-between text-caption opacity-80">

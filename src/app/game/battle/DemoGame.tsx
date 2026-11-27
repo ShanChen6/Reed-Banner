@@ -1238,10 +1238,10 @@ export default function DemoGame({
     <div
       ref={rootRef}
       // battle-live: đang ở màn trận (cả lúc hiện kết quả); màn ngang thấp ẩn header chung và dồn bàn cờ vừa chiều cao (components.css).
-      className={`${palette} ui-mode-screen ${started ? "battle-live" : ""}`}
+      className={`${palette} ui-mode-screen ${started ? "battle-live ui-mode-fit" : ""}`}
     >
       {/* Điện thoại: khung ngoài phẳng (.ui-frame--phone-flat) để bàn cờ lấp ngang (Shan chọn 1A, 21/11/2026). */}
-      <OrnateFrame level="raised" flush className={`ui-frame--phone-flat mx-auto flex w-full flex-col gap-2 p-0 sm:gap-3 sm:p-6 ${started ? "landscape-short:gap-1.5 landscape-short:p-0" : ""} ${MODE_CONTENT_WIDTH}`}>
+      <OrnateFrame level="raised" flush className={`battle-shell ui-frame--phone-flat mx-auto flex w-full flex-col gap-2 p-0 sm:gap-3 sm:p-6 ${started ? "landscape-short:gap-1.5 landscape-short:p-0" : ""} ${MODE_CONTENT_WIDTH}`}>
         <BattleHeader
           atBreak={atBreak}
           difficulty={difficulty}
