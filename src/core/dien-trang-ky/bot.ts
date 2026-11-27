@@ -3,15 +3,17 @@
 // Người chơi để hết giờ thì máy đi thay theo lối Lão luyện.
 
 import { createRng } from "../rng";
-import { BOAT_FARE, JAIL_BAIL, MAX_LEVEL_ON_BUY, REGION_TILES, TILES } from "./board";
+import { BOAT_FARE, JAIL_BAIL, MAX_LEVEL_ON_BUY, REGION_TILES, SCENIC_TILES, SIDE_LANDS, TILES } from "./board";
 import {
   aliveSeats,
   assetsOf,
   buildCostBetween,
+  disasterTargets,
   freeLands,
   holdsRegion,
   isScenic,
   levelCap,
+  monopolyOf,
   ownedTiles,
   priceOf,
   rentOf,
@@ -81,6 +83,24 @@ function completes(s: DtkState, tile: number, seat: number): boolean {
   return REGION_TILES[t.region]!.every((i) => i === tile || s.plots[i]?.owner === seat);
 }
 
+/** Có ô này thì thắng ngay (đủ một cạnh hoặc đủ bốn danh thắng). */
+function winsWith(s: DtkState, tile: number, seat: number): boolean {
+  const t = structuredClone(s);
+  t.plots[tile] = { owner: seat, level: t.plots[tile]?.level ?? 0 };
+  return monopolyOf(t, seat) !== null;
+}
+
+/** Người `o` chỉ còn thiếu đúng một ô để thắng ngay. */
+function nearWin(s: DtkState, o: number): boolean {
+  const groups = [SCENIC_TILES, ...SIDE_LANDS];
+  return groups.some((g) => g.filter((i) => s.plots[i]?.owner === o).length >= g.length - 1 && g.some((i) => s.plots[i]?.owner === o));
+}
+
+/** Ô này mà về tay người khác thì người đó thắng ngay: nên giành trước để chặn. */
+function blocks(s: DtkState, tile: number, seat: number): boolean {
+  return aliveSeats(s).some((o) => o !== seat && winsWith(s, tile, o));
+}
+
 /** Bậc cao nhất xây tới được mà vẫn giữ `reserve`, rồi nhân theo độ dám xây. */
 function targetLevel(cash: number, reserve: number, tile: number, from: number, cap: number, build: number, base = 0): number {
   let best = from;
@@ -106,6 +126,7 @@ export function chooseAction(s: DtkState, style: BotStyle = styleOf(s.players[s.
       return { t: "roll" };
     case "buy": {
       const price = priceOf(ph.tile);
+      if (me.cash >= price && (winsWith(s, ph.tile, seat) || blocks(s, ph.tile, seat))) return { t: "buy", level: 0 };
       const reserve = completes(s, ph.tile, seat) ? prm.reserve / 2 : prm.reserve;
       if (me.cash - price < reserve && !whim()) return { t: "skip" };
       if (me.cash < price) return { t: "skip" };
@@ -119,6 +140,9 @@ export function chooseAction(s: DtkState, style: BotStyle = styleOf(s.players[s.
       return level > plot.level ? { t: "build", level } : { t: "skip" };
     }
     case "rent": {
+      // Mua lại khi thắng ngay được, hoặc khi chủ ô đang giữ thế sắp thắng (cướp một ô của cạnh hay danh thắng của họ).
+      if (winsWith(s, ph.tile, seat)) return { t: "buyout" };
+      if (nearWin(s, ph.owner) && me.cash - ph.buyout >= ph.amount) return { t: "buyout" };
       const left = me.cash - ph.buyout;
       if (left < Math.max(prm.reserve, ph.amount)) return { t: "pay" };
       let want = prm.buyout * 0.5;
@@ -128,6 +152,13 @@ export function chooseAction(s: DtkState, style: BotStyle = styleOf(s.players[s.
       return rng.next() < want ? { t: "buyout" } : { t: "pay" };
     }
     case "pick": {
+      if (ph.what === "quake" || ph.what === "storm") {
+        // Nhắm nhà tô cao nhất của người giàu nhất.
+        const targets = disasterTargets(s, seat, ph.what);
+        if (!targets.length) return { t: "skip" };
+        const score = (i: number) => assetsOf(s, s.plots[i]!.owner!) * 10 + rentOf(s, i);
+        return { t: "pick", tile: targets.reduce((a, b) => (score(b) > score(a) ? b : a)) };
+      }
       if (ph.what === "festival") {
         const mine = ownedTiles(s, seat);
         return mine.length ? { t: "pick", tile: mine.reduce((a, b) => (rentOf(s, b) > rentOf(s, a) ? b : a)) } : { t: "skip" };
@@ -137,8 +168,8 @@ export function chooseAction(s: DtkState, style: BotStyle = styleOf(s.players[s.
       const affordable = free.filter((i) => priceOf(i) <= budget);
       if (!affordable.length) return { t: "skip" };
       const best = affordable.reduce((a, b) => {
-        const sa = (completes(s, a, seat) ? 1000 : 0) + priceOf(a);
-        const sb = (completes(s, b, seat) ? 1000 : 0) + priceOf(b);
+        const sa = (winsWith(s, a, seat) ? 5000 : 0) + (blocks(s, a, seat) ? 3000 : 0) + (completes(s, a, seat) ? 1000 : 0) + priceOf(a);
+        const sb = (winsWith(s, b, seat) ? 5000 : 0) + (blocks(s, b, seat) ? 3000 : 0) + (completes(s, b, seat) ? 1000 : 0) + priceOf(b);
         return sb > sa ? b : a;
       });
       if (ph.what === "boat" && !completes(s, best, seat) && rng.next() < 0.3) return { t: "skip" };

@@ -12,12 +12,14 @@ import {
   OMENS,
   REGION_TILES,
   SALARY,
+  SIDE_LANDS,
   SCENIC_RENT,
   START_CASH,
   TILES,
   act,
   buyoutOf,
   chooseAction,
+  disasterTargets,
   groupRate,
   newDtk,
   priceOf,
@@ -61,8 +63,12 @@ test("máy chơi tới khi chỉ còn một người, không chạm chốt an to
     const s = playOut(newDtk({ seats: seats(2 + (seed % 3)), seed }));
     assert.equal(s.phase.k, "ended");
     assert.ok(s.turns < MAX_TURNS);
-    assert.equal(s.players.filter((p) => !p.out).length, 1);
-    assert.equal(s.ranking![0], s.players.findIndex((p) => !p.out));
+    // Hết ván khi chỉ còn một người, hoặc có người thắng ngay (đủ một cạnh hay bốn danh thắng).
+    const mono = s.log.some((e) => e.k === "monopoly");
+    if (!mono) {
+      assert.equal(s.players.filter((p) => !p.out).length, 1);
+      assert.equal(s.ranking![0], s.players.findIndex((p) => !p.out));
+    }
   }
 });
 
@@ -184,14 +190,14 @@ test("Lao Ngục: bị giam, đổ hỏng thì ở lại, nộp tiền chuộc t
   assert.deepEqual(act(newDtk({ seats: seats(2), seed: 1 }), 0, { t: "bail" }), { ok: false, error: "illegal" });
 });
 
-test("dãy ba: giữ hai ô tô nhân 1,25, đủ ba ô nhân 2 và mở được Trang ấp", () => {
+test("dãy ba: chưa đủ dãy thì không nhân tô, đủ ba ô nhân 2", () => {
   const s = structuredClone(newDtk({ seats: seats(2), seed: 7 }));
   s.fairs = [];
   const [a, b, c] = REGION_TILES[2]!;
   s.plots[a!] = { owner: 0, level: 1 };
   const one = rentOf(s, a!);
   s.plots[b!] = { owner: 0, level: 0 };
-  assert.equal(rentOf(s, a!), Math.round(one * 1.25));
+  assert.equal(rentOf(s, a!), one);
   s.plots[c!] = { owner: 0, level: 0 };
   assert.equal(rentOf(s, a!), Math.round(one * 2));
 });
@@ -206,38 +212,80 @@ test("ba ô lễ hội nhỏ chọn đầu ván, tô nhân thêm", () => {
   assert.equal(rentOf(s, f), Math.round(plain * FAIR_RATE));
 });
 
-test("quẻ Động đất hạ nhà cao nhất một bậc, Trang ấp đứng vững", () => {
-  const quake = OMENS.findIndex((o) => o.id === "dongDat");
+/** Đi đò tới ô Quẻ bói số 2 để rút quẻ `id` đã xếp sẵn. */
+function drawOmenById(s: DtkState, id: string): DtkState {
+  const d = structuredClone(s);
+  d.deck = [OMENS.findIndex((o) => o.id === id)];
+  d.deckAt = 0;
+  d.turn = 0;
+  d.players[0]!.pos = 0;
+  d.phase = { k: "pick", what: "boat" };
+  const r = act(d, 0, { t: "pick", tile: 2 });
+  assert.ok(r.ok);
+  return r.state;
+}
+
+test("Động đất: chọn nhà người khác, sập một bậc, không bắt sửa; Trang ấp và nhà mình không chọn được", () => {
   const s = structuredClone(newDtk({ seats: seats(2), seed: 3 }));
-  s.plots[1] = { owner: 0, level: 2 };
-  s.plots[3] = { owner: 0, level: 5 };
+  s.plots[1] = { owner: 1, level: 2 };
+  s.plots[3] = { owner: 1, level: 5 };
   s.plots[6] = { owner: 0, level: 4 };
-  s.deck = [quake];
-  s.deckAt = 0;
-  s.players[0]!.pos = 0;
-  // Đi đò tới ô Quẻ bói số 2 để rút quẻ đã xếp sẵn.
-  s.phase = { k: "pick", what: "boat" };
-  const r = act(s, 0, { t: "pick", tile: 2 });
+  const t = drawOmenById(s, "dongDat");
+  assert.deepEqual(t.phase, { k: "pick", what: "quake" });
+  assert.deepEqual(disasterTargets(t, 0, "quake"), [1]);
+  assert.equal(act(t, 0, { t: "pick", tile: 3 }).ok, false);
+  assert.equal(act(t, 0, { t: "pick", tile: 6 }).ok, false);
+  const r = act(t, 0, { t: "pick", tile: 1 });
+  assert.ok(r.ok);
+  assert.equal(r.state.plots[1]!.level, 1);
+  assert.equal(r.state.plots[1]!.ruin ?? 0, 0);
+});
+
+test("Bão lũ: nhà bị chọn giữ nguyên bậc, sửa 1 tới 3 lượt của chủ, hết sửa thì thu tô lại", () => {
+  const s = structuredClone(newDtk({ seats: seats(2), seed: 3 }));
+  s.plots[6] = { owner: 1, level: 3 };
+  const t = drawOmenById(s, "baoLu");
+  const r = act(t, 0, { t: "pick", tile: 6 });
   assert.ok(r.ok);
   assert.equal(r.state.plots[6]!.level, 3);
-  assert.equal(r.state.plots[3]!.level, 5);
-  assert.equal(r.state.plots[1]!.level, 2);
-  // Nhà đang sửa: không thu tô, mỗi lượt của chủ bớt một, hết thì thu lại.
   const ruin = r.state.plots[6]!.ruin!;
   assert.ok(ruin >= 1 && ruin <= 3);
   assert.equal(rentOf(r.state, 6), 0);
-  let t = r.state;
+  let u = r.state;
   for (let k = 0; k < ruin; k++) {
-    t = structuredClone(t);
-    t.phase = { k: "build", tile: 1 };
-    t.turn = 1;
-    const n = act(t, 1, { t: "skip" });
+    u = structuredClone(u);
+    u.turn = 0;
+    u.phase = { k: "pick", what: "festival" };
+    const n = act(u, 0, { t: "skip" });
     assert.ok(n.ok);
-    t = n.state;
-    assert.equal(t.turn, 0);
+    u = n.state;
+    assert.equal(u.turn, 1);
   }
-  assert.equal(t.plots[6]!.ruin, 0);
-  assert.ok(rentOf(t, 6) > 0);
+  assert.equal(u.plots[6]!.ruin, 0);
+  assert.ok(rentOf(u, 6) > 0);
+});
+
+test("thắng ngay khi giữ hết đất một cạnh bàn hoặc đủ bốn danh thắng", () => {
+  const s = structuredClone(newDtk({ seats: seats(3), seed: 5 }));
+  for (const i of SIDE_LANDS[0]!.slice(1)) s.plots[i] = { owner: 1, level: 0 };
+  const last = SIDE_LANDS[0]![0]!;
+  s.turn = 1;
+  s.players[1]!.pos = last;
+  s.phase = { k: "buy", tile: last };
+  const r = act(s, 1, { t: "buy", level: 0 });
+  assert.ok(r.ok);
+  assert.equal(r.state.phase.k, "ended");
+  assert.equal(r.state.ranking![0], 1);
+  assert.ok(r.state.log.some((e) => e.k === "monopoly" && e.how === "side"));
+
+  const t = structuredClone(newDtk({ seats: seats(2), seed: 5 }));
+  for (const i of [5, 15, 25]) t.plots[i] = { owner: 0, level: 0 };
+  t.players[0]!.pos = 35;
+  t.phase = { k: "buy", tile: 35 };
+  const w = act(t, 0, { t: "buy", level: 0 });
+  assert.ok(w.ok);
+  assert.equal(w.state.phase.k, "ended");
+  assert.equal(w.state.ranking![0], 0);
 });
 
 test("đi qua Hoa Lư nhận lương vòng", () => {

@@ -12,8 +12,8 @@ export type OmenEffect =
   | { readonly k: "nearestFree" }
   | { readonly k: "blessing" }
   | { readonly k: "jail" }
-  /** Thiên tai: nhà sập một bậc, ô đang sửa không thu tô 1..3 lượt. Động đất nhắm nhà cao nhất của người rút, bão nhắm một nhà bất kỳ trên bàn. */
-  | { readonly k: "disaster"; readonly target: "mine" | "any" }
+  /** Thiên tai: người rút chọn một nhà của người khác. quake: sập một bậc; storm: phải sửa 1..3 lượt, không thu tô. */
+  | { readonly k: "disaster"; readonly kind: "quake" | "storm" }
   | { readonly k: "freeBuild" };
 
 export interface Omen {
@@ -39,7 +39,7 @@ export const OMENS: readonly Omen[] = [
   { id: "batGiam", title: "Bị quan bắt giam", text: "Vướng vụ kiện đất, bị giải thẳng vào Lao Ngục.", effect: { k: "jail" } },
   { id: "veBenDo", title: "Gọi đò sông Đáy", text: "Đi tới Bến Sông Đáy.", effect: { k: "goto", tile: 30 } },
   { id: "dungNoc", title: "Thợ làng dựng giúp", text: "Ô thấp nhất của bạn được lên một bậc nhà, không mất tiền.", effect: { k: "freeBuild" } },
-  { id: "dongDat", title: "Động đất", text: "Đất rung chuyển, ngôi nhà cao nhất của bạn sập một bậc và phải sửa, tạm không thu tô. Trang ấp đứng vững.", effect: { k: "disaster", target: "mine" } },
-  { id: "baoLon", title: "Bão lớn", text: "Bão quét qua, một ngôi nhà trên bàn sập một bậc và phải sửa, tạm không thu tô. Trang ấp đứng vững.", effect: { k: "disaster", target: "any" } },
+  { id: "dongDat", title: "Động đất", text: "Đất rung chuyển. Chọn một ngôi nhà của nhà khác, nhà đó sập một bậc. Trang ấp đứng vững.", effect: { k: "disaster", kind: "quake" } },
+  { id: "baoLu", title: "Bão lũ", text: "Bão lũ tràn về. Chọn một ngôi nhà của nhà khác, nhà đó phải sửa 1 tới 3 lượt, không thu tô. Trang ấp đứng vững.", effect: { k: "disaster", kind: "storm" } },
   { id: "thueMuoi", title: "Quan thu thuế muối", text: "Nộp một phần mười tiền mặt.", effect: { k: "loseRate", rate: 0.1 } },
 ];

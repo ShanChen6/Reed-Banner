@@ -56,20 +56,21 @@ Giá đất khác nhau theo khu (60 tới 350 quan). Giá xây và tô đều t�
 
 Nguyên tắc: một lần thu tô (chưa tính hùng cứ, lễ hội) không vượt giá trị ô. Bảng cũ (tô 4,5 lần giá đất ở Trang ấp) làm Dinh thự gỡ vốn sau một lần dừng.
 
-- **Dãy và hùng cứ** (Shan chọn 27/11: 3 dãy đôi, 6 dãy ba): dãy đôi giữ đủ hai ô thì tô nhân 1,5; dãy ba giữ hai ô nhân 1,25, đủ ba ô nhân 2. Giữ đủ dãy mới xây được Trang ấp.
+- **Dãy và hùng cứ** (Shan chọn 27/11: 3 dãy đôi, 6 dãy ba): chỉ khi giữ đủ dãy mới nhân tô (Shan 27/11): dãy đôi nhân 1,5, dãy ba nhân 2. Giữ đủ dãy mới xây được Trang ấp.
 - **Lễ hội nhỏ**: đầu ván chọn ngẫu nhiên theo seed 3 ô đất có lễ hội suốt ván (đèn lồng trên ô). Giá không đổi, tô nhân 1,5; cộng dồn với hùng cứ và Hội Cờ Lau.
-- **Thiên tai** (quẻ Động đất, Bão lớn): một ngôi nhà sập một bậc và phải sửa 1 tới 3 lượt của chủ (ngẫu nhiên); trong lúc sửa ô không thu tô, người dừng chỉ được chọn mua lại hoặc đi tiếp. Đất chưa xây và Trang ấp (nhà cao cấp) không bị ảnh hưởng.
+- **Thiên tai** (Shan 27/11): người rút quẻ chọn một ngôi nhà của nhà khác (bậc 1 tới 4). Động đất: nhà đó sập một bậc. Bão lũ: nhà đó giữ nguyên bậc nhưng phải sửa 1 tới 3 lượt của chủ (ngẫu nhiên), trong lúc sửa không thu tô, người dừng chỉ được chọn mua lại hoặc đi tiếp. Hai hiệu ứng không xảy ra cùng lúc. Đất chưa xây và Trang ấp (nhà cao cấp) không bị ảnh hưởng. Không có nhà nào hợp lệ thì quẻ qua.
 - **Nguyên tố** chỉ quyết định kiểu dáng và màu nhà của người chơi (màu mái, vật trên nóc), không đổi tô hay luật.
 
 ## 6. Quẻ bói
 
-18 quẻ thời loạn (`omens.ts`), xếp lại theo seed đầu ván rồi rút vòng: được mùa, giặc đốt kho, Hoa Lư ban thưởng, về Hoa Lư, lũ tràn bờ đê (20 quan mỗi bậc nhà), khao quân (trả mỗi người 30), các làng góp lễ (nhận của mỗi người 30), ngựa trạm gấp (tiến 3), sạt lở (lùi 3), thầy địa lý (tới ô đất trống gần nhất), phúc ấm (miễn tô một lần), bị quan bắt giam (vào Lao Ngục), gọi đò (tới Bến Sông Đáy), thợ làng dựng giúp (ô thấp nhất lên một bậc), thuế muối (một phần mười tiền mặt), thương lái trả nợ, động đất (nhà cao nhất của người rút sập một bậc, phải sửa), bão lớn (một nhà bất kỳ trên bàn sập một bậc, phải sửa); xem Thiên tai ở mục 5.
+18 quẻ thời loạn (`omens.ts`), xếp lại theo seed đầu ván rồi rút vòng: được mùa, giặc đốt kho, Hoa Lư ban thưởng, về Hoa Lư, lũ tràn bờ đê (20 quan mỗi bậc nhà), khao quân (trả mỗi người 30), các làng góp lễ (nhận của mỗi người 30), ngựa trạm gấp (tiến 3), sạt lở (lùi 3), thầy địa lý (tới ô đất trống gần nhất), phúc ấm (miễn tô một lần), bị quan bắt giam (vào Lao Ngục), gọi đò (tới Bến Sông Đáy), thợ làng dựng giúp (ô thấp nhất lên một bậc), thuế muối (một phần mười tiền mặt), thương lái trả nợ, động đất (chọn nhà người khác, sập một bậc), bão lũ (chọn nhà người khác, phải sửa); xem Thiên tai ở mục 5.
 
 ## 7. Hết tiền và kết thúc (mục 6, 7)
 
 - Thiếu tiền thì chọn ô đất để bán lại cho triều đình được nửa giá trị. Bán hết vẫn thiếu là **phá sản**: tiền còn lại về chủ nợ, đất về trống, rời ván. Không đổi hay bán đất giữa người chơi.
 - Rời ván giữa chừng tính như phá sản.
-- Chơi tới khi chỉ còn một người. Ván trên server mà không còn người thật nào thì chốt ngay, xếp các máy còn lại theo tài sản. Chốt an toàn 1.600 lượt (chạy thử chưa ván nào chạm).
+- **Thắng ngay** (Shan 27/11): giữ hết đất trên một cạnh bàn (không tính danh thắng), hoặc giữ đủ bốn danh thắng. Người thắng xếp hạng nhất, những người còn lại xếp theo tài sản.
+- Không ai thắng ngay thì chơi tới khi chỉ còn một người. Ván trên server mà không còn người thật nào thì chốt ngay, xếp các máy còn lại theo tài sản. Chốt an toàn 1.600 lượt (chạy thử chưa ván nào chạm).
 - Xếp hạng: người còn lại hạng nhất, rồi ngược thứ tự phá sản.
 
 ## 8. Thưởng (mục 8)
@@ -88,7 +89,7 @@ Mỗi tài khoản tối đa 3 ván có vàng mỗi ngày (giờ Việt Nam). Kh
 
 Mười hai sứ quân, mỗi người một tính cách (cùng tên bộ tính cách của bot nhân vật): Mãnh công (Phạm Bạch Hổ, Lý Khuê, Nguyễn Siêu) mua hăng, xây cao, giữ ít tiền; Thủ thành (Nguyễn Khoan, Kiều Thuận) giữ tiền chắc; Mưu phá (Ngô Xương Xí, Ngô Nhật Khánh) chuyên mua lại để phá hùng cứ; Tích lực (Kiều Công Hãn, Lữ Đường) gom đất trước, đủ tiền mới xây; Liều lĩnh (Đỗ Cảnh Thạc); Lão luyện (Trần Lãm), cũng là lối máy đi thay người quá giờ; Tùy cơ (Nguyễn Thủ Tiệp) giàu thì giữ, nghèo thì liều. Máy chỉ nhìn bàn như người chơi, không biết trước xúc xắc hay quẻ.
 
-Chạy thử 300 ván mỗi cỡ (máy với máy, bảng tô mới, danh thắng, Lao Ngục, 18 quẻ): trung vị 95 / 133 / 180 lượt cho 2 / 3 / 4 người (khoảng 48 / 44 / 45 vòng; 9 dãy, lễ hội nhỏ, thiên tai), không ván nào chạm chốt an toàn.
+Chạy thử 300 ván mỗi cỡ (máy với máy, có thắng ngay, máy biết chặn): trung vị 75 / 99 / 139 lượt cho 2 / 3 / 4 người (khoảng 38 / 33 / 35 vòng), không ván nào chạm chốt an toàn. Cách kết thúc: đủ bốn danh thắng khoảng 41–47%, giữ hết một cạnh khoảng 25%, phá sản tới người cuối khoảng 28–33%.
 
 ## 10. Hình
 

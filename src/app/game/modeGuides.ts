@@ -18,7 +18,7 @@ import { KL_TOOL_HINT, KL_TOOL_NAME } from "./khai-lo/tools";
 import { EXPEDITION_REST_HEAL, EXPEDITION_SCOUT_SIGHT } from "@/core";
 import { DEFEAT_RATIO, ENCOUNTERS_PER_DAY, TOLL_RATIO, TRADE_LEG_MINUTES, TRADE_PASSES_PER_DAY, TRADE_START_MONEY } from "@/core/trade";
 import type { PieceType } from "@/core/tam-quan-ky";
-import { BOAT_FARE, BUYOUT_RATE, DTK_GOLD, DTK_REWARDS_PER_DAY, FAIR_RATE, FESTIVAL_RATE, HOLD3_RATE, HOLD_RATE, JAIL_BAIL, JAIL_TRIES, LEVEL_NAME, MAX_LEVEL_ON_BUY, PART3_RATE, RENT_RATE, RUIN_MAX, RUIN_MIN, SALARY, SCENIC_PRICE, SCENIC_RENT, SELL_RATE, START_CASH, TRIBUTE_BASE, TRIBUTE_PER_LEVEL } from "@/core/dien-trang-ky";
+import { BOAT_FARE, BUYOUT_RATE, DTK_GOLD, DTK_REWARDS_PER_DAY, FAIR_RATE, FESTIVAL_RATE, HOLD3_RATE, HOLD_RATE, JAIL_BAIL, JAIL_TRIES, LEVEL_NAME, MAX_LEVEL_ON_BUY, RENT_RATE, RUIN_MAX, RUIN_MIN, SALARY, SCENIC_PRICE, SCENIC_RENT, SELL_RATE, START_CASH, TRIBUTE_BASE, TRIBUTE_PER_LEVEL } from "@/core/dien-trang-ky";
 import type { Scene } from "./scene";
 
 /** Các chế độ có thẻ Hướng dẫn (mười hai chế độ ở thẻ Chiến Trường và Tam Quân Kỳ ở mục Sắp ra mắt). */
@@ -143,7 +143,7 @@ const BATTLE_ITEMS: GuideItems = {
 
 export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
   DIEN_TRANG_KY: {
-    goal: `Làm phú hộ thời mười hai sứ quân: đổ xúc xắc đi vòng bàn 40 ô, tậu đất, dựng nhà, thu tô người khác. Ai cũng khởi đầu ${START_CASH.toLocaleString("vi-VN")} quan; chơi tới khi chỉ còn một người chưa phá sản.`,
+    goal: `Làm phú hộ thời mười hai sứ quân: đổ xúc xắc đi vòng bàn 40 ô, tậu đất, dựng nhà, thu tô người khác. Ai cũng khởi đầu ${START_CASH.toLocaleString("vi-VN")} quan; chơi tới khi chỉ còn một người chưa phá sản, hoặc có người thắng ngay.`,
     steps: [
       "Chọn cách chơi: đấu sứ quân có thưởng (1–3 sứ quân máy), cùng máy (2–4 ghế, người hoặc máy) hoặc phòng mã (mời bạn bè bằng mã 6 ký tự).",
       "Chọn hệ của bạn. Hệ chỉ đổi kiểu dáng và màu nhà bạn xây, không đổi tô hay luật.",
@@ -157,8 +157,9 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       `Mỗi lần đi qua Hoa Lư lĩnh ${SALARY} quan lương vòng. Đổ ra đôi được đổ thêm một lần, tối đa một lần mỗi lượt.`,
       `Năm bậc nhà: ${LEVEL_NAME.slice(1).join(", ")}. Giá đất mỗi khu một khác; mỗi bậc tốn nửa giá đất của khu, riêng ${LEVEL_NAME[5]} tốn bằng giá đất và chỉ xây được khi giữ đủ cả dãy (hùng cứ).`,
       `Tô tính theo phần trăm giá trị ô (đất cộng nhà đã xây): ${RENT_RATE.map((r) => `${Math.round(r * 100)}%`).join(", ")} từ đất chưa xây tới ${LEVEL_NAME[5]}.`,
-      `Đất chia 3 dãy đôi và 6 dãy ba. Giữ đủ dãy đôi thì tô cả dãy nhân ${HOLD_RATE}; dãy ba giữ hai ô thì nhân ${PART3_RATE.toLocaleString("vi-VN")}, đủ ba ô nhân ${HOLD3_RATE}. Ô đang mở Hội Cờ Lau thu tô gấp ${FESTIVAL_RATE}, tới khi có người mở hội nơi khác. Ba ô có đèn lồng là lễ hội nhỏ suốt ván, tô nhân ${FAIR_RATE.toLocaleString("vi-VN")}.`,
-      `Thiên tai (quẻ Động đất, Bão lớn) làm một ngôi nhà sập một bậc và phải sửa ${RUIN_MIN} tới ${RUIN_MAX} lượt của chủ, trong lúc sửa không thu tô. ${LEVEL_NAME[5]} không bị thiên tai.`,
+      `Đất chia 3 dãy đôi và 6 dãy ba. Giữ đủ dãy đôi thì tô cả dãy nhân ${HOLD_RATE}; dãy ba đủ ba ô nhân ${HOLD3_RATE}; chưa đủ dãy thì không nhân. Ô đang mở Hội Cờ Lau thu tô gấp ${FESTIVAL_RATE}, tới khi có người mở hội nơi khác. Ba ô có đèn lồng là lễ hội nhỏ suốt ván, tô nhân ${FAIR_RATE.toLocaleString("vi-VN")}.`,
+      `Thiên tai: rút quẻ Động đất hoặc Bão lũ thì bạn chọn một ngôi nhà của nhà khác. Động đất làm nhà đó sập một bậc; Bão lũ bắt nhà đó sửa ${RUIN_MIN} tới ${RUIN_MAX} lượt của chủ, trong lúc sửa không thu tô. ${LEVEL_NAME[5]} không bị thiên tai.`,
+      "Thắng ngay: giữ hết đất trên một cạnh bàn (không tính danh thắng), hoặc giữ đủ bốn danh thắng.",
       `Mua lại đất người khác tốn gấp ${BUYOUT_RATE} giá trị ô (đất và nhà), trả cho chủ đất, nhà giữ nguyên. ${LEVEL_NAME[5]} không ai mua lại được.`,
       `Ô riêng: Quẻ bói rút quẻ thời loạn; Thuế đinh nộp một phần mười tiền mặt; Cống nạp nộp ${TRIBUTE_BASE} quan cộng ${TRIBUTE_PER_LEVEL} quan mỗi bậc nhà; Chợ phiên mua một ô trống bất kỳ.`,
       `Bốn danh thắng (Đền Hùng, Núi Tản Viên, Chùa Dâu, Tràng An) giá ${SCENIC_PRICE} quan, không xây nhà. Tô theo số danh thắng cùng một chủ: ${SCENIC_RENT.slice(1).join(", ")} quan cho 1, 2, 3, 4 nơi. Danh thắng vẫn mua lại và mở hội được.`,

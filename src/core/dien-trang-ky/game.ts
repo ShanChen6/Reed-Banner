@@ -13,7 +13,7 @@ import {
   FESTIVAL_RATE,
   HOLD3_RATE,
   HOLD_RATE,
-  PART3_RATE,
+  SIDE_LANDS,
   JAIL_BAIL,
   JAIL_TILE,
   JAIL_TRIES,
@@ -81,7 +81,7 @@ export type Phase =
   | { readonly k: "buy"; readonly tile: number }
   | { readonly k: "build"; readonly tile: number }
   | { readonly k: "rent"; readonly tile: number; readonly owner: number; readonly amount: number; readonly buyout: number }
-  | { readonly k: "pick"; readonly what: "market" | "boat" | "festival" }
+  | { readonly k: "pick"; readonly what: "market" | "boat" | "festival" | "quake" | "storm" }
   | { readonly k: "raise"; readonly amount: number; readonly payees: readonly Payee[] }
   | { readonly k: "ended" };
 
@@ -105,8 +105,9 @@ export type DtkEventBody =
   | { readonly k: "blessing" }
   | { readonly k: "festival"; readonly tile: number }
   | { readonly k: "freeBuild"; readonly tile: number; readonly level: number }
-  | { readonly k: "disaster"; readonly tile: number; readonly level: number; readonly ruin: number }
+  | { readonly k: "disaster"; readonly how: "quake" | "storm"; readonly tile: number; readonly level: number; readonly ruin: number }
   | { readonly k: "noDisaster" }
+  | { readonly k: "monopoly"; readonly how: "side" | "scenic"; readonly side?: number }
   | { readonly k: "extra" }
   | { readonly k: "end"; readonly ranking: readonly number[] };
 
@@ -228,14 +229,13 @@ export function holdsRegion(s: DtkState, tile: number, owner: number): boolean {
   return REGION_TILES[t.region]!.every((i) => s.plots[i]?.owner === owner);
 }
 
-/** Hệ số tô theo dãy: dãy đôi đủ hai ô nhân 1,5; dãy ba giữ hai ô nhân 1,25, đủ ba ô nhân 2. */
+/** Hệ số tô theo dãy: chỉ khi giữ đủ dãy; dãy đôi nhân 1,5, dãy ba nhân 2. */
 export function groupRate(s: DtkState, tile: number, owner: number): number {
   const t = TILES[tile];
   if (t?.kind !== "land") return 1;
   const group = REGION_TILES[t.region]!;
-  const held = group.filter((i) => s.plots[i]?.owner === owner).length;
-  if (held === group.length) return group.length >= 3 ? HOLD3_RATE : HOLD_RATE;
-  return group.length >= 3 && held >= 2 ? PART3_RATE : 1;
+  if (!group.every((i) => s.plots[i]?.owner === owner)) return 1;
+  return group.length >= 3 ? HOLD3_RATE : HOLD_RATE;
 }
 
 export function rentOf(s: DtkState, tile: number): number {
@@ -281,8 +281,31 @@ export const freeLands = (s: DtkState): number[] => s.plots.flatMap((p, i) => (p
 
 // ---------- diễn biến ----------
 
-function finish(d: DtkState): void {
-  const alive = aliveSeats(d).sort((a, b) => assetsOf(d, b) - assetsOf(d, a) || a - b);
+/** Thắng ngay: giữ hết đất một cạnh bàn, hoặc đủ bốn danh thắng. */
+export function monopolyOf(s: DtkState, seat: number): { how: "side" | "scenic"; side?: number } | null {
+  if (SCENIC_TILES.every((i) => s.plots[i]?.owner === seat)) return { how: "scenic" };
+  const side = SIDE_LANDS.findIndex((g) => g.every((i) => s.plots[i]?.owner === seat));
+  return side >= 0 ? { how: "side", side } : null;
+}
+
+/** Nhà người khác bị thiên tai được: có nhà (bậc 1..4), không phải Trang ấp; bão lũ bỏ qua nhà đang sửa. */
+export function disasterTargets(s: DtkState, seat: number, kind: "quake" | "storm"): number[] {
+  return s.plots.flatMap((pl, i) =>
+    pl && pl.owner !== null && pl.owner !== seat && !isScenic(i) && pl.level > 0 && pl.level < MAX_LEVEL && (kind === "quake" || (pl.ruin ?? 0) === 0) ? [i] : [],
+  );
+}
+
+/** Sau khi ghế `seat` có thêm đất: thắng ngay thì xong ván, trả true. */
+function checkMonopoly(d: DtkState, seat: number): boolean {
+  const m = monopolyOf(d, seat);
+  if (!m) return false;
+  emit(d, seat, { k: "monopoly", ...m });
+  finish(d, seat);
+  return true;
+}
+
+function finish(d: DtkState, winner: number | null = null): void {
+  const alive = aliveSeats(d).sort((a, b) => (b === winner ? 1 : 0) - (a === winner ? 1 : 0) || assetsOf(d, b) - assetsOf(d, a) || a - b);
   d.ranking = [...alive, ...[...d.outOrder].reverse()];
   d.phase = { k: "ended" };
   emit(d, alive[0] ?? 0, { k: "end", ranking: d.ranking });
@@ -518,22 +541,13 @@ function drawOmen(d: DtkState, seat: number): void {
       return endTurn(d);
     case "jail":
       return jail(d, seat);
-    case "disaster": {
-      const hit = (i: number) => !isScenic(i) && d.plots[i]!.level > 0 && d.plots[i]!.level < MAX_LEVEL;
-      const pool = e.target === "mine" ? ownedTiles(d, seat).filter(hit) : d.plots.flatMap((pl, i) => (pl && pl.owner !== null && hit(i) ? [i] : []));
-      if (!pool.length) {
+    case "disaster":
+      if (!disasterTargets(d, seat, e.kind).length) {
         emit(d, seat, { k: "noDisaster" });
         return endTurn(d);
       }
-      const i = e.target === "mine" ? pool.reduce((x, y) => (d.plots[y]!.level > d.plots[x]!.level ? y : x)) : pool[draw(d, pool.length) - 1]!;
-      const plot = d.plots[i]!;
-      plot.level -= 1;
-      // Mỗi lần tới lượt chủ ô thì bớt một; về 0 là sửa xong, thu tô lại.
-      const ruin = RUIN_MIN + draw(d, RUIN_MAX - RUIN_MIN + 1) - 1;
-      plot.ruin = ruin;
-      emit(d, seat, { k: "disaster", tile: i, level: plot.level, ruin });
-      return endTurn(d);
-    }
+      d.phase = { k: "pick", what: e.kind };
+      return;
     case "freeBuild": {
       const mine = ownedTiles(d, seat).filter((i) => !isScenic(i) && d.plots[i]!.level < MAX_LEVEL - 1);
       if (mine.length) {
@@ -609,7 +623,7 @@ export function act(s: DtkState, seat: number, a: DtkAction): DtkResult {
       p.cash -= cost;
       d.plots[ph.tile] = { owner: seat, level: a.level };
       emit(d, seat, { k: "buy", tile: ph.tile, level: a.level, cost });
-      endTurn(d);
+      if (!checkMonopoly(d, seat)) endTurn(d);
       break;
     }
     case "build": {
@@ -642,6 +656,7 @@ export function act(s: DtkState, seat: number, a: DtkAction): DtkResult {
       d.plots[ph.tile]!.owner = seat;
       if (d.festival === ph.tile) d.festival = null;
       emit(d, seat, { k: "buyout", tile: ph.tile, from: ph.owner, cost: ph.buyout });
+      if (checkMonopoly(d, seat)) break;
       const plot = d.plots[ph.tile]!;
       if (plot.level < levelCap(d, ph.tile, seat) && p.cash >= buildCostBetween(ph.tile, plot.level, plot.level + 1)) d.phase = { k: "build", tile: ph.tile };
       else endTurn(d);
@@ -659,6 +674,13 @@ export function act(s: DtkState, seat: number, a: DtkAction): DtkResult {
         p.cash -= priceOf(a.tile);
         d.plots[a.tile] = { owner: seat, level: 0 };
         emit(d, seat, { k: "buy", tile: a.tile, level: 0, cost: priceOf(a.tile) });
+        if (!checkMonopoly(d, seat)) endTurn(d);
+      } else if (ph.what === "quake" || ph.what === "storm") {
+        if (!disasterTargets(d, seat, ph.what).includes(a.tile)) return bad;
+        const plot = d.plots[a.tile]!;
+        if (ph.what === "quake") plot.level -= 1;
+        else plot.ruin = RUIN_MIN + draw(d, RUIN_MAX - RUIN_MIN + 1) - 1;
+        emit(d, seat, { k: "disaster", how: ph.what, tile: a.tile, level: plot.level, ruin: plot.ruin ?? 0 });
         endTurn(d);
       } else if (ph.what === "festival") {
         if (d.plots[a.tile]?.owner !== seat) return bad;

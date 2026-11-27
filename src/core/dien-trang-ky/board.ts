@@ -112,13 +112,12 @@ export const RENT_RATE = [0.15, 0.3, 0.45, 0.6, 0.7, 0.75] as const;
 /** Ba ô có lễ hội nhỏ suốt ván (chọn ngẫu nhiên đầu ván): tô nhân thêm. */
 export const FAIR_COUNT = 3;
 export const FAIR_RATE = 1.5;
-/** Thiên tai: nhà sập một bậc và đang sửa, không thu tô trong 1..3 lượt của chủ. Trang ấp không bị ảnh hưởng. */
+/** Thiên tai (người rút chọn nhà của người khác): Động đất làm sập một bậc; Bão lũ bắt sửa 1..3 lượt của chủ, không thu tô. Hai hiệu ứng không cùng lúc; Trang ấp không bị ảnh hưởng. */
 export const RUIN_MIN = 1;
 export const RUIN_MAX = 3;
 /** Giữ đủ cả dãy đôi (hùng cứ): tô nhân thêm. Bậc 5 chỉ xây được khi giữ đủ dãy. */
 export const HOLD_RATE = 1.5;
-/** Dãy ba: giữ hai ô thì tô nhân chừng này, giữ đủ ba ô (hùng cứ) thì nhân `HOLD3_RATE`. */
-export const PART3_RATE = 1.25;
+/** Giữ đủ dãy ba (hùng cứ) thì tô nhân chừng này. Chưa đủ dãy thì không nhân (Shan chốt 27/11). */
 export const HOLD3_RATE = 2;
 /** Ô đang mở Hội Cờ Lau: tô nhân thêm. */
 export const FESTIVAL_RATE = 2;
@@ -161,6 +160,11 @@ export function tileValue(price: number, level: number): number {
 /** Ô đất của từng vùng. */
 export const REGION_TILES: readonly (readonly number[])[] = REGIONS.map((_, r) =>
   TILES.flatMap((t, i) => (t.kind === "land" && t.region === r ? [i] : [])),
+);
+
+/** Ô đất (không tính danh thắng) trên từng cạnh bàn. Giữ hết một cạnh là thắng ngay (Shan chốt 27/11). */
+export const SIDE_LANDS: readonly (readonly number[])[] = [0, 1, 2, 3].map((k) =>
+  TILES.flatMap((t, i) => (t.kind === "land" && i > k * 10 && i < k * 10 + 10 ? [i] : [])),
 );
 
 export const SCENIC_TILES = TILES.flatMap((t, i) => (t.kind === "scenic" ? [i] : []));

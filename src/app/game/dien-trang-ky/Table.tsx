@@ -7,6 +7,7 @@ import { useMemo, useState, type ReactNode } from "react";
 import {
   BOAT_FARE,
   FAIR_RATE,
+  disasterTargets,
   REGION_TILES,
   JAIL_BAIL,
   JAIL_TRIES,
@@ -121,6 +122,7 @@ export function Table({ state, controls, onAction, busy = false, status, toolbar
     if (ph.k === "pick") {
       if (ph.what === "market") return new Set(freeLands(state).filter((i) => priceOf(i) <= p.cash));
       if (ph.what === "festival") return new Set(ownedTiles(state, seat));
+      if (ph.what === "quake" || ph.what === "storm") return new Set(disasterTargets(state, seat, ph.what));
       return new Set(TILES.flatMap((t, i) => (i !== p.pos && t.kind !== "boat" ? [i] : [])));
     }
     if (ph.k === "raise") return new Set(ownedTiles(state, seat));
@@ -153,6 +155,8 @@ export function Table({ state, controls, onAction, busy = false, status, toolbar
       case "rent":
         return ph.amount === 0 ? `Nhà của ${state.players[ph.owner]!.name} đang sửa sau thiên tai, chưa thu tô. Mua lại ${money(ph.buyout)} không?` : `Đất của ${state.players[ph.owner]!.name}: nộp tô ${money(ph.amount)} hoặc mua lại ${money(ph.buyout)}.`;
       case "pick":
+        if (ph.what === "quake") return "Động đất: chọn một ngôi nhà của nhà khác sáng lên, nhà đó sập một bậc.";
+        if (ph.what === "storm") return "Bão lũ: chọn một ngôi nhà của nhà khác sáng lên, nhà đó phải sửa 1 tới 3 lượt, không thu tô.";
         return ph.what === "market" ? "Chợ phiên: chọn một ô đất trống sáng lên để mua theo giá gốc." : ph.what === "boat" ? `Bến đò: chọn ô muốn tới (tiền đò ${money(BOAT_FARE)}).` : "Hội Cờ Lau: chọn một ô đất của bạn để mở hội.";
       case "raise":
         return `Cần ${money(ph.amount)}, đang có ${money(p.cash)}. Chọn ô đất để bán lại cho triều đình (nửa giá).`;

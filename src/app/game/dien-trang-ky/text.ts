@@ -54,8 +54,11 @@ export function eventText(e: DtkEvent, s: DtkState): string | null {
       return `Thợ làng dựng giúp ${who}: ${tileName(e.tile)} lên ${LEVEL_NAME[e.level]}.`;
     case "disaster": {
       const owner = s.plots[e.tile]?.owner;
-      return `Nhà ở ${tileName(e.tile)}${owner != null ? ` của ${name(owner)}` : ""} sập còn ${LEVEL_NAME[e.level]}, phải sửa ${e.ruin} lượt, chưa thu tô.`;
+      const of = `${tileName(e.tile)}${owner != null ? ` của ${name(owner)}` : ""}`;
+      return e.how === "quake" ? `${who} giáng động đất: nhà ở ${of} sập còn ${LEVEL_NAME[e.level]}.` : `${who} đẩy bão lũ: nhà ở ${of} phải sửa ${e.ruin} lượt, chưa thu tô.`;
     }
+    case "monopoly":
+      return e.how === "scenic" ? `${who} giữ đủ bốn danh thắng, thắng ngay!` : `${who} giữ hết đất cạnh bàn thứ ${(e.side ?? 0) + 1}, thắng ngay!`;
     case "noDisaster":
       return "May thay chưa có nhà nào bị hại.";
     case "extra":
