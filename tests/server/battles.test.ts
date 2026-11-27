@@ -1589,6 +1589,11 @@ describe("đấu trường bóng ma", () => {
     const real = view.offers.findIndex((o) => !o.bot);
     assert.ok(real >= 0);
     assert.equal(view.offers.filter((o) => o.bot).length, ARENA_OFFERS - 1);
+    // Đội máy do sứ quân dẫn: tên đội là tên người dẫn, kèm tính cách và nét riêng.
+    for (const o of view.offers.filter((x) => x.bot)) {
+      assert.equal(o.name, o.members[0]!.name);
+      assert.ok(o.leader && o.leader.personality.length > 0 && o.leader.quirk.length > 0);
+    }
     // Không lộ id chủ đội.
     assert.ok(view.offers.every((o) => !("owner" in o)));
 
