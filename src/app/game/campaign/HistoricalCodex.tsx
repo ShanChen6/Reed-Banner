@@ -8,6 +8,7 @@
 // nguyên văn.
 
 import type { ReactNode } from "react";
+import { FitPages, type FitUnit } from "@/components/game-ui";
 import {
   BASIS_LABEL,
   historySource,
@@ -218,33 +219,53 @@ const GROUP_TEXT = {
 
 export default function WarlordCodex({
   campaign,
+  ledger,
+  fit = false,
 }: {
   campaign: CampaignProgressV2;
+  /** Sổ thế cục đứng trước hồ sơ (cùng trang thứ nhất). */
+  ledger?: ReactNode;
+  /** Khung cố định chiều cao (máy tính rộng, Shan 28/11/2026): hồ sơ dài thì chia trang. */
+  fit?: boolean;
 }) {
   const entries = warlordCodex(campaign);
-  const known = entries.filter((e) => e.stage !== "unknown").length;
-  return (
-    <section
-      aria-labelledby="warlord-codex-title"
-      className="rounded-xl border border-frame-line-soft bg-wood-inset p-3 text-sm"
-    >
-      <h2 id="warlord-codex-title" className="font-semibold text-frame-gold">
-        Sứ quân ký – {known}/12 hồ sơ đã mở
+  const opened = entries.filter((e) => e.stage !== "unknown");
+  const known = opened.length;
+  const title = (continued: boolean) => (
+    <>
+      <h2 className="font-semibold text-frame-gold">
+        Sứ quân ký – {known}/12 hồ sơ đã mở{continued ? " (tiếp)" : ""}
       </h2>
-      <p className="mb-2 text-caption text-on-wood-soft">
-        Hồ sơ mở khi nhiệm vụ của sứ quân đó mở; kết cục chỉ hiện khi bạn đã đi
-        qua.
-      </p>
-      {/* Chỉ liệt kê hồ sơ đã mở (không hiện hàng khóa "W01 … W12 chưa gặp", Shan yêu cầu 07/11/2026). */}
-      {known === 0 ? (
-        <p className="ui-frame-inset p-3 text-center text-on-wood-soft">
-          Chưa có hồ sơ sứ quân nào. Hồ sơ đầu tiên mở khi bạn tới nhiệm vụ của một sứ quân.
+      {!continued && (
+        <p className="mb-2 text-caption text-on-wood-soft">
+          Hồ sơ mở khi nhiệm vụ của sứ quân đó mở; kết cục chỉ hiện khi bạn đã đi
+          qua.
         </p>
-      ) : (
-        <ol className="grid gap-2 sm:grid-cols-2">
-          {entries
-            .filter((e) => e.stage !== "unknown")
-            .map(({ record: w, resolution: r, stage, location }) => (
+      )}
+    </>
+  );
+  const frame = "rounded-xl border border-frame-line-soft bg-wood-inset p-3 text-sm";
+  // Chỉ liệt kê hồ sơ đã mở (không hiện hàng khóa "W01 … W12 chưa gặp", Shan yêu cầu 07/11/2026).
+  const units: FitUnit[] = [
+    ...(ledger ? [{ key: "ledger", node: <div>{ledger}</div> }] : []),
+    ...(known === 0
+      ? [
+          {
+            key: "empty",
+            node: (
+              <section aria-label="Sứ quân ký" className={frame}>
+                {title(false)}
+                <p className="ui-frame-inset p-3 text-center text-on-wood-soft">
+                  Chưa có hồ sơ sứ quân nào. Hồ sơ đầu tiên mở khi bạn tới nhiệm vụ của một sứ quân.
+                </p>
+              </section>
+            ),
+          },
+        ]
+      : opened.map(({ record: w, resolution: r, stage, location }) => ({
+          key: w.id,
+          group: "codex",
+          node: (
               <li
                 key={w.id}
                 className="rounded-md border border-frame-line-soft bg-wood-inset p-2"
@@ -302,10 +323,21 @@ export default function WarlordCodex({
                     </dd>
                   </dl>
                 </details>
-              </li>
-            ))}
-        </ol>
+              </li>),
+        }))),
+  ];
+  return (
+    <FitPages
+      className="xl:min-h-0 xl:flex-1"
+      enabled={fit}
+      units={units}
+      label="Trang Sử ký"
+      groupWrap={(_, items, continued) => (
+        <section aria-label="Sứ quân ký" className={frame}>
+          {title(continued)}
+          <ol className="grid gap-2 sm:grid-cols-2">{items}</ol>
+        </section>
       )}
-    </section>
+    />
   );
 }

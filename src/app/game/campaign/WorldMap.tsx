@@ -2,11 +2,12 @@
 
 // Bản đồ Sử ký toàn cảnh (Campaign V2 MAP-02): Hoa Lư và 12 cứ điểm sứ quân trên một tấm bản đồ chung khung
 // 1536×1024 (worldAtlas.ts). Cờ đổi màu theo thế cục server đã ghi, chưa ghi thì trung tính. Chọn chương chỉ làm
-// nổi các điểm của chương và kéo khung nhìn tới đó; bấm điểm chỉ chọn điểm (panel bên phải), không gọi API.
+// nổi các điểm của chương; bấm điểm chỉ chọn điểm (panel bên phải), không gọi API. Bản đồ luôn xem toàn cảnh, không
+// phóng to (Shan bỏ zoom 28/11/2026); trên máy tính rộng tranh thu vừa khung cao cố định của cột giữa.
 // Tranh nền của Shan (không chữ, không cờ) nằm dưới cùng khung tọa độ; chữ, cờ và vùng bấm luôn là SVG động.
 // Tranh lỗi thì còn nền giấy dó vẽ bằng code và thành trì SVG (MAP-ART-02).
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAudio } from "../audio/AudioProvider";
 import {
   CAMPAIGN_CHAPTERS,
@@ -19,7 +20,6 @@ import {
 import { AtlasCorners } from "./AtlasFrame";
 import { FACTION_MARKS, FLAG_ART, flagPath } from "./factionMarks";
 import RotateHint from "./RotateHint";
-import { fitView, useMapView, MAX_ZOOM } from "./useMapView";
 import {
   PLACED_STRONGHOLDS,
   MIN_LABEL_PX,
@@ -324,8 +324,19 @@ export default function WorldMap({
   selected: StrongholdId | null;
   onSelect: (id: StrongholdId) => void;
 }) {
-  const { view, setView, zoomBy, reset, reveal, svgProps, pxPerUnit } =
-    useMapView(W, H);
+  // Số px thật của một đơn vị bản đồ (tranh vừa khung, giữ tỉ lệ): để biết chữ trong SVG cao bao nhiêu px.
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [pxPerUnit, setPxPerUnit] = useState(0);
+  useEffect(() => {
+    const el = svgRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => {
+      const r = el.getBoundingClientRect();
+      setPxPerUnit(Math.min(r.width / W, r.height / H));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   // Chữ nhãn phải ≥ 13px thật; bản đồ nhỏ hơn mức đó thì ẩn nhãn (danh sách cứ điểm bên dưới thay thế).
   const showLabels = pxPerUnit * PLACE_FONT >= MIN_LABEL_PX - 0.2;
   const [artFailed, setArtFailed] = useState(false);
@@ -350,21 +361,6 @@ export default function WorldMap({
   }, [unlocked, playSound]);
   const inChapter = new Set(chapterStrongholds(chapter.missions));
 
-  // Đổi chương thì kéo khung nhìn tới các điểm của chương (đặt trạng thái ngay lúc dựng, không cần effect).
-  const [focused, setFocused] = useState(chapter.chapter);
-  if (focused !== chapter.chapter) {
-    setFocused(chapter.chapter);
-    setView(
-      fitView(
-        PLACED_STRONGHOLDS.filter((s) => inChapter.has(s.id)).map((s) => s.at!),
-        W,
-        H,
-        260,
-        1.8,
-      ),
-    );
-  }
-
   const label = (s: WorldStronghold) => {
     const st = strongholdState(s, campaign.factions);
     const open = strongholdHasOpenMission(s, status);
@@ -372,16 +368,17 @@ export default function WorldMap({
   };
 
   return (
-    <figure className="campaign-map atlas-frame flex flex-col self-start overflow-hidden xl:self-stretch">
+    <figure className="campaign-map atlas-frame flex flex-col self-start overflow-hidden xl:h-full xl:min-h-0 xl:self-stretch">
       <AtlasCorners />
       <RotateHint />
-      <div className="map-viewport relative">
+      <div className="map-viewport relative xl:min-h-0 xl:flex-1">
         <svg
-          {...svgProps}
-          className="block h-auto w-full select-none"
+          ref={svgRef}
+          viewBox={`0 0 ${W} ${H}`}
+          className="block h-auto w-full select-none xl:h-full"
           role="group"
           tabIndex={0}
-          aria-label="Bản đồ Sử ký: Hoa Lư và 12 cứ điểm sứ quân. Phím mũi tên để kéo, cộng và trừ để phóng, 0 để xem toàn cảnh, Tab để đi qua từng cứ điểm."
+          aria-label="Bản đồ Sử ký: Hoa Lư và 12 cứ điểm sứ quân. Tab để đi qua từng cứ điểm, Enter để chọn."
           aria-describedby="world-map-legend"
         >
           <defs>
@@ -470,7 +467,6 @@ export default function WorldMap({
                 className="map-stage cursor-pointer"
                 opacity={lit || isSelected ? 1 : 0.72}
                 onClick={() => pick(s.id)}
-                onFocus={() => reveal(x, y)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
@@ -574,46 +570,10 @@ export default function WorldMap({
           </g>
         </svg>
 
-        {/* Nút phóng/thu: một hàng ở mép dưới phải (vùng biển, không có cứ điểm); bản đồ nhỏ thì đặt thành dải
-            riêng dưới bản đồ để không che nhãn nào. */}
-        <div className="map-controls flex justify-end gap-1.5 p-1.5 md:absolute md:right-2 md:bottom-2 md:p-0">
-          {[
-            {
-              t: "+",
-              a: "Phóng to bản đồ",
-              f: () => zoomBy(1.5),
-              off: view.s >= MAX_ZOOM,
-            },
-            {
-              t: "−",
-              a: "Thu nhỏ bản đồ",
-              f: () => zoomBy(1 / 1.5),
-              off: view.s <= 1,
-            },
-            {
-              t: "⤢",
-              a: "Xem toàn cảnh",
-              f: reset,
-              off: view.s <= 1,
-            },
-          ].map((b) => (
-            <button
-              key={b.a}
-              type="button"
-              aria-label={b.a}
-              title={b.a}
-              disabled={b.off}
-              onClick={b.f}
-              className="map-control flex size-11 items-center justify-center rounded-lg border text-lg font-bold shadow disabled:opacity-40"
-            >
-              {b.t}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Bình Kiều: sử chép "nay không rõ chỗ nào", nên ở ô riêng chứ không cắm cờ lên bản đồ. */}
-      <div className="world-strip flex flex-col gap-2 border-t px-3 py-2 lg:flex-row lg:items-center">
+      <div className="world-strip flex flex-col gap-2 border-t px-3 py-2 lg:flex-row lg:items-center xl:shrink-0 xl:py-1.5">
         <div className="flex shrink-0 flex-wrap gap-1.5">
           {UNPLACED_STRONGHOLDS.map((s) => (
             <button
@@ -622,7 +582,7 @@ export default function WorldMap({
               aria-pressed={s.id === selected}
               aria-label={`${label(s)}, vị trí còn tranh luận`}
               onClick={() => pick(s.id)}
-              className={`map-chip flex min-h-11 items-center gap-2 rounded-lg border-2 border-dashed px-2.5 py-1 text-left shadow ${
+              className={`map-chip flex min-h-11 items-center gap-2 rounded-lg border-2 border-dashed px-2.5 py-1 text-left shadow xl:py-0.5 ${
                 s.id === selected ? "map-chip-active" : ""
               } ${inChapter.has(s.id) ? "" : "opacity-70"}`}
             >
@@ -635,7 +595,7 @@ export default function WorldMap({
                 <span className="block font-bold">
                   {s.place}, {strongholdLeader(s)}
                 </span>
-                <span className="block italic opacity-80">
+                <span className="block italic opacity-80 xl:hidden">
                   vị trí còn tranh luận
                 </span>
               </span>
@@ -657,17 +617,17 @@ export default function WorldMap({
               {STATE_TEXT[st]}
             </span>
           ))}
-          <span className="basis-full opacity-75">
+          <span className="basis-full opacity-75 xl:hidden">
             Màu cờ theo thế cục đã ghi trong hồ sơ của bạn. Vị trí là bố cục
             minh họa để định hướng, không phải tọa độ chiến trường.
           </span>
         </div>
       </div>
-      {/* Bản đồ nhỏ trên điện thoại (và màn rộng, để lấp phần dưới khung bản đồ khi cột bên phải dài): chọn cứ điểm từ danh sách, không cần chạm trúng lá cờ (cờ trên bản đồ chỉ rộng 30–60px).
+      {/* Màn hẹp (dưới 1280px): bản đồ nhỏ nên chọn cứ điểm từ danh sách, không cần chạm trúng lá cờ (cờ chỉ rộng 30–60px). Máy tính rộng thì bỏ danh sách, danh sách 13 cứ điểm nằm trong Hướng dẫn (Shan 28/11/2026).
           Mở sẵn vì đây là cách chọn chính khi màn hẹp; cứ điểm của chương đang xem lên đầu, cứ điểm có nhiệm vụ đang mở có chấm. */}
       <details
         open
-        className="world-strip border-t px-3 py-2 text-sm lg:hidden xl:block xl:flex-1"
+        className="world-strip border-t px-3 py-2 text-sm xl:hidden"
       >
         <summary className="flex min-h-11 cursor-pointer items-center font-semibold">
           Danh sách cứ điểm ({WORLD_STRONGHOLDS.length})

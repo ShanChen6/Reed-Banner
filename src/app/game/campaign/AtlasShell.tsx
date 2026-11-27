@@ -5,6 +5,7 @@
 // hồ sơ server qua chapterStatus.
 
 import { buttonVariants } from "@/components/ui";
+import { FitPages, type FitUnit } from "@/components/game-ui";
 import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { GuideSheetButton } from "../ModeGuide";
 import Image from "next/image";
@@ -63,7 +64,7 @@ export function ChapterRail({
   return (
     <nav
       aria-label="Sử ký sáu chương"
-      className="atlas-frame atlas-frame-paper flex flex-col p-2 xl:h-full"
+      className="atlas-rail atlas-frame atlas-frame-paper flex flex-col p-2 xl:h-full xl:overflow-hidden"
     >
       <AtlasCorners />
       <h2 className="mb-2 hidden px-1 text-center text-sm font-bold tracking-widest text-ink uppercase xl:block">
@@ -134,7 +135,7 @@ export function ChapterRail({
         })}
       </div>
       {/* Tranh trang trí cuối cột (Shan vẽ), chỉ hiện khi cột đứng dọc. */}
-      <figure className="mt-auto hidden pt-3 xl:block">
+      <figure className="atlas-rail-art mt-auto hidden pt-3 xl:block">
         <Image
           src="/art/campaign/rail-ink.webp"
           alt=""
@@ -232,40 +233,50 @@ export function ChapterPanel({
   chapter,
   current,
   onPick,
+  fit = false,
 }: {
   campaign: CampaignProgressV2;
   chapter: ChapterContent;
   /** Nhiệm vụ đang xem ở khung chi tiết. */
   current: CampaignMissionId;
   onPick: (id: CampaignMissionId) => void;
+  /** Khung cố định chiều cao (máy tính rộng): dài thì chia trang. */
+  fit?: boolean;
 }) {
   const statuses = chapterStatus(campaign, chapter);
   const finished = statuses.filter((m) => m.status === "completed").length;
   const roman = ROMAN[chapter.chapter];
-  return (
-    <aside
-      aria-labelledby="atlas-panel-title"
-      className="atlas-frame atlas-frame-paper flex flex-col p-3 xl:h-full"
-    >
-      <AtlasCorners />
-      <div className="atlas-scroll flex min-h-0 flex-1 flex-col gap-3">
+  const units: FitUnit[] = [
+    {
+      key: "head",
+      node: (
         <header>
           <p className="text-caption font-semibold tracking-widest uppercase opacity-75">
             Chương {roman}, {finished}/{chapter.missions.length} nhiệm vụ
           </p>
-          <h2 id="atlas-panel-title" className="text-2xl font-black">
+          <h2 className="text-2xl font-black">
             {chapter.title}
           </h2>
           <p className="mt-1 text-[15px] leading-relaxed">{chapter.question}</p>
         </header>
-
-        {chapterCompleted(campaign, chapter.chapter) && (
-          <p className="rounded-lg border border-jade/40 bg-jade/10 p-2 text-sm leading-relaxed">
-            <span className="font-bold">Hoàn thành Chương {roman}.</span>{" "}
-            {chapter.completeLine}
-          </p>
-        )}
-
+      ),
+    },
+    ...(chapterCompleted(campaign, chapter.chapter)
+      ? [
+          {
+            key: "done",
+            node: (
+              <p className="rounded-lg border border-jade/40 bg-jade/10 p-2 text-sm leading-relaxed">
+                <span className="font-bold">Hoàn thành Chương {roman}.</span>{" "}
+                {chapter.completeLine}
+              </p>
+            ),
+          },
+        ]
+      : []),
+    {
+      key: "missions",
+      node: (
         <div>
           <h3 className="atlas-panel-heading">Nhiệm vụ chương</h3>
           <MissionList
@@ -275,22 +286,38 @@ export function ChapterPanel({
             onPick={onPick}
           />
         </div>
-
-        <p className="text-sm leading-relaxed opacity-85">
-          {chapter.region.note}
-        </p>
-
-        <div className="grid gap-2 text-sm leading-relaxed">
-          <div>
-            <BasisBadge basis="legend" />
-            <p className="mt-1">{chapter.legendVsRecord.legend}</p>
-          </div>
-          <div>
-            <BasisBadge basis="recorded" />
-            <p className="mt-1">{chapter.legendVsRecord.record}</p>
-          </div>
+      ),
+    },
+    {
+      key: "region",
+      node: <p className="text-sm leading-relaxed opacity-85">{chapter.region.note}</p>,
+    },
+    {
+      key: "legend",
+      node: (
+        <div className="text-sm leading-relaxed">
+          <BasisBadge basis="legend" />
+          <p className="mt-1">{chapter.legendVsRecord.legend}</p>
         </div>
-      </div>
+      ),
+    },
+    {
+      key: "record",
+      node: (
+        <div className="text-sm leading-relaxed">
+          <BasisBadge basis="recorded" />
+          <p className="mt-1">{chapter.legendVsRecord.record}</p>
+        </div>
+      ),
+    },
+  ];
+  return (
+    <aside
+      aria-label={`Chương ${roman}: ${chapter.title}`}
+      className="atlas-frame atlas-frame-paper flex flex-col p-3 xl:h-full"
+    >
+      <AtlasCorners />
+      <FitPages className="flex-1" enabled={fit} units={units} tone="paper" label="Trang thông tin chương" />
     </aside>
   );
 }
@@ -439,12 +466,15 @@ export function StrongholdPanel({
   current,
   onPick,
   onClose,
+  fit = false,
 }: {
   campaign: CampaignProgressV2;
   stronghold: WorldStronghold;
   current: CampaignMissionId;
   onPick: (id: CampaignMissionId) => void;
   onClose: () => void;
+  /** Khung cố định chiều cao (máy tính rộng): dài thì chia trang, nút chính luôn ở đáy. */
+  fit?: boolean;
 }) {
   const status = missionStatusMap(campaign);
   const missions = s.missions.map((id) => ({
@@ -460,13 +490,10 @@ export function StrongholdPanel({
   // Thẻ thưởng theo nhiệm vụ của nút chính; vùng chưa mở gì thì xem nhiệm vụ đầu tiên (hiện "chưa phát thưởng").
   const rewardFor = focus ?? missions[0];
   const backdrop = backdropUrl(missionBackdrop(s.missions[0] ?? "M01"));
-  return (
-    <aside
-      aria-labelledby="atlas-panel-title"
-      className="atlas-frame atlas-frame-paper flex flex-col p-3 xl:h-full"
-    >
-      <AtlasCorners />
-      <div className="atlas-scroll flex min-h-0 flex-1 flex-col gap-3">
+  const units: FitUnit[] = [
+    {
+      key: "head",
+      node: (
         <header className="flex items-start gap-3">
           <FactionFlag
             id={s.id}
@@ -477,12 +504,7 @@ export function StrongholdPanel({
             <p className="text-caption font-semibold tracking-widest uppercase opacity-75">
               {s.faction ? "Cứ điểm sứ quân" : "Đầu não"}, {STATE_TEXT[state]}
             </p>
-            <h2
-              id="atlas-panel-title"
-              className="text-2xl leading-tight font-black"
-            >
-              {s.place}
-            </h2>
+            <h2 className="text-2xl leading-tight font-black">{s.place}</h2>
             <p className="text-[15px] italic">
               {strongholdLeader(s)}
               {record ? `, ${record.title}` : ""}
@@ -497,14 +519,22 @@ export function StrongholdPanel({
             ×
           </button>
         </header>
-
-        {/* Ảnh minh họa lấy từ ảnh nền thoại của vùng; ảnh lỗi thì chỉ còn màu nền. */}
+      ),
+    },
+    {
+      // Ảnh minh họa lấy từ ảnh nền thoại của vùng; ảnh lỗi thì chỉ còn màu nền.
+      key: "art",
+      node: (
         <div
           aria-hidden
           className="aspect-[16/8] rounded-lg border border-frame-line-soft bg-paper-card bg-cover bg-center"
           style={{ backgroundImage: `url(${backdrop})` }}
         />
-
+      ),
+    },
+    {
+      key: "facts",
+      node: (
         <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm leading-relaxed">
           <dt className="opacity-70">Địa danh</dt>
           <dd>
@@ -538,32 +568,53 @@ export function StrongholdPanel({
             </>
           )}
         </dl>
-
-        {!s.faction && (
-          <p className="text-sm leading-relaxed">
-            Căn cứ của Đinh Bộ Lĩnh, không tính là một trong 12 sứ quân. Các
-            nhiệm vụ ở đây mở đầu và khép lại Bình Loạn.
-          </p>
-        )}
-        {!s.at && (
-          <p className="text-sm leading-relaxed">
-            Sử chép “nay không rõ chỗ nào”, các bản tổng thuật đặt ở hai vùng
-            khác nhau, nên bản đồ không cắm cờ cho Bình Kiều.
-          </p>
-        )}
-
-        {rewardFor ? (
+      ),
+    },
+    ...(!s.faction
+      ? [
+          {
+            key: "hq",
+            node: (
+              <p className="text-sm leading-relaxed">
+                Căn cứ của Đinh Bộ Lĩnh, không tính là một trong 12 sứ quân. Các
+                nhiệm vụ ở đây mở đầu và khép lại Bình Loạn.
+              </p>
+            ),
+          },
+        ]
+      : []),
+    ...(!s.at
+      ? [
+          {
+            key: "unplaced",
+            node: (
+              <p className="text-sm leading-relaxed">
+                Sử chép “nay không rõ chỗ nào”, các bản tổng thuật đặt ở hai vùng
+                khác nhau, nên bản đồ không cắm cờ cho Bình Kiều.
+              </p>
+            ),
+          },
+        ]
+      : []),
+    {
+      key: "reward",
+      node: rewardFor ? (
+        <div>
           <MissionRewardCard
             campaign={campaign}
             mission={rewardFor.id}
             status={rewardFor.status}
           />
-        ) : (
-          <p className="rounded-lg border border-frame-line-soft p-2 text-center text-sm opacity-80">
-            Chưa có nhiệm vụ nào gắn với vùng này.
-          </p>
-        )}
-
+        </div>
+      ) : (
+        <p className="rounded-lg border border-frame-line-soft p-2 text-center text-sm opacity-80">
+          Chưa có nhiệm vụ nào gắn với vùng này.
+        </p>
+      ),
+    },
+    {
+      key: "missions",
+      node: (
         <div>
           <h3 className="atlas-panel-heading">Nhiệm vụ ở {s.place}</h3>
           <MissionList
@@ -573,32 +624,50 @@ export function StrongholdPanel({
             onPick={onPick}
           />
         </div>
-
-        {focus ? (
-          <button
-            type="button"
-            onClick={() => onPick(focus.id)}
-            aria-label={`${
-              focus.status === "completed"
-                ? "Xem lại"
-                : focus.status === "inProgress"
-                  ? "Tiếp tục"
-                  : "Bắt đầu"
-            }: ${storyNodeById(focus.id)?.title ?? ""}`}
-            className={buttonVariants({ size: "lg", className: "min-h-12 w-full" })}
-          >
-            {focus.status === "completed"
-              ? "Xem lại"
-              : focus.status === "inProgress"
-                ? "Tiếp tục"
-                : "Bắt đầu"}
-          </button>
-        ) : (
-          <p className="rounded-lg border border-frame-line-soft p-2 text-center text-sm opacity-80">
-            Chưa mở nhiệm vụ nào ở đây.
-          </p>
-        )}
-      </div>
+      ),
+    },
+  ];
+  return (
+    <aside
+      aria-label={`Cứ điểm ${s.place}`}
+      className="atlas-frame atlas-frame-paper flex flex-col p-3 xl:h-full"
+    >
+      <AtlasCorners />
+      <FitPages
+        className="flex-1"
+        enabled={fit}
+        units={units}
+        tone="paper"
+        label={`Trang thông tin ${s.place}`}
+        footer={
+          <div className="mt-3">
+            {focus ? (
+              <button
+                type="button"
+                onClick={() => onPick(focus.id)}
+                aria-label={`${
+                  focus.status === "completed"
+                    ? "Xem lại"
+                    : focus.status === "inProgress"
+                      ? "Tiếp tục"
+                      : "Bắt đầu"
+                }: ${storyNodeById(focus.id)?.title ?? ""}`}
+                className={buttonVariants({ size: "lg", className: "min-h-12 w-full" })}
+              >
+                {focus.status === "completed"
+                  ? "Xem lại"
+                  : focus.status === "inProgress"
+                    ? "Tiếp tục"
+                    : "Bắt đầu"}
+              </button>
+            ) : (
+              <p className="rounded-lg border border-frame-line-soft p-2 text-center text-sm opacity-80">
+                Chưa mở nhiệm vụ nào ở đây.
+              </p>
+            )}
+          </div>
+        }
+      />
     </aside>
   );
 }
