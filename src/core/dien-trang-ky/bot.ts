@@ -90,6 +90,9 @@ function winsWith(s: DtkState, tile: number, seat: number): boolean {
   return monopolyOf(t, seat) !== null;
 }
 
+/** Số nhà khác nhau đang giữ ít nhất một danh thắng. */
+const scenicHolders = (s: DtkState): number => new Set(SCENIC_TILES.flatMap((i) => (s.plots[i]?.owner != null ? [s.plots[i]!.owner!] : []))).size;
+
 /** Người `o` chỉ còn thiếu đúng một ô để thắng ngay. */
 function nearWin(s: DtkState, o: number): boolean {
   const groups = [SCENIC_TILES, ...SIDE_LANDS];
@@ -127,8 +130,9 @@ export function chooseAction(s: DtkState, style: BotStyle = styleOf(s.players[s.
     case "buy": {
       const price = priceOf(ph.tile);
       if (me.cash >= price && (winsWith(s, ph.tile, seat) || blocks(s, ph.tile, seat))) return { t: "buy", level: 0 };
-      // Danh thắng: gặp là mua để chặn cửa thắng bốn danh thắng (Shan dặn 27/11).
-      if (isScenic(ph.tile) && me.cash >= price) return { t: "buy", level: 0 };
+      // Danh thắng: khi chưa tới hai nhà giữ danh thắng thì gặp là mua để chặn cửa thắng bốn danh thắng. Đã có hai nhà
+      // khác nhau giữ (cửa thắng đã bị chặn) thì cân theo tiền còn lại như đất thường (Shan dặn 27/11).
+      if (isScenic(ph.tile) && me.cash >= price && scenicHolders(s) < 2) return { t: "buy", level: 0 };
       const reserve = completes(s, ph.tile, seat) ? prm.reserve / 2 : prm.reserve;
       if (me.cash - price < reserve && !whim()) return { t: "skip" };
       if (me.cash < price) return { t: "skip" };
