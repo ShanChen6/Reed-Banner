@@ -3,7 +3,8 @@ import { describe, it } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
-import { TRADE_ITEM_IDS, TRADE_START_MONEY, neighbors, type TradeItemId, type TradeNodeId } from "../../src/core/trade";
+import { TRADE_ITEM_IDS, TRADE_START_MONEY, botLegsOn, edgeKey, legMs, legsMeet, marketSeason, neighbors, tradeEdge, type TradeItemId, type TradeNodeId } from "../../src/core/trade";
+import { vnWeek } from "../../src/core/vnTime";
 import { DrizzleTradeStore } from "../../src/server/db/trade";
 import type { Db } from "../../src/server/db/store";
 import { MemorySeasonStore } from "../../src/server/seasons";
@@ -49,6 +50,7 @@ function harness(store: TradeStore) {
     newId: () => `id${++n}`,
     random: () => 0.999,
     nameOf: async (id) => `Người ${id}`,
+    bots: false,
   });
   return {
     seasons,
@@ -206,3 +208,66 @@ for (const [name, make] of stores) {
     });
   });
 }
+
+describe("thương đoàn máy trên server", () => {
+  /** Đoàn "a" đi một chặng chắc chắn gặp thương đoàn máy; trả bản xem lúc tới nơi. */
+  const meetBot = async () => {
+    const store = new MemoryTradeStore();
+    let now = T0;
+    let n = 0;
+    const deps = (): TradeDeps => ({ store, seasons: new MemorySeasonStore(), now, newId: () => `id${++n}`, random: () => 0.999, nameOf: async (id) => `Người ${id}` });
+    const start = view(await tradeGet("a", deps())).player.node;
+    const to: TradeNodeId = neighbors(start)[0]!;
+    const edge = tradeEdge(start, to)!;
+    const ms = legMs(edge, 1);
+    let t = T0;
+    while (!botLegsOn(marketSeason(vnWeek(t)), edgeKey(start, to), t, t + ms).some((b) => legsMeet({ from: start, to, departAt: t, arriveAt: t + ms }, b))) t += 5 * MIN;
+    now = t;
+    view(await tradeDepart("a", to, deps()));
+    now = t + ms + 1000;
+    const v = view(await tradeGet("a", deps()));
+    return { v, deps, store };
+  };
+
+  it("gặp thương đoàn máy: ghi rõ là máy kèm tính cách; máy ngỏ bán hàng, đồng ý thì đổi ngay, mỗi chuyến một lần", async () => {
+    const { v, deps } = await meetBot();
+    const bot = v.met.find((m) => m.bot);
+    assert.ok(bot, "phải gặp thương đoàn máy");
+    assert.match(bot.name, /\(Máy\)$/);
+    assert.ok(bot.bot!.personality && bot.bot!.note);
+    const offer = v.offers.find((o) => o.id.startsWith("botoffer-"));
+    assert.ok(offer);
+    const [item, count] = Object.entries(offer.give.items)[0]! as [TradeItemId, number];
+    const done = view(await tradeRespond("a", offer.id, true, deps()));
+    assert.equal(done.player.money, v.player.money - offer.want.money);
+    assert.equal(done.player.cargo[item], count);
+    assert.equal(done.player.canOffer, false);
+    assert.equal(done.offers.some((o) => o.id === offer.id), false);
+    assert.deepEqual(await tradeRespond("a", offer.id, true, deps()), { ok: false, error: "offerGone" });
+  });
+
+  it("từ chối lời ngỏ của máy thì không hiện lại; ngỏ ép giá thì máy chê, ngỏ hời thì máy nhận ngay", async () => {
+    const { v, deps } = await meetBot();
+    const bot = v.met.find((m) => m.bot)!;
+    const offer = v.offers.find((o) => o.id.startsWith("botoffer-"))!;
+    const after = view(await tradeRespond("a", offer.id, false, deps()));
+    assert.equal(after.offers.some((o) => o.id === offer.id), false);
+    assert.equal(after.player.canOffer, true, "từ chối không mất lượt giao thương");
+    const [item] = Object.entries(bot.cargo)[0]! as [TradeItemId, number];
+    const low = await tradeOffer("a", { to: bot.ownerId, legId: bot.legId, give: { money: 1 }, want: { items: { [item]: 1 } } }, deps());
+    assert.deepEqual(low, { ok: false, error: "botDeclined" });
+    const rich = view(await tradeOffer("a", { to: bot.ownerId, legId: bot.legId, give: { money: 5000 }, want: { items: { [item]: 1 } } }, deps()));
+    assert.equal(rich.player.money, v.player.money - 5000);
+    assert.equal(rich.player.cargo[item], 1);
+    assert.equal(rich.player.canOffer, false);
+  });
+
+  it("thương đoàn máy không lên bảng mùa, không đụng kho chung", async () => {
+    const { v, deps } = await meetBot();
+    const before = JSON.stringify(v.markets);
+    const offer = v.offers.find((o) => o.id.startsWith("botoffer-"))!;
+    const done = view(await tradeRespond("a", offer.id, true, deps()));
+    assert.equal(JSON.stringify(done.markets), before);
+  });
+});
+

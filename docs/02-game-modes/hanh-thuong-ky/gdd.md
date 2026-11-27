@@ -66,6 +66,27 @@ Shan chốt 27/11/2026: **40 món**, chia năm nhóm (nông sản, hải sản, 
 - Tới nơi, một bên ngỏ lời: đưa hàng và/hoặc kim tiền, xin hàng và/hoặc kim tiền. Phần đưa ra bị khóa tới khi bên kia trả lời. Xem được khoang của bên kia trước khi quyết; **kim tiền của người khác không hiện ở đâu**, trừ lãi mùa trên bảng Công trạng.
 - Hai bên đồng ý mới đổi. Mỗi chuyến chỉ giao thương một lần. Lời ngỏ tự hủy (trả hàng khóa) khi một bên xuất hành chặng mới hoặc khi mùa khép. Không giới hạn số lần giữa một cặp, không chặn chênh giá trị (chênh giá mua bán đã đủ, Shan 26/11/2026). Không có trò chuyện.
 
+### 6.1 Thương đoàn máy (Shan chốt 27/11/2026)
+
+- Khi vắng người, **thương đoàn của 20 nhân vật máy** (sứ quân, tướng lịch sử, Minh Nguyệt, Vũ Phong) đi các chặng theo lịch tính sẵn từ hạt giống mùa, không cần tiến trình nền: mỗi phiên giá (2 giờ, chia theo `TRADE_SPEED` khi thử) mỗi đoàn đi tối đa một chặng (85%), cấp 1, khoang 150 ô, chở hàng rẻ ở nơi đi. Đo trên lịch mẫu: chặng đi bất kỳ lúc nào gặp ít nhất một đoàn máy khoảng 45%.
+- Đoàn máy hiện trong danh sách đã gặp sau đoàn người (chung giới hạn 5 đoàn), tên kèm "(Máy)", ghi tính cách và cách buôn.
+- **Máy ngỏ trước:** mỗi đoàn máy đã gặp ngỏ một lần trên chặng của người chơi, bán một phần món đắt nhất trong khoang lấy kim tiền, giá theo giá tham chiếu ở nơi tới (giá gốc × hệ số vùng × xu hướng, không tính sức ép kho) nhân hệ số tính cách. Đồng ý thì đổi ngay; từ chối thì không hiện lại và vẫn còn lượt giao thương chuyến đó.
+- **Người chơi ngỏ:** máy trả lời ngay. Nhận khi có đủ hàng được xin, xin kim tiền không quá 20 000 và giá trị nhận về (hàng người chơi đưa tính 90% như chợ thu mua) ít nhất bằng mức chịu của tính cách nhân giá trị phải đưa. Chê giá thì báo "chê giá", người chơi ngỏ lại được.
+- Cách buôn theo tính cách (`TRADE_STYLES`, `src/core/trade/bots.ts`):
+
+| Tính cách | Giá bán ra | Mức chịu khi người chơi ngỏ | Kỳ trân | Phần khoang đem bán |
+|---|---|---|---|---|
+| Mãnh công | ×1,00 | 0,95 | 15% | 50% |
+| Thủ thành | ×1,00 | 1,00 | 5% | 30% |
+| Mưu phá | ×1,15 | 1,12 | 15% | 30% |
+| Tích lực | ×1,10 | 0,92 | 10% | 20% |
+| Liều lĩnh | ×0,90 | 1,05 | 50% | 60% |
+| Lão luyện | ×1,03 | 1,00 | 15% | 35% |
+| Hộ chủ | ×0,95 | 0,92 | 5% | 40% |
+| Tùy cơ | ×1,05 | 1,00 | 20% | 40% |
+
+- Đoàn máy không có kim tiền trên bảng mùa (lãi lỗ của người chơi khi đổi với máy vẫn tính cho người chơi như mọi giao dịch), **không mua bán vào kho chung**: kho đã tự sinh hoặc tiêu thụ 15% phần chênh mỗi phiên nên không cần máy đẩy kho.
+
 ## 7. Đoàn hàng
 
 Khoang 100 ở cấp 1. Một đường nâng cấp chung (Shan chọn), trả bằng kim tiền, làm lại mỗi mùa:
