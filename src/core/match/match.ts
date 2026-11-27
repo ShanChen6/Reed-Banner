@@ -194,7 +194,8 @@ export function matchOver(m: Match): boolean {
 function runAi(m: Match, at: number, difficulty: Difficulty): MatchStep {
   if (m.battle.winner !== null || m.battle.turn.side !== AI_SIDE)
     return { match: m, events: [] };
-  const r = playAiTurn(m.battle, difficulty, at);
+  // Phá Doanh: mỗi nhân vật trong đội phòng thủ chơi theo tính cách riêng (Shan 27/11/2026); chế độ khác giữ AI gốc.
+  const r = playAiTurn(m.battle, difficulty, at, m.arena ? { personality: "auto" } : {});
   return { match: { ...m, battle: r.state, seq: m.seq + 1 }, events: r.events };
 }
 

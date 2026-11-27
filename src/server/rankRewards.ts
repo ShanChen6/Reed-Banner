@@ -109,7 +109,11 @@ export function destinySource(board: DestinyLeaderboardStore): RankRewardSource 
 }
 
 /** Mùa theo tuần của Trấn Ải và Quần Hùng: kỳ là khóa thứ Hai đầu tuần, bảng là điểm mùa của @/server/seasons. */
-export function seasonSource(mode: "survival" | "arena" | "tamTuongKy" | "pvp" | "trade", seasons: SeasonStore): RankRewardSource {
+/**
+ * `ignore`: những dòng đứng trên bảng nhưng không nhận thưởng (thương đoàn máy ở Hành Thương Ký, Shan 27/11/2026); hạng
+ * thưởng và số người tính lại chỉ giữa người thật.
+ */
+export function seasonSource(mode: "survival" | "arena" | "tamTuongKy" | "pvp" | "trade", seasons: SeasonStore, ignore: readonly string[] = []): RankRewardSource {
   return {
     mode,
     closedPeriods(now, count) {
@@ -117,8 +121,15 @@ export function seasonSource(mode: "survival" | "arena" | "tamTuongKy" | "pvp" |
       return Array.from({ length: count }, (_, i) => vnWeek(now - (i + 1) * 7 * DAY_MS)).filter((p) => p < current);
     },
     async standing(period, ownerId) {
-      const [mine, participants] = await Promise.all([seasons.rankOf(mode, period, ownerId), seasons.count(mode, period)]);
-      return mine ? { rank: mine.rank, participants } : null;
+      if (ignore.includes(ownerId)) return null;
+      const [mine, participants, skipped] = await Promise.all([
+        seasons.rankOf(mode, period, ownerId),
+        seasons.count(mode, period),
+        Promise.all(ignore.map((id) => seasons.rankOf(mode, period, id))),
+      ]);
+      if (!mine) return null;
+      const ranked = skipped.filter((x) => x !== null);
+      return { rank: mine.rank - ranked.filter((x) => x.rank < mine.rank).length, participants: participants - ranked.length };
     },
   };
 }

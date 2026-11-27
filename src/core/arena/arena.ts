@@ -2,7 +2,7 @@
 // đội 3vs3 lúc đặt); người khác đánh với đội đó do AI điều khiển. Điểm đấu trường tính kiểu Elo.
 // Số liệu là điểm xuất phát do Claude đặt, chờ Shan duyệt. Xem docs/02-game-modes/README.md mục 5.3.
 
-import type { Difficulty } from "../ai";
+import { BOT_CHARACTERS, type Difficulty } from "../ai";
 import {
   withComboPassive,
   ELEMENTS,
@@ -168,6 +168,30 @@ export function botDefense(seed: number, level: number): ArenaDefense {
     team,
     team.map(() => level),
   );
+}
+
+/** Sứ quân dẫn đầu đội máy (Shan 27/11/2026: Phá Doanh dùng đội do một sứ quân dẫn thay bóng ma). */
+const WARLORD_LEADERS = BOT_CHARACTERS.filter((c) => WARLORD_ENCOUNTERS.some((w) => w.id === c.id));
+
+/** Ba người của đội máy: một sứ quân dẫn đầu, hai nhân vật máy khác (sứ quân, tướng lịch sử, nhân vật đặc biệt). */
+function characterBotIds(seed: number): string[] {
+  const rng = createRng((seed ^ 0x2545f491) >>> 0);
+  const leader = WARLORD_LEADERS[rng.int(0, WARLORD_LEADERS.length - 1)]!.id;
+  return [leader, ...pickDistinct(rng, BOT_CHARACTERS.filter((c) => c.id !== leader).map((c) => c.id), 2)];
+}
+
+/** Tên đội máy: tên sứ quân dẫn đầu. */
+export function characterBotName(seed: number): string {
+  return companionById(characterBotIds(seed)[0]!)!.name;
+}
+
+/**
+ * Đội máy do một sứ quân dẫn, cùng cấp với người đánh, không trang bị. Mỗi người chơi theo tính cách riêng
+ * (src/core/ai/personality.ts) khi trận Phá Doanh chạy AI với tính cách "auto".
+ */
+export function characterBotDefense(seed: number, level: number): ArenaDefense {
+  const team = characterBotIds(seed).map((id) => leveledFoe(companionById(id)!, level));
+  return defenseFrom(team, team.map(() => level));
 }
 
 /**

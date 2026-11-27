@@ -559,6 +559,11 @@ function Meetings({ view, busy, run }: { view: TradeView; busy: boolean; run: (a
                 <b>{m.name}</b>, khoang {m.weight}/{m.capacity}
                 {m.busy ? " (đã giao thương chuyến này)" : ""}
               </span>
+              {m.bot && (
+                <span className="text-caption text-on-wood-soft">
+                  Tính {m.bot.personality.toLowerCase()}, {m.bot.note}. Ngỏ lời thì trả lời ngay.
+                </span>
+              )}
               <span className="text-caption text-on-wood-soft">{cargoText(m.cargo)}</span>
               {p.canOffer && !m.busy && (
                 <Button size="sm" variant="secondary" disabled={busy} onClick={() => setComposing(composing?.ownerId === m.ownerId ? null : m)}>
@@ -572,7 +577,7 @@ function Meetings({ view, busy, run }: { view: TradeView; busy: boolean; run: (a
                   busy={busy}
                   onSend={(give, want) => {
                     setComposing(null);
-                    void run("offer", { to: m.ownerId, legId: m.legId, give, want }, `Đã ngỏ lời với ${m.name}. Hàng đưa ra được khóa tới khi họ trả lời.`);
+                    void run("offer", { to: m.ownerId, legId: m.legId, give, want }, m.bot ? `${m.name} nhận lời, đã đổi hàng.` : `Đã ngỏ lời với ${m.name}. Hàng đưa ra được khóa tới khi họ trả lời.`);
                   }}
                 />
               )}

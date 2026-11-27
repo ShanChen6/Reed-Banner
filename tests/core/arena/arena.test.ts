@@ -5,6 +5,10 @@ import {
   arenaDelta,
   botDefense,
   botName,
+  BOT_CHARACTERS,
+  characterBotDefense,
+  characterBotName,
+  isWarlord,
   defenseOf,
   ghostTeam,
   newProfile,
@@ -67,6 +71,19 @@ describe("đấu trường bóng ma", () => {
     assert.equal(a.team.length, 3);
     assert.ok(a.members.every((m) => m.level === 12));
     assert.match(botName(77), /^Bóng ma /);
+  });
+
+  it("đội máy do sứ quân dẫn: cùng seed cùng đội, ba nhân vật máy khác nhau, người dẫn là sứ quân, tên đội là tên người dẫn", () => {
+    for (let seed = 0; seed < 30; seed++) {
+      const d = characterBotDefense(seed, 8);
+      assert.deepEqual(d, characterBotDefense(seed, 8));
+      const ids = d.members.map((m) => m.id);
+      assert.equal(new Set(ids).size, 3);
+      assert.ok(ids.every((id) => BOT_CHARACTERS.some((c) => c.id === id)), ids.join());
+      assert.ok(isWarlord(ids[0]!), ids[0]);
+      assert.ok(d.members.every((m) => m.level === 8));
+      assert.equal(characterBotName(seed), d.members[0]!.name);
+    }
   });
 
   it("đổi tên nhân vật chính của đội phòng thủ thành tên chủ đội", () => {

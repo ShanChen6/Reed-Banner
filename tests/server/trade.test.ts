@@ -3,7 +3,8 @@ import { describe, it } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
-import { TRADE_ITEM_IDS, TRADE_NODE_IDS, TRADE_START_MONEY, initialMarket, marketKey, neighbors, newTradePlayer, type TradeItemId, type TradeNodeId } from "../../src/core/trade";
+import { TRADE_BOT_MAX, TRADE_BOT_OWNERS, TRADE_MASTER_ID, TRADE_ITEM_IDS, TRADE_NODE_IDS, TRADE_START_MONEY, initialMarket, marketKey, neighbors, newTradePlayer, tradeBotName, tradeSlot, type TradeItemId, type TradeNodeId } from "../../src/core/trade";
+import { seasonSource } from "../../src/server/rankRewards";
 import { DrizzleTradeStore } from "../../src/server/db/trade";
 import type { Db } from "../../src/server/db/store";
 import { MemorySeasonStore } from "../../src/server/seasons";
@@ -50,6 +51,7 @@ function harness(store: TradeStore) {
     newId: () => `id${++n}`,
     random: () => 0.999,
     nameOf: async (id) => `Người ${id}`,
+    bots: false,
   });
   return {
     seasons,
@@ -230,3 +232,104 @@ for (const [name, make] of stores) {
     });
   });
 }
+
+describe("thương đoàn máy trên server", () => {
+  /** Mọi đoàn (người và máy) xuất phát cùng một điểm, không gặp nạn; đoàn máy chạy khi "a" mở chế độ. */
+  const setup = () => {
+    const store = new MemoryTradeStore();
+    const seasons = new MemorySeasonStore();
+    let now = T0;
+    let n = 0;
+    const deps = (): TradeDeps => ({ store, seasons, now, newId: () => `id${++n}`, random: () => 0.999, nameOf: async (id) => `Người ${id}` });
+    return { store, seasons, deps, at: (t: number) => void (now = t) };
+  };
+
+  /** "a" đi theo một đoàn máy chở hàng ra cùng cạnh, tới nơi thì gặp. */
+  const meetBot = async () => {
+    const h = setup();
+    const v0 = view(await tradeGet("a", h.deps()));
+    const season = tradeSeason(T0);
+    const bots = await h.store.players(season, TRADE_BOT_OWNERS);
+    // Đoàn thường (cấp 1 như "a"); đại thương gia đã nâng cấp nên đi nhanh hơn.
+    const [owner, bot] = [...bots].find(([o, b]) => o !== `bot:${TRADE_MASTER_ID}` && b.leg && Object.keys(b.cargo).length > 0 && b.leg.from === v0.player.node)!;
+    h.at(T0 + MIN);
+    view(await tradeDepart("a", bot.leg!.to, h.deps()));
+    h.at(bot.leg!.arriveAt + MIN + 1000);
+    const v = view(await tradeGet("a", h.deps()));
+    // Danh sách gặp giữ tối đa 5 đoàn: lấy đoàn nhân vật nào đã gặp và đang ngỏ bán.
+    const met = v.met.find((m) => m.bot && v.offers.some((o) => o.id.startsWith("botoffer-") && o.fromName === m.name)) ?? v.met.find((m) => m.ownerId === owner);
+    return { ...h, v, owner: met?.ownerId ?? owner, season };
+  };
+
+  it("đoàn máy là đoàn thật trong mùa: có hồ sơ, mua hàng qua kho chung nên tồn kho giảm thật", async () => {
+    const h = setup();
+    const v = view(await tradeGet("a", h.deps()));
+    const season = tradeSeason(T0);
+    const bots = await h.store.players(season, TRADE_BOT_OWNERS);
+    assert.equal(bots.size, TRADE_BOT_MAX, "vắng người thì đủ đoàn máy");
+    const loaded = [...bots.values()].filter((b) => Object.keys(b.cargo).length > 0);
+    assert.ok(loaded.length > 0, "phải có đoàn máy chở hàng");
+    assert.ok([...bots.values()].every((b) => b.leg !== null), "đoàn máy đã xuất hành");
+    const init = initialMarket(tradeSlot(T0), season);
+    const bought = new Map<string, number>();
+    for (const b of loaded) for (const [item, count] of Object.entries(b.cargo) as [TradeItemId, number][]) bought.set(marketKey(b.leg!.from, item), (bought.get(marketKey(b.leg!.from, item)) ?? 0) + count);
+    const rows = await h.store.market(season);
+    for (const [key, count] of bought) assert.equal(rows.get(key)!.row.stock, init.get(key)!.stock - count, `kho ${key} phải giảm đúng số đoàn máy mua`);
+    assert.equal(v.player.money, TRADE_START_MONEY);
+  });
+
+  it("gặp đoàn máy: tên là nhân vật, không ghi máy; đoàn máy ngỏ bán, đồng ý thì hàng và tiền đổi thật hai bên", async () => {
+    const { v, deps, store, owner, season } = await meetBot();
+    const bot = v.met.find((m) => m.ownerId === owner);
+    assert.ok(bot, "phải gặp đoàn máy");
+    assert.doesNotMatch(bot.name, /Máy/);
+    assert.equal(bot.name, tradeBotName(owner));
+    assert.ok(bot.bot!.personality && bot.bot!.note);
+    const offer = v.offers.find((o) => o.id.startsWith("botoffer-") && o.fromName === bot.name);
+    assert.ok(offer);
+    const [item, count] = Object.entries(offer.give.items)[0]! as [TradeItemId, number];
+    const before = (await store.getPlayer(season, owner))!.player;
+    const done = view(await tradeRespond("a", offer.id, true, deps()));
+    assert.equal(done.player.money, v.player.money - offer.want.money);
+    assert.equal(done.player.cargo[item], count);
+    assert.equal(done.player.canOffer, false);
+    const after = (await store.getPlayer(season, owner))!.player;
+    assert.equal(after.money, before.money + offer.want.money);
+    assert.equal(after.cargo[item] ?? 0, (before.cargo[item] ?? 0) - count);
+    assert.deepEqual(await tradeRespond("a", offer.id, true, deps()), { ok: false, error: "offerGone" });
+  });
+
+  it("từ chối lời ngỏ của máy thì không hiện lại; ngỏ ép giá thì máy chê, ngỏ hời thì máy nhận ngay", async () => {
+    const { v, deps, owner } = await meetBot();
+    const bot = v.met.find((m) => m.ownerId === owner)!;
+    const offer = v.offers.find((o) => o.id.startsWith("botoffer-") && o.fromName === bot.name)!;
+    const after = view(await tradeRespond("a", offer.id, false, deps()));
+    assert.equal(after.offers.some((o) => o.id === offer.id), false);
+    assert.equal(after.player.canOffer, true, "từ chối không mất lượt giao thương");
+    const [item] = Object.entries(bot.cargo)[0]! as [TradeItemId, number];
+    const low = await tradeOffer("a", { to: bot.ownerId, legId: bot.legId, give: { money: 1 }, want: { items: { [item]: 1 } } }, deps());
+    assert.deepEqual(low, { ok: false, error: "botDeclined" });
+    const rich = view(await tradeOffer("a", { to: bot.ownerId, legId: bot.legId, give: { money: 5000 }, want: { items: { [item]: 1 } } }, deps()));
+    assert.equal(rich.player.money, v.player.money - 5000);
+    assert.equal(rich.player.cargo[item], 1);
+    assert.equal(rich.player.canOffer, false);
+  });
+
+  it("đoàn máy bán hàng ở nơi tới, lãi lên bảng mùa với tên nhân vật; thưởng mùa chỉ xếp hạng người thật", async () => {
+    const h = setup();
+    let t = T0;
+    for (let i = 0; i < 40; i++, t += 20 * MIN) {
+      h.at(t);
+      await tradeGet("a", h.deps());
+    }
+    const board = await tradeBoard(null, h.seasons, t);
+    assert.ok(board.top.length > 0, "đoàn máy có lãi phải lên bảng");
+    for (const row of board.top) assert.ok(TRADE_BOT_OWNERS.some((o) => tradeBotName(o) === row.name), row.name);
+    // Một người thật đứng sau các đoàn máy vẫn nhận thưởng hạng 1.
+    const season = tradeSeason(T0);
+    await h.seasons.add("trade", season, "human", 1, t);
+    const source = seasonSource("trade", h.seasons, TRADE_BOT_OWNERS);
+    assert.deepEqual(await source.standing(season, "human"), { rank: 1, participants: 1 });
+    assert.equal(await source.standing(season, TRADE_BOT_OWNERS[0]!), null);
+  });
+});

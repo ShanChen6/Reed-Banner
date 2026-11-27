@@ -158,6 +158,9 @@ function EmptyLine({ rank }: { rank: number }) {
  * hơn 10 người (top 20, 50) thì danh sách cuộn trong khung cao đúng 7 dòng, nên mỗi lúc chỉ thấy 10 người. Thanh hạng
  * của mình dính đáy. `mine` null là chưa có tên trên bảng; `myExtra` gắn thêm vào thanh (ví dụ huy hiệu bậc hạng).
  */
+/** Câu mời khi bảng còn trống (Shan 27/11/2026: không bơm máy vào bảng xếp hạng). */
+export const BOARD_INVITE = "Bảng còn trống, chưa ai ghi danh. Chúa công hãy là người đầu tiên lưu tên.";
+
 export function RankBoard({
   entries,
   mine,
@@ -177,6 +180,7 @@ export function RankBoard({
   const myReward = mine?.reward ?? meEntry?.reward ?? null;
   return (
     <div className="flex flex-col gap-3">
+      {entries.length === 0 && <p className="text-center text-sm text-on-wood-soft">{BOARD_INVITE}</p>}
       <Podium entries={entries.filter((e) => e.rank <= 3)} />
       <ol
         className={cn("flex flex-col gap-1.5", lines.length > BOARD_SLOTS - 3 && "barracks-scroll max-h-[calc(7*3.5rem)] overflow-y-auto overscroll-contain pr-1")}

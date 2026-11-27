@@ -44,6 +44,7 @@ const ERROR_TEXT: Partial<Record<TradeServiceError | "network" | "featureDisable
   alreadyTraded: "Chuyến này đã giao thương một lần rồi.",
   offerGone: "Lời ngỏ không còn hiệu lực.",
   notYours: "Lời ngỏ này không phải của bạn.",
+  botDeclined: "Thương đoàn chê giá, chưa chịu đổi. Xin ngỏ lại.",
   network: "Mất kết nối. Xin thử lại.",
   featureDisabled: "Hành Thương Ký chưa khai mở.",
   loginRequired: "Cần trình danh để chơi.",

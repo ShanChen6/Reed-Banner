@@ -1,7 +1,7 @@
 // Hành Thương Ký trên Postgres (Neon trên Vercel, PGlite trong test). Ghi đoàn hàng và dòng kho kèm điều kiện version.
 
-import { and, eq, gte, inArray, lte, ne, or } from "drizzle-orm";
-import { edgeKey, parseTradePlayer, type Bundle, type MarketRow, type TradeLeg, type TradePlayer } from "@/core/trade";
+import { and, count, eq, gte, inArray, lte, ne, notLike, or } from "drizzle-orm";
+import { edgeKey, parseTradePlayer, TRADE_BOT_PREFIX, type Bundle, type MarketRow, type TradeLeg, type TradePlayer } from "@/core/trade";
 import type { LegRecord, OfferStatus, StoredPlayer, StoredRow, TradeOffer, TradeStore } from "../trade";
 import { tradeLegs, tradeMarkets, tradeOffers, tradePlayers } from "./schema";
 import type { Db } from "./store";
@@ -42,6 +42,14 @@ export class DrizzleTradeStore implements TradeStore {
       .where(and(eq(tradePlayers.season, season), eq(tradePlayers.ownerId, ownerId), eq(tradePlayers.version, expected)))
       .returning({ ownerId: tradePlayers.ownerId });
     return rows.length > 0;
+  }
+
+  async activeHumans(season: string, since: number): Promise<number> {
+    const [row] = await this.db
+      .select({ n: count() })
+      .from(tradePlayers)
+      .where(and(eq(tradePlayers.season, season), gte(tradePlayers.updatedAt, since), notLike(tradePlayers.ownerId, `${TRADE_BOT_PREFIX}%`)));
+    return Number(row?.n ?? 0);
   }
 
   async players(season: string, ownerIds: readonly string[]): Promise<Map<string, TradePlayer>> {
