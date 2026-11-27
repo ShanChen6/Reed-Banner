@@ -95,6 +95,6 @@ Chạy thử 300 ván mỗi cỡ (máy với máy, có thắng ngay, máy gặp 
 
 ## 10. Hình
 
-Nhà năm bậc × bảy hệ đã có tranh (28/11): `public/art/dien-trang-ky/house/<bậc>-<hệ>.webp` cộng lớp mặt nạ `-mask.webp` tách từ vùng #ff00ff, game tô mặt nạ bằng màu ghế. Nhà tranh bậc 1 của Kim, Hỏa, Thổ, Phong còn mái rơm tự nhiên (chỉ cờ đổi màu), chờ vẽ lại. Prompt nhà ở `/mnt/project-files/art/prompts/dien-trang-ky-nha.md`.
+Nhà năm bậc × bảy hệ đã có tranh (28/11): `public/art/dien-trang-ky/house/<bậc>-<hệ>.webp` cộng lớp mặt nạ `-mask.webp` tách từ vùng #ff00ff, game tô mặt nạ bằng màu ghế. Prompt nhà ở `/mnt/project-files/art/prompts/dien-trang-ky-nha.md`.
 
 Bàn, ô và xúc xắc vẫn vẽ bằng code. Chờ Shan vẽ: tranh thẻ `public/art/home/dien-trang-ky.webp`, banner, biểu tượng ô riêng. Prompt ở `/mnt/project-files/art/prompts/dien-trang-ky.md`.
