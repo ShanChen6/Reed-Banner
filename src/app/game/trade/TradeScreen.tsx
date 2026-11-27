@@ -416,6 +416,7 @@ function GoodsCard({ id, q, tab, have, open, onClick }: { id: TradeItemId; q: Ma
   const count = tab === "buy" ? (q?.stock ?? 0) : have;
   const label = [
     it.name,
+    TRADE_TIER_NAME[it.tier],
     ribbon,
     price !== null ? `giá ${money(price)}` : "phiên này chợ không thu",
     tab === "buy" ? `kho ${count}` : `có ${count}`,
@@ -434,10 +435,7 @@ function GoodsCard({ id, q, tab, have, open, onClick }: { id: TradeItemId; q: Ma
       <GoodsIcon id={id} count={count} />
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
         <b className="line-clamp-2 pr-5 leading-tight break-words">{it.name}</b>
-        <span className="text-caption text-on-wood-soft">
-          {TRADE_TIER_NAME[it.tier]}
-          {q?.rotating ? ", theo phiên" : ""}
-        </span>
+        {q?.rotating && <span className="text-caption text-on-wood-soft">Theo phiên</span>}
         {price !== null ? (
           <span className="flex items-baseline justify-between gap-1">
             <span className="font-semibold tabular-nums text-frame-gold">{money(price)}</span>

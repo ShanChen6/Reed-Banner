@@ -154,6 +154,7 @@ export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
       "Kho chung cho mọi người: ai mua thì kho giảm, ai bán thì hàng vào kho. Kho thiếu thì phiên sau giá lên, kho ứ thì giá xuống; chợ ứ quá thì tạm không thu mua món đó.",
       "Bán lại tại chỗ luôn lỗ: giá thu mua chỉ bằng 90% giá bán ra.",
       "Mỗi chợ có 2 món Đặc sản, rẻ ở quê nhà, chở càng xa càng đắt. Món Hiếm là món chợ vốn không bày nhưng phiên này có ít hàng về, giá cao; mỗi phiên 1–2 món.",
+      "Màu viền ô hình cho biết phẩm cấp: viền nâu là hàng thường dụng, viền ngọc là thượng phẩm, viền vàng là kỳ trân.",
       "Kỳ trân dị bảo lãi lớn nhưng ít hàng, 5 món chung một ô khoang, chở kỳ trân dễ gặp nạn hơn.",
       `Trên đường có thể gặp giặc sông, sóng dữ hay thảo khấu (tối đa ${ENCOUNTERS_PER_DAY} lần mỗi ngày). Nộp mãi lộ mất ${Math.round(TOLL_RATIO * 100)}% giá trị hàng; đánh trận ghép ô dễ, thắng giữ trọn hàng, thua mất ${Math.round(DEFEAT_RATIO * 100)}%. Không bao giờ mất đoàn.`,
       "Hai đoàn đi cùng chặng, trùng giờ ít nhất 5 phút là gặp nhau. Tới nơi, một bên ngỏ lời đổi hàng hoặc kim tiền, bên kia đồng ý mới đổi; không cần cùng vào game. Mỗi chuyến chỉ giao thương một lần, lời ngỏ tự hủy khi một bên xuất hành chặng mới.",
