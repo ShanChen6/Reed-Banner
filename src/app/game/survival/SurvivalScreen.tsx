@@ -328,7 +328,7 @@ export default function SurvivalScreen() {
               next[index] = "";
               changeSlots(next, index);
             }}
-            className="absolute right-1 top-1 grid size-8 place-items-center rounded text-on-wood-soft hover:bg-black/30 hover:text-on-wood pointer-coarse:size-11"
+            className="absolute right-1 top-1 grid size-8 place-items-center rounded-lg text-on-wood-soft hover:bg-black/30 hover:text-on-wood pointer-coarse:size-11"
           >
             ×
           </button>
@@ -596,7 +596,7 @@ function OpenRunPanel({ run, busy, onResume }: { run: OpenRun; busy: boolean; on
                   </p>
                 </div>
               </div>
-              <div className="mt-1.5 h-1.5 overflow-hidden rounded bg-black/40" aria-hidden>
+              <div className="mt-1.5 h-1.5 overflow-hidden rounded-lg bg-black/40" aria-hidden>
                 <div className={cn("h-full", ratio < 30 ? "bg-danger" : "bg-jade")} style={{ width: `${ratio}%` }} />
               </div>
             </li>

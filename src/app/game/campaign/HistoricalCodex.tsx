@@ -79,8 +79,8 @@ function SourceList({ sources }: { sources: readonly HistorySource[] }) {
 export function MissionSources({ nodeId, children }: { nodeId: CampaignMissionId; children?: ReactNode }) {
   const h = missionHistory(nodeId);
   return (
-    <details className="rounded-md border border-info/40 bg-info/10 p-2 text-sm">
-      <summary className="flex min-h-11 cursor-pointer items-center gap-2 rounded font-semibold text-info focus-visible:ring-2 focus-visible:ring-info focus-visible:outline-none">
+    <details className="rounded-lg border border-info/40 bg-info/10 p-2 text-sm">
+      <summary className="flex min-h-11 cursor-pointer items-center gap-2 rounded-lg font-semibold text-info focus-visible:ring-2 focus-visible:ring-info focus-visible:outline-none">
         Sử liệu
         <span className="text-caption font-normal text-on-wood-soft">
           ghi chú nguồn, sự kiện và phần game dựng
@@ -123,7 +123,7 @@ export function MissionSources({ nodeId, children }: { nodeId: CampaignMissionId
             </h3>
             <ul className="flex flex-col gap-1.5">
               {h.claims.map((c) => (
-                <li key={c.id} className="rounded bg-wood-inset p-2 text-caption">
+                <li key={c.id} className="rounded-lg bg-wood-inset p-2 text-caption">
                   <div className="mb-1 flex flex-wrap items-center gap-1.5">
                     {c.basis.map((b) => (
                       <BasisBadge key={b} basis={b} />
@@ -148,7 +148,7 @@ export function MissionSources({ nodeId, children }: { nodeId: CampaignMissionId
             </h3>
             <ul className="flex flex-col gap-1.5">
               {h.unresolved.map((u) => (
-                <li key={u.id} className="rounded bg-wood-inset p-2 text-caption">
+                <li key={u.id} className="rounded-lg bg-wood-inset p-2 text-caption">
                   <p className="text-on-wood">
                     <span className="text-on-wood-soft/80">{u.id}, </span>
                     {u.question}
@@ -169,7 +169,7 @@ export function MissionSources({ nodeId, children }: { nodeId: CampaignMissionId
             </h3>
             <ul className="flex flex-col gap-1.5">
               {h.warlords.map((w) => (
-                <li key={w.id} className="rounded bg-wood-inset p-2 text-caption">
+                <li key={w.id} className="rounded-lg bg-wood-inset p-2 text-caption">
                   <div className="mb-1 flex flex-wrap items-center gap-1.5">
                     {w.outcomeBasis.map((b) => (
                       <BasisBadge key={b} basis={b} />
@@ -244,7 +244,7 @@ export default function WarlordCodex({
       )}
     </>
   );
-  const frame = "rounded-xl border border-frame-line-soft bg-wood-inset p-3 text-sm";
+  const frame = "rounded-lg border border-frame-line-soft bg-wood-inset p-3 text-sm";
   // Chỉ liệt kê hồ sơ đã mở (không hiện hàng khóa "W01 … W12 chưa gặp", Shan yêu cầu 07/11/2026).
   const units: FitUnit[] = [
     ...(ledger ? [{ key: "ledger", node: <div>{ledger}</div> }] : []),
@@ -268,7 +268,7 @@ export default function WarlordCodex({
           node: (
               <li
                 key={w.id}
-                className="rounded-md border border-frame-line-soft bg-wood-inset p-2"
+                className="rounded-lg border border-frame-line-soft bg-wood-inset p-2"
               >
                 <details>
                   <summary className="flex min-h-11 cursor-pointer flex-wrap items-center gap-x-1.5 font-semibold text-on-wood focus-visible:ring-2 focus-visible:ring-frame-gold focus-visible:outline-none">

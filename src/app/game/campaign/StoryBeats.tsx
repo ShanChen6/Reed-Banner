@@ -23,7 +23,7 @@ export function BasisBadge({ basis }: { basis: StoryBeat["basis"] }) {
   return (
     <span
       title={BASIS_LABEL[basis].hint}
-      className={`inline-block shrink-0 rounded border px-1.5 py-0.5 text-caption font-semibold tracking-wide uppercase ${BASIS_STYLE[basis]}`}
+      className={`inline-block shrink-0 rounded-lg border px-1.5 py-0.5 text-caption font-semibold tracking-wide uppercase ${BASIS_STYLE[basis]}`}
     >
       {BASIS_LABEL[basis].name}
     </span>
@@ -36,7 +36,7 @@ export function Beats({ beats }: { beats: readonly StoryBeat[] }) {
       {beats.map((b, i) => {
         const sources = (b.refs ?? []).filter((r) => r.startsWith("S"));
         return (
-          <li key={i} className="rounded-md bg-wood-inset p-2 text-sm">
+          <li key={i} className="rounded-lg bg-wood-inset p-2 text-sm">
             <div className="mb-1 flex flex-wrap items-center gap-1.5">
               <BasisBadge basis={b.basis} />
               {b.speaker && (
@@ -108,8 +108,8 @@ export function SourceNotes({
   );
   if (bare) return body;
   return (
-    <details className="rounded-md border border-info/30 bg-info/5 p-2 text-sm">
-      <summary className="flex min-h-11 cursor-pointer items-center rounded font-semibold text-info focus-visible:ring-2 focus-visible:ring-info focus-visible:outline-none">
+    <details className="rounded-lg border border-info/30 bg-info/5 p-2 text-sm">
+      <summary className="flex min-h-11 cursor-pointer items-center rounded-lg font-semibold text-info focus-visible:ring-2 focus-visible:ring-info focus-visible:outline-none">
         {label}
       </summary>
       {body}

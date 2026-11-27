@@ -47,7 +47,7 @@ export function SectionTitle({ kicker, title, sub, id }: { kicker: string; title
 export function SiteHeader() {
   return (
     <>
-      <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-wood-lo focus:p-2">
+      <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded-lg focus:bg-wood-lo focus:p-2">
         Bỏ qua tới nội dung
       </a>
       <header className="sticky top-0 z-40 border-b border-frame-gold/40 bg-wood-lo/90 shadow-[0_8px_24px_-12px_var(--black)] backdrop-blur">
@@ -90,7 +90,7 @@ export function SiteFooter() {
       <div className={`mx-auto grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-start lg:gap-12 ${SITE_WIDTH}`}>
         <div className="order-2 flex flex-col gap-4 lg:order-1 lg:pt-6">
           {/* Bấm logo hoặc tên về trang chủ (/). */}
-          <Link href="/" title="Về trang chủ" className="flex w-fit items-center gap-4 rounded hover:[&_p:first-child]:text-title-on-wood focus-visible:outline-2 focus-visible:outline-frame-gold-hi">
+          <Link href="/" title="Về trang chủ" className="flex w-fit items-center gap-4 rounded-lg hover:[&_p:first-child]:text-title-on-wood focus-visible:outline-2 focus-visible:outline-frame-gold-hi">
             <LogoMark className="size-14" />
             <div>
               <p className="font-serif text-2xl font-bold text-on-wood">Cờ Lau</p>
@@ -134,7 +134,7 @@ export const SITE_FRAME = `mx-auto w-full px-4 py-10 sm:px-8 md:py-14 ${SITE_WID
 export function FinalCta({ title, body, cta, secondary }: { title: string; body: string; cta: string; secondary?: NavLink }) {
   return (
     <section className="px-4 pb-20 pt-6">
-      <div className={`fx-panel-hi relative mx-auto overflow-hidden rounded-3xl px-6 py-14 text-center md:py-20 ${SITE_WIDTH}`}>
+      <div className={`fx-panel-hi relative mx-auto overflow-hidden rounded-xl px-6 py-14 text-center md:py-20 ${SITE_WIDTH}`}>
         <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 w-[640px] -translate-x-1/2 -translate-y-1/2 opacity-[0.12] md:w-[900px]">
           <DrumFace className="h-auto w-full" />
         </div>

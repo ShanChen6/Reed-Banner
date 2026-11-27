@@ -615,7 +615,7 @@ function Bar({ value, max, label, tone }: { value: number; max: number; label: s
   return (
     <div className="flex items-center gap-2 text-caption">
       <span className="w-14 shrink-0 text-on-wood-soft">{label}</span>
-      <div className="h-2.5 flex-1 overflow-hidden rounded bg-wood-inset" role="meter" aria-label={label} aria-valuemin={0} aria-valuemax={max} aria-valuenow={value}>
+      <div className="h-2.5 flex-1 overflow-hidden rounded-lg bg-wood-inset" role="meter" aria-label={label} aria-valuemin={0} aria-valuemax={max} aria-valuenow={value}>
         <div className={`h-full ${color} transition-[width] duration-500 motion-reduce:transition-none`} style={{ width: `${pct}%` }} />
       </div>
       <span className="w-16 shrink-0 text-right tabular-nums">
@@ -876,7 +876,7 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
           <div
             role="grid"
             aria-label="Bàn cờ"
-            className="grid gap-0.5 rounded bg-wood-inset p-1"
+            className="grid gap-0.5 rounded-lg bg-wood-inset p-1"
             style={{ gridTemplateColumns: `repeat(${board.cols}, minmax(0, 1fr))` }}
           >
             {board.cells.map((tile, i) => {
@@ -891,7 +891,7 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
                     aria-label={`Hàng ${pos.row + 1}, cột ${pos.col + 1}`}
                     aria-pressed={!!sel}
                     onClick={() => onCell(pos)}
-                    className={`aspect-square rounded p-0.5 focus-visible:outline-2 focus-visible:outline-frame-gold ${sel || center ? "ring-2 ring-frame-gold-hi" : ""} ${myTurn ? "" : "opacity-80"}`}
+                    className={`aspect-square rounded-lg p-0.5 focus-visible:outline-2 focus-visible:outline-frame-gold ${sel || center ? "ring-2 ring-frame-gold-hi" : ""} ${myTurn ? "" : "opacity-80"}`}
                   >
                     {tile && <TileArt kind={tile.kind} {...(tile.special ? { special: tile.special } : {})} className="size-full" />}
                   </button>

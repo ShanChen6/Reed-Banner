@@ -1162,7 +1162,7 @@
 .barracks .barracks-field {
   background: var(--wood-inset);
   border: 1px solid var(--frame-line-soft);
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
 }
 .barracks .barracks-field:focus-within {
   border-color: var(--frame-gold-hi);
@@ -1611,7 +1611,7 @@ html {
   position: relative;
   min-height: 100%;
   border: 1px solid var(--frame-gold);
-  border-radius: 1rem;
+  border-radius: 0.75rem;
   background:
     radial-gradient(ellipse at 50% 35%, color-mix(in srgb, var(--frame-gold) 9%, transparent) 0%, transparent 65%),
     linear-gradient(180deg, var(--wood) 0%, var(--wood-lo) 100%);

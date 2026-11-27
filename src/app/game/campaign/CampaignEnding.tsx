@@ -41,7 +41,7 @@ export default function CampaignEnding({
   return (
     <section
       aria-labelledby="campaign-ending-title"
-      className="flex flex-col gap-3 rounded-xl border-2 border-frame-gold bg-gradient-to-b from-wood/80 to-wood-lo/50 p-4 text-sm"
+      className="flex flex-col gap-3 rounded-lg border-2 border-frame-gold bg-gradient-to-b from-wood/80 to-wood-lo/50 p-4 text-sm"
     >
       <header>
         <p className="text-kicker text-frame-gold">
@@ -111,7 +111,7 @@ export default function CampaignEnding({
         </ul>
       </div>
 
-      <details className="rounded-md border border-info/30 bg-info/5 p-2">
+      <details className="rounded-lg border border-info/30 bg-info/5 p-2">
         <summary className="flex min-h-11 cursor-pointer items-center font-semibold text-info">
           Nguồn và ghi công
         </summary>

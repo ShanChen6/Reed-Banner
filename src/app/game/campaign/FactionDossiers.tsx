@@ -34,7 +34,7 @@ export default function FactionDossiers({
   return (
     <section
       aria-labelledby="dossiers-title"
-      className="rounded-xl border border-frame-line-soft bg-wood-inset p-3 text-sm"
+      className="rounded-lg border border-frame-line-soft bg-wood-inset p-3 text-sm"
     >
       <h3 id="dossiers-title" className="font-semibold text-frame-gold">
         Hồ sơ 12 sứ quân – {ledger.resolvedCount}/12 có kết cục
@@ -48,7 +48,7 @@ export default function FactionDossiers({
           const node = storyNodeById(r.mission);
           return (
             <li key={r.faction}>
-              <details className="rounded-md border border-frame-line-soft bg-wood-inset p-2">
+              <details className="rounded-lg border border-frame-line-soft bg-wood-inset p-2">
                 <summary className="cursor-pointer font-semibold text-on-wood pointer-coarse:py-3.5">
                   {companionById(r.faction)?.name ?? r.faction}
                   <span className="ml-1 text-caption font-normal text-on-wood-soft">

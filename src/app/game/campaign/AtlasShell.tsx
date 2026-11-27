@@ -105,14 +105,14 @@ export function ChapterRail({
               {/* Hình nhỏ giữ đúng tỉ lệ 16:9 của ảnh gốc; ảnh lỗi thì ô vẫn đọc được nhờ màu nền. Góc dưới là tiến độ. */}
               <span
                 aria-hidden
-                className={`atlas-chapter-thumb relative aspect-video w-16 shrink-0 overflow-hidden rounded border bg-cover bg-center ${
+                className={`atlas-chapter-thumb relative aspect-video w-16 shrink-0 overflow-hidden rounded-lg border bg-cover bg-center ${
                   open ? "" : "grayscale"
                 }`}
                 style={{
                   backgroundImage: `url(${chapterThumbUrl(c.chapter)})`,
                 }}
               >
-                <span className="atlas-chapter-progress absolute right-0 bottom-0 rounded-tl px-1 text-[11px] leading-4 font-bold">
+                <span className="atlas-chapter-progress absolute right-0 bottom-0 rounded-tl-lg px-1 text-[11px] leading-4 font-bold">
                   {!open ? (
                     <LockGlyph />
                   ) : done ? (
@@ -785,7 +785,7 @@ export function AtlasHeader({
     ...(phone ? [] : [{ v: "guide" as const, label: "Hướng dẫn" }]),
   ];
   const tabClass = (active: boolean) =>
-    `atlas-tab flex h-[52px] min-w-0 flex-col items-center justify-center gap-0.5 rounded-md border px-0.5 text-caption leading-none font-bold tracking-wide whitespace-nowrap uppercase max-sm:tracking-normal max-sm:normal-case sm:h-12 sm:flex-row sm:gap-1.5 sm:px-2 sm:text-sm ${
+    `atlas-tab flex h-[52px] min-w-0 flex-col items-center justify-center gap-0.5 rounded-lg border px-0.5 text-caption leading-none font-bold tracking-wide whitespace-nowrap uppercase max-sm:tracking-normal max-sm:normal-case sm:h-12 sm:flex-row sm:gap-1.5 sm:px-2 sm:text-sm ${
       active ? "atlas-tab-active" : ""
     }`;
   return (
@@ -826,7 +826,7 @@ export function AtlasHeader({
           ].map((x) => (
             <div
               key={x.k}
-              className="atlas-stat flex h-9 items-center gap-1.5 rounded-md border px-2.5"
+              className="atlas-stat flex h-9 items-center gap-1.5 rounded-lg border px-2.5"
             >
               <StatIcon kind={x.icon as StatKind} />
               <dt className="text-caption opacity-75">{x.k}</dt>

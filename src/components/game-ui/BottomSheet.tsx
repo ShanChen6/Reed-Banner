@@ -44,7 +44,7 @@ export function BottomSheet({ open, onClose, title, children, toolbar, footer, c
             <span aria-hidden className="ui-sheet-handle" />
             <h2 id={`${id}-title`} className="ui-title-on-wood min-w-0 flex-1 text-title">{title}</h2>
             <button type="button" onClick={onClose} aria-label="Đóng"
-              className="flex size-11 shrink-0 items-center justify-center rounded-md text-on-wood-soft hover:text-title-on-wood">
+              className="flex size-11 shrink-0 items-center justify-center rounded-lg text-on-wood-soft hover:text-title-on-wood">
               <svg aria-hidden viewBox="0 0 20 20" className="size-5" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
                 <path d="M5 5l10 10M15 5L5 15" />
               </svg>

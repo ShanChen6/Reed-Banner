@@ -32,6 +32,7 @@ Dùng **Noto Serif** cho toàn bộ giao diện, phù hợp phong cách sử ký
 - Thao tác: `bg-primary text-primary-foreground`, `bg-secondary text-secondary-foreground`, `border-border`, `outline-ring`.
 - Trạng thái: success, warning, danger, info có token chữ và nền riêng.
 - Bo góc và bóng: `rounded-control`, `rounded-card`, `shadow-card`, `shadow-card-inset`.
+- Chỉ ba mức bo góc (Shan chốt 28/11/2026): **12px** (`rounded-xl`, `rounded-card`) cho khung lớn đứng riêng (khung màn, card có góc hoa văn, hộp thoại); **8px** (`rounded-lg`, `rounded-control`) cho mọi card, ô lõm, nút, nhãn nằm bên trong khung; **tròn hẳn** (`rounded-full`) cho chip, huy hiệu, ảnh đại diện. Không dùng `rounded`, `rounded-sm`, `rounded-md`, `rounded-2xl`.
 
 Chỉnh nhận diện chung tại `theme.css`; không khai báo mã màu tại component UI. Màu hệ nguyên tố, độ hiếm, bản đồ và hiệu ứng trận đấu vẫn là bảng màu chuyên biệt. Các biến cũ `--bg`, `--panel`, `--fg`, `--gold`, `--frame`, `--cell` là alias cho phần giao diện cũ. Tùy chọn hiển thị riêng có sẵn của màn chiến đấu được giữ nguyên; hệ thống này không thêm cơ chế đổi theme.
 

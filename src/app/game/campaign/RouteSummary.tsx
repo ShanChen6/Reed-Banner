@@ -74,7 +74,7 @@ function RouteColumn({
               type="button"
               disabled={r.state === "locked"}
               onClick={() => onPick(r.mission)}
-              className={`atlas-mission flex min-h-11 w-full flex-col items-start justify-center rounded-md border px-2 py-1 text-left disabled:cursor-not-allowed ${FOCUS}`}
+              className={`atlas-mission flex min-h-11 w-full flex-col items-start justify-center rounded-lg border px-2 py-1 text-left disabled:cursor-not-allowed ${FOCUS}`}
             >
               <span className="font-semibold">
                 {r.state === "completed" ? "✓ " : ""}
@@ -157,7 +157,7 @@ export default function RouteSummary({
           type="button"
           disabled={!gate.ready}
           onClick={() => onPick(finale.id)}
-          className={`atlas-mission flex min-h-11 items-center gap-2 rounded-md border px-3 py-1 font-semibold disabled:cursor-not-allowed ${FOCUS}`}
+          className={`atlas-mission flex min-h-11 items-center gap-2 rounded-lg border px-3 py-1 font-semibold disabled:cursor-not-allowed ${FOCUS}`}
         >
           {finaleDone ? "✓ " : ""}
           {finale.title}

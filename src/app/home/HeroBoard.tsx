@@ -91,13 +91,13 @@ export default function HeroBoard({ cells }: { cells: readonly (Tile | null)[] }
   return (
     <div
       ref={ref}
-      className="fx-board-well relative grid gap-0.5 overflow-hidden rounded-md p-0.5"
+      className="fx-board-well relative grid gap-0.5 overflow-hidden rounded-lg p-0.5"
       style={{ gridTemplateColumns: `repeat(${BOARD_COLS}, minmax(0, 1fr))` }}
     >
       {board.cells.map((t, i) => (
         <div
           key={i}
-          className={`aspect-square rounded-md transition duration-300 ${focus.includes(i) ? "z-10 scale-110 ring-2 ring-frame-gold-hi" : ""} ${clearing.has(i) ? "scale-50 opacity-0" : ""}`}
+          className={`aspect-square rounded-lg transition duration-300 ${focus.includes(i) ? "z-10 scale-110 ring-2 ring-frame-gold-hi" : ""} ${clearing.has(i) ? "scale-50 opacity-0" : ""}`}
         >
           {t && <TileArt kind={t.kind} special={t.special} className={`size-full ${t.special === "strong" ? "tile-strong" : ""}`} />}
         </div>

@@ -300,7 +300,7 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
         />
         <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-wood-lo via-wood-lo/25 to-transparent" />
         {mode.kicker && (
-          <span className={`home-kicker absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase ${compact}`}>
+          <span className={`home-kicker absolute top-3 left-3 rounded-lg px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase ${compact}`}>
             {mode.kicker}
           </span>
         )}
@@ -363,7 +363,7 @@ function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
           <Image src="/art/campaign/rail-ink.webp" alt="" fill sizes="(min-width: 1024px) 460px, 100vw" className="object-cover object-bottom opacity-60 sepia-[.4]" />
         )}
         <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-wood-lo via-wood-lo/20 to-transparent" />
-        <span className="home-kicker absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase">
+        <span className="home-kicker absolute top-3 left-3 rounded-lg px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase">
           {mode.scene ? "Đã mở" : "Sắp ra mắt"}
         </span>
         <h3 className="absolute right-4 bottom-2.5 left-4 font-serif text-xl font-bold text-[var(--title-on-wood)] [text-shadow:0_2px_4px_var(--black)] sm:text-2xl">

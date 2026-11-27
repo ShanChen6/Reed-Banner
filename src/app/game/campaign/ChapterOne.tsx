@@ -821,7 +821,7 @@ export default function ChapterOne({
             {prepSide && (
               <aside
                 aria-label="Bày trận"
-                className="ui-frame-inset rounded-xl p-3 lg:sticky lg:top-[4.5rem] lg:max-h-[calc(100dvh-5.5rem)] lg:overflow-y-auto xl:static xl:max-h-none xl:min-h-0"
+                className="ui-frame-inset rounded-lg p-3 lg:sticky lg:top-[4.5rem] lg:max-h-[calc(100dvh-5.5rem)] lg:overflow-y-auto xl:static xl:max-h-none xl:min-h-0"
               >
                 <BattlePrep
                   key={step.nodeId}

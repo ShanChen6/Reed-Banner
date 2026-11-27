@@ -82,7 +82,7 @@ function StagePortrait({
           {speaker.charAt(0).toUpperCase()}
         </span>
       )}
-      <figcaption className="max-w-28 truncate rounded bg-black/55 px-1.5 text-caption text-on-wood">
+      <figcaption className="max-w-28 truncate rounded-lg bg-black/55 px-1.5 text-caption text-on-wood">
         {speaker}
       </figcaption>
     </figure>
@@ -151,7 +151,7 @@ function Backlog({
         aria-label="Nhật ký thoại"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.key === "Escape" && onClose()}
-        className="flex max-h-[80vh] w-full max-w-xl flex-col rounded-t-2xl border-2 border-frame-line bg-wood text-on-wood shadow-2xl sm:rounded-2xl"
+        className="flex max-h-[80vh] w-full max-w-xl flex-col rounded-t-xl border-2 border-frame-line bg-wood text-on-wood shadow-2xl sm:rounded-xl"
       >
         <div className="flex items-center justify-between border-b border-white/10 px-4 py-2">
           <h2 className="font-bold text-title-on-wood">Nhật ký</h2>
@@ -171,7 +171,7 @@ function Backlog({
                 type="button"
                 onClick={() => onJump(i)}
                 aria-current={i === current ? "step" : undefined}
-                className={`w-full rounded-md border p-2 text-left text-sm ${FOCUS} ${
+                className={`w-full rounded-lg border p-2 text-left text-sm ${FOCUS} ${
                   i === current
                     ? "border-frame-gold/70 bg-frame-gold/10"
                     : "border-transparent bg-black/25 hover:bg-black/40"
@@ -270,7 +270,7 @@ export default function DialoguePlayer({
   return (
     <section
       aria-label={label ?? "Thoại"}
-      className="flex flex-col gap-2 rounded-xl border border-frame-line bg-cover bg-center p-3"
+      className="flex flex-col gap-2 rounded-lg border border-frame-line bg-cover bg-center p-3"
       style={{
         // Tranh nền sáng ở trên cho thấy cảnh, tối dần xuống khung chữ; ảnh chưa tải hay lỗi thì còn lớp nâu cuối.
         backgroundImage: `linear-gradient(color-mix(in srgb, var(--tone-140d09) 8%, transparent) 0%, color-mix(in srgb, var(--tone-140d09) 33%, transparent) 45%, color-mix(in srgb, var(--tone-140d09) 90%, transparent) 100%), url(${art}), radial-gradient(ellipse at top, var(--tone-5b3a22) 0%, var(--tone-2a1b12) 60%, var(--tone-140d09) 100%)`,

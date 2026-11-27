@@ -193,7 +193,7 @@ export default function Home() {
           <SectionTitle kicker="Chủ tướng" title="Đinh Bộ Lĩnh qua ba thời" sub="Từ cậu bé chăn trâu cầm cờ lau, thành vị tướng dẹp loạn sứ quân, rồi lên ngôi hoàng đế." />
           <ul className={`mx-auto grid grid-cols-3 gap-3 md:gap-6 lg:gap-8 ${SITE_WIDTH}`}>
             {DBL_ERAS.map((e) => (
-              <li key={e.src} className="flex flex-col items-center justify-end rounded-2xl fx-panel-hi p-2 text-center md:p-4">
+              <li key={e.src} className="flex flex-col items-center justify-end rounded-xl fx-panel-hi p-2 text-center md:p-4">
                 <Image src={e.src} alt={`Đinh Bộ Lĩnh ${e.title}`} width={e.w} height={900} sizes="(min-width: 1536px) 500px, (min-width: 768px) 380px, 30vw" className="h-auto w-full drop-shadow-[0_12px_20px_color-mix(in_srgb,var(--black)_67%,transparent)]" />
                 <p className="mt-2 font-serif text-base font-bold md:text-lg">{e.title}</p>
                 <p className="hidden text-xs text-on-wood-soft sm:block">{e.note}</p>
@@ -223,7 +223,7 @@ export default function Home() {
                     const open = !m.flag || flags[m.flag];
                     const body = (
                       <>
-                        <span className="relative block aspect-[16/7] overflow-hidden rounded-t-2xl">
+                        <span className="relative block aspect-[16/7] overflow-hidden rounded-t-xl">
                           <Image
                             src={m.art}
                             alt=""
@@ -254,12 +254,12 @@ export default function Home() {
                         {open ? (
                           <Link
                             href={`/game/${m.slug}`}
-                            className={`group flex h-full flex-col overflow-hidden rounded-2xl transition hover:-translate-y-0.5 hover:brightness-110 ${m.slug === "practice" ? "fx-panel-hi" : "fx-panel"}`}
+                            className={`group flex h-full flex-col overflow-hidden rounded-xl transition hover:-translate-y-0.5 hover:brightness-110 ${m.slug === "practice" ? "fx-panel-hi" : "fx-panel"}`}
                           >
                             {body}
                           </Link>
                         ) : (
-                          <div aria-disabled="true" className="flex h-full flex-col overflow-hidden rounded-2xl fx-panel opacity-75">
+                          <div aria-disabled="true" className="flex h-full flex-col overflow-hidden rounded-xl fx-panel opacity-75">
                             {body}
                           </div>
                         )}
@@ -284,7 +284,7 @@ export default function Home() {
           />
           <div className={`mx-auto ${SITE_WIDTH}`}>
             <div className="flex flex-col gap-5">
-              <div className="rounded-2xl fx-panel p-5">
+              <div className="rounded-xl fx-panel p-5">
                 <h3 className="font-serif text-lg font-bold">Mười hai sứ quân</h3>
                 <p className="mt-1 text-sm text-on-wood-soft">Đánh dẹp hoặc thu phục ở Bình Loạn; sứ quân đã thắng có thể chiêu mộ về đội.</p>
                 <ul className="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-6 xl:grid-cols-12">
@@ -301,7 +301,7 @@ export default function Home() {
             <h3 className="mt-10 mb-4 font-serif text-xl font-bold">{NumberWords(PROFESSIONS.length)} nghề, mỗi nghề một vai</h3>
             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {PROFESSIONS.map((p) => (
-                <li key={p} className="flex items-center gap-3 rounded-2xl fx-panel p-4">
+                <li key={p} className="flex items-center gap-3 rounded-xl fx-panel p-4">
                   <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-black/30 ring-1 ring-frame-gold/40">
                     <ProfessionIcon profession={p} className="size-9" />
                   </span>
@@ -323,7 +323,7 @@ export default function Home() {
               {ELEMENTS.map((e) => {
                 const counters = ELEMENTS.filter((o) => elementRelation(e, o) === "counter");
                 return (
-                  <li key={e} className="flex flex-col items-center gap-2 rounded-2xl fx-panel border-t-4 p-4 text-center" style={{ borderTopColor: ELEMENT_COLOR[e] }}>
+                  <li key={e} className="flex flex-col items-center gap-2 rounded-xl fx-panel border-t-4 p-4 text-center" style={{ borderTopColor: ELEMENT_COLOR[e] }}>
                     <ElementIcon element={e} className="size-12" />
                     <span className="font-serif text-lg font-bold">{ELEMENT_NAME[e]}</span>
                     <span className="text-sm leading-snug text-on-wood-soft">{ELEMENT_TRAIT[e].role}</span>
