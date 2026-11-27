@@ -15,6 +15,7 @@ import {
   dtkGet,
   dtkHost,
   dtkJoin,
+  dtkSetColor,
   dtkRemoveSeat,
   dtkResign,
   dtkStart,
@@ -113,11 +114,16 @@ for (const [label, make] of stores) {
 
     it("phòng mã: vào phòng, thêm máy, khai cuộc, quá giờ thì máy đi thay", async () => {
       const h = harness(await make());
-      const room = ok(await dtkHost("a", { element: "thuy" }, h.deps()));
+      const room = ok(await dtkHost("a", { element: "thuy", color: "lam" }, h.deps()));
       assert.ok(room.code);
-      const joined = ok(await dtkJoin("b", room.code!, { element: "thuy" }, h.deps()));
+      // Cùng hệ vẫn được; màu đã có người chọn thì bị khóa.
+      assert.deepEqual(await dtkJoin("b", room.code!, { element: "thuy", color: "lam" }, h.deps()), { ok: false, error: "colorTaken" });
+      const joined = ok(await dtkJoin("b", room.code!, { element: "thuy", color: "son" }, h.deps()));
       assert.equal(joined.you, 1);
-      assert.notEqual(joined.seats[1]!.element, "thuy");
+      assert.equal(joined.seats[1]!.element, "thuy");
+      assert.deepEqual(joined.seats.map((x) => x.color), ["lam", "son"]);
+      assert.deepEqual(await dtkSetColor("b", room.id, "lam", h.deps()), { ok: false, error: "colorTaken" });
+      assert.equal(ok(await dtkSetColor("b", room.id, "luc", h.deps())).seats[1]!.color, "luc");
       assert.deepEqual(await dtkAddBot("b", room.id, "tranLam", h.deps()), { ok: false, error: "notHost" });
       ok(await dtkAddBot("a", room.id, "tranLam", h.deps()));
       ok(await dtkAddBot("a", room.id, "lyKhue", h.deps()));
@@ -125,6 +131,7 @@ for (const [label, make] of stores) {
       ok(await dtkRemoveSeat("a", room.id, 3, h.deps()));
       const started = ok(await dtkStart("a", room.id, h.deps()));
       assert.equal(started.status, "playing");
+      assert.equal(new Set(started.state!.players.map((p) => p.color)).size, started.state!.players.length);
       assert.equal(started.state!.turn, 0);
       assert.equal(started.turnLeftMs, DTK_TURN_MS);
 

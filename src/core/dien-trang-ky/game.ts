@@ -37,6 +37,9 @@ import {
   TRIBUTE_PER_LEVEL,
   buildCost,
   tileValue,
+  DTK_COLORS,
+  freeColor,
+  type DtkColor,
 } from "./board";
 import { OMENS } from "./omens";
 
@@ -52,9 +55,13 @@ export interface Seat {
   readonly element: Element;
   /** Id sứ quân khi máy cầm ghế này; null là người. */
   readonly bot: string | null;
+  /** Màu nhà; thiếu hoặc trùng thì tự lấy màu trống. */
+  readonly color?: DtkColor;
 }
 
 export interface Player extends Seat {
+  /** Ván lưu trước khi có màu thì thiếu; dùng `colorOf`. */
+  color?: DtkColor;
   cash: number;
   pos: number;
   out: boolean;
@@ -173,6 +180,17 @@ function draw(d: DtkState, max: number): number {
   return v;
 }
 
+/** Màu cho từng ghế: giữ màu đã chọn nếu chưa ai lấy trước, ghế còn lại lấy màu trống theo thứ tự. */
+function seatColors(seats: readonly Seat[]): DtkColor[] {
+  const out: DtkColor[] = [];
+  for (const s of seats) out.push(s.color && !out.includes(s.color) ? s.color : (undefined as unknown as DtkColor));
+  for (let i = 0; i < out.length; i++) if (!out[i]) out[i] = freeColor(out);
+  return out;
+}
+
+/** Màu nhà của một ghế (ván cũ chưa lưu màu thì theo thứ tự ghế). */
+export const colorOf = (s: DtkState, seat: number): DtkColor => s.players[seat]?.color ?? DTK_COLORS[seat % DTK_COLORS.length]!.id;
+
 export function newDtk(opts: { seats: readonly Seat[]; seed: number }): DtkState {
   if (opts.seats.length < MIN_PLAYERS || opts.seats.length > MAX_PLAYERS) throw new RangeError("Điền Trang Ký cần 2 đến 4 người.");
   const rng = createRng(opts.seed >>> 0 || 1);
@@ -190,7 +208,10 @@ export function newDtk(opts: { seats: readonly Seat[]; seed: number }): DtkState
   fairs.sort((a, b) => a - b);
   return {
     v: 1,
-    players: opts.seats.map((s) => ({ name: s.name, element: s.element, bot: s.bot, cash: START_CASH, pos: 0, out: false, jail: 0, blessing: false })),
+    players: seatColors(opts.seats).map((color, i) => {
+      const s = opts.seats[i]!;
+      return { name: s.name, element: s.element, bot: s.bot, color, cash: START_CASH, pos: 0, out: false, jail: 0, blessing: false };
+    }),
     plots: TILES.map((t) => (t.kind === "land" || t.kind === "scenic" ? { owner: null, level: 0 } : null)),
     turn: 0,
     phase: { k: "roll" },
@@ -424,7 +445,8 @@ function land(d: DtkState, seat: number): void {
         return endTurn(d);
       }
       const buyout = buyoutOf(d, p.pos);
-      if (plot.level < MAX_LEVEL && p.cash >= buyout) {
+      // Trang ấp và danh thắng đã có chủ không mua lại được (Shan chốt 27/11).
+      if (plot.level < MAX_LEVEL && !isScenic(p.pos) && p.cash >= buyout) {
         d.phase = { k: "rent", tile: p.pos, owner: plot.owner, amount, buyout };
         return;
       }
