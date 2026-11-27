@@ -466,3 +466,40 @@ export const tradeOffers = pgTable(
   },
   (t) => [index("trade_offers_from_idx").on(t.season, t.fromOwner, t.status), index("trade_offers_to_idx").on(t.season, t.toOwner, t.status)],
 );
+
+/**
+ * Điền Trang Ký (src/server/dienTrangKy.ts): một dòng mỗi ván (đấu sứ quân hoặc phòng mã). `seats` là danh sách ghế,
+ * `state` là DtkState (null khi phòng còn chờ), `rewards` là vàng theo tài khoản khi xong ván.
+ */
+export const dtkMatches = pgTable(
+  "dtk_matches",
+  {
+    id: text("id").primaryKey(),
+    ownerId: text("owner_id").notNull(),
+    code: text("code").notNull(),
+    kind: text("kind").notNull(),
+    status: text("status").notNull(),
+    seats: jsonb("seats").notNull(),
+    state: jsonb("state"),
+    seq: integer("seq").notNull(),
+    turnStartedAt: bigint("turn_started_at", { mode: "number" }).notNull(),
+    idle: jsonb("idle").notNull(),
+    rewards: jsonb("rewards"),
+    rewardDay: text("reward_day"),
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
+    updatedAt: bigint("updated_at", { mode: "number" }).notNull(),
+  },
+  (t) => [index("dtk_matches_code_idx").on(t.code, t.status)],
+);
+
+/** Vàng Điền Trang Ký đã trả theo (ván, tài khoản), để đếm số ván có vàng mỗi ngày. */
+export const dtkRewards = pgTable(
+  "dtk_rewards",
+  {
+    matchId: text("match_id").notNull(),
+    ownerId: text("owner_id").notNull(),
+    day: text("day").notNull(),
+    gold: integer("gold").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.matchId, t.ownerId] }), index("dtk_rewards_owner_idx").on(t.ownerId, t.day)],
+);

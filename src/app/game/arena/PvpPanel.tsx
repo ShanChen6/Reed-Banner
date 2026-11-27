@@ -6,6 +6,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   canFreeWhirl,
+  PVP_BOT_AFTER_MS,
+  PVP_TEAM_SOLO_MS,
   comboSkillCost,
   defaultSkillTarget,
   fighterSkill,
@@ -229,7 +231,10 @@ export default function PvpPanel({ onBusyChange }: { onBusyChange?: (busy: boole
       {o?.queue ? (
         <div role="status" aria-live="polite" className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-on-wood">
-            {o.queue.format === "team" ? "Đang ghép trận 3vs3, máy sẽ điền chỗ trống nếu chờ lâu…" : "Đang tìm đối thủ có điểm gần bạn…"} đã chờ {Math.floor(o.queue.waitedMs / 1000)} giây. Hãy để trang này mở.
+            {o.queue.format === "team"
+              ? `Đang ghép trận 3vs3, máy sẽ điền chỗ trống nếu chờ lâu. Một mình quá ${PVP_TEAM_SOLO_MS / 1000} giây thì bạn đánh cùng năm tướng máy.`
+              : `Đang tìm đối thủ có điểm gần bạn. Quá ${PVP_BOT_AFTER_MS / 1000} giây không có ai thì một tướng máy vào đấu.`}{" "}
+            Đã chờ {Math.floor(o.queue.waitedMs / 1000)} giây. Hãy để trang này mở.
           </p>
           <Button variant="secondary" disabled={busy} onClick={() => void leave()}>
             Rời hàng đợi
@@ -747,11 +752,13 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
   const remaining = view.clock.deadline === null ? null : Math.max(0, Math.ceil((view.clock.deadline - (clockNow + offset)) / 1000));
   const over = view.status !== "active";
   const team = view.format === "team";
+  /** Nhân vật máy dẫn đầu phe đối thủ (đấu máy), để hiện tính cách và thoại. */
+  const foeBot = view.bots.find((b) => b.side !== mySide) ?? null;
   /** Nhãn chỗ ngồi: "Bạn", tên đồng đội hoặc đối thủ, hoặc "Máy" khi do máy điều khiển. */
   const seatTag = (side: 0 | 1, position: number) => {
     const seat = view.seats.find((x) => x.side === side && x.position === position);
     if (!seat) return side === mySide ? "Đồng đội" : "Đối thủ";
-    return seat.mine ? "Bạn" : seat.ai ? "Máy" : (seat.name ?? (side === mySide ? "Đồng đội" : "Đối thủ"));
+    return seat.mine ? "Bạn" : seat.ai ? (seat.name ? `${seat.name} (Máy)` : "Máy") : (seat.name ?? (side === mySide ? "Đồng đội" : "Đối thủ"));
   };
   /** Đội trưởng của phe đang đánh được chọn người hành động trong số người ra tay được. */
   const captainPick = !over && view.you.captain && !view.you.left && state.turn.side === mySide && !state.turn.skillUsed ? selectableActors(state) : [];
@@ -851,6 +858,12 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
           )}
         </div>
         {view.friendly && <p className="text-caption text-on-wood-soft">Giao hữu: không tính điểm hạng, không có vàng.</p>}
+        {view.vsBot && <p className="text-caption text-on-wood-soft">Đấu máy: không tính điểm hạng, vàng giảm theo số tướng máy.</p>}
+        {view.vsBot && foeBot && !over && (
+          <p className="text-sm text-on-wood">
+            <span className="font-bold text-title-on-wood">{foeBot.name} (Máy)</span>, {foeBot.personality.toLowerCase()}: {foeBot.quirk} <q>{foeBot.lines.open}</q>
+          </p>
+        )}
         {message && <Alert role="alert">{message}</Alert>}
 
         <div className={team ? "grid gap-2 md:grid-cols-3" : ""}>
@@ -978,8 +991,15 @@ function PvpMatch({ id, onExit }: { id: string; onExit: () => void }) {
       {over && (
         <OrnateFrame className="flex flex-col items-center gap-2 text-center" role="status">
           <h3 className="ui-title-on-wood text-2xl font-bold">{view.winner === null ? "Trận bị hủy" : view.winner === mySide ? "Chúa công thắng!" : "Chúa công thua"}</h3>
+          {view.vsBot && foeBot && view.winner !== null && (
+            <p>
+              {foeBot.name}: <q>{view.winner === mySide ? foeBot.lines.lose : foeBot.lines.win}</q>
+            </p>
+          )}
           {view.friendly ? (
             <p>Trận giao hữu nên không đổi điểm hạng và không có vàng.</p>
+          ) : view.vsBot && result && !result.breaker && !result.left ? (
+            <p>Đấu máy nên không đổi điểm hạng.{result.gold > 0 ? ` Thưởng ${result.gold} vàng.` : " Trận này không có vàng (đã đủ trần vàng hôm nay)."}</p>
           ) : result ? (
             <p>
               {result.counted

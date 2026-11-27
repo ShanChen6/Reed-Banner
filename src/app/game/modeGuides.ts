@@ -18,6 +18,7 @@ import { KL_TOOL_HINT, KL_TOOL_NAME } from "./khai-lo/tools";
 import { EXPEDITION_REST_HEAL, EXPEDITION_SCOUT_SIGHT } from "@/core";
 import { DEFEAT_RATIO, ENCOUNTERS_PER_DAY, TOLL_RATIO, TRADE_LEG_MINUTES, TRADE_PASSES_PER_DAY, TRADE_START_MONEY } from "@/core/trade";
 import type { PieceType } from "@/core/tam-quan-ky";
+import { BOAT_FARE, BUYOUT_RATE, DTK_GOLD, DTK_REWARDS_PER_DAY, FAIR_RATE, FESTIVAL_RATE, HOLD3_RATE, HOLD_RATE, JAIL_BAIL, JAIL_TRIES, LEVEL_NAME, MAX_LEVEL_ON_BUY, RENT_RATE, RUIN_MAX, RUIN_MIN, SALARY, SCENIC_PRICE, SCENIC_RENT, SELL_RATE, START_CASH, TRIBUTE_BASE, TRIBUTE_PER_LEVEL } from "@/core/dien-trang-ky";
 import type { Scene } from "./scene";
 
 /** Các chế độ có thẻ Hướng dẫn (mười hai chế độ ở thẻ Chiến Trường và Tam Quân Kỳ ở mục Sắp ra mắt). */
@@ -38,6 +39,7 @@ export type GuideScene = Extract<
   | "TAM_QUAN_KY"
   | "VAY_THANH_KY"
   | "TRADE"
+  | "DIEN_TRANG_KY"
 >;
 
 export interface ModeGuide {
@@ -98,6 +100,7 @@ export const GUIDE_SCENES: readonly GuideScene[] = [
   "TAM_QUAN_KY",
   "VAY_THANH_KY",
   "TRADE",
+  "DIEN_TRANG_KY",
 ];
 
 /** Cách đổi ô và phím tắt trên bàn cờ trận đấu; trước đây là dòng chữ dưới bàn cờ (Shan 20/11/2026: gợi ý đưa vào Hướng dẫn). */
@@ -139,6 +142,43 @@ const BATTLE_ITEMS: GuideItems = {
 };
 
 export const MODE_GUIDES: Readonly<Record<GuideScene, ModeGuide>> = {
+  DIEN_TRANG_KY: {
+    goal: `Làm phú hộ thời mười hai sứ quân: đổ xúc xắc đi vòng bàn 40 ô, tậu đất, dựng nhà, thu tô người khác. Ai cũng khởi đầu ${START_CASH.toLocaleString("vi-VN")} quan; chơi tới khi chỉ còn một người chưa phá sản, hoặc có người thắng ngay.`,
+    steps: [
+      "Chọn cách chơi: đấu sứ quân có thưởng (1–3 sứ quân máy), cùng máy (2–4 ghế, người hoặc máy) hoặc phòng mã (mời bạn bè bằng mã 6 ký tự).",
+      "Chọn hệ của bạn. Hệ chỉ đổi kiểu dáng và màu nhà bạn xây, không đổi tô hay luật.",
+      "Tới lượt thì bấm Đổ xúc xắc. Quân đi ngược chiều kim đồng hồ, bắt đầu từ Kinh thành Hoa Lư ở góc dưới phải.",
+      `Dừng ở đất trống thì được mua, có thể dựng luôn tới ${LEVEL_NAME[MAX_LEVEL_ON_BUY]}. Dừng lại ở đất của mình thì xây thêm bậc.`,
+      "Dừng ở đất người khác thì chọn nộp tô, hoặc mua lại đất đó.",
+      "Bị giam ở Lao Ngục thì đầu lượt chọn đổ thử tìm đôi, hoặc nộp tiền chuộc để đi ngay.",
+      "Chợ phiên, Bến Sông Đáy, Hội Cờ Lau và lúc phải bán đất: chọn ô sáng lên trên bàn. Chạm một ô bất kỳ để xem giá và tô.",
+    ],
+    rules: [
+      `Mỗi lần đi qua Hoa Lư lĩnh ${SALARY} quan lương vòng. Đổ ra đôi được đổ thêm một lần, tối đa một lần mỗi lượt.`,
+      `Năm bậc nhà: ${LEVEL_NAME.slice(1).join(", ")}. Giá đất mỗi khu một khác; mỗi bậc tốn nửa giá đất của khu, riêng ${LEVEL_NAME[5]} tốn bằng giá đất và chỉ xây được khi giữ đủ cả dãy (hùng cứ).`,
+      `Tô tính theo phần trăm giá trị ô (đất cộng nhà đã xây): ${RENT_RATE.map((r) => `${Math.round(r * 100)}%`).join(", ")} từ đất chưa xây tới ${LEVEL_NAME[5]}.`,
+      `Đất chia 3 dãy đôi và 6 dãy ba. Giữ đủ dãy đôi thì tô cả dãy nhân ${HOLD_RATE}; dãy ba đủ ba ô nhân ${HOLD3_RATE}; chưa đủ dãy thì không nhân. Ô đang mở Hội Cờ Lau thu tô gấp ${FESTIVAL_RATE}, tới khi có người mở hội nơi khác. Ba ô có đèn lồng là lễ hội nhỏ suốt ván, tô nhân ${FAIR_RATE.toLocaleString("vi-VN")}.`,
+      `Thiên tai: rút quẻ Động đất hoặc Bão lũ thì bạn chọn một ngôi nhà của nhà khác. Động đất làm nhà đó sập một bậc; Bão lũ bắt nhà đó sửa ${RUIN_MIN} tới ${RUIN_MAX} lượt của chủ, trong lúc sửa không thu tô. ${LEVEL_NAME[5]} không bị thiên tai.`,
+      "Thắng ngay: giữ hết đất trên một cạnh bàn (không tính danh thắng), hoặc giữ đủ bốn danh thắng.",
+      `Mua lại đất người khác tốn gấp ${BUYOUT_RATE} giá trị ô (đất và nhà), trả cho chủ đất, nhà giữ nguyên. ${LEVEL_NAME[5]} không ai mua lại được.`,
+      `Ô riêng: Quẻ bói rút quẻ thời loạn; Thuế đinh nộp một phần mười tiền mặt; Cống nạp nộp ${TRIBUTE_BASE} quan cộng ${TRIBUTE_PER_LEVEL} quan mỗi bậc nhà; Chợ phiên mua một ô trống bất kỳ.`,
+      `Bốn danh thắng (Đền Hùng, Núi Tản Viên, Chùa Dâu, Tràng An) giá ${SCENIC_PRICE} quan, không xây nhà. Tô theo số danh thắng cùng một chủ: ${SCENIC_RENT.slice(1).join(", ")} quan cho 1, 2, 3, 4 nơi. Danh thắng vẫn mua lại và mở hội được.`,
+      `Góc bàn: Bến Sông Đáy trả ${BOAT_FARE} quan để tới ô bất kỳ; Hội Cờ Lau mở hội trên đất mình; Lao Ngục chỉ là ô ghé qua nếu không bị giam.`,
+      `Bị giam khi rút quẻ Bị quan bắt giam. Trong ngục, mỗi lượt đổ thử một lần: ra đôi thì ra và đi luôn; hỏng ${JAIL_TRIES} lần thì mãn hạn, ra và đi theo lần đổ cuối. Nộp ${JAIL_BAIL} quan chuộc thì ra ngay đầu lượt. Bị giam vẫn thu tô bình thường.`,
+      `Thiếu tiền thì bán đất lại cho triều đình được ${Math.round(SELL_RATE * 100)}% giá trị. Bán hết vẫn thiếu là phá sản: tiền còn lại về chủ nợ, đất về trống. Không đổi hay bán đất cho nhau.`,
+      "Phòng mã: mỗi quyết định có 30 giây, quá giờ máy đi thay một bước; quá giờ hai lần liền thì máy đi thay luôn tới khi bạn bấm lại. Rời ván tính như phá sản.",
+    ],
+    rewards: [
+      `Đấu sứ quân có thưởng và phòng mã: vàng theo thứ hạng trong ván. Ván 2 người: hạng nhất ${DTK_GOLD[2]![0]} vàng. Ván 3 người: ${DTK_GOLD[3]![0]} và ${DTK_GOLD[3]![1]} vàng cho hai hạng đầu. Ván 4 người: ${DTK_GOLD[4]![0]}, ${DTK_GOLD[4]![1]} và ${DTK_GOLD[4]![2]} vàng cho ba hạng đầu.`,
+      `Tối đa ${DTK_REWARDS_PER_DAY} ván có vàng mỗi ngày. Chế độ này không xếp hạng theo mùa.`,
+      "Ván cùng máy là giao hữu, không có vàng, không cần tài khoản.",
+    ],
+    tips: [
+      "Gom đủ một dãy sớm: tô nhân lên và mở được Trang ấp, không ai mua lại được.",
+      "Giữ ít tiền mặt phòng thuế và tô bất ngờ; bán đất chỉ được nửa giá.",
+      "Mười hai sứ quân mỗi người một lối: Mãnh công mua hăng, Thủ thành giữ tiền, Mưu phá hay mua lại đất để phá thế hùng cứ.",
+    ],
+  },
   TRADE: {
     goal: `Làm thương nhân thời mười hai sứ quân: mua hàng nơi rẻ, chở tới nơi đắt mà bán. Ai cũng khởi đầu ${TRADE_START_MONEY.toLocaleString("vi-VN")} kim tiền ở một bến chợ ngẫu nhiên; hết tuần, ai lãi nhiều nhất đứng đầu.`,
     steps: [

@@ -573,7 +573,7 @@ function RankedMode({ initial, playTabs }: { initial: TtkRankedView | null; play
             <section aria-labelledby="ttk-board-title">
               <h3 id="ttk-board-title" className="font-serif font-bold text-[var(--title-on-wood)]">Bảng tuần</h3>
               {view.board.top.length === 0 ? (
-                <p className="text-sm text-[var(--ash)]">Chưa có ai ghép ra tướng đề cử.</p>
+                <p className="text-sm text-[var(--ash)]">Chưa ai ghép ra tướng đề cử. Chúa công hãy là người đầu tiên.</p>
               ) : (
                 <ol className="mt-1 space-y-0.5 text-sm">
                   {view.board.top.map((e) => (

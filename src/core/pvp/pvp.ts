@@ -64,6 +64,8 @@ export interface PvpConfig {
   readonly friendly?: boolean;
   /** Tên hiển thị của từng chỗ ngồi, cùng thứ tự với `sides[].players` (null là AI). */
   readonly names?: readonly [readonly (string | null)[], readonly (string | null)[]];
+  /** Đấu máy khi chờ lâu (Shan 27/11/2026): chỉ một người thật, không tính điểm hạng, vẫn có vàng giảm theo số máy. */
+  readonly vsBot?: boolean;
 }
 
 export interface PvpPlayerStat {
@@ -98,6 +100,8 @@ export interface PvpState {
   readonly aiDifficulty: Difficulty;
   /** Giao hữu: không đổi điểm, không có vàng. */
   readonly friendly: boolean;
+  /** Đấu máy khi chờ lâu: không đổi điểm hạng. Thiếu ở trận lưu trước 27/11/2026. */
+  readonly vsBot?: boolean;
   /** Tên hiển thị của từng chỗ ngồi; null khi không có tên (AI hoặc trận ghép trong hàng đợi). */
   readonly names: readonly [readonly (string | null)[], readonly (string | null)[]] | null;
   /** Diễn biến gần nhất (sự kiện nhỏ gọn, không có bàn cờ) để mọi người cùng đọc; tối đa `PVP_LOG_SIZE` mục. */
@@ -148,7 +152,8 @@ function validate(config: PvpConfig): PvpFormat {
   for (const spec of config.sides) {
     if (spec.players.length !== spec.fighters.length) throw new RangeError("Mỗi tướng phải có một người điều khiển (hoặc AI)");
     if (!Number.isInteger(spec.captain) || spec.captain < 0 || spec.captain >= spec.fighters.length) throw new RangeError("Đội trưởng không hợp lệ");
-    if (spec.players[spec.captain] === null) throw new RangeError("Đội trưởng phải là người thật");
+    // Phe toàn máy (đấu máy) không cần đội trưởng người thật.
+    if (spec.players.some((p) => p !== null) && spec.players[spec.captain] === null) throw new RangeError("Đội trưởng phải là người thật");
     for (const p of spec.players) {
       if (p === null) continue;
       if (seen.has(p)) throw new RangeError(`Người chơi ${p} ngồi hai chỗ`);
@@ -192,6 +197,7 @@ export function createPvpMatch(config: PvpConfig): { state: PvpState; events: Ba
       players,
       aiDifficulty: config.aiDifficulty ?? "hard",
       friendly: config.friendly ?? false,
+      ...(config.vsBot ? { vsBot: true } : {}),
       names: config.names ?? null,
       log: [],
       logNext: 1,
@@ -371,12 +377,12 @@ export function pvpAdvanceAi(start: PvpState, now: number): { state: PvpState; e
     const side = battle.turn.side;
     for (const step of aiSteps(battle)) apply(step);
     if (battle.winner === null) {
-      const skill = chooseSkill(toView(battle));
+      const skill = chooseSkill(toView(battle), "auto");
       if (skill) apply(skill);
     }
     if (battle.winner === null && battle.turn.side === side && battle.turn.number === turnNumber && battle.turn.actor === actor) {
       const rng = createRng(battle.aiRng);
-      const move = chooseMove(toView(battle), state.aiDifficulty, rng);
+      const move = chooseMove(toView(battle), state.aiDifficulty, rng, "auto");
       battle = { ...battle, aiRng: rng.state() };
       if (!apply({ type: "swap", from: move.from, to: move.to })) throw new Error("AI chọn nước đi không hợp lệ");
     }
@@ -430,7 +436,7 @@ export function pvpSettle(state: PvpState, ratings: Readonly<Record<string, numb
   for (const [p, stat] of Object.entries(state.players)) {
     const before = rating(p);
     const won = winner === stat.side;
-    const counted = !stat.breaker && !stat.left;
+    const counted = !stat.breaker && !stat.left && state.vsBot !== true;
     const raw = counted ? pvpEloDelta({ won, own: sideAvg[stat.side] as number, foe: sideAvg[1 - stat.side] as number, aiCount }) : 0;
     const after = Math.max(0, before + raw);
     out.push({ player: p, side: stat.side, won, before, after, delta: after - before, counted, breaker: stat.breaker, left: stat.left, disconnects: stat.disconnects });

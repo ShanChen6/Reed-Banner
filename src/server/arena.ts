@@ -7,7 +7,10 @@ import {
   ARENA_START,
   arenaDay,
   botDefense,
-  botName,
+  botCharacter,
+  characterBotDefense,
+  characterBotName,
+  PERSONALITIES,
   claimArenaTier,
   claimSurvivalTier,
   claimModeTier,
@@ -34,6 +37,8 @@ export interface ArenaOffer {
   /** Bóng ma máy tạo: seed và cấp để dựng lại đúng đội đã bày. */
   readonly seed?: number;
   readonly level?: number;
+  /** Đội máy do sứ quân dẫn (từ 27/11/2026); thiếu là bóng ma kiểu cũ bày trước đó. */
+  readonly character?: true;
 }
 
 export interface ArenaRow {
@@ -214,10 +219,11 @@ export async function makeOffers(
   if (real.length === 0 && far.length > 0) take(far[0]!);
   const bots = Array.from({ length: ARENA_OFFERS - real.length }, () => {
     const s = rng.int(0, 2 ** 31 - 1);
-    const d = botDefense(s, level);
+    const d = characterBotDefense(s, level);
     return {
       owner: null,
-      name: botName(s),
+      character: true as const,
+      name: characterBotName(s),
       rating: ARENA_START,
       members: d.members,
       power: d.power,
@@ -234,7 +240,7 @@ export async function offerDefense(
   offer: ArenaOffer,
 ): Promise<ArenaDefense | null> {
   if (offer.owner === null)
-    return botDefense(offer.seed ?? 0, offer.level ?? 1);
+    return offer.character ? characterBotDefense(offer.seed ?? 0, offer.level ?? 1) : botDefense(offer.seed ?? 0, offer.level ?? 1);
   return (await store.get(offer.owner))?.defense ?? null;
 }
 
@@ -262,6 +268,8 @@ export interface ArenaView {
     readonly members: readonly ArenaMember[];
     readonly power: number;
     readonly bot: boolean;
+    /** Đội máy do sứ quân dẫn: tính cách và nét riêng của người dẫn đầu. */
+    readonly leader?: { readonly personality: string; readonly quirk: string };
   }[];
   /** Id các bậc hạng đã nhận thưởng. */
   readonly tierClaims: readonly string[];
@@ -327,6 +335,10 @@ export async function arenaView(
       members: o.members,
       power: o.power,
       bot: o.owner === null,
+      ...(() => {
+        const c = o.owner === null && o.character ? botCharacter(o.members[0]?.id ?? "") : undefined;
+        return c ? { leader: { personality: PERSONALITIES[c.personality].name, quirk: c.quirk } } : {};
+      })(),
     })),
   };
 }

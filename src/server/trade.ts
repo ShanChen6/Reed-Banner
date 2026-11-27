@@ -38,6 +38,15 @@ import {
   tradeSlot,
   traveling,
   TRADE_NODE_IDS,
+  TRADE_STYLE_NOTE,
+  activeTradeBots,
+  botAccepts,
+  botOffer,
+  isTradeBot,
+  planTradeBot,
+  tradeBotCharacter,
+  tradeBotName,
+  tradeBotOwner,
   upgrade,
   newTradePlayer,
   type Bundle,
@@ -52,6 +61,7 @@ import {
   type TradePlayer,
 } from "@/core/trade";
 import { vnWeek } from "@/core/vnTime";
+import { PERSONALITIES } from "@/core/ai";
 import { recordSeason, seasonBoardView, type SeasonBoardView, type SeasonStore } from "./seasons";
 
 export interface StoredPlayer {
@@ -92,6 +102,8 @@ export interface TradeStore {
   /** Ghi khi version đang lưu đúng bằng `expected`. */
   savePlayer(season: string, ownerId: string, player: TradePlayer, expected: number, now: number): Promise<boolean>;
   players(season: string, ownerIds: readonly string[]): Promise<Map<string, TradePlayer>>;
+  /** Số đoàn người thật (không tính thương đoàn máy) có ghi từ `since` trở đi trong mùa. */
+  activeHumans(season: string, since: number): Promise<number>;
   /** Mọi dòng kho của mùa (khóa `node:item`); rỗng khi mùa chưa mở. */
   market(season: string): Promise<Map<string, StoredRow>>;
   /** Mở kho đầu mùa, bỏ qua dòng đã có. */
@@ -109,7 +121,7 @@ export interface TradeStore {
 }
 
 export class MemoryTradeStore implements TradeStore {
-  private readonly playerRows = new Map<string, StoredPlayer>();
+  private readonly playerRows = new Map<string, StoredPlayer & { updatedAt: number }>();
   private readonly marketRows = new Map<string, Map<string, StoredRow>>();
   private readonly legRows: (LegRecord & { season: string; edge: string })[] = [];
   private readonly offerRows = new Map<string, TradeOffer>();
@@ -117,22 +129,28 @@ export class MemoryTradeStore implements TradeStore {
 
   async getPlayer(season: string, ownerId: string) {
     const r = this.playerRows.get(this.pk(season, ownerId));
-    return r ? structuredClone(r) : null;
+    return r ? { player: structuredClone(r.player), version: r.version } : null;
   }
 
-  async createPlayer(season: string, ownerId: string, player: TradePlayer) {
+  async createPlayer(season: string, ownerId: string, player: TradePlayer, now: number) {
     const k = this.pk(season, ownerId);
     if (this.playerRows.has(k)) return false;
-    this.playerRows.set(k, { player: structuredClone(player), version: 0 });
+    this.playerRows.set(k, { player: structuredClone(player), version: 0, updatedAt: now });
     return true;
   }
 
-  async savePlayer(season: string, ownerId: string, player: TradePlayer, expected: number) {
+  async savePlayer(season: string, ownerId: string, player: TradePlayer, expected: number, now: number) {
     const k = this.pk(season, ownerId);
     const cur = this.playerRows.get(k);
     if (!cur || cur.version !== expected) return false;
-    this.playerRows.set(k, { player: structuredClone(player), version: expected + 1 });
+    this.playerRows.set(k, { player: structuredClone(player), version: expected + 1, updatedAt: now });
     return true;
+  }
+
+  async activeHumans(season: string, since: number) {
+    let n = 0;
+    for (const [k, r] of this.playerRows) if (k.startsWith(`${season}|`) && !isTradeBot(k.slice(season.length + 1)) && r.updatedAt >= since) n++;
+    return n;
   }
 
   async players(season: string, ownerIds: readonly string[]) {
@@ -205,9 +223,11 @@ export interface TradeDeps {
   readonly nameOf: (ownerId: string) => Promise<string>;
   /** Tăng tốc khi thử (TRADE_SPEED): khung giá, đường đi ngắn lại, lộ phiếu nhiều hơn. Bỏ trống là giờ thật. */
   readonly speed?: number;
+  /** Thương đoàn máy (mặc định bật); test tắt để chỉ thấy đoàn người. */
+  readonly bots?: boolean;
 }
 
-export type TradeServiceError = TradeError | "notSold" | "conflict" | "badRequest" | "notFound" | "noMeeting" | "alreadyTraded" | "offerGone" | "notYours";
+export type TradeServiceError = TradeError | "notSold" | "conflict" | "badRequest" | "notFound" | "noMeeting" | "alreadyTraded" | "offerGone" | "notYours" | "botDeclined";
 
 export type TradeServiceResult<T = object> = ({ readonly ok: true } & T & { readonly view: TradeView }) | { readonly ok: false; readonly error: TradeServiceError };
 
@@ -263,10 +283,14 @@ async function scoreChange(ownerId: string, before: TradePlayer, after: TradePla
 async function loadMarket(deps: TradeDeps): Promise<Map<string, StoredRow>> {
   const season = mSeason(deps);
   let m = await deps.store.market(season);
-  if (m.size === 0) {
-    await deps.store.initMarket(season, initialMarket(slotNow(deps), season));
+  const want = initialMarket(slotNow(deps), season);
+  // Kho mùa đang chạy thiếu dòng (món mới hay món đổi mã) thì bổ sung; dòng đã có giữ nguyên.
+  if ([...want.keys()].some((k) => !m.has(k))) {
+    await deps.store.initMarket(season, want);
     m = await deps.store.market(season);
   }
+  // Dòng của mã cũ còn trong kho thì bỏ qua.
+  for (const k of m.keys()) if (!want.has(k)) m.delete(k);
   return m;
 }
 
@@ -298,6 +322,8 @@ export interface OtherCaravan {
   readonly capacity: number;
   /** Người đó đã dùng chặng này cho một giao dịch khác. */
   readonly busy: boolean;
+  /** Thương đoàn máy (Shan 27/11/2026): tính cách và cách buôn của người dẫn đoàn. */
+  readonly bot?: { readonly personality: string; readonly note: string };
 }
 
 export interface OfferView {
@@ -340,9 +366,11 @@ export interface TradeView {
   readonly offers: readonly OfferView[];
 }
 
-async function buildView(ownerId: string, deps: TradeDeps, preset?: TradePlayer): Promise<TradeView> {
-  const season = tradeSeason(deps.now);
-  const player = settle(preset ?? (await loadPlayer(ownerId, deps)).player, deps.now);
+/** Tên hiện cho người chơi: thương đoàn máy mang tên nhân vật, người thật theo tài khoản. */
+const nameOf = async (deps: TradeDeps, ownerId: string) => tradeBotName(ownerId) ?? (await deps.nameOf(ownerId));
+
+/** Giá và tồn các món đang bày ở mọi chợ trong khung hiện tại. */
+async function marketsNow(deps: TradeDeps): Promise<Record<TradeNodeId, MarketQuote[]>> {
   const market = await loadMarket(deps);
   const markets = {} as Record<TradeNodeId, MarketQuote[]>;
   const ms = mSeason(deps);
@@ -353,6 +381,13 @@ async function buildView(ownerId: string, deps: TradeDeps, preset?: TradePlayer)
       return r ? [quote(ms, node, item, rowNow(deps, node, item, r))] : [];
     });
   }
+  return markets;
+}
+
+async function buildView(ownerId: string, deps: TradeDeps, preset?: TradePlayer): Promise<TradeView> {
+  const season = tradeSeason(deps.now);
+  const player = settle(preset ?? (await loadPlayer(ownerId, deps)).player, deps.now);
+  const markets = await marketsNow(deps);
   const met = await meetings(ownerId, player, deps);
   const pending = await deps.store.pendingOffers(season, ownerId);
   const others = await deps.store.players(season, [...new Set(pending.flatMap((o) => [o.fromOwner, o.toOwner]))].filter((id) => id !== ownerId));
@@ -362,8 +397,8 @@ async function buildView(ownerId: string, deps: TradeDeps, preset?: TradePlayer)
     const other = mine ? o.toOwner : o.fromOwner;
     offers.push({
       id: o.id,
-      fromName: mine ? await deps.nameOf(ownerId) : await deps.nameOf(other),
-      toName: mine ? await deps.nameOf(other) : await deps.nameOf(ownerId),
+      fromName: mine ? await nameOf(deps, ownerId) : await nameOf(deps, other),
+      toName: mine ? await nameOf(deps, other) : await nameOf(deps, ownerId),
       mine,
       give: o.give,
       want: o.want,
@@ -371,6 +406,7 @@ async function buildView(ownerId: string, deps: TradeDeps, preset?: TradePlayer)
       createdAt: o.createdAt,
     });
   }
+  offers.push(...(await botOffers(ownerId, player, met, markets, deps)));
   return {
     season,
     now: deps.now,
@@ -412,21 +448,46 @@ async function meetings(ownerId: string, p: TradePlayer, deps: TradeDeps): Promi
     const other = players.get(h.ownerId);
     // Chỉ còn giao dịch được khi chặng gặp nhau vẫn là chặng gần nhất của họ.
     if (!other || other.leg?.id !== h.leg.id || out.some((o) => o.ownerId === h.ownerId)) continue;
+    const c = tradeBotCharacter(h.ownerId);
     out.push({
       ownerId: h.ownerId,
-      name: await deps.nameOf(h.ownerId),
+      name: await nameOf(deps, h.ownerId),
       legId: h.leg.id,
       cargo: other.cargo,
       weight: cargoWeight(other.cargo),
       capacity: capacityOf(other),
       busy: other.tradeLegId === h.leg.id,
+      ...(c ? { bot: { personality: PERSONALITIES[c.personality].name, note: TRADE_STYLE_NOTE[c.personality] } } : {}),
     });
     if (out.length >= MEET_LIMIT) break;
   }
   return out;
 }
 
+/** Mã lời ngỏ đoàn máy đưa ra cho một chặng của người chơi (cố định, để ghi lại đã nhận hay đã từ chối). */
+const botOfferId = (botLegId: string, myLegId: string) => `botoffer-${botLegId}-${myLegId}`;
+
+/** Lời ngỏ đoàn máy đang chờ người chơi trả lời: mỗi đoàn máy đã gặp (chưa giao thương chuyến này) ngỏ một lần trên chặng của người chơi. */
+async function botOffers(ownerId: string, p: TradePlayer, met: readonly OtherCaravan[], markets: Readonly<Record<TradeNodeId, readonly MarketQuote[]>>, deps: TradeDeps): Promise<OfferView[]> {
+  if (!p.leg || !canOfferNow(p, deps.now)) return [];
+  const bots = met.filter((m) => m.bot && !m.busy);
+  if (bots.length === 0) return [];
+  const players = await deps.store.players(tradeSeason(deps.now), bots.map((m) => m.ownerId));
+  const out: OfferView[] = [];
+  for (const m of bots) {
+    const id = botOfferId(m.legId, p.leg.id);
+    const bot = players.get(m.ownerId);
+    const c = tradeBotCharacter(m.ownerId);
+    if (!bot || !c || (await deps.store.getOffer(id))) continue;
+    const offer = botOffer(bot, c, markets);
+    if (!offer) continue;
+    out.push({ id, fromName: m.name, toName: await nameOf(deps, ownerId), mine: false, give: offer.give, want: offer.want, otherCargo: m.cargo, createdAt: p.leg.arriveAt });
+  }
+  return out;
+}
+
 export async function tradeGet(ownerId: string, deps: TradeDeps): Promise<TradeServiceResult> {
+  await runTradeBots(deps);
   // Ghi lại khi vừa tới nơi hay sang ngày, để trạng thái lưu khớp với bản xem.
   const r = await mutatePlayer<never>(ownerId, deps, (p) => ({ ok: true, player: settle(p, deps.now) }));
   if (!r.ok) return r;
@@ -438,7 +499,14 @@ export async function tradeGet(ownerId: string, deps: TradeDeps): Promise<TradeS
 /** Chợ không bày món này trong phiên thì không mua, không bán. */
 const offered = (deps: TradeDeps, node: TradeNodeId, item: TradeItemId) => presenceAt(mSeason(deps), node, slotNow(deps)).has(item);
 
+type PlayerResult = { ok: true; player: TradePlayer } | { ok: false; error: TradeServiceError };
+
 export async function tradeBuy(ownerId: string, item: unknown, amount: unknown, deps: TradeDeps): Promise<TradeServiceResult> {
+  const r = await buyCore(ownerId, item, amount, deps);
+  return r.ok ? { ok: true, view: await buildView(ownerId, deps, r.player) } : r;
+}
+
+async function buyCore(ownerId: string, item: unknown, amount: unknown, deps: TradeDeps): Promise<PlayerResult> {
   if (!isTradeItem(item) || !Number.isInteger(amount)) return { ok: false, error: "badRequest" };
   const n = amount as number;
   for (let i = 0; i < RETRIES; i++) {
@@ -454,7 +522,7 @@ export async function tradeBuy(ownerId: string, item: unknown, amount: unknown, 
     if (!(await deps.store.saveRow(mSeason(deps), marketKey(p.node, item), { ...row, stock: row.stock - n }, r.version))) continue;
     if (await deps.store.savePlayer(tradeSeason(deps.now), ownerId, next.player, cur.version, deps.now)) {
       await scoreChange(ownerId, cur.player, next.player, deps);
-      return { ok: true, view: await buildView(ownerId, deps, next.player) };
+      return { ok: true, player: next.player };
     }
     await changeStock(deps, p.node, item, n);
   }
@@ -462,6 +530,11 @@ export async function tradeBuy(ownerId: string, item: unknown, amount: unknown, 
 }
 
 export async function tradeSell(ownerId: string, item: unknown, amount: unknown, deps: TradeDeps): Promise<TradeServiceResult> {
+  const r = await sellCore(ownerId, item, amount, deps);
+  return r.ok ? { ok: true, view: await buildView(ownerId, deps, r.player) } : r;
+}
+
+async function sellCore(ownerId: string, item: unknown, amount: unknown, deps: TradeDeps): Promise<PlayerResult> {
   if (!isTradeItem(item) || !Number.isInteger(amount)) return { ok: false, error: "badRequest" };
   const n = amount as number;
   for (let i = 0; i < RETRIES; i++) {
@@ -477,7 +550,7 @@ export async function tradeSell(ownerId: string, item: unknown, amount: unknown,
     if (!(await deps.store.saveRow(mSeason(deps), marketKey(p.node, item), { ...row, stock: row.stock + n }, r.version))) continue;
     if (await deps.store.savePlayer(tradeSeason(deps.now), ownerId, next.player, cur.version, deps.now)) {
       await scoreChange(ownerId, cur.player, next.player, deps);
-      return { ok: true, view: await buildView(ownerId, deps, next.player) };
+      return { ok: true, player: next.player };
     }
     await changeStock(deps, p.node, item, -n);
   }
@@ -492,6 +565,11 @@ export async function tradeUpgrade(ownerId: string, deps: TradeDeps): Promise<Tr
 // ── Đi đường và nạn ──
 
 export async function tradeDepart(ownerId: string, to: unknown, deps: TradeDeps): Promise<TradeServiceResult> {
+  const r = await departCore(ownerId, to, deps);
+  return r.ok ? { ok: true, view: await buildView(ownerId, deps, r.player) } : r;
+}
+
+async function departCore(ownerId: string, to: unknown, deps: TradeDeps): Promise<PlayerResult> {
   // Xuất hành chặng mới thì mọi lời ngỏ đang chờ có mình ở một bên đều tự hủy (Shan, 26/11/2026).
   const pre = settle((await loadPlayer(ownerId, deps)).player, deps.now);
   if (traveling(pre, deps.now)) return { ok: false, error: "traveling" };
@@ -503,7 +581,7 @@ export async function tradeDepart(ownerId: string, to: unknown, deps: TradeDeps)
   const r = await mutatePlayer(ownerId, deps, (p) => depart(p, to, deps.now, legId, roll, seed, deps.speed));
   if (!r.ok) return r;
   await deps.store.addLeg(tradeSeason(deps.now), ownerId, r.player.leg!);
-  return { ok: true, view: await buildView(ownerId, deps, r.player) };
+  return { ok: true, player: r.player };
 }
 
 export async function tradeEncounter(ownerId: string, choice: unknown, actions: unknown, deps: TradeDeps): Promise<TradeServiceResult<{ outcome: EncounterOutcome; lost: Cargo }>> {
@@ -546,6 +624,7 @@ export async function tradeOffer(ownerId: string, body: { to?: unknown; legId?: 
   const other = met.find((m) => m.ownerId === body.to && m.legId === body.legId);
   if (!other || !canOfferNow(me, deps.now)) return { ok: false, error: "noMeeting" };
   if (other.busy) return { ok: false, error: "alreadyTraded" };
+  if (isTradeBot(other.ownerId)) return offerToBot(ownerId, me, other, give, want, deps);
   const fromLeg = me.leg!.id;
   const r = await mutatePlayer<TradeServiceError>(ownerId, deps, (p0) => {
     const p = settle(p0, deps.now);
@@ -559,6 +638,47 @@ export async function tradeOffer(ownerId: string, body: { to?: unknown; legId?: 
   return { ok: true, view: await buildView(ownerId, deps, r.player) };
 }
 
+/** Ngỏ lời với thương đoàn máy: máy trả lời ngay theo lối buôn; nhận thì đổi luôn, chê thì người chơi được ngỏ lại. */
+async function offerToBot(ownerId: string, me: TradePlayer, other: OtherCaravan, give: Bundle, want: Bundle, deps: TradeDeps): Promise<TradeServiceResult> {
+  const c = tradeBotCharacter(other.ownerId);
+  const bot = c ? settle((await loadPlayer(other.ownerId, deps)).player, deps.now) : null;
+  if (!c || !bot || bot.leg?.id !== other.legId) return { ok: false, error: "noMeeting" };
+  if (!botAccepts(bot, c, await marketsNow(deps), give, want)) return { ok: false, error: "botDeclined" };
+  return tradeWithBot(ownerId, me.leg!.id, `botdeal-${other.legId}-${me.leg!.id}`, other.ownerId, other.legId, give, want, deps);
+}
+
+/**
+ * Đổi hàng với đoàn máy bằng hàng thật hai bên: trừ hàng đoàn máy trước (đoàn máy phải còn đủ và chưa giao thương chặng
+ * này), rồi tới người chơi; người chơi không đổi được thì trả lại hàng cho đoàn máy. Ghi lời ngỏ đã nhận để không đổi hai lần.
+ */
+async function tradeWithBot(ownerId: string, myLeg: string, offerId: string, botOwner: string, botLeg: string, mineGive: Bundle, mineGet: Bundle, deps: TradeDeps): Promise<TradeServiceResult> {
+  const me = settle((await loadPlayer(ownerId, deps)).player, deps.now);
+  if (!canOfferNow(me, deps.now) || me.leg?.id !== myLeg) return { ok: false, error: "alreadyTraded" };
+  if (!hasBundle(me, mineGive)) return { ok: false, error: mineGive.money > me.money ? "noMoney" : "noCargo" };
+  if (!fitsAfter(me, mineGive, mineGet)) return { ok: false, error: "overCapacity" };
+  const bot = await mutatePlayer<TradeServiceError>(botOwner, deps, (b0) => {
+    const b = settle(b0, deps.now);
+    if (b.leg?.id !== botLeg || b.tradeLegId !== null) return { ok: false, error: "alreadyTraded" };
+    if (!hasBundle(b, mineGet)) return { ok: false, error: "botDeclined" };
+    return { ok: true, player: { ...giveBundle(takeBundle(b, mineGet), mineGive), tradeLegId: botLeg } };
+  });
+  if (!bot.ok) return bot;
+  const r = await mutatePlayer<TradeServiceError>(ownerId, deps, (p0) => {
+    const p = settle(p0, deps.now);
+    if (!canOfferNow(p, deps.now) || p.leg?.id !== myLeg) return { ok: false, error: "alreadyTraded" };
+    if (!hasBundle(p, mineGive)) return { ok: false, error: mineGive.money > p.money ? "noMoney" : "noCargo" };
+    if (!fitsAfter(p, mineGive, mineGet)) return { ok: false, error: "overCapacity" };
+    return { ok: true, player: { ...giveBundle(takeBundle(p, mineGive), mineGet), tradeLegId: myLeg } };
+  });
+  if (!r.ok) {
+    const back = await mutatePlayer(botOwner, deps, (b) => ({ ok: true, player: { ...giveBundle(takeBundle(b, mineGive), mineGet), tradeLegId: null } }));
+    if (!back.ok) console.error("Không trả lại được hàng cho thương đoàn máy", botOwner, offerId);
+    return r;
+  }
+  await deps.store.createOffer({ id: offerId, season: tradeSeason(deps.now), fromOwner: botOwner, toOwner: ownerId, fromLeg: botLeg, toLeg: myLeg, give: mineGet, want: mineGive, status: "accepted", createdAt: deps.now, resolvedAt: deps.now });
+  return { ok: true, view: await buildView(ownerId, deps, r.player) };
+}
+
 /** Rút lời ngỏ của mình (trả hàng khóa, được ngỏ lại trên chặng này). */
 export async function tradeWithdraw(ownerId: string, offerId: unknown, deps: TradeDeps): Promise<TradeServiceResult> {
   const o = typeof offerId === "string" ? await deps.store.getOffer(offerId) : null;
@@ -569,6 +689,7 @@ export async function tradeWithdraw(ownerId: string, offerId: unknown, deps: Tra
 }
 
 export async function tradeRespond(ownerId: string, offerId: unknown, accept: unknown, deps: TradeDeps): Promise<TradeServiceResult> {
+  if (typeof offerId === "string" && offerId.startsWith("botoffer-")) return respondBot(ownerId, offerId, accept === true, deps);
   const o = typeof offerId === "string" ? await deps.store.getOffer(offerId) : null;
   if (!o || o.status !== "pending" || o.season !== tradeSeason(deps.now)) return { ok: false, error: "offerGone" };
   if (o.toOwner !== ownerId) return { ok: false, error: "notYours" };
@@ -603,6 +724,95 @@ export async function tradeRespond(ownerId: string, offerId: unknown, accept: un
   return { ok: true, view: await buildView(ownerId, deps, mine.player) };
 }
 
+/** Trả lời lời ngỏ của thương đoàn máy (lời ngỏ dựng lại từ khoang đoàn máy, không lưu tới khi người chơi trả lời). */
+async function respondBot(ownerId: string, offerId: string, accept: boolean, deps: TradeDeps): Promise<TradeServiceResult> {
+  const me = settle((await loadPlayer(ownerId, deps)).player, deps.now);
+  const met = await meetings(ownerId, me, deps);
+  const offer = (await botOffers(ownerId, me, met, await marketsNow(deps), deps)).find((o) => o.id === offerId);
+  const from = me.leg ? met.find((m) => offerId === botOfferId(m.legId, me.leg!.id)) : undefined;
+  if (!offer || !me.leg || !from) return { ok: false, error: "offerGone" };
+  if (!accept) {
+    await deps.store.createOffer({ id: offerId, season: tradeSeason(deps.now), fromOwner: from.ownerId, toOwner: ownerId, fromLeg: from.legId, toLeg: me.leg.id, give: offer.give, want: offer.want, status: "declined", createdAt: deps.now, resolvedAt: deps.now });
+    return { ok: true, view: await buildView(ownerId, deps) };
+  }
+  return tradeWithBot(ownerId, me.leg.id, offerId, from.ownerId, from.legId, offer.want, offer.give, deps);
+}
+
 export async function tradeBoard(ownerId: string | null, seasons: SeasonStore, now: number): Promise<SeasonBoardView> {
-  return seasonBoardView(seasons, "trade", tradeSeason(now), ownerId);
+  return seasonBoardView(seasons, "trade", tradeSeason(now), ownerId, tradeBotName);
+}
+
+// ── Thương đoàn máy ──
+
+/** Đoàn máy nghỉ ở chợ bấy lâu sau khi tới (giờ thật), để người tới sau trên cùng chặng còn kịp gặp và đổi hàng. */
+export const TRADE_BOT_REST_MS = 30 * 60_000;
+/** Mỗi kho chỉ cho đoàn máy chạy tối đa một lần trong khoảng này (nhiều người mở cùng lúc thì chạy một lần). */
+const BOT_TICK_MS = 20_000;
+/** Người thật tính là đang chơi khi có ghi trong một ngày gần nhất. */
+const ACTIVE_WINDOW_MS = 24 * 60 * 60_000;
+const lastBotRun = new WeakMap<TradeStore, Map<string, number>>();
+
+/**
+ * Cho các đoàn máy của mùa đi hết việc đã tới giờ: nạn thì nộp mãi lộ, tới chợ nghỉ đủ thì bán sạch hàng, chọn chuyến kế
+ * theo lối buôn, mua hàng qua kho chung rồi xuất hành. Dùng đúng các thao tác của người chơi (kho chung, lộ phiếu, điểm
+ * mùa như nhau). Lỗi của một đoàn chỉ ghi log, không làm hỏng request của người chơi.
+ */
+export async function runTradeBots(deps: TradeDeps): Promise<void> {
+  if (deps.bots === false) return;
+  const season = tradeSeason(deps.now);
+  const runs = lastBotRun.get(deps.store) ?? new Map<string, number>();
+  lastBotRun.set(deps.store, runs);
+  const last = runs.get(season);
+  if (last !== undefined && deps.now >= last && deps.now - last < BOT_TICK_MS / normalSpeed(deps.speed)) return;
+  runs.set(season, deps.now);
+  try {
+    const humans = await deps.store.activeHumans(season, deps.now - ACTIVE_WINDOW_MS);
+    const bots = activeTradeBots(season, humans);
+    const owners = bots.map(tradeBotOwner);
+    const known = await deps.store.players(season, owners);
+    // Chỉ đoàn tới việc (chưa có hồ sơ, hoặc đã tới nơi và nghỉ đủ) mới đọc giá và làm.
+    const rest = TRADE_BOT_REST_MS / normalSpeed(deps.speed);
+    const due = bots.filter((c) => {
+      const p = known.get(tradeBotOwner(c));
+      return !p || !p.leg || deps.now >= p.leg.arriveAt + rest;
+    });
+    if (due.length === 0) return;
+    let markets = await marketsNow(deps);
+    for (const c of due) if (await stepBot(tradeBotOwner(c), c, markets, deps)) markets = await marketsNow(deps);
+  } catch (e) {
+    console.error("Thương đoàn máy lỗi", e);
+  }
+}
+
+/** Một đoàn máy làm việc; true khi đã mua bán (bảng giá cần đọc lại). */
+async function stepBot(owner: string, c: NonNullable<ReturnType<typeof tradeBotCharacter>>, markets: Readonly<Record<TradeNodeId, readonly MarketQuote[]>>, deps: TradeDeps): Promise<boolean> {
+  let p = settle((await loadPlayer(owner, deps)).player, deps.now);
+  if (traveling(p, deps.now)) return false;
+  if (p.leg && deps.now < p.leg.arriveAt + TRADE_BOT_REST_MS / normalSpeed(deps.speed)) return false;
+  if (p.encounter) {
+    const r = await mutatePlayer(owner, deps, (x) => {
+      const res = resolveEncounter(x, "toll", [], deps.now);
+      return res.ok ? { ok: true, player: res.player } : res;
+    });
+    if (!r.ok) return false;
+    p = r.player;
+  }
+  let traded = false;
+  // Bán sạch hàng đang chở ở chợ này (món chợ không bày hay đã ứ thì chở tiếp).
+  for (const [item, n] of Object.entries(p.cargo) as [TradeItemId, number][]) {
+    const q = markets[p.node]?.find((x) => x.item === item);
+    const room = q ? stockCap(item, p.node) - q.stock : 0;
+    if (!q || q.full || n <= 0 || room <= 0) continue;
+    const r = await sellCore(owner, item, Math.min(n, room), deps);
+    if (r.ok) {
+      p = r.player;
+      traded = true;
+    }
+  }
+  const plan = planTradeBot(p, c, markets, deps.now, normalSpeed(deps.speed), Math.floor(deps.random() * 0x7fffffff));
+  if (!plan) return traded;
+  if (plan.upgrade) await mutatePlayer(owner, deps, (x) => upgrade(x, deps.now));
+  for (const b of plan.buys) if ((await buyCore(owner, b.item, b.amount, deps)).ok) traded = true;
+  await departCore(owner, plan.to, deps);
+  return traded;
 }

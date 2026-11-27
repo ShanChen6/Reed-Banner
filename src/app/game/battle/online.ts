@@ -180,6 +180,8 @@ export interface ArenaResponse {
     readonly members: readonly ArenaMember[];
     readonly power: number;
     readonly bot: boolean;
+    /** Đội máy do sứ quân dẫn: tính cách và nét riêng của người dẫn đầu. */
+    readonly leader?: { readonly personality: string; readonly quirk: string };
   }[];
   /** Id các bậc hạng đã nhận thưởng. */
   readonly tierClaims?: readonly string[];

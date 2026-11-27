@@ -4,6 +4,10 @@
 import {
   PLAYABLE_COMPANIONS,
   STARTER_COMPANIONS,
+  BOT_CHARACTERS,
+  botCharacter,
+  botFighter,
+  companionById,
   createDraft,
   createPvpMatch,
   createRng,
@@ -62,6 +66,9 @@ export async function buildDraft(group: readonly PvpQueueRow[], deps: PvpDeps): 
   return { id: deps.newId(), state, seq: 1, status: "active", matchId: null, owners: ranked.map((r) => r.ownerId), createdAt: deps.now, updatedAt: deps.now };
 }
 
+/** Nhân vật máy điền chỗ trống: sứ quân, tướng lịch sử, nhân vật đặc biệt, mỗi người một tính cách (Shan 27/11/2026). */
+const FILLER_POOL: readonly FighterConfig[] = BOT_CHARACTERS.map((c) => companionById(c.id)!);
+
 /** Tướng máy điền chỗ trống của từng phe: không trùng tướng trong phe, không bị cấm, cấp bằng cấp trung bình của người thật. */
 export function draftFillers(d: PvpDraft): [DraftHero[], DraftHero[]] {
   const rng = createRng(d.seed + 17);
@@ -71,7 +78,7 @@ export function draftFillers(d: PvpDraft): [DraftHero[], DraftHero[]] {
     const used = new Set(d.picks.filter((p) => p.side === side).map((p) => p.hero.id));
     const out: DraftHero[] = [];
     while (used.size < 3) {
-      const free = STARTER_COMPANIONS.filter((c) => !used.has(c.id));
+      const free = FILLER_POOL.filter((c) => !used.has(c.id));
       const pool = free.filter((c) => !banned.has(c.id));
       const choices = pool.length ? pool : free;
       const pick = choices[rng.int(0, choices.length - 1)] as FighterConfig;
@@ -100,13 +107,14 @@ export async function buildTeamMatch(draft: PvpDraftRecord, deps: PvpDeps, forgi
             ? profileTeam({ ...profile, element: slot.hero.element, profession: slot.hero.profession })[0]
             : profileTeam(profile, [slot.hero.id])[1];
       } else {
-        const base = STARTER_COMPANIONS.find((c) => c.id === slot.hero.id);
-        cfg = base ? leveledFoe(base, slot.hero.level) : undefined;
+        // Phiên cấm chọn mở trước 27/11/2026 còn điền tướng khởi đầu.
+        const base = botCharacter(slot.hero.id) ? null : STARTER_COMPANIONS.find((c) => c.id === slot.hero.id);
+        cfg = base ? leveledFoe(base, slot.hero.level) : botCharacter(slot.hero.id) ? botFighter(slot.hero.id, slot.hero.level) : undefined;
       }
       if (!cfg) continue;
       fighters.push(cfg);
       players.push(slot.owner);
-      names.push(slot.owner === null ? null : (d.names[slot.owner] ?? null));
+      names.push(slot.owner === null ? cfg.name : (d.names[slot.owner] ?? null));
     }
     sideSpecs.push({ fighters, players, names, captain: Math.max(0, players.indexOf(d.humans[side][0] ?? null)) });
   }

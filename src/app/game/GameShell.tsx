@@ -33,6 +33,7 @@ import TrialScreen from "./trial/TrialScreen";
 import DestinyScreen from "./destiny/DestinyScreen";
 import ExpeditionScreen from "./expedition/ExpeditionScreen";
 import TradeScreen from "./trade/TradeScreen";
+import DienTrangKyScreen from "./dien-trang-ky/DienTrangKyScreen";
 import FullscreenToggle from "./FullscreenToggle";
 import MobileTabBar from "./MobileTabBar";
 import GameHeader from "./header/GameHeader";
@@ -176,6 +177,8 @@ function SceneView({
       return <VayThanhKyScreen />;
     case "TRADE":
       return !towerFeatures.trade ? <DisabledTowerMode name={SCENE_TITLE.TRADE} /> : account ? <TradeScreen /> : <LoginGate scene="TRADE" name={SCENE_TITLE.TRADE} />;
+    case "DIEN_TRANG_KY":
+      return <DienTrangKyScreen />;
     case "QUESTS":
       return <QuestsScreen tamTuongKy={towerFeatures.tamTuongKy === true} tamTuongKyPack2={towerFeatures.tamTuongKyPack2 === true} tamTuongKyPack3={towerFeatures.tamTuongKyPack3 === true} />;
     case "TIERS":

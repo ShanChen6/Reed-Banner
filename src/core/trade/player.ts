@@ -3,7 +3,7 @@
 
 import { vnDay } from "../vnTime";
 import { newSkirmish, skAct, type SkAction, type SkState } from "../su-lo/skirmish";
-import { cargoWeight, isTradeItem, TRADE_ITEMS, tradeItem, type TradeItemId } from "./goods";
+import { cargoWeight, isTradeItem, migrateCargo, TRADE_ITEMS, tradeItem, type TradeItemId } from "./goods";
 import { normalSpeed } from "./market";
 import { isTradeNode, tradeEdge, TRADE_NODE_IDS, type TradeEdge, type TradeNodeId } from "./map";
 
@@ -312,5 +312,5 @@ export function parseTradePlayer(v: unknown, season: string): TradePlayer | null
   if (!v || typeof v !== "object") return null;
   const p = v as TradePlayer;
   if (p.v !== 1 || p.season !== season || !isTradeNode(p.node) || typeof p.money !== "number") return null;
-  return p;
+  return { ...p, cargo: migrateCargo(p.cargo ?? {}) };
 }

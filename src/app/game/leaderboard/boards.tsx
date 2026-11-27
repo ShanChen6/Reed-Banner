@@ -117,7 +117,7 @@ export function SeasonBoardPanel({ board, myExtra }: { board: SeasonBoardId; myE
       {!data?.top ? (
         data?.error ? <BoardEmpty>Chưa mở được bảng công trạng. Xin tải lại trang.</BoardEmpty> : <BoardLoading />
       ) : data.top.length === 0 ? (
-        <BoardEmpty>Chưa có ai trên bảng mùa này.</BoardEmpty>
+        <BoardEmpty>Bảng mùa này còn trống, chưa ai ghi danh. Chúa công hãy là người đầu tiên lưu tên.</BoardEmpty>
       ) : (
         <RankBoard
           entries={data.top.slice(0, 20).map((r) => ({ rank: r.rank, name: r.name, mine: r.mine, score: seasonScore(board, r.score) }))}
@@ -138,7 +138,7 @@ export function DestinyBoardPanel() {
       {!data?.entries ? (
         data?.error ? <BoardEmpty>Chưa mở được bảng công trạng. Xin tải lại trang.</BoardEmpty> : <BoardLoading />
       ) : data.entries.length === 0 ? (
-        <BoardEmpty>Chưa có thành tích trong chu kỳ này.</BoardEmpty>
+        <BoardEmpty>Chu kỳ này chưa ai ghi danh. Chúa công hãy là người đầu tiên lưu tên.</BoardEmpty>
       ) : (
         <RankBoard
           entries={data.entries.map((e) => ({ rank: e.rank, name: e.name, mine: e.mine, score: `Tầng ${e.clearedFloor}`, detail: `${e.totalTurns} lượt đánh` }))}
@@ -157,7 +157,7 @@ export function TtkBoard({ data }: { data: TtkBoardResponse | null }) {
       {!data?.top ? (
         data?.error ? <BoardEmpty>Chưa mở được bảng công trạng. Xin tải lại trang.</BoardEmpty> : <BoardLoading />
       ) : data.top.length === 0 ? (
-        <BoardEmpty>Tuần này chưa có ai ghép ra tướng đề cử.</BoardEmpty>
+        <BoardEmpty>Tuần này chưa ai ghép ra tướng đề cử. Chúa công hãy là người đầu tiên.</BoardEmpty>
       ) : (
         <RankBoard
           entries={data.top.map((r) => ({ rank: r.rank, name: r.name, mine: r.mine, score: `${r.points} điểm`, detail: `tiêu ${r.unitsSpent} nguyên tố` }))}

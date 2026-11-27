@@ -42,11 +42,11 @@ export type TradeItemId =
   | "pottery"
   | "silk"
   | "brocade"
-  | "hemp"
+  | "indigoCloth"
   | "sedgeMat"
   | "doPaper"
   | "lacquer"
-  | "basketry"
+  | "conicalHat"
   | "laterite"
   | "ironBar"
   | "bronze"
@@ -80,46 +80,46 @@ export const TRADE_ITEMS: readonly TradeItem[] = [
   item("rice", "Gạo tẻ", "farm", "common", 20, ["dangChau"], ["plain", "river"]),
   item("stickyRice", "Gạo nếp", "farm", "common", 28, ["doDong"], ["plain", "river"]),
   item("taro", "Khoai môn", "farm", "common", 15, [], ["mountain", "plain"]),
-  item("beans", "Đậu các loại", "farm", "common", 25, [], ["plain", "river"]),
+  item("beans", "Đậu đỗ", "farm", "common", 25, [], ["plain", "river"]),
   item("sesame", "Vừng", "farm", "common", 35, [], ["plain"]),
   item("molasses", "Mật mía", "farm", "common", 30, ["teGiang"], ["river"]),
   item("tea", "Chè xanh", "farm", "fine", 120, ["tienDu"], ["mountain"]),
   item("areca", "Cau khô", "farm", "common", 30, [], ["plain", "river"]),
-  item("longan", "Hạt sen, long nhãn", "farm", "fine", 110, ["dangChau"], ["river"]),
+  item("longan", "Long nhãn", "farm", "fine", 110, ["dangChau"], ["river"]),
   item("riceWine", "Rượu nếp", "farm", "fine", 90, ["tayPhuLiet"], ["plain"]),
   // Thủy hải sản
   item("salt", "Muối hạt", "sea", "common", 22, ["cuaDaiAc"], ["sea"]),
-  item("driedFish", "Cá khô, tôm khô", "sea", "common", 40, ["tamDai"], ["sea", "river"]),
-  item("fishSauce", "Nước mắm, mắm tôm", "sea", "fine", 70, ["boHai"], ["sea"]),
+  item("driedFish", "Cá khô", "sea", "common", 40, ["tamDai"], ["sea", "river"]),
+  item("fishSauce", "Nước mắm", "sea", "fine", 70, ["boHai"], ["sea"]),
   item("squid", "Mực khô", "sea", "fine", 100, [], ["sea"]),
-  item("seaCucumber", "Hải sâm, bào ngư khô", "sea", "fine", 220, [], ["sea"]),
+  item("seaCucumber", "Hải sâm", "sea", "fine", 220, [], ["sea"]),
   item("pearl", "Ngọc trai", "sea", "treasure", 700, ["boHai"], ["sea"]),
   item("tortoiseshell", "Đồi mồi", "sea", "treasure", 600, ["cuaDaiAc"], ["sea"]),
   item("coral", "San hô đỏ", "sea", "treasure", 650, [], ["sea"]),
   // Lâm sản, dược liệu
   item("ironwood", "Gỗ lim", "forest", "fine", 150, ["hoaLu"], ["mountain"]),
-  item("rosewood", "Gỗ quý (hương, trắc)", "forest", "fine", 260, [], ["mountain"]),
-  item("bamboo", "Tre nứa, mây song", "forest", "common", 25, ["hoaLu"], ["mountain", "river"]),
+  item("rosewood", "Gỗ trắc", "forest", "fine", 260, [], ["mountain"]),
+  item("bamboo", "Tre nứa", "forest", "common", 25, ["hoaLu"], ["mountain", "river"]),
   item("charcoal", "Than củi", "forest", "common", 18, [], ["mountain"]),
   item("cinnamon", "Quế", "forest", "fine", 160, ["phongChau"], ["mountain"]),
-  item("anise", "Hồi, thảo quả", "forest", "fine", 130, [], ["mountain"]),
-  item("herbs", "Dược liệu khô", "forest", "fine", 120, [], ["mountain", "plain"]),
-  item("honey", "Mật ong, sáp ong", "forest", "fine", 140, ["hoiHo"], ["mountain"]),
+  item("anise", "Hoa hồi", "forest", "fine", 130, [], ["mountain"]),
+  item("herbs", "Dược liệu", "forest", "fine", 120, [], ["mountain", "plain"]),
+  item("honey", "Mật ong", "forest", "fine", 140, ["hoiHo"], ["mountain"]),
   item("agarwood", "Trầm hương", "forest", "treasure", 900, ["duongLam"], ["mountain"]),
-  item("ginseng", "Sâm, tam thất", "forest", "treasure", 750, [], ["mountain"]),
+  item("ginseng", "Nhân sâm", "forest", "treasure", 750, [], ["mountain"]),
   // Thủ công
   item("pottery", "Gốm men", "craft", "fine", 160, ["sieuLoai"], ["plain"]),
   item("silk", "Lụa tơ tằm", "craft", "fine", 180, ["teGiang"], ["river"]),
   item("brocade", "Gấm vóc", "craft", "fine", 300, ["tienDu"], ["plain"]),
-  item("hemp", "Vải gai, vải chàm", "craft", "common", 45, ["tamDai"], ["river", "mountain"]),
+  item("indigoCloth", "Vải chàm", "craft", "common", 45, ["tamDai"], ["river", "mountain"]),
   item("sedgeMat", "Chiếu cói", "craft", "fine", 90, ["doDong"], ["river"]),
   item("doPaper", "Giấy dó", "craft", "fine", 110, ["tayPhuLiet"], ["plain"]),
-  item("lacquer", "Sơn mài, khảm trai", "craft", "fine", 240, ["sieuLoai"], ["plain"]),
-  item("basketry", "Mây tre đan, nón lá", "craft", "common", 40, [], ["river", "plain"]),
+  item("lacquer", "Sơn mài", "craft", "fine", 240, ["sieuLoai"], ["plain"]),
+  item("conicalHat", "Nón lá", "craft", "common", 40, [], ["river", "plain"]),
   // Khoáng sản, lễ khí
   item("laterite", "Đá ong", "mineral", "common", 35, ["duongLam"], ["mountain"]),
   item("ironBar", "Sắt thỏi", "mineral", "fine", 120, [], ["mountain"]),
-  item("bronze", "Đồ đồng (chuông, lư)", "mineral", "fine", 280, ["phongChau"], ["mountain"]),
+  item("bronze", "Đồ đồng", "mineral", "fine", 280, ["phongChau"], ["mountain"]),
   item("ivory", "Ngà voi", "mineral", "treasure", 850, ["hoiHo"], ["mountain"]),
 ];
 
@@ -134,6 +134,22 @@ export const TRADE_CATEGORY_NAME: Readonly<Record<TradeCategory, string>> = {
   craft: "Thủ công",
   mineral: "Khoáng sản, lễ khí",
 };
+
+/** Mã cũ đã đổi cho khớp tên rút gọn (27/11/2026): hồ sơ và kho lưu mã cũ được đọc sang mã mới. */
+export const LEGACY_TRADE_ITEM_IDS: Readonly<Record<string, TradeItemId>> = { hemp: "indigoCloth", basketry: "conicalHat" };
+
+/** Mã món sau khi đổi mã cũ (giữ nguyên mã lạ để bộ kiểm phía sau từ chối). */
+export const currentTradeItemId = (id: string): string => LEGACY_TRADE_ITEM_IDS[id] ?? id;
+
+/** Khoang hàng đọc từ kho: gộp mã cũ vào mã mới, bỏ món không còn trong danh mục. */
+export function migrateCargo(c: Readonly<Record<string, number | undefined>>): Partial<Record<TradeItemId, number>> {
+  const out: Partial<Record<TradeItemId, number>> = {};
+  for (const [raw, n] of Object.entries(c)) {
+    const id = currentTradeItemId(raw);
+    if (n && n > 0 && isTradeItem(id)) out[id] = (out[id] ?? 0) + n;
+  }
+  return out;
+}
 
 export const isTradeItem = (v: unknown): v is TradeItemId => typeof v === "string" && (TRADE_ITEM_IDS as readonly string[]).includes(v);
 

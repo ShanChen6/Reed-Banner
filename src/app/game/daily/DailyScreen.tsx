@@ -162,7 +162,7 @@ export default function DailyScreen() {
                 <OrnateFrame className="flex min-w-0 flex-col gap-2">
                   <SectionTitle>Bảng hôm nay</SectionTitle>
                   {top.length === 0 ? (
-                    <p className="text-sm text-on-wood-soft">Chưa ai đánh xong hôm nay.</p>
+                    <p className="text-sm text-on-wood-soft">Hôm nay chưa ai đánh xong. Chúa công hãy là người đầu tiên lưu tên.</p>
                   ) : (
                     <RankBoard
                       entries={top.map((r) => ({

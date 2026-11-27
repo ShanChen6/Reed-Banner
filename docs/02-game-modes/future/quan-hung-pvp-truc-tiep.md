@@ -1,6 +1,6 @@
 # 13 — Quần Hùng online: đấu trực tiếp giữa người với người (1vs1 và 3vs3)
 
-> Cập nhật: 13/11/2026
+> Cập nhật: 27/11/2026
 > Trạng thái: **DRAFT** — Shan chốt hướng 01/11/2026 và duyệt luật 1vs1, 3vs3 ngày 13/11/2026 (mục 1.1, đã bổ sung vòng hai cùng ngày). Lõi PVP-01 (`src/core/pvp/`) và server 1vs1 PVP-02 đã có code (mục 5); giao diện 1vs1 PVP-03 có bản đầu; 3vs3 (phòng, hàng đợi, cấm chọn, Nộ riêng) đã có bản đầu; chưa mô phỏng cân bằng Nộ riêng. Các con số kỹ thuật (giờ, ngưỡng cảnh cáo, hàng đợi) là đề xuất của Claude, chờ đo.
 
 ## 1. Quyết định của Shan
@@ -22,6 +22,15 @@
 - **Bỏ lượt:** người hết giờ thì **mất lượt, lượt chuyển sang đối thủ**. Bỏ lượt liên tục bị coi là **phá trận**: cảnh cáo, về sau hạn chế ghép trận (mục 3.6). Chưa xử thua vì bỏ lượt. Luật phá trận được Shan đồng ý.
 - **Điểm hạng:** **mỗi người một điểm Elo riêng**, tính cho từng thể thức (mục 3.7). **Người phá trận không được tính điểm.**
 - **Thưởng:** chỉ vàng, như các chế độ xếp hạng khác.
+
+### 1.2 Đấu máy khi vắng người (Shan chốt 27/11/2026)
+
+- **1vs1:** chờ quá **40 giây** (`PVP_BOT_AFTER_MS`) mà hàng đợi không có ai khác thì gặp một **nhân vật máy**. Còn người khác đang chờ (dù điểm cách xa) thì không ghép máy, đợi ghép người.
+- **3vs3:** chờ quá **45 giây** (`PVP_TEAM_SOLO_MS`) mà chỉ có một mình thì đánh cùng hai nhân vật máy, gặp ba nhân vật máy, dùng Đinh Bộ Lĩnh của mình, không qua cấm chọn. Từ hai người thật trở lên vẫn như cũ (máy điền chỗ sau 25 giây).
+- **Nhân vật máy** là sứ quân, tướng lịch sử, Minh Nguyệt, Vũ Phong, dựng ở cấp Đinh Bộ Lĩnh của người chơi, chơi theo [tính cách](../../01-gameplay/ai.md#tính-cách-máy) riêng. Chỗ máy điền ở 3vs3 xếp hạng cũng lấy từ danh sách này (trước là tướng khởi đầu).
+- **Ghi rõ là máy:** tên kèm "(Máy)", trận hiện tính cách, nét riêng và thoại vào trận, thắng, thua của nhân vật máy dẫn đầu phe đối thủ.
+- **Không tính điểm hạng, không vào bảng mùa**; vẫn có vàng (giảm theo số máy như mọi trận có máy, chung trần vàng mỗi ngày). Phá trận hoặc bị máy thay thì không có vàng.
+- Code: `src/core/pvp/bots.ts`, `startBotMatch` trong `src/server/pvp.ts`, trường `vsBot` của trận.
 
 ## 2. Hiện trạng kỹ thuật cần biết
 

@@ -300,7 +300,7 @@ describe("tab Tầm Tướng Ký trên trang Xếp hạng", () => {
     assert.match(html, /Đứng thứ 7/);
     assert.match(html, />200 điểm</);
     assert.match(html, /tuần bắt đầu 2026-11-02/);
-    assert.match(renderToStaticMarkup(createElement(TtkBoard, { data: { week: "2026-11-02", top: [], mine: null } })), /chưa có ai ghép ra tướng đề cử/);
+    assert.match(renderToStaticMarkup(createElement(TtkBoard, { data: { week: "2026-11-02", top: [], mine: null } })), /chưa ai ghép ra tướng đề cử/);
   });
 });
 
