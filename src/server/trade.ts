@@ -21,9 +21,12 @@ import {
   MARKET_ITEMS,
   MEET_LIMIT,
   MEET_OVERLAP_MS,
+  marketSeason,
   nextSlotAt,
+  normalSpeed,
   parseBundle,
   parseTradePlayer,
+  presenceAt,
   passesLeft,
   quote,
   resolveEncounter,
@@ -200,14 +203,19 @@ export interface TradeDeps {
   /** Số thực ngẫu nhiên trong [0, 1) (server dùng crypto). */
   readonly random: () => number;
   readonly nameOf: (ownerId: string) => Promise<string>;
+  /** Tăng tốc khi thử (TRADE_SPEED): khung giá, đường đi ngắn lại, lộ phiếu nhiều hơn. Bỏ trống là giờ thật. */
+  readonly speed?: number;
 }
 
-export type TradeServiceError = TradeError | "conflict" | "badRequest" | "notFound" | "noMeeting" | "alreadyTraded" | "offerGone" | "notYours";
+export type TradeServiceError = TradeError | "notSold" | "conflict" | "badRequest" | "notFound" | "noMeeting" | "alreadyTraded" | "offerGone" | "notYours";
 
 export type TradeServiceResult<T = object> = ({ readonly ok: true } & T & { readonly view: TradeView }) | { readonly ok: false; readonly error: TradeServiceError };
 
 const RETRIES = 4;
 export const tradeSeason = (now: number) => vnWeek(now);
+/** Khóa kho của mùa (chạy thử có kho riêng) và khung giá hiện tại theo tốc độ. */
+const mSeason = (deps: TradeDeps) => marketSeason(tradeSeason(deps.now), deps.speed);
+const slotNow = (deps: TradeDeps) => tradeSlot(deps.now, deps.speed);
 
 // ── Đọc và ghi đoàn hàng ──
 
@@ -253,20 +261,20 @@ async function scoreChange(ownerId: string, before: TradePlayer, after: TradePla
 // ── Kho chung ──
 
 async function loadMarket(deps: TradeDeps): Promise<Map<string, StoredRow>> {
-  const season = tradeSeason(deps.now);
+  const season = mSeason(deps);
   let m = await deps.store.market(season);
   if (m.size === 0) {
-    await deps.store.initMarket(season, initialMarket(tradeSlot(deps.now)));
+    await deps.store.initMarket(season, initialMarket(slotNow(deps), season));
     m = await deps.store.market(season);
   }
   return m;
 }
 
-const rowNow = (deps: TradeDeps, node: TradeNodeId, item: TradeItemId, r: StoredRow) => advanceRow(tradeSeason(deps.now), node, item, r.row, tradeSlot(deps.now));
+const rowNow = (deps: TradeDeps, node: TradeNodeId, item: TradeItemId, r: StoredRow) => advanceRow(mSeason(deps), node, item, r.row, slotNow(deps));
 
 /** Đổi tồn một dòng kho (dương là thêm), có thử lại; `check` từ chối khi không đủ hàng hay chợ đã ứ. */
 async function changeStock(deps: TradeDeps, node: TradeNodeId, item: TradeItemId, delta: number): Promise<boolean> {
-  const season = tradeSeason(deps.now);
+  const season = mSeason(deps);
   const key = marketKey(node, item);
   for (let i = 0; i < RETRIES; i++) {
     const r = (await loadMarket(deps)).get(key);
@@ -309,6 +317,8 @@ export interface TradeView {
   readonly now: number;
   readonly slot: number;
   readonly nextSlotAt: number;
+  /** 1 là giờ thật; lớn hơn là đang chạy thử nhanh. */
+  readonly speed: number;
   readonly player: {
     readonly money: number;
     readonly cargo: Cargo;
@@ -324,7 +334,7 @@ export interface TradeView {
     readonly canOffer: boolean;
     readonly score: number;
   };
-  /** Giá và tồn của mọi điểm trong khung hiện tại (Shan, 26/11/2026: xem được giá các vùng, không xem khung sau). */
+  /** Giá và tồn các món đang bày ở mọi điểm trong khung hiện tại (Shan, 26/11/2026: xem được giá các vùng, không xem khung sau). */
   readonly markets: Readonly<Record<TradeNodeId, readonly MarketQuote[]>>;
   readonly met: readonly OtherCaravan[];
   readonly offers: readonly OfferView[];
@@ -335,11 +345,14 @@ async function buildView(ownerId: string, deps: TradeDeps, preset?: TradePlayer)
   const player = settle(preset ?? (await loadPlayer(ownerId, deps)).player, deps.now);
   const market = await loadMarket(deps);
   const markets = {} as Record<TradeNodeId, MarketQuote[]>;
-  for (const node of TRADE_NODE_IDS)
+  const ms = mSeason(deps);
+  for (const node of TRADE_NODE_IDS) {
+    const shown = presenceAt(ms, node, slotNow(deps));
     markets[node] = MARKET_ITEMS.flatMap((item) => {
-      const r = market.get(marketKey(node, item));
-      return r ? [quote(season, node, item, rowNow(deps, node, item, r))] : [];
+      const r = shown.has(item) ? market.get(marketKey(node, item)) : undefined;
+      return r ? [quote(ms, node, item, rowNow(deps, node, item, r))] : [];
     });
+  }
   const met = await meetings(ownerId, player, deps);
   const pending = await deps.store.pendingOffers(season, ownerId);
   const others = await deps.store.players(season, [...new Set(pending.flatMap((o) => [o.fromOwner, o.toOwner]))].filter((id) => id !== ownerId));
@@ -361,8 +374,9 @@ async function buildView(ownerId: string, deps: TradeDeps, preset?: TradePlayer)
   return {
     season,
     now: deps.now,
-    slot: tradeSlot(deps.now),
-    nextSlotAt: nextSlotAt(deps.now),
+    slot: slotNow(deps),
+    nextSlotAt: nextSlotAt(deps.now, deps.speed),
+    speed: normalSpeed(deps.speed),
     player: {
       money: player.money,
       cargo: player.cargo,
@@ -372,7 +386,7 @@ async function buildView(ownerId: string, deps: TradeDeps, preset?: TradePlayer)
       node: player.node,
       leg: player.leg,
       traveling: traveling(player, deps.now),
-      passesLeft: passesLeft(player, deps.now),
+      passesLeft: passesLeft(player, deps.now, deps.speed),
       encounter: player.encounter ? { kind: player.encounter.kind, seed: player.encounter.seed } : null,
       legs: player.legs,
       canOffer: canOfferNow(player, deps.now),
@@ -421,19 +435,23 @@ export async function tradeGet(ownerId: string, deps: TradeDeps): Promise<TradeS
 
 // ── Mua, bán, nâng cấp ──
 
+/** Chợ không bày món này trong phiên thì không mua, không bán. */
+const offered = (deps: TradeDeps, node: TradeNodeId, item: TradeItemId) => presenceAt(mSeason(deps), node, slotNow(deps)).has(item);
+
 export async function tradeBuy(ownerId: string, item: unknown, amount: unknown, deps: TradeDeps): Promise<TradeServiceResult> {
   if (!isTradeItem(item) || !Number.isInteger(amount)) return { ok: false, error: "badRequest" };
   const n = amount as number;
   for (let i = 0; i < RETRIES; i++) {
     const cur = await loadPlayer(ownerId, deps);
     const p = settle(cur.player, deps.now);
+    if (!traveling(p, deps.now) && !offered(deps, p.node, item)) return { ok: false, error: "notSold" };
     const r = (await loadMarket(deps)).get(marketKey(p.node, item));
     if (!r) return { ok: false, error: "notFound" };
     const row = rowNow(deps, p.node, item, r);
-    const q = quote(tradeSeason(deps.now), p.node, item, row);
+    const q = quote(mSeason(deps), p.node, item, row);
     const next = buyGoods(p, item, n, q.buy, row.stock, deps.now);
     if (!next.ok) return next;
-    if (!(await deps.store.saveRow(tradeSeason(deps.now), marketKey(p.node, item), { ...row, stock: row.stock - n }, r.version))) continue;
+    if (!(await deps.store.saveRow(mSeason(deps), marketKey(p.node, item), { ...row, stock: row.stock - n }, r.version))) continue;
     if (await deps.store.savePlayer(tradeSeason(deps.now), ownerId, next.player, cur.version, deps.now)) {
       await scoreChange(ownerId, cur.player, next.player, deps);
       return { ok: true, view: await buildView(ownerId, deps, next.player) };
@@ -449,13 +467,14 @@ export async function tradeSell(ownerId: string, item: unknown, amount: unknown,
   for (let i = 0; i < RETRIES; i++) {
     const cur = await loadPlayer(ownerId, deps);
     const p = settle(cur.player, deps.now);
+    if (!traveling(p, deps.now) && !offered(deps, p.node, item)) return { ok: false, error: "notSold" };
     const r = (await loadMarket(deps)).get(marketKey(p.node, item));
     if (!r) return { ok: false, error: "notFound" };
     const row = rowNow(deps, p.node, item, r);
-    const q = quote(tradeSeason(deps.now), p.node, item, row);
+    const q = quote(mSeason(deps), p.node, item, row);
     const next = sellGoods(p, item, n, q.sell, Math.max(0, stockCap(item, p.node) - row.stock), deps.now);
     if (!next.ok) return next;
-    if (!(await deps.store.saveRow(tradeSeason(deps.now), marketKey(p.node, item), { ...row, stock: row.stock + n }, r.version))) continue;
+    if (!(await deps.store.saveRow(mSeason(deps), marketKey(p.node, item), { ...row, stock: row.stock + n }, r.version))) continue;
     if (await deps.store.savePlayer(tradeSeason(deps.now), ownerId, next.player, cur.version, deps.now)) {
       await scoreChange(ownerId, cur.player, next.player, deps);
       return { ok: true, view: await buildView(ownerId, deps, next.player) };
@@ -481,7 +500,7 @@ export async function tradeDepart(ownerId: string, to: unknown, deps: TradeDeps)
   const legId = deps.newId();
   const roll = deps.random();
   const seed = 1 + Math.floor(deps.random() * 0x7ffffffe);
-  const r = await mutatePlayer(ownerId, deps, (p) => depart(p, to, deps.now, legId, roll, seed));
+  const r = await mutatePlayer(ownerId, deps, (p) => depart(p, to, deps.now, legId, roll, seed, deps.speed));
   if (!r.ok) return r;
   await deps.store.addLeg(tradeSeason(deps.now), ownerId, r.player.leg!);
   return { ok: true, view: await buildView(ownerId, deps, r.player) };

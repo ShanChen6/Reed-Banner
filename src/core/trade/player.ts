@@ -4,6 +4,7 @@
 import { vnDay } from "../vnTime";
 import { newSkirmish, skAct, type SkAction, type SkState } from "../su-lo/skirmish";
 import { cargoWeight, isTradeItem, TRADE_ITEMS, tradeItem, type TradeItemId } from "./goods";
+import { normalSpeed } from "./market";
 import { isTradeNode, tradeEdge, TRADE_NODE_IDS, type TradeEdge, type TradeNodeId } from "./map";
 
 export const TRADE_START_MONEY = 10_000;
@@ -98,15 +99,21 @@ export const capacityOf = (p: Pick<TradePlayer, "level">) => TRADE_LEVELS[Math.m
 
 export const traveling = (p: Pick<TradePlayer, "leg">, now: number) => p.leg !== null && now < p.leg.arriveAt;
 
-export const passesLeft = (p: TradePlayer, now: number) => (p.day === vnDay(now) ? TRADE_PASSES_PER_DAY - p.passesUsed : TRADE_PASSES_PER_DAY);
+/** Lộ phiếu mỗi ngày; khi thử nhanh nhân theo tốc độ. */
+export const passesPerDay = (speed = 1) => TRADE_PASSES_PER_DAY * normalSpeed(speed);
+
+export const passesLeft = (p: TradePlayer, now: number, speed = 1) => (p.day === vnDay(now) ? passesPerDay(speed) - p.passesUsed : passesPerDay(speed));
 
 /** Điểm xếp hạng: lãi so với vốn ban đầu. Hàng trong khoang và tiền đã nâng cấp không tính. */
 export const tradeScore = (p: Pick<TradePlayer, "money">) => p.money - TRADE_START_MONEY;
 
-/** Phút đi một chặng theo cấp đoàn hàng. */
+/** Phút đi một chặng theo cấp đoàn hàng (giờ thật). */
 export function legMinutes(edge: TradeEdge, level: number): number {
   return Math.round(TRADE_LEG_MINUTES[edge.dist] * TRADE_LEVELS[Math.min(TRADE_MAX_LEVEL, Math.max(1, level)) - 1]!.time);
 }
+
+/** Mili giây đi một chặng; khi thử nhanh chia theo tốc độ. */
+export const legMs = (edge: TradeEdge, level: number, speed = 1) => Math.round((legMinutes(edge, level) * 60_000) / normalSpeed(speed));
 
 /** Chuyển ngày: lộ phiếu về 5, không tích (Shan chốt 26/11/2026); tới nơi thì đặt nạn chờ xử lý. */
 export function settle(p: TradePlayer, now: number): TradePlayer {
@@ -144,20 +151,20 @@ function encounterKindOf(edge: TradeEdge): EncounterKind {
   return edge.sea ? "storm" : "pirates";
 }
 
-const hasTreasure = (c: Cargo) => Object.entries(c).some(([id, n]) => (n ?? 0) > 0 && isTradeItem(id) && tradeItem(id).group === "treasure");
+const hasTreasure = (c: Cargo) => Object.entries(c).some(([id, n]) => (n ?? 0) > 0 && isTradeItem(id) && tradeItem(id).tier === "treasure");
 
 /**
  * Xuất hành sang điểm kề: tốn một lộ phiếu, khoang phải vừa sức chở. `roll` trong [0, 1) quyết định có gặp nạn,
  * `seed` là hạt giống của trận nếu gặp; cả hai do server bốc.
  */
-export function depart(p0: TradePlayer, to: unknown, now: number, legId: string, roll: number, seed: number): TradeResult {
+export function depart(p0: TradePlayer, to: unknown, now: number, legId: string, roll: number, seed: number, speed = 1): TradeResult {
   const p = settle(p0, now);
   if (traveling(p, now)) return fail("traveling");
   if (p.encounter) return fail("encounterPending");
   if (!isTradeNode(to)) return fail("noRoute");
   const edge = tradeEdge(p.node, to);
   if (!edge) return fail("noRoute");
-  if (passesLeft(p, now) <= 0) return fail("noPasses");
+  if (passesLeft(p, now, speed) <= 0) return fail("noPasses");
   if (cargoWeight(p.cargo) > capacityOf(p)) return fail("overCapacity");
   const kind = encounterKindOf(edge);
   const chance = ENCOUNTER_CHANCE[kind] + (hasTreasure(p.cargo) ? ENCOUNTER_TREASURE_BONUS : 0);
@@ -167,7 +174,7 @@ export function depart(p0: TradePlayer, to: unknown, now: number, legId: string,
     from: p.node,
     to,
     departAt: now,
-    arriveAt: now + legMinutes(edge, p.level) * 60_000,
+    arriveAt: now + legMs(edge, p.level, speed),
     encounter: hit ? { kind, seed } : null,
   };
   return {

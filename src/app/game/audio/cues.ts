@@ -92,10 +92,14 @@ export const KHAILO_CUES = ["khailo.remove", "khailo.big", "khailo.fall", "khail
 
 export const TQK_CUES = ["tqk.select", "tqk.move", "tqk.capture", "tqk.carry", "tqk.boat", "tqk.fly", "tqk.check", "tqk.checked", "tqk.hero", "tqk.illegal", "tqk.win", "tqk.lose", "tqk.draw", "tqk.clock"] as const;
 
-export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...SULO_CUES, ...DOTHAM_CUES, ...MODE_CUES, ...KHAILO_CUES, ...TQK_CUES] as const;
+export const GO_CUES = ["go.place", "go.capture_small", "go.capture_big", "go.atari", "go.pass", "go.illegal", "go.score", "go.clock", "go.win", "go.lose"] as const;
+
+export const TTK_CUES = ["ttk.slot", "ttk.unslot", "ttk.miss", "ttk.known", "ttk.reject"] as const;
+
+export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...SULO_CUES, ...DOTHAM_CUES, ...MODE_CUES, ...KHAILO_CUES, ...TQK_CUES, ...GO_CUES, ...TTK_CUES] as const;
 export type CueId = (typeof CUE_IDS)[number];
 
-export const MUSIC_IDS = ["formation_menu", "formation_play", "formation_result_win", "formation_result_lose", "battle_normal", "battle_boss", "survival", "atlas", "dialogue", "ending", "tower_trial", "tower_destiny", "arena", "pvp", "sulo_maze", "sulo_boss", "dotham", "prep", "daily", "expedition", "khai_lo", "khai_lo_timed"] as const;
+export const MUSIC_IDS = ["formation_menu", "formation_play", "formation_result_win", "formation_result_lose", "battle_normal", "battle_boss", "survival", "atlas", "dialogue", "ending", "tower_trial", "tower_destiny", "arena", "pvp", "sulo_maze", "sulo_boss", "dotham", "prep", "daily", "expedition", "khai_lo", "khai_lo_timed", "tam_quan_ky", "vay_thanh_ky"] as const;
 export const AMBIENCE_IDS = ["atlas"] as const;
 export type AmbienceId = (typeof AMBIENCE_IDS)[number];
 export type MusicId = (typeof MUSIC_IDS)[number];

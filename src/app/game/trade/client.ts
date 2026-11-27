@@ -35,6 +35,7 @@ const ERROR_TEXT: Partial<Record<TradeServiceError | "network" | "featureDisable
   noMoney: "Không đủ kim tiền.",
   noCargo: "Trong khoang không đủ hàng đó.",
   marketFull: "Chợ đã ứ món này, chờ khung giá sau.",
+  notSold: "Phiên này chợ không bày món đó.",
   maxLevel: "Đoàn hàng đã ở cấp cao nhất.",
   noEncounter: "Nạn này đã xong.",
   badActions: "Trận không hợp lệ, xin đánh lại.",

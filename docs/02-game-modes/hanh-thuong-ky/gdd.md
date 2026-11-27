@@ -1,6 +1,6 @@
 # Hành Thương Ký: buôn bán khắp mười ba bến chợ
 
-> Cập nhật: 26/11/2026
+> Cập nhật: 27/11/2026
 > Trạng thái: **IMPLEMENTED (sau cờ `TRADE_ENABLED`, mặc định tắt)** — Shan duyệt thiết kế 25–26/11/2026 ("Đồng ý và triển khai"). Ý tưởng tham khảo cách chơi buôn bán đường biển của một game khác, luật, tên, bản đồ và mã tự làm (clean-room).
 
 ## 1. Định vị
@@ -18,18 +18,41 @@ Mã: lõi thuần `src/core/trade/` (bản đồ, hàng, chợ, đoàn hàng, gi
 
 ## 3. Hàng hóa
 
-| Nhóm | Món | Ghi chú |
-|---|---|---|
-| Phổ thông | Lúa gạo, muối hạt, vải gai, cá khô, củi than | Có ở mọi chợ, giá theo loại điểm |
-| Đặc sản | Mỗi điểm (trừ Cửa Đại Ác) một món: gỗ lim (Hoa Lư), nước mắm (Bố Hải), nhãn khô (Đằng Châu), tơ tằm (Tế Giang), cá sông khô (Tam Đái), chiếu cói (Đỗ Động), giấy dó (Tây Phù Liệt), gốm (Siêu Loại), chè (Tiên Du), quế (Phong Châu), mật ong rừng (Hồi Hồ), đá ong (Đường Lâm) | Rẻ ở quê nhà; nơi khác gắn nhãn **Hiếm**, càng xa càng đắt (tối đa ×1,5). Đặc sản là game dựng, không phải sử chép |
-| Kỳ trân | Ngà voi, trầm hương, ngọc trai, đồi mồi, san hô | Chỉ thỉnh thoảng có hàng ở vài nơi; 5 món chiếm một chỗ khoang; chở kỳ trân dễ gặp nạn hơn |
+Shan chốt 27/11/2026: **40 món**, chia năm nhóm (nông sản, hải sản, lâm sản, thủ công, khoáng sản) và ba phẩm cấp. Danh sách trong `src/core/trade/goods.ts` là nguồn chính.
+
+| Phẩm cấp | Số món | Giá gốc | Ghi chú |
+|---|---|---|---|
+| Thường dụng | 14 | 15–45 | Gạo tẻ, gạo nếp, khoai môn, đậu, vừng, mật mía, cau khô, muối, cá khô, tre nứa, than củi, vải gai, mây tre đan, đá ong |
+| Thượng phẩm | 20 | 70–300 | Chè, hạt sen long nhãn, rượu nếp, nước mắm, mực khô, hải sâm, gỗ lim, gỗ quý, quế, hồi, dược liệu, mật ong, gốm, lụa, gấm, chiếu cói, giấy dó, sơn mài, sắt thỏi, đồ đồng |
+| Kỳ trân | 6 | 600–900 | Ngọc trai, đồi mồi, san hô, trầm hương, sâm, ngà voi. 5 món chiếm một ô khoang; chở kỳ trân dễ gặp nạn hơn |
+
+- **Đặc sản** là nhãn cố định gắn món với quê nhà, ở phẩm cấp nào cũng được. Mỗi điểm có đúng 2 đặc sản (ví dụ Tế Giang: mật mía, lụa; Bố Hải: nước mắm, ngọc trai). Đặc sản rẻ ở quê (×0,65, kỳ trân ×0,8), xa một chặng ×1,05, mỗi chặng thêm 0,1, tối đa ×1,45. Đặc sản là game dựng, không phải sử chép.
+- **Hiếm** là món chợ vốn không bày nhưng phiên này có ít hàng về: giá ×1,15 trên sức ép kho (kho gần cạn nên thường đắt). Mỗi chợ mỗi phiên 1–2 món Hiếm, không bao giờ là đặc sản của chợ đó, không phải kỳ trân. Hai nhãn không đứng chung một món.
+
+### Chợ bày gì
+
+- Mỗi chợ xếp 40 món theo độ hợp: đặc sản, hàng hợp loại đất (cửa biển, bến sông, đồng bằng, núi), hàng của quê gần, hàng thường dụng. 16 món đầu **bày cố định**, 8 món kế **bày theo phiên** (mỗi phiên mỗi món có nửa phần có mặt), số còn lại chợ không bày, chỉ có khi thành món Hiếm. Trung bình mỗi chợ khoảng 20 món mỗi phiên.
+- Chợ không bày món nào thì không mua, không bán món đó ở đó trong phiên (`notSold`).
 
 ## 4. Giá và kho chung
 
-- Khung giá 2 giờ, đổi vào giờ chẵn giờ Việt Nam. Server tính, ai cũng thấy như nhau. Xem được giá và tồn của mọi chợ trong khung hiện tại, không xem khung sau.
-- Giá = giá gốc × hệ số vùng × xu hướng (nhiễu trơn theo mùa, điểm, món) × sức ép kho (tồn lúc mở khung so với mức bình thường, từ ×0,7 tới ×1,4).
-- Giá thu mua = 90% giá bán ra cùng khung, nên mua rồi bán tại chỗ luôn lỗ.
-- **Kho chung cho mọi người** (cạnh tranh): ai mua thì tồn giảm, ai bán thì hàng vào kho. Chợ không nạp mặc định; mỗi khung chỉ tự sinh hoặc tiêu thụ 8% phần chênh với mức bình thường. Kỳ trân hao 10% mỗi khung và thỉnh thoảng có thuyền mang tới ở nơi có nguồn. Chợ ứ quá mức thì tạm không thu mua món đó.
+- Phiên giá 2 giờ, đổi vào giờ chẵn giờ Việt Nam. Server tính, ai cũng thấy như nhau. Xem được giá và tồn của mọi chợ trong phiên hiện tại, không xem phiên sau.
+- Giá = giá gốc × hệ số vùng × xu hướng (nhiễu trơn theo mùa, điểm, món; biên ±10% thường dụng, ±20% thượng phẩm, ±40% kỳ trân) × sức ép kho (tồn lúc mở phiên so với mức bình thường, từ ×0,7 tới ×1,4) × 1,15 nếu là món Hiếm.
+- Giá thu mua = 90% giá bán ra cùng phiên, nên mua rồi bán tại chỗ luôn lỗ.
+- **Kho chung cho mọi người** (cạnh tranh): ai mua thì tồn giảm, ai bán thì hàng vào kho. Mỗi phiên chợ tự sinh hoặc tiêu thụ 15% phần chênh với mức bình thường. Món Hiếm có 10–30 đơn vị về khi kho dưới 30. Chợ ứ quá 3 lần mức bình thường thì tạm không thu mua món đó.
+- **Mức tồn bình thường** cân cho máy chủ khoảng 1 000 người (Shan 27/11/2026). Ước chừng 300 người vào mỗi ngày, mỗi người 5 lộ phiếu, rải 12 chợ, giờ đông 15–25 đoàn ghé một chợ mỗi phiên, mỗi đoàn chở 100–200 ô:
+
+| Phẩm cấp | Ở quê (đặc sản) | Nơi khác có bày |
+|---|---|---|
+| Thường dụng | 1 200 | 600 |
+| Thượng phẩm | 800 | 250 |
+| Kỳ trân | 150 | 40 |
+
+- Màn chợ dạng thẻ (Shan 27/11/2026, theo ảnh mẫu): lưới thẻ 2 cột trên điện thoại, 3–4 cột trên máy lớn. Mỗi thẻ có ô hình (viền theo phẩm cấp: nâu thường dụng, ngọc thượng phẩm, vàng kỳ trân; không ghi chữ phẩm cấp, Shan 27/11), số tồn ở góc, tên, giá, % đổi so với phiên trước, dải góc **Đặc sản** hoặc **Hiếm**. Chạm thẻ mở ô mua bán ngay dưới thẻ. Xếp theo mặc định, giá cao, giá thấp, tăng giá. Tab Bán hiện mọi món trong khoang, món chợ không thu thì thẻ mờ. Tranh 40 món Shan vẽ ở `public/art/trade/goods/<id>.webp` (160 px nền trong; test kiểm đủ tranh cho mọi món).
+
+### Chạy thử nhanh
+
+`TRADE_SPEED` (số nguyên 2–120, để trống là giờ thật): phiên giá ngắn đi chừng đó lần, đường đi nhanh chừng đó lần, lộ phiếu mỗi ngày nhân theo. Ví dụ 10: phiên 12 phút, chặng gần 2 phút, 50 lộ phiếu. Chạy thử dùng kho riêng (khóa mùa thêm `~x10`) nên tắt đi kho thật không bị đụng; đoàn hàng và điểm mùa vẫn chung. Màn hiện "chạy thử nhanh ×N" ở đầu trang. Thử xong thì xóa biến để về giờ thật.
 
 ## 5. Đi đường và gặp nạn
 

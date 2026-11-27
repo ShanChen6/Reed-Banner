@@ -37,13 +37,12 @@ export interface ElementTheme {
   /** Quầng sáng quanh quả cầu lớn ở khung người chơi. */
   readonly glow: string;
   /** Lưới sáng trên nền tối. */
-  readonly lightGrid: boolean;
   readonly ground: Recipe;
 }
 
 export const THEME: Readonly<Record<Element | "neutral", ElementTheme>> = {
   hoa: {
-    light: "#ffe08a", base: "#f0621f", dark: "#6e1606", glow: "#ff7a2a", lightGrid: true,
+    light: "#ffe08a", base: "#f0621f", dark: "#6e1606", glow: "#ff7a2a",
     ground: {
       base: ["#140c0a", "#4a2e24"], freq: 0.9, octaves: 4, seed: 3,
       veins: { color: "#ff5a14", core: "#ffd36b", freq: 0.42, seed: 11, octaves: 4, glow: 0.05, width: 0.03 },
@@ -51,7 +50,7 @@ export const THEME: Readonly<Record<Element | "neutral", ElementTheme>> = {
     },
   },
   moc: {
-    light: "#e4ffb0", base: "#4caf3f", dark: "#14532d", glow: "#8ee06a", lightGrid: false,
+    light: "#e4ffb0", base: "#4caf3f", dark: "#14532d", glow: "#8ee06a",
     ground: {
       base: ["#355f1f", "#7fb547"], freq: 0.7, octaves: 4, seed: 8,
       streak: { color: "#b6e57a", freq: [2.4, 1.5], seed: 4, cut: 0.62, opacity: 0.55 },
@@ -59,7 +58,7 @@ export const THEME: Readonly<Record<Element | "neutral", ElementTheme>> = {
     },
   },
   thuy: {
-    light: "#f0fbff", base: "#2f8fdc", dark: "#0b3766", glow: "#7cc8ff", lightGrid: false,
+    light: "#f0fbff", base: "#2f8fdc", dark: "#0b3766", glow: "#7cc8ff",
     ground: {
       base: ["#8ebfe0", "#e9f7ff"], freq: 0.45, octaves: 3, seed: 2,
       veins: { color: "#ffffff", freq: 0.55, seed: 21, octaves: 3, glow: 0.02, width: 0.025 },
@@ -67,7 +66,7 @@ export const THEME: Readonly<Record<Element | "neutral", ElementTheme>> = {
     },
   },
   kim: {
-    light: "#ffffff", base: "#aeb6c2", dark: "#3f4650", glow: "#e6ecf5", lightGrid: false,
+    light: "#ffffff", base: "#aeb6c2", dark: "#3f4650", glow: "#e6ecf5",
     ground: {
       base: ["#6f7781", "#d6dce3"], freq: 0.35, octaves: 2, seed: 4,
       streak: { color: "#f4f7fa", freq: [0.2, 2.2], seed: 13, cut: 0.6, opacity: 0.28 },
@@ -75,7 +74,7 @@ export const THEME: Readonly<Record<Element | "neutral", ElementTheme>> = {
     },
   },
   tho: {
-    light: "#ffe9a8", base: "#c08637", dark: "#5a3510", glow: "#f0bf6a", lightGrid: false,
+    light: "#ffe9a8", base: "#c08637", dark: "#5a3510", glow: "#f0bf6a",
     ground: {
       base: ["#9a5a1e", "#e8b45e"], freq: 1.1, octaves: 5, seed: 6,
       specks: { color: "#5a3412", freq: 1.3, seed: 31, cut: 0.66, opacity: 0.7 },
@@ -84,7 +83,7 @@ export const THEME: Readonly<Record<Element | "neutral", ElementTheme>> = {
     },
   },
   loi: {
-    light: "#f6edff", base: "#8a4ee6", dark: "#2e1065", glow: "#c69bff", lightGrid: true,
+    light: "#f6edff", base: "#8a4ee6", dark: "#2e1065", glow: "#c69bff",
     ground: {
       base: ["#140b26", "#3f2771"], freq: 0.6, octaves: 4, seed: 12,
       veins: { color: "#a974ff", core: "#f3e8ff", freq: 0.3, seed: 41, octaves: 5, glow: 0.06, width: 0.02 },
@@ -92,7 +91,7 @@ export const THEME: Readonly<Record<Element | "neutral", ElementTheme>> = {
     },
   },
   phong: {
-    light: "#e6fffa", base: "#2cb3a2", dark: "#0f4d46", glow: "#8cf0e1", lightGrid: false,
+    light: "#e6fffa", base: "#2cb3a2", dark: "#0f4d46", glow: "#8cf0e1",
     ground: {
       base: ["#3f9a8c", "#b9ebe2"], freq: 0.3, octaves: 3, seed: 14,
       streak: { color: "#f0fffb", freq: [0.25, 1.6], seed: 8, cut: 0.6, opacity: 0.55 },
@@ -100,7 +99,7 @@ export const THEME: Readonly<Record<Element | "neutral", ElementTheme>> = {
     },
   },
   neutral: {
-    light: "#fff", base: "#a07d52", dark: "#3b2814", glow: "#fff", lightGrid: false,
+    light: "#fff", base: "#a07d52", dark: "#3b2814", glow: "#fff",
     ground: {
       base: ["#4f463f", "#857868"], freq: 0.8, octaves: 4, seed: 1,
       specks: { color: "#3a322b", freq: 1.5, seed: 2, cut: 0.7, opacity: 0.4 },
@@ -216,8 +215,8 @@ export function OrbDefs({ id, element }: { id: string; element: Element }) {
   );
 }
 
-/** Tranh nền đất của hệ (Shan vẽ), phủ vùng đất trên bàn. */
-export const groundArt = (e: Element) => `/art/vay-thanh-ky/ground/${e}.webp`;
+/** Tranh đất của hệ (Shan vẽ): `calm` dịu phủ vùng đất, `core` rực làm lõi quanh quân. */
+export const groundArt = (e: Element, layer: "calm" | "core") => `/art/vay-thanh-ky/ground/${e}-${layer}.webp`;
 
 /** Tranh dọc của hệ cho khung người chơi. */
 export const panelArt = (e: Element) => `/art/vay-thanh-ky/panel/${e}.webp`;

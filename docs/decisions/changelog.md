@@ -2,6 +2,13 @@
 
 > Trạng thái: **REFERENCE** — nhật ký quyết định theo ngày.
 
+## 27/11/2026
+
+**Hành Thương Ký: 40 món hàng, chợ dạng thẻ, chạy thử nhanh (Shan chốt "Chốt 40 mặt hàng")**
+- 40 món trong 5 nhóm, 3 phẩm cấp (14 thường dụng, 20 thượng phẩm, 6 kỳ trân). Mỗi điểm 2 đặc sản (nhãn cố định, phẩm cấp nào cũng được). Mỗi chợ khoảng 20 món mỗi phiên (16 cố định, 8 theo phiên), 1–2 món Hiếm là món chợ vốn không bày; Hiếm và Đặc sản không chồng nhau ([GDD mục 3](../02-game-modes/hanh-thuong-ky/gdd.md)).
+- Lượng tồn cân cho máy chủ khoảng 1 000 người, chợ hồi 15% mỗi phiên ([mục 4](../02-game-modes/hanh-thuong-ky/gdd.md)).
+- Màn chợ thành lưới thẻ hàng như ảnh mẫu Shan gửi. Biến `TRADE_SPEED` để chạy thử nhanh (kho riêng), để trống khi chạy thật.
+
 ## 26/11/2026
 
 **Hành Thương Ký: chế độ buôn bán mới (Shan duyệt thiết kế, "Đồng ý và triển khai")**

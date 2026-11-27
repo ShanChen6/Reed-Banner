@@ -155,9 +155,10 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
   const r = 0.46;
   const k = 10 / (size + 1);
   const blur = size >= 19 ? 0.22 : size >= 13 ? 0.26 : 0.3;
-  const grid = (c: Color) => THEME[elements[c]].lightGrid;
   const gradient = (c: Color) => `${uid}-g${c}`;
   const sides = [BLACK, WHITE] as const;
+  /** Cỡ một tấm tranh lõi (đơn vị giao điểm): lặp tấm để mỗi quân có một mảng khác nhau. */
+  const coreTile = size >= 19 ? 7 : size >= 13 ? 5.5 : 4.5;
 
   return (
     <div className="w-full" style={{ ["--vtk-frame" as string]: "#5b3a1e" }}>
@@ -194,14 +195,40 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
             {sides.map((c) => (
               <OrbDefs key={c} id={gradient(c)} element={elements[c]} />
             ))}
+            {/* Dịu tranh nền: bớt tương phản và độ rực để lưới và quân nổi lên trên. */}
+            <filter id={`${uid}-soft`} colorInterpolationFilters="sRGB">
+              <feColorMatrix type="saturate" values="0.9" />
+              <feComponentTransfer>
+                <feFuncR type="linear" slope={0.82} intercept={0.05} />
+                <feFuncG type="linear" slope={0.82} intercept={0.05} />
+                <feFuncB type="linear" slope={0.82} intercept={0.05} />
+              </feComponentTransfer>
+            </filter>
+            <filter id={`${uid}-glow`} x="-10%" y="-10%" width="120%" height="120%">
+              <feGaussianBlur stdDeviation={0.32} />
+            </filter>
+            {/* Lõi nguyên tố: vùng tròn quanh mỗi quân còn sống, mờ dần ra rìa. */}
+            {sides.map((c) => (
+              <mask key={c} id={`${uid}-k${c}`} maskUnits="userSpaceOnUse" x={0} y={0} width={size + 1} height={size + 1}>
+                <g filter={`url(#${uid}-glow)`} fill="#fff">
+                  {Array.from(board, (stone, p) => (stone === c && !deadSet.has(p) ? <circle key={p} {...coord(p)} r={0.7} /> : null))}
+                </g>
+              </mask>
+            ))}
+            {sides.map((c) => (
+              <pattern key={c} id={`${uid}-p${c}`} patternUnits="userSpaceOnUse" width={coreTile} height={coreTile}>
+                <image href={groundArt(elements[c], "core")} width={coreTile} height={coreTile} preserveAspectRatio="xMidYMid slice" />
+              </pattern>
+            ))}
           </defs>
 
           {/* Đất trung lập: nền đất nâu như sa bàn. */}
           <rect x={0} y={0} width={size + 1} height={size + 1} filter={`url(#${uid}-t0)`} />
+          <g filter={`url(#${uid}-soft)`}>
           {sides.map((c) => (
             <image
               key={c}
-              href={groundArt(elements[c])}
+              href={groundArt(elements[c], "calm")}
               x={0}
               y={0}
               width={size + 1}
@@ -211,27 +238,27 @@ export function Board({ size, board, elements, toPlay, lastMove, interactive, on
               data-ground={elements[c]}
             />
           ))}
+          </g>
+          {sides.map((c) => (
+            <rect key={c} x={0} y={0} width={size + 1} height={size + 1} fill={`url(#${uid}-p${c})`} mask={`url(#${uid}-k${c})`} opacity={0.9} data-core={elements[c]} />
+          ))}
           <rect x={0.5} y={0.5} width={size} height={size} fill="none" stroke="#1b1008" strokeOpacity={0.6} strokeWidth={0.05} />
 
-          {Array.from({ length: size }, (_, i) => (
-            <g key={i} stroke="#2b1a0e" strokeOpacity={0.7} strokeWidth={0.035}>
-              <line x1={1} y1={i + 1} x2={size} y2={i + 1} />
-              <line x1={i + 1} y1={1} x2={i + 1} y2={size} />
-            </g>
-          ))}
-          {/* Trên nền tối (Hỏa, Lôi), kẻ lại lưới sáng trong vùng đất ấy. */}
-          {sides.map((c) =>
-            grid(c) ? (
-              <g key={c} mask={`url(#${uid}-m${c})`} stroke="#f5deb3" strokeOpacity={0.35} strokeWidth={0.035}>
-                {Array.from({ length: size }, (_, i) => (
-                  <g key={i}>
-                    <line x1={1} y1={i + 1} x2={size} y2={i + 1} />
-                    <line x1={i + 1} y1={1} x2={i + 1} y2={size} />
-                  </g>
-                ))}
+          {/* Lưới hai lớp: viền sáng mảnh dưới nét tối, đọc rõ trên cả nền sáng lẫn nền tối. */}
+          <g strokeLinecap="square">
+            {Array.from({ length: size }, (_, i) => (
+              <g key={i} stroke="#f5e6c8" strokeOpacity={0.3} strokeWidth={0.085}>
+                <line x1={1} y1={i + 1} x2={size} y2={i + 1} />
+                <line x1={i + 1} y1={1} x2={i + 1} y2={size} />
               </g>
-            ) : null,
-          )}
+            ))}
+            {Array.from({ length: size }, (_, i) => (
+              <g key={`d${i}`} stroke="#1b1008" strokeOpacity={0.9} strokeWidth={0.038}>
+                <line x1={1} y1={i + 1} x2={size} y2={i + 1} />
+                <line x1={i + 1} y1={1} x2={i + 1} y2={size} />
+              </g>
+            ))}
+          </g>
           {stars.map((p) => (
             <circle key={p} {...coord(p)} r={size >= 13 ? 0.1 : 0.09} fill="#2b1a0e" opacity={0.75} />
           ))}
