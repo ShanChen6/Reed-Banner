@@ -4,14 +4,17 @@
 // Server giữ mọi số liệu (kim tiền, khoang, kho chung, giá); màn này chỉ hiện và gửi lệnh. Kim tiền của người khác chỉ
 // có trên bảng Công trạng (lãi mùa), không hiện ở đây.
 
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import {
-  TRADE_GROUP_NAME,
+  TRADE_CATEGORY_NAME,
+  TRADE_ITEM_IDS,
   TRADE_LEVELS,
   TRADE_MAX_LEVEL,
   TRADE_NODE_KIND_NAME,
-  TRADE_PASSES_PER_DAY,
-  legMinutes,
+  TRADE_TIER_NAME,
+  TREASURE_PER_SLOT,
+  legMs,
+  passesPerDay,
   neighbors,
   tradeEdge,
   tradeItem,
@@ -41,6 +44,8 @@ const clock = (ms: number) => {
   const ss = s % 60;
   return h > 0 ? `${h} giờ ${m} phút` : `${m}:${String(ss).padStart(2, "0")}`;
 };
+
+const legText = (ms: number) => (ms >= 60_000 ? `${Math.round(ms / 60_000)} phút` : `${Math.max(1, Math.round(ms / 1000))} giây`);
 
 const cargoText = (c: Cargo) =>
   Object.entries(c)
@@ -120,11 +125,11 @@ export default function TradeScreen() {
         title="Hành Thương Ký"
         art="/art/campaign/world-map.webp"
         artPosition="center 70%"
-        kicker={`Mùa từ ${view.season}`}
+        kicker={view.speed > 1 ? `Mùa từ ${view.season}, chạy thử nhanh ×${view.speed}` : `Mùa từ ${view.season}`}
         description={MODE_TEXT.TRADE}
         stats={[
           { label: "Kim tiền", value: money(p.money) },
-          { label: "Lộ phiếu", value: `${p.passesLeft}/${TRADE_PASSES_PER_DAY}` },
+          { label: "Lộ phiếu", value: `${p.passesLeft}/${passesPerDay(view.speed)}` },
           { label: "Khoang", value: `${p.weight}/${p.capacity}` },
           { label: "Lãi mùa", value: `${p.score >= 0 ? "+" : ""}${money(p.score)}` },
         ]}
@@ -226,7 +231,7 @@ function NodePanel({ view, target, traveling, serverNow, busy, onDepart }: { vie
   const top = [...quotes].filter((q) => q.stock > 0).sort((a, b) => b.buy - a.buy);
   return (
     <OrnateFrame className="flex flex-col gap-3">
-      <SectionTitle description={`${TRADE_NODE_KIND_NAME[n.kind]}${n.holder ? `, đất ${n.holder}` : ""}. Khung giá đổi lúc ${new Date(view.nextSlotAt).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}.`}>
+      <SectionTitle description={`${TRADE_NODE_KIND_NAME[n.kind]}${n.holder ? `, đất ${n.holder}` : ""}. Phiên giá đổi lúc ${new Date(view.nextSlotAt).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}.`}>
         {n.name}
       </SectionTitle>
       {traveling && p.leg ? (
@@ -238,7 +243,7 @@ function NodePanel({ view, target, traveling, serverNow, busy, onDepart }: { vie
       ) : edge ? (
         <div className="flex flex-col gap-2">
           <p className="text-sm">
-            Đi {edge.route === "land" ? "đường bộ" : edge.route === "water" ? "đường thủy" : "đường thủy và bộ"}, {legMinutes(edge, p.level)} phút, tốn 1 lộ phiếu.
+            Đi {edge.route === "land" ? "đường bộ" : edge.route === "water" ? "đường thủy" : "đường thủy và bộ"}, {legText(legMs(edge, p.level, view.speed))}, tốn 1 lộ phiếu.
             {edge.route === "land" ? " Có thể gặp thảo khấu." : edge.sea ? " Có thể gặp sóng dữ." : " Có thể gặp giặc sông."}
           </p>
           <Button disabled={busy || p.passesLeft <= 0 || p.encounter !== null || p.weight > p.capacity} onClick={() => onDepart(target)}>
@@ -250,11 +255,12 @@ function NodePanel({ view, target, traveling, serverNow, busy, onDepart }: { vie
         <p className="text-sm text-on-wood-soft">Không có đường đi thẳng từ chỗ đoàn hàng đang đứng.</p>
       )}
       <div className="flex flex-col gap-1">
-        <p className="text-caption text-on-wood-soft">Giá bán ra khung này (đắt nhất trước):</p>
+        <p className="text-caption text-on-wood-soft">Giá bán ra phiên này (đắt nhất trước):</p>
         <ul className="flex max-h-64 flex-col gap-1 overflow-y-auto text-sm">
           {top.map((q) => (
             <li key={q.item} className="flex items-center gap-2">
               <span className="min-w-0 flex-1 truncate">{tradeItem(q.item).name}</span>
+              {q.specialty && <Badge tone="success">Đặc sản</Badge>}
               {q.rare && <Badge tone="warning">Hiếm</Badge>}
               <span className="tabular-nums">{money(q.buy)}</span>
               <Change v={q.change} />
@@ -282,68 +288,223 @@ function Market(props: {
   onSell: (item: TradeItemId, amount: number) => void;
 }) {
   const [tab, setTab] = useState<"buy" | "sell">("buy");
-  const [amounts, setAmounts] = useState<Partial<Record<TradeItemId, number>>>({});
-  const rows = tab === "buy" ? props.quotes : props.quotes.filter((q) => (props.cargo[q.item] ?? 0) > 0);
-  const amountOf = (id: TradeItemId) => amounts[id] ?? 1;
+  const [sort, setSort] = useState<SortKey>("default");
+  const [picked, setPicked] = useState<TradeItemId | null>(null);
+  const [amount, setAmount] = useState(1);
+  const byItem = new Map(props.quotes.map((q) => [q.item, q]));
+  // Tab Bán: mọi món trong khoang, kể cả món chợ phiên này không thu (thẻ mờ).
+  const ids: TradeItemId[] =
+    tab === "buy" ? props.quotes.map((q) => q.item) : (Object.keys(props.cargo) as TradeItemId[]).filter((id) => (props.cargo[id] ?? 0) > 0);
+  const priceOf = (id: TradeItemId) => {
+    const q = byItem.get(id);
+    return q ? (tab === "buy" ? q.buy : q.sell) : 0;
+  };
+  const sorted = [...ids].sort((a, b) => {
+    if (sort === "high") return priceOf(b) - priceOf(a);
+    if (sort === "low") return priceOf(a) - priceOf(b);
+    if (sort === "rise") return (byItem.get(b)?.change ?? -999) - (byItem.get(a)?.change ?? -999);
+    return cardRank(byItem.get(a), a) - cardRank(byItem.get(b), b);
+  });
+  const maxOf = (id: TradeItemId) => {
+    const q = byItem.get(id);
+    if (!q) return 0;
+    if (tab === "sell") return q.full ? 0 : props.cargo[id] ?? 0;
+    const it = tradeItem(id);
+    const room = it.tier === "treasure" ? props.room * TREASURE_PER_SLOT : props.room;
+    return Math.max(0, Math.min(q.stock, Math.floor(props.money / q.buy), room));
+  };
+  const choose = (id: TradeItemId) => {
+    setPicked(picked === id ? null : id);
+    setAmount(1);
+  };
   return (
     <OrnateFrame className="flex flex-col gap-3">
-      <SectionTitle description="Kho chung cho mọi người: ai mua thì kho giảm, ai bán thì hàng vào kho. Giá trong một khung cố định, khung sau tính theo tồn lúc mở khung.">
+      <SectionTitle description="Kho chung cho mọi người: ai mua thì kho giảm, ai bán thì hàng vào kho. Giá giữ nguyên trong phiên, phiên sau tính theo tồn lúc mở phiên. Chạm vào thẻ để mua bán.">
         Chợ {tradeNode(props.node).name}
       </SectionTitle>
-      <Tabs<"buy" | "sell">
-        label="Mua hay bán"
-        value={tab}
-        onChange={setTab}
-        items={[
-          { value: "buy", label: "Mua" },
-          { value: "sell", label: "Bán" },
-        ]}
-      />
-      {rows.length === 0 ? (
-        <p className="py-4 text-center text-sm text-on-wood-soft">Khoang chưa có hàng để bán.</p>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Tabs<"buy" | "sell">
+          label="Mua hay bán"
+          value={tab}
+          onChange={(t) => {
+            setTab(t);
+            setPicked(null);
+          }}
+          items={[
+            { value: "buy", label: "Mua" },
+            { value: "sell", label: "Bán" },
+          ]}
+        />
+        <div className="flex flex-wrap gap-1.5" role="group" aria-label="Xếp thẻ hàng">
+          {SORTS.map((s) => (
+            <ChoiceChip key={s.value} selected={sort === s.value} onClick={() => setSort(s.value)}>
+              {s.label}
+            </ChoiceChip>
+          ))}
+        </div>
+      </div>
+      {sorted.length === 0 ? (
+        <p className="py-4 text-center text-sm text-on-wood-soft">{tab === "buy" ? "Phiên này chợ chưa bày hàng." : "Khoang chưa có hàng để bán."}</p>
       ) : (
-        <ul className="flex flex-col gap-1.5">
-          {rows.map((q) => {
-            const it = tradeItem(q.item);
-            const max =
-              tab === "buy"
-                ? Math.max(0, Math.min(q.stock, Math.floor(props.money / q.buy), it.group === "treasure" ? q.stock : props.room))
-                : props.cargo[q.item] ?? 0;
-            const disabled = props.busy || max <= 0 || (tab === "sell" && q.full);
+        <ul className="grid grid-flow-row-dense grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4" aria-label={tab === "buy" ? "Hàng chợ bày" : "Hàng trong khoang"}>
+          {sorted.map((id) => {
+            const q = byItem.get(id);
+            const open = picked === id;
             return (
-              <li key={q.item} className="flex flex-col gap-2 rounded-control border border-frame-line-soft bg-wood-inset px-3 py-2 text-sm sm:flex-row sm:items-center sm:gap-3">
-                <div className="flex min-w-0 flex-1 items-center gap-x-3">
-                  <span className="min-w-0 flex-1">
-                    <b>{it.name}</b> <span className="text-caption text-on-wood-soft">{TRADE_GROUP_NAME[it.group]}</span> {q.rare && <Badge tone="warning">Hiếm</Badge>}
-                  </span>
-                  <span className="tabular-nums">{money(tab === "buy" ? q.buy : q.sell)}</span>
-                  <Change v={q.change} />
-                  <span className="w-16 text-right text-caption text-on-wood-soft tabular-nums">{tab === "buy" ? `kho ${q.stock}` : q.full ? "chợ ứ" : `có ${props.cargo[q.item] ?? 0}`}</span>
-                </div>
-                <div className="flex items-center justify-end gap-2">
-                  <Input
-                    type="number"
-                    inputMode="numeric"
-                    min={1}
-                    max={Math.max(1, max)}
-                    aria-label={`Số ${it.name}`}
-                    className="w-20"
-                    value={amountOf(q.item)}
-                    onChange={(e) => setAmounts({ ...amounts, [q.item]: Math.max(1, Math.floor(Number(e.target.value) || 1)) })}
-                  />
-                  <Button size="sm" variant="secondary" disabled={disabled} onClick={() => setAmounts({ ...amounts, [q.item]: Math.max(1, max) })}>
-                    Tối đa
-                  </Button>
-                  <Button size="sm" disabled={disabled || amountOf(q.item) > max} onClick={() => (tab === "buy" ? props.onBuy : props.onSell)(q.item, amountOf(q.item))}>
-                    {tab === "buy" ? "Mua" : "Bán"}
-                  </Button>
-                </div>
-              </li>
+              <Fragment key={id}>
+                <li>
+                  <GoodsCard id={id} q={q} tab={tab} have={props.cargo[id] ?? 0} open={open} onClick={() => choose(id)} />
+                </li>
+                {open && q && (
+                  <li className="col-span-full">
+                    <TradeBox
+                      id={id}
+                      q={q}
+                      tab={tab}
+                      max={maxOf(id)}
+                      amount={amount}
+                      setAmount={setAmount}
+                      busy={props.busy}
+                      onGo={() => (tab === "buy" ? props.onBuy : props.onSell)(id, amount)}
+                    />
+                  </li>
+                )}
+              </Fragment>
             );
           })}
         </ul>
       )}
     </OrnateFrame>
+  );
+}
+
+type SortKey = "default" | "high" | "low" | "rise";
+const SORTS: readonly { value: SortKey; label: string }[] = [
+  { value: "default", label: "Mặc định" },
+  { value: "high", label: "Giá cao" },
+  { value: "low", label: "Giá thấp" },
+  { value: "rise", label: "Tăng giá" },
+];
+
+/** Xếp mặc định: đặc sản, món Hiếm, rồi theo phẩm cấp và nhóm như danh mục. */
+function cardRank(q: MarketQuote | undefined, id: TradeItemId): number {
+  if (!q) return 10_000 + TRADE_ITEM_IDS.indexOf(id);
+  const tag = q.specialty ? 0 : q.rare ? 1 : 2;
+  return tag * 1000 + TIER_ORDER[tradeItem(id).tier] * 100 + TRADE_ITEM_IDS.indexOf(id);
+}
+const TIER_ORDER = { treasure: 0, fine: 1, common: 2 } as const;
+
+/** Viền ô hình theo phẩm cấp. */
+const TIER_FRAME = { common: "border-frame-line", fine: "border-jade", treasure: "border-frame-gold-hi" } as const;
+
+/** Ô hình món hàng: tranh Shan vẽ ở public/art/trade/goods/<id>.webp (160 px nền trong), viền theo phẩm cấp. */
+function GoodsIcon({ id, count }: { id: TradeItemId; count: number | null }) {
+  const it = tradeItem(id);
+  return (
+    <span aria-hidden className={`relative grid size-11 shrink-0 place-items-center overflow-hidden sm:size-14 rounded-control border-2 bg-wood-lo ${TIER_FRAME[it.tier]}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element -- biểu tượng tĩnh 160px, dùng lại ở mọi thẻ */}
+      <img src={`/art/trade/goods/${id}.webp`} alt="" className="size-full object-contain p-0.5" draggable={false} loading="lazy" />
+      {count !== null && <span className="absolute bottom-0 left-0 rounded-tr-control bg-wood/90 px-1 text-[11px] leading-tight text-on-wood tabular-nums">{count}</span>}
+    </span>
+  );
+}
+
+function GoodsCard({ id, q, tab, have, open, onClick }: { id: TradeItemId; q: MarketQuote | undefined; tab: "buy" | "sell"; have: number; open: boolean; onClick: () => void }) {
+  const it = tradeItem(id);
+  const price = q ? (tab === "buy" ? q.buy : q.sell) : null;
+  const ribbon = q?.specialty ? "Đặc sản" : q?.rare ? "Hiếm" : null;
+  const count = tab === "buy" ? (q?.stock ?? 0) : have;
+  const label = [
+    it.name,
+    TRADE_TIER_NAME[it.tier],
+    ribbon,
+    price !== null ? `giá ${money(price)}` : "phiên này chợ không thu",
+    tab === "buy" ? `kho ${count}` : `có ${count}`,
+  ]
+    .filter(Boolean)
+    .join(", ");
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      aria-expanded={open}
+      disabled={!q}
+      onClick={onClick}
+      className={`relative flex h-full w-full items-center gap-2 overflow-hidden rounded-control border bg-wood-inset p-2 text-left text-sm transition-colors disabled:opacity-55 ${open ? "border-frame-gold-hi" : "border-frame-line-soft hover:border-frame-gold"}`}
+    >
+      <GoodsIcon id={id} count={count} />
+      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <b className="line-clamp-2 pr-5 leading-tight break-words">{it.name}</b>
+        {q?.rotating && <span className="text-caption text-on-wood-soft">Theo phiên</span>}
+        {price !== null ? (
+          <span className="flex items-baseline justify-between gap-1">
+            <span className="font-semibold tabular-nums text-frame-gold">{money(price)}</span>
+            <Change v={q!.change} />
+          </span>
+        ) : (
+          <span className="text-caption text-on-wood-soft">Không thu</span>
+        )}
+      </span>
+      {ribbon && (
+        <span
+          aria-hidden
+          className={`absolute -right-6 top-2 w-24 rotate-45 py-px text-center text-[11px] font-semibold leading-tight ${ribbon === "Hiếm" ? "bg-lacquer text-on-wood" : "bg-jade text-wood"}`}
+        >
+          {ribbon}
+        </span>
+      )}
+    </button>
+  );
+}
+
+function TradeBox(props: {
+  id: TradeItemId;
+  q: MarketQuote;
+  tab: "buy" | "sell";
+  max: number;
+  amount: number;
+  setAmount: (n: number) => void;
+  busy: boolean;
+  onGo: () => void;
+}) {
+  const it = tradeItem(props.id);
+  const price = props.tab === "buy" ? props.q.buy : props.q.sell;
+  const disabled = props.busy || props.max <= 0;
+  const notes = [
+    TRADE_CATEGORY_NAME[it.category],
+    props.q.specialty ? "đặc sản nơi này, giá gốc rẻ" : null,
+    props.q.rare ? "món Hiếm: chợ thường không bày, phiên này có ít hàng, giá cao" : null,
+    props.q.rotating ? "bày theo phiên, phiên sau có thể không còn" : null,
+    it.tier === "treasure" ? `${TREASURE_PER_SLOT} món chung một ô khoang` : null,
+    props.tab === "sell" && props.q.full ? "chợ ứ, phiên này không thu thêm" : null,
+  ].filter(Boolean);
+  return (
+    <div className="flex flex-col gap-2 rounded-control border border-frame-gold bg-wood-lo p-3 text-sm">
+      <p>
+        <b>{it.name}</b>: {notes.join("; ")}.
+      </p>
+      <div className="flex flex-wrap items-center justify-end gap-2">
+        <span className="mr-auto text-caption text-on-wood-soft">
+          {props.amount} × {money(price)} = <b className="text-on-wood">{money(props.amount * price)}</b>
+        </span>
+        <Input
+          type="number"
+          inputMode="numeric"
+          min={1}
+          max={Math.max(1, props.max)}
+          aria-label={`Số ${it.name}`}
+          className="w-20"
+          value={props.amount}
+          onChange={(e) => props.setAmount(Math.max(1, Math.floor(Number(e.target.value) || 1)))}
+        />
+        <Button size="sm" variant="secondary" disabled={disabled} onClick={() => props.setAmount(Math.max(1, props.max))}>
+          Tối đa
+        </Button>
+        <Button size="sm" disabled={disabled || props.amount > props.max} onClick={props.onGo}>
+          {props.tab === "buy" ? "Mua" : "Bán"}
+        </Button>
+      </div>
+    </div>
   );
 }
 
