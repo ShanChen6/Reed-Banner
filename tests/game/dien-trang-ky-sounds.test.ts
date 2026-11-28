@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { DtkEvent } from "../../src/core/dien-trang-ky";
+import { OMENS, type DtkEvent } from "../../src/core/dien-trang-ky";
 import { eventCue } from "../../src/app/game/dien-trang-ky/sounds";
 
 const ev = (body: Record<string, unknown>): DtkEvent => ({ n: 1, seat: 0, ...body }) as unknown as DtkEvent;
@@ -21,11 +21,30 @@ describe("Điền Trang Ký: tiếng theo sự kiện", () => {
 
   it("mất tiền là tiếng nộp tô, được tiền là tiếng nhận", () => {
     assert.equal(eventCue(ev({ k: "rent", tile: 1, owner: 1, amount: 30 })), "dtk.rent");
-    assert.equal(eventCue(ev({ k: "pay", amount: 50, reason: "tribute" })), "dtk.rent");
+    assert.equal(eventCue(ev({ k: "pay", amount: 50, reason: "tribute" })), "dtk.pay");
+    assert.equal(eventCue(ev({ k: "sell", tile: 1, amount: 30 })), "dtk.sell");
     assert.equal(eventCue(ev({ k: "gain", amount: 50, reason: "omen" })), "dtk.gain");
   });
 
+  it("giam, ra ngục, phúc lành, gom dãy, phá sản", () => {
+    assert.equal(eventCue(ev({ k: "jailed" })), "dtk.jailed");
+    assert.equal(eventCue(ev({ k: "freed", how: "bail" })), "dtk.freed");
+    assert.equal(eventCue(ev({ k: "blessing" })), "dtk.blessing");
+    assert.equal(eventCue(ev({ k: "festival", tile: 3 })), "dtk.blessing");
+    assert.equal(eventCue(ev({ k: "monopoly", how: "scenic" })), "dtk.monopoly");
+    assert.equal(eventCue(ev({ k: "out", by: null })), "dtk.out");
+  });
+
+  it("quẻ chỉ kêu điềm báo khi là quẻ thiên tai; thiên tai theo loại", () => {
+    const disaster = OMENS.find((o) => o.effect.k === "disaster")!;
+    const good = OMENS.find((o) => o.effect.k === "gain")!;
+    assert.equal(eventCue(ev({ k: "omen", omen: disaster.id })), "dtk.omen");
+    assert.equal(eventCue(ev({ k: "omen", omen: good.id })), null);
+    assert.equal(eventCue(ev({ k: "disaster", how: "quake", tile: 1, level: 1, ruin: 0 })), "dtk.quake");
+    assert.equal(eventCue(ev({ k: "disaster", how: "storm", tile: 1, level: 1, ruin: 2 })), "dtk.storm");
+  });
+
   it("việc chưa có tệp riêng thì im", () => {
-    for (const k of ["jailed", "freed", "disaster", "monopoly", "end", "omen", "sell", "out"]) assert.equal(eventCue(ev({ k })), null, k);
+    for (const k of ["end", "noDisaster", "extra", "jailStay"]) assert.equal(eventCue(ev({ k })), null, k);
   });
 });

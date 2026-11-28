@@ -253,7 +253,7 @@ Nhạc: `vay_thanh_ky` (26/11/2026) ở phân cảnh `VAY_THANH_KY` (`sceneMusic
 
 Chưa có: `ttk.new` (khám phá mới), `ttk.hero` (ra tướng), `ttk.hint` và nhạc `tam_tuong_ky` (prompt ở 04-prompts mục D5).
 
-### 5.12 Điền Trang Ký (`dtk.*`, nối một phần 28/11/2026)
+### 5.12 Điền Trang Ký (`dtk.*`, nối 28/11/2026)
 
 Tiếng phát theo nhịp diễn lại nhật ký (`dien-trang-ky/usePlayback.ts`, mỗi bước mang `cue` từ `eventCue` trong `dien-trang-ky/sounds.ts`), nên khớp hoạt ảnh và chạy cả với máy lẫn đối thủ online. Nhạc `dien_trang_ky` theo phân cảnh `DIEN_TRANG_KY`.
 
@@ -264,10 +264,18 @@ Tiếng phát theo nhịp diễn lại nhật ký (`dien-trang-ky/usePlayback.ts
 | `dtk.salary` | Qua Hoa Lư nhận lương | Tệp riêng `dtk/salary` (2 biến thể) | P1 |
 | `dtk.buy` | Mua đất (`buy`) hoặc mua lại đất người khác (`buyout`) | Tệp riêng `dtk/buy` (2 biến thể) | P1 |
 | `dtk.build` | Xây nhà (`build`, `freeBuild`) | Tệp riêng `dtk/build` (3 biến thể) | P1 |
-| `dtk.rent` | Nộp tô (`rent`) và mọi khoản mất tiền (`pay`: thuế, quẻ, đò, chuộc ngục) | Tệp riêng `dtk/rent` | P1 |
+| `dtk.rent` | Nộp tô (`rent`) | Tệp riêng `dtk/rent` | P1 |
+| `dtk.pay` | Khoản mất tiền khác (`pay`: thuế, quẻ, đò, chuộc ngục, khao quân) | Tệp riêng `dtk/pay` | P1 |
 | `dtk.gain` | Được tiền từ quẻ (`gain`) | Tệp riêng `dtk/gain` (2 biến thể) | P1 |
+| `dtk.sell` | Bán đất lại cho triều đình (`sell`) | Tệp riêng `dtk/sell` (3 biến thể) | P1 |
+| `dtk.jailed` / `dtk.freed` | Bị giải vào Lao Ngục / ra ngục (đổ đôi, chuộc, hết hạn) | Tệp riêng `dtk/jailed`, `dtk/freed` (2 biến thể) | P1 |
+| `dtk.blessing` | Quẻ Phúc ấm (`blessing`), dùng phúc miễn tô (`blessUsed`), mở lễ hội (`festival`) | Tệp riêng `dtk/blessing` (2 biến thể) | P1 |
+| `dtk.omen` | Rút trúng quẻ thiên tai (quẻ khác im, việc theo sau tự có tiếng) | Tệp riêng `dtk/omen` (2 biến thể) | P1 |
+| `dtk.quake` / `dtk.storm` | Thiên tai giáng xuống nhà đã chọn (`disaster`) | Tệp riêng `dtk/quake` (3 biến thể), `dtk/storm` | P1 |
+| `dtk.monopoly` | Gom đủ dãy hoặc đủ danh thắng (`monopoly`) | Tệp riêng `dtk/monopoly` (2 biến thể) | P1 |
+| `dtk.out` | Một người phá sản hoặc đầu hàng (`out`) | Tệp riêng `dtk/out` | P1 |
 
-Chưa có (prompt ở `/mnt/project-files/art/prompts/prompt-am-thanh-con-thieu.md` mục 1): `pay` riêng, `sell`, `jailed`, `freed`, `blessing`, `omen`, `quake`, `storm`, `monopoly`, `out`, `win`, `lose`.
+Chưa có: `win`, `lose` khi kết ván (prompt ở `/mnt/project-files/art/prompts/prompt-am-thanh-con-thieu.md` mục 1).
 
 ## 6. Kiểm tra
 

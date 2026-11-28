@@ -1084,6 +1084,74 @@
         "sfx/dtk/gain_b"
       ],
       "volume": 0.7
+    },
+    "dtk.pay": {
+      "files": [
+        "sfx/dtk/pay"
+      ],
+      "volume": 0.7
+    },
+    "dtk.sell": {
+      "files": [
+        "sfx/dtk/sell_a",
+        "sfx/dtk/sell_b",
+        "sfx/dtk/sell_c"
+      ],
+      "volume": 0.7
+    },
+    "dtk.jailed": {
+      "files": [
+        "sfx/dtk/jailed"
+      ],
+      "volume": 0.8
+    },
+    "dtk.freed": {
+      "files": [
+        "sfx/dtk/freed_a",
+        "sfx/dtk/freed_b"
+      ],
+      "volume": 0.75
+    },
+    "dtk.blessing": {
+      "files": [
+        "sfx/dtk/blessing_a",
+        "sfx/dtk/blessing_b"
+      ],
+      "volume": 0.75
+    },
+    "dtk.omen": {
+      "files": [
+        "sfx/dtk/omen_a",
+        "sfx/dtk/omen_b"
+      ],
+      "volume": 0.7
+    },
+    "dtk.quake": {
+      "files": [
+        "sfx/dtk/quake_a",
+        "sfx/dtk/quake_b",
+        "sfx/dtk/quake_c"
+      ],
+      "volume": 0.8
+    },
+    "dtk.storm": {
+      "files": [
+        "sfx/dtk/storm"
+      ],
+      "volume": 0.8
+    },
+    "dtk.monopoly": {
+      "files": [
+        "sfx/dtk/monopoly_a",
+        "sfx/dtk/monopoly_b"
+      ],
+      "volume": 0.8
+    },
+    "dtk.out": {
+      "files": [
+        "sfx/dtk/out"
+      ],
+      "volume": 0.8
     }
   },
   "music": {
