@@ -17,6 +17,8 @@ function Poem({ poem, className }: { poem: ColumnPoem; className?: string }) {
 
 /** Chỗ trống thấp hơn mức này thì không đặt khung lấp; khung ngay trên giãn xuống cho hai cột bằng đáy. */
 const MIN_FILL_PX = 80;
+/** Khung tranh ẩn dưới 8rem (container query trong components.css): thấp hơn thì cũng gập để khung trên giãn, không để ô trống. */
+const MIN_ART_PX = 128;
 
 /**
  * Lấp phần trống ở cột ngắn để hai cột cao bằng nhau, chỉ trên máy tính (lg). Đặt làm phần tử cuối của cột
@@ -33,16 +35,17 @@ export function ColumnFill({ mode, className }: { mode: ColumnFillMode; classNam
     if (!el || !column) return;
     // Bỏ ẩn, đo chỗ trống thật (đọc kích thước ép trình duyệt tính lại bố cục ngay), rồi ẩn lại nếu quá thấp. Làm
     // trọn trong một lần gọi nên trạng thái cuối giống lúc đầu khi chỗ trống không đổi, không gây vòng đo lặp.
+    const min = art ? MIN_ART_PX : MIN_FILL_PX;
     const measure = () => {
       el.removeAttribute("data-collapsed");
-      if (el.getBoundingClientRect().height < MIN_FILL_PX) el.setAttribute("data-collapsed", "");
+      if (el.getBoundingClientRect().height < min) el.setAttribute("data-collapsed", "");
     };
     const observer = new ResizeObserver(measure);
     observer.observe(column);
     for (const child of column.children) if (child !== el && child !== el.previousElementSibling) observer.observe(child);
     measure();
     return () => observer.disconnect();
-  }, []);
+  }, [art]);
 
   return (
     <div ref={ref} className={cn("ui-column-fill hidden lg:block lg:data-collapsed:hidden", className)}>

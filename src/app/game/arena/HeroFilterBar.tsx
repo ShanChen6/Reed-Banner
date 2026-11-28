@@ -43,23 +43,28 @@ export function HeroFilterBar({
   filter,
   onChange,
   extra,
+  search = true,
 }: {
   filter: HeroFilter;
   onChange: (patch: Partial<HeroFilter>) => void;
   /** Bộ lọc riêng của màn, nằm giữa ô tìm và hàng lọc hệ. */
   extra?: ReactNode;
+  /** false: bỏ ô tìm tên (màn đã đặt ô tìm riêng, hàng chip nằm trong hộp Lọc). */
+  search?: boolean;
 }) {
   const { query, element, profession } = filter;
   return (
     <FilterBar label="Bộ lọc tướng">
-      <Input
-        type="search"
-        aria-label="Tìm tướng theo tên"
-        placeholder="Tìm tên tướng…"
-        value={query}
-        onChange={(e) => onChange({ query: e.currentTarget.value })}
-        className="min-h-11 sm:max-w-xs"
-      />
+      {search && (
+        <Input
+          type="search"
+          aria-label="Tìm tướng theo tên"
+          placeholder="Tìm tên tướng…"
+          value={query}
+          onChange={(e) => onChange({ query: e.currentTarget.value })}
+          className="min-h-11 sm:max-w-xs"
+        />
+      )}
       {extra}
       <div className="flex flex-col gap-1.5 lg:flex-row lg:flex-wrap lg:items-center lg:gap-4">
         <div className="flex flex-wrap gap-1.5" role="group" aria-label="Lọc theo hệ">

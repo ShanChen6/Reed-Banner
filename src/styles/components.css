@@ -441,6 +441,11 @@
   @media (min-width: 1280px) and (max-height: 860px) {
     .ui-mode-screen.ui-mode-fit { padding-top: 1rem; padding-bottom: 1rem; --mode-fit-h: calc(100dvh - 68px - 2rem); }
   }
+  /* Màn có đại card (ModeScreen card) cũng khóa cao: card cao đúng khung, phần chơi bên trong tự chia chỗ.
+     Lề trong gọn hơn đặt bằng class FIT_CARD_CLASS (ModeScreen.tsx), vì lớp utilities đè lớp components. */
+  @media (min-width: 1280px) {
+    .ui-mode-fit [data-slot="mode-card"] { height: var(--mode-fit-h); min-height: 0; }
+  }
   .ui-mode-screen :is(button, a, select, input, textarea, [tabindex]):focus-visible {
     outline: 2px solid var(--frame-gold-hi);
     outline-offset: 2px;

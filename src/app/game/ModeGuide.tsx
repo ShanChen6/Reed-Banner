@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type ComponentType, type ReactNode } from "react";
 import { BottomSheet, FitPages, FrameInset, OrnateFrame, type FitUnit } from "@/components/game-ui";
 import { DESKTOP_FIT_QUERY, PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { Button, choiceVariants, Tabs } from "@/components/ui";
+import { CircleHelpIcon } from "@/components/ui/icons";
 import { ElementIcon, SuLoAidIcon } from "./art/icons";
 import { TileArt } from "./art/tiles";
 import { Glyph } from "./formation/pieces";
@@ -309,11 +310,20 @@ export interface ModePlayTabs {
  * luật và thưởng của chế độ. Không gọi API, chuyển thẻ không mất tiến độ ván.
  * `extraTabs` chèn thẻ riêng của màn vào giữa hai thẻ đó; nội dung thẻ chỉ dựng khi được chọn.
  */
-export function ModeGuideTabs({ scene, extraTabs = [], playTabs, children }: {
+export function ModeGuideTabs({ scene, extraTabs = [], playTabs, fit, playLabel = "Chơi", playIcon, children }: {
   scene: GuideScene;
   extraTabs?: readonly ModeExtraTab[];
   /** Nhiều thẻ chơi thay cho một thẻ "Chơi". */
   playTabs?: ModePlayTabs;
+  /**
+   * Màn vừa một màn hình (ModeScreen fit): thẻ trải đều hàng ngang, Hướng dẫn chia trang và bỏ nút "Vào chơi"
+   * (đã có thẻ Chơi ngay trên), như Bình Loạn.
+   */
+  fit?: boolean;
+  /** Tên thẻ chơi riêng của chế độ thay chữ "Chơi" (Shan 28/11/2026, ví dụ Tháp Thí Luyện là "Chinh phạt"). */
+  playLabel?: string;
+  /** Icon thẻ chơi; có thì thẻ Hướng dẫn cũng có icon, màn hẹp chỉ còn icon (như thẻ Bình Loạn). */
+  playIcon?: ComponentType<{ className?: string }>;
   children: ReactNode;
 }) {
   // Điện thoại: không có thẻ Hướng dẫn, thay bằng nút "?" mở bảng trượt đáy (Shan chọn 5B, 21/11/2026).
@@ -325,7 +335,14 @@ export function ModeGuideTabs({ scene, extraTabs = [], playTabs, children }: {
   };
   const shown = phone && view === "guide" ? "play" : view;
   const extra = extraTabs.find((tab) => tab.value === shown);
-  const plays = playTabs?.items ?? [{ value: "play", label: "Chơi" }];
+  const withIcon = (Icon: ComponentType<{ className?: string }> | undefined, text: string): ReactNode =>
+    Icon ? (
+      <span className="flex items-center gap-2" title={text}>
+        <Icon className="size-4" />
+        <span className="max-md:sr-only">{text}</span>
+      </span>
+    ) : text;
+  const plays = playTabs?.items ?? [{ value: "play", label: withIcon(playIcon, playLabel) }];
   const pick = (next: string) => {
     if (playTabs?.items.some((tab) => tab.value === next)) {
       setView("play");
@@ -337,18 +354,21 @@ export function ModeGuideTabs({ scene, extraTabs = [], playTabs, children }: {
       <div className="flex items-center gap-2">
         <Tabs<string>
           label="Màn chế độ"
+          fullWidth={fit}
           className="flex-1 max-sm:min-w-0"
           value={shown === "play" ? (playTabs?.value ?? "play") : shown}
           onChange={pick}
           items={[
             ...plays,
             ...extraTabs.map(({ value, label }) => ({ value, label })),
-            ...(phone ? [] : [{ value: "guide", label: "Hướng dẫn" }]),
+            ...(phone ? [] : [{ value: "guide", label: withIcon(playIcon && CircleHelpIcon, "Hướng dẫn") }]),
           ]}
         />
         {phone && <GuideSheetButton scene={scene} />}
       </div>
-      {shown === "guide" ? <ModeGuidePanel scene={scene} onPlay={() => setView("play")} /> : extra ? extra.content : children}
+      {shown === "guide" ? (
+        fit ? <ModeGuidePanel scene={scene} paged /> : <ModeGuidePanel scene={scene} onPlay={() => setView("play")} />
+      ) : extra ? extra.content : children}
     </>
   );
 }

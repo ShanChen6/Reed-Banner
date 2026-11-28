@@ -26,3 +26,6 @@ export function useMediaQuery(query: string, fallback = false): boolean {
  * khung chế độ cao bằng màn hình, nội dung dài thì chia trang thay vì kéo dài trang. Hẹp hơn thì trang cuộn như cũ.
  */
 export const DESKTOP_FIT_QUERY = "(min-width: 1280px)";
+
+/** Máy tính thấp (laptop 1366×768): khung vừa màn hình còn ít chỗ, các màn gọn thêm (chặng lật trang, ẩn chữ phụ). */
+export const SHORT_FIT_QUERY = "(min-width: 1280px) and (max-height: 860px)";
