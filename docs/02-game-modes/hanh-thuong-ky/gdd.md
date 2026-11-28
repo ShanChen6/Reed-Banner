@@ -14,7 +14,7 @@ Mã: lõi thuần `src/core/trade/` (bản đồ, hàng, chợ, đoàn hàng, gi
 - Tranh nền bản đồ Bình Loạn (`public/art/campaign/world-map.webp`). 12 điểm lấy tọa độ cứ điểm của Bình Loạn; thêm **Cửa Đại Ác** chỉ khai báo trong `src/core/trade/map.ts`, Bình Loạn không đổi gì. Bình Kiều không có (chưa có tọa độ).
 - Bốn loại điểm: cửa biển, bến sông, chợ đồng bằng, núi và trung du. 20 chặng nối các điểm; mỗi chặng là đường thủy, đường bộ hoặc cả hai, xa gần ba mức (20, 45, 90 phút ở cấp 1).
 - Mỗi người bắt đầu mùa ở một điểm ngẫu nhiên.
-- Thuyền (đường thủy) và xe ngựa (đường bộ) chỉ là hoạt ảnh; sức chở như nhau.
+- Thuyền (đường thủy) và xe ngựa (đường bộ) chỉ là hoạt ảnh (tranh `public/art/trade/boat.webp`, `cart.webp`); sức chở như nhau.
 
 ## 3. Hàng hóa
 
