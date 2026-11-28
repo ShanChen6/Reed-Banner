@@ -104,3 +104,8 @@ export function CircleHelpIcon(props: IconProps) {
     </Icon>
   );
 }
+
+/** Lucide `x`: đóng hộp, bảng; bỏ một mục khỏi danh sách. */
+export function XIcon(props: IconProps) {
+  return <Icon {...props}><path d="M18 6 6 18" /><path d="m6 6 12 12" /></Icon>;
+}

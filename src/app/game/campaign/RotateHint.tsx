@@ -4,6 +4,7 @@
 // được ở mọi nơi: Android cho khóa ngang khi toàn màn hình (Screen Orientation API), iPhone thì không, nên ở đó
 // chỉ còn lời nhắc. Ẩn được, chỉ nhớ trong lần mở trang.
 
+import { XIcon } from "@/components/ui";
 import { useState, useSyncExternalStore } from "react";
 
 type OrientationLock = { lock?: (o: "landscape") => Promise<void> };
@@ -78,7 +79,7 @@ export default function RotateHint() {
         aria-label="Ẩn gợi ý xoay ngang"
         className="flex size-11 shrink-0 items-center justify-center rounded-lg text-lg"
       >
-        ×
+        <XIcon className="size-5" />
       </button>
     </div>
   );

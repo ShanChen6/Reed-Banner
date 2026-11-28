@@ -1,7 +1,7 @@
 "use client";
 
 import { ModeBanner, ModeScreen, ModeSkeleton, OrnateFrame, SectionTitle } from "@/components/game-ui";
-import { Alert, Button, ChoiceChip, buttonVariants } from "@/components/ui";
+import { Alert, Button, ChoiceChip, buttonVariants, XIcon } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { cn } from "@/lib/cn";
 
@@ -330,7 +330,7 @@ export default function SurvivalScreen() {
             }}
             className="absolute right-1 top-1 grid size-8 place-items-center rounded-lg text-on-wood-soft hover:bg-black/30 hover:text-on-wood pointer-coarse:size-11"
           >
-            ×
+            <XIcon />
           </button>
         )}
       </div>

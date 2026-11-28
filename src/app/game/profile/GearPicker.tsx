@@ -5,6 +5,7 @@
 // equip/unequip; chuyển món đang ở người khác cần bấm xác nhận lần nữa. Dùng <dialog> gốc để có khóa tiêu điểm
 // và phím Esc; trên điện thoại hiện như tấm trượt từ đáy.
 
+import { XIcon } from "@/components/ui";
 import { useEffect, useRef, useState } from "react";
 import { itemStat, SLOT_STAT, wearerOf, type GearItem, type GearSlot, type Profile, type ProfileAction } from "@/core";
 import { GearIcon } from "../art/gear";
@@ -12,7 +13,6 @@ import { gearText, PROFESSION_NAME, SLOT_NAME, TIER_CLASS } from "../battle/labe
 import { gearComparison } from "../battle/GearPanel";
 import { SceneLink } from "../SceneContext";
 import { fighterOf, slotItem, STAT_NAME } from "./HeroDetail";
-import { XGlyph } from "./glyphs";
 import { nameOf } from "./roster";
 
 /** Món trong kho đặt được vào ô này cho nhân vật này, món tốt trước, món chưa ai dùng trước. */
@@ -84,7 +84,7 @@ export default function GearPicker({
             </p>
           </div>
           <button type="button" onClick={onClose} aria-label="Đóng bảng chọn đồ" className="barracks-btn flex size-11 shrink-0 items-center justify-center rounded-lg">
-            <XGlyph className="size-5" />
+            <XIcon className="size-5" />
           </button>
         </header>
 

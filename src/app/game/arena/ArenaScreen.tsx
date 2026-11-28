@@ -1,7 +1,7 @@
 "use client";
 
 import { ModeBanner, ModeScreen, ModeSkeleton, OrnateFrame, SectionTitle } from "@/components/game-ui";
-import { Alert, Button, buttonVariants } from "@/components/ui";
+import { Alert, Button, buttonVariants, XIcon } from "@/components/ui";
 
 // Quần Hùng: điểm và thành tích, đội phòng thủ (bản chụp đội 3vs3 đang chọn), 3 đối thủ đang bày.
 // Đánh dùng đội 3vs3 đang chọn ở hồ sơ; đối thủ do AI điều khiển.
@@ -310,7 +310,7 @@ export default function ArenaScreen() {
                           onClick={() => choosePicks(lineup.filter((x) => x !== id))}
                           className="grid size-8 shrink-0 place-items-center rounded-lg text-on-wood-soft hover:bg-black/30 hover:text-on-wood pointer-coarse:size-11"
                         >
-                          ×
+                          <XIcon />
                         </button>
                       )}
                     </>

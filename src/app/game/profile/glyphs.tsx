@@ -33,16 +33,6 @@ export const TeamGlyph = (p: P) => (
     <path d="M6 21V3.5M6 4.5h11l-2.5 4 2.5 4H6" />
   </Svg>
 );
-export const XGlyph = (p: P) => (
-  <Svg {...p}>
-    <path d="M6 6l12 12M18 6L6 18" />
-  </Svg>
-);
-export const BackGlyph = (p: P) => (
-  <Svg {...p}>
-    <path d="M19 12H5M11 6l-6 6 6 6" />
-  </Svg>
-);
 export const ShopGlyph = (p: P) => (
   <Svg {...p}>
     <path d="M4 9.5L5.5 4h13L20 9.5M4 9.5h16M4 9.5c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3M5.5 12.5V20h13v-7.5M10 20v-4.5h4V20" />

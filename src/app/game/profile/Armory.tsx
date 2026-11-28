@@ -25,7 +25,7 @@ import {
   type Profile,
   type ProfileAction,
 } from "@/core";
-import { Select } from "@/components/ui";
+import { Select, XIcon } from "@/components/ui";
 import { Pagination } from "@/components/ui/Pagination";
 import { ItemIcon, type ItemArtId } from "../art/items";
 import { ITEMS } from "../items/catalog";
@@ -33,7 +33,7 @@ import { GearIcon, GearActionIcon } from "../art/gear";
 import { gearText, PROFESSION_NAME, SLOT_NAME, TIER_CLASS } from "../battle/labels";
 import { SceneLink } from "../SceneContext";
 import { fighterOf, STAT_NAME, XpBooks } from "./HeroDetail";
-import { ShopGlyph, XGlyph } from "./glyphs";
+import { ShopGlyph } from "./glyphs";
 import { nameOf, ownedIds } from "./roster";
 
 type Shelf = "all" | "weapon" | "armor" | "jewelry";
@@ -564,7 +564,7 @@ function MergePanel({
               {it ? (
                 <button type="button" onClick={() => onRemove(it.id)} aria-label={`Bỏ ${gearText(it)} khỏi ghép`} className="gear-slot is-selected relative flex aspect-square w-full items-center justify-center rounded-lg p-0.5">
                   <GearIcon slot={it.slot} element={it.element} tier={it.tier} set={it.set} profession={it.profession} className="size-full" />
-                  <XGlyph className="absolute top-1 right-1 size-4 rounded-full bg-black/70 p-0.5" />
+                  <XIcon className="absolute top-1 right-1 size-4 rounded-full bg-black/70 p-0.5" />
                 </button>
               ) : (
                 <span className="gear-slot is-empty flex aspect-square w-full items-center justify-center rounded-lg text-sm text-[var(--on-wood-soft)]">{i + 1}</span>

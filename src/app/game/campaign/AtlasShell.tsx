@@ -4,8 +4,8 @@
 // Chỉ là trình bày: chọn chương chỉ đổi chương đang xem, không mở hay hoàn thành nhiệm vụ nào. Tiến độ lấy từ
 // hồ sơ server qua chapterStatus.
 
-import { BookOpenIcon, buttonVariants, CircleHelpIcon, MapIcon, ScrollTextIcon, SwordsIcon } from "@/components/ui";
-import type { ComponentType } from "react";
+import { BookOpenIcon, buttonVariants, CircleHelpIcon, MapIcon, ScrollTextIcon, SwordsIcon, XIcon } from "@/components/ui";
+import type { ComponentType, ReactNode } from "react";
 import { FitPages, type FitUnit } from "@/components/game-ui";
 import { PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 import { GuideSheetButton } from "../ModeGuide";
@@ -235,9 +235,12 @@ export function ChapterPanel({
   current,
   onPick,
   fit = false,
+  actions,
 }: {
   campaign: CampaignProgressV2;
   chapter: ChapterContent;
+  /** Nút luôn ở đáy bảng (máy tính rộng): mở Hội quân, tuyến chương, hồi kết của chương. */
+  actions?: ReactNode;
   /** Nhiệm vụ đang xem ở khung chi tiết. */
   current: CampaignMissionId;
   onPick: (id: CampaignMissionId) => void;
@@ -318,7 +321,7 @@ export function ChapterPanel({
       className="atlas-frame atlas-frame-paper flex flex-col p-3 xl:h-full"
     >
       <AtlasCorners />
-      <FitPages className="flex-1" enabled={fit} units={units} tone="paper" label="Trang thông tin chương" />
+      <FitPages className="flex-1" enabled={fit} units={units} tone="paper" label="Trang thông tin chương" footer={actions} />
     </aside>
   );
 }
@@ -515,9 +518,9 @@ export function StrongholdPanel({
             type="button"
             onClick={onClose}
             aria-label="Đóng thông tin cứ điểm, về thông tin chương"
-            className="flex size-11 shrink-0 items-center justify-center rounded-lg border border-frame-line-soft bg-paper-card text-xl font-bold text-ink hover:bg-paper-hi"
+            className="flex size-11 shrink-0 items-center justify-center rounded-lg border border-frame-line-soft bg-paper-card text-ink hover:bg-paper-hi"
           >
-            ×
+            <XIcon className="size-5" />
           </button>
         </header>
       ),

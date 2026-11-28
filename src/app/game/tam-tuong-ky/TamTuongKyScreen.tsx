@@ -7,7 +7,7 @@
 
 import { MODE_CONTENT_WIDTH } from "@/components/game-ui";
 import { ModeBanner, ModeCard, ModeSkeleton } from "@/components/game-ui";
-import { ChoiceChip, buttonVariants } from "@/components/ui";
+import { ChoiceChip, buttonVariants, XIcon } from "@/components/ui";
 import { PageControls, usePagedItems } from "@/components/ui/Pagination";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { PROFESSION_DISPLAY_NAME, type Element, type Profession } from "@/core/battle";
@@ -968,7 +968,7 @@ function PickerDialog({ index, picker, onClose }: { index: 0 | 1 | null; picker:
           <div className="flex items-center justify-between gap-2">
             <h2 className="ui-title-on-wood font-serif text-lg font-bold">Chọn nguyên liệu cho {label}</h2>
             <button type="button" onClick={onClose} aria-label="Đóng" className="grid size-11 shrink-0 place-items-center rounded-full border border-[var(--frame-line-mid)] text-lg hover:border-[var(--frame-gold)]">
-              ✕
+              <XIcon className="size-5" />
             </button>
           </div>
           <LibraryBody
@@ -1227,7 +1227,7 @@ function Slot({ label, id, busy, onClear, onOpen }: { label: string; id: NodeId 
     >
       {content}
       <span aria-hidden className="absolute top-1 right-2 text-sm font-bold text-[var(--lacquer)] opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
-        ✕
+        <XIcon className="size-3.5" />
       </span>
     </button>
   );
@@ -1351,7 +1351,7 @@ function RecipeBookDialog({ id, book, open, onClose }: { id: NodeId; book: Recip
               <span className="truncate">{node.nameVi}</span>
             </h2>
             <button type="button" onClick={onClose} aria-label="Đóng" className="grid size-11 shrink-0 place-items-center rounded-full border border-[var(--frame-line-mid)] text-lg hover:border-[var(--frame-gold)]">
-              ✕
+              <XIcon className="size-5" />
             </button>
           </div>
           {!node.element && (
