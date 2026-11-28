@@ -6,6 +6,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { BOARD_SIZE, type DtkEvent, type DtkState } from "@/core/dien-trang-ky";
+import { useAudio } from "../audio/AudioProvider";
+import type { CueId } from "../audio/cues";
+import { eventCue } from "./sounds";
 
 const ROLL_FRAMES = 7;
 const ROLL_FRAME_MS = 70;
@@ -31,7 +34,8 @@ export interface Playback {
   readonly shownN: number;
 }
 
-type Step = { readonly wait: number; readonly apply: (f: Frame) => Frame };
+/** `cue`: tiếng phát đúng lúc bước này hiện lên (xúc xắc bắt đầu lăn, quân chạm ô, việc mua bán...). */
+type Step = { readonly wait: number; readonly apply: (f: Frame) => Frame; readonly cue?: CueId };
 interface Frame {
   pos: number[];
   dice: [number, number] | null;
@@ -44,27 +48,28 @@ const reducedMotion = () => typeof window !== "undefined" && window.matchMedia?.
 /** Các bước diễn cho một sự kiện. `face` cho mặt xúc xắc giả lúc lăn (không ảnh hưởng luật). */
 function stepsFor(e: DtkEvent, face: () => number, fast: boolean): Step[] {
   const mark = (f: Frame): Frame => ({ ...f, shownN: e.n });
+  const cue = eventCue(e) ?? undefined;
   switch (e.k) {
     case "roll": {
       const out: Step[] = [];
-      if (!fast) for (let i = 0; i < ROLL_FRAMES; i++) out.push({ wait: ROLL_FRAME_MS, apply: (f) => ({ ...f, dice: [face(), face()], rolling: true }) });
-      out.push({ wait: fast ? 120 : AFTER_ROLL_MS, apply: (f) => mark({ ...f, dice: [e.dice[0], e.dice[1]], rolling: false }) });
+      if (!fast) for (let i = 0; i < ROLL_FRAMES; i++) out.push({ wait: ROLL_FRAME_MS, apply: (f) => ({ ...f, dice: [face(), face()], rolling: true }), cue: i === 0 ? cue : undefined });
+      out.push({ wait: fast ? 120 : AFTER_ROLL_MS, apply: (f) => mark({ ...f, dice: [e.dice[0], e.dice[1]], rolling: false }), cue: fast ? cue : undefined });
       return out;
     }
     case "move": {
       const seat = e.seat;
       const dist = e.back ? (e.from - e.to + BOARD_SIZE) % BOARD_SIZE : (e.to - e.from + BOARD_SIZE) % BOARD_SIZE;
       if (fast || dist === 0 || (e.back && dist > BACK_JUMP)) {
-        return [{ wait: fast ? 80 : 300, apply: (f) => mark({ ...f, pos: f.pos.map((p, i) => (i === seat ? e.to : p)) }) }];
+        return [{ wait: fast ? 80 : 300, apply: (f) => mark({ ...f, pos: f.pos.map((p, i) => (i === seat ? e.to : p)) }), cue: dist === 0 ? undefined : cue }];
       }
       const hop = Math.min(HOP_MS, Math.floor(MOVE_MAX_MS / dist));
       return Array.from({ length: dist }, (_, k) => {
         const at = (e.from + (e.back ? -(k + 1) : k + 1) + BOARD_SIZE) % BOARD_SIZE;
-        return { wait: hop, apply: (f: Frame) => (k === dist - 1 ? mark : (x: Frame) => x)({ ...f, pos: f.pos.map((p, i) => (i === seat ? at : p)) }) };
+        return { wait: hop, apply: (f: Frame) => (k === dist - 1 ? mark : (x: Frame) => x)({ ...f, pos: f.pos.map((p, i) => (i === seat ? at : p)) }), cue };
       });
     }
     default:
-      return [{ wait: PAUSE_ON.has(e.k) && !fast ? PAUSE_MS : 0, apply: mark }];
+      return [{ wait: PAUSE_ON.has(e.k) && !fast ? PAUSE_MS : 0, apply: mark, cue }];
   }
 }
 
@@ -78,6 +83,11 @@ export function usePlayback(state: DtkState): Playback {
   const timer = useRef<number | null>(null);
   const target = useRef(state);
   const seed = useRef((state.rng | 1) >>> 0);
+  const { play } = useAudio();
+  const playRef = useRef(play);
+  useEffect(() => {
+    playRef.current = play;
+  }, [play]);
 
   useEffect(() => {
     const prev = target.current;
@@ -118,6 +128,7 @@ export function usePlayback(state: DtkState): Playback {
         return;
       }
       cur.current = step.apply(cur.current!);
+      if (step.cue) playRef.current(step.cue);
       setFrame(cur.current);
       timer.current = window.setTimeout(tick, step.wait);
     };

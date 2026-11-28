@@ -27,6 +27,7 @@ describe("âm thanh theo phân cảnh", () => {
     assert.deepEqual(soundOfScene("EXPEDITION"), { music: "expedition", ambience: null });
     assert.deepEqual(soundOfScene("TAM_QUAN_KY"), { music: "tam_quan_ky", ambience: null });
     assert.deepEqual(soundOfScene("VAY_THANH_KY"), { music: "vay_thanh_ky", ambience: null });
+    assert.deepEqual(soundOfScene("DIEN_TRANG_KY"), { music: "dien_trang_ky", ambience: null });
   });
 
   it("Tháp, Đấu trường, Sinh tồn mỗi nơi một bài", () => {

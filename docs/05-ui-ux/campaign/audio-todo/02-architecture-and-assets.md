@@ -253,6 +253,22 @@ Nhạc: `vay_thanh_ky` (26/11/2026) ở phân cảnh `VAY_THANH_KY` (`sceneMusic
 
 Chưa có: `ttk.new` (khám phá mới), `ttk.hero` (ra tướng), `ttk.hint` và nhạc `tam_tuong_ky` (prompt ở 04-prompts mục D5).
 
+### 5.12 Điền Trang Ký (`dtk.*`, nối một phần 28/11/2026)
+
+Tiếng phát theo nhịp diễn lại nhật ký (`dien-trang-ky/usePlayback.ts`, mỗi bước mang `cue` từ `eventCue` trong `dien-trang-ky/sounds.ts`), nên khớp hoạt ảnh và chạy cả với máy lẫn đối thủ online. Nhạc `dien_trang_ky` theo phân cảnh `DIEN_TRANG_KY`.
+
+| Cue | Khi nào | Tệp | Ưu tiên |
+|---|---|---|---|
+| `dtk.roll` | Xúc xắc bắt đầu lăn | Tệp riêng `dtk/roll` (2 biến thể) | P1 |
+| `dtk.move` | Quân chạm từng ô khi đi (đặt thẳng khi bị giải vào ngục cũng một tiếng) | Tệp riêng `dtk/move` (3 biến thể) | P1 |
+| `dtk.salary` | Qua Hoa Lư nhận lương | Tệp riêng `dtk/salary` (2 biến thể) | P1 |
+| `dtk.buy` | Mua đất (`buy`) hoặc mua lại đất người khác (`buyout`) | Tệp riêng `dtk/buy` (2 biến thể) | P1 |
+| `dtk.build` | Xây nhà (`build`, `freeBuild`) | Tệp riêng `dtk/build` (3 biến thể) | P1 |
+| `dtk.rent` | Nộp tô (`rent`) và mọi khoản mất tiền (`pay`: thuế, quẻ, đò, chuộc ngục) | Tệp riêng `dtk/rent` | P1 |
+| `dtk.gain` | Được tiền từ quẻ (`gain`) | Tệp riêng `dtk/gain` (2 biến thể) | P1 |
+
+Chưa có (prompt ở `/mnt/project-files/art/prompts/prompt-am-thanh-con-thieu.md` mục 1): `pay` riêng, `sell`, `jailed`, `freed`, `blessing`, `omen`, `quake`, `storm`, `monopoly`, `out`, `win`, `lose`.
+
 ## 6. Kiểm tra
 
 - Test tự động: mọi `CueId` có dòng manifest và tệp; mọi tệp trong manifest tồn tại; kích thước tệp trong ngưỡng; không có cue trùng tên.

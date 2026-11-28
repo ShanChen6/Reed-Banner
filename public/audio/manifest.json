@@ -1034,6 +1034,56 @@
         "sfx/ttk/reject_b"
       ],
       "volume": 0.6
+    },
+    "dtk.roll": {
+      "files": [
+        "sfx/dtk/roll_a",
+        "sfx/dtk/roll_b"
+      ],
+      "volume": 0.8
+    },
+    "dtk.move": {
+      "files": [
+        "sfx/dtk/move_a",
+        "sfx/dtk/move_b",
+        "sfx/dtk/move_c"
+      ],
+      "volume": 0.5
+    },
+    "dtk.salary": {
+      "files": [
+        "sfx/dtk/salary_a",
+        "sfx/dtk/salary_b"
+      ],
+      "volume": 0.75
+    },
+    "dtk.buy": {
+      "files": [
+        "sfx/dtk/buy_a",
+        "sfx/dtk/buy_b"
+      ],
+      "volume": 0.75
+    },
+    "dtk.build": {
+      "files": [
+        "sfx/dtk/build_a",
+        "sfx/dtk/build_b",
+        "sfx/dtk/build_c"
+      ],
+      "volume": 0.75
+    },
+    "dtk.rent": {
+      "files": [
+        "sfx/dtk/rent"
+      ],
+      "volume": 0.7
+    },
+    "dtk.gain": {
+      "files": [
+        "sfx/dtk/gain_a",
+        "sfx/dtk/gain_b"
+      ],
+      "volume": 0.7
     }
   },
   "music": {
@@ -1136,6 +1186,10 @@
       "file": "music/ending",
       "volume": 0.6,
       "loop": false
+    },
+    "dien_trang_ky": {
+      "file": "music/dien_trang_ky",
+      "volume": 0.5
     }
   },
   "ambience": {
