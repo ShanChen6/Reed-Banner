@@ -204,7 +204,7 @@ export default function DiplomacyScene({
                       {c.label}
                     </span>
                     {tone && (
-                      <span className="shrink-0 rounded border border-current/40 px-1.5 py-0.5 text-caption uppercase">
+                      <span className="shrink-0 rounded-lg border border-current/40 px-1.5 py-0.5 text-caption uppercase">
                         {TONE_TEXT[tone]}
                       </span>
                     )}
@@ -252,9 +252,9 @@ export default function DiplomacyScene({
       <div role="status" aria-live="polite" className="flex flex-col gap-2">
         {message && <p className="text-sm text-danger">{message}</p>}
         {done && phase === "choice" && (
-          <div className="rounded-xl border-2 border-info/50 bg-info/10 p-3">
+          <div className="rounded-lg border-2 border-info/50 bg-info/10 p-3">
             <p className="flex flex-wrap items-baseline gap-2">
-              <span className="rounded border-2 border-info px-2 py-0.5 text-lg font-black tracking-widest text-info uppercase">
+              <span className="rounded-lg border-2 border-info px-2 py-0.5 text-lg font-black tracking-widest text-info uppercase">
                 {outcome ?? "Hoàn thành"}
               </span>
               {counterpart && (

@@ -10,7 +10,7 @@ import { ELEMENT_NAME, PROFESSION_NAME } from "../battle/labels";
 
 // Trong Doanh Trại lớp .barracks-tab (bảng màu --bk-*) đè lên; ở màn khác dùng kiểu lựa chọn chung .ui-choice.
 const CHIP =
-  "ui-choice barracks-tab inline-flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-2.5 text-[15px] disabled:opacity-50";
+  "ui-choice barracks-tab inline-flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-lg px-2.5 text-[15px] disabled:opacity-50";
 
 export default function LeaderBuild({
   element,

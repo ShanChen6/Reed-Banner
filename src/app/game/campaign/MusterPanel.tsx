@@ -47,7 +47,7 @@ export default function MusterPanel({
   return (
     <section
       aria-labelledby="muster-title"
-      className="flex flex-col gap-3 rounded-xl border-2 border-frame-gold bg-wood/90 p-4"
+      className="flex flex-col gap-3 rounded-lg border-2 border-frame-gold bg-wood/90 p-4"
     >
       <header>
         <p className="text-kicker text-frame-gold">
@@ -81,7 +81,7 @@ export default function MusterPanel({
           ).map(([label, n]) => (
             <li
               key={label}
-              className="rounded-md border border-white/10 bg-black/30 p-2"
+              className="rounded-lg border border-white/10 bg-black/30 p-2"
             >
               <span className="block text-lg font-black text-on-wood">
                 {n}
@@ -102,7 +102,7 @@ export default function MusterPanel({
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <div className="rounded-md border border-white/10 bg-black/25 p-2 text-sm">
+        <div className="rounded-lg border border-white/10 bg-black/25 p-2 text-sm">
           <h3 className="font-semibold text-frame-gold">Đội hình</h3>
           <p className="text-on-wood">
             Đinh Bộ Lĩnh cấp {profile.main.level}
@@ -127,7 +127,7 @@ export default function MusterPanel({
             Đổi đội ở Doanh Trại, thẻ Đội hình.
           </p>
         </div>
-        <div className="rounded-md border border-white/10 bg-black/25 p-2 text-sm">
+        <div className="rounded-lg border border-white/10 bg-black/25 p-2 text-sm">
           <h3 className="font-semibold text-frame-gold">Tài nguyên</h3>
           <p className="text-on-wood">
             {profile.gold} vàng, {campaign.supply}/{CAMPAIGN_FOOD_MAX} lương

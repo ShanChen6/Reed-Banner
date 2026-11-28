@@ -11,7 +11,7 @@ export default function Biography({ id }: { id: string }) {
   const faction = FACTIONS[lore.faction];
   const people = relatedTo(id);
   return (
-    <section aria-label="Tiểu sử" className="barracks-inset flex flex-col gap-2 rounded-md p-3">
+    <section aria-label="Tiểu sử" className="barracks-inset flex flex-col gap-2 rounded-lg p-3">
       <p>
         <span className="font-serif text-lg font-bold text-title-on-wood">{lore.epithet}</span>
         {lore.epithetMeaning && <span className="text-sm text-[var(--on-wood-soft)]">, {lore.epithetMeaning}</span>}

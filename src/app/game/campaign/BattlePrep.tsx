@@ -151,7 +151,7 @@ export default function BattlePrep({
               key={label}
               aria-current={i === phase ? "step" : undefined}
               title={label}
-              className={`rounded border px-2 py-0.5 ${
+              className={`rounded-lg border px-2 py-0.5 ${
                 i < phase
                   ? "border-jade/50 bg-jade/15 text-jade"
                   : i === phase
@@ -167,7 +167,7 @@ export default function BattlePrep({
         </ol>
       )}
 
-      <div className="rounded-md border border-frame-line bg-frame-gold/10 p-2 text-title-on-wood">
+      <div className="rounded-lg border border-frame-line bg-frame-gold/10 p-2 text-title-on-wood">
         <p className="font-semibold">Mục tiêu</p>
         <p>
           {stage === "escort"

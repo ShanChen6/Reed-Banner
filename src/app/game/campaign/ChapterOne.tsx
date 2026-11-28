@@ -8,7 +8,8 @@ import { Alert, Button, buttonVariants, choiceVariants } from "@/components/ui";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { DESKTOP_FIT_QUERY, PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
-import { ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon } from "@/components/ui";
+import { ChevronLeftIcon, ChevronRightIcon } from "@/components/ui";
+import { ResultModal } from "@/components/game-ui";
 import BattlePrep, { type BattleChoice } from "./BattlePrep";
 import { nextMissionAfter } from "./startMission";
 import {
@@ -174,58 +175,40 @@ function RewardNotice({
   if (!reward) return null;
   const node = storyNodeById(reward.nodeId)!;
   return (
-    // Báo thưởng nằm ngay trong trang (không dùng hộp nổi), trên đầu khung Sử ký.
-    <section
-      aria-labelledby="first-clear-title"
-      role="status"
-      className="rounded-xl border-2 border-frame-gold bg-wood p-3 text-on-wood shadow-lg"
+    // Báo thưởng thành hộp giữa màn (Shan 28/11/2026: khối báo trên đầu khung đẩy màn Sử ký dài quá màn hình).
+    <ResultModal
+      open
+      tone="win"
+      kicker="Hoàn thành lần đầu"
+      title={node.title}
+      actions={
+        <Button variant="ornate" size="lg" autoFocus type="button" onClick={() => onClose(reward.receipts, reward.nodeId)}>
+          Nhận thưởng
+        </Button>
+      }
     >
-      <div>
-        <p className="text-kicker text-frame-gold">
-          Hoàn thành lần đầu
-        </p>
-        <h2
-          id="first-clear-title"
-          className="text-xl font-black text-title-on-wood"
-        >
-          {node.title}
-        </h2>
-        <ul className="ui-frame-inset mt-2 flex flex-col gap-1 p-2 text-sm">
-          <li className="font-semibold text-frame-gold">
-            +{reward.missionGold} vàng thưởng nhiệm vụ
-          </li>
-          {reward.chapterGold > 0 && (
-            <li className="font-semibold text-frame-gold">
-              +{reward.chapterGold} vàng hoàn thành chương
+      <ul className="ui-frame-inset flex w-full flex-col gap-1 p-3 text-left text-sm">
+        <li className="font-semibold text-frame-gold">+{reward.missionGold} vàng thưởng nhiệm vụ</li>
+        {reward.chapterGold > 0 && (
+          <li className="font-semibold text-frame-gold">+{reward.chapterGold} vàng hoàn thành chương</li>
+        )}
+        {(() => {
+          const faction = campaignEventByNode(node.id)?.faction;
+          return faction ? (
+            <li className="text-info">
+              Thế cục: {companionById(faction.faction)?.name ?? faction.faction}{" "}
+              {FACTION_STATUS_TEXT[faction.status].toLowerCase()} (không tính là trận thắng)
             </li>
-          )}
-          {(() => {
-            const faction = campaignEventByNode(node.id)?.faction;
-            return faction ? (
-              <li className="text-info">
-                Thế cục:{" "}
-                {companionById(faction.faction)?.name ?? faction.faction}{" "}
-                {FACTION_STATUS_TEXT[faction.status].toLowerCase()} (không tính
-                là trận thắng)
-              </li>
-            ) : null;
-          })()}
-          {reward.unlockedHeroes.map((id) => (
-            <li key={id} className="text-jade">
-              Tướng quân gia nhập: {companionById(id)?.name ?? id}
-            </li>
-          ))}
-          <li className="text-caption text-on-wood-soft">
-            Thưởng chỉ nhận một lần; đánh lại hoặc xem lại không nhận thêm.
+          ) : null;
+        })()}
+        {reward.unlockedHeroes.map((id) => (
+          <li key={id} className="text-jade">
+            Tướng quân gia nhập: {companionById(id)?.name ?? id}
           </li>
-        </ul>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Button variant="ornate" type="button" onClick={() => onClose(reward.receipts, reward.nodeId)}>
-            Nhận thưởng
-          </Button>
-        </div>
-      </div>
-    </section>
+        ))}
+      </ul>
+      <p className="text-caption text-on-wood-soft">Thưởng chỉ nhận một lần; đánh lại hoặc xem lại không nhận thêm.</p>
+    </ResultModal>
   );
 }
 
@@ -585,7 +568,7 @@ export default function ChapterOne({
               </div>
               )}
               {(!paged || page === 1) && extras.length > 0 && (
-                <div className="flex flex-col gap-3 xl:min-h-0 xl:flex-1 xl:overflow-y-auto">{extras}</div>
+                <div className="flex flex-col gap-3 xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:pb-6">{extras}</div>
               )}
               {paged && (
                 <nav aria-label="Trang Bản đồ" className="flex shrink-0 items-center justify-center gap-3">
@@ -607,40 +590,23 @@ export default function ChapterOne({
           })()}
       {view === "guide" ? (
         <div className="flex flex-col px-1 sm:px-2 xl:min-h-0 xl:flex-1">
-          <ModeGuidePanel scene="CAMPAIGN" headingId="mode-guide-title" paged onPlay={() => updateAtlas({ ...atlas, view: "atlas" })} />
+          <ModeGuidePanel scene="CAMPAIGN" headingId="mode-guide-title" paged />
         </div>
       ) : view === "codex" ? (
         <WarlordCodex campaign={campaign} fit={fit} ledger={<WorldLedger campaign={profile.campaign} />} />
       ) : view === "raid" ? (
-        <div className="px-1 sm:px-2 xl:min-h-0 xl:flex-1 xl:overflow-y-auto">{footer}</div>
+        <div className="px-1 sm:px-2 xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:pb-6">{footer}</div>
       ) : view === "atlas" ? null : (
         <>
-          <nav
-            aria-label="Đường dẫn"
-            className="flex flex-wrap items-center gap-x-3 gap-y-1"
-          >
-            <button
-              type="button"
-              onClick={() => updateAtlas({ ...atlas, view: "atlas" })}
-              className={buttonVariants({ variant: "secondary", className: "min-h-11" })}
-            >
-              <ArrowLeftIcon className="size-5" />
-              Về bản đồ Sử ký
-            </button>
-            <p className="text-sm text-on-wood-soft">
-              Chương {ROMAN[chapter.chapter]} – {chapter.title}
-              {stronghold ? `, ${stronghold.place}` : ""}
-            </p>
-          </nav>
 
           <article
-            className={`border-t border-frame-line-soft px-1 pt-3 sm:px-2 xl:min-h-0 xl:flex-1 ${
+            className={`px-1 pt-1 sm:px-2 xl:min-h-0 xl:flex-1 ${
               prepSide
                 ? "grid gap-4 pb-24 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start lg:pb-0 xl:grid-cols-[minmax(0,1fr)_26rem] xl:grid-rows-[minmax(0,1fr)] xl:items-stretch"
-                : "flex flex-col gap-3 xl:overflow-y-auto"
+                : "flex flex-col gap-3 xl:overflow-y-auto xl:pb-6"
             }`}
           >
-           <div className="flex min-w-0 flex-col gap-3 xl:min-h-0 xl:overflow-y-auto">
+           <div className="flex min-w-0 flex-col gap-3 xl:min-h-0 xl:overflow-y-auto xl:pb-6">
             <header>
               <p className="text-kicker text-frame-gold">
                 {node.location.name},{" "}
@@ -855,7 +821,7 @@ export default function ChapterOne({
             {prepSide && (
               <aside
                 aria-label="Bày trận"
-                className="ui-frame-inset rounded-xl p-3 lg:sticky lg:top-[4.5rem] lg:max-h-[calc(100dvh-5.5rem)] lg:overflow-y-auto xl:static xl:max-h-none xl:min-h-0"
+                className="ui-frame-inset rounded-lg p-3 lg:sticky lg:top-[4.5rem] lg:max-h-[calc(100dvh-5.5rem)] lg:overflow-y-auto xl:static xl:max-h-none xl:min-h-0"
               >
                 <BattlePrep
                   key={step.nodeId}

@@ -188,7 +188,7 @@ function Stars({ n, className = "" }: { n: number; className?: string }) {
 function HpBar({ ratio }: { ratio: number }) {
   const pct = Math.max(0, Math.min(100, Math.round(ratio * 100)));
   return (
-    <div className="h-1.5 overflow-hidden rounded bg-wood-inset">
+    <div className="h-1.5 overflow-hidden rounded-lg bg-wood-inset">
       <div className={`h-full ${pct > 50 ? "bg-jade" : pct > 0 ? "bg-frame-gold" : "bg-danger"}`} style={{ width: `${pct}%` }} />
     </div>
   );
@@ -513,7 +513,7 @@ function SetupView(props: {
                     const element = c?.element ?? profile.element;
                     const profession = c?.profession ?? profile.profession;
                     return (
-                      <span key={id} className="flex items-center gap-1.5 rounded bg-wood-hi py-1 pl-2 pr-1 text-sm">
+                      <span key={id} className="flex items-center gap-1.5 rounded-lg bg-wood-hi py-1 pl-2 pr-1 text-sm">
                         <Portrait id={id} element={element} profession={profession} className="size-7" />
                         {c?.name ?? "Đinh Bộ Lĩnh"}
                         {id !== MAIN_ID && (
@@ -521,7 +521,7 @@ function SetupView(props: {
                             type="button"
                             aria-label={`Bỏ ${c?.name ?? id} khỏi ${ARMY_NAME[a]}`}
                             onClick={() => (a === 0 ? setMain(main.filter((x) => x !== id)) : setSecond(second.filter((x) => x !== id)))}
-                            className="grid size-7 place-items-center rounded text-on-wood-soft hover:bg-black/30 hover:text-on-wood pointer-coarse:size-9"
+                            className="grid size-7 place-items-center rounded-lg text-on-wood-soft hover:bg-black/30 hover:text-on-wood pointer-coarse:size-9"
                           >
                             ×
                           </button>
@@ -926,13 +926,13 @@ function RunView(props: {
                 </h3>
                 <p className="mt-1 text-sm text-on-wood-soft">{KIND_TEXT[node.kind]}</p>
                 {chase && (
-                  <p className="mt-2 rounded bg-danger-surface p-2 text-caption text-on-wood">
+                  <p className="mt-2 rounded-lg bg-danger-surface p-2 text-caption text-on-wood">
                     Truy binh đuổi {noun} vì {nameOf(scenario?.chaseUnless ?? "")} chưa chiếm: rời {nameOf(scenario?.village ?? "")} là vào
                     trận hộ tống (giữ {chase.objective && "turns" in chase.objective ? chase.objective.turns : 6} lượt hoặc hạ hết). Thua thì {noun} bị bắt lại.
                   </p>
                 )}
                 {!chase && preview && run.refugees === army && (
-                  <p className="mt-2 rounded bg-danger-surface p-2 text-caption text-on-wood">Đạo này đang hộ tống {noun}: thua trận này thì {noun} bị bắt lại.</p>
+                  <p className="mt-2 rounded-lg bg-danger-surface p-2 text-caption text-on-wood">Đạo này đang hộ tống {noun}: thua trận này thì {noun} bị bắt lại.</p>
                 )}
                 {preview?.objective?.type === "hold" && (
                   <p className="mt-2 text-caption text-frame-gold">
@@ -950,10 +950,10 @@ function RunView(props: {
                   <div className="mt-2 space-y-1.5">
                     <p className="text-caption text-on-wood-soft">
                       AI {DIFFICULTY_NAME[preview.difficulty]}, cấp {preview.foes[0]?.level}
-                      {preview.pincer && <span className="ml-2 rounded bg-jade/20 px-1.5 py-0.5 text-jade">Giáp công: máu địch −{Math.round((1 - EXPEDITION_PINCER_HP) * 100)}%</span>}
+                      {preview.pincer && <span className="ml-2 rounded-lg bg-jade/20 px-1.5 py-0.5 text-jade">Giáp công: máu địch −{Math.round((1 - EXPEDITION_PINCER_HP) * 100)}%</span>}
                     </p>
                     {preview.foes.map((f, i) => (
-                      <div key={`${f.id}-${i}`} className="flex items-center gap-2 rounded bg-wood-inset p-1.5">
+                      <div key={`${f.id}-${i}`} className="flex items-center gap-2 rounded-lg bg-wood-inset p-1.5">
                         <Portrait id={f.id} element={f.element} profession={f.profession} className="size-8" level={f.level} />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1 text-sm">

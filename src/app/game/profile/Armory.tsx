@@ -122,7 +122,7 @@ export default function Armory({
               setMerging(!merging);
               setTray([]);
             }}
-            className={`barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-3 text-[15px] ${merging ? "is-on" : ""}`}
+            className={`barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-lg px-3 text-[15px] ${merging ? "is-on" : ""}`}
           >
             <GearActionIcon action="merge" className="size-6" />
             {merging ? "Thoát ghép" : "Ghép đồ"}
@@ -142,7 +142,7 @@ export default function Armory({
                   setSlotFilter("all");
                   setPage(0);
                 }}
-                className={`barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-3 text-[15px] ${!itemShelf && shelf === s.id ? "is-on" : ""}`}
+                className={`barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-lg px-3 text-[15px] ${!itemShelf && shelf === s.id ? "is-on" : ""}`}
               >
                 {s.name} <span className="text-sm opacity-75 tabular-nums">{n}</span>
               </button>
@@ -156,7 +156,7 @@ export default function Armory({
               setMerging(false);
               setTray([]);
             }}
-            className={`barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-3 text-[15px] ${itemShelf ? "is-on" : ""}`}
+            className={`barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-lg px-3 text-[15px] ${itemShelf ? "is-on" : ""}`}
           >
             Vật phẩm <span className="text-sm opacity-75 tabular-nums">{ITEMS.filter((g) => g.have(profile) > 0).length}</span>
           </button>
@@ -190,7 +190,7 @@ export default function Armory({
             {goods.length === 0 && (
               <div className="flex flex-wrap items-center justify-center gap-3 py-2 text-center text-[15px] text-[var(--on-wood-soft)]">
                 <p>Chưa có vật phẩm nào.</p>
-                <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-4">
+                <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-lg px-4">
                   <ShopGlyph className="size-4" /> Mua ở Cửa Hàng
                 </SceneLink>
               </div>
@@ -208,7 +208,7 @@ export default function Armory({
                   >
                     <ItemIcon id={g.id} className="size-full" />
                   </button>
-                  <span className="pointer-events-none absolute right-1 bottom-1 rounded bg-black/70 px-1 text-[11px] leading-tight font-bold text-frame-gold-hi tabular-nums" aria-hidden>
+                  <span className="pointer-events-none absolute right-1 bottom-1 rounded-lg bg-black/70 px-1 text-[11px] leading-tight font-bold text-frame-gold-hi tabular-nums" aria-hidden>
                     ×{n}
                   </span>
                 </li>
@@ -235,7 +235,7 @@ export default function Armory({
           {items.length === 0 && (
             <div className="flex flex-wrap items-center justify-center gap-3 py-2 text-center text-[15px] text-[var(--on-wood-soft)]">
               <p>{profile.bag.length === 0 ? "Kho đồ trống. Thắng trận chắc chắn rơi 1 món." : "Không có món nào thuộc loại này."}</p>
-              <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-4">
+              <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-lg px-4">
                 <ShopGlyph className="size-4" /> Mua ở Cửa Hàng
               </SceneLink>
             </div>
@@ -259,12 +259,12 @@ export default function Armory({
                       <GearIcon slot={it.slot} element={it.element} tier={it.tier} set={it.set} profession={it.profession} className="size-full" />
                     </button>
                     {!!it.enhance && (
-                      <span className="pointer-events-none absolute top-1 left-1 rounded bg-black/70 px-1 text-[11px] leading-tight font-bold text-frame-gold-hi tabular-nums" aria-hidden>
+                      <span className="pointer-events-none absolute top-1 left-1 rounded-lg bg-black/70 px-1 text-[11px] leading-tight font-bold text-frame-gold-hi tabular-nums" aria-hidden>
                         +{it.enhance}
                       </span>
                     )}
                     {by && (
-                      <span className="pointer-events-none absolute right-1 bottom-1 rounded bg-success-surface px-1 text-[11px] leading-tight font-bold text-success" aria-hidden>
+                      <span className="pointer-events-none absolute right-1 bottom-1 rounded-lg bg-success-surface px-1 text-[11px] leading-tight font-bold text-success" aria-hidden>
                         Mặc
                       </span>
                     )}
@@ -365,7 +365,7 @@ function ItemPanel({
         </div>
       </div>
 
-      <div className="barracks-inset flex flex-col gap-2 rounded-md p-2.5">
+      <div className="barracks-inset flex flex-col gap-2 rounded-lg p-2.5">
         <label className="flex flex-col gap-1 text-sm text-[var(--on-wood-soft)]">
           Mặc cho
           <Select value={to} onChange={(e) => onTarget(e.target.value)} className="text-[15px]">
@@ -381,12 +381,12 @@ function ItemPanel({
         </p>
         <div className="flex flex-wrap gap-2">
           {wearer !== to && (
-            <button type="button" disabled={busy} onClick={() => onAction({ type: "equip", character: to, item: item.id })} className="barracks-btn is-action min-h-10 pointer-coarse:min-h-11 rounded-md px-3 disabled:opacity-50">
+            <button type="button" disabled={busy} onClick={() => onAction({ type: "equip", character: to, item: item.id })} className="barracks-btn is-action min-h-10 pointer-coarse:min-h-11 rounded-lg px-3 disabled:opacity-50">
               {wearer ? `Chuyển sang ${nameOf(to)}` : `Mặc cho ${nameOf(to)}`}
             </button>
           )}
           {wearer && (
-            <button type="button" disabled={busy} onClick={() => onAction({ type: "unequip", character: wearer, item: item.id })} className="barracks-btn min-h-10 pointer-coarse:min-h-11 rounded-md px-3 disabled:opacity-50">
+            <button type="button" disabled={busy} onClick={() => onAction({ type: "unequip", character: wearer, item: item.id })} className="barracks-btn min-h-10 pointer-coarse:min-h-11 rounded-lg px-3 disabled:opacity-50">
               Tháo khỏi {nameOf(wearer)}
             </button>
           )}
@@ -395,7 +395,7 @@ function ItemPanel({
 
       <EnhanceBox profile={profile} item={item} element={element} who={nameOf(to)} busy={busy} onAction={onAction} />
 
-      <button type="button" disabled={busy} onClick={() => onAction({ type: "sell", item: item.id }, onSold)} className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 self-start rounded-md px-3 disabled:opacity-50">
+      <button type="button" disabled={busy} onClick={() => onAction({ type: "sell", item: item.id }, onSold)} className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 self-start rounded-lg px-3 disabled:opacity-50">
         <GearActionIcon action="sell" className="size-6" />
         Bán lấy {SELL_GOLD[item.tier]} vàng{wearer ? " (tháo ra trước)" : ""}
       </button>
@@ -461,17 +461,17 @@ function GoodPanel({
         </div>
       )}
       {g.id === "stone" && have > 0 && (
-        <button type="button" onClick={onEnhance} className="barracks-btn is-action flex min-h-11 items-center justify-center gap-1.5 rounded-md px-4">
+        <button type="button" onClick={onEnhance} className="barracks-btn is-action flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-4">
           Chọn trang bị để cường hóa
         </button>
       )}
       {g.id === "food" && (
-        <SceneLink scene="CAMPAIGN" className="barracks-btn is-action flex min-h-11 items-center justify-center gap-1.5 rounded-md px-4">
+        <SceneLink scene="CAMPAIGN" className="barracks-btn is-action flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-4">
           Sang Bình Loạn
         </SceneLink>
       )}
       <p className="text-sm"><b>Dùng ở:</b> {g.use}</p>
-      <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 self-start rounded-md px-4">
+      <SceneLink scene="SHOP" className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 self-start rounded-lg px-4">
         <ShopGlyph className="size-4" /> Mua thêm ở Cửa Hàng, {g.price} vàng/{g.unit}
       </SceneLink>
     </div>
@@ -500,7 +500,7 @@ function EnhanceBox({
   const next = cost ? itemStat({ ...item, enhance: level + 1 }, element) : now;
   const short = cost ? (profile.stones < cost.stones ? "Thiếu Đá Cường Hóa" : profile.gold < cost.gold ? "Thiếu vàng" : null) : null;
   return (
-    <div className="barracks-inset flex flex-col gap-2 rounded-md p-2.5" aria-label="Cường hóa">
+    <div className="barracks-inset flex flex-col gap-2 rounded-lg p-2.5" aria-label="Cường hóa">
       <div className="flex items-center justify-between gap-2">
         <span className="font-serif font-bold text-title-on-wood">Cường hóa +{level}/{ENHANCE_MAX}</span>
         <span className="text-sm text-[var(--on-wood-soft)] tabular-nums">Có {profile.stones} Đá Cường Hóa</span>
@@ -519,7 +519,7 @@ function EnhanceBox({
             type="button"
             disabled={busy || short !== null}
             onClick={() => onAction({ type: "enhance", item: item.id })}
-            className="barracks-btn is-action min-h-10 pointer-coarse:min-h-11 self-start rounded-md px-3 disabled:opacity-50"
+            className="barracks-btn is-action min-h-10 pointer-coarse:min-h-11 self-start rounded-lg px-3 disabled:opacity-50"
           >
             Cường hóa lên +{level + 1}, {cost.stones} đá, {cost.gold} vàng
           </button>
@@ -574,7 +574,7 @@ function MergePanel({
         })}
       </ul>
       {items[0] && <p className={`text-sm ${TIER_CLASS[items[0].tier]}`}>{gearText(items[0])}</p>}
-      <button type="button" disabled={busy || !ready || (cost !== null && profile.gold < cost)} onClick={onMerge} className="barracks-btn is-action flex min-h-11 items-center justify-center gap-1.5 rounded-md px-4 disabled:opacity-50">
+      <button type="button" disabled={busy || !ready || (cost !== null && profile.gold < cost)} onClick={onMerge} className="barracks-btn is-action flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-4 disabled:opacity-50">
         <GearActionIcon action="merge" className="size-6" />
         Ghép{cost !== null ? ` (−${cost} vàng)` : ""}
       </button>

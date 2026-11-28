@@ -158,7 +158,7 @@ export function AvatarPicker({ current }: { current: string | null }) {
                       >
                         {/* Chân dung nhỏ trong game, không cần tối ưu qua next/image. */}
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={url} alt="" loading="lazy" className="aspect-square w-full rounded-md object-cover" />
+                        <img src={url} alt="" loading="lazy" className="aspect-square w-full rounded-lg object-cover" />
                         <span className="w-full truncate text-caption font-semibold">{nameOf(id)}</span>
                       </button>
                     </li>

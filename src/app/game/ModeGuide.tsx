@@ -40,7 +40,7 @@ function GuideItemIcon({ icon }: { icon: GuideIcon }) {
 function GuideItemRow({ item, ...rest }: { item: GuideItems["list"][number] } & Record<`data-${string}`, unknown>) {
   // `rest`: dấu đo của FitPages (data-fit-unit) phải nằm trên chính thẻ li.
   return (
-    <li {...rest} className="flex items-start gap-3 rounded-md border border-frame-bronze/40 bg-black/15 p-2">
+    <li {...rest} className="flex items-start gap-3 rounded-lg border border-frame-bronze/40 bg-black/15 p-2">
       <GuideItemIcon icon={item.icon} />
       <div className="min-w-0 flex-1">
         <p className="font-bold text-title-on-wood">{item.name}</p>

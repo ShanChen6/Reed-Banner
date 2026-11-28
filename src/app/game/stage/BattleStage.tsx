@@ -1281,7 +1281,13 @@ export default function BattleStage({
       for (const s of latest.current)
         map.get(s.key)?.setDown(!isAlive(s.fighter));
 
+      // Pixi chỉ đo lại khi cửa sổ đổi cỡ; sân đổi bề ngang mà cửa sổ giữ nguyên (phóng to màn chơi kiểu phủ trang, khung
+      // co theo chiều cao màn) thì nhân vật lệch khỏi vòng tròn lượt vẽ bằng CSS. Theo dõi chính hộp sân để luôn khớp.
+      const watch = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(() => app.queueResize());
+      watch?.observe(el);
+
       destroy = () => {
+        watch?.disconnect();
         document.removeEventListener("visibilitychange", onVisibility);
         map.clear();
         app.destroy(true, { children: true });
@@ -1375,7 +1381,7 @@ export default function BattleStage({
     <div
       ref={host}
       aria-hidden
-      className="relative h-32 w-full overflow-hidden rounded-xl border border-[var(--primary)]/40 bg-gradient-to-b from-transparent via-black/5 to-black/25 sm:h-40 md:h-44 [@media(max-height:720px)]:md:h-32"
+      className="relative h-32 w-full overflow-hidden rounded-lg border border-[var(--primary)]/40 bg-gradient-to-b from-transparent via-black/5 to-black/25 sm:h-40 md:h-44 [@media(max-height:720px)]:md:h-32 [@media(max-height:860px)]:xl:h-32"
     >
       <div ref={camera} className="absolute inset-0">
         {/* Mặt đất: dải mờ dưới chân hai đội. */}

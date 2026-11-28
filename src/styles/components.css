@@ -90,7 +90,7 @@
       gap: 0.5rem;
       min-height: 2.25rem;
       padding: 0.35rem 0.7rem;
-      border-radius: 0.375rem;
+      border-radius: 0.5rem;
       background: transparent;
       color: var(--on-wood);
       font-size: inherit;
@@ -259,7 +259,7 @@
   /* Nhãn luật (Cấm / Bắt buộc / Giới hạn): chữ, không emoji. */
   .ui-rule-tag {
     border: 1px solid currentColor;
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
     padding: 0 0.4rem;
     font-size: 0.75rem;
     font-weight: 600;
@@ -498,7 +498,7 @@
     padding: 0;
     border: 1px solid var(--frame-gold);
     border-bottom: 0;
-    border-radius: 1rem 1rem 0 0;
+    border-radius: 0.75rem 0.75rem 0 0;
     background: linear-gradient(180deg, var(--wood), var(--wood-panel) 30%, var(--wood-lo));
     color: var(--on-wood);
     overflow: hidden;

@@ -192,7 +192,7 @@ export default function GearPanel({
   return (
     <section
       aria-label="Trang bị"
-      className="ui-frame-inset rounded-xl p-3 text-caption text-on-wood"
+      className="ui-frame-inset rounded-lg p-3 text-caption text-on-wood"
     >
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-semibold">
@@ -245,7 +245,7 @@ export default function GearPanel({
                   ? `${gearText(item)}, bấm để tháo`
                   : `${SLOT_NAME[slot]}: trống`
               }
-              className="rounded disabled:cursor-default"
+              className="rounded-lg disabled:cursor-default"
             >
               {item ? (
                 <GearIcon
@@ -296,7 +296,7 @@ export default function GearPanel({
                   aria-pressed={on}
                   onClick={() => toggle(it.id)}
                   title={`${gearText(it)}${worn ? `, ${nameOf(worn)} đang mặc` : ""}`}
-                  className={`rounded ${on ? "ring-2 ring-frame-gold" : ""}`}
+                  className={`rounded-lg ${on ? "ring-2 ring-frame-gold" : ""}`}
                 >
                   <GearIcon
                     slot={it.slot}
@@ -319,7 +319,7 @@ export default function GearPanel({
       )}
 
       {items.length > 0 && (
-        <div className="mt-2 flex flex-wrap items-center gap-1.5 rounded border border-frame-line-soft bg-black/10 p-1.5">
+        <div className="mt-2 flex flex-wrap items-center gap-1.5 rounded-lg border border-frame-line-soft bg-black/10 p-1.5">
           {one ? (
             <>
               <span className="min-w-0 flex-1">

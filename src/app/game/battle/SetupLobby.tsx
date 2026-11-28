@@ -143,7 +143,7 @@ export default function SetupLobby({
   return (
     <div className="relative mx-auto flex w-full flex-col gap-4 text-on-wood">
       {/* Banner: tranh sân khấu theo hệ đang chọn, đổi hệ là đổi nền (Shan 18/11/2026). */}
-      <header className="relative isolate overflow-hidden rounded-xl border border-frame-line">
+      <header className="relative isolate overflow-hidden rounded-lg border border-frame-line">
         {stage && (
           <>
             {/* Tranh nền trang trí, không cần tối ưu qua next/image. */}
@@ -177,7 +177,7 @@ export default function SetupLobby({
       </header>
 
       {/* Thế trận: hai phe hai bên, huy hiệu VS ở giữa. */}
-      <section aria-label="Thế trận" className="ui-frame-inset grid items-center gap-3 rounded-xl p-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:p-4">
+      <section aria-label="Thế trận" className="ui-frame-inset grid items-center gap-3 rounded-lg p-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:p-4">
         <TeamRow fighters={teams[0]} label="Phe bạn" align="start" foes={teams[1]} />
         <span aria-hidden className="mx-auto grid size-14 place-items-center rounded-full border-2 border-frame-gold bg-lacquer font-serif text-xl font-bold text-paper-hi shadow-lg">VS</span>
         <TeamRow fighters={teams[1]} label="Đối thủ" align="end" />
@@ -185,7 +185,7 @@ export default function SetupLobby({
 
       <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="flex min-w-0 flex-col gap-4">
-          <section aria-labelledby="lobby-leader" className="ui-frame-inset flex flex-col gap-4 rounded-xl p-3 sm:p-4">
+          <section aria-labelledby="lobby-leader" className="ui-frame-inset flex flex-col gap-4 rounded-lg p-3 sm:p-4">
             <h3 id="lobby-leader" className="ui-title-on-wood font-serif text-lg font-bold">Chủ tướng</h3>
             <Row title="Nguyên tố">
               <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Nguyên tố chủ tướng">
@@ -229,7 +229,7 @@ export default function SetupLobby({
           </section>
 
           {practice && !online && (
-            <section aria-labelledby="lobby-gear" className="ui-frame-inset flex flex-col gap-3 rounded-xl p-3 sm:p-4">
+            <section aria-labelledby="lobby-gear" className="ui-frame-inset flex flex-col gap-3 rounded-lg p-3 sm:p-4">
               <h3 id="lobby-gear" className="ui-title-on-wood font-serif text-lg font-bold">Trang bị mẫu</h3>
               <Row title="Phẩm">
                 <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Phẩm trang bị">
@@ -279,7 +279,7 @@ export default function SetupLobby({
         </div>
 
         {/* Thẻ ra trận: dính bên phải trên máy tính để nút Vào trận luôn trong tầm mắt. */}
-        <aside aria-label="Ra trận" className="ui-frame-inset order-first flex flex-col gap-3 rounded-xl p-3 sm:p-4 lg:sticky lg:top-20 lg:order-none">
+        <aside aria-label="Ra trận" className="ui-frame-inset order-first flex flex-col gap-3 rounded-lg p-3 sm:p-4 lg:sticky lg:top-20 lg:order-none">
           {leader && (
             <div className="flex items-center gap-3">
               <Portrait id={leader.id} element={leader.element} profession={leader.profession} level={leader.level} className="size-16 shrink-0" />

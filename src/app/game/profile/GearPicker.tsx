@@ -83,7 +83,7 @@ export default function GearPicker({
               {slot === "vuKhi" ? `Chỉ vũ khí nghề ${PROFESSION_NAME[fighter.profession]}.` : "Mọi tướng quân mặc được."} Mỗi món chỉ một người dùng.
             </p>
           </div>
-          <button type="button" onClick={onClose} aria-label="Đóng bảng chọn đồ" className="barracks-btn flex size-11 shrink-0 items-center justify-center rounded-md">
+          <button type="button" onClick={onClose} aria-label="Đóng bảng chọn đồ" className="barracks-btn flex size-11 shrink-0 items-center justify-center rounded-lg">
             <XGlyph className="size-5" />
           </button>
         </header>
@@ -93,10 +93,10 @@ export default function GearPicker({
             Đang mặc: {current ? <span className={TIER_CLASS[current.tier]}>{gearText(current)}</span> : "trống"}
           </p>
           {usable.length === 0 ? (
-            <div className="barracks-inset flex flex-col items-center gap-2 rounded-md p-4 text-center text-[15px]">
+            <div className="barracks-inset flex flex-col items-center gap-2 rounded-lg p-4 text-center text-[15px]">
               <p>Kho chưa có món {SLOT_NAME[slot].toLowerCase()} dùng được cho {name}.</p>
               {otherProfession > 0 && <p className="text-sm text-[var(--on-wood-soft)]">{otherProfession} vũ khí của nghề khác không dùng được.</p>}
-              <SceneLink scene="SHOP" className="barracks-btn is-action min-h-10 pointer-coarse:min-h-11 rounded-md px-4 leading-10">
+              <SceneLink scene="SHOP" className="barracks-btn is-action min-h-10 pointer-coarse:min-h-11 rounded-lg px-4 leading-10">
                 Mua ở Cửa Hàng
               </SceneLink>
             </div>
@@ -114,7 +114,7 @@ export default function GearPicker({
                         setPick(it.id);
                         setConfirm(false);
                       }}
-                      className={`gear-row flex w-full items-center gap-3 rounded-md px-2 py-1.5 text-left ${on ? "is-selected" : ""}`}
+                      className={`gear-row flex w-full items-center gap-3 rounded-lg px-2 py-1.5 text-left ${on ? "is-selected" : ""}`}
                     >
                       <GearIcon slot={it.slot} element={it.element} tier={it.tier} set={it.set} profession={it.profession} className="size-11 shrink-0" />
                       <span className="min-w-0 flex-1">
@@ -146,20 +146,20 @@ export default function GearPicker({
             )}
             <div className="mt-2 flex flex-wrap gap-2">
               {wearer === id ? (
-                <button type="button" disabled={busy} onClick={() => run({ type: "unequip", character: id, item: chosen.id })} className="barracks-btn min-h-11 rounded-md px-4 disabled:opacity-50">
+                <button type="button" disabled={busy} onClick={() => run({ type: "unequip", character: id, item: chosen.id })} className="barracks-btn min-h-11 rounded-lg px-4 disabled:opacity-50">
                   Tháo khỏi {name}
                 </button>
               ) : wearer && !confirm ? (
-                <button type="button" disabled={busy} onClick={() => setConfirm(true)} className="barracks-btn is-action min-h-11 rounded-md px-4 disabled:opacity-50">
+                <button type="button" disabled={busy} onClick={() => setConfirm(true)} className="barracks-btn is-action min-h-11 rounded-lg px-4 disabled:opacity-50">
                   Chuyển sang {name}
                 </button>
               ) : (
-                <button type="button" disabled={busy} onClick={() => run({ type: "equip", character: id, item: chosen.id })} className="barracks-btn is-action min-h-11 rounded-md px-4 disabled:opacity-50">
+                <button type="button" disabled={busy} onClick={() => run({ type: "equip", character: id, item: chosen.id })} className="barracks-btn is-action min-h-11 rounded-lg px-4 disabled:opacity-50">
                   {wearer ? `Xác nhận chuyển từ ${nameOf(wearer)}` : current ? "Thay món này" : "Trang bị"}
                 </button>
               )}
               {current && wearer !== id && (
-                <button type="button" disabled={busy} onClick={() => run({ type: "unequip", character: id, item: current.id })} className="barracks-btn min-h-11 rounded-md px-4 disabled:opacity-50">
+                <button type="button" disabled={busy} onClick={() => run({ type: "unequip", character: id, item: current.id })} className="barracks-btn min-h-11 rounded-lg px-4 disabled:opacity-50">
                   Tháo món đang mặc
                 </button>
               )}

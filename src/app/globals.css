@@ -1162,7 +1162,7 @@
 .barracks .barracks-field {
   background: var(--wood-inset);
   border: 1px solid var(--frame-line-soft);
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
 }
 .barracks .barracks-field:focus-within {
   border-color: var(--frame-gold-hi);
@@ -1611,7 +1611,7 @@ html {
   position: relative;
   min-height: 100%;
   border: 1px solid var(--frame-gold);
-  border-radius: 1rem;
+  border-radius: 0.75rem;
   background:
     radial-gradient(ellipse at 50% 35%, color-mix(in srgb, var(--frame-gold) 9%, transparent) 0%, transparent 65%),
     linear-gradient(180deg, var(--wood) 0%, var(--wood-lo) 100%);
@@ -1736,6 +1736,51 @@ html {
     margin-top: 0;
     /* Màn thấp: cột thẻ tướng cao hơn màn làm hộp cao theo, nên chặn thêm theo chiều cao màn (trừ sân đấu, đồng hồ, lề). */
     width: min(100cqw, calc((100cqh - 16px) * var(--board-ratio) + 16px), calc((100dvh - 21rem) * var(--board-ratio)));
+    max-width: none;
+  }
+}
+/* Trận ở trang thường trên máy tính (từ 1280px): khung trận cao bằng cửa sổ như các màn chế độ (Shan 28/11/2026: Giao
+   tranh trong Bình Loạn còn phải cuộn). Hàng ba cột lấp phần dưới sân đấu, bàn cờ lớn nhất vừa ô chứa (container query)
+   như khi phóng to; sân đấu thôi dính vì trang không cuộn nữa; nút phóng to nằm ở góc dưới cột phải, không chừa dải riêng. */
+@media (width >= 80rem) {
+  .battle-live.ui-mode-fit .battle-shell {
+    height: var(--mode-fit-h);
+  }
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    min-height: 0;
+    padding-bottom: 0;
+  }
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) > .play-card-body {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) .play-card-sticky {
+    position: static;
+  }
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) .battle-fill {
+    flex: 1 1 0;
+    min-height: 0;
+    align-items: stretch;
+  }
+  /* Đội ba người trên laptop thấp: cột thẻ tướng dài hơn khung thì cuộn riêng trong cột, bàn cờ không bị đẩy. */
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) .battle-side {
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    padding: 2px 2px 0.75rem;
+  }
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) .battle-board-box {
+    flex: 1 1 0;
+    min-height: 0;
+    container-type: size;
+    margin-top: 0.75rem;
+  }
+  .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) .battle-board {
+    margin-top: 0;
+    width: min(100cqw, calc((100cqh - 16px) * var(--board-ratio) + 16px));
     max-width: none;
   }
 }

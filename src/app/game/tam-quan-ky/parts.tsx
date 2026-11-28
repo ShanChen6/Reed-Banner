@@ -305,7 +305,7 @@ export function Board({ map, position, flipped, selected, targets, lastMove, onS
         aria-describedby="tqk-cursor"
         onKeyDown={onKeyDown}
         onBlur={() => setCursor(null)}
-        className="rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-frame-gold"
+        className="rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-frame-gold"
       >
         <span id="tqk-cursor" className="sr-only" aria-live="polite">{cursorText}</span>
         <svg

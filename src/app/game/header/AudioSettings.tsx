@@ -12,7 +12,7 @@ export default function AudioSettings() {
   const audio = useAudio();
   const on = !audio.muted;
   return (
-    <div role="group" aria-label="Âm thanh" className="mx-1 mt-1 mb-1.5 rounded-md border border-[var(--frame-bronze)]/40 bg-wood-inset/70 p-3">
+    <div role="group" aria-label="Âm thanh" className="mx-1 mt-1 mb-1.5 rounded-lg border border-[var(--frame-bronze)]/40 bg-wood-inset/70 p-3">
       <label className="mb-3 flex cursor-pointer items-center justify-between gap-3 text-sm text-[var(--on-wood)]">
         Âm thanh
         <button

@@ -79,7 +79,7 @@ export function DestinyResult({ floor, outcome, state }: {
                 <Portrait id={f.id} element={f.element} profession={f.profession}
                   className={cn("size-11 shrink-0", down && "opacity-50 grayscale")} />
                 <span className="w-full truncate text-caption font-semibold">{f.name}</span>
-                <span className="h-1.5 w-full overflow-hidden rounded bg-black/40" role="img"
+                <span className="h-1.5 w-full overflow-hidden rounded-lg bg-black/40" role="img"
                   aria-label={down ? `${f.name} đã gục` : `${f.name} còn ${Math.round(ratio * 100)}% máu`}>
                   <span className={cn("block h-full", ratio < 0.3 ? "bg-danger" : "bg-jade")} style={{ width: `${ratio * 100}%` }} />
                 </span>

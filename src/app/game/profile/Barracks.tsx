@@ -137,7 +137,7 @@ export default function Barracks({
                   aria-selected={tab === t.id}
                   aria-controls="barracks-panel"
                   onClick={() => setTab(t.id)}
-                  className={`barracks-tab min-h-11 rounded-md px-2 font-serif text-base font-bold sm:text-[17px] ${tab === t.id ? "is-on" : ""}`}
+                  className={`barracks-tab min-h-11 rounded-lg px-2 font-serif text-base font-bold sm:text-[17px] ${tab === t.id ? "is-on" : ""}`}
                 >
                   {t.name}
                 </button>
@@ -149,7 +149,7 @@ export default function Barracks({
                   scene="LOGIN"
                   params={{ returnTo: "/game/profile" }}
                   aria-label="Trình danh để giữ Doanh Trại"
-                  className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center rounded-md px-2 text-sm sm:px-3"
+                  className="barracks-btn flex min-h-10 pointer-coarse:min-h-11 items-center rounded-lg px-2 text-sm sm:px-3"
                 >
                   Trình danh
                   <span className="hidden sm:inline">
@@ -161,13 +161,13 @@ export default function Barracks({
               <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
                 <SceneLink
                   scene="COMBOS"
-                  className="barracks-btn flex min-h-11 items-center gap-1 rounded-md px-2 font-serif text-[15px] font-semibold sm:gap-2 sm:px-3"
+                  className="barracks-btn flex min-h-11 items-center gap-1 rounded-lg px-2 font-serif text-[15px] font-semibold sm:gap-2 sm:px-3"
                 >
                   Hợp Kích
                 </SceneLink>
                 <SceneLink
                   scene="SHOP"
-                  className="barracks-btn flex min-h-11 items-center gap-1 rounded-md px-2 font-serif text-[15px] font-semibold sm:gap-2 sm:px-3"
+                  className="barracks-btn flex min-h-11 items-center gap-1 rounded-lg px-2 font-serif text-[15px] font-semibold sm:gap-2 sm:px-3"
                 >
                   <ShopGlyph className="size-5" /> Cửa Hàng
                 </SceneLink>
@@ -187,7 +187,7 @@ export default function Barracks({
           {message && (
             <p
               role="alert"
-              className="rounded-md border border-danger/40 bg-danger-surface/60 px-3 py-2 text-[15px] text-danger"
+              className="rounded-lg border border-danger/40 bg-danger-surface/60 px-3 py-2 text-[15px] text-danger"
             >
               {message}
             </p>

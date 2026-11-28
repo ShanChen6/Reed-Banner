@@ -206,7 +206,7 @@ function DisabledTowerMode({ name }: { name: string }) {
       <section role="status" className="max-w-md rounded-xl border border-frame-bronze/40 bg-wood-panel p-6 text-center">
         <h1 className="font-serif text-2xl font-bold text-title-on-wood">{name}</h1>
         <p className="mt-2 text-foreground-secondary">Chế độ này chưa mở. Tiến trình và trận đang dở được giữ nguyên cho đến khi mở lại.</p>
-        <SceneLink scene="MENU" className="mt-4 inline-block rounded bg-primary px-4 py-2 font-semibold text-primary-foreground">Về màn chính</SceneLink>
+        <SceneLink scene="MENU" className="mt-4 inline-block rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground">Về màn chính</SceneLink>
       </section>
     </main>
   );

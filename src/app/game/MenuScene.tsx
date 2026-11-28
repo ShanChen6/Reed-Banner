@@ -69,7 +69,7 @@ const MODES: readonly Mode[] = [
   { scene: "TAM_QUAN_KY", group: "puzzle", title: "Tam Quân Kỳ", text: MODE_TEXT.TAM_QUAN_KY, art: "tam-quan-ky", kicker: "Đánh cờ", status: "Thắng sứ quân có vàng, đấu người bằng mã phòng", cta: "Bày cờ" },
   { scene: "VAY_THANH_KY", group: "puzzle", title: "Vây Thành Kỳ", text: MODE_TEXT.VAY_THANH_KY, art: "vay-thanh-ky", kicker: "Đánh cờ", status: "Đấu sứ quân hoặc đấu người bằng mã phòng", cta: "Vây thành" },
   { scene: "DIEN_TRANG_KY", group: "puzzle", title: "Điền Trang Ký", text: MODE_TEXT.DIEN_TRANG_KY, kicker: "Đánh cờ", status: "Đấu sứ quân có thưởng, cùng máy hoặc phòng mã", cta: "Gieo xúc xắc" },
-  { scene: "TRADE", group: "puzzle", title: "Hành Thương Ký", text: MODE_TEXT.TRADE, kicker: "Buôn bán", status: "Mùa một tuần, giá đổi mỗi hai giờ", cta: "Lên đường", lockedText: "Sắp khai mở" },
+  { scene: "TRADE", group: "puzzle", title: "Hành Thương Ký", text: MODE_TEXT.TRADE, art: "trade", kicker: "Buôn bán", status: "Mùa một tuần, giá đổi mỗi hai giờ", cta: "Lên đường", lockedText: "Sắp khai mở" },
   { scene: "EXPEDITION", group: "battle", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, art: "vien-chinh", kicker: "Hành quân", status: "Bày mưu tính kế trên sa bàn", cta: "Hành quân", lockedText: "Sắp khai mở" },
 ];
 
@@ -300,7 +300,7 @@ function ModeCard({ mode, locked, needsLogin }: { mode: Mode; locked: boolean; n
         />
         <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-wood-lo via-wood-lo/25 to-transparent" />
         {mode.kicker && (
-          <span className={`home-kicker absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase ${compact}`}>
+          <span className={`home-kicker absolute top-3 left-3 rounded-lg px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase ${compact}`}>
             {mode.kicker}
           </span>
         )}
@@ -363,7 +363,7 @@ function UpcomingCard({ mode }: { mode: (typeof UPCOMING)[number] }) {
           <Image src="/art/campaign/rail-ink.webp" alt="" fill sizes="(min-width: 1024px) 460px, 100vw" className="object-cover object-bottom opacity-60 sepia-[.4]" />
         )}
         <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-wood-lo via-wood-lo/20 to-transparent" />
-        <span className="home-kicker absolute top-3 left-3 rounded px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase">
+        <span className="home-kicker absolute top-3 left-3 rounded-lg px-2 py-0.5 text-[11px] font-semibold tracking-[0.18em] uppercase">
           {mode.scene ? "Đã mở" : "Sắp ra mắt"}
         </span>
         <h3 className="absolute right-4 bottom-2.5 left-4 font-serif text-xl font-bold text-[var(--title-on-wood)] [text-shadow:0_2px_4px_var(--black)] sm:text-2xl">

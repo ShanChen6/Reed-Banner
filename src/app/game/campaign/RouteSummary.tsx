@@ -14,6 +14,7 @@ import {
   type CampaignProgressV2,
   type CampaignRoute,
 } from "@/core";
+import { ArrowRightIcon } from "@/components/ui";
 import { AtlasCorners } from "./AtlasFrame";
 import { FACTION_STATUS_TEXT } from "./StoryBeats";
 
@@ -73,7 +74,7 @@ function RouteColumn({
               type="button"
               disabled={r.state === "locked"}
               onClick={() => onPick(r.mission)}
-              className={`atlas-mission flex min-h-11 w-full flex-col items-start justify-center rounded-md border px-2 py-1 text-left disabled:cursor-not-allowed ${FOCUS}`}
+              className={`atlas-mission flex min-h-11 w-full flex-col items-start justify-center rounded-lg border px-2 py-1 text-left disabled:cursor-not-allowed ${FOCUS}`}
             >
               <span className="font-semibold">
                 {r.state === "completed" ? "✓ " : ""}
@@ -149,14 +150,14 @@ export default function RouteSummary({
       </div>
       {/* Điểm hội: hai tuyến cùng dẫn tới Đỗ Động. */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-sm">
-        <span aria-hidden className="atlas-muted">
-          Tây + Đông →
+        <span aria-hidden className="atlas-muted inline-flex items-center gap-1">
+          Tây + Đông <ArrowRightIcon />
         </span>
         <button
           type="button"
           disabled={!gate.ready}
           onClick={() => onPick(finale.id)}
-          className={`atlas-mission flex min-h-11 items-center gap-2 rounded-md border px-3 py-1 font-semibold disabled:cursor-not-allowed ${FOCUS}`}
+          className={`atlas-mission flex min-h-11 items-center gap-2 rounded-lg border px-3 py-1 font-semibold disabled:cursor-not-allowed ${FOCUS}`}
         >
           {finaleDone ? "✓ " : ""}
           {finale.title}

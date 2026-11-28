@@ -16,7 +16,7 @@ import type { Scene } from "./scene";
 export const FOOTER_SCENES: ReadonlySet<Scene> = new Set<Scene>(["MENU", "QUESTS", "TIERS", "COMBOS", "LEADERBOARD", "SHOP", "ACCOUNT"]);
 
 const LINK =
-  "inline-flex min-h-11 items-center rounded px-1 hover:text-title-on-wood focus-visible:outline-2 focus-visible:outline-frame-gold-hi";
+  "inline-flex min-h-11 items-center rounded-lg px-1 hover:text-title-on-wood focus-visible:outline-2 focus-visible:outline-frame-gold-hi";
 
 function item(l: FooterLink) {
   // Đang khóa hoặc chưa có địa chỉ: nút không làm gì (không chuyển trang, không thông báo).
@@ -62,7 +62,7 @@ export default function GameFooter({ compact = false }: { compact?: boolean }) {
       <div className={`mx-auto grid w-full gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,40rem)] lg:items-start lg:gap-12 ${MODE_CONTENT_WIDTH}`}>
         <div className="order-2 flex flex-col gap-4 lg:order-1 lg:pt-6">
           {/* Bấm logo hoặc tên về trang chủ (/). */}
-          <Link href="/" title="Về trang chủ" className="flex w-fit items-center gap-4 rounded hover:[&_p:first-child]:text-title-on-wood focus-visible:outline-2 focus-visible:outline-frame-gold-hi">
+          <Link href="/" title="Về trang chủ" className="flex w-fit items-center gap-4 rounded-lg hover:[&_p:first-child]:text-title-on-wood focus-visible:outline-2 focus-visible:outline-frame-gold-hi">
             <LogoMark className="size-14" />
             <div>
               <p className="font-serif text-2xl font-bold text-on-wood">Cờ Lau</p>

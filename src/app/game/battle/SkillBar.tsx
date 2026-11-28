@@ -88,10 +88,10 @@ export function SkillBar({
           >
             {/* Điện thoại: biểu tượng nhỏ bên trái, tên bên phải để hai hàng kỹ năng vừa màn cùng bàn cờ. */}
             <SkillIcon def={def} className={stacked ? "size-10" : "size-8 shrink-0 sm:size-10 landscape-short:size-6"} />
-            <span className="absolute left-1 top-1 rounded-br bg-black/60 px-1 text-[11px] font-bold text-white">
+            <span className="absolute left-1 top-1 rounded-br-lg bg-black/60 px-1 text-[11px] font-bold text-white">
               {i + 1}
             </span>
-            <span className="absolute right-1 top-1 rounded-bl bg-stat-energy/90 px-1 text-[11px] tabular-nums text-white">
+            <span className="absolute right-1 top-1 rounded-bl-lg bg-stat-energy/90 px-1 text-[11px] tabular-nums text-white">
               {comboSkillCost(actor,def)}
             </span>
             <span className={stacked ? "text-center" : "line-clamp-2 min-w-0 pr-5 sm:pr-0 sm:text-center landscape-short:w-full landscape-short:truncate landscape-short:pr-0"}>{def.name}</span>
@@ -114,7 +114,7 @@ export function SkillBar({
                   },
             );
           }}
-          className={`col-span-3 flex items-center justify-center gap-1 rounded px-2 py-2 text-caption ${stacked ? "" : "sm:col-auto"} ${whirlAim && !whirlAim.skill ? "bg-stat-hp text-white" : "bg-info text-white"}`}
+          className={`col-span-3 flex items-center justify-center gap-1 rounded-lg px-2 py-2 text-caption ${stacked ? "" : "sm:col-auto"} ${whirlAim && !whirlAim.skill ? "bg-stat-hp text-white" : "bg-info text-white"}`}
         >
           <ElementIcon element="phong" className="size-3.5" /> Xoay
           miễn phí

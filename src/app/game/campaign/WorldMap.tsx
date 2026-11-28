@@ -611,7 +611,7 @@ export default function WorldMap({
             <span key={st} className="flex items-center gap-1">
               <span
                 aria-hidden
-                className="inline-block h-3 w-2.5 rounded-sm"
+                className="inline-block h-3 w-2.5 rounded-lg"
                 style={{ background: STATE_COLOR[st] }}
               />
               {STATE_TEXT[st]}

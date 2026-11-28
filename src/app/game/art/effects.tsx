@@ -30,7 +30,7 @@ export function EffectBadge({
   const src = effectArt(kind);
   if (!src)
     return (
-      <span title={label} className="rounded bg-wood-inset px-1 py-0.5 text-caption">
+      <span title={label} className="rounded-lg bg-wood-inset px-1 py-0.5 text-caption">
         {name}
         {count === null ? "" : ` ${count}`}
       </span>

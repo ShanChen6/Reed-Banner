@@ -127,7 +127,7 @@ export default function HeroDetail({
   return (
     <div className="flex flex-col">
       {onBack && (
-        <button type="button" onClick={onBack} className="barracks-btn mb-2 flex min-h-11 items-center gap-2 self-start rounded-md px-3 text-[15px] lg:hidden">
+        <button type="button" onClick={onBack} className="barracks-btn mb-2 flex min-h-11 items-center gap-2 self-start rounded-lg px-3 text-[15px] lg:hidden">
           <BackGlyph className="size-5" /> Danh sách tướng quân
         </button>
       )}
@@ -206,7 +206,7 @@ export default function HeroDetail({
             aria-selected={sub === t.id}
             aria-controls="hero-sub-panel"
             onClick={() => setSub(t.id)}
-            className={`barracks-tab min-h-10 pointer-coarse:min-h-11 rounded-md px-2 font-serif text-[15px] font-semibold sm:text-base ${sub === t.id ? "is-on" : ""}`}
+            className={`barracks-tab min-h-10 pointer-coarse:min-h-11 rounded-lg px-2 font-serif text-[15px] font-semibold sm:text-base ${sub === t.id ? "is-on" : ""}`}
           >
             {t.name}
           </button>
@@ -248,7 +248,7 @@ function TeamControl({
     );
   if (open !== id)
     return (
-      <button type="button" disabled={busy} onClick={() => setOpen(id)} className="barracks-btn is-action flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-3 text-[15px] disabled:opacity-50">
+      <button type="button" disabled={busy} onClick={() => setOpen(id)} className="barracks-btn is-action flex min-h-10 pointer-coarse:min-h-11 items-center gap-1.5 rounded-lg px-3 text-[15px] disabled:opacity-50">
         <PlusGlyph className="size-4" /> Thêm vào đội hình
       </button>
     );
@@ -266,12 +266,12 @@ function TeamControl({
               if (!e) setOpen(null);
             })
           }
-          className="barracks-btn min-h-10 pointer-coarse:min-h-11 rounded-md px-3 disabled:opacity-50"
+          className="barracks-btn min-h-10 pointer-coarse:min-h-11 rounded-lg px-3 disabled:opacity-50"
         >
           {nameOf(t)}
         </button>
       ))}
-      <button type="button" onClick={() => setOpen(null)} className="min-h-10 pointer-coarse:min-h-11 rounded-md px-2 text-[var(--on-wood-soft)] hover:text-on-wood">
+      <button type="button" onClick={() => setOpen(null)} className="min-h-10 pointer-coarse:min-h-11 rounded-lg px-2 text-[var(--on-wood-soft)] hover:text-on-wood">
         Hủy
       </button>
     </div>
@@ -317,7 +317,7 @@ export function GearSlotButton({
       )}
       {!item && <PlusGlyph className="absolute right-1 bottom-1 size-3.5 text-[var(--on-wood-soft)]" />}
       {!!item?.enhance && (
-        <span className="pointer-events-none absolute top-0.5 left-0.5 rounded bg-black/70 px-1 text-[11px] leading-tight font-bold text-frame-gold-hi tabular-nums" aria-hidden>
+        <span className="pointer-events-none absolute top-0.5 left-0.5 rounded-lg bg-black/70 px-1 text-[11px] leading-tight font-bold text-frame-gold-hi tabular-nums" aria-hidden>
           +{item.enhance}
         </span>
       )}
@@ -339,7 +339,7 @@ function Meter({ label, value, max, text }: { label: string; value: number; max:
 
 function StatCard({ label, value, bonus }: { label: string; value: number | string; bonus?: number }) {
   return (
-    <div className="barracks-inset rounded-md px-3 py-2">
+    <div className="barracks-inset rounded-lg px-3 py-2">
       <dt className="text-sm text-[var(--on-wood-soft)]">{label}</dt>
       <dd className="font-serif text-xl font-bold text-title-on-wood tabular-nums">
         {value}
@@ -365,7 +365,7 @@ export function XpBooks({ profile, id, busy, onAction }: { profile: Profile; id:
   };
   const packs = [...new Set([1, toNext, 10])].filter((n) => n <= Math.max(have, 1)).sort((a, b) => a - b);
   return (
-    <div className="barracks-inset flex flex-wrap items-center gap-2 rounded-md px-2.5 py-2 text-sm">
+    <div className="barracks-inset flex flex-wrap items-center gap-2 rounded-lg px-2.5 py-2 text-sm">
       <ItemIcon id="xpBook" className="size-8 shrink-0" />
       <span className="min-w-0 flex-1">
         Sách kinh nghiệm: <b className="tabular-nums text-title-on-wood">{have}</b> cuốn, mỗi cuốn +{XP_BOOK_XP}
@@ -377,13 +377,13 @@ export function XpBooks({ profile, id, busy, onAction }: { profile: Profile; id:
             type="button"
             disabled={busy || n > have}
             onClick={() => void spendBooks(n)}
-            className="barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-2.5 whitespace-nowrap disabled:opacity-45"
+            className="barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-lg px-2.5 whitespace-nowrap disabled:opacity-45"
           >
             {n === toNext && n !== 1 ? `Dùng ${n} (lên cấp ${p.level + 1})` : `Dùng ${n}`}
           </button>
         ))
       ) : (
-        <SceneLink scene="SHOP" className="barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-2.5 leading-9">Mua ở Cửa Hàng</SceneLink>
+        <SceneLink scene="SHOP" className="barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-lg px-2.5 leading-9">Mua ở Cửa Hàng</SceneLink>
       )}
     </div>
   );
@@ -533,7 +533,7 @@ function SkillUpgrade({
         disabled={disabled || cost === null || points < cost}
         onClick={onUp}
         aria-label={cost === null ? `${def.name} đã tối đa` : `Nâng ${def.name} lên cấp ${level + 1}, tốn ${cost} điểm`}
-        className="barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-md px-2.5 text-sm whitespace-nowrap disabled:opacity-45"
+        className="barracks-btn min-h-9 pointer-coarse:min-h-11 rounded-lg px-2.5 text-sm whitespace-nowrap disabled:opacity-45"
       >
         {cost === null ? "Tối đa" : `Nâng – ${cost} điểm`}
       </button>
@@ -552,7 +552,7 @@ function Details({ profile, id, fighter, bare, worn }: { profile: Profile; id: s
   return (
     <div className="flex flex-col gap-3 text-[15px]">
       <Biography id={id} />
-      <table className="w-full overflow-hidden rounded-md text-left">
+      <table className="w-full overflow-hidden rounded-lg text-left">
         <caption className="sr-only">Chỉ số gốc, phần cộng từ trang bị và tổng</caption>
         <thead className="text-sm text-[var(--on-wood-soft)]">
           <tr>

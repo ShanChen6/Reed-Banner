@@ -490,7 +490,7 @@ export default function KhaiLoScreen() {
                 ref={boardRef}
                 role="grid"
                 aria-label={`Bàn Khai Lộ ${height} hàng ${width} cột`}
-                className="kl-board relative overflow-hidden rounded-sm"
+                className="kl-board relative overflow-hidden rounded-lg"
                 data-peek={preview.cells.size > 0 || undefined}
                 style={{ width: `calc(${cell} * ${width})`, height: `calc(${cell} * ${height})`, ["--kl-cell" as string]: cell }}
                 onMouseLeave={() => setPeek(null)}

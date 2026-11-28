@@ -60,7 +60,7 @@ function RuinMark({ left }: { left: number }) {
       <svg viewBox="0 0 24 24" className="absolute inset-0 size-full" preserveAspectRatio="none" focusable="false">
         <path d="M14 0 L10 7 L15 11 L8 17 L12 24" fill="none" stroke="#2b1d10" strokeWidth={1.2} opacity={0.7} />
       </svg>
-      <span className="relative rounded-sm px-0.5 text-[clamp(5px,0.9vw,9px)] font-bold text-white" style={{ background: "#5a4632" }}>
+      <span className="relative rounded-lg px-0.5 text-[clamp(5px,0.9vw,9px)] font-bold text-white" style={{ background: "#5a4632" }}>
         Sửa {left}
       </span>
     </span>
@@ -105,7 +105,7 @@ export interface BoardProps {
 
 export function Board({ state, pickable, selected, onTile, center }: BoardProps) {
   return (
-    <div className="dtk-board relative grid aspect-square w-full grid-cols-11 grid-rows-11 gap-px rounded-md p-px" style={{ background: BOARD.frame, color: BOARD.ink, boxShadow: `inset 0 0 0 2px ${BOARD.rim}` }}>
+    <div className="dtk-board relative grid aspect-square w-full grid-cols-11 grid-rows-11 gap-px rounded-lg p-px" style={{ background: BOARD.frame, color: BOARD.ink, boxShadow: `inset 0 0 0 2px ${BOARD.rim}` }}>
       {TILES.map((t, i) => {
         const [row, col] = cellOf(i);
         const corner = i % 10 === 0;

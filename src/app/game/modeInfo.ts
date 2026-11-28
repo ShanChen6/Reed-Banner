@@ -64,7 +64,7 @@ export const MODE_INFO: Partial<Record<Scene, ModeInfo>> = {
     perks: ["Mỗi lượt chơi tốn một phiếu", "Tướng tìm được ghi vào Tướng Lục theo tài khoản"],
   },
   TRADE: {
-    text: MODE_TEXT.TRADE, kicker: "Buôn bán",
+    text: MODE_TEXT.TRADE, art: "trade", kicker: "Buôn bán",
     perks: ["Ai cũng khởi đầu 10.000 kim tiền, mùa một tuần", "Kho chung, giá đổi mỗi hai giờ", "Hết mùa xếp hạng theo lãi, thưởng vàng và Đá Cường Hóa"],
   },
   DIEN_TRANG_KY: {
