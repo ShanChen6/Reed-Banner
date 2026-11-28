@@ -15,6 +15,7 @@ export function ModeScreen({
   className,
   label,
   card,
+  fit,
 }: {
   children: ReactNode;
   className?: string;
@@ -23,15 +24,23 @@ export function ModeScreen({
   label?: string;
   /** Màn chế độ chơi: bọc banner, tab và nội dung trong một đại card như Bình Loạn (16/11/2026). */
   card?: boolean;
+  /**
+   * Vừa một màn hình (Shan chốt 28/11/2026): từ 1280px khung cao bằng cửa sổ, card gọn lề; nội dung bên trong tự chia
+   * chỗ (cột cao bằng hàng, danh sách chia trang). Hẹp hơn thì trang cuộn như cũ.
+   */
+  fit?: boolean;
 }) {
   return (
-    <main aria-label={label} className={cn("ui-mode-screen", className)}>
+    <main aria-label={label} className={cn("ui-mode-screen", fit && "ui-mode-fit", className)}>
       <div className={cn("mx-auto flex w-full flex-col gap-4 sm:gap-5", MODE_CONTENT_WIDTH)}>
-        {card ? <ModeCard>{children}</ModeCard> : children}
+        {card ? <ModeCard className={fit ? FIT_CARD_CLASS : undefined}>{children}</ModeCard> : children}
       </div>
     </main>
   );
 }
+
+/** Lề trong và khoảng cách gọn của đại card khi màn vừa một màn hình (máy tính thấp còn gọn hơn). */
+const FIT_CARD_CLASS = "xl:gap-3 xl:p-5 [@media(max-height:860px)]:xl:gap-2.5 [@media(max-height:860px)]:xl:px-4 [@media(max-height:860px)]:xl:py-3.5";
 
 /** Đại card của màn chế độ: khung gỗ viền đồng, góc hoa văn, như khung Sử ký của Bình Loạn. */
 export function ModeCard({ children, className }: { children: ReactNode; className?: string }) {
@@ -63,9 +72,40 @@ export interface ModeBannerProps {
   readonly actions?: ReactNode;
   readonly children?: ReactNode;
   readonly className?: string;
+  /**
+   * Dòng tiêu đề gọn thay banner tranh (màn vừa một màn hình, như đầu khung Bình Loạn): tên chế độ, `tagline`, chỉ số
+   * thành chip. Màn tự bật theo DESKTOP_FIT_QUERY.
+   */
+  readonly compact?: boolean;
+  /** Một dòng mô tả ngắn dưới tên khi `compact`. */
+  readonly tagline?: string;
 }
 
-export function ModeBanner({ title, showTitle, kicker, description, art, artPosition, stats, actions, children, className }: ModeBannerProps) {
+export function ModeBanner({ title, showTitle, kicker, description, art, artPosition, stats, actions, children, className, compact, tagline }: ModeBannerProps) {
+  if (compact)
+    return (
+      <header className={cn("flex flex-wrap items-end justify-between gap-x-4 gap-y-2 px-1", className)}>
+        <div className="min-w-0">
+          <h1 className="ui-title-on-wood text-2xl leading-tight font-bold tracking-wide uppercase">{title}</h1>
+          {tagline && <p className="text-caption text-on-wood-soft [@media(max-height:860px)]:hidden">{tagline}</p>}
+        </div>
+        {(stats?.length || actions) && (
+          <div className="flex flex-wrap items-center justify-end gap-1.5">
+            {stats && (
+              <dl className="flex flex-wrap items-center gap-1.5 text-sm">
+                {stats.map((s) => (
+                  <div key={s.label} className="ui-frame-inset flex items-baseline gap-1.5 rounded-full px-3 py-1">
+                    <dt className="text-on-wood-soft">{s.label}</dt>
+                    <dd className="font-bold text-title-on-wood">{s.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            {actions}
+          </div>
+        )}
+      </header>
+    );
   return (
     <OrnateFrame level="hero" flush className={cn(art && "min-h-36 sm:min-h-44", className)}>
       {art && (

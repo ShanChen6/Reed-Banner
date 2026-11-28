@@ -37,7 +37,7 @@ interface SweepResponse {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <ModeScreen card label="Tháp Thí Luyện">
+    <ModeScreen card fit label="Tháp Thí Luyện">
       {children}
     </ModeScreen>
   );

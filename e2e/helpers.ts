@@ -62,7 +62,12 @@ export async function playMode(page: Page): Promise<void> {
     await expect(sheet).toBeHidden();
     return;
   }
-  await page.getByRole("button", { name: "Vào chơi" }).click();
+  // Màn vừa một màn hình (từ 1280px) bỏ nút "Vào chơi" ở Hướng dẫn: bấm thẻ chơi (thẻ đầu) thay vào.
+  const enter = page.getByRole("button", { name: "Vào chơi" });
+  const playTab = page.getByRole("tablist", { name: "Màn chế độ" }).getByRole("tab").first();
+  await expect(enter.or(playTab).first()).toBeVisible();
+  if (await enter.isVisible()) await enter.click();
+  else await playTab.click();
 }
 
 /** Tên các thẻ chế độ như người chơi thấy: điện thoại không có thẻ Hướng dẫn. */
