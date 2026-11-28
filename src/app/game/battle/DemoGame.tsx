@@ -114,7 +114,7 @@ import { useBattleKeyboard } from "./useBattleKeyboard";
 import { TeamColumn } from "./TeamColumn";
 import { BoardCells } from "./BoardCells";
 import { PlayCard } from "../PlayCard";
-import { BattleHeader, surrenderConsequence } from "./BattleHeader";
+import { BattleHeader, BattleTools, surrenderConsequence } from "./BattleHeader";
 import { ProgressSection } from "./ProgressSection";
 
 const FLOAT_MS = 1100;
@@ -1259,6 +1259,7 @@ export default function DemoGame({
           survival={survival}
           surrender={canSurrender ? { consequence: surrenderText, onConfirm: surrender, disabled: pending } : null}
           clock={turnClock}
+          liveWide={!!turnClock && !scenarioOver}
         />
         {scenario && live && !scenarioOver && (phaseTurns || labels.length > 1) && (
           <p className="rounded-lg border border-frame-line bg-frame-gold/10 px-3 py-1 text-sm text-title-on-wood">
@@ -1333,7 +1334,7 @@ export default function DemoGame({
         <PlayCard label="Trận đấu" active={started} className={started ? "" : "hidden"}>
         {started && stageVisible && (
           /* md+: sân đấu dính dưới thanh đầu trang để cuộn xuống bàn cờ vẫn thấy hoạt ảnh khi đối thủ ra đòn. */
-          <div className="play-card-sticky z-20 md:sticky md:top-16 md:-mx-1 md:bg-[color-mix(in_srgb,var(--wood-lo,#1c120b)_94%,transparent)] md:px-1 md:pb-1 md:backdrop-blur xl:top-[68px]">
+          <div className="play-card-sticky z-20 md:sticky md:top-16 md:-mx-1 md:rounded-xl md:bg-[color-mix(in_srgb,var(--wood-lo,#1c120b)_94%,transparent)] md:px-1 md:pb-1 md:backdrop-blur xl:top-[68px]">
             <BattleStage
               sides={[(heldSides ?? state.sides)[PLAYER].fighters, (heldSides ?? state.sides)[AI].fighters]}
               actor={
@@ -1352,7 +1353,20 @@ export default function DemoGame({
           {side(PLAYER)}
 
           <div className="battle-center order-2 mx-auto flex w-full min-w-0 flex-1 flex-col gap-2 md:order-none landscape-short:order-none landscape-short:gap-1.5 xl:max-w-[46rem] 3xl:max-w-[56rem]">
-            {turnClock && <div className="landscape-short:hidden">{turnClock}</div>}
+            {/* Máy tính, máy tính bảng: thanh giờ ở giữa, nút trong trận chỉ icon ở bên phải (thanh đầu trận ẩn khi đang đánh). */}
+            {turnClock && (
+              <div className="flex items-center gap-2 landscape-short:hidden">
+                <div aria-hidden className="battle-clock-tools flex-1" />
+                <div className="min-w-0 flex-[1_1_28rem] md:max-w-md">{turnClock}</div>
+                <div className="battle-clock-tools flex-1 items-center justify-end gap-1.5">
+                  {!scenarioOver && (
+                    <BattleTools compact online={online} started={started} profession={profession} difficulty={difficulty}
+                      setDifficulty={setDifficulty} setProfile={setProfile} setStarted={setStarted}
+                      surrender={canSurrender ? { consequence: surrenderText, onConfirm: surrender, disabled: pending } : null} />
+                  )}
+                </div>
+              </div>
+            )}
             {/* lg+: bàn cờ cố gắng vừa phần màn hình còn lại dưới sân đấu nhưng không nhỏ hơn 34rem; màn thấp thì cuộn, sân đấu dính trên đầu nên vẫn thấy hoạt ảnh.
                 Toàn màn hình: hộp .battle-board-box giãn hết chiều cao còn lại, bàn cờ vừa hộp (globals.css). */}
             <div className="battle-board-box">

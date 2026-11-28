@@ -43,6 +43,11 @@ export interface BattleHeaderProps {
   readonly survival: SurvivalView | null;
   /** Thanh giờ lượt: chỉ hiện ở thanh này khi màn ngang thấp (điện thoại xoay ngang) để bàn cờ cao thêm một hàng. */
   readonly clock?: ReactNode;
+  /**
+   * Đang đánh: máy tính, máy tính bảng ẩn cả thanh này (Shan 28/11/2026: chữ "Lượt của bạn" trùng thanh giờ, mất một
+   * dòng); nút Đầu hàng và nút Thao Luyện chuyển sang hai bên thanh giờ (`BattleTools compact`).
+   */
+  readonly liveWide?: boolean;
   /** Có khi ván đang đánh dở: nút Đầu hàng kèm câu hậu quả theo chế độ. */
   readonly surrender: {
     readonly consequence: string;
@@ -99,11 +104,12 @@ export function BattleHeader({
   survival,
   surrender,
   clock,
+  liveWide = false,
 }: BattleHeaderProps) {
   // Sảnh chờ trước trận đã có banner, độ khó và nút riêng: thanh này chỉ còn tiêu đề cho trình đọc màn hình.
   if (!started) return <h1 className="sr-only">{online ? "Cờ Lau – Giao Tranh" : "Cờ Lau – Thao Luyện"}</h1>;
   return (
-    <header className="flex flex-wrap items-center justify-between gap-2 border-b border-frame-line-soft pb-2 max-sm:flex-nowrap max-sm:pb-1.5 landscape-short:flex-nowrap landscape-short:pb-1">
+    <header className={`${liveWide ? "battle-header--live " : ""}flex flex-wrap items-center justify-between gap-2 border-b border-frame-line-soft pb-2 max-sm:flex-nowrap max-sm:pb-1.5 landscape-short:flex-nowrap landscape-short:pb-1`}>
       {/* Tên chế độ đã ở header chung; giữ h1 cho trình đọc màn hình. */}
       <h1 className="sr-only">
         {online ? "Cờ Lau – Giao Tranh" : "Cờ Lau – Thao Luyện"}
@@ -134,28 +140,52 @@ export function BattleHeader({
                     : "Lượt đối thủ…"}
       </div>
       {clock && <div className="hidden min-w-0 flex-1 landscape-short:flex">{clock}</div>}
+      <BattleTools online={online} started={started} profession={profession} difficulty={difficulty}
+        setDifficulty={setDifficulty} setProfile={setProfile} setStarted={setStarted} surrender={surrender} />
+    </header>
+  );
+}
+
+/** Nút trong trận: Đầu hàng; Thao Luyện thêm Đổi đội hình và Độ khó. `compact`: chỉ icon, đặt cạnh thanh giờ. */
+export function BattleTools({
+  online,
+  started,
+  profession,
+  difficulty,
+  setDifficulty,
+  setProfile,
+  setStarted,
+  surrender,
+  compact = false,
+}: Pick<BattleHeaderProps, "online" | "started" | "profession" | "difficulty" | "setDifficulty" | "setProfile" | "setStarted" | "surrender"> & {
+  compact?: boolean;
+}) {
+  return (
+    <>
       {surrender && (
         <SurrenderButton
           consequence={surrender.consequence}
           onConfirm={surrender.onConfirm}
           disabled={surrender.disabled}
-          className="min-h-9 pointer-coarse:min-h-11 whitespace-nowrap text-caption max-sm:px-2.5"
+          iconOnly={compact}
+          className={compact ? "size-9 min-h-9 p-0 pointer-coarse:size-11" : "min-h-9 pointer-coarse:min-h-11 whitespace-nowrap text-caption max-sm:px-2.5"}
         />
       )}
       {!online && started && (
         <button
           type="button"
           onClick={() => { setProfile(loadProfile()); setStarted(false); }}
-          className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-9 pointer-coarse:min-h-11 gap-1.5 whitespace-nowrap text-caption max-sm:px-2.5" })}
+          title={compact ? "Đổi đội hình" : undefined}
+          className={buttonVariants({ variant: "secondary", size: "sm", className: compact ? "size-9 min-h-9 p-0 pointer-coarse:size-11" : "min-h-9 pointer-coarse:min-h-11 gap-1.5 whitespace-nowrap text-caption max-sm:px-2.5" })}
         >
           <ProfessionIcon profession={profession} className="size-4" />
-          Đổi đội hình
+          <span className={compact ? "sr-only" : undefined}>Đổi đội hình</span>
         </button>
       )}
       {/* Trận online: máy chủ đã chốt độ khó lúc dựng trận nên đổi ở đây không có tác dụng; chỉ trận offline đổi được. */}
       {!online && (
-        <label className="flex items-center gap-2 text-caption text-on-wood-soft max-sm:ml-auto">
-          <span className="max-sm:sr-only landscape-short:sr-only">Độ khó</span>
+        <label className={`flex items-center gap-2 text-caption text-on-wood-soft ${compact ? "" : "max-sm:ml-auto"}`}>
+          <span className={compact ? "sr-only" : "max-sm:sr-only landscape-short:sr-only"}>Độ khó</span>
           <Select uiSize="sm" value={difficulty} onChange={(e) => setDifficulty(e.target.value as Difficulty)}>
             {DIFFICULTIES.map((d) => (
               <option key={d} value={d}>
@@ -165,6 +195,6 @@ export function BattleHeader({
           </Select>
         </label>
       )}
-    </header>
+    </>
   );
 }
