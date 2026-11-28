@@ -1,7 +1,8 @@
 "use client";
 
 // Bản đồ Hành Thương Ký: tranh nền Bình Loạn (1536×1024) với 13 điểm giao dịch và các chặng. Thuyền, xe ngựa chỉ là hoạt
-// ảnh theo loại đường (Shan, 26/11/2026): đường thủy hiện thuyền, đường bộ hiện xe ngựa, sức chở như nhau.
+// ảnh theo loại đường (Shan, 26/11/2026): đường thủy hiện thuyền, đường bộ hiện xe ngựa, sức chở như nhau. Tranh ở
+// public/art/trade/boat.webp, cart.webp (28/11/2026).
 
 import { TRADE_EDGES, TRADE_NODE_KIND_NAME, TRADE_NODES, tradeEdge, tradeNode, type TradeLeg, type TradeNodeId } from "@/core/trade";
 
@@ -12,21 +13,12 @@ const HALO = { paintOrder: "stroke", stroke: "#1b1411", strokeWidth: 6, strokeLi
 
 const KIND_COLOR = { sea: "#7fd0e6", river: "#9fc4e8", plain: "#f0d77f", mountain: "#c9a27a" } as const;
 
-/** Thuyền buồm hoặc xe ngựa vẽ bằng nét, tâm ở (0, 0). */
+/** Thuyền buôn hoặc xe ngựa (tranh Shan vẽ, quay sang phải), tâm ở (0, 0). */
 function Vehicle({ boat }: { boat: boolean }) {
   return boat ? (
-    <g>
-      <path d="M-26 6 H26 L16 20 H-16 Z" fill="#6b3f22" stroke="#f3dfae" strokeWidth={2} />
-      <path d="M0 4 V-34 L22 -2 Z" fill="#f3dfae" stroke="#6b3f22" strokeWidth={2} />
-      <path d="M-2 -30 L-20 0 H-2 Z" fill="#e8c98c" stroke="#6b3f22" strokeWidth={2} />
-    </g>
+    <image href="/art/trade/boat.webp" x={-54} y={-50} width={108} height={100} />
   ) : (
-    <g>
-      <rect x={-22} y={-18} width={30} height={20} rx={3} fill="#8a5a2f" stroke="#f3dfae" strokeWidth={2} />
-      <circle cx={-14} cy={6} r={7} fill="#3b2a1d" stroke="#f3dfae" strokeWidth={2} />
-      <circle cx={2} cy={6} r={7} fill="#3b2a1d" stroke="#f3dfae" strokeWidth={2} />
-      <path d="M8 -6 L26 -10 L30 -2 L24 4 L14 2 Z" fill="#c9a27a" stroke="#f3dfae" strokeWidth={2} />
-    </g>
+    <image href="/art/trade/cart.webp" x={-76} y={-38} width={152} height={76} />
   );
 }
 
@@ -110,7 +102,7 @@ export function TradeMap({
         );
       })}
       {pos && (
-        <g transform={`translate(${pos.x} ${pos.y - 30}) scale(${pos.flip ? -1.3 : 1.3} 1.3)`} aria-label="Đoàn hàng của bạn đang đi" className="trade-caravan">
+        <g transform={`translate(${pos.x} ${pos.y - 30}) scale(${pos.flip ? -1 : 1} 1)`} aria-label="Đoàn hàng của bạn đang đi" className="trade-caravan">
           <Vehicle boat={pos.boat} />
         </g>
       )}
