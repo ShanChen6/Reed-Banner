@@ -75,16 +75,10 @@ const MODES: readonly Mode[] = [
 
 /**
  * Chế độ mới đang thiết kế, chưa phát hành: thẻ không bấm được ở mục Sắp ra mắt (có `scene` thì bấm được). Chế độ đã phát hành
- * nhưng tắt cờ ở môi trường nào đó vẫn nằm ở nhóm của nó, hiện thẻ khóa. Nguồn: hàng "Chế độ mới" ở docs/09-roadmap/lo-trinh.md.
+ * nhưng tắt cờ ở môi trường nào đó vẫn nằm ở nhóm của nó, hiện thẻ khóa. Shan bỏ Long Hổ Hội (28/11/2026), hiện trống. Nguồn: hàng "Chế độ mới" ở docs/09-roadmap/lo-trinh.md.
  * TODO tranh: public/art/home/<id>.webp, chưa có thì thẻ dùng tranh mực tạm.
  */
 const UPCOMING: readonly { id: string; title: string; text: string; art?: string; scene?: Scene; note?: string }[] = [
-  {
-    id: "long-ho-hoi",
-    title: "Long Hổ Hội",
-    text: "Long hổ bốn phương tụ về một hội, mỗi mùa một lần so tài, ai trụ đến cuối cùng được thiên hạ nể vì.",
-    art: "arena",
-  },
 ];
 
 

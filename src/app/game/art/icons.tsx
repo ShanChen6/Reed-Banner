@@ -1,6 +1,5 @@
 // Biểu tượng nguyên tố và biểu tượng giao diện nhỏ cho màn chơi, vẽ bằng SVG.
 
-import { useId } from "react";
 import type { Element, Profession } from "@/core";
 import type { SlAid } from "@/core/su-lo";
 import { INK, TILE_GLYPH } from "./tiles";
@@ -136,19 +135,3 @@ export function CloudCorner({ className, style }: { className?: string; style?: 
   );
 }
 
-/** Dải hoa văn trống đồng: hàng răng cưa xen chấm tròn, lặp theo chiều ngang không bị kéo méo. */
-export function DongSonBand({ className }: { className?: string }) {
-  const id = `dongson-${useId().replace(/[^\w-]/g, "")}`;
-  return (
-    <svg className={className} height={10} aria-hidden focusable="false">
-      <defs>
-        <pattern id={id} width={12} height={10} patternUnits="userSpaceOnUse">
-          <path d="M0 1 H12 M0 9 H12" stroke="var(--primary)" strokeWidth={1} />
-          <path d="M0 8 L4 2.5 L8 8" fill="none" stroke="var(--primary)" strokeWidth={1} />
-          <circle cx={10} cy={5} r={1.2} fill="var(--primary)" />
-        </pattern>
-      </defs>
-      <rect width="100%" height={10} fill={`url(#${id})`} />
-    </svg>
-  );
-}

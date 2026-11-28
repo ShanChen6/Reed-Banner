@@ -96,10 +96,13 @@ export const GO_CUES = ["go.place", "go.capture_small", "go.capture_big", "go.at
 
 export const TTK_CUES = ["ttk.slot", "ttk.unslot", "ttk.miss", "ttk.known", "ttk.reject"] as const;
 
-export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...SULO_CUES, ...DOTHAM_CUES, ...MODE_CUES, ...KHAILO_CUES, ...TQK_CUES, ...GO_CUES, ...TTK_CUES] as const;
+/** Điền Trang Ký (mục 5.12 của 02-architecture-and-assets.md). */
+export const DTK_CUES = ["dtk.roll", "dtk.move", "dtk.salary", "dtk.buy", "dtk.build", "dtk.rent", "dtk.gain", "dtk.pay", "dtk.sell", "dtk.jailed", "dtk.freed", "dtk.blessing", "dtk.omen", "dtk.quake", "dtk.storm", "dtk.monopoly", "dtk.out"] as const;
+
+export const CUE_IDS = [...UI_CUES, ...FORMATION_CUES, ...BATTLE_CUES, ...SULO_CUES, ...DOTHAM_CUES, ...MODE_CUES, ...KHAILO_CUES, ...TQK_CUES, ...GO_CUES, ...TTK_CUES, ...DTK_CUES] as const;
 export type CueId = (typeof CUE_IDS)[number];
 
-export const MUSIC_IDS = ["formation_menu", "formation_play", "formation_result_win", "formation_result_lose", "battle_normal", "battle_boss", "survival", "atlas", "dialogue", "ending", "tower_trial", "tower_destiny", "arena", "pvp", "sulo_maze", "sulo_boss", "dotham", "prep", "daily", "expedition", "khai_lo", "khai_lo_timed", "tam_quan_ky", "vay_thanh_ky"] as const;
+export const MUSIC_IDS = ["formation_menu", "formation_play", "formation_result_win", "formation_result_lose", "battle_normal", "battle_boss", "survival", "atlas", "dialogue", "ending", "tower_trial", "tower_destiny", "arena", "pvp", "sulo_maze", "sulo_boss", "dotham", "prep", "daily", "expedition", "khai_lo", "khai_lo_timed", "tam_quan_ky", "vay_thanh_ky", "dien_trang_ky"] as const;
 export const AMBIENCE_IDS = ["atlas"] as const;
 export type AmbienceId = (typeof AMBIENCE_IDS)[number];
 export type MusicId = (typeof MUSIC_IDS)[number];

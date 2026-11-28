@@ -16,9 +16,11 @@ export interface SurrenderButtonProps {
   readonly className?: string;
   /** Chữ trên nút, mặc định "Đầu hàng". */
   readonly label?: string;
+  /** Chỉ hiện cờ (chữ vẫn có cho trình đọc màn hình và khi rê chuột), cho thanh gọn trong trận. */
+  readonly iconOnly?: boolean;
 }
 
-export function SurrenderButton({ consequence, onConfirm, disabled, size = "sm", className, label = "Đầu hàng" }: SurrenderButtonProps) {
+export function SurrenderButton({ consequence, onConfirm, disabled, size = "sm", className, label = "Đầu hàng", iconOnly = false }: SurrenderButtonProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -49,10 +51,11 @@ export function SurrenderButton({ consequence, onConfirm, disabled, size = "sm",
         disabled={disabled || busy}
         aria-haspopup="dialog"
         onClick={() => setOpen(true)}
+        title={iconOnly ? label : undefined}
         className={cn("gap-1.5", className)}
       >
         <FlagIcon />
-        {label}
+        <span className={iconOnly ? "sr-only" : undefined}>{label}</span>
       </Button>
       <dialog
         ref={ref}
