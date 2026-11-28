@@ -57,7 +57,6 @@ import { sidesAfterEvents } from "./heldSides";
 import { COMBAT_PACING } from "./pacing";
 import {
   CloudCorner,
-  DongSonBand,
 } from "../art/icons";
 
 import { SurvivalWaveResult } from "./SurvivalWaveResult";
@@ -1296,7 +1295,6 @@ export default function DemoGame({
               : `${expeditionObjective.type === "hold" ? "Giữ vị trí" : "Hộ tống đoàn dân"}: đã giữ ${Math.min(completedPlayerTurns(live), expeditionObjective.turns)}/${expeditionObjective.turns} lượt của bạn, hoặc hạ hết đối thủ.`}
           </p>
         )}
-        {started && <DongSonBand className="-mt-1 w-full opacity-70 max-sm:hidden landscape-short:hidden" />}
         {survival && started && (
           <WaveBanner survival={survival} resting={atBreak} />
         )}
