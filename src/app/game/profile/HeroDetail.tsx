@@ -4,6 +4,7 @@
 // ba thẻ Tổng quan / Kỹ năng / Chi tiết. Mọi số lấy từ @/core (profileTeam, gearStats…); ở đây không có công thức
 // riêng. Bấm ô trang bị mở GearPicker cho đúng ô đó.
 
+import { ArrowLeftIcon } from "@/components/ui";
 import LeaderBuild from "./LeaderBuild";
 import { useState } from "react";
 import {
@@ -45,7 +46,7 @@ import { ProfileArt } from "../art/ProfileArt";
 import { stageBackdropUrl } from "../art/portrait-data";
 import { ELEMENT_NAME, gearText, PROFESSION_NAME, skillLevelTable, SLOT_NAME, TIER_CLASS } from "../battle/labels";
 import SkillDetails from "../battle/SkillDetails";
-import { BackGlyph, InfoGlyph, PlusGlyph, TeamGlyph } from "./glyphs";
+import { InfoGlyph, PlusGlyph, TeamGlyph } from "./glyphs";
 import { nameOf } from "./roster";
 import Biography from "./Biography";
 import { SceneLink } from "../SceneContext";
@@ -128,7 +129,7 @@ export default function HeroDetail({
     <div className="flex flex-col">
       {onBack && (
         <button type="button" onClick={onBack} className="barracks-btn mb-2 flex min-h-11 items-center gap-2 self-start rounded-lg px-3 text-[15px] lg:hidden">
-          <BackGlyph className="size-5" /> Danh sách tướng quân
+          <ArrowLeftIcon className="size-5" /> Danh sách tướng quân
         </button>
       )}
 

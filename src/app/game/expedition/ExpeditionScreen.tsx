@@ -6,7 +6,7 @@
 import { requestJson, postJson } from "../api";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ModeBanner, ModeScreen, ModeSkeleton, SurrenderButton } from "@/components/game-ui";
-import { Alert, Button, ChoiceChip, choiceVariants } from "@/components/ui";
+import { Alert, Button, ChoiceChip, choiceVariants, XIcon } from "@/components/ui";
 import {
   EXPEDITION_PINCER_HP,
   EXPEDITION_REINFORCE_PER_DAY,
@@ -523,7 +523,7 @@ function SetupView(props: {
                             onClick={() => (a === 0 ? setMain(main.filter((x) => x !== id)) : setSecond(second.filter((x) => x !== id)))}
                             className="grid size-7 place-items-center rounded-lg text-on-wood-soft hover:bg-black/30 hover:text-on-wood pointer-coarse:size-9"
                           >
-                            ×
+                            <XIcon />
                           </button>
                         )}
                       </span>

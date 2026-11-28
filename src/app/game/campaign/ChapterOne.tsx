@@ -6,9 +6,8 @@ import { Alert, Button, buttonVariants, choiceVariants } from "@/components/ui";
 // (trận). Mọi tiến độ, lựa chọn và thưởng lấy từ hồ sơ server; trình duyệt chỉ nhớ bước đang xem và màn
 // thưởng đã xem để tải lại trang không phải xem lại từ đầu.
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import { DESKTOP_FIT_QUERY, PHONE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
-import { ChevronLeftIcon, ChevronRightIcon } from "@/components/ui";
 import { ResultModal } from "@/components/game-ui";
 import BattlePrep, { type BattleChoice } from "./BattlePrep";
 import { nextMissionAfter } from "./startMission";
@@ -271,8 +270,11 @@ export default function ChapterOne({
   const phone = useMediaQuery(PHONE_QUERY);
   // Máy tính rộng: card Sử ký cao đúng một màn hình, năm thẻ chung chiều cao, nội dung dài chia trang (Shan 28/11/2026).
   const fit = useMediaQuery(DESKTOP_FIT_QUERY);
-  /** Trang của thẻ Bản đồ khi khung cố định: 0 là ba cột, 1 là Hội quân / tuyến chương / hồi kết bên dưới. */
-  const [atlasPage, setAtlasPage] = useState(0);
+  /**
+   * Máy tính rộng: Hội quân, tuyến chương, hồi kết không nằm dưới bản đồ nữa mà mở thành hộp từ nút ở bảng chương
+   * (Shan 28/11/2026: trang 2 của Bản đồ làm co bản đồ). Màn hẹp vẫn xếp dưới bản đồ.
+   */
+  const [extraOpen, setExtraOpen] = useState<ExtraKey | null>(null);
   const view = phone && atlas.view === "guide" ? "atlas" : atlas.view;
   const strongholdId = atlas.stronghold;
   const stronghold = strongholdId ? strongholdById(strongholdId) : undefined;
@@ -399,12 +401,13 @@ export default function ChapterOne({
               ? "Xem Hội quân Hoa Lư"
               : "Về bản đồ Sử ký",
           onFinished: () => {
-            jumpTo.current = campaignCompleted(campaign)
-              ? "campaign-ending-title"
+            const extra: ExtraKey | null = campaignCompleted(campaign)
+              ? "ending"
               : campaignMusterReady(campaign)
-                ? "muster-title"
+                ? "muster"
                 : null;
-            if (jumpTo.current) setAtlasPage(1);
+            if (fit) setExtraOpen(extra);
+            else jumpTo.current = extra === "ending" ? "campaign-ending-title" : extra === "muster" ? "muster-title" : null;
             updateAtlas({ ...atlas, view: "atlas" });
           },
         };
@@ -489,38 +492,30 @@ export default function ChapterOne({
             onView={(view) => updateAtlas({ ...atlas, view })}
           />
           {view === "atlas" && (() => {
-            const extras = [
-              chapter.chapter === 6 && campaignCompleted(campaign) && (
-                <CampaignEnding
-                  key="ending"
-                  campaign={campaign}
-                  onReplay={() => openMission(CAMPAIGN_FINAL_NODE)}
-                />
-              ),
-              chapter.chapter === 3 && campaignMusterReady(campaign) && (
-                <MusterPanel
-                  key="muster"
-                  profile={profile}
-                  busy={actionBusy}
-                  onAction={onAction}
-                  onPick={openMission}
-                />
-              ),
-              chapter.chapter >= 4 && (
-                <RouteSummary
-                  key="route"
-                  campaign={campaign}
-                  chapter={chapter.chapter}
-                  onPick={openMission}
-                />
-              ),
-            ].filter(Boolean);
-            // Khung cố định: ba cột là trang 1, các khối dưới bản đồ (hồi kết, Hội quân, tuyến chương) là trang 2.
-            const paged = fit && extras.length > 0;
-            const page = paged ? atlasPage : 0;
+            const extras: { key: ExtraKey; label: string; node: ReactNode }[] = [];
+            if (chapter.chapter === 6 && campaignCompleted(campaign))
+              extras.push({ key: "ending", label: "Hồi kết", node: <CampaignEnding campaign={campaign} onReplay={() => { setExtraOpen(null); openMission(CAMPAIGN_FINAL_NODE); }} /> });
+            if (chapter.chapter === 3 && campaignMusterReady(campaign))
+              extras.push({ key: "muster", label: "Hội quân Hoa Lư", node: (
+                <MusterPanel profile={profile} busy={actionBusy} onAction={onAction} onPick={(id) => { setExtraOpen(null); openMission(id); }} />
+              ) });
+            if (chapter.chapter >= 4)
+              extras.push({ key: "route", label: "Tuyến chương", node: (
+                <RouteSummary campaign={campaign} chapter={chapter.chapter} onPick={(id) => { setExtraOpen(null); openMission(id); }} />
+              ) });
+            const shown = fit ? extras.find((e) => e.key === extraOpen) : undefined;
+            const actions = fit && extras.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {extras.map((e) => (
+                  <button key={e.key} type="button" aria-haspopup="dialog" onClick={() => setExtraOpen(e.key)}
+                    className={buttonVariants({ variant: "secondary", size: "sm", className: "min-h-11 flex-1" })}>
+                    {e.label}
+                  </button>
+                ))}
+              </div>
+            );
             return (
             <div ref={mapRef} className="flex flex-col gap-3 xl:min-h-0 xl:flex-1">
-              {page === 0 && (
               <div className="grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)] xl:min-h-0 xl:flex-1 xl:grid-cols-[minmax(260px,0.22fr)_minmax(0,1fr)_minmax(300px,0.3fr)] xl:grid-rows-[minmax(0,1fr)]">
                 <div className="md:col-span-2 xl:col-span-1 xl:min-h-0">
                   <ChapterRail
@@ -528,7 +523,6 @@ export default function ChapterOne({
                     current={chapter}
                     onPick={(c) => {
                       updateAtlas({ view: "atlas", stronghold: null });
-                      setAtlasPage(0);
                       move({
                         nodeId: chapterFocus(campaign, c),
                         phase: "intro",
@@ -562,28 +556,16 @@ export default function ChapterOne({
                       current={step.nodeId}
                       onPick={openMission}
                       fit={fit}
+                      actions={actions || undefined}
                     />
                   )}
                 </div>
               </div>
-              )}
-              {(!paged || page === 1) && extras.length > 0 && (
-                <div className="flex flex-col gap-3 xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:pb-6">{extras}</div>
-              )}
-              {paged && (
-                <nav aria-label="Trang Bản đồ" className="flex shrink-0 items-center justify-center gap-3">
-                  <button type="button" aria-label="Trang trước" disabled={page === 0} onClick={() => setAtlasPage(0)}
-                    className={buttonVariants({ variant: "secondary", size: "icon", className: "disabled:opacity-40" })}>
-                    <ChevronLeftIcon className="size-5" />
-                  </button>
-                  <span aria-live="polite" className="text-sm font-semibold text-on-wood tabular-nums">
-                    {page === 0 ? "Bản đồ" : chapter.chapter === 3 ? "Hội quân Hoa Lư" : chapter.chapter >= 4 ? "Tuyến chương" : "Hồi kết"}, trang {page + 1}/2
-                  </span>
-                  <button type="button" aria-label="Trang sau" disabled={page === 1} onClick={() => setAtlasPage(1)}
-                    className={buttonVariants({ variant: "secondary", size: "icon", className: "disabled:opacity-40" })}>
-                    <ChevronRightIcon className="size-5" />
-                  </button>
-                </nav>
+              {!fit && extras.map((e) => <Fragment key={e.key}>{e.node}</Fragment>)}
+              {shown && (
+                <AtlasDialog label={shown.label} onClose={() => setExtraOpen(null)}>
+                  {shown.node}
+                </AtlasDialog>
               )}
             </div>
             );
@@ -844,5 +826,32 @@ export default function ChapterOne({
         </div>
       </div>
     </section>
+  );
+}
+
+type ExtraKey = "ending" | "muster" | "route";
+
+/** Hộp lớn giữa màn cho Hội quân, tuyến chương, hồi kết (máy tính rộng). Esc, bấm nền hoặc nút Đóng thì đóng. */
+function AtlasDialog({ label, onClose, children }: { label: string; onClose: () => void; children: ReactNode }) {
+  const ref = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const d = ref.current;
+    if (d && !d.open) d.showModal?.();
+  }, []);
+  return (
+    <dialog
+      ref={ref}
+      aria-label={label}
+      onClose={onClose}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+      className="m-auto max-h-[calc(100dvh-2rem)] w-[min(72rem,calc(100vw-2rem))] max-w-none overflow-y-auto rounded-xl border border-frame-gold bg-wood-lo p-4 text-on-wood backdrop:bg-black/65"
+    >
+      <div className="flex flex-col gap-3">
+        {children}
+        <button type="button" autoFocus onClick={onClose} className={buttonVariants({ variant: "secondary", className: "min-h-11 self-end px-6" })}>
+          Đóng
+        </button>
+      </div>
+    </dialog>
   );
 }

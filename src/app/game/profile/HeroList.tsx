@@ -5,7 +5,7 @@
 
 import { useId, useRef, useState, type KeyboardEvent, type Ref } from "react";
 import { ELEMENTS, PROFESSIONS, type Element, type Profession } from "@/core";
-import { Select } from "@/components/ui";
+import { Select, XIcon } from "@/components/ui";
 import { Pagination } from "@/components/ui/Pagination";
 import { ElementIcon, ELEMENT_COLOR, ProfessionIcon } from "../art/icons";
 import { Portrait } from "../art/portraits";
@@ -20,7 +20,7 @@ import {
   type RosterSort,
   type TeamFilter,
 } from "./roster";
-import { FilterGlyph, SearchGlyph, SortGlyph, TeamGlyph, XGlyph } from "./glyphs";
+import { FilterGlyph, SearchGlyph, SortGlyph, TeamGlyph } from "./glyphs";
 
 const TEAM_FILTER_NAME: Readonly<Record<Exclude<TeamFilter, "all">, string>> = {
   in: "Trong đội hình",
@@ -107,7 +107,7 @@ export default function HeroList({
       >
         {icon}
         {label}
-        <XGlyph className="size-3.5 opacity-80" />
+        <XIcon className="size-3.5 opacity-80" />
       </button>
     </li>
   );

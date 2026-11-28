@@ -7,7 +7,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/game-ui";
-import { buttonVariants } from "@/components/ui";
+import { buttonVariants, XIcon } from "@/components/ui";
 import { portraitUrl } from "../art/portrait-data";
 import { useProfile } from "../profile/useProfile";
 import { nameOf, ownedIds } from "../profile/roster";
@@ -106,7 +106,7 @@ export function AvatarPicker({ current }: { current: string | null }) {
             <div className="flex items-center justify-between gap-2">
               <h2 className="ui-title-on-wood font-serif text-lg font-bold">Chọn ảnh đại diện</h2>
               <button type="button" onClick={() => setOpen(false)} aria-label="Đóng" className="grid size-11 shrink-0 place-items-center rounded-full border border-frame-line-soft text-lg hover:border-frame-gold">
-                ✕
+                <XIcon className="size-5" />
               </button>
             </div>
             {error && <p role="alert" className="text-sm text-danger">{error}</p>}
