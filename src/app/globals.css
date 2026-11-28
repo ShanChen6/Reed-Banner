@@ -1739,6 +1739,19 @@ html {
     max-width: none;
   }
 }
+/* Đang đánh trên máy tính, máy tính bảng (không phải điện thoại xoay ngang): ẩn thanh đầu trận, nút trong trận nằm cạnh
+   thanh giờ (Shan 28/11/2026: chữ "Lượt của bạn" trùng thanh giờ, mất một dòng). */
+.battle-clock-tools {
+  display: none;
+}
+@media (width >= 48rem) and (not ((orientation: landscape) and (max-height: 499px))) {
+  .battle-header--live {
+    display: none;
+  }
+  .battle-clock-tools {
+    display: flex;
+  }
+}
 /* Trận ở trang thường trên máy tính (từ 1280px): khung trận cao bằng cửa sổ như các màn chế độ (Shan 28/11/2026: Giao
    tranh trong Bình Loạn còn phải cuộn). Hàng ba cột lấp phần dưới sân đấu, bàn cờ lớn nhất vừa ô chứa (container query)
    như khi phóng to; sân đấu thôi dính vì trang không cuộn nữa; nút phóng to nằm ở góc dưới cột phải, không chừa dải riêng. */
@@ -1757,8 +1770,13 @@ html {
     flex: 1 1 0;
     min-height: 0;
   }
+  /* Trang không cuộn nên sân đấu thôi dính, bỏ luôn lớp nền phủ quanh sân (Shan 28/11/2026: nền tràn ra ngoài viền sân). */
   .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) .play-card-sticky {
     position: static;
+    margin-inline: 0;
+    padding: 0;
+    background: none;
+    backdrop-filter: none;
   }
   .battle-live.ui-mode-fit .play-card:not(:fullscreen):not(.play-card--overlay) .battle-fill {
     flex: 1 1 0;

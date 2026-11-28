@@ -81,20 +81,21 @@ export function SkillBar({
               setWhirlAim(null);
               setPendingWhirl(null);
             }}
-            className={`relative flex w-full items-center rounded-lg p-1 text-caption leading-tight ${stacked ? "flex-col gap-0.5" : "min-h-11 gap-1.5 text-left max-sm:pl-1 sm:w-[4.5rem] sm:flex-col sm:gap-0.5 sm:text-center landscape-short:w-auto landscape-short:flex-col landscape-short:gap-0 landscape-short:p-0.5 landscape-short:text-center"} border ${aiming ? "border-stat-hp bg-stat-hp text-white" : "border-frame-line-soft bg-wood-panel hover:border-frame-gold"} ${
+            className={`relative flex w-full items-center rounded-lg p-1 text-caption leading-tight ${stacked ? "h-14 flex-col justify-center" : "min-h-11 gap-1.5 text-left max-sm:pl-1 sm:w-[4.5rem] sm:flex-col sm:gap-0.5 sm:text-center landscape-short:w-auto landscape-short:flex-col landscape-short:gap-0 landscape-short:p-0.5 landscape-short:text-center"} border ${aiming ? "border-stat-hp bg-stat-hp text-white" : "border-frame-line-soft bg-wood-panel hover:border-frame-gold"} ${
               disabled && !aiming ? "opacity-40 grayscale" : ""
             }`}
             title={`${skillText(def)}, phím ${i + 1}`}
           >
             {/* Điện thoại: biểu tượng nhỏ bên trái, tên bên phải để hai hàng kỹ năng vừa màn cùng bàn cờ. */}
-            <SkillIcon def={def} className={stacked ? "size-10" : "size-8 shrink-0 sm:size-10 landscape-short:size-6"} />
+            <SkillIcon def={def} className={stacked ? "size-11" : "size-8 shrink-0 sm:size-10 landscape-short:size-6"} />
             <span className="absolute left-1 top-1 rounded-br-lg bg-black/60 px-1 text-[11px] font-bold text-white">
               {i + 1}
             </span>
             <span className="absolute right-1 top-1 rounded-bl-lg bg-stat-energy/90 px-1 text-[11px] tabular-nums text-white">
               {comboSkillCost(actor,def)}
             </span>
-            <span className={stacked ? "text-center" : "line-clamp-2 min-w-0 pr-5 sm:pr-0 sm:text-center landscape-short:w-full landscape-short:truncate landscape-short:pr-0"}>{def.name}</span>
+            {/* Cột trái máy tính chỉ giữ icon (Shan 28/11/2026): tên đọc khi rê chuột (title) và cho trình đọc màn hình. */}
+            <span className={stacked ? "sr-only" : "line-clamp-2 min-w-0 pr-5 sm:pr-0 sm:text-center landscape-short:w-full landscape-short:truncate landscape-short:pr-0"}>{def.name}</span>
           </button>
         );
       })}
