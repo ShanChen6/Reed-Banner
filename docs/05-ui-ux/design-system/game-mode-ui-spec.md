@@ -326,7 +326,7 @@ Shan yêu cầu chia chế độ của màn Chiến trường (`MenuScene.tsx`) 
 
 - **Chiến đấu** (trận ghép ô, dẫn đội tướng đánh nhau): Bình Loạn (thẻ to), Tháp Thí Luyện, Tháp Thiên Mệnh, Trấn Ải, Nhật Lệnh, Quần Hùng, Viễn Chinh.
 - **Giải đố** (một người, không đọ sức đội hình): Trận Đồ (xếp quân, không đánh nhau), Khai Lộ, Do Thám, Sử Lộ (có trận ghép ô một chiều với quân giặc trấn cổng nhưng trục chính là đáp câu sử và mọi người như nhau), Tầm Tướng Ký (ghép yếu tố, không đánh nhau), Tam Quân Kỳ và Vây Thành Kỳ (đánh cờ, nhãn "Đánh cờ"; rời Sắp ra mắt ngày 23/11/2026).
-- **Sắp ra mắt**: chỉ chế độ mới đang thiết kế, chưa phát hành (`UPCOMING`, theo hàng "Chế độ mới" của [lộ trình](../../09-roadmap/lo-trinh.md)); hiện có thẻ Long Hổ Hội (chỉ là tên hiển thị, chưa có thiết kế, dùng tạm tranh Quần Hùng). Chế độ đã phát hành nhưng tắt cờ ở một môi trường (ví dụ máy dev) vẫn nằm ở nhóm của nó với thẻ khóa, không chuyển sang mục này (Shan 14/11). Không còn chế độ nào thì hiện dòng báo trống.
+- **Sắp ra mắt**: chỉ chế độ mới đang thiết kế, chưa phát hành (`UPCOMING`, theo hàng "Chế độ mới" của [lộ trình](../../09-roadmap/lo-trinh.md)); hiện chưa có thẻ nào (Shan bỏ Long Hổ Hội 28/11/2026). Chế độ đã phát hành nhưng tắt cờ ở một môi trường (ví dụ máy dev) vẫn nằm ở nhóm của nó với thẻ khóa, không chuyển sang mục này (Shan 14/11). Không còn chế độ nào thì hiện dòng báo trống.
 - Mỗi chế độ khai báo `group` trong `MODES`; thêm chế độ mới phải chọn nhóm. Thanh dẫn là `nav` với liên kết neo `#home-battle`, `#home-puzzle`, `#home-soon` (kiểu `.ui-choice`, nút đang đọc mang `aria-current`), có số chế độ trên mỗi nút; mỗi mục có tiêu đề và một câu dẫn. Người dùng tắt chuyển động thì nhảy thẳng, không cuộn mượt.
 
 ## 17. Đại card cho mọi màn chế độ (16/11/2026)
