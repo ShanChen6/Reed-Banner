@@ -104,6 +104,27 @@ export function nextSweepTierHint(cleared: number, totalFloors: number): string 
   return null;
 }
 
+export interface SweepTierRow {
+  readonly tier: number;
+  /** Tầng phải qua để mở bậc này. */
+  readonly floor: number;
+  readonly amount: number;
+}
+
+/** Các bậc quét trong phạm vi tháp, mỗi bậc kèm tầng mở và số đá mỗi ngày (bảng "Quét tháp" như danh sách càn quét). */
+export function sweepTiers(totalFloors: number): readonly SweepTierRow[] {
+  const rows: SweepTierRow[] = [];
+  let last = 0;
+  for (let floor = 1; floor <= totalFloors; floor++) {
+    const tier = trialSweepTier(floor);
+    if (tier > last) {
+      rows.push({ tier, floor, amount: trialSweepStoneAmount(tier) });
+      last = tier;
+    }
+  }
+  return rows;
+}
+
 export interface FoeInfo {
   readonly id: string;
   readonly name: string;

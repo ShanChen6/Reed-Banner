@@ -40,6 +40,7 @@ import {
   previewLineup,
   RULE_TAG,
   sweepButtonState,
+  sweepTiers,
   type CompanionOption,
   type LeaderBuild,
   type LeaderPick,
@@ -306,7 +307,9 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; fit: bool
   const shown = filterHeroes(candidates, filter.query, filter.element, filter.profession);
   const pagedOptions = usePagedItems(shown, fit ? (short ? 2 : 6) : 12);
   const setFilter = (patch: Parameters<typeof updateFilter>[0]) => { updateFilter(patch); pagedOptions.setPage(0); };
-  const [dialog, setDialog] = useState<"filter" | "leader" | null>(null);
+  const [dialog, setDialog] = useState<"filter" | "leader" | "sweep" | null>(null);
+  const sweep = props.overview.sweep;
+  const sweepReady = sweep.eligible && !sweep.claimedToday && props.overview.supported;
   const build = props.build ?? defaultBuild(profile);
   const preview = previewLineup(profile, f.rules, companions, build);
   const picker = leaderPicker(profile, f.rules, companions, build);
@@ -320,8 +323,13 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; fit: bool
 
   const actions = (
     <div className={cn("flex flex-wrap items-center gap-3", fit && "mt-auto")}>
-      <Button type="button" disabled={!canStart} onClick={props.onStart} className={cn("min-h-11 px-6", fit && "flex-1")}>
+      <Button type="button" disabled={!canStart} onClick={props.onStart} className="min-h-11 flex-1 px-6">
         {busy ? "Đang vào tầng…" : hasActiveHere ? "Tiếp tục trận" : entry.state === "cleared" ? "Đánh lại" : "Vào tầng"}
+      </Button>
+      {/* Quét tháp nằm ngang nút Vào tầng (Shan 28/11/2026), bấm mở bảng các bậc quét. */}
+      <Button variant="secondary" type="button" aria-haspopup="dialog" onClick={() => setDialog("sweep")} className="relative min-h-11 flex-1 px-6">
+        Quét tháp
+        {sweepReady && <span aria-label="Có đá chờ nhận" className="absolute right-2 top-2 size-2 rounded-full bg-jade" />}
       </Button>
       {hasActiveHere && (
         <SurrenderButton
@@ -586,6 +594,9 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; fit: bool
         )}
       </OrnateFrame>
 
+      <FrameDialog open={dialog === "sweep"} title="Quét tháp hằng ngày" onClose={() => setDialog(null)}>
+        <SweepTiers overview={props.overview} sweepBusy={props.sweepBusy} onSweep={props.onSweep} />
+      </FrameDialog>
       {fit && (
         <>
           <FrameDialog open={dialog === "filter"} title="Lọc tướng kèm" onClose={() => setDialog(null)}>
@@ -595,6 +606,64 @@ function FloorDetail(props: TrialViewProps & { entry: TrialFloorEntry; fit: bool
             {leaderRows}
           </FrameDialog>
         </>
+      )}
+    </>
+  );
+}
+
+/** Bảng các bậc quét (như danh sách càn quét): bậc đã mở có dấu, bậc đang giữ có nút nhận, bậc sau có khóa và tầng cần qua. */
+function SweepTiers({ overview, sweepBusy, onSweep }: Pick<TrialViewProps, "overview" | "sweepBusy" | "onSweep">) {
+  const { sweep } = overview;
+  const button = sweepButtonState(sweep, sweepBusy);
+  const tiers = sweepTiers(overview.floors.length);
+  return (
+    <>
+      <p className="text-sm text-on-wood-soft">
+        Mỗi ngày nhận Đá Cường Hóa một lần mà không cần đánh lại. Qua tầng càng cao, bậc quét càng nhiều đá. Đổi ngày lúc 0 giờ (giờ Việt Nam).
+      </p>
+      <ul aria-label="Các bậc quét" className="grid gap-2 sm:grid-cols-2">
+        {tiers.map((t) => {
+          const current = sweep.eligible && t.tier === sweep.tier;
+          const reached = sweep.eligible && t.tier <= sweep.tier;
+          return (
+            <li key={t.tier} data-current={current || undefined}
+              className={cn("ui-frame-inset flex items-center gap-3 p-3", current && "outline outline-1 outline-frame-gold-hi", !reached && "opacity-70")}>
+              <span className="min-w-0 flex-1 text-sm">
+                <strong className="block text-title-on-wood">Bậc {t.tier}: {t.amount} đá mỗi ngày</strong>
+                <span className="text-caption text-on-wood-soft">Qua tầng {t.floor}</span>
+              </span>
+              {current ? (
+                <Button size="sm" type="button" disabled={button.disabled || !overview.supported} onClick={onSweep}>
+                  {sweep.claimedToday ? "Đã nhận" : sweepBusy ? "Đang quét…" : "Nhận"}
+                </Button>
+              ) : reached ? (
+                <CheckIcon className="size-5 text-jade" aria-label="Đã mở" />
+              ) : (
+                <LockIcon className="size-5 text-on-wood-soft" aria-label="Chưa mở" />
+              )}
+            </li>
+          );
+        })}
+      </ul>
+      {!sweep.eligible && <p className="text-sm text-frame-gold">Vượt tầng 1 để mở bậc quét đầu tiên.</p>}
+      {sweep.claimedToday && (
+        <p className="text-caption text-jade">
+          Hôm nay đã nhận. Lượt tiếp theo:{" "}
+          <time dateTime={new Date(sweep.nextAt).toISOString()}>{formatSweepTime(sweep.nextAt)}</time> (giờ Việt Nam).
+        </p>
+      )}
+      {sweep.history.length > 0 && (
+        <details className="text-caption text-on-wood-soft">
+          <summary className="cursor-pointer py-1 text-on-wood-soft hover:text-on-wood">Lịch sử nhận gần đây</summary>
+          <ul className="mt-1 flex flex-col gap-0.5">
+            {sweep.history.map((item) => (
+              <li key={item.dateKey} data-testid={item.dateKey === sweep.lastClaim?.dateKey ? "last-sweep" : undefined}>
+                {formatDateKey(item.dateKey)}
+                {item.amount === null ? ": đã nhận" : `: +${item.amount} đá`}
+              </li>
+            ))}
+          </ul>
+        </details>
       )}
     </>
   );
@@ -721,7 +790,6 @@ export default function TrialView(props: TrialViewProps) {
               <FloorNavigator floors={overview.floors} selected={floor} active={overview.active?.floor ?? null} onSelect={selectFloor} short={short} />
               <p className="hidden text-caption text-on-wood-soft pointer-fine:block [@media(max-height:860px)]:xl:hidden">Dùng phím mũi tên để chuyển tầng, Enter để chọn.</p>
             </OrnateFrame>
-            <SweepPanel overview={overview} sweepBusy={props.sweepBusy} onSweep={props.onSweep} />
             <ColumnFill mode="trial" className="xl:min-h-0" />
           </div>
           {/* Màn hẹp: hai khung chi tiết xếp chồng ở cột phải; từ 1280px mỗi khung là một cột (contents). */}

@@ -20,6 +20,7 @@ import {
   navigateIndex,
   previewLineup,
   sweepButtonState,
+  sweepTiers,
   toggleCompanion,
   type TrialFloorEntry,
 } from "../../src/app/game/trial/trial-ui";
@@ -113,6 +114,11 @@ describe("UI Tháp Thí Luyện", () => {
     assert.equal(nextSweepTierHint(0, 50), "Qua tầng 1 để quét được 1 đá mỗi ngày");
     assert.equal(nextSweepTierHint(23, 50), "Qua tầng 31 để quét được 6 đá mỗi ngày");
     assert.equal(nextSweepTierHint(41, 50), null);
+    const tiers = sweepTiers(50);
+    assert.deepEqual(tiers[0], { tier: 1, floor: 1, amount: 1 });
+    assert.deepEqual(tiers.map((t) => t.floor), [...new Set(tiers.map((t) => t.floor))]);
+    assert.ok(tiers.every((t, i) => i === 0 || (t.tier > tiers[i - 1]!.tier && t.floor > tiers[i - 1]!.floor)));
+    assert.ok(tiers.some((t) => t.floor === 31 && t.amount === 6));
     assert.equal(nextSweepTierHint(50, 50), null);
     assert.equal(formatDateKey("2026-11-10"), "10/11/2026");
     assert.equal(formatDateKey("lạ"), "lạ");
