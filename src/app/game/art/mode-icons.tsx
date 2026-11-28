@@ -7,7 +7,7 @@ export type ModeIconKind =
   | "formation" | "clear-path" | "scout" | "maze" | "tam-tuong-ky" | "expedition" | "three-armies" | "go" | "trade";
 
 /** Chế độ chưa có ảnh biểu tượng: ModeIcon không vẽ gì (TODO tranh: public/art/modes/<slug>.webp). */
-const NO_ICON: ReadonlySet<ModeIconKind> = new Set<ModeIconKind>(["three-armies", "go", "trade"]);
+const NO_ICON: ReadonlySet<ModeIconKind> = new Set<ModeIconKind>(["three-armies", "go"]);
 
 /** Biểu tượng chế độ (ảnh vẽ, tách nền sẵn). */
 export function ModeIcon({ kind, className }: { kind: ModeIconKind; className?: string }) {

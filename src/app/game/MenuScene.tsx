@@ -69,7 +69,7 @@ const MODES: readonly Mode[] = [
   { scene: "TAM_QUAN_KY", group: "puzzle", title: "Tam Quân Kỳ", text: MODE_TEXT.TAM_QUAN_KY, art: "tam-quan-ky", kicker: "Đánh cờ", status: "Thắng sứ quân có vàng, đấu người bằng mã phòng", cta: "Bày cờ" },
   { scene: "VAY_THANH_KY", group: "puzzle", title: "Vây Thành Kỳ", text: MODE_TEXT.VAY_THANH_KY, art: "vay-thanh-ky", kicker: "Đánh cờ", status: "Đấu sứ quân hoặc đấu người bằng mã phòng", cta: "Vây thành" },
   { scene: "DIEN_TRANG_KY", group: "puzzle", title: "Điền Trang Ký", text: MODE_TEXT.DIEN_TRANG_KY, kicker: "Đánh cờ", status: "Đấu sứ quân có thưởng, cùng máy hoặc phòng mã", cta: "Gieo xúc xắc" },
-  { scene: "TRADE", group: "puzzle", title: "Hành Thương Ký", text: MODE_TEXT.TRADE, kicker: "Buôn bán", status: "Mùa một tuần, giá đổi mỗi hai giờ", cta: "Lên đường", lockedText: "Sắp khai mở" },
+  { scene: "TRADE", group: "puzzle", title: "Hành Thương Ký", text: MODE_TEXT.TRADE, art: "trade", kicker: "Buôn bán", status: "Mùa một tuần, giá đổi mỗi hai giờ", cta: "Lên đường", lockedText: "Sắp khai mở" },
   { scene: "EXPEDITION", group: "battle", title: "Viễn Chinh", text: MODE_TEXT.EXPEDITION, art: "vien-chinh", kicker: "Hành quân", status: "Bày mưu tính kế trên sa bàn", cta: "Hành quân", lockedText: "Sắp khai mở" },
 ];
 
